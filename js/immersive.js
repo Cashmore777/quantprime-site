@@ -333,18 +333,18 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Control crawl visibility based on scene-crawl position
+    // Control crawl visibility - show during crawl section only
     ScrollTrigger.create({
         trigger: '.scene-crawl',
-        start: 'top 80%',
-        end: 'bottom 20%',
+        start: 'top bottom',
+        end: 'bottom top',
         onEnter: () => {
             crawlContainer.classList.add('active');
             crawlContainer.style.opacity = '1';
         },
         onLeave: () => {
             crawlContainer.style.opacity = '0';
-            setTimeout(() => crawlContainer.classList.remove('active'), 300);
+            crawlContainer.classList.remove('active');
         },
         onEnterBack: () => {
             crawlContainer.classList.add('active');
@@ -352,15 +352,15 @@ function setupCrawl() {
         },
         onLeaveBack: () => {
             crawlContainer.style.opacity = '0';
-            setTimeout(() => crawlContainer.classList.remove('active'), 300);
+            crawlContainer.classList.remove('active');
         }
     });
 
-    // Animate the crawl text scrolling up
+    // Simple scroll: text moves from bottom to top
     gsap.fromTo(crawlContent, 
-        { y: '50%' },
+        { y: '0%' },  // Starts at top: 100% (off screen bottom)
         { 
-            y: '-80%',
+            y: '-100%',  // Ends off screen top
             ease: 'none',
             scrollTrigger: {
                 trigger: '.scene-crawl',
