@@ -161,7 +161,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-logo {
-    height: 150vh;
+    height: 250vh;
     flex-direction: column;
     display: flex;
     align-items: center;
@@ -247,7 +247,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-crawl {
-    height: 350vh;
+    height: 500vh;
     background: var(--bg-primary);
     overflow: hidden;
 }
