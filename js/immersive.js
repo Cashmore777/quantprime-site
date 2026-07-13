@@ -108,6 +108,7 @@ drawIndicatorLines();
 // ═══════════════════════════════════════════════════════════════
 
 const logoContainer = document.querySelector('.logo-container');
+const logoBadge = document.querySelector('.logo-badge');
 const logoTagline = document.querySelector('.logo-tagline');
 const scrollIndicator = document.querySelector('.scroll-indicator');
 
@@ -120,7 +121,7 @@ gsap.to(logoTagline, {
     ease: 'power2.out'
 });
 
-// Logo zoom on scroll
+// Logo zoom on scroll - you zoom INTO the logo
 gsap.timeline({
     scrollTrigger: {
         trigger: '.scene-logo',
@@ -131,11 +132,25 @@ gsap.timeline({
         pinSpacing: false
     }
 })
-.to(logoContainer, {
-    scale: 20,
+.to(logoBadge, {
+    scale: 30,
+    rotation: 180,
+    ease: 'power2.in'
+}, 0)
+.to('.logo-glow', {
+    scale: 40,
     opacity: 0,
     ease: 'power2.in'
-})
+}, 0)
+.to(logoTagline, {
+    opacity: 0,
+    y: -50,
+    ease: 'power2.in'
+}, 0)
+.to(logoContainer, {
+    opacity: 0,
+    ease: 'power2.in'
+}, 0.7)
 .to(scrollIndicator, {
     opacity: 0,
     y: 20

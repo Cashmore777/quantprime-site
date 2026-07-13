@@ -180,71 +180,30 @@ body {
 
 .logo-3d {
     position: relative;
-    perspective: 1000px;
-    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.logo-layer {
+.logo-glow {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.logo-layer.logo-layer-mid {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-}
-
-.logo-layer-back {
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(0, 171, 255, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, rgba(0, 171, 255, 0.05) 50%, transparent 70%);
     filter: blur(60px);
+    pointer-events: none;
 }
 
-.logo-layer-mid {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    transform: none;
+.logo-badge {
+    width: clamp(300px, 50vw, 500px);
+    height: auto;
+    animation: logoSpin 60s linear infinite;
+    filter: drop-shadow(0 0 30px rgba(201, 168, 76, 0.3));
 }
 
-.logo-text-quant,
-.logo-text-prime {
-    font-family: var(--font-sans);
-    font-size: clamp(4rem, 15vw, 12rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 0.9;
-}
-
-.logo-text-quant {
-    color: var(--text-primary);
-}
-
-.logo-text-prime {
-    background: linear-gradient(135deg, var(--cyan) 0%, var(--gold) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.logo-layer-front {
-    width: 800px;
-    height: 800px;
-    border: 1px solid rgba(0, 171, 255, 0.1);
-    border-radius: 50%;
-    animation: pulse 4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.1; }
+@keyframes logoSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .logo-tagline {
