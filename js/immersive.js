@@ -144,20 +144,46 @@ async function loadLogo() {
         const scale = 3 / maxDim;
         logoGroup.scale.setScalar(scale);
         
-        // Gold material - bright and shiny
+        // Materials
         const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffc840,  // Bright gold
-            metalness: 0.8,
-            roughness: 0.2,
+            color: 0xc9a84c,
+            metalness: 0.9,
+            roughness: 0.15,
             emissive: 0xc9a84c,
-            emissiveIntensity: 0.15
+            emissiveIntensity: 0.1
+        });
+        
+        const whiteMaterial = new THREE.MeshStandardMaterial({
+            color: 0xffffff,
+            metalness: 0.3,
+            roughness: 0.4
+        });
+        
+        const blackMaterial = new THREE.MeshStandardMaterial({
+            color: 0x0a0a0a,
+            metalness: 0.1,
+            roughness: 0.8
         });
 
-        // Apply materials - force gold on everything
+        // Apply materials based on mesh name
         logoGroup.traverse((child) => {
             if (child.isMesh) {
-                child.material = goldMaterial.clone();
-                child.material.needsUpdate = true;
+                const name = child.name.toLowerCase();
+                
+                // Skip the broken PRIME letters (Curve.001-007)
+                if (name.includes('curve.00')) {
+                    child.visible = false;
+                    return;
+                }
+                
+                if (name.includes('q-body')) {
+                    child.material = whiteMaterial;
+                } else if (name.includes('q-cutout')) {
+                    child.material = blackMaterial;
+                } else {
+                    // Ring, arrow = gold
+                    child.material = goldMaterial;
+                }
             }
         });
 
