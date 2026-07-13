@@ -340,22 +340,15 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Control crawl visibility - show during crawl section only
+    // Start crawl during LOGO section (last 50%) - fade in as logo fades out
     ScrollTrigger.create({
-        trigger: '.scene-crawl',
-        start: 'top bottom',
+        trigger: '.scene-logo',
+        start: 'center top',  // Start when logo section is 50% scrolled
         end: 'bottom top',
-        onEnter: () => {
+        onUpdate: (self) => {
+            // Fade in crawl as logo fades out
             crawlContainer.classList.add('active');
-            crawlContainer.style.opacity = '1';
-        },
-        onLeave: () => {
-            crawlContainer.style.opacity = '0';
-            crawlContainer.classList.remove('active');
-        },
-        onEnterBack: () => {
-            crawlContainer.classList.add('active');
-            crawlContainer.style.opacity = '1';
+            crawlContainer.style.opacity = self.progress;
         },
         onLeaveBack: () => {
             crawlContainer.style.opacity = '0';
@@ -363,17 +356,33 @@ function setupCrawl() {
         }
     });
 
-    // Simple scroll: text moves from center to top
+    // Keep crawl visible during crawl section
+    ScrollTrigger.create({
+        trigger: '.scene-crawl',
+        start: 'top top',
+        end: 'bottom top',
+        onLeave: () => {
+            crawlContainer.style.opacity = '0';
+            crawlContainer.classList.remove('active');
+        },
+        onEnterBack: () => {
+            crawlContainer.classList.add('active');
+            crawlContainer.style.opacity = '1';
+        }
+    });
+
+    // Scroll text: starts from bottom, moves up through BOTH sections
     gsap.fromTo(crawlContent, 
-        { y: '0%' },  // Starts at top:100% position (visible immediately)
+        { y: '100%' },  // Starts below viewport
         { 
-            y: '-150%',  // Ends off screen top
+            y: '-150%',  // Ends above viewport
             ease: 'none',
             scrollTrigger: {
-                trigger: '.scene-crawl',
-                start: 'top top',
+                trigger: '.scene-logo',
+                start: 'center top',  // Start moving when logo is 50% scrolled
+                endTrigger: '.scene-crawl',
                 end: 'bottom top',
-                scrub: 0.3
+                scrub: 0.5
             }
         }
     );

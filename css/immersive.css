@@ -293,7 +293,7 @@ body {
 
 .crawl-content {
     position: absolute;
-    top: 20%;
+    top: 0;
     left: 50%;
     width: 70%;
     max-width: 700px;
