@@ -134,7 +134,7 @@ gsap.timeline({
 })
 .to(logoBadge, {
     scale: 30,
-    rotation: 180,
+    rotateY: 360,
     ease: 'power2.in'
 }, 0)
 .to('.logo-glow', {
