@@ -161,7 +161,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-logo {
-    height: 400vh;
+    height: 200vh;
     flex-direction: column;
     display: flex;
     align-items: center;
@@ -293,7 +293,7 @@ body {
 
 .crawl-content {
     position: absolute;
-    top: 100%;
+    top: 20%;
     left: 50%;
     width: 70%;
     max-width: 700px;

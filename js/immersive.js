@@ -166,7 +166,9 @@ async function loadLogo() {
             color: 0xc9a84c,
             metalness: 1.0,
             roughness: 0.15,
-            envMapIntensity: 1.5
+            envMapIntensity: 1.5,
+            transparent: true,
+            opacity: 1
         });
 
         // Apply to ALL meshes - smooth normals + gold material
@@ -361,11 +363,11 @@ function setupCrawl() {
         }
     });
 
-    // Simple scroll: text moves from bottom to top - slow and complete
+    // Simple scroll: text moves from center to top
     gsap.fromTo(crawlContent, 
-        { y: '100vh' },  // Starts off screen at bottom
+        { y: '0%' },  // Starts at top:100% position (visible immediately)
         { 
-            y: '-200%',  // Ends well off screen top
+            y: '-150%',  // Ends off screen top
             ease: 'none',
             scrollTrigger: {
                 trigger: '.scene-crawl',
