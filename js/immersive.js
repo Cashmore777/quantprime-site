@@ -197,10 +197,9 @@ async function loadLogo() {
             }
         });
 
-        // Rotate to face camera (SVG imports are often on XY plane, need to face Z)
-        logoGroup.rotation.x = 0;
-        logoGroup.rotation.y = 0;
-        logoGroup.rotation.z = 0;
+        // Rotate to face camera (SVG imports are flat on XY plane)
+        // Rotate -90 degrees on X to face the camera
+        logoGroup.rotation.x = -Math.PI / 2;
         
         scene.add(logoGroup);
         
@@ -262,8 +261,8 @@ function setupScrollAnimation() {
                 const baseScale = logoGroup.userData.baseScale || 1;
                 logoGroup.scale.setScalar(baseScale * scale);
                 
-                // Rotate as we zoom
-                logoGroup.rotation.z = scrollProgress * Math.PI * 2;
+                // Rotate as we zoom (spin around Y axis)
+                logoGroup.rotation.y = scrollProgress * Math.PI * 2;
                 
                 // Move camera forward
                 camera.position.z = 5 - (scrollProgress * 4);
@@ -305,8 +304,8 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (logoGroup && scrollProgress < 0.1) {
-        // Gentle idle rotation when not scrolling
-        logoGroup.rotation.z += 0.005;
+        // Gentle idle rotation when not scrolling (spin around Y axis)
+        logoGroup.rotation.y += 0.005;
     }
 
     if (renderer && scene && camera) {
