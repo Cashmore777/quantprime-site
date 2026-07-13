@@ -265,13 +265,12 @@ function setupScrollAnimation() {
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo as you zoom through it
+                // FADE OUT the logo as you zoom through it - START IMMEDIATELY
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
-                        // Start fading at 30% scroll, fully transparent by 80%
-                        child.material.opacity = scrollProgress < 0.3 ? 1 : 
-                            Math.max(0, 1 - ((scrollProgress - 0.3) / 0.5));
+                        // Start fading immediately, fully transparent by 50%
+                        child.material.opacity = Math.max(0, 1 - (scrollProgress * 2));
                     }
                 });
             }
@@ -280,11 +279,11 @@ function setupScrollAnimation() {
             if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
-            // Fade out entire canvas container at the end
+            // Fade out entire canvas container - start at 40%, gone by 60%
             const container = document.getElementById('logo-3d-container');
             if (container) {
-                if (scrollProgress > 0.6) {
-                    container.style.opacity = 1 - ((scrollProgress - 0.6) * 2.5);
+                if (scrollProgress > 0.4) {
+                    container.style.opacity = Math.max(0, 1 - ((scrollProgress - 0.4) * 5));
                 } else {
                     container.style.opacity = 1;
                 }

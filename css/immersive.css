@@ -176,6 +176,7 @@ body {
     height: 100vh;
     z-index: 10;
     pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
 #logo-3d-container canvas {
@@ -260,8 +261,9 @@ body {
     perspective: 400px;
     overflow: hidden;
     opacity: 0;
-    z-index: 20;
-    background: var(--bg-primary);
+    z-index: 100;
+    background: #030308;
+    pointer-events: none;
 }
 
 .crawl-fade {
@@ -283,6 +285,7 @@ body {
     transform: translateX(-50%) rotateX(25deg);
     transform-origin: center top;
     text-align: center;
+    color: #c9a84c;
 }
 
 .crawl-intro {
