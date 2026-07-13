@@ -333,47 +333,43 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Show crawl when logo section is 15% scrolled (logo nearly faded)
-    ScrollTrigger.create({
-        trigger: '.scene-logo',
-        start: 'top+=15% top',
-        onEnter: () => {
-            crawlContainer.classList.add('active');
-            gsap.to(crawlContainer, { opacity: 1, duration: 0.5 });
-        },
-        onLeaveBack: () => {
-            gsap.to(crawlContainer, { opacity: 0, duration: 0.3, onComplete: () => {
-                crawlContainer.classList.remove('active');
-            }});
-        }
-    });
-
-    // Hide crawl when leaving crawl section
+    // Control crawl visibility based on scene-crawl position
     ScrollTrigger.create({
         trigger: '.scene-crawl',
-        start: 'bottom bottom',
+        start: 'top 80%',
+        end: 'bottom 20%',
+        onEnter: () => {
+            crawlContainer.classList.add('active');
+            crawlContainer.style.opacity = '1';
+        },
         onLeave: () => {
-            gsap.to(crawlContainer, { opacity: 0, duration: 0.3, onComplete: () => {
-                crawlContainer.classList.remove('active');
-            }});
+            crawlContainer.style.opacity = '0';
+            setTimeout(() => crawlContainer.classList.remove('active'), 300);
         },
         onEnterBack: () => {
             crawlContainer.classList.add('active');
-            gsap.to(crawlContainer, { opacity: 1, duration: 0.3 });
+            crawlContainer.style.opacity = '1';
+        },
+        onLeaveBack: () => {
+            crawlContainer.style.opacity = '0';
+            setTimeout(() => crawlContainer.classList.remove('active'), 300);
         }
     });
 
-    // Animate the crawl text scrolling up - smooth
-    gsap.to(crawlContent, {
-        y: '-150%',
-        ease: 'none',
-        scrollTrigger: {
-            trigger: '.scene-crawl',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 2  // Smoother scrub
+    // Animate the crawl text scrolling up
+    gsap.fromTo(crawlContent, 
+        { y: '50%' },
+        { 
+            y: '-80%',
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.scene-crawl',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1
+            }
         }
-    });
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════
