@@ -1,7 +1,14 @@
 /**
- * QUANT PRIME — Immersive Experience
- * GSAP + Lenis + Canvas animations
+ * QUANT PRIME — Immersive 3D Experience
+ * Three.js + GSAP ScrollTrigger
  */
+
+// ═══════════════════════════════════════════════════════════════
+// THREE.JS IMPORTS (loaded via CDN in HTML)
+// ═══════════════════════════════════════════════════════════════
+
+let scene, camera, renderer, logoGroup;
+let scrollProgress = 0;
 
 // ═══════════════════════════════════════════════════════════════
 // LENIS SMOOTH SCROLL
@@ -20,13 +27,11 @@ function raf(time) {
 }
 requestAnimationFrame(raf);
 
-// Connect Lenis to GSAP ScrollTrigger
 lenis.on('scroll', ScrollTrigger.update);
 
 gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
 });
-
 gsap.ticker.lagSmoothing(0);
 
 // ═══════════════════════════════════════════════════════════════
@@ -45,179 +50,451 @@ gsap.to('.progress-bar', {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// INDICATOR CANVAS BACKGROUND
+// THREE.JS SCENE SETUP
 // ═══════════════════════════════════════════════════════════════
 
-const indicatorCanvas = document.getElementById('indicator-canvas');
-const ctx = indicatorCanvas.getContext('2d');
+async function initThreeJS() {
+    const container = document.getElementById('logo-3d-container');
+    if (!container) return;
 
-function resizeCanvas() {
-    indicatorCanvas.width = window.innerWidth;
-    indicatorCanvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+    // Scene
+    scene = new THREE.Scene();
 
-// Generate flowing indicator lines
-const lines = [];
-const numLines = 5;
+    // Camera
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
 
-for (let i = 0; i < numLines; i++) {
-    lines.push({
-        points: [],
-        speed: 0.5 + Math.random() * 1,
-        amplitude: 30 + Math.random() * 50,
-        frequency: 0.01 + Math.random() * 0.02,
-        offset: Math.random() * 1000,
-        y: (indicatorCanvas.height / (numLines + 1)) * (i + 1),
-        color: i % 2 === 0 ? 'rgba(0, 171, 255, 0.3)' : 'rgba(201, 168, 76, 0.2)'
+    // Renderer
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: true, 
+        alpha: true,
+        powerPreference: 'high-performance'
     });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    scene.add(ambientLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    keyLight.position.set(5, 5, 5);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0x00abff, 0.5);
+    fillLight.position.set(-5, 0, 5);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xc9a84c, 0.8);
+    rimLight.position.set(0, -5, -5);
+    scene.add(rimLight);
+
+    // Create the 3D logo
+    await createLogo();
+
+    // Handle resize
+    window.addEventListener('resize', onWindowResize);
+
+    // Start render loop
+    animate();
+
+    // Setup scroll animation
+    setupScrollAnimation();
 }
 
-let time = 0;
+// ═══════════════════════════════════════════════════════════════
+// CREATE 3D LOGO
+// ═══════════════════════════════════════════════════════════════
 
-function drawIndicatorLines() {
-    ctx.clearRect(0, 0, indicatorCanvas.width, indicatorCanvas.height);
-    
-    lines.forEach(line => {
-        ctx.beginPath();
-        ctx.strokeStyle = line.color;
-        ctx.lineWidth = 1;
-        
-        for (let x = 0; x <= indicatorCanvas.width; x += 5) {
-            const y = line.y + Math.sin((x * line.frequency) + time * line.speed + line.offset) * line.amplitude;
-            
-            if (x === 0) {
-                ctx.moveTo(x, y);
-            } else {
-                ctx.lineTo(x, y);
-            }
-        }
-        
-        ctx.stroke();
+async function createLogo() {
+    logoGroup = new THREE.Group();
+
+    // Gold material - metallic look
+    const goldMaterial = new THREE.MeshStandardMaterial({
+        color: 0xc9a84c,
+        metalness: 0.9,
+        roughness: 0.2,
+        envMapIntensity: 1.0
     });
+
+    // Cyan accent material
+    const cyanMaterial = new THREE.MeshStandardMaterial({
+        color: 0x00abff,
+        metalness: 0.7,
+        roughness: 0.3,
+        emissive: 0x00abff,
+        emissiveIntensity: 0.2
+    });
+
+    // Create environment map for reflections
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const envTexture = pmremGenerator.fromScene(new THREE.Scene()).texture;
+    goldMaterial.envMap = envTexture;
+    cyanMaterial.envMap = envTexture;
+
+    // Outer ring (torus)
+    const outerRingGeo = new THREE.TorusGeometry(2, 0.08, 16, 100);
+    const outerRing = new THREE.Mesh(outerRingGeo, goldMaterial);
+    logoGroup.add(outerRing);
+
+    // Inner ring
+    const innerRingGeo = new THREE.TorusGeometry(1.7, 0.05, 16, 100);
+    const innerRing = new THREE.Mesh(innerRingGeo, goldMaterial);
+    logoGroup.add(innerRing);
+
+    // Load font and create text
+    const fontLoader = new THREE.FontLoader();
     
-    time += 0.02;
-    requestAnimationFrame(drawIndicatorLines);
+    try {
+        const font = await new Promise((resolve, reject) => {
+            fontLoader.load(
+                'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json',
+                resolve,
+                undefined,
+                reject
+            );
+        });
+
+        // QUANT text (top arc)
+        const quantText = createArcText('QUANT', font, goldMaterial, 1.85, Math.PI * 0.7, Math.PI * 0.3);
+        logoGroup.add(quantText);
+
+        // PRIME text (bottom arc)
+        const primeText = createArcText('PRIME', font, cyanMaterial, 1.85, -Math.PI * 0.3, -Math.PI * 0.7);
+        logoGroup.add(primeText);
+
+        // Center emblem - stylized QP monogram
+        const centerGroup = createCenterEmblem(goldMaterial, cyanMaterial);
+        logoGroup.add(centerGroup);
+
+    } catch (error) {
+        console.warn('Font loading failed, using fallback geometry');
+        // Fallback: simple shapes if font fails
+        createFallbackLogo(goldMaterial, cyanMaterial);
+    }
+
+    // Add decorative elements
+    addDecorativeElements(goldMaterial);
+
+    scene.add(logoGroup);
 }
 
-drawIndicatorLines();
+// Create text along an arc
+function createArcText(text, font, material, radius, startAngle, endAngle) {
+    const group = new THREE.Group();
+    const chars = text.split('');
+    const angleSpan = endAngle - startAngle;
+    const angleStep = angleSpan / (chars.length + 1);
 
-// ═══════════════════════════════════════════════════════════════
-// SCENE 1: LOGO ZOOM
-// ═══════════════════════════════════════════════════════════════
+    chars.forEach((char, i) => {
+        const textGeo = new THREE.TextGeometry(char, {
+            font: font,
+            size: 0.25,
+            height: 0.08,
+            curveSegments: 12,
+            bevelEnabled: true,
+            bevelThickness: 0.02,
+            bevelSize: 0.01,
+            bevelOffset: 0,
+            bevelSegments: 5
+        });
 
-const logoContainer = document.querySelector('.logo-container');
-const logoBadge = document.querySelector('.logo-badge');
-const logoTagline = document.querySelector('.logo-tagline');
-const scrollIndicator = document.querySelector('.scroll-indicator');
+        textGeo.computeBoundingBox();
+        textGeo.center();
 
-// Initial tagline fade in
-gsap.to(logoTagline, {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    delay: 0.5,
-    ease: 'power2.out'
-});
+        const textMesh = new THREE.Mesh(textGeo, material);
+        
+        const angle = startAngle - angleStep * (i + 1);
+        textMesh.position.x = Math.cos(angle) * radius;
+        textMesh.position.y = Math.sin(angle) * radius;
+        textMesh.rotation.z = angle - Math.PI / 2;
 
-// Logo zoom on scroll - you zoom INTO the logo
-gsap.timeline({
-    scrollTrigger: {
-        trigger: '.scene-logo',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        pin: logoContainer,
-        pinSpacing: false
+        group.add(textMesh);
+    });
+
+    return group;
+}
+
+// Center QP emblem
+function createCenterEmblem(goldMat, cyanMat) {
+    const group = new THREE.Group();
+
+    // Central hexagon
+    const hexShape = new THREE.Shape();
+    const hexRadius = 0.8;
+    for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+        const x = Math.cos(angle) * hexRadius;
+        const y = Math.sin(angle) * hexRadius;
+        if (i === 0) hexShape.moveTo(x, y);
+        else hexShape.lineTo(x, y);
     }
-})
-.to(logoBadge, {
-    scale: 30,
-    rotateY: 360,
-    ease: 'power2.in'
-}, 0)
-.to('.logo-glow', {
-    scale: 40,
-    opacity: 0,
-    ease: 'power2.in'
-}, 0)
-.to(logoTagline, {
-    opacity: 0,
-    y: -50,
-    ease: 'power2.in'
-}, 0)
-.to(logoContainer, {
-    opacity: 0,
-    ease: 'power2.in'
-}, 0.7)
-.to(scrollIndicator, {
-    opacity: 0,
-    y: 20
-}, 0);
+    hexShape.closePath();
 
-// Show nav after logo zoom
-ScrollTrigger.create({
-    trigger: '.scene-crawl',
-    start: 'top 80%',
-    onEnter: () => document.querySelector('.nav').classList.add('visible'),
-    onLeaveBack: () => document.querySelector('.nav').classList.remove('visible')
-});
+    const hexGeo = new THREE.ExtrudeGeometry(hexShape, {
+        depth: 0.05,
+        bevelEnabled: true,
+        bevelThickness: 0.02,
+        bevelSize: 0.02,
+        bevelSegments: 3
+    });
+    const hexMesh = new THREE.Mesh(hexGeo, goldMat);
+    hexMesh.position.z = -0.03;
+    group.add(hexMesh);
 
-// ═══════════════════════════════════════════════════════════════
-// SCENE 2: STAR WARS CRAWL
-// ═══════════════════════════════════════════════════════════════
+    // Inner circuit-like lines
+    const lineMat = new THREE.MeshStandardMaterial({
+        color: 0x00abff,
+        metalness: 0.8,
+        roughness: 0.2,
+        emissive: 0x00abff,
+        emissiveIntensity: 0.5
+    });
 
-const crawlContainer = document.querySelector('.crawl-container');
-const crawlContent = document.querySelector('.crawl-content');
+    // Vertical line
+    const vLineGeo = new THREE.BoxGeometry(0.03, 1.0, 0.04);
+    const vLine = new THREE.Mesh(vLineGeo, lineMat);
+    vLine.position.z = 0.02;
+    group.add(vLine);
 
-gsap.timeline({
-    scrollTrigger: {
-        trigger: '.scene-crawl',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: 1,
-        pin: crawlContainer,
-        pinSpacing: false,
-        onEnter: () => gsap.to(crawlContainer, { opacity: 1, duration: 0.5 }),
-        onLeaveBack: () => gsap.to(crawlContainer, { opacity: 0, duration: 0.5 })
+    // Horizontal line
+    const hLineGeo = new THREE.BoxGeometry(0.8, 0.03, 0.04);
+    const hLine = new THREE.Mesh(hLineGeo, lineMat);
+    hLine.position.z = 0.02;
+    group.add(hLine);
+
+    // Corner accents
+    const cornerGeo = new THREE.BoxGeometry(0.15, 0.03, 0.04);
+    const corners = [
+        { x: 0.3, y: 0.3, rot: Math.PI / 4 },
+        { x: -0.3, y: 0.3, rot: -Math.PI / 4 },
+        { x: 0.3, y: -0.3, rot: -Math.PI / 4 },
+        { x: -0.3, y: -0.3, rot: Math.PI / 4 }
+    ];
+
+    corners.forEach(c => {
+        const corner = new THREE.Mesh(cornerGeo, lineMat);
+        corner.position.set(c.x, c.y, 0.02);
+        corner.rotation.z = c.rot;
+        group.add(corner);
+    });
+
+    // Center node
+    const nodeGeo = new THREE.OctahedronGeometry(0.1, 0);
+    const node = new THREE.Mesh(nodeGeo, cyanMat);
+    node.position.z = 0.05;
+    group.add(node);
+
+    return group;
+}
+
+// Decorative dots around the ring
+function addDecorativeElements(material) {
+    const dotGeo = new THREE.SphereGeometry(0.03, 8, 8);
+    const numDots = 24;
+
+    for (let i = 0; i < numDots; i++) {
+        const angle = (i / numDots) * Math.PI * 2;
+        const dot = new THREE.Mesh(dotGeo, material);
+        dot.position.x = Math.cos(angle) * 1.9;
+        dot.position.y = Math.sin(angle) * 1.9;
+        logoGroup.add(dot);
     }
-})
-.fromTo(crawlContent, 
-    { y: '100%' },
-    { y: '-100%', ease: 'none' }
-);
+}
+
+// Fallback if font loading fails
+function createFallbackLogo(goldMat, cyanMat) {
+    // Simple geometric fallback
+    const ringGeo = new THREE.TorusGeometry(1.5, 0.1, 16, 100);
+    const ring = new THREE.Mesh(ringGeo, goldMat);
+    logoGroup.add(ring);
+
+    const hexGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 6);
+    const hex = new THREE.Mesh(hexGeo, cyanMat);
+    hex.rotation.x = Math.PI / 2;
+    logoGroup.add(hex);
+}
 
 // ═══════════════════════════════════════════════════════════════
-// SCENE 3: SYSTEMS REVEAL
+// SCROLL ANIMATION
 // ═══════════════════════════════════════════════════════════════
 
-// Header animation
-gsap.to('.systems-header', {
-    opacity: 1,
-    y: 0,
-    duration: 1,
-    scrollTrigger: {
-        trigger: '.systems-header',
-        start: 'top 80%'
-    }
-});
+function setupScrollAnimation() {
+    const logoSection = document.querySelector('.scene-logo');
+    const tagline = document.querySelector('.logo-tagline');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
 
-// System cards stagger animation
-document.querySelectorAll('.system-card').forEach((card, index) => {
-    gsap.to(card, {
+    // Fade in tagline on load
+    gsap.to(tagline, {
         opacity: 1,
         y: 0,
         duration: 1,
-        delay: index * 0.2,
-        scrollTrigger: {
-            trigger: card,
-            start: 'top 85%'
+        delay: 0.5
+    });
+
+    // Main scroll animation - zoom INTO the logo
+    ScrollTrigger.create({
+        trigger: logoSection,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 1,
+        onUpdate: (self) => {
+            scrollProgress = self.progress;
+            
+            if (logoGroup) {
+                // Zoom: camera moves toward logo (or logo scales up massively)
+                const scale = 1 + (scrollProgress * 50); // Scale up to 51x
+                logoGroup.scale.set(scale, scale, scale);
+                
+                // Rotate as we zoom
+                logoGroup.rotation.y = scrollProgress * Math.PI * 2;
+                logoGroup.rotation.x = scrollProgress * 0.5;
+                
+                // Move camera forward slightly
+                camera.position.z = 5 - (scrollProgress * 3);
+            }
+            
+            // Fade out tagline and scroll indicator
+            if (tagline) tagline.style.opacity = 1 - (scrollProgress * 3);
+            if (scrollIndicator) scrollIndicator.style.opacity = 1 - (scrollProgress * 3);
+            
+            // Fade out entire canvas at the end
+            const container = document.getElementById('logo-3d-container');
+            if (container && scrollProgress > 0.8) {
+                container.style.opacity = 1 - ((scrollProgress - 0.8) * 5);
+            } else if (container) {
+                container.style.opacity = 1;
+            }
         }
     });
-});
 
-// System canvas visualizations
+    // Show nav after logo zoom
+    ScrollTrigger.create({
+        trigger: '.scene-crawl',
+        start: 'top 80%',
+        onEnter: () => document.querySelector('.nav')?.classList.add('visible'),
+        onLeaveBack: () => document.querySelector('.nav')?.classList.remove('visible')
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ANIMATION LOOP
+// ═══════════════════════════════════════════════════════════════
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    if (logoGroup && scrollProgress < 0.1) {
+        // Gentle idle rotation when not scrolling
+        logoGroup.rotation.y += 0.003;
+    }
+
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
+}
+
+function onWindowResize() {
+    if (!camera || !renderer) return;
+    
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STAR WARS CRAWL
+// ═══════════════════════════════════════════════════════════════
+
+function setupCrawl() {
+    const crawlContainer = document.querySelector('.crawl-container');
+    const crawlContent = document.querySelector('.crawl-content');
+
+    if (!crawlContainer || !crawlContent) return;
+
+    gsap.timeline({
+        scrollTrigger: {
+            trigger: '.scene-crawl',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+            pin: crawlContainer,
+            onEnter: () => gsap.to(crawlContainer, { opacity: 1, duration: 0.5 }),
+            onLeaveBack: () => gsap.to(crawlContainer, { opacity: 0, duration: 0.5 })
+        }
+    })
+    .fromTo(crawlContent, 
+        { y: '100%' },
+        { y: '-100%', ease: 'none' }
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEMS & OTHER SECTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function setupSections() {
+    // Systems header
+    gsap.to('.systems-header', {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        scrollTrigger: {
+            trigger: '.systems-header',
+            start: 'top 80%'
+        }
+    });
+
+    // System cards
+    document.querySelectorAll('.system-card').forEach((card, index) => {
+        gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: index * 0.2,
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%'
+            }
+        });
+    });
+
+    // Proof cards
+    document.querySelectorAll('.proof-card').forEach((card, index) => {
+        gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: index * 0.15,
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 85%'
+            }
+        });
+    });
+
+    // Price cards
+    document.querySelectorAll('.price-card').forEach((card, index) => {
+        gsap.to(card, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: index * 0.1,
+            scrollTrigger: {
+                trigger: '.pricing-grid',
+                start: 'top 80%'
+            }
+        });
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM CANVAS VISUALIZATIONS
+// ═══════════════════════════════════════════════════════════════
+
 function initSystemCanvas(canvasId, type) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -240,7 +517,6 @@ function initSystemCanvas(canvasId, type) {
         ctx.clearRect(0, 0, w, h);
         
         if (type === 'meridian') {
-            // Draw EMA-like lines
             const colors = ['#00abff', '#0085c7', '#005e8c', '#194866'];
             colors.forEach((color, i) => {
                 ctx.beginPath();
@@ -259,7 +535,6 @@ function initSystemCanvas(canvasId, type) {
                 ctx.stroke();
             });
             
-            // Draw LP levels
             ctx.strokeStyle = 'rgba(0, 171, 255, 0.3)';
             ctx.lineWidth = 1;
             ctx.setLineDash([5, 5]);
@@ -272,7 +547,6 @@ function initSystemCanvas(canvasId, type) {
             ctx.setLineDash([]);
             
         } else if (type === 'recoil') {
-            // Draw volatility bands
             const centerY = h * 0.5;
             
             for (let band = 1; band <= 8; band++) {
@@ -301,7 +575,6 @@ function initSystemCanvas(canvasId, type) {
             }
             
         } else if (type === 'executor') {
-            // Draw data flow lines
             const numFlows = 8;
             for (let i = 0; i < numFlows; i++) {
                 const startX = (w / numFlows) * i + (w / numFlows / 2);
@@ -314,7 +587,6 @@ function initSystemCanvas(canvasId, type) {
                 ctx.lineTo(startX, progress + 30);
                 ctx.stroke();
                 
-                // Signal dot
                 ctx.beginPath();
                 ctx.fillStyle = i % 2 === 0 ? '#00abff' : '#c9a84c';
                 ctx.arc(startX, progress, 4, 0, Math.PI * 2);
@@ -326,7 +598,6 @@ function initSystemCanvas(canvasId, type) {
         animationId = requestAnimationFrame(draw);
     }
     
-    // Start animation when in view
     ScrollTrigger.create({
         trigger: canvas,
         start: 'top 90%',
@@ -338,65 +609,20 @@ function initSystemCanvas(canvasId, type) {
     });
 }
 
-initSystemCanvas('meridian-canvas', 'meridian');
-initSystemCanvas('recoil-canvas', 'recoil');
-initSystemCanvas('executor-canvas', 'executor');
-
 // ═══════════════════════════════════════════════════════════════
-// SCENE 4: PROOF CARDS
+// INIT
 // ═══════════════════════════════════════════════════════════════
 
-document.querySelectorAll('.proof-card').forEach((card, index) => {
-    gsap.to(card, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: index * 0.15,
-        scrollTrigger: {
-            trigger: card,
-            start: 'top 85%'
-        }
-    });
+document.addEventListener('DOMContentLoaded', () => {
+    initThreeJS();
+    setupCrawl();
+    setupSections();
+    
+    initSystemCanvas('meridian-canvas', 'meridian');
+    initSystemCanvas('recoil-canvas', 'recoil');
+    initSystemCanvas('executor-canvas', 'executor');
 });
 
-// ═══════════════════════════════════════════════════════════════
-// SCENE 5: PRICING CARDS
-// ═══════════════════════════════════════════════════════════════
-
-document.querySelectorAll('.price-card').forEach((card, index) => {
-    gsap.to(card, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        delay: index * 0.1,
-        scrollTrigger: {
-            trigger: '.pricing-grid',
-            start: 'top 80%'
-        }
-    });
-});
-
-// ═══════════════════════════════════════════════════════════════
-// PARALLAX DEPTH EFFECT
-// ═══════════════════════════════════════════════════════════════
-
-document.querySelectorAll('.scene').forEach(scene => {
-    gsap.to(scene, {
-        backgroundPositionY: '30%',
-        ease: 'none',
-        scrollTrigger: {
-            trigger: scene,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-        }
-    });
-});
-
-// ═══════════════════════════════════════════════════════════════
-// CONSOLE BRANDING
-// ═══════════════════════════════════════════════════════════════
-
+// Console branding
 console.log('%c QUANT PRIME ', 'background: linear-gradient(135deg, #00abff, #c9a84c); color: #030308; font-weight: bold; padding: 8px 16px; font-size: 14px;');
 console.log('%c Institutional-Grade Market Intelligence ', 'color: #c9a84c; font-size: 12px;');
-console.log('%c https://quantprime.uk ', 'color: #00abff;');
