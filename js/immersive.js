@@ -153,50 +153,23 @@ async function loadLogo() {
         // Use wrapper as our logo group
         logoGroup = wrapper;
         
-        // Materials
-        const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xc9a84c,
-            metalness: 0.9,
-            roughness: 0.15,
-            emissive: 0xc9a84c,
-            emissiveIntensity: 0.1
-        });
-        
-        const whiteMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            metalness: 0.3,
-            roughness: 0.4
-        });
-        
-        const blackMaterial = new THREE.MeshStandardMaterial({
-            color: 0x0a0a0a,
-            metalness: 0.1,
-            roughness: 0.8
+        // Simple bright material for debugging
+        const brightMaterial = new THREE.MeshBasicMaterial({
+            color: 0xffcc00,
+            wireframe: false
         });
 
-        // Apply materials based on mesh name
+        // Apply to ALL meshes - no filtering
+        let meshCount = 0;
         logoGroup.traverse((child) => {
             if (child.isMesh) {
-                const name = child.name.toLowerCase();
-                
-                // Skip the broken PRIME letters (Curve001-007)
-                if (name.match(/curve00[1-7]/)) {
-                    child.visible = false;
-                    return;
-                }
-                
-                if (name.includes('body')) {
-                    child.material = whiteMaterial;
-                } else if (name.includes('cutout')) {
-                    child.material = blackMaterial;
-                } else if (name.includes('arrow')) {
-                    child.material = goldMaterial;
-                } else {
-                    // Ring (Curve) and anything else = gold
-                    child.material = goldMaterial;
-                }
+                child.material = brightMaterial;
+                child.visible = true;
+                meshCount++;
+                console.log('Applied material to:', child.name, 'position:', child.position);
             }
         });
+        console.log('Total meshes:', meshCount);
 
         // Rotate to face camera (SVG imports are flat on XY plane)
         // Rotate -90 degrees on X to face the camera
