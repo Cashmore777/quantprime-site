@@ -3,8 +3,12 @@
  * Three.js + GSAP ScrollTrigger
  */
 
+import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+
 // ═══════════════════════════════════════════════════════════════
-// THREE.JS IMPORTS (loaded via CDN in HTML)
+// GLOBALS
 // ═══════════════════════════════════════════════════════════════
 
 let scene, camera, renderer, logoGroup;
@@ -129,12 +133,6 @@ async function createLogo() {
         emissiveIntensity: 0.2
     });
 
-    // Create environment map for reflections
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const envTexture = pmremGenerator.fromScene(new THREE.Scene()).texture;
-    goldMaterial.envMap = envTexture;
-    cyanMaterial.envMap = envTexture;
-
     // Outer ring (torus)
     const outerRingGeo = new THREE.TorusGeometry(2, 0.08, 16, 100);
     const outerRing = new THREE.Mesh(outerRingGeo, goldMaterial);
@@ -146,7 +144,7 @@ async function createLogo() {
     logoGroup.add(innerRing);
 
     // Load font and create text
-    const fontLoader = new THREE.FontLoader();
+    const fontLoader = new FontLoader();
     
     try {
         const font = await new Promise((resolve, reject) => {
@@ -171,7 +169,7 @@ async function createLogo() {
         logoGroup.add(centerGroup);
 
     } catch (error) {
-        console.warn('Font loading failed, using fallback geometry');
+        console.warn('Font loading failed, using fallback geometry', error);
         // Fallback: simple shapes if font fails
         createFallbackLogo(goldMaterial, cyanMaterial);
     }
@@ -190,7 +188,7 @@ function createArcText(text, font, material, radius, startAngle, endAngle) {
     const angleStep = angleSpan / (chars.length + 1);
 
     chars.forEach((char, i) => {
-        const textGeo = new THREE.TextGeometry(char, {
+        const textGeo = new TextGeometry(char, {
             font: font,
             size: 0.25,
             height: 0.08,
