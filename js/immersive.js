@@ -172,9 +172,10 @@ async function loadLogo() {
         });
         console.log('Total meshes:', meshCount);
 
-        // Rotate to face camera and flip horizontally to correct mirror
-        logoGroup.rotation.x = -Math.PI / 2;
-        logoGroup.scale.x *= -1;  // Mirror horizontally to fix backwards text
+        // Rotate to face camera correctly
+        logoGroup.rotation.x = -Math.PI / 2;  // Face camera
+        logoGroup.rotation.y = Math.PI;        // Flip right-side up
+        logoGroup.scale.x *= -1;               // Mirror to fix text direction
         
         scene.add(logoGroup);
         
