@@ -172,6 +172,10 @@ body {
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo-3d {
@@ -187,6 +191,13 @@ body {
     transform: translate(-50%, -50%);
 }
 
+.logo-layer.logo-layer-mid {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+}
+
 .logo-layer-back {
     width: 600px;
     height: 600px;
@@ -195,10 +206,12 @@ body {
 }
 
 .logo-layer-mid {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+    transform: none;
 }
 
 .logo-text-quant,
