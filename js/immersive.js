@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 // ═══════════════════════════════════════════════════════════════
 // GLOBALS
@@ -78,6 +79,13 @@ async function initThreeJS() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
+
+    // Environment map for realistic metallic reflections
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const environment = pmremGenerator.fromScene(new RoomEnvironment()).texture;
+    scene.environment = environment;
+    pmremGenerator.dispose();
 
     // Lighting - bright and warm
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
@@ -153,11 +161,12 @@ async function loadLogo() {
         // Use wrapper as our logo group
         logoGroup = wrapper;
         
-        // Gold material
+        // Premium gold material with environment reflections
         const goldMaterial = new THREE.MeshStandardMaterial({
             color: 0xc9a84c,
-            metalness: 0.8,
-            roughness: 0.3
+            metalness: 1.0,
+            roughness: 0.15,
+            envMapIntensity: 1.5
         });
 
         // Apply to ALL meshes - smooth normals + gold material
