@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <!-- 
+    QUANT PRIME LOGO - For Blender Import
+    Components:
+    1. Outer gold ring
+    2. Q shape (rounded rectangle with tail)
+    3. Arrow/chevron inside Q
+    4. "PRIME" text with dashes
+  -->
+  
+  <!-- OUTER RING -->
+  <circle cx="500" cy="500" r="450" fill="none" stroke="#c9a84c" stroke-width="25"/>
+  
+  <!-- Q SHAPE - Main rounded rectangle -->
+  <path d="
+    M 320 280
+    Q 320 230, 370 230
+    L 630 230
+    Q 680 230, 680 280
+    L 680 520
+    Q 680 570, 630 570
+    L 530 570
+    L 600 670
+    L 520 670
+    L 450 570
+    L 370 570
+    Q 320 570, 320 520
+    Z
+  " fill="#e8e8ed" stroke="#d0d0d8" stroke-width="3"/>
+  
+  <!-- Q SHAPE - Inner cutout (the hole in the Q) -->
+  <path d="
+    M 380 290
+    Q 380 265, 405 265
+    L 595 265
+    Q 620 265, 620 290
+    L 620 485
+    Q 620 510, 595 510
+    L 405 510
+    Q 380 510, 380 485
+    Z
+  " fill="white"/>
+  
+  <!-- ARROW/CHEVRON inside Q -->
+  <path d="
+    M 500 320
+    L 560 400
+    L 520 400
+    L 520 460
+    L 480 460
+    L 480 400
+    L 440 400
+    Z
+  " fill="#c9a84c"/>
+  
+  <!-- PRIME TEXT -->
+  <text x="500" y="760" 
+        font-family="Arial, sans-serif" 
+        font-size="65" 
+        font-weight="400"
+        letter-spacing="18"
+        fill="#c9a84c" 
+        text-anchor="middle">PRIME</text>
+  
+  <!-- Decorative dashes beside PRIME -->
+  <line x1="260" y1="745" x2="320" y2="745" stroke="#c9a84c" stroke-width="4"/>
+  <line x1="680" y1="745" x2="740" y2="745" stroke="#c9a84c" stroke-width="4"/>
+  
+</svg>

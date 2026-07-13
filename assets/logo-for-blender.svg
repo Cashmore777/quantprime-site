@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <!-- 
+    QUANT PRIME LOGO - Blender-Ready Version
+    Import this into Blender: File > Import > SVG
+    Then convert curves to mesh and extrude
+    
+    LAYERS (import separately for different materials):
+    - outer-ring: Gold metallic
+    - q-shape: Silver/chrome
+    - arrow: Gold metallic  
+    - prime-text: Gold metallic
+  -->
+  
+  <!-- LAYER 1: OUTER RING (Gold) -->
+  <g id="outer-ring">
+    <circle cx="500" cy="500" r="450" fill="none" stroke="#c9a84c" stroke-width="25"/>
+  </g>
+  
+  <!-- LAYER 2: Q SHAPE (Silver) - Outer boundary -->
+  <g id="q-shape">
+    <path id="q-outer" d="
+      M 320 280
+      Q 320 230, 370 230
+      L 630 230
+      Q 680 230, 680 280
+      L 680 520
+      Q 680 570, 630 570
+      L 530 570
+      L 600 670
+      L 520 670
+      L 450 570
+      L 370 570
+      Q 320 570, 320 520
+      Z
+    " fill="#e8e8ed"/>
+    
+    <!-- Inner cutout - will need to be subtracted in Blender -->
+    <path id="q-inner-cutout" d="
+      M 380 290
+      Q 380 265, 405 265
+      L 595 265
+      Q 620 265, 620 290
+      L 620 485
+      Q 620 510, 595 510
+      L 405 510
+      Q 380 510, 380 485
+      Z
+    " fill="white"/>
+  </g>
+  
+  <!-- LAYER 3: ARROW/CHEVRON (Gold) -->
+  <g id="arrow">
+    <path d="
+      M 500 320
+      L 560 400
+      L 520 400
+      L 520 460
+      L 480 460
+      L 480 400
+      L 440 400
+      Z
+    " fill="#c9a84c"/>
+  </g>
+  
+  <!-- LAYER 4: PRIME TEXT (Gold) - Converted to paths -->
+  <g id="prime-text">
+    <!-- P -->
+    <path d="M 295 710 L 295 780 L 305 780 L 305 750 L 320 750 Q 335 750, 335 730 Q 335 710, 320 710 Z M 305 720 L 318 720 Q 325 720, 325 730 Q 325 740, 318 740 L 305 740 Z" fill="#c9a84c"/>
+    
+    <!-- R -->
+    <path d="M 355 710 L 355 780 L 365 780 L 365 752 L 378 752 L 395 780 L 408 780 L 388 750 Q 400 745, 400 730 Q 400 710, 382 710 Z M 365 720 L 380 720 Q 390 720, 390 730 Q 390 742, 380 742 L 365 742 Z" fill="#c9a84c"/>
+    
+    <!-- I -->
+    <path d="M 425 710 L 425 780 L 435 780 L 435 710 Z" fill="#c9a84c"/>
+    
+    <!-- M -->
+    <path d="M 460 710 L 460 780 L 470 780 L 470 730 L 490 760 L 510 730 L 510 780 L 520 780 L 520 710 L 508 710 L 490 738 L 472 710 Z" fill="#c9a84c"/>
+    
+    <!-- E -->
+    <path d="M 545 710 L 545 780 L 590 780 L 590 770 L 555 770 L 555 750 L 585 750 L 585 740 L 555 740 L 555 720 L 590 720 L 590 710 Z" fill="#c9a84c"/>
+    
+    <!-- Left dash -->
+    <rect x="240" y="742" width="40" height="5" fill="#c9a84c"/>
+    
+    <!-- Right dash -->
+    <rect x="610" y="742" width="40" height="5" fill="#c9a84c"/>
+  </g>
+  
+</svg>

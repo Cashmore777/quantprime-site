@@ -1,11 +1,10 @@
 /**
  * QUANT PRIME — Immersive 3D Experience
- * Three.js + GSAP ScrollTrigger
+ * Three.js + GSAP ScrollTrigger + GLB Model
  */
 
 import * as THREE from 'three';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ═══════════════════════════════════════════════════════════════
 // GLOBALS
@@ -77,27 +76,31 @@ async function initThreeJS() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
 
     // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x00abff, 0.5);
+    const fillLight = new THREE.DirectionalLight(0x00abff, 0.8);
     fillLight.position.set(-5, 0, 5);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xc9a84c, 0.8);
+    const rimLight = new THREE.DirectionalLight(0xc9a84c, 1.2);
     rimLight.position.set(0, -5, -5);
     scene.add(rimLight);
 
-    // Create the 3D logo
-    await createLogo();
+    const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    topLight.position.set(0, 10, 0);
+    scene.add(topLight);
+
+    // Load the 3D logo
+    await loadLogo();
 
     // Handle resize
     window.addEventListener('resize', onWindowResize);
@@ -110,210 +113,91 @@ async function initThreeJS() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// CREATE 3D LOGO
+// LOAD GLB MODEL
 // ═══════════════════════════════════════════════════════════════
 
-async function createLogo() {
-    logoGroup = new THREE.Group();
-
-    // Gold material - metallic look
-    const goldMaterial = new THREE.MeshStandardMaterial({
-        color: 0xc9a84c,
-        metalness: 0.9,
-        roughness: 0.2,
-        envMapIntensity: 1.0
-    });
-
-    // Cyan accent material
-    const cyanMaterial = new THREE.MeshStandardMaterial({
-        color: 0x00abff,
-        metalness: 0.7,
-        roughness: 0.3,
-        emissive: 0x00abff,
-        emissiveIntensity: 0.2
-    });
-
-    // Outer ring (torus)
-    const outerRingGeo = new THREE.TorusGeometry(2, 0.08, 16, 100);
-    const outerRing = new THREE.Mesh(outerRingGeo, goldMaterial);
-    logoGroup.add(outerRing);
-
-    // Inner ring
-    const innerRingGeo = new THREE.TorusGeometry(1.7, 0.05, 16, 100);
-    const innerRing = new THREE.Mesh(innerRingGeo, goldMaterial);
-    logoGroup.add(innerRing);
-
-    // Load font and create text
-    const fontLoader = new FontLoader();
+async function loadLogo() {
+    const loader = new GLTFLoader();
     
     try {
-        const font = await new Promise((resolve, reject) => {
-            fontLoader.load(
-                'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json',
+        const gltf = await new Promise((resolve, reject) => {
+            loader.load(
+                'assets/quant-prime-logo.glb',
                 resolve,
-                undefined,
+                (progress) => {
+                    console.log('Loading:', (progress.loaded / progress.total * 100) + '%');
+                },
                 reject
             );
         });
 
-        // QUANT text (top arc)
-        const quantText = createArcText('QUANT', font, goldMaterial, 1.85, Math.PI * 0.7, Math.PI * 0.3);
-        logoGroup.add(quantText);
-
-        // PRIME text (bottom arc)
-        const primeText = createArcText('PRIME', font, cyanMaterial, 1.85, -Math.PI * 0.3, -Math.PI * 0.7);
-        logoGroup.add(primeText);
-
-        // Center emblem - stylized QP monogram
-        const centerGroup = createCenterEmblem(goldMaterial, cyanMaterial);
-        logoGroup.add(centerGroup);
-
-    } catch (error) {
-        console.warn('Font loading failed, using fallback geometry', error);
-        // Fallback: simple shapes if font fails
-        createFallbackLogo(goldMaterial, cyanMaterial);
-    }
-
-    // Add decorative elements
-    addDecorativeElements(goldMaterial);
-
-    scene.add(logoGroup);
-}
-
-// Create text along an arc
-function createArcText(text, font, material, radius, startAngle, endAngle) {
-    const group = new THREE.Group();
-    const chars = text.split('');
-    const angleSpan = endAngle - startAngle;
-    const angleStep = angleSpan / (chars.length + 1);
-
-    chars.forEach((char, i) => {
-        const textGeo = new TextGeometry(char, {
-            font: font,
-            size: 0.25,
-            height: 0.08,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 0.02,
-            bevelSize: 0.01,
-            bevelOffset: 0,
-            bevelSegments: 5
+        logoGroup = gltf.scene;
+        
+        // Center the model
+        const box = new THREE.Box3().setFromObject(logoGroup);
+        const center = box.getCenter(new THREE.Vector3());
+        logoGroup.position.sub(center);
+        
+        // Scale to fit nicely in view
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 3 / maxDim;
+        logoGroup.scale.setScalar(scale);
+        
+        // Apply gold material to all meshes
+        const goldMaterial = new THREE.MeshStandardMaterial({
+            color: 0xc9a84c,
+            metalness: 0.9,
+            roughness: 0.15,
+            envMapIntensity: 1.5
+        });
+        
+        const silverMaterial = new THREE.MeshStandardMaterial({
+            color: 0xe8e8ed,
+            metalness: 0.95,
+            roughness: 0.1,
+            envMapIntensity: 1.5
         });
 
-        textGeo.computeBoundingBox();
-        textGeo.center();
+        // Apply materials
+        logoGroup.traverse((child) => {
+            if (child.isMesh) {
+                // Make everything gold for now - looks premium
+                child.material = goldMaterial;
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
 
-        const textMesh = new THREE.Mesh(textGeo, material);
+        // Rotate to face camera properly (adjust as needed)
+        logoGroup.rotation.x = Math.PI / 2; // Rotate 90 degrees if needed
         
-        const angle = startAngle - angleStep * (i + 1);
-        textMesh.position.x = Math.cos(angle) * radius;
-        textMesh.position.y = Math.sin(angle) * radius;
-        textMesh.rotation.z = angle - Math.PI / 2;
-
-        group.add(textMesh);
-    });
-
-    return group;
-}
-
-// Center QP emblem
-function createCenterEmblem(goldMat, cyanMat) {
-    const group = new THREE.Group();
-
-    // Central hexagon
-    const hexShape = new THREE.Shape();
-    const hexRadius = 0.8;
-    for (let i = 0; i < 6; i++) {
-        const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-        const x = Math.cos(angle) * hexRadius;
-        const y = Math.sin(angle) * hexRadius;
-        if (i === 0) hexShape.moveTo(x, y);
-        else hexShape.lineTo(x, y);
-    }
-    hexShape.closePath();
-
-    const hexGeo = new THREE.ExtrudeGeometry(hexShape, {
-        depth: 0.05,
-        bevelEnabled: true,
-        bevelThickness: 0.02,
-        bevelSize: 0.02,
-        bevelSegments: 3
-    });
-    const hexMesh = new THREE.Mesh(hexGeo, goldMat);
-    hexMesh.position.z = -0.03;
-    group.add(hexMesh);
-
-    // Inner circuit-like lines
-    const lineMat = new THREE.MeshStandardMaterial({
-        color: 0x00abff,
-        metalness: 0.8,
-        roughness: 0.2,
-        emissive: 0x00abff,
-        emissiveIntensity: 0.5
-    });
-
-    // Vertical line
-    const vLineGeo = new THREE.BoxGeometry(0.03, 1.0, 0.04);
-    const vLine = new THREE.Mesh(vLineGeo, lineMat);
-    vLine.position.z = 0.02;
-    group.add(vLine);
-
-    // Horizontal line
-    const hLineGeo = new THREE.BoxGeometry(0.8, 0.03, 0.04);
-    const hLine = new THREE.Mesh(hLineGeo, lineMat);
-    hLine.position.z = 0.02;
-    group.add(hLine);
-
-    // Corner accents
-    const cornerGeo = new THREE.BoxGeometry(0.15, 0.03, 0.04);
-    const corners = [
-        { x: 0.3, y: 0.3, rot: Math.PI / 4 },
-        { x: -0.3, y: 0.3, rot: -Math.PI / 4 },
-        { x: 0.3, y: -0.3, rot: -Math.PI / 4 },
-        { x: -0.3, y: -0.3, rot: Math.PI / 4 }
-    ];
-
-    corners.forEach(c => {
-        const corner = new THREE.Mesh(cornerGeo, lineMat);
-        corner.position.set(c.x, c.y, 0.02);
-        corner.rotation.z = c.rot;
-        group.add(corner);
-    });
-
-    // Center node
-    const nodeGeo = new THREE.OctahedronGeometry(0.1, 0);
-    const node = new THREE.Mesh(nodeGeo, cyanMat);
-    node.position.z = 0.05;
-    group.add(node);
-
-    return group;
-}
-
-// Decorative dots around the ring
-function addDecorativeElements(material) {
-    const dotGeo = new THREE.SphereGeometry(0.03, 8, 8);
-    const numDots = 24;
-
-    for (let i = 0; i < numDots; i++) {
-        const angle = (i / numDots) * Math.PI * 2;
-        const dot = new THREE.Mesh(dotGeo, material);
-        dot.position.x = Math.cos(angle) * 1.9;
-        dot.position.y = Math.sin(angle) * 1.9;
-        logoGroup.add(dot);
+        scene.add(logoGroup);
+        
+        console.log('Logo loaded successfully');
+        
+    } catch (error) {
+        console.error('Failed to load logo:', error);
+        createFallbackLogo();
     }
 }
 
-// Fallback if font loading fails
-function createFallbackLogo(goldMat, cyanMat) {
-    // Simple geometric fallback
+// Fallback if GLB fails to load
+function createFallbackLogo() {
+    logoGroup = new THREE.Group();
+    
+    const goldMaterial = new THREE.MeshStandardMaterial({
+        color: 0xc9a84c,
+        metalness: 0.9,
+        roughness: 0.2
+    });
+    
+    // Simple ring as fallback
     const ringGeo = new THREE.TorusGeometry(1.5, 0.1, 16, 100);
-    const ring = new THREE.Mesh(ringGeo, goldMat);
+    const ring = new THREE.Mesh(ringGeo, goldMaterial);
     logoGroup.add(ring);
-
-    const hexGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.1, 6);
-    const hex = new THREE.Mesh(hexGeo, cyanMat);
-    hex.rotation.x = Math.PI / 2;
-    logoGroup.add(hex);
+    
+    scene.add(logoGroup);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -343,31 +227,36 @@ function setupScrollAnimation() {
             scrollProgress = self.progress;
             
             if (logoGroup) {
-                // Zoom: camera moves toward logo (or logo scales up massively)
-                const scale = 1 + (scrollProgress * 50); // Scale up to 51x
-                logoGroup.scale.set(scale, scale, scale);
+                // Zoom: scale up massively as you scroll
+                const scale = 1 + (scrollProgress * 80);
+                const baseScale = logoGroup.userData.baseScale || 1;
+                logoGroup.scale.setScalar(baseScale * scale);
                 
                 // Rotate as we zoom
-                logoGroup.rotation.y = scrollProgress * Math.PI * 2;
-                logoGroup.rotation.x = scrollProgress * 0.5;
+                logoGroup.rotation.z = scrollProgress * Math.PI * 2;
                 
-                // Move camera forward slightly
-                camera.position.z = 5 - (scrollProgress * 3);
+                // Move camera forward
+                camera.position.z = 5 - (scrollProgress * 4);
             }
             
             // Fade out tagline and scroll indicator
-            if (tagline) tagline.style.opacity = 1 - (scrollProgress * 3);
-            if (scrollIndicator) scrollIndicator.style.opacity = 1 - (scrollProgress * 3);
+            if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
+            if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
             // Fade out entire canvas at the end
             const container = document.getElementById('logo-3d-container');
-            if (container && scrollProgress > 0.8) {
-                container.style.opacity = 1 - ((scrollProgress - 0.8) * 5);
+            if (container && scrollProgress > 0.7) {
+                container.style.opacity = 1 - ((scrollProgress - 0.7) * 3.33);
             } else if (container) {
                 container.style.opacity = 1;
             }
         }
     });
+
+    // Store base scale for scroll calculations
+    if (logoGroup) {
+        logoGroup.userData.baseScale = logoGroup.scale.x;
+    }
 
     // Show nav after logo zoom
     ScrollTrigger.create({
@@ -387,7 +276,7 @@ function animate() {
 
     if (logoGroup && scrollProgress < 0.1) {
         // Gentle idle rotation when not scrolling
-        logoGroup.rotation.y += 0.003;
+        logoGroup.rotation.z += 0.005;
     }
 
     if (renderer && scene && camera) {
