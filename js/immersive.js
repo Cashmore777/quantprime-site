@@ -265,11 +265,8 @@ function setupScrollAnimation() {
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo smoothly - starts at 20%, gone by 80%
-                let logoOpacity = 1;
-                if (scrollProgress > 0.2) {
-                    logoOpacity = Math.max(0, 1 - ((scrollProgress - 0.2) / 0.6));
-                }
+                // FADE OUT the logo - starts IMMEDIATELY, very gradual
+                let logoOpacity = Math.max(0, 1 - (scrollProgress * 1.5));
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
@@ -364,17 +361,17 @@ function setupCrawl() {
         }
     });
 
-    // Simple scroll: text moves from bottom to top through entire section
+    // Simple scroll: text moves from bottom to top - slow and complete
     gsap.fromTo(crawlContent, 
-        { y: '20%' },  // Starts slightly below center
+        { y: '100vh' },  // Starts off screen at bottom
         { 
-            y: '-120%',  // Ends well off screen top
+            y: '-200%',  // Ends well off screen top
             ease: 'none',
             scrollTrigger: {
                 trigger: '.scene-crawl',
                 start: 'top top',
                 end: 'bottom top',
-                scrub: 0.5
+                scrub: 0.3
             }
         }
     );
