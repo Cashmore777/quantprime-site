@@ -4,373 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quant Prime Technologies — Institutional-Grade Market Intelligence</title>
-    <meta name="description" content="Professional quantitative trading tools. Market structure analysis, volatility systems, and automated execution. Built for serious traders.">
+    <meta name="description" content="Professional quantitative trading tools. Market structure analysis, volatility systems, and automated execution.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/style.css">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.1/dist/lenis.min.js"></script>
+    
+    <link rel="stylesheet" href="css/immersive.css">
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
 <body>
+    <!-- Indicator Canvas Background -->
+    <canvas id="indicator-canvas"></canvas>
+    
+    <!-- Progress Bar -->
+    <div class="progress-bar"></div>
+
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
             <a href="/" class="nav-logo">
                 <span class="logo-quant">QUANT</span><span class="logo-prime">PRIME</span>
             </a>
-            <div class="nav-links">
-                <a href="#products">Products</a>
-                <a href="#performance">Performance</a>
-                <a href="#pricing">Pricing</a>
-                <a href="#academy">Academy</a>
-            </div>
             <a href="#pricing" class="nav-cta">Get Access</a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-grid"></div>
-        <div class="hero-content">
-            <div class="hero-badge">Quantitative Trading Systems</div>
-            <h1>Institutional-Grade<br><span class="text-gradient">Market Intelligence</span></h1>
-            <p class="hero-sub">Professional tools for market structure analysis, volatility detection, and automated execution. No screenshots. No hype. Just edge.</p>
-            <div class="hero-cta">
-                <a href="#pricing" class="btn btn-primary">View Products</a>
-                <a href="#performance" class="btn btn-secondary">See Performance</a>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 1: THE LOGO ZOOM
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-logo" id="scene-logo">
+        <div class="logo-container">
+            <div class="logo-3d">
+                <div class="logo-layer logo-layer-back"></div>
+                <div class="logo-layer logo-layer-mid">
+                    <span class="logo-text-quant">QUANT</span>
+                    <span class="logo-text-prime">PRIME</span>
+                </div>
+                <div class="logo-layer logo-layer-front"></div>
             </div>
-            <div class="hero-stats">
-                <div class="stat">
-                    <span class="stat-value">3</span>
-                    <span class="stat-label">Trading Systems</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">24/7</span>
-                    <span class="stat-label">Automation</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-value">FCA</span>
-                    <span class="stat-label">Compliant</span>
+            <div class="logo-tagline">
+                <span>INSTITUTIONAL-GRADE</span>
+                <span>MARKET INTELLIGENCE</span>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>SCROLL TO ENTER</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 2: STAR WARS MISSION CRAWL
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-crawl" id="scene-crawl">
+        <div class="crawl-container">
+            <div class="crawl-fade"></div>
+            <div class="crawl-content">
+                <p class="crawl-intro">In a market dominated by noise...</p>
+                <div class="crawl-title">QUANT PRIME</div>
+                <div class="crawl-text">
+                    <p>The financial markets have been overrun by gurus, 
+                    fake signals, and cherry-picked screenshots.</p>
+                    
+                    <p>Traders struggle to find edge in a world of noise, 
+                    manipulated by algorithms they don't understand.</p>
+                    
+                    <p>QUANT PRIME was built to change this.</p>
+                    
+                    <p>We develop institutional-grade trading systems — 
+                    transparent, auditable, and ruthlessly effective.</p>
+                    
+                    <p>No hype. No promises. Just tools that work.</p>
+                    
+                    <p>Our mission: democratize quantitative trading 
+                    for independent traders worldwide.</p>
+                    
+                    <p>The future of trading is algorithmic. 
+                    The future is QUANT PRIME.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Proof Strip -->
-    <section class="proof" id="performance">
-        <div class="container">
-            <div class="proof-header">
-                <span class="section-tag">Verified Performance</span>
-                <h2>Transparent. Auditable. Real.</h2>
-                <p>Live results tracked on Myfxbook. No cherry-picked screenshots.</p>
-            </div>
-            <div class="proof-grid">
-                <div class="proof-card">
-                    <div class="proof-card-header">
-                        <span class="proof-system">MERIDIAN</span>
-                        <span class="proof-status">● LIVE</span>
-                    </div>
-                    <div class="proof-metrics">
-                        <div class="metric">
-                            <span class="metric-label">Total Return</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Max Drawdown</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Win Rate</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Profit Factor</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                    </div>
-                    <div class="proof-placeholder">
-                        <p>Live tracking begins July 2026</p>
-                        <p class="proof-note">90-day verified record in progress</p>
-                    </div>
-                </div>
-                <div class="proof-card">
-                    <div class="proof-card-header">
-                        <span class="proof-system">RECOIL</span>
-                        <span class="proof-status">● LIVE</span>
-                    </div>
-                    <div class="proof-metrics">
-                        <div class="metric">
-                            <span class="metric-label">Total Return</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Max Drawdown</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Win Rate</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Profit Factor</span>
-                            <span class="metric-value metric-placeholder">—</span>
-                        </div>
-                    </div>
-                    <div class="proof-placeholder">
-                        <p>Live tracking begins July 2026</p>
-                        <p class="proof-note">90-day verified record in progress</p>
-                    </div>
-                </div>
-            </div>
-            <a href="https://www.myfxbook.com/" target="_blank" class="proof-link">View Full Myfxbook Verification →</a>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 3: THE SYSTEMS REVEAL
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-systems" id="scene-systems">
+        <div class="systems-header">
+            <span class="section-tag">TRADING SYSTEMS</span>
+            <h2>Purpose-Built Instruments</h2>
         </div>
-    </section>
-
-    <!-- Products -->
-    <section class="products" id="products">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Trading Systems</span>
-                <h2>Purpose-Built Instruments</h2>
-                <p>Each system targets a specific market behavior. No overlap. No redundancy.</p>
-            </div>
-            <div class="products-grid">
-                <!-- Meridian -->
-                <div class="product-card">
-                    <div class="product-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                            <path d="M2 17l10 5 10-5"/>
-                            <path d="M2 12l10 5 10-5"/>
-                        </svg>
-                    </div>
-                    <h3>Meridian</h3>
-                    <p class="product-type">Market Structure Engine</p>
-                    <p class="product-desc">Multi-timeframe liquidity mapping, regime detection, and directional bias. The analytical foundation.</p>
-                    <ul class="product-features">
-                        <li>Liquidity pool detection (3 timeframes)</li>
-                        <li>HTF bias alignment (3D/3H/30M)</li>
+        
+        <div class="systems-grid">
+            <!-- Meridian -->
+            <div class="system-card" data-system="meridian">
+                <div class="system-visual">
+                    <canvas class="system-canvas" id="meridian-canvas"></canvas>
+                </div>
+                <div class="system-info">
+                    <div class="system-number">01</div>
+                    <h3>MERIDIAN</h3>
+                    <p class="system-type">Market Structure Engine</p>
+                    <p class="system-desc">Multi-timeframe liquidity mapping, regime detection, and directional bias alignment.</p>
+                    <ul class="system-features">
+                        <li>Liquidity pool detection</li>
+                        <li>HTF bias alignment</li>
                         <li>FVG suspension zones</li>
                         <li>AMD cycle tracking</li>
                         <li>Vortex signal generation</li>
                     </ul>
-                    <div class="product-footer">
-                        <span class="product-category">Analysis + Signals</span>
-                    </div>
                 </div>
+            </div>
 
-                <!-- Recoil -->
-                <div class="product-card">
-                    <div class="product-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                        </svg>
-                    </div>
-                    <h3>Recoil</h3>
-                    <p class="product-type">Volatility Fade System</p>
-                    <p class="product-desc">Statistical mean-reversion on overextended candles. Band-scaled risk with trend alignment.</p>
-                    <ul class="product-features">
+            <!-- Recoil -->
+            <div class="system-card" data-system="recoil">
+                <div class="system-info">
+                    <div class="system-number">02</div>
+                    <h3>RECOIL</h3>
+                    <p class="system-type">Volatility Fade System</p>
+                    <p class="system-desc">Statistical mean-reversion on overextended candles with band-scaled risk.</p>
+                    <ul class="system-features">
                         <li>8-band volatility classification</li>
-                        <li>Automatic fade triggers (B6/B7/B8)</li>
+                        <li>Automatic fade triggers</li>
                         <li>Trend-aligned risk scaling</li>
                         <li>FVG-based stop placement</li>
-                        <li>Body retrace TP targeting</li>
+                        <li>Body retrace targeting</li>
                     </ul>
-                    <div class="product-footer">
-                        <span class="product-category">Analysis + Signals</span>
-                    </div>
                 </div>
+                <div class="system-visual">
+                    <canvas class="system-canvas" id="recoil-canvas"></canvas>
+                </div>
+            </div>
 
-                <!-- The Executor -->
-                <div class="product-card product-featured">
-                    <div class="product-badge">Automation</div>
-                    <div class="product-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="2" y="3" width="20" height="14" rx="2"/>
-                            <path d="M8 21h8"/>
-                            <path d="M12 17v4"/>
-                            <path d="M7 8h2m2 0h2m2 0h2"/>
-                            <path d="M7 12h10"/>
-                        </svg>
-                    </div>
-                    <h3>The Executor</h3>
-                    <p class="product-type">Automated Execution Bridge</p>
-                    <p class="product-desc">TradingView to MT5 pipeline. Webhook receiver, signal router, position management.</p>
-                    <ul class="product-features">
-                        <li>Sub-second signal relay</li>
-                        <li>Risk-multiplied lot sizing</li>
-                        <li>Multi-indicator routing</li>
-                        <li>Position tracking per system</li>
-                        <li>IB commission tracking</li>
-                    </ul>
-                    <div class="product-footer">
-                        <span class="product-category">Execution Infrastructure</span>
-                    </div>
+            <!-- Executor -->
+            <div class="system-card system-card-full" data-system="executor">
+                <div class="system-visual system-visual-wide">
+                    <canvas class="system-canvas" id="executor-canvas"></canvas>
+                </div>
+                <div class="system-info">
+                    <div class="system-number">03</div>
+                    <h3>THE EXECUTOR</h3>
+                    <p class="system-type">Automated Execution Bridge</p>
+                    <p class="system-desc">TradingView to MT5 pipeline. Sub-second signal relay with risk-multiplied lot sizing.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing -->
-    <section class="pricing" id="pricing">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Access Tiers</span>
-                <h2>Choose Your Level</h2>
-                <p>All tiers include lifetime updates. No hidden fees.</p>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 4: PROOF STRIP
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-proof" id="scene-proof">
+        <div class="proof-container">
+            <span class="section-tag">VERIFIED PERFORMANCE</span>
+            <h2>Transparent. Auditable. Real.</h2>
+            <p class="proof-subtitle">Live results tracked on Myfxbook. No cherry-picked screenshots.</p>
+            
+            <div class="proof-cards">
+                <div class="proof-card">
+                    <div class="proof-header">
+                        <span class="proof-name">MERIDIAN</span>
+                        <span class="proof-status">● TRACKING</span>
+                    </div>
+                    <div class="proof-metrics">
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Return</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Drawdown</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Win Rate</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Profit Factor</span>
+                        </div>
+                    </div>
+                    <div class="proof-note">90-day verified record in progress</div>
+                </div>
+
+                <div class="proof-card">
+                    <div class="proof-header">
+                        <span class="proof-name">RECOIL</span>
+                        <span class="proof-status">● TRACKING</span>
+                    </div>
+                    <div class="proof-metrics">
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Return</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Drawdown</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Win Rate</span>
+                        </div>
+                        <div class="proof-metric">
+                            <span class="metric-value">—</span>
+                            <span class="metric-label">Profit Factor</span>
+                        </div>
+                    </div>
+                    <div class="proof-note">90-day verified record in progress</div>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 5: PRICING
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-pricing" id="pricing">
+        <div class="pricing-container">
+            <span class="section-tag">ACCESS TIERS</span>
+            <h2>Choose Your Level</h2>
+            
             <div class="pricing-grid">
-                <!-- Research -->
                 <div class="price-card">
                     <div class="price-tier">Research</div>
-                    <div class="price-amount">
-                        <span class="currency">£</span>
-                        <span class="amount">28</span>
-                        <span class="period">/month</span>
-                    </div>
+                    <div class="price-amount"><span class="currency">£</span>28<span class="period">/mo</span></div>
                     <p class="price-desc">Learn the methodology</p>
-                    <ul class="price-features">
+                    <ul>
                         <li>Weekly market analysis</li>
-                        <li>Educational content library</li>
-                        <li>Discord community access</li>
-                        <li>System methodology docs</li>
+                        <li>Educational content</li>
+                        <li>Discord community</li>
+                        <li>System documentation</li>
                     </ul>
                     <a href="#" class="btn btn-outline">Coming Soon</a>
                 </div>
 
-                <!-- Terminal -->
                 <div class="price-card">
                     <div class="price-tier">Terminal</div>
-                    <div class="price-amount">
-                        <span class="currency">£</span>
-                        <span class="amount">58</span>
-                        <span class="period">/month</span>
-                    </div>
+                    <div class="price-amount"><span class="currency">£</span>58<span class="period">/mo</span></div>
                     <p class="price-desc">Manual trading toolkit</p>
-                    <ul class="price-features">
+                    <ul>
                         <li>Everything in Research</li>
-                        <li>Meridian indicator access</li>
-                        <li>Recoil indicator access</li>
-                        <li>Real-time signal alerts</li>
+                        <li>Meridian indicator</li>
+                        <li>Recoil indicator</li>
+                        <li>Real-time alerts</li>
                     </ul>
                     <a href="#" class="btn btn-outline">Coming Soon</a>
                 </div>
 
-                <!-- Suite -->
                 <div class="price-card price-featured">
-                    <div class="price-badge">Most Popular</div>
+                    <div class="price-badge">POPULAR</div>
                     <div class="price-tier">Suite</div>
-                    <div class="price-amount">
-                        <span class="currency">£</span>
-                        <span class="amount">88</span>
-                        <span class="period">/month</span>
-                    </div>
+                    <div class="price-amount"><span class="currency">£</span>88<span class="period">/mo</span></div>
                     <p class="price-desc">Full automation stack</p>
-                    <ul class="price-features">
+                    <ul>
                         <li>Everything in Terminal</li>
-                        <li>The Executor (MT5 bridge)</li>
-                        <li>Automated trade execution</li>
+                        <li>The Executor bridge</li>
+                        <li>Automated execution</li>
                         <li>Priority support</li>
                     </ul>
                     <a href="#" class="btn btn-primary">Coming Soon</a>
                 </div>
 
-                <!-- Academy -->
                 <div class="price-card price-premium">
                     <div class="price-tier">Academy</div>
-                    <div class="price-amount">
-                        <span class="currency">£</span>
-                        <span class="amount">258</span>
-                        <span class="period">/month</span>
-                    </div>
+                    <div class="price-amount"><span class="currency">£</span>258<span class="period">/mo</span></div>
                     <p class="price-desc">Or £2,495 lifetime</p>
-                    <ul class="price-features">
+                    <ul>
                         <li>Everything in Suite</li>
-                        <li>1-on-1 deployment support</li>
+                        <li>1-on-1 deployment</li>
                         <li>Custom configuration</li>
                         <li>Completion guarantee</li>
-                        <li>VPS setup assistance</li>
                     </ul>
-                    <a href="#" class="btn btn-gold">Coming Soon</a>
+                    <a href="#" class="btn btn-gold">Join Waitlist</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Academy CTA -->
-    <section class="academy-cta" id="academy">
-        <div class="container">
-            <div class="academy-content">
-                <span class="section-tag">Academy Program</span>
-                <h2>Done-With-You Deployment</h2>
-                <p>The Academy isn't a course. It's a deployment program. You get access to everything, plus direct support until your system is live and verified working.</p>
-                <div class="academy-features">
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>Broker account setup</span>
-                    </div>
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>VPS configuration</span>
-                    </div>
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>Indicator optimization</span>
-                    </div>
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>Execution bridge deployment</span>
-                    </div>
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>Risk management calibration</span>
-                    </div>
-                    <div class="academy-feature">
-                        <span class="feature-icon">✓</span>
-                        <span>Ongoing support access</span>
-                    </div>
-                </div>
-                <p class="academy-guarantee">Guarantee: We work with you until your system is deployed and executing. Not until you "understand" — until it's <em>live</em>.</p>
-                <a href="#" class="btn btn-gold btn-large">Join the Waitlist</a>
-            </div>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCENE 6: FINAL CTA
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="scene scene-cta" id="scene-cta">
+        <div class="cta-container">
+            <h2>The Future is <span class="text-gradient">Algorithmic</span></h2>
+            <p>Join the waitlist for early access to Quant Prime.</p>
+            <a href="#" class="btn btn-gold btn-large">Get Early Access</a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <span class="logo-quant">QUANT</span><span class="logo-prime">PRIME</span>
-                    <p>Institutional-grade trading tools for independent traders.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Products</h4>
-                    <a href="#products">Meridian</a>
-                    <a href="#products">Recoil</a>
-                    <a href="#products">The Executor</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
-                    <a href="#">Terms</a>
-                    <a href="#">Privacy</a>
-                </div>
-                <div class="footer-links">
-                    <h4>Legal</h4>
-                    <p class="footer-disclaimer">Quant Prime provides analytical tools and educational content. Past performance does not guarantee future results. Trading involves risk of loss. Not financial advice.</p>
-                </div>
+        <div class="footer-container">
+            <div class="footer-brand">
+                <span class="logo-quant">QUANT</span><span class="logo-prime">PRIME</span>
+                <p>Institutional-grade trading tools.</p>
             </div>
-            <div class="footer-bottom">
+            <div class="footer-legal">
+                <p>Quant Prime provides analytical tools and educational content. Past performance does not guarantee future results. Trading involves risk of loss. Not financial advice.</p>
                 <p>© 2026 Quant Prime Technologies. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script src="js/immersive.js"></script>
 </body>
 </html>
