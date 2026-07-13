@@ -336,40 +336,26 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Fade in the crawl container
+    // Show/hide crawl based on scroll position
     ScrollTrigger.create({
         trigger: '.scene-crawl',
-        start: 'top 80%',
-        end: 'top top',
-        scrub: true,
-        onUpdate: (self) => {
-            crawlContainer.style.opacity = self.progress;
-        }
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter: () => crawlContainer.classList.add('active'),
+        onLeave: () => crawlContainer.classList.remove('active'),
+        onEnterBack: () => crawlContainer.classList.add('active'),
+        onLeaveBack: () => crawlContainer.classList.remove('active')
     });
 
-    // Animate the crawl text
-    gsap.timeline({
+    // Animate the crawl text scrolling up
+    gsap.to(crawlContent, {
+        y: '-200%',
+        ease: 'none',
         scrollTrigger: {
             trigger: '.scene-crawl',
             start: 'top top',
             end: 'bottom top',
-            scrub: 1,
-            pin: crawlContainer
-        }
-    })
-    .fromTo(crawlContent, 
-        { y: '100%' },
-        { y: '-100%', ease: 'none' }
-    );
-    
-    // Fade out at the end
-    ScrollTrigger.create({
-        trigger: '.scene-crawl',
-        start: 'bottom 20%',
-        end: 'bottom top',
-        scrub: true,
-        onUpdate: (self) => {
-            crawlContainer.style.opacity = 1 - self.progress;
+            scrub: 1
         }
     });
 }

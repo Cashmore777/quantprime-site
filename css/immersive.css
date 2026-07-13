@@ -161,7 +161,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-logo {
-    height: 300vh;
+    height: 150vh;
     flex-direction: column;
     display: flex;
     align-items: center;
@@ -247,7 +247,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-crawl {
-    height: 400vh;
+    height: 200vh;
     background: var(--bg-primary);
     overflow: hidden;
 }
@@ -260,10 +260,15 @@ body {
     height: 100vh;
     perspective: 400px;
     overflow: hidden;
-    opacity: 0;
+    opacity: 1;
     z-index: 100;
     background: #030308;
     pointer-events: none;
+    display: none;
+}
+
+.crawl-container.active {
+    display: block;
 }
 
 .crawl-fade {
