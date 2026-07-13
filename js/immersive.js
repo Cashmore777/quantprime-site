@@ -179,6 +179,11 @@ async function loadLogo() {
         // Rotate to face camera correctly
         logoGroup.rotation.x = -Math.PI / 2;  // Face camera
         logoGroup.rotation.y = Math.PI;        // Flip right-side up
+        
+        // Store base scale BEFORE mirroring
+        logoGroup.userData.baseScale = logoGroup.scale.x;
+        logoGroup.userData.needsMirror = true;
+        
         logoGroup.scale.x *= -1;               // Mirror to fix text direction
         
         scene.add(logoGroup);
@@ -239,10 +244,15 @@ function setupScrollAnimation() {
                 // Zoom: scale up massively as you scroll
                 const scale = 1 + (scrollProgress * 80);
                 const baseScale = logoGroup.userData.baseScale || 1;
-                logoGroup.scale.setScalar(baseScale * scale);
                 
-                // Rotate as we zoom (spinning top style on Z-axis)
-                logoGroup.rotation.z = scrollProgress * Math.PI * 2;
+                // Scale while preserving the mirror on X axis
+                logoGroup.scale.x = -baseScale * scale;  // Negative for mirror
+                logoGroup.scale.y = baseScale * scale;
+                logoGroup.scale.z = baseScale * scale;
+                
+                // Rotate as we zoom (spinning top style on Z-axis) - DON'T flip
+                // Only rotate forward, don't reset or it jumps
+                logoGroup.rotation.z += 0.01;  // Continuous slow spin
                 
                 // Move camera forward
                 camera.position.z = 5 - (scrollProgress * 4);
@@ -262,10 +272,7 @@ function setupScrollAnimation() {
         }
     });
 
-    // Store base scale for scroll calculations
-    if (logoGroup) {
-        logoGroup.userData.baseScale = logoGroup.scale.x;
-    }
+    // Base scale is now stored in loadLogo()
 
     // Show nav after logo zoom
     ScrollTrigger.create({
@@ -283,7 +290,7 @@ function setupScrollAnimation() {
 function animate() {
     requestAnimationFrame(animate);
 
-    if (logoGroup && scrollProgress < 0.1) {
+    if (logoGroup && scrollProgress === 0) {
         // Gentle idle rotation - spinning top style (Z-axis)
         logoGroup.rotation.z += 0.005;
     }
