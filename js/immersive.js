@@ -250,8 +250,8 @@ function setupScrollAnimation() {
             scrollProgress = self.progress;
             
             if (logoGroup) {
-                // Zoom: scale up massively as you scroll
-                const scale = 1 + (scrollProgress * 80);
+                // Zoom: scale up as you scroll (less aggressive)
+                const scale = 1 + (scrollProgress * 20);
                 const baseScale = logoGroup.userData.baseScale || 1;
                 
                 // Scale while preserving the mirror on X axis
@@ -259,24 +259,35 @@ function setupScrollAnimation() {
                 logoGroup.scale.y = baseScale * scale;
                 logoGroup.scale.z = baseScale * scale;
                 
-                // Rotate as we zoom (spinning top style on Z-axis) - DON'T flip
-                // Only rotate forward, don't reset or it jumps
+                // Rotate as we zoom (spinning top style on Z-axis)
                 logoGroup.rotation.z += 0.01;  // Continuous slow spin
                 
-                // Move camera forward
-                camera.position.z = 5 - (scrollProgress * 4);
+                // Move camera forward slightly
+                camera.position.z = 5 - (scrollProgress * 2);
+                
+                // FADE OUT the logo as you zoom through it
+                logoGroup.traverse((child) => {
+                    if (child.isMesh && child.material) {
+                        child.material.transparent = true;
+                        // Start fading at 30% scroll, fully transparent by 80%
+                        child.material.opacity = scrollProgress < 0.3 ? 1 : 
+                            Math.max(0, 1 - ((scrollProgress - 0.3) / 0.5));
+                    }
+                });
             }
             
             // Fade out tagline and scroll indicator
             if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
-            // Fade out entire canvas at the end
+            // Fade out entire canvas container at the end
             const container = document.getElementById('logo-3d-container');
-            if (container && scrollProgress > 0.7) {
-                container.style.opacity = 1 - ((scrollProgress - 0.7) * 3.33);
-            } else if (container) {
-                container.style.opacity = 1;
+            if (container) {
+                if (scrollProgress > 0.6) {
+                    container.style.opacity = 1 - ((scrollProgress - 0.6) * 2.5);
+                } else {
+                    container.style.opacity = 1;
+                }
             }
         }
     });

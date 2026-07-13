@@ -260,6 +260,8 @@ body {
     perspective: 400px;
     overflow: hidden;
     opacity: 0;
+    z-index: 20;
+    background: var(--bg-primary);
 }
 
 .crawl-fade {
