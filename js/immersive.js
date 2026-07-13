@@ -136,12 +136,22 @@ async function loadLogo() {
         // Center the model
         const box = new THREE.Box3().setFromObject(logoGroup);
         const center = box.getCenter(new THREE.Vector3());
-        logoGroup.position.sub(center);
         
-        // Scale to fit nicely in view
-        const size = box.getSize(new THREE.Vector3());
+        // Move all children to center
+        logoGroup.traverse((child) => {
+            if (child.isMesh) {
+                child.position.sub(center);
+            }
+        });
+        
+        // Reset group position
+        logoGroup.position.set(0, 0, 0);
+        
+        // Recalculate bounds after centering
+        const newBox = new THREE.Box3().setFromObject(logoGroup);
+        const size = newBox.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 3 / maxDim;
+        const scale = 2.5 / maxDim;
         logoGroup.scale.setScalar(scale);
         
         // Materials
@@ -187,8 +197,10 @@ async function loadLogo() {
             }
         });
 
-        // Rotate to face camera properly (adjust as needed)
-        logoGroup.rotation.x = Math.PI / 2; // Rotate 90 degrees if needed
+        // Rotate to face camera (SVG imports are often on XY plane, need to face Z)
+        logoGroup.rotation.x = 0;
+        logoGroup.rotation.y = 0;
+        logoGroup.rotation.z = 0;
         
         scene.add(logoGroup);
         
