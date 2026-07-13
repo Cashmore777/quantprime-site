@@ -133,26 +133,25 @@ async function loadLogo() {
 
         logoGroup = gltf.scene;
         
-        // Center the model
-        const box = new THREE.Box3().setFromObject(logoGroup);
+        // Center the entire scene by wrapping in a group and offsetting
+        const wrapper = new THREE.Group();
+        wrapper.add(logoGroup);
+        
+        // Calculate bounds and center
+        const box = new THREE.Box3().setFromObject(wrapper);
         const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
         
-        // Move all children to center
-        logoGroup.traverse((child) => {
-            if (child.isMesh) {
-                child.position.sub(center);
-            }
-        });
+        // Offset the inner group to center everything
+        logoGroup.position.set(-center.x, -center.y, -center.z);
         
-        // Reset group position
-        logoGroup.position.set(0, 0, 0);
-        
-        // Recalculate bounds after centering
-        const newBox = new THREE.Box3().setFromObject(logoGroup);
-        const size = newBox.getSize(new THREE.Vector3());
+        // Scale to fit
         const maxDim = Math.max(size.x, size.y, size.z);
         const scale = 2.5 / maxDim;
-        logoGroup.scale.setScalar(scale);
+        wrapper.scale.setScalar(scale);
+        
+        // Use wrapper as our logo group
+        logoGroup = wrapper;
         
         // Materials
         const goldMaterial = new THREE.MeshStandardMaterial({
@@ -179,6 +178,7 @@ async function loadLogo() {
         logoGroup.traverse((child) => {
             if (child.isMesh) {
                 const name = child.name.toLowerCase();
+                console.log('Mesh found:', child.name);
                 
                 // Skip the broken PRIME letters (Curve.001-007)
                 if (name.includes('curve.00')) {
@@ -186,14 +186,19 @@ async function loadLogo() {
                     return;
                 }
                 
-                if (name.includes('q-body')) {
+                if (name.includes('q-body') || name.includes('body')) {
                     child.material = whiteMaterial;
-                } else if (name.includes('q-cutout')) {
+                } else if (name.includes('q-cutout') || name.includes('cutout')) {
                     child.material = blackMaterial;
+                } else if (name.includes('arrow')) {
+                    child.material = goldMaterial;
                 } else {
-                    // Ring, arrow = gold
+                    // Ring and anything else = gold
                     child.material = goldMaterial;
                 }
+                
+                // Make sure everything is visible
+                child.visible = true;
             }
         });
 
