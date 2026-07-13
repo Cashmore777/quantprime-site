@@ -172,10 +172,9 @@ async function loadLogo() {
         });
         console.log('Total meshes:', meshCount);
 
-        // Rotate to face camera (SVG imports are flat on XY plane)
-        // Rotate -90 degrees on X to face camera, flip 180 on Y to correct orientation
+        // Rotate to face camera and flip horizontally to correct mirror
         logoGroup.rotation.x = -Math.PI / 2;
-        logoGroup.rotation.y = Math.PI;
+        logoGroup.scale.x *= -1;  // Mirror horizontally to fix backwards text
         
         scene.add(logoGroup);
         
@@ -237,8 +236,8 @@ function setupScrollAnimation() {
                 const baseScale = logoGroup.userData.baseScale || 1;
                 logoGroup.scale.setScalar(baseScale * scale);
                 
-                // Rotate as we zoom (counter-clockwise spin)
-                logoGroup.rotation.y = Math.PI - (scrollProgress * Math.PI * 2);
+                // Rotate as we zoom (spinning top style on Z-axis)
+                logoGroup.rotation.z = scrollProgress * Math.PI * 2;
                 
                 // Move camera forward
                 camera.position.z = 5 - (scrollProgress * 4);
@@ -280,8 +279,8 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (logoGroup && scrollProgress < 0.1) {
-        // Gentle idle rotation when not scrolling (counter-clockwise)
-        logoGroup.rotation.y -= 0.005;
+        // Gentle idle rotation - spinning top style (Z-axis)
+        logoGroup.rotation.z += 0.005;
     }
 
     if (renderer && scene && camera) {
