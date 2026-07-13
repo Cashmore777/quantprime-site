@@ -184,11 +184,11 @@ body {
 }
 
 .logo-tagline {
+    display: none;  /* REMOVED - too cluttered */
     position: fixed;
     top: 60%;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.25rem;
@@ -260,7 +260,7 @@ body {
     height: 100vh;
     perspective: 400px;
     overflow: hidden;
-    opacity: 1;
+    opacity: 0;
     z-index: 100;
     background: #030308;
     pointer-events: none;
@@ -269,6 +269,22 @@ body {
 
 .crawl-container.active {
     display: block;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .crawl-content {
+        width: 90%;
+        transform: translateX(-50%) rotateX(20deg);
+    }
+    
+    .crawl-title {
+        font-size: 2.5rem;
+    }
+    
+    .crawl-text {
+        font-size: 1.1rem;
+    }
 }
 
 .crawl-fade {

@@ -250,8 +250,8 @@ function setupScrollAnimation() {
             scrollProgress = self.progress;
             
             if (logoGroup) {
-                // Zoom: scale up as you scroll (less aggressive)
-                const scale = 1 + (scrollProgress * 20);
+                // Zoom: scale up as you scroll (smooth, not too aggressive)
+                const scale = 1 + (scrollProgress * 8);
                 const baseScale = logoGroup.userData.baseScale || 1;
                 
                 // Scale while preserving the mirror on X axis
@@ -259,17 +259,18 @@ function setupScrollAnimation() {
                 logoGroup.scale.y = baseScale * scale;
                 logoGroup.scale.z = baseScale * scale;
                 
-                // Rotate as we zoom (spinning top style on Z-axis)
-                logoGroup.rotation.z += 0.01;  // Continuous slow spin
+                // Rotate as we zoom (spinning top style on Z-axis) - smooth
+                logoGroup.rotation.z += 0.005;
                 
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo IMMEDIATELY - gone by 30% scroll
+                // FADE OUT the logo FAST - gone by 20% scroll
+                const logoOpacity = Math.max(0, 1 - (scrollProgress * 5));
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
-                        child.material.opacity = Math.max(0, 1 - (scrollProgress * 3.5));
+                        child.material.opacity = logoOpacity;
                     }
                 });
             }
@@ -278,14 +279,10 @@ function setupScrollAnimation() {
             if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
-            // Fade out entire canvas container - start at 20%, gone by 35%
+            // Fade out entire canvas container - matches logo opacity
             const container = document.getElementById('logo-3d-container');
             if (container) {
-                if (scrollProgress > 0.2) {
-                    container.style.opacity = Math.max(0, 1 - ((scrollProgress - 0.2) * 6.5));
-                } else {
-                    container.style.opacity = 1;
-                }
+                container.style.opacity = logoOpacity;
             }
         }
     });
@@ -310,7 +307,7 @@ function animate() {
 
     if (logoGroup && scrollProgress === 0) {
         // Gentle idle rotation - spinning top style (Z-axis)
-        logoGroup.rotation.z += 0.005;
+        logoGroup.rotation.z += 0.003;
     }
 
     if (renderer && scene && camera) {
@@ -336,26 +333,45 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Show/hide crawl based on scroll position
+    // Show crawl when logo section is 15% scrolled (logo nearly faded)
     ScrollTrigger.create({
-        trigger: '.scene-crawl',
-        start: 'top bottom',
-        end: 'bottom top',
-        onEnter: () => crawlContainer.classList.add('active'),
-        onLeave: () => crawlContainer.classList.remove('active'),
-        onEnterBack: () => crawlContainer.classList.add('active'),
-        onLeaveBack: () => crawlContainer.classList.remove('active')
+        trigger: '.scene-logo',
+        start: 'top+=15% top',
+        onEnter: () => {
+            crawlContainer.classList.add('active');
+            gsap.to(crawlContainer, { opacity: 1, duration: 0.5 });
+        },
+        onLeaveBack: () => {
+            gsap.to(crawlContainer, { opacity: 0, duration: 0.3, onComplete: () => {
+                crawlContainer.classList.remove('active');
+            }});
+        }
     });
 
-    // Animate the crawl text scrolling up
+    // Hide crawl when leaving crawl section
+    ScrollTrigger.create({
+        trigger: '.scene-crawl',
+        start: 'bottom bottom',
+        onLeave: () => {
+            gsap.to(crawlContainer, { opacity: 0, duration: 0.3, onComplete: () => {
+                crawlContainer.classList.remove('active');
+            }});
+        },
+        onEnterBack: () => {
+            crawlContainer.classList.add('active');
+            gsap.to(crawlContainer, { opacity: 1, duration: 0.3 });
+        }
+    });
+
+    // Animate the crawl text scrolling up - smooth
     gsap.to(crawlContent, {
-        y: '-200%',
+        y: '-150%',
         ease: 'none',
         scrollTrigger: {
             trigger: '.scene-crawl',
             start: 'top top',
             end: 'bottom top',
-            scrub: 1
+            scrub: 2  // Smoother scrub
         }
     });
 }
