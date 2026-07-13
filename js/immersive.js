@@ -265,12 +265,11 @@ function setupScrollAnimation() {
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo as you zoom through it - START IMMEDIATELY
+                // FADE OUT the logo IMMEDIATELY - gone by 30% scroll
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
-                        // Start fading immediately, fully transparent by 50%
-                        child.material.opacity = Math.max(0, 1 - (scrollProgress * 2));
+                        child.material.opacity = Math.max(0, 1 - (scrollProgress * 3.5));
                     }
                 });
             }
@@ -279,11 +278,11 @@ function setupScrollAnimation() {
             if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
-            // Fade out entire canvas container - start at 40%, gone by 60%
+            // Fade out entire canvas container - start at 20%, gone by 35%
             const container = document.getElementById('logo-3d-container');
             if (container) {
-                if (scrollProgress > 0.4) {
-                    container.style.opacity = Math.max(0, 1 - ((scrollProgress - 0.4) * 5));
+                if (scrollProgress > 0.2) {
+                    container.style.opacity = Math.max(0, 1 - ((scrollProgress - 0.2) * 6.5));
                 } else {
                     container.style.opacity = 1;
                 }
@@ -337,21 +336,42 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
+    // Fade in the crawl container
+    ScrollTrigger.create({
+        trigger: '.scene-crawl',
+        start: 'top 80%',
+        end: 'top top',
+        scrub: true,
+        onUpdate: (self) => {
+            crawlContainer.style.opacity = self.progress;
+        }
+    });
+
+    // Animate the crawl text
     gsap.timeline({
         scrollTrigger: {
             trigger: '.scene-crawl',
             start: 'top top',
             end: 'bottom top',
             scrub: 1,
-            pin: crawlContainer,
-            onEnter: () => gsap.to(crawlContainer, { opacity: 1, duration: 0.5 }),
-            onLeaveBack: () => gsap.to(crawlContainer, { opacity: 0, duration: 0.5 })
+            pin: crawlContainer
         }
     })
     .fromTo(crawlContent, 
         { y: '100%' },
         { y: '-100%', ease: 'none' }
     );
+    
+    // Fade out at the end
+    ScrollTrigger.create({
+        trigger: '.scene-crawl',
+        start: 'bottom 20%',
+        end: 'bottom top',
+        scrub: true,
+        onUpdate: (self) => {
+            crawlContainer.style.opacity = 1 - self.progress;
+        }
+    });
 }
 
 // ═══════════════════════════════════════════════════════════════
