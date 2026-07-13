@@ -153,17 +153,18 @@ async function loadLogo() {
         // Use wrapper as our logo group
         logoGroup = wrapper;
         
-        // Simple bright material for debugging
-        const brightMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffcc00,
-            wireframe: false
+        // Gold material
+        const goldMaterial = new THREE.MeshStandardMaterial({
+            color: 0xc9a84c,
+            metalness: 0.8,
+            roughness: 0.3
         });
 
         // Apply to ALL meshes - no filtering
         let meshCount = 0;
         logoGroup.traverse((child) => {
             if (child.isMesh) {
-                child.material = brightMaterial;
+                child.material = goldMaterial;
                 child.visible = true;
                 meshCount++;
                 console.log('Applied material to:', child.name, 'position:', child.position);
@@ -172,8 +173,9 @@ async function loadLogo() {
         console.log('Total meshes:', meshCount);
 
         // Rotate to face camera (SVG imports are flat on XY plane)
-        // Rotate -90 degrees on X to face the camera
+        // Rotate -90 degrees on X to face camera, flip 180 on Y to correct orientation
         logoGroup.rotation.x = -Math.PI / 2;
+        logoGroup.rotation.y = Math.PI;
         
         scene.add(logoGroup);
         
@@ -235,8 +237,8 @@ function setupScrollAnimation() {
                 const baseScale = logoGroup.userData.baseScale || 1;
                 logoGroup.scale.setScalar(baseScale * scale);
                 
-                // Rotate as we zoom (spin around Y axis)
-                logoGroup.rotation.y = scrollProgress * Math.PI * 2;
+                // Rotate as we zoom (counter-clockwise spin)
+                logoGroup.rotation.y = Math.PI - (scrollProgress * Math.PI * 2);
                 
                 // Move camera forward
                 camera.position.z = 5 - (scrollProgress * 4);
@@ -278,8 +280,8 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (logoGroup && scrollProgress < 0.1) {
-        // Gentle idle rotation when not scrolling (spin around Y axis)
-        logoGroup.rotation.y += 0.005;
+        // Gentle idle rotation when not scrolling (counter-clockwise)
+        logoGroup.rotation.y -= 0.005;
     }
 
     if (renderer && scene && camera) {
