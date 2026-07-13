@@ -247,7 +247,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-crawl {
-    height: 200vh;
+    height: 350vh;
     background: var(--bg-primary);
     overflow: hidden;
 }

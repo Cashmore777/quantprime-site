@@ -265,8 +265,11 @@ function setupScrollAnimation() {
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo FAST - gone by 20% scroll
-                const logoOpacity = Math.max(0, 1 - (scrollProgress * 5));
+                // FADE OUT the logo smoothly - starts at 10%, gone by 50%
+                let logoOpacity = 1;
+                if (scrollProgress > 0.1) {
+                    logoOpacity = Math.max(0, 1 - ((scrollProgress - 0.1) * 2.5));
+                }
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
@@ -279,10 +282,15 @@ function setupScrollAnimation() {
             if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
             
-            // Fade out entire canvas container - matches logo opacity
+            // Fade out entire canvas container - matches logo
             const container = document.getElementById('logo-3d-container');
             if (container) {
                 container.style.opacity = logoOpacity;
+                if (logoOpacity === 0) {
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'block';
+                }
             }
         }
     });
