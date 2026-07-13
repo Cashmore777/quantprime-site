@@ -79,24 +79,24 @@ async function initThreeJS() {
     renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Lighting - warm gold tones
+    const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.8);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x00abff, 0.8);
-    fillLight.position.set(-5, 0, 5);
+    const fillLight = new THREE.DirectionalLight(0xffeedd, 1.0);
+    fillLight.position.set(-5, 3, 5);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xc9a84c, 1.2);
-    rimLight.position.set(0, -5, -5);
+    const rimLight = new THREE.DirectionalLight(0xc9a84c, 1.5);
+    rimLight.position.set(0, -3, -5);
     scene.add(rimLight);
 
-    const topLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    topLight.position.set(0, 10, 0);
+    const topLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    topLight.position.set(0, 10, 2);
     scene.add(topLight);
 
     // Load the 3D logo
@@ -144,30 +144,35 @@ async function loadLogo() {
         const scale = 3 / maxDim;
         logoGroup.scale.setScalar(scale);
         
-        // Apply gold material to all meshes
+        // Gold material - rich and shiny
         const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xc9a84c,
-            metalness: 0.9,
-            roughness: 0.15,
-            envMapIntensity: 1.5
+            color: 0xd4af37,  // Rich gold
+            metalness: 1.0,
+            roughness: 0.1,
+            envMapIntensity: 2.0
         });
         
-        const silverMaterial = new THREE.MeshStandardMaterial({
-            color: 0xe8e8ed,
-            metalness: 0.95,
-            roughness: 0.1,
-            envMapIntensity: 1.5
-        });
+        // Create environment map for reflections
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        pmremGenerator.compileEquirectangularShader();
+        
+        // Simple gradient environment for reflections
+        const envScene = new THREE.Scene();
+        envScene.background = new THREE.Color(0x222222);
+        const envMap = pmremGenerator.fromScene(envScene).texture;
+        goldMaterial.envMap = envMap;
 
-        // Apply materials
+        // Apply materials - force gold on everything
         logoGroup.traverse((child) => {
             if (child.isMesh) {
-                // Make everything gold for now - looks premium
-                child.material = goldMaterial;
+                child.material = goldMaterial.clone();
+                child.material.needsUpdate = true;
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
         });
+        
+        pmremGenerator.dispose();
 
         // Rotate to face camera properly (adjust as needed)
         logoGroup.rotation.x = Math.PI / 2; // Rotate 90 degrees if needed
