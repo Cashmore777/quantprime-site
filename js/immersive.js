@@ -160,10 +160,14 @@ async function loadLogo() {
             roughness: 0.3
         });
 
-        // Apply to ALL meshes - no filtering
+        // Apply to ALL meshes - smooth normals + gold material
         let meshCount = 0;
         logoGroup.traverse((child) => {
             if (child.isMesh) {
+                // Smooth the geometry by computing vertex normals
+                if (child.geometry) {
+                    child.geometry.computeVertexNormals();
+                }
                 child.material = goldMaterial;
                 child.visible = true;
                 meshCount++;
