@@ -79,23 +79,23 @@ async function initThreeJS() {
     renderer.toneMappingExposure = 1.5;
     container.appendChild(renderer.domElement);
 
-    // Lighting - warm gold tones
-    const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.8);
+    // Lighting - bright and warm
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3);
     keyLight.position.set(5, 5, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffeedd, 1.0);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 2);
     fillLight.position.set(-5, 3, 5);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xc9a84c, 1.5);
-    rimLight.position.set(0, -3, -5);
-    scene.add(rimLight);
+    const backLight = new THREE.DirectionalLight(0xffffff, 2);
+    backLight.position.set(0, 0, -5);
+    scene.add(backLight);
 
-    const topLight = new THREE.DirectionalLight(0xffffff, 1.0);
+    const topLight = new THREE.DirectionalLight(0xffffff, 2);
     topLight.position.set(0, 10, 2);
     scene.add(topLight);
 
@@ -144,35 +144,22 @@ async function loadLogo() {
         const scale = 3 / maxDim;
         logoGroup.scale.setScalar(scale);
         
-        // Gold material - rich and shiny
+        // Gold material - bright and shiny
         const goldMaterial = new THREE.MeshStandardMaterial({
-            color: 0xd4af37,  // Rich gold
-            metalness: 1.0,
-            roughness: 0.1,
-            envMapIntensity: 2.0
+            color: 0xffc840,  // Bright gold
+            metalness: 0.8,
+            roughness: 0.2,
+            emissive: 0xc9a84c,
+            emissiveIntensity: 0.15
         });
-        
-        // Create environment map for reflections
-        const pmremGenerator = new THREE.PMREMGenerator(renderer);
-        pmremGenerator.compileEquirectangularShader();
-        
-        // Simple gradient environment for reflections
-        const envScene = new THREE.Scene();
-        envScene.background = new THREE.Color(0x222222);
-        const envMap = pmremGenerator.fromScene(envScene).texture;
-        goldMaterial.envMap = envMap;
 
         // Apply materials - force gold on everything
         logoGroup.traverse((child) => {
             if (child.isMesh) {
                 child.material = goldMaterial.clone();
                 child.material.needsUpdate = true;
-                child.castShadow = true;
-                child.receiveShadow = true;
             }
         });
-        
-        pmremGenerator.dispose();
 
         // Rotate to face camera properly (adjust as needed)
         logoGroup.rotation.x = Math.PI / 2; // Rotate 90 degrees if needed
