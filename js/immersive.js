@@ -178,27 +178,23 @@ async function loadLogo() {
         logoGroup.traverse((child) => {
             if (child.isMesh) {
                 const name = child.name.toLowerCase();
-                console.log('Mesh found:', child.name);
                 
-                // Skip the broken PRIME letters (Curve.001-007)
-                if (name.includes('curve.00')) {
+                // Skip the broken PRIME letters (Curve001-007)
+                if (name.match(/curve00[1-7]/)) {
                     child.visible = false;
                     return;
                 }
                 
-                if (name.includes('q-body') || name.includes('body')) {
+                if (name.includes('body')) {
                     child.material = whiteMaterial;
-                } else if (name.includes('q-cutout') || name.includes('cutout')) {
+                } else if (name.includes('cutout')) {
                     child.material = blackMaterial;
                 } else if (name.includes('arrow')) {
                     child.material = goldMaterial;
                 } else {
-                    // Ring and anything else = gold
+                    // Ring (Curve) and anything else = gold
                     child.material = goldMaterial;
                 }
-                
-                // Make sure everything is visible
-                child.visible = true;
             }
         });
 
