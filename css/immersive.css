@@ -337,12 +337,13 @@ body {
 
 .scene-systems {
     min-height: auto;
-    padding: 10rem 2rem;
+    padding: 6rem 2rem;
     flex-direction: column;
     gap: 4rem;
     position: relative;
     z-index: 60;
     background: #030308;
+    margin-top: -10vh;
 }
 
 .systems-header {

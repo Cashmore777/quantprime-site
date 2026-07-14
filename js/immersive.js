@@ -356,11 +356,15 @@ function setupCrawl() {
         }
     });
 
-    // Keep crawl visible during crawl section
+    // Fade out crawl at the END of crawl section - synced with systems entering
     ScrollTrigger.create({
         trigger: '.scene-crawl',
-        start: 'top top',
+        start: '80% top',  // Start fading at 80%
         end: 'bottom top',
+        onUpdate: (self) => {
+            // Fade out crawl as we approach the end
+            crawlContainer.style.opacity = 1 - self.progress;
+        },
         onLeave: () => {
             crawlContainer.style.opacity = '0';
             crawlContainer.classList.remove('active');
