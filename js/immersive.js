@@ -226,13 +226,14 @@ function createFallbackLogo() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SCROLL ANIMATION
+// SCROLL ANIMATION - LOGO + CRAWL SEAMLESS TRANSITION
 // ═══════════════════════════════════════════════════════════════
 
 function setupScrollAnimation() {
     const logoSection = document.querySelector('.scene-logo');
     const tagline = document.querySelector('.logo-tagline');
     const scrollIndicator = document.querySelector('.scroll-indicator');
+    const crawlContainer = document.querySelector('.crawl-container');
 
     // Fade in tagline on load
     gsap.to(tagline, {
@@ -242,7 +243,7 @@ function setupScrollAnimation() {
         delay: 0.5
     });
 
-    // Main scroll animation - zoom INTO the logo
+    // Main scroll animation - zoom INTO the logo, fade out EARLY
     ScrollTrigger.create({
         trigger: logoSection,
         start: 'top top',
@@ -252,7 +253,7 @@ function setupScrollAnimation() {
             scrollProgress = self.progress;
             
             if (logoGroup) {
-                // Zoom: scale up as you scroll (smooth, not too aggressive)
+                // Zoom: scale up as you scroll
                 const scale = 1 + (scrollProgress * 8);
                 const baseScale = logoGroup.userData.baseScale || 1;
                 
@@ -261,40 +262,48 @@ function setupScrollAnimation() {
                 logoGroup.scale.y = baseScale * scale;
                 logoGroup.scale.z = baseScale * scale;
                 
-                // Rotate as we zoom (spinning top style on Z-axis) - smooth
+                // Rotate as we zoom (spinning top style on Z-axis)
                 logoGroup.rotation.z += 0.005;
                 
                 // Move camera forward slightly
                 camera.position.z = 5 - (scrollProgress * 2);
                 
-                // FADE OUT the logo - starts IMMEDIATELY, very gradual
-                let logoOpacity = Math.max(0, 1 - (scrollProgress * 1.5));
+                // EARLY FADE - logo gone by 25% scroll
+                let logoOpacity = Math.max(0, 1 - (scrollProgress * 4));
                 logoGroup.traverse((child) => {
                     if (child.isMesh && child.material) {
                         child.material.transparent = true;
                         child.material.opacity = logoOpacity;
                     }
                 });
-            }
-            
-            // Fade out tagline and scroll indicator
-            if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
-            if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 4));
-            
-            // Fade out entire canvas container - matches logo
-            const container = document.getElementById('logo-3d-container');
-            if (container) {
-                container.style.opacity = logoOpacity;
-                if (logoOpacity === 0) {
-                    container.style.display = 'none';
-                } else {
-                    container.style.display = 'block';
+                
+                // Hide container when fully transparent
+                const container = document.getElementById('logo-3d-container');
+                if (container) {
+                    container.style.opacity = logoOpacity;
+                    container.style.display = logoOpacity === 0 ? 'none' : 'block';
+                }
+                
+                // CRAWL FADE IN - starts at 10% scroll, fully visible by 30%
+                if (crawlContainer) {
+                    const crawlStart = 0.1;
+                    const crawlFull = 0.3;
+                    let crawlOpacity = 0;
+                    
+                    if (scrollProgress > crawlStart) {
+                        crawlOpacity = Math.min(1, (scrollProgress - crawlStart) / (crawlFull - crawlStart));
+                    }
+                    
+                    crawlContainer.style.opacity = crawlOpacity;
+                    crawlContainer.classList.toggle('active', crawlOpacity > 0);
                 }
             }
+            
+            // Fade out tagline and scroll indicator FAST
+            if (tagline) tagline.style.opacity = Math.max(0, 1 - (scrollProgress * 6));
+            if (scrollIndicator) scrollIndicator.style.opacity = Math.max(0, 1 - (scrollProgress * 6));
         }
     });
-
-    // Base scale is now stored in loadLogo()
 
     // Show nav after logo zoom
     ScrollTrigger.create({
@@ -331,7 +340,7 @@ function onWindowResize() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// STAR WARS CRAWL
+// STAR WARS CRAWL - NOW TRIGGERS DURING LOGO FADE
 // ═══════════════════════════════════════════════════════════════
 
 function setupCrawl() {
@@ -340,29 +349,14 @@ function setupCrawl() {
 
     if (!crawlContainer || !crawlContent) return;
 
-    // Start crawl during LOGO section (last 50%) - fade in as logo fades out
-    ScrollTrigger.create({
-        trigger: '.scene-logo',
-        start: 'center top',  // Start when logo section is 50% scrolled
-        end: 'bottom top',
-        onUpdate: (self) => {
-            // Fade in crawl as logo fades out
-            crawlContainer.classList.add('active');
-            crawlContainer.style.opacity = self.progress;
-        },
-        onLeaveBack: () => {
-            crawlContainer.style.opacity = '0';
-            crawlContainer.classList.remove('active');
-        }
-    });
+    // Crawl visibility now handled in setupScrollAnimation() for seamless handoff
 
-    // Fade out crawl at the END of crawl section - synced with systems entering
+    // Fade out crawl at the END of crawl section
     ScrollTrigger.create({
         trigger: '.scene-crawl',
-        start: '80% top',  // Start fading at 80%
+        start: '75% top',
         end: 'bottom top',
         onUpdate: (self) => {
-            // Fade out crawl as we approach the end
             crawlContainer.style.opacity = 1 - self.progress;
         },
         onLeave: () => {
@@ -377,13 +371,13 @@ function setupCrawl() {
 
     // Scroll text: starts from bottom, moves up through BOTH sections
     gsap.fromTo(crawlContent, 
-        { y: '100%' },  // Starts below viewport
+        { y: '100%' },
         { 
-            y: '-150%',  // Ends above viewport
+            y: '-150%',
             ease: 'none',
             scrollTrigger: {
                 trigger: '.scene-logo',
-                start: 'center top',  // Start moving when logo is 50% scrolled
+                start: '10% top',  // Start moving early, synced with crawl fade-in
                 endTrigger: '.scene-crawl',
                 end: 'bottom top',
                 scrub: 0.5
@@ -393,66 +387,239 @@ function setupCrawl() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SYSTEMS & OTHER SECTIONS
+// SYSTEMS - UPGRADED ANIMATIONS
 // ═══════════════════════════════════════════════════════════════
 
 function setupSections() {
-    // Systems header
-    gsap.to('.systems-header', {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        scrollTrigger: {
-            trigger: '.systems-header',
-            start: 'top 80%'
+    // Systems header - dramatic entrance
+    gsap.fromTo('.systems-header', 
+        { opacity: 0, y: 80, scale: 0.9 },
+        {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '.systems-header',
+                start: 'top 85%'
+            }
+        }
+    );
+
+    // System cards - dramatic staggered entrance with glow pulse
+    document.querySelectorAll('.system-card').forEach((card, index) => {
+        const isEven = index % 2 === 0;
+        const visual = card.querySelector('.system-visual');
+        const info = card.querySelector('.system-info');
+        const number = card.querySelector('.system-number');
+        const features = card.querySelectorAll('.system-features li');
+
+        // Card slide in from side
+        gsap.fromTo(card, 
+            { 
+                opacity: 0, 
+                x: isEven ? -100 : 100,
+                rotateY: isEven ? -15 : 15
+            },
+            {
+                opacity: 1,
+                x: 0,
+                rotateY: 0,
+                duration: 1.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%'
+                }
+            }
+        );
+
+        // Visual canvas glow pulse
+        if (visual) {
+            gsap.fromTo(visual, 
+                { scale: 0.8, opacity: 0 },
+                {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 1,
+                    delay: 0.3,
+                    ease: 'back.out(1.4)',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%'
+                    }
+                }
+            );
+        }
+
+        // Number counter animation
+        if (number) {
+            gsap.fromTo(number, 
+                { opacity: 0, scale: 2, y: -30 },
+                {
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                    duration: 0.8,
+                    delay: 0.2,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%'
+                    }
+                }
+            );
+        }
+
+        // Features stagger in
+        if (features.length) {
+            gsap.fromTo(features, 
+                { opacity: 0, x: -20 },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 0.5,
+                    stagger: 0.1,
+                    delay: 0.5,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 85%'
+                    }
+                }
+            );
         }
     });
 
-    // System cards
-    document.querySelectorAll('.system-card').forEach((card, index) => {
-        gsap.to(card, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            delay: index * 0.2,
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 85%'
-            }
-        });
-    });
-
-    // Proof cards
+    // Proof cards - fade up with stagger
     document.querySelectorAll('.proof-card').forEach((card, index) => {
-        gsap.to(card, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: index * 0.15,
-            scrollTrigger: {
-                trigger: card,
-                start: 'top 85%'
+        gsap.fromTo(card, 
+            { opacity: 0, y: 60, scale: 0.95 },
+            {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.8,
+                delay: index * 0.2,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%'
+                }
             }
-        });
-    });
-
-    // Price cards
-    document.querySelectorAll('.price-card').forEach((card, index) => {
-        gsap.to(card, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: index * 0.1,
-            scrollTrigger: {
-                trigger: '.pricing-grid',
-                start: 'top 80%'
-            }
-        });
+        );
     });
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SYSTEM CANVAS VISUALIZATIONS
+// PRICING CARDS - HORIZONTAL SCROLL CAROUSEL
+// ═══════════════════════════════════════════════════════════════
+
+function setupPricingCarousel() {
+    const pricingSection = document.querySelector('.scene-pricing');
+    const pricingContainer = document.querySelector('.pricing-container');
+    const cards = document.querySelectorAll('.price-card');
+    
+    if (!pricingSection || cards.length === 0) return;
+
+    // Initial reveal animation
+    gsap.fromTo('.pricing-container > .section-tag', 
+        { opacity: 0, y: 30 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            scrollTrigger: {
+                trigger: '.scene-pricing',
+                start: 'top 80%'
+            }
+        }
+    );
+    
+    gsap.fromTo('.pricing-container > h2', 
+        { opacity: 0, y: 30 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.1,
+            scrollTrigger: {
+                trigger: '.scene-pricing',
+                start: 'top 80%'
+            }
+        }
+    );
+
+    // Set initial state - all cards start visible but stacked/faded
+    cards.forEach((card, index) => {
+        card.style.opacity = '1';
+        card.style.transform = 'none';
+    });
+
+    // Horizontal scroll effect - cards slide left as you scroll
+    const totalCards = cards.length;
+    
+    ScrollTrigger.create({
+        trigger: '.scene-pricing',
+        start: 'top 30%',
+        end: 'bottom 70%',
+        scrub: 1,
+        onUpdate: (self) => {
+            const progress = self.progress;
+            
+            cards.forEach((card, index) => {
+                // Calculate position in the "deck"
+                const cardProgress = (progress * (totalCards - 1)) - index;
+                
+                // Current card (active)
+                if (cardProgress >= -0.5 && cardProgress <= 0.5) {
+                    // Center position - fully visible
+                    gsap.to(card, {
+                        scale: 1,
+                        opacity: 1,
+                        x: 0,
+                        rotateY: 0,
+                        zIndex: 10,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+                // Cards that have passed (scrolled away)
+                else if (cardProgress > 0.5) {
+                    // Slide left and fade
+                    const offset = Math.min(cardProgress - 0.5, 1);
+                    gsap.to(card, {
+                        scale: 0.85,
+                        opacity: 0.3,
+                        x: -100 * offset,
+                        rotateY: 15,
+                        zIndex: 10 - index,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+                // Cards coming up (not yet reached)
+                else {
+                    // Behind/right, waiting
+                    const offset = Math.min(Math.abs(cardProgress + 0.5), 1);
+                    gsap.to(card, {
+                        scale: 0.9,
+                        opacity: 0.5,
+                        x: 80 * offset,
+                        rotateY: -10,
+                        zIndex: index,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                }
+            });
+        }
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM CANVAS VISUALIZATIONS - UPGRADED
 // ═══════════════════════════════════════════════════════════════
 
 function initSystemCanvas(canvasId, type) {
@@ -462,6 +629,7 @@ function initSystemCanvas(canvasId, type) {
     const ctx = canvas.getContext('2d');
     let animationId;
     let t = 0;
+    let isActive = false;
     
     function resize() {
         canvas.width = canvas.offsetWidth * 2;
@@ -471,34 +639,50 @@ function initSystemCanvas(canvasId, type) {
     resize();
     
     function draw() {
+        if (!isActive) return;
+        
         const w = canvas.offsetWidth;
         const h = canvas.offsetHeight;
         
-        ctx.clearRect(0, 0, w, h);
+        // Clear with slight trail effect for glow
+        ctx.fillStyle = 'rgba(18, 18, 28, 0.15)';
+        ctx.fillRect(0, 0, w, h);
         
         if (type === 'meridian') {
-            const colors = ['#00abff', '#0085c7', '#005e8c', '#194866'];
-            colors.forEach((color, i) => {
+            // UPGRADED: Multiple glowing wave layers with pulse
+            const pulse = Math.sin(t * 0.5) * 0.3 + 1;
+            const colors = [
+                { color: '#00abff', alpha: 0.9 },
+                { color: '#0085c7', alpha: 0.7 },
+                { color: '#005e8c', alpha: 0.5 },
+                { color: '#194866', alpha: 0.3 }
+            ];
+            
+            colors.forEach((c, i) => {
                 ctx.beginPath();
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = c.color;
+                ctx.lineWidth = (3 - i * 0.5) * pulse;
+                ctx.shadowColor = c.color;
+                ctx.shadowBlur = 15 * pulse;
                 
-                const baseY = h * 0.3 + (i * h * 0.15);
-                for (let x = 0; x <= w; x += 3) {
+                const baseY = h * 0.25 + (i * h * 0.15);
+                for (let x = 0; x <= w; x += 2) {
                     const y = baseY + 
-                        Math.sin((x * 0.02) + t * 0.5 + i) * 20 +
-                        Math.sin((x * 0.005) + t * 0.2) * 30;
+                        Math.sin((x * 0.02) + t * 0.8 + i) * 25 * pulse +
+                        Math.sin((x * 0.005) + t * 0.3) * 40;
                     
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
+                ctx.shadowBlur = 0;
             });
             
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.3)';
+            // Glowing grid lines
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.15)';
             ctx.lineWidth = 1;
-            ctx.setLineDash([5, 5]);
-            [0.25, 0.45, 0.65, 0.85].forEach(pct => {
+            ctx.setLineDash([3, 3]);
+            [0.2, 0.4, 0.6, 0.8].forEach(pct => {
                 ctx.beginPath();
                 ctx.moveTo(0, h * pct);
                 ctx.lineTo(w, h * pct);
@@ -506,27 +690,55 @@ function initSystemCanvas(canvasId, type) {
             });
             ctx.setLineDash([]);
             
-        } else if (type === 'recoil') {
-            const centerY = h * 0.5;
+            // Scanning line
+            const scanX = (t * 50) % w;
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.6)';
+            ctx.shadowColor = '#00abff';
+            ctx.shadowBlur = 20;
+            ctx.lineWidth = 2;
+            ctx.moveTo(scanX, 0);
+            ctx.lineTo(scanX, h);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
             
-            for (let band = 1; band <= 8; band++) {
-                const alpha = band <= 5 ? 0.1 : band === 6 ? 0.3 : band === 7 ? 0.5 : 0.8;
-                const spread = band * 8;
+        } else if (type === 'recoil') {
+            // UPGRADED: Breathing bands with glow
+            const centerY = h * 0.5;
+            const breathe = Math.sin(t * 0.4) * 0.2 + 1;
+            
+            for (let band = 8; band >= 1; band--) {
+                const spread = band * 10 * breathe;
+                let color, glow;
                 
-                ctx.fillStyle = band <= 5 ? `rgba(0, 171, 255, ${alpha})` :
-                               band === 6 ? `rgba(255, 235, 59, ${alpha})` :
-                               band === 7 ? `rgba(255, 152, 0, ${alpha})` :
-                               `rgba(242, 54, 69, ${alpha})`;
+                if (band <= 5) {
+                    const alpha = 0.08 + (band * 0.02);
+                    color = `rgba(0, 171, 255, ${alpha})`;
+                    glow = '#00abff';
+                } else if (band === 6) {
+                    color = 'rgba(255, 235, 59, 0.25)';
+                    glow = '#ffeb3b';
+                } else if (band === 7) {
+                    color = 'rgba(255, 152, 0, 0.35)';
+                    glow = '#ff9800';
+                } else {
+                    color = 'rgba(242, 54, 69, 0.45)';
+                    glow = '#f23645';
+                }
+                
+                ctx.fillStyle = color;
+                ctx.shadowColor = glow;
+                ctx.shadowBlur = band > 5 ? 15 : 5;
                 
                 ctx.beginPath();
-                for (let x = 0; x <= w; x += 3) {
-                    const wave = Math.sin((x * 0.01) + t * 0.3) * spread;
+                for (let x = 0; x <= w; x += 2) {
+                    const wave = Math.sin((x * 0.008) + t * 0.5) * spread * 0.5;
                     const y = centerY - wave - spread;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
-                for (let x = w; x >= 0; x -= 3) {
-                    const wave = Math.sin((x * 0.01) + t * 0.3) * spread;
+                for (let x = w; x >= 0; x -= 2) {
+                    const wave = Math.sin((x * 0.008) + t * 0.5) * spread * 0.5;
                     const y = centerY + wave + spread;
                     ctx.lineTo(x, y);
                 }
@@ -534,39 +746,124 @@ function initSystemCanvas(canvasId, type) {
                 ctx.fill();
             }
             
+            // Center pulse line
+            ctx.beginPath();
+            ctx.strokeStyle = '#00abff';
+            ctx.shadowColor = '#00abff';
+            ctx.shadowBlur = 10;
+            ctx.lineWidth = 2;
+            for (let x = 0; x <= w; x += 3) {
+                const y = centerY + Math.sin((x * 0.03) + t) * 5;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+            
         } else if (type === 'executor') {
-            const numFlows = 8;
+            // UPGRADED: Matrix-style data streams
+            const numFlows = 12;
             for (let i = 0; i < numFlows; i++) {
                 const startX = (w / numFlows) * i + (w / numFlows / 2);
-                const progress = ((t * 50 + i * 100) % (h + 100)) - 50;
+                const speed = 40 + (i % 3) * 20;
+                const progress = ((t * speed + i * 80) % (h + 150)) - 75;
+                const isCyan = i % 2 === 0;
+                const color = isCyan ? '#00abff' : '#c9a84c';
+                
+                // Trail effect
+                const gradient = ctx.createLinearGradient(startX, progress, startX, progress + 60);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(1, 'transparent');
                 
                 ctx.beginPath();
-                ctx.strokeStyle = i % 2 === 0 ? '#00abff' : '#c9a84c';
+                ctx.strokeStyle = gradient;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = 15;
                 ctx.lineWidth = 2;
                 ctx.moveTo(startX, progress);
-                ctx.lineTo(startX, progress + 30);
+                ctx.lineTo(startX, progress + 50);
                 ctx.stroke();
                 
+                // Head dot
                 ctx.beginPath();
-                ctx.fillStyle = i % 2 === 0 ? '#00abff' : '#c9a84c';
+                ctx.fillStyle = color;
+                ctx.shadowBlur = 20;
                 ctx.arc(startX, progress, 4, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.shadowBlur = 0;
             }
+            
+            // Horizontal connection lines
+            const yPos = (t * 30) % h;
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.3)';
+            ctx.lineWidth = 1;
+            ctx.moveTo(0, yPos);
+            ctx.lineTo(w, yPos);
+            ctx.stroke();
         }
         
-        t += 0.02;
+        t += 0.025;
         animationId = requestAnimationFrame(draw);
     }
     
     ScrollTrigger.create({
         trigger: canvas,
-        start: 'top 90%',
-        end: 'bottom 10%',
-        onEnter: () => draw(),
-        onLeave: () => cancelAnimationFrame(animationId),
-        onEnterBack: () => draw(),
-        onLeaveBack: () => cancelAnimationFrame(animationId)
+        start: 'top 95%',
+        end: 'bottom 5%',
+        onEnter: () => { isActive = true; draw(); },
+        onLeave: () => { isActive = false; cancelAnimationFrame(animationId); },
+        onEnterBack: () => { isActive = true; draw(); },
+        onLeaveBack: () => { isActive = false; cancelAnimationFrame(animationId); }
     });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CTA SECTION
+// ═══════════════════════════════════════════════════════════════
+
+function setupCTA() {
+    gsap.fromTo('.cta-container h2', 
+        { opacity: 0, y: 50 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '.scene-cta',
+                start: 'top 75%'
+            }
+        }
+    );
+    
+    gsap.fromTo('.cta-container p', 
+        { opacity: 0, y: 30 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.2,
+            scrollTrigger: {
+                trigger: '.scene-cta',
+                start: 'top 75%'
+            }
+        }
+    );
+    
+    gsap.fromTo('.cta-container .btn', 
+        { opacity: 0, scale: 0.9 },
+        {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            delay: 0.4,
+            ease: 'back.out(1.5)',
+            scrollTrigger: {
+                trigger: '.scene-cta',
+                start: 'top 75%'
+            }
+        }
+    );
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -577,6 +874,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initThreeJS();
     setupCrawl();
     setupSections();
+    setupPricingCarousel();
+    setupCTA();
     
     initSystemCanvas('meridian-canvas', 'meridian');
     initSystemCanvas('recoil-canvas', 'recoil');
