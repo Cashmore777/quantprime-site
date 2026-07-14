@@ -247,7 +247,7 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-crawl {
-    height: 800vh;
+    height: 300vh;
     background: var(--bg-primary);
     overflow: hidden;
 }
@@ -343,7 +343,6 @@ body {
     position: relative;
     z-index: 60;
     background: #030308;
-    margin-top: -10vh;
 }
 
 .systems-header {
