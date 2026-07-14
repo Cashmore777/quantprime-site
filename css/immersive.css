@@ -600,8 +600,8 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 .scene-pricing {
-    padding: 10rem 2rem;
-    min-height: 200vh; /* Extra height for scroll-based card transitions */
+    padding: 8rem 2rem;
+    min-height: 120vh; /* Shorter - faster card cycle */
 }
 
 .pricing-container {
@@ -636,7 +636,7 @@ body {
     width: 280px;
     flex-shrink: 0;
     transform-style: preserve-3d;
-    transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+    transition: box-shadow 0.3s ease;
     will-change: transform, opacity;
 }
 

@@ -387,19 +387,18 @@ function setupCrawl() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// SYSTEMS - UPGRADED ANIMATIONS
+// SYSTEMS - CLEAN ANIMATIONS (PERFORMANCE OPTIMIZED)
 // ═══════════════════════════════════════════════════════════════
 
 function setupSections() {
-    // Systems header - dramatic entrance
+    // Systems header
     gsap.fromTo('.systems-header', 
-        { opacity: 0, y: 80, scale: 0.9 },
+        { opacity: 0, y: 50 },
         {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 1.2,
-            ease: 'power3.out',
+            duration: 0.8,
+            ease: 'power2.out',
             scrollTrigger: {
                 trigger: '.systems-header',
                 start: 'top 85%'
@@ -407,105 +406,38 @@ function setupSections() {
         }
     );
 
-    // System cards - dramatic staggered entrance with glow pulse
+    // System cards - slide in from alternating sides
     document.querySelectorAll('.system-card').forEach((card, index) => {
         const isEven = index % 2 === 0;
-        const visual = card.querySelector('.system-visual');
-        const info = card.querySelector('.system-info');
-        const number = card.querySelector('.system-number');
-        const features = card.querySelectorAll('.system-features li');
-
-        // Card slide in from side
+        
         gsap.fromTo(card, 
-            { 
-                opacity: 0, 
-                x: isEven ? -100 : 100,
-                rotateY: isEven ? -15 : 15
-            },
+            { opacity: 0, x: isEven ? -60 : 60 },
             {
                 opacity: 1,
                 x: 0,
-                rotateY: 0,
-                duration: 1.2,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: card,
-                    start: 'top 85%'
-                }
-            }
-        );
-
-        // Visual canvas glow pulse
-        if (visual) {
-            gsap.fromTo(visual, 
-                { scale: 0.8, opacity: 0 },
-                {
-                    scale: 1,
-                    opacity: 1,
-                    duration: 1,
-                    delay: 0.3,
-                    ease: 'back.out(1.4)',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 85%'
-                    }
-                }
-            );
-        }
-
-        // Number counter animation
-        if (number) {
-            gsap.fromTo(number, 
-                { opacity: 0, scale: 2, y: -30 },
-                {
-                    opacity: 1,
-                    scale: 1,
-                    y: 0,
-                    duration: 0.8,
-                    delay: 0.2,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 85%'
-                    }
-                }
-            );
-        }
-
-        // Features stagger in
-        if (features.length) {
-            gsap.fromTo(features, 
-                { opacity: 0, x: -20 },
-                {
-                    opacity: 1,
-                    x: 0,
-                    duration: 0.5,
-                    stagger: 0.1,
-                    delay: 0.5,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 85%'
-                    }
-                }
-            );
-        }
-    });
-
-    // Proof cards - fade up with stagger
-    document.querySelectorAll('.proof-card').forEach((card, index) => {
-        gsap.fromTo(card, 
-            { opacity: 0, y: 60, scale: 0.95 },
-            {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                duration: 0.8,
-                delay: index * 0.2,
+                duration: 0.7,
                 ease: 'power2.out',
                 scrollTrigger: {
                     trigger: card,
-                    start: 'top 85%'
+                    start: 'top 88%'
+                }
+            }
+        );
+    });
+
+    // Proof cards - simple fade up
+    document.querySelectorAll('.proof-card').forEach((card, index) => {
+        gsap.fromTo(card, 
+            { opacity: 0, y: 40 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                delay: index * 0.1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 88%'
                 }
             }
         );
@@ -513,105 +445,84 @@ function setupSections() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// PRICING CARDS - HORIZONTAL SCROLL CAROUSEL
+// PRICING CARDS - FAST SCROLL CAROUSEL
 // ═══════════════════════════════════════════════════════════════
 
 function setupPricingCarousel() {
     const pricingSection = document.querySelector('.scene-pricing');
-    const pricingContainer = document.querySelector('.pricing-container');
     const cards = document.querySelectorAll('.price-card');
     
     if (!pricingSection || cards.length === 0) return;
 
-    // Initial reveal animation
+    // Initial reveal - header
     gsap.fromTo('.pricing-container > .section-tag', 
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 20 },
         {
             opacity: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.5,
             scrollTrigger: {
                 trigger: '.scene-pricing',
-                start: 'top 80%'
+                start: 'top 85%'
             }
         }
     );
     
     gsap.fromTo('.pricing-container > h2', 
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 20 },
         {
             opacity: 1,
             y: 0,
-            duration: 0.8,
-            delay: 0.1,
+            duration: 0.5,
+            delay: 0.05,
             scrollTrigger: {
                 trigger: '.scene-pricing',
-                start: 'top 80%'
+                start: 'top 85%'
             }
         }
     );
 
-    // Set initial state - all cards start visible but stacked/faded
-    cards.forEach((card, index) => {
+    // Cards start ready
+    cards.forEach((card) => {
         card.style.opacity = '1';
         card.style.transform = 'none';
     });
 
-    // Horizontal scroll effect - cards slide left as you scroll
     const totalCards = cards.length;
     
+    // FAST carousel - cards cycle through quickly, last one stays highlighted
     ScrollTrigger.create({
         trigger: '.scene-pricing',
-        start: 'top 30%',
-        end: 'bottom 70%',
-        scrub: 1,
+        start: 'top 60%',
+        end: 'top 20%',  // Much shorter scroll distance = faster flip
+        scrub: 0.3,
         onUpdate: (self) => {
             const progress = self.progress;
+            // Speed multiplier - cycles through all cards in the scroll range
+            const cycleProgress = progress * totalCards;
             
             cards.forEach((card, index) => {
-                // Calculate position in the "deck"
-                const cardProgress = (progress * (totalCards - 1)) - index;
+                const cardProgress = cycleProgress - index;
                 
-                // Current card (active)
-                if (cardProgress >= -0.5 && cardProgress <= 0.5) {
-                    // Center position - fully visible
-                    gsap.to(card, {
-                        scale: 1,
-                        opacity: 1,
-                        x: 0,
-                        rotateY: 0,
-                        zIndex: 10,
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
+                // Active card
+                if (cardProgress >= 0 && cardProgress < 1) {
+                    card.style.transform = 'scale(1) translateX(0) rotateY(0deg)';
+                    card.style.opacity = '1';
+                    card.style.zIndex = '10';
                 }
-                // Cards that have passed (scrolled away)
-                else if (cardProgress > 0.5) {
-                    // Slide left and fade
-                    const offset = Math.min(cardProgress - 0.5, 1);
-                    gsap.to(card, {
-                        scale: 0.85,
-                        opacity: 0.3,
-                        x: -100 * offset,
-                        rotateY: 15,
-                        zIndex: 10 - index,
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
+                // Past cards - quickly fade left
+                else if (cardProgress >= 1) {
+                    const offset = Math.min(cardProgress - 1, 1);
+                    card.style.transform = `scale(0.88) translateX(${-60 * offset}px) rotateY(12deg)`;
+                    card.style.opacity = `${Math.max(0.25, 1 - offset * 0.75)}`;
+                    card.style.zIndex = `${5 - index}`;
                 }
-                // Cards coming up (not yet reached)
+                // Upcoming cards - waiting on right
                 else {
-                    // Behind/right, waiting
-                    const offset = Math.min(Math.abs(cardProgress + 0.5), 1);
-                    gsap.to(card, {
-                        scale: 0.9,
-                        opacity: 0.5,
-                        x: 80 * offset,
-                        rotateY: -10,
-                        zIndex: index,
-                        duration: 0.3,
-                        ease: 'power2.out'
-                    });
+                    const offset = Math.min(Math.abs(cardProgress), 1);
+                    card.style.transform = `scale(0.92) translateX(${40 * offset}px) rotateY(-8deg)`;
+                    card.style.opacity = `${Math.max(0.4, 1 - offset * 0.6)}`;
+                    card.style.zIndex = `${index}`;
                 }
             });
         }
@@ -644,42 +555,32 @@ function initSystemCanvas(canvasId, type) {
         const w = canvas.offsetWidth;
         const h = canvas.offsetHeight;
         
-        // Clear with slight trail effect for glow
-        ctx.fillStyle = 'rgba(18, 18, 28, 0.15)';
-        ctx.fillRect(0, 0, w, h);
+        // Clear fully (no trails - faster)
+        ctx.clearRect(0, 0, w, h);
         
         if (type === 'meridian') {
-            // UPGRADED: Multiple glowing wave layers with pulse
-            const pulse = Math.sin(t * 0.5) * 0.3 + 1;
-            const colors = [
-                { color: '#00abff', alpha: 0.9 },
-                { color: '#0085c7', alpha: 0.7 },
-                { color: '#005e8c', alpha: 0.5 },
-                { color: '#194866', alpha: 0.3 }
-            ];
+            // Clean waves - no shadowBlur (faster)
+            const colors = ['#00abff', '#0085c7', '#005e8c', '#194866'];
             
-            colors.forEach((c, i) => {
+            colors.forEach((color, i) => {
                 ctx.beginPath();
-                ctx.strokeStyle = c.color;
-                ctx.lineWidth = (3 - i * 0.5) * pulse;
-                ctx.shadowColor = c.color;
-                ctx.shadowBlur = 15 * pulse;
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2.5 - i * 0.4;
                 
                 const baseY = h * 0.25 + (i * h * 0.15);
-                for (let x = 0; x <= w; x += 2) {
+                for (let x = 0; x <= w; x += 4) {
                     const y = baseY + 
-                        Math.sin((x * 0.02) + t * 0.8 + i) * 25 * pulse +
-                        Math.sin((x * 0.005) + t * 0.3) * 40;
+                        Math.sin((x * 0.02) + t * 0.6 + i) * 22 +
+                        Math.sin((x * 0.005) + t * 0.25) * 35;
                     
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
-                ctx.shadowBlur = 0;
             });
             
-            // Glowing grid lines
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.15)';
+            // Grid lines
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.12)';
             ctx.lineWidth = 1;
             ctx.setLineDash([3, 3]);
             [0.2, 0.4, 0.6, 0.8].forEach(pct => {
@@ -690,55 +591,43 @@ function initSystemCanvas(canvasId, type) {
             });
             ctx.setLineDash([]);
             
-            // Scanning line
-            const scanX = (t * 50) % w;
+            // Scan line
+            const scanX = (t * 40) % w;
             ctx.beginPath();
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.6)';
-            ctx.shadowColor = '#00abff';
-            ctx.shadowBlur = 20;
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.5)';
             ctx.lineWidth = 2;
             ctx.moveTo(scanX, 0);
             ctx.lineTo(scanX, h);
             ctx.stroke();
-            ctx.shadowBlur = 0;
             
         } else if (type === 'recoil') {
-            // UPGRADED: Breathing bands with glow
+            // Bands - no shadowBlur
             const centerY = h * 0.5;
-            const breathe = Math.sin(t * 0.4) * 0.2 + 1;
             
             for (let band = 8; band >= 1; band--) {
-                const spread = band * 10 * breathe;
-                let color, glow;
+                const spread = band * 9;
+                let color;
                 
                 if (band <= 5) {
-                    const alpha = 0.08 + (band * 0.02);
-                    color = `rgba(0, 171, 255, ${alpha})`;
-                    glow = '#00abff';
+                    color = `rgba(0, 171, 255, ${0.06 + band * 0.015})`;
                 } else if (band === 6) {
-                    color = 'rgba(255, 235, 59, 0.25)';
-                    glow = '#ffeb3b';
+                    color = 'rgba(255, 235, 59, 0.2)';
                 } else if (band === 7) {
-                    color = 'rgba(255, 152, 0, 0.35)';
-                    glow = '#ff9800';
+                    color = 'rgba(255, 152, 0, 0.3)';
                 } else {
-                    color = 'rgba(242, 54, 69, 0.45)';
-                    glow = '#f23645';
+                    color = 'rgba(242, 54, 69, 0.4)';
                 }
                 
                 ctx.fillStyle = color;
-                ctx.shadowColor = glow;
-                ctx.shadowBlur = band > 5 ? 15 : 5;
-                
                 ctx.beginPath();
-                for (let x = 0; x <= w; x += 2) {
-                    const wave = Math.sin((x * 0.008) + t * 0.5) * spread * 0.5;
+                for (let x = 0; x <= w; x += 4) {
+                    const wave = Math.sin((x * 0.008) + t * 0.4) * spread * 0.4;
                     const y = centerY - wave - spread;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
-                for (let x = w; x >= 0; x -= 2) {
-                    const wave = Math.sin((x * 0.008) + t * 0.5) * spread * 0.5;
+                for (let x = w; x >= 0; x -= 4) {
+                    const wave = Math.sin((x * 0.008) + t * 0.4) * spread * 0.4;
                     const y = centerY + wave + spread;
                     ctx.lineTo(x, y);
                 }
@@ -746,64 +635,43 @@ function initSystemCanvas(canvasId, type) {
                 ctx.fill();
             }
             
-            // Center pulse line
+            // Center line
             ctx.beginPath();
             ctx.strokeStyle = '#00abff';
-            ctx.shadowColor = '#00abff';
-            ctx.shadowBlur = 10;
             ctx.lineWidth = 2;
-            for (let x = 0; x <= w; x += 3) {
-                const y = centerY + Math.sin((x * 0.03) + t) * 5;
+            for (let x = 0; x <= w; x += 5) {
+                const y = centerY + Math.sin((x * 0.025) + t) * 4;
                 if (x === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
             ctx.stroke();
-            ctx.shadowBlur = 0;
             
         } else if (type === 'executor') {
-            // UPGRADED: Matrix-style data streams
-            const numFlows = 12;
+            // Data streams - simplified
+            const numFlows = 10;
             for (let i = 0; i < numFlows; i++) {
                 const startX = (w / numFlows) * i + (w / numFlows / 2);
-                const speed = 40 + (i % 3) * 20;
-                const progress = ((t * speed + i * 80) % (h + 150)) - 75;
-                const isCyan = i % 2 === 0;
-                const color = isCyan ? '#00abff' : '#c9a84c';
+                const speed = 35 + (i % 3) * 15;
+                const progress = ((t * speed + i * 70) % (h + 100)) - 50;
+                const color = i % 2 === 0 ? '#00abff' : '#c9a84c';
                 
-                // Trail effect
-                const gradient = ctx.createLinearGradient(startX, progress, startX, progress + 60);
-                gradient.addColorStop(0, color);
-                gradient.addColorStop(1, 'transparent');
-                
+                // Simple line
                 ctx.beginPath();
-                ctx.strokeStyle = gradient;
-                ctx.shadowColor = color;
-                ctx.shadowBlur = 15;
+                ctx.strokeStyle = color;
                 ctx.lineWidth = 2;
                 ctx.moveTo(startX, progress);
-                ctx.lineTo(startX, progress + 50);
+                ctx.lineTo(startX, progress + 40);
                 ctx.stroke();
                 
                 // Head dot
                 ctx.beginPath();
                 ctx.fillStyle = color;
-                ctx.shadowBlur = 20;
-                ctx.arc(startX, progress, 4, 0, Math.PI * 2);
+                ctx.arc(startX, progress, 3, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.shadowBlur = 0;
             }
-            
-            // Horizontal connection lines
-            const yPos = (t * 30) % h;
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.3)';
-            ctx.lineWidth = 1;
-            ctx.moveTo(0, yPos);
-            ctx.lineTo(w, yPos);
-            ctx.stroke();
         }
         
-        t += 0.025;
+        t += 0.02;
         animationId = requestAnimationFrame(draw);
     }
     
