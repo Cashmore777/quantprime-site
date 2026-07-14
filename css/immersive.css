@@ -601,15 +601,13 @@ body {
 
 .scene-pricing {
     padding: 8rem 2rem;
-    min-height: 120vh; /* Shorter - faster card cycle */
+    min-height: auto;
 }
 
 .pricing-container {
     max-width: 1200px;
     text-align: center;
-    position: sticky;
-    top: 50%;
-    transform: translateY(-50%);
+    margin: 0 auto;
 }
 
 .pricing-container h2 {
@@ -618,12 +616,10 @@ body {
 
 .pricing-grid {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 1.5rem;
-    perspective: 1000px;
-    min-height: 500px;
-    position: relative;
 }
 
 .price-card {
@@ -855,11 +851,6 @@ body {
    ═══════════════════════════════════════════════════════════════ */
 
 @media (max-width: 1024px) {
-    .pricing-grid {
-        flex-wrap: wrap;
-        gap: 1rem;
-    }
-    
     .price-card {
         width: 260px;
     }
@@ -875,19 +866,12 @@ body {
     }
     
     .scene-pricing {
-        min-height: auto;
-        padding: 6rem 1rem;
-    }
-    
-    .pricing-container {
-        position: relative;
-        top: auto;
-        transform: none;
+        padding: 5rem 1rem;
     }
     
     .pricing-grid {
         flex-direction: column;
-        min-height: auto;
+        align-items: center;
     }
     
     .price-card {

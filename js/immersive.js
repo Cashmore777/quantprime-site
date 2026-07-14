@@ -445,16 +445,14 @@ function setupSections() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// PRICING CARDS - FAST SCROLL CAROUSEL
+// PRICING CARDS - SIMPLE STAGGERED REVEAL (NO CAROUSEL ON MOBILE)
 // ═══════════════════════════════════════════════════════════════
 
 function setupPricingCarousel() {
-    const pricingSection = document.querySelector('.scene-pricing');
     const cards = document.querySelectorAll('.price-card');
-    
-    if (!pricingSection || cards.length === 0) return;
+    if (cards.length === 0) return;
 
-    // Initial reveal - header
+    // Header fade in
     gsap.fromTo('.pricing-container > .section-tag', 
         { opacity: 0, y: 20 },
         {
@@ -474,7 +472,6 @@ function setupPricingCarousel() {
             opacity: 1,
             y: 0,
             duration: 0.5,
-            delay: 0.05,
             scrollTrigger: {
                 trigger: '.scene-pricing',
                 start: 'top 85%'
@@ -482,51 +479,62 @@ function setupPricingCarousel() {
         }
     );
 
-    // Cards start ready
-    cards.forEach((card) => {
-        card.style.opacity = '1';
-        card.style.transform = 'none';
-    });
-
-    const totalCards = cards.length;
+    // Check if mobile
+    const isMobile = window.innerWidth < 900;
     
-    // FAST carousel - cards cycle through quickly, last one stays highlighted
-    ScrollTrigger.create({
-        trigger: '.scene-pricing',
-        start: 'top 60%',
-        end: 'top 20%',  // Much shorter scroll distance = faster flip
-        scrub: 0.3,
-        onUpdate: (self) => {
-            const progress = self.progress;
-            // Speed multiplier - cycles through all cards in the scroll range
-            const cycleProgress = progress * totalCards;
-            
-            cards.forEach((card, index) => {
-                const cardProgress = cycleProgress - index;
+    if (isMobile) {
+        // Mobile: simple staggered fade-in, no carousel
+        cards.forEach((card, index) => {
+            gsap.fromTo(card, 
+                { opacity: 0, y: 30 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.5,
+                    delay: index * 0.15,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 90%'
+                    }
+                }
+            );
+        });
+    } else {
+        // Desktop: slower carousel with more scroll distance
+        const totalCards = cards.length;
+        
+        ScrollTrigger.create({
+            trigger: '.scene-pricing',
+            start: 'top 70%',
+            end: 'bottom 60%',  // Much longer scroll = slower flip
+            scrub: 0.5,
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const cycleProgress = progress * (totalCards - 1);
                 
-                // Active card
-                if (cardProgress >= 0 && cardProgress < 1) {
-                    card.style.transform = 'scale(1) translateX(0) rotateY(0deg)';
-                    card.style.opacity = '1';
-                    card.style.zIndex = '10';
-                }
-                // Past cards - quickly fade left
-                else if (cardProgress >= 1) {
-                    const offset = Math.min(cardProgress - 1, 1);
-                    card.style.transform = `scale(0.88) translateX(${-60 * offset}px) rotateY(12deg)`;
-                    card.style.opacity = `${Math.max(0.25, 1 - offset * 0.75)}`;
-                    card.style.zIndex = `${5 - index}`;
-                }
-                // Upcoming cards - waiting on right
-                else {
-                    const offset = Math.min(Math.abs(cardProgress), 1);
-                    card.style.transform = `scale(0.92) translateX(${40 * offset}px) rotateY(-8deg)`;
-                    card.style.opacity = `${Math.max(0.4, 1 - offset * 0.6)}`;
-                    card.style.zIndex = `${index}`;
-                }
-            });
-        }
-    });
+                cards.forEach((card, index) => {
+                    const diff = cycleProgress - index;
+                    
+                    if (Math.abs(diff) < 0.5) {
+                        // Current card
+                        card.style.transform = 'scale(1)';
+                        card.style.opacity = '1';
+                        card.style.zIndex = '10';
+                    } else if (diff >= 0.5) {
+                        // Past
+                        card.style.transform = 'scale(0.9)';
+                        card.style.opacity = '0.4';
+                        card.style.zIndex = '1';
+                    } else {
+                        // Future
+                        card.style.transform = 'scale(0.95)';
+                        card.style.opacity = '0.6';
+                        card.style.zIndex = '5';
+                    }
+                });
+            }
+        });
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -538,10 +546,8 @@ function initSystemCanvas(canvasId, type) {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    let animationId;
-    let t = 0;
-    let isActive = false;
     
+    // Single draw - NO animation loop (static visualization)
     function resize() {
         canvas.width = canvas.offsetWidth * 2;
         canvas.height = canvas.offsetHeight * 2;
@@ -549,41 +555,32 @@ function initSystemCanvas(canvasId, type) {
     }
     resize();
     
-    function draw() {
-        if (!isActive) return;
-        
+    function drawStatic() {
         const w = canvas.offsetWidth;
         const h = canvas.offsetHeight;
-        
-        // Clear fully (no trails - faster)
         ctx.clearRect(0, 0, w, h);
         
         if (type === 'meridian') {
-            // Clean waves - no shadowBlur (faster)
+            // Static waves
             const colors = ['#00abff', '#0085c7', '#005e8c', '#194866'];
-            
             colors.forEach((color, i) => {
                 ctx.beginPath();
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 2.5 - i * 0.4;
-                
-                const baseY = h * 0.25 + (i * h * 0.15);
-                for (let x = 0; x <= w; x += 4) {
-                    const y = baseY + 
-                        Math.sin((x * 0.02) + t * 0.6 + i) * 22 +
-                        Math.sin((x * 0.005) + t * 0.25) * 35;
-                    
+                ctx.lineWidth = 2 - i * 0.3;
+                const baseY = h * 0.25 + (i * h * 0.18);
+                for (let x = 0; x <= w; x += 6) {
+                    const y = baseY + Math.sin(x * 0.015 + i) * 25 + Math.sin(x * 0.004) * 40;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
                 ctx.stroke();
             });
             
-            // Grid lines
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.12)';
+            // Grid
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.1)';
             ctx.lineWidth = 1;
             ctx.setLineDash([3, 3]);
-            [0.2, 0.4, 0.6, 0.8].forEach(pct => {
+            [0.25, 0.5, 0.75].forEach(pct => {
                 ctx.beginPath();
                 ctx.moveTo(0, h * pct);
                 ctx.lineTo(w, h * pct);
@@ -591,43 +588,27 @@ function initSystemCanvas(canvasId, type) {
             });
             ctx.setLineDash([]);
             
-            // Scan line
-            const scanX = (t * 40) % w;
-            ctx.beginPath();
-            ctx.strokeStyle = 'rgba(0, 171, 255, 0.5)';
-            ctx.lineWidth = 2;
-            ctx.moveTo(scanX, 0);
-            ctx.lineTo(scanX, h);
-            ctx.stroke();
-            
         } else if (type === 'recoil') {
-            // Bands - no shadowBlur
+            // Static bands
             const centerY = h * 0.5;
-            
             for (let band = 8; band >= 1; band--) {
-                const spread = band * 9;
+                const spread = band * 10;
                 let color;
-                
-                if (band <= 5) {
-                    color = `rgba(0, 171, 255, ${0.06 + band * 0.015})`;
-                } else if (band === 6) {
-                    color = 'rgba(255, 235, 59, 0.2)';
-                } else if (band === 7) {
-                    color = 'rgba(255, 152, 0, 0.3)';
-                } else {
-                    color = 'rgba(242, 54, 69, 0.4)';
-                }
+                if (band <= 5) color = `rgba(0, 171, 255, ${0.05 + band * 0.02})`;
+                else if (band === 6) color = 'rgba(255, 235, 59, 0.2)';
+                else if (band === 7) color = 'rgba(255, 152, 0, 0.3)';
+                else color = 'rgba(242, 54, 69, 0.4)';
                 
                 ctx.fillStyle = color;
                 ctx.beginPath();
-                for (let x = 0; x <= w; x += 4) {
-                    const wave = Math.sin((x * 0.008) + t * 0.4) * spread * 0.4;
+                for (let x = 0; x <= w; x += 8) {
+                    const wave = Math.sin(x * 0.006) * spread * 0.3;
                     const y = centerY - wave - spread;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
-                for (let x = w; x >= 0; x -= 4) {
-                    const wave = Math.sin((x * 0.008) + t * 0.4) * spread * 0.4;
+                for (let x = w; x >= 0; x -= 8) {
+                    const wave = Math.sin(x * 0.006) * spread * 0.3;
                     const y = centerY + wave + spread;
                     ctx.lineTo(x, y);
                 }
@@ -639,51 +620,21 @@ function initSystemCanvas(canvasId, type) {
             ctx.beginPath();
             ctx.strokeStyle = '#00abff';
             ctx.lineWidth = 2;
-            for (let x = 0; x <= w; x += 5) {
-                const y = centerY + Math.sin((x * 0.025) + t) * 4;
-                if (x === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(w, centerY);
             ctx.stroke();
-            
-        } else if (type === 'executor') {
-            // Data streams - simplified
-            const numFlows = 10;
-            for (let i = 0; i < numFlows; i++) {
-                const startX = (w / numFlows) * i + (w / numFlows / 2);
-                const speed = 35 + (i % 3) * 15;
-                const progress = ((t * speed + i * 70) % (h + 100)) - 50;
-                const color = i % 2 === 0 ? '#00abff' : '#c9a84c';
-                
-                // Simple line
-                ctx.beginPath();
-                ctx.strokeStyle = color;
-                ctx.lineWidth = 2;
-                ctx.moveTo(startX, progress);
-                ctx.lineTo(startX, progress + 40);
-                ctx.stroke();
-                
-                // Head dot
-                ctx.beginPath();
-                ctx.fillStyle = color;
-                ctx.arc(startX, progress, 3, 0, Math.PI * 2);
-                ctx.fill();
-            }
         }
-        
-        t += 0.02;
-        animationId = requestAnimationFrame(draw);
     }
     
+    // Draw once on scroll into view
     ScrollTrigger.create({
         trigger: canvas,
         start: 'top 95%',
-        end: 'bottom 5%',
-        onEnter: () => { isActive = true; draw(); },
-        onLeave: () => { isActive = false; cancelAnimationFrame(animationId); },
-        onEnterBack: () => { isActive = true; draw(); },
-        onLeaveBack: () => { isActive = false; cancelAnimationFrame(animationId); }
+        onEnter: drawStatic,
+        onEnterBack: drawStatic
     });
+    
+    window.addEventListener('resize', () => { resize(); drawStatic(); });
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -747,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     initSystemCanvas('meridian-canvas', 'meridian');
     initSystemCanvas('recoil-canvas', 'recoil');
-    initSystemCanvas('executor-canvas', 'executor');
+    // Executor canvas removed - too heavy
 });
 
 // Console branding
