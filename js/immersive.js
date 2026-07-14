@@ -483,18 +483,19 @@ function setupPricingCarousel() {
     const isMobile = window.innerWidth < 900;
     
     if (isMobile) {
-        // Mobile: simple staggered fade-in, no carousel
+        // Mobile: each card fades in when you scroll to IT specifically
         cards.forEach((card, index) => {
             gsap.fromTo(card, 
-                { opacity: 0, y: 30 },
+                { opacity: 0, y: 40, scale: 0.95 },
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 0.5,
-                    delay: index * 0.15,
+                    scale: 1,
+                    duration: 0.6,
+                    ease: 'power2.out',
                     scrollTrigger: {
                         trigger: card,
-                        start: 'top 90%'
+                        start: 'top 85%'
                     }
                 }
             );
@@ -546,8 +547,14 @@ function initSystemCanvas(canvasId, type) {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
+    let animationId;
+    let t = 0;
+    let isActive = false;
     
-    // Single draw - NO animation loop (static visualization)
+    // Throttle to 30fps max for performance
+    let lastFrame = 0;
+    const frameInterval = 1000 / 30;
+    
     function resize() {
         canvas.width = canvas.offsetWidth * 2;
         canvas.height = canvas.offsetHeight * 2;
@@ -555,21 +562,31 @@ function initSystemCanvas(canvasId, type) {
     }
     resize();
     
-    function drawStatic() {
+    function draw(timestamp) {
+        if (!isActive) return;
+        
+        // Throttle framerate
+        if (timestamp - lastFrame < frameInterval) {
+            animationId = requestAnimationFrame(draw);
+            return;
+        }
+        lastFrame = timestamp;
+        
         const w = canvas.offsetWidth;
         const h = canvas.offsetHeight;
         ctx.clearRect(0, 0, w, h);
         
         if (type === 'meridian') {
-            // Static waves
             const colors = ['#00abff', '#0085c7', '#005e8c', '#194866'];
             colors.forEach((color, i) => {
                 ctx.beginPath();
                 ctx.strokeStyle = color;
-                ctx.lineWidth = 2 - i * 0.3;
-                const baseY = h * 0.25 + (i * h * 0.18);
-                for (let x = 0; x <= w; x += 6) {
-                    const y = baseY + Math.sin(x * 0.015 + i) * 25 + Math.sin(x * 0.004) * 40;
+                ctx.lineWidth = 2.5 - i * 0.4;
+                const baseY = h * 0.25 + (i * h * 0.16);
+                for (let x = 0; x <= w; x += 5) {
+                    const y = baseY + 
+                        Math.sin((x * 0.018) + t * 0.5 + i) * 22 +
+                        Math.sin((x * 0.005) + t * 0.2) * 35;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
@@ -588,27 +605,35 @@ function initSystemCanvas(canvasId, type) {
             });
             ctx.setLineDash([]);
             
+            // Scan line
+            const scanX = (t * 30) % w;
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(0, 171, 255, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.moveTo(scanX, 0);
+            ctx.lineTo(scanX, h);
+            ctx.stroke();
+            
         } else if (type === 'recoil') {
-            // Static bands
             const centerY = h * 0.5;
             for (let band = 8; band >= 1; band--) {
-                const spread = band * 10;
+                const spread = band * 9;
                 let color;
-                if (band <= 5) color = `rgba(0, 171, 255, ${0.05 + band * 0.02})`;
+                if (band <= 5) color = `rgba(0, 171, 255, ${0.05 + band * 0.018})`;
                 else if (band === 6) color = 'rgba(255, 235, 59, 0.2)';
-                else if (band === 7) color = 'rgba(255, 152, 0, 0.3)';
-                else color = 'rgba(242, 54, 69, 0.4)';
+                else if (band === 7) color = 'rgba(255, 152, 0, 0.28)';
+                else color = 'rgba(242, 54, 69, 0.38)';
                 
                 ctx.fillStyle = color;
                 ctx.beginPath();
-                for (let x = 0; x <= w; x += 8) {
-                    const wave = Math.sin(x * 0.006) * spread * 0.3;
+                for (let x = 0; x <= w; x += 6) {
+                    const wave = Math.sin((x * 0.007) + t * 0.3) * spread * 0.35;
                     const y = centerY - wave - spread;
                     if (x === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
                 }
-                for (let x = w; x >= 0; x -= 8) {
-                    const wave = Math.sin(x * 0.006) * spread * 0.3;
+                for (let x = w; x >= 0; x -= 6) {
+                    const wave = Math.sin((x * 0.007) + t * 0.3) * spread * 0.35;
                     const y = centerY + wave + spread;
                     ctx.lineTo(x, y);
                 }
@@ -616,25 +641,33 @@ function initSystemCanvas(canvasId, type) {
                 ctx.fill();
             }
             
-            // Center line
+            // Center pulse
             ctx.beginPath();
             ctx.strokeStyle = '#00abff';
             ctx.lineWidth = 2;
-            ctx.moveTo(0, centerY);
-            ctx.lineTo(w, centerY);
+            for (let x = 0; x <= w; x += 6) {
+                const y = centerY + Math.sin((x * 0.02) + t * 0.8) * 4;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
             ctx.stroke();
         }
+        
+        t += 0.03;
+        animationId = requestAnimationFrame(draw);
     }
     
-    // Draw once on scroll into view
     ScrollTrigger.create({
         trigger: canvas,
         start: 'top 95%',
-        onEnter: drawStatic,
-        onEnterBack: drawStatic
+        end: 'bottom 5%',
+        onEnter: () => { isActive = true; animationId = requestAnimationFrame(draw); },
+        onLeave: () => { isActive = false; cancelAnimationFrame(animationId); },
+        onEnterBack: () => { isActive = true; animationId = requestAnimationFrame(draw); },
+        onLeaveBack: () => { isActive = false; cancelAnimationFrame(animationId); }
     });
     
-    window.addEventListener('resize', () => { resize(); drawStatic(); });
+    window.addEventListener('resize', resize);
 }
 
 // ═══════════════════════════════════════════════════════════════
