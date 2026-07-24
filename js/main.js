@@ -59,7 +59,6 @@ if (dropdownBtn && dropdownMenu) {
     const centerX = w * 0.4;
     const candleWidth = 50;
     
-    // Compression zone
     const zoneTop = h * 0.68;
     const zoneBottom = h * 0.88;
     
@@ -262,30 +261,25 @@ if (dropdownBtn && dropdownMenu) {
       ctx.strokeRect(candle3X - candleWidth/2, candle3Close, candleWidth, candle3Open - candle3Close);
     }
 
-    // Recoil Signal Box with PROPER arrow
     if (showSignal) {
       const signalX = candle2X + candleWidth/2 + 20;
       const signalY = candle2Low + 10;
       
-      // Signal box
       ctx.fillStyle = `rgba(0, 136, 204, ${0.95 * signalAlpha})`;
       ctx.beginPath();
       ctx.roundRect(signalX, signalY, 90, 32, 6);
       ctx.fill();
       
-      // Proper upward arrow (triangle pointing up)
       ctx.fillStyle = `rgba(255, 255, 255, ${signalAlpha})`;
       ctx.beginPath();
-      ctx.moveTo(signalX + 18, signalY + 8);  // Top point
-      ctx.lineTo(signalX + 12, signalY + 18); // Bottom left
-      ctx.lineTo(signalX + 24, signalY + 18); // Bottom right
+      ctx.moveTo(signalX + 18, signalY + 8);
+      ctx.lineTo(signalX + 12, signalY + 18);
+      ctx.lineTo(signalX + 24, signalY + 18);
       ctx.closePath();
       ctx.fill();
       
-      // Arrow stem
       ctx.fillRect(signalX + 15, signalY + 17, 6, 8);
       
-      // Text
       ctx.font = '700 11px "JetBrains Mono"';
       ctx.fillStyle = `rgba(255, 255, 255, ${signalAlpha})`;
       ctx.fillText('RECOIL', signalX + 35, signalY + 21);
@@ -297,7 +291,7 @@ if (dropdownBtn && dropdownMenu) {
 })();
 
 // ── MERIDIAN ANIMATION ──
-// Slow line draw, diamond at tip as low is created
+// Market structure with swing highs and lows
 (function() {
   const c = document.getElementById('meridianCanvas');
   if (!c) return;
@@ -313,6 +307,24 @@ if (dropdownBtn && dropdownMenu) {
   resize();
   window.addEventListener('resize', resize);
 
+  // Define swing points for market structure (x as %, y as % of height)
+  // Descending structure: lower highs, lower lows, then reversal
+  const swingPoints = [
+    { x: 0.05, y: 0.20 },  // Start high
+    { x: 0.12, y: 0.32 },  // Swing low 1
+    { x: 0.20, y: 0.25 },  // Lower high 1
+    { x: 0.28, y: 0.42 },  // Swing low 2 (lower)
+    { x: 0.36, y: 0.35 },  // Lower high 2
+    { x: 0.44, y: 0.55 },  // Swing low 3 (lower)
+    { x: 0.52, y: 0.48 },  // Lower high 3
+    { x: 0.60, y: 0.78 },  // THE LOW (major swing low at quant node)
+    { x: 0.68, y: 0.58 },  // Higher low / reversal
+    { x: 0.76, y: 0.65 },  // Pullback
+    { x: 0.84, y: 0.45 },  // Higher high (confirmation)
+    { x: 0.92, y: 0.52 },  // Small pullback
+    { x: 0.98, y: 0.38 },  // Continuation up
+  ];
+
   function draw() {
     frame++;
     const w = W / 2, h = H / 2;
@@ -321,14 +333,14 @@ if (dropdownBtn && dropdownMenu) {
     ctx.fillStyle = '#f2f1ed';
     ctx.fillRect(0, 0, w, h);
 
-    // 480 frame cycle - MUCH slower
-    const progress = (frame % 480) / 480;
+    // 540 frame cycle - slow
+    const progress = (frame % 540) / 540;
 
     // Quant Node levels
     const nodes = [
-      { y: h * 0.18, label: '1.14500' },
-      { y: h * 0.38, label: '1.14200' },
-      { y: h * 0.58, label: '1.13900' },
+      { y: h * 0.20, label: '1.14500' },
+      { y: h * 0.40, label: '1.14200' },
+      { y: h * 0.60, label: '1.13900' },
       { y: h * 0.78, label: '1.13600' },
     ];
 
@@ -359,80 +371,99 @@ if (dropdownBtn && dropdownMenu) {
       }
     });
 
-    // Line drawing from 0.08 to 0.85 (very slow)
+    // Line drawing
     const lineStart = 0.08;
-    const lineEnd = 0.85;
+    const lineEnd = 0.88;
     
-    // The lowest point position
-    const lowestY = h * 0.78;
-    const lowestX = w * 0.55;
-    
-    // At what progress does the line reach the lowest point?
-    const lowPointProgress = 0.55; // 55% through the line drawing
+    // The major low is at index 7 in swingPoints
+    const majorLowIndex = 7;
 
     if (progress > lineStart) {
       const rawLineProgress = (progress - lineStart) / (lineEnd - lineStart);
       const lineProgress = Math.min(rawLineProgress, 1);
       
-      const points = [];
-      const totalPoints = 120;
-      const numPts = Math.floor(lineProgress * totalPoints);
+      // Calculate how many swing points to show
+      const totalSegments = swingPoints.length - 1;
+      const currentSegment = lineProgress * totalSegments;
+      const fullSegments = Math.floor(currentSegment);
+      const segmentProgress = currentSegment - fullSegments;
 
+      // Build points array
+      const points = [];
+      const padding = 50;
+      const drawWidth = w - padding * 2;
+      const drawHeight = h - 40;
+
+      for (let i = 0; i <= fullSegments && i < swingPoints.length; i++) {
+        const sp = swingPoints[i];
+        points.push({
+          x: padding + sp.x * drawWidth,
+          y: 20 + sp.y * drawHeight
+        });
+      }
+
+      // Add partial segment
+      if (fullSegments < totalSegments && segmentProgress > 0) {
+        const from = swingPoints[fullSegments];
+        const to = swingPoints[fullSegments + 1];
+        points.push({
+          x: padding + (from.x + (to.x - from.x) * segmentProgress) * drawWidth,
+          y: 20 + (from.y + (to.y - from.y) * segmentProgress) * drawHeight
+        });
+      }
+
+      // Track the current lowest point
       let currentLowestY = 0;
       let currentLowestX = 0;
-
-      for (let i = 0; i < numPts; i++) {
-        const t = i / totalPoints;
-        const x = 55 + t * (w - 110);
-        let y;
-        
-        if (t < 0.55) {
-          // Descent to low
-          const descT = t / 0.55;
-          y = h * 0.22 + descT * (lowestY - h * 0.22) + Math.sin(i * 0.2) * 4;
-        } else {
-          // Reversal up
-          const revT = (t - 0.55) / 0.45;
-          y = lowestY - revT * (lowestY - h * 0.38) + Math.sin(i * 0.25) * 3;
-        }
-        points.push({ x, y });
-        
-        // Track the current lowest point as line draws
-        if (y > currentLowestY) {
-          currentLowestY = y;
-          currentLowestX = x;
+      for (const p of points) {
+        if (p.y > currentLowestY) {
+          currentLowestY = p.y;
+          currentLowestX = p.x;
         }
       }
 
-      // Draw the line
+      // Draw the line with smooth curves
       if (points.length > 1) {
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
         
-        for (let i = 1; i < points.length - 1; i++) {
-          const xc = (points[i].x + points[i + 1].x) / 2;
-          const yc = (points[i].y + points[i + 1].y) / 2;
-          ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        for (let i = 1; i < points.length; i++) {
+          const prev = points[i - 1];
+          const curr = points[i];
+          
+          // Use quadratic curves for smoother lines
+          const cpX = (prev.x + curr.x) / 2;
+          const cpY = (prev.y + curr.y) / 2;
+          
+          if (i === 1) {
+            ctx.lineTo(curr.x, curr.y);
+          } else {
+            ctx.quadraticCurveTo(prev.x, prev.y, cpX, cpY);
+          }
         }
-        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+        
+        // Draw to the last point
+        if (points.length > 2) {
+          const last = points[points.length - 1];
+          ctx.lineTo(last.x, last.y);
+        }
         
         ctx.strokeStyle = '#1a1a1a';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
 
-      // Has the line reached near the lowest point? (t >= 0.53)
-      const currentT = numPts / totalPoints;
-      const hasReachedLow = currentT >= 0.53;
+      // Has the line reached the major low? (segment 7)
+      const hasReachedLow = fullSegments >= majorLowIndex;
       
       if (hasReachedLow) {
-        // Signal appears AS the low is being created
-        const timeSinceLow = Math.max(0, currentT - 0.53) / 0.1;
-        const signalAlpha = Math.min(timeSinceLow, 1);
+        const timeSinceLow = (fullSegments - majorLowIndex) / totalSegments;
+        const signalAlpha = Math.min(timeSinceLow * 8 + 0.3, 1);
         
-        // NO RINGS - just the diamond directly below the lowest point
-        const diamondX = currentLowestX;
-        const diamondY = currentLowestY + 12; // Directly below the tip
+        // Position at the actual major low
+        const majorLow = swingPoints[majorLowIndex];
+        const diamondX = padding + majorLow.x * drawWidth;
+        const diamondY = 20 + majorLow.y * drawHeight + 12;
         const size = 10;
 
         // Diamond
@@ -448,7 +479,7 @@ if (dropdownBtn && dropdownMenu) {
         ctx.fillRect(-size/2, -size/2, size, size);
         ctx.restore();
 
-        // Label - centered below diamond
+        // Label
         if (signalAlpha > 0.3) {
           const labelAlpha = (signalAlpha - 0.3) / 0.7;
           ctx.font = '700 10px "JetBrains Mono"';
