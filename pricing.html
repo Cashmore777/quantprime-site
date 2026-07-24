@@ -9,12 +9,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
+/* Light theme base */
 body {
-  background: #0a0a0f;
+  background: #fafafa;
 }
 
 .page-header {
-  background: linear-gradient(180deg, #0d1117 0%, #0a0a0f 100%);
+  background: linear-gradient(180deg, #0d1117 0%, #1a1a24 100%);
+  padding-bottom: 3rem;
 }
 
 .page-header h1, .page-header p, .page-header .label {
@@ -26,12 +28,84 @@ body {
 }
 
 .page-header p {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.7);
 }
 
+/* Billing Toggle */
+.billing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 2rem;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.toggle-label.active {
+  color: #fff;
+  font-weight: 500;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.toggle-switch.annual::after {
+  transform: translateX(22px);
+}
+
+.toggle-switch.annual {
+  background: var(--gold);
+}
+
+.save-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(201,168,76,0.2);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 100px;
+  margin-left: 0.5rem;
+}
+
+.save-badge::before {
+  content: '🔥';
+  font-size: 0.65rem;
+}
+
+/* Pricing Section */
 .pricing-section {
-  padding: 2rem 0 6rem;
-  background: #0a0a0f;
+  padding: 3rem 0 6rem;
+  background: #fafafa;
+  margin-top: -1rem;
 }
 
 /* Card grid */
@@ -40,17 +114,20 @@ body {
   grid-template-columns: repeat(5, 1fr);
   gap: 0;
   border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.1);
+  overflow: visible;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
 }
 
 /* Individual card */
 .price-card {
-  background: #12121a;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  background: #fff;
+  border-right: 1px solid rgba(0,0,0,0.06);
   padding: 0;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .price-card:last-child {
@@ -59,15 +136,15 @@ body {
 
 /* Card header */
 .card-header {
-  padding: 1.8rem 1.2rem 1.5rem;
-  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  padding: 2.2rem 1.2rem 1.5rem;
+  background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 .card-name {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #fff;
+  color: #1a1a1a;
   margin-bottom: 0.6rem;
 }
 
@@ -75,38 +152,49 @@ body {
   font-family: 'JetBrains Mono', monospace;
   font-size: 2rem;
   font-weight: 600;
-  color: #fff;
+  color: #1a1a1a;
 }
 
 .card-price span {
   font-size: 0.8rem;
   font-weight: 400;
-  color: rgba(255,255,255,0.5);
+  color: rgba(0,0,0,0.5);
 }
 
 .card-billing {
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.4);
+  font-size: 0.72rem;
+  color: rgba(0,0,0,0.5);
   margin-top: 0.3rem;
 }
 
 .card-save {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--gold);
+  font-weight: 500;
   margin-top: 0.2rem;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 0.3s;
+}
+
+.card-save.visible {
+  opacity: 1;
+  height: auto;
+  margin-top: 0.3rem;
 }
 
 .card-btn {
   display: block;
   width: 100%;
   margin-top: 1.2rem;
-  padding: 0.7rem 1rem;
-  font-size: 0.8rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.82rem;
   font-weight: 500;
   text-align: center;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: transparent;
-  color: #fff;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: #fff;
+  color: #1a1a1a;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
@@ -114,13 +202,13 @@ body {
 }
 
 .card-btn:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.3);
+  background: #f5f5f5;
+  border-color: rgba(0,0,0,0.25);
 }
 
 .card-skip {
-  font-size: 0.68rem;
-  color: rgba(255,255,255,0.4);
+  font-size: 0.7rem;
+  color: rgba(0,0,0,0.45);
   text-align: center;
   margin-top: 0.6rem;
 }
@@ -128,6 +216,11 @@ body {
 .card-skip a {
   color: var(--gold);
   text-decoration: none;
+  font-weight: 500;
+}
+
+.card-skip a:hover {
+  text-decoration: underline;
 }
 
 /* Feature list */
@@ -142,8 +235,8 @@ body {
   gap: 0.6rem;
   padding: 0.45rem 0;
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.85);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #1a1a1a;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
 }
 
 .feature-item:last-child {
@@ -151,7 +244,7 @@ body {
 }
 
 .feature-item.disabled {
-  color: rgba(255,255,255,0.25);
+  color: rgba(0,0,0,0.25);
 }
 
 .feature-icon {
@@ -165,28 +258,51 @@ body {
 }
 
 .feature-icon.x {
-  color: rgba(255,255,255,0.2);
+  color: rgba(0,0,0,0.15);
 }
 
-.feature-value {
-  color: var(--gold);
+/* Badges - positioned properly */
+.card-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  margin-right: 0.3rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 100px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.badge-popular {
+  background: var(--gold);
+  color: #000;
+  font-weight: 600;
+}
+
+.badge-valuable {
+  background: #1a1a1a;
+  color: var(--gold);
+  border: 1px solid var(--gold);
 }
 
 /* Highlighted cards */
 .price-card.popular {
-  background: #16161f;
+  background: #fffdf8;
   border: 2px solid var(--gold);
   border-radius: 12px;
   margin: -1px;
-  position: relative;
+  margin-top: -12px;
+  padding-top: 12px;
   z-index: 2;
+  box-shadow: 0 8px 32px rgba(201,168,76,0.15);
 }
 
 .price-card.popular .card-header {
-  background: linear-gradient(180deg, rgba(184,150,46,0.1) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(201,168,76,0.08) 0%, transparent 100%);
 }
 
 .price-card.popular .card-btn {
@@ -200,42 +316,18 @@ body {
   background: #d4b94e;
 }
 
-.card-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.8rem;
-  border-radius: 100px;
-  white-space: nowrap;
-}
-
-.badge-popular {
-  background: var(--gold);
-  color: #000;
-}
-
-.badge-valuable {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-  color: var(--gold);
-  border: 1px solid var(--gold);
-}
-
 .price-card.valuable {
-  background: linear-gradient(180deg, #1a1a20 0%, #12121a 100%);
+  background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
   border: 2px solid var(--gold);
   border-radius: 12px;
   margin: -1px;
-  position: relative;
+  margin-top: -12px;
+  padding-top: 12px;
   z-index: 1;
 }
 
 .price-card.valuable .card-header {
-  background: linear-gradient(180deg, rgba(184,150,46,0.08) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(201,168,76,0.05) 0%, transparent 100%);
 }
 
 .price-card.valuable .card-btn {
@@ -245,18 +337,27 @@ body {
   font-weight: 600;
 }
 
-/* Footer override for dark */
-footer {
-  background: #0a0a0f;
-  border-top: 1px solid rgba(255,255,255,0.06);
+.price-card.valuable .card-btn:hover {
+  background: #d4b94e;
 }
 
-footer p, footer .nav-logo {
-  color: rgba(255,255,255,0.5);
+/* Lifetime link - only for Ascension */
+.lifetime-link {
+  font-size: 0.68rem;
+  color: rgba(0,0,0,0.4);
+  text-align: center;
+  margin-top: 0.4rem;
 }
 
-footer .nav-logo span {
+.lifetime-link a {
   color: var(--gold);
+  text-decoration: none;
+}
+
+/* Footer */
+footer {
+  background: #fff;
+  border-top: 1px solid rgba(0,0,0,0.06);
 }
 
 /* Responsive */
@@ -266,7 +367,7 @@ footer .nav-logo span {
   }
   .price-card:nth-child(4),
   .price-card:nth-child(5) {
-    border-top: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid rgba(0,0,0,0.06);
   }
 }
 
@@ -276,10 +377,15 @@ footer .nav-logo span {
   }
   .price-card {
     border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
   }
   .price-card:last-child {
     border-bottom: none;
+  }
+  .price-card.popular,
+  .price-card.valuable {
+    margin-top: 1rem;
+    padding-top: 12px;
   }
 }
 </style>
@@ -312,6 +418,13 @@ footer .nav-logo span {
     <div class="label">ACCESS TIERS</div>
     <h1>Choose your level.<br><em>Scale when ready.</em></h1>
     <p>Start with Research to learn the framework. Unlock instruments as you grow.</p>
+    
+    <div class="billing-toggle">
+      <span class="toggle-label" id="monthlyLabel">Monthly</span>
+      <div class="toggle-switch annual" id="billingToggle"></div>
+      <span class="toggle-label active" id="annualLabel">Annually</span>
+      <span class="save-badge">Save up to 17%</span>
+    </div>
   </div>
 </section>
 
@@ -320,14 +433,14 @@ footer .nav-logo span {
     <div class="pricing-cards">
       
       <!-- Research -->
-      <div class="price-card">
+      <div class="price-card" data-monthly="8" data-annual="6.67" data-save="16">
         <div class="card-header">
           <div class="card-name">Research</div>
-          <div class="card-price">£8<span>/mo</span></div>
-          <div class="card-billing">billed monthly</div>
-          <div class="card-save">Save £17 with annual</div>
+          <div class="card-price">£<span class="price-value">6.67</span><span>/mo</span></div>
+          <div class="card-billing billing-text">billed annually</div>
+          <div class="card-save visible">Save £16 a year</div>
           <a href="#" class="card-btn">Coming Soon</a>
-          <div class="card-skip">or <a href="#">pay annually</a></div>
+          <div class="card-skip">or <a href="#" class="alt-billing">pay monthly</a></div>
         </div>
         <div class="card-features">
           <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
@@ -355,14 +468,14 @@ footer .nav-logo span {
       </div>
       
       <!-- Recoil -->
-      <div class="price-card">
+      <div class="price-card" data-monthly="28" data-annual="23.33" data-save="56">
         <div class="card-header">
           <div class="card-name">Recoil</div>
-          <div class="card-price">£28<span>/mo</span></div>
-          <div class="card-billing">billed monthly</div>
-          <div class="card-save">Save £56 with annual</div>
+          <div class="card-price">£<span class="price-value">23.33</span><span>/mo</span></div>
+          <div class="card-billing billing-text">billed annually</div>
+          <div class="card-save visible">Save £56 a year</div>
           <a href="#" class="card-btn">Coming Soon</a>
-          <div class="card-skip">or <a href="#">pay annually</a></div>
+          <div class="card-skip">or <a href="#" class="alt-billing">pay monthly</a></div>
         </div>
         <div class="card-features">
           <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
@@ -390,14 +503,14 @@ footer .nav-logo span {
       </div>
       
       <!-- Recoil + Meridian -->
-      <div class="price-card">
+      <div class="price-card" data-monthly="58" data-annual="48.33" data-save="116">
         <div class="card-header">
           <div class="card-name">Recoil + Meridian</div>
-          <div class="card-price">£58<span>/mo</span></div>
-          <div class="card-billing">billed monthly</div>
-          <div class="card-save">Save £116 with annual</div>
+          <div class="card-price">£<span class="price-value">48.33</span><span>/mo</span></div>
+          <div class="card-billing billing-text">billed annually</div>
+          <div class="card-save visible">Save £116 a year</div>
           <a href="#" class="card-btn">Coming Soon</a>
-          <div class="card-skip">or <a href="#">pay annually</a></div>
+          <div class="card-skip">or <a href="#" class="alt-billing">pay monthly</a></div>
         </div>
         <div class="card-features">
           <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
@@ -425,15 +538,15 @@ footer .nav-logo span {
       </div>
       
       <!-- Full Suite (Popular) -->
-      <div class="price-card popular">
+      <div class="price-card popular" data-monthly="88" data-annual="73.33" data-save="176">
         <div class="card-badge badge-popular">Most Popular</div>
         <div class="card-header">
           <div class="card-name">Full Suite</div>
-          <div class="card-price">£88<span>/mo</span></div>
-          <div class="card-billing">billed monthly</div>
-          <div class="card-save">Save £176 with annual</div>
+          <div class="card-price">£<span class="price-value">73.33</span><span>/mo</span></div>
+          <div class="card-billing billing-text">billed annually</div>
+          <div class="card-save visible">Save £176 a year</div>
           <a href="#" class="card-btn">Coming Soon</a>
-          <div class="card-skip">or <a href="#">pay annually</a></div>
+          <div class="card-skip">or <a href="#" class="alt-billing">pay monthly</a></div>
         </div>
         <div class="card-features">
           <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
@@ -461,15 +574,16 @@ footer .nav-logo span {
       </div>
       
       <!-- Ascension (Valuable) -->
-      <div class="price-card valuable">
+      <div class="price-card valuable" data-monthly="258" data-annual="215" data-save="516">
         <div class="card-badge badge-valuable">Most Valuable</div>
         <div class="card-header">
           <div class="card-name">Ascension</div>
-          <div class="card-price">£258<span>/mo</span></div>
-          <div class="card-billing">billed monthly</div>
-          <div class="card-save">Save £516 with annual</div>
+          <div class="card-price">£<span class="price-value">215</span><span>/mo</span></div>
+          <div class="card-billing billing-text">billed annually</div>
+          <div class="card-save visible">Save £516 a year</div>
           <a href="#" class="card-btn">Join Waitlist</a>
-          <div class="card-skip">or <a href="#">pay annually</a></div>
+          <div class="card-skip">or <a href="#" class="alt-billing">pay monthly</a></div>
+          <div class="lifetime-link">or <a href="#">£4,995 lifetime</a></div>
         </div>
         <div class="card-features">
           <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
@@ -509,5 +623,76 @@ footer .nav-logo span {
 </footer>
 
 <script src="/js/main.js?v=3"></script>
+<script>
+// Billing toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const toggle = document.getElementById('billingToggle');
+  const monthlyLabel = document.getElementById('monthlyLabel');
+  const annualLabel = document.getElementById('annualLabel');
+  const cards = document.querySelectorAll('.price-card');
+  
+  let isAnnual = true; // Default to annual
+  
+  function updatePricing() {
+    cards.forEach(card => {
+      const priceEl = card.querySelector('.price-value');
+      const billingEl = card.querySelector('.billing-text');
+      const saveEl = card.querySelector('.card-save');
+      const altLink = card.querySelector('.alt-billing');
+      
+      if (isAnnual) {
+        priceEl.textContent = card.dataset.annual;
+        billingEl.textContent = 'billed annually';
+        saveEl.classList.add('visible');
+        saveEl.textContent = `Save £${card.dataset.save} a year`;
+        altLink.textContent = 'pay monthly';
+      } else {
+        priceEl.textContent = card.dataset.monthly;
+        billingEl.textContent = 'billed monthly';
+        saveEl.classList.remove('visible');
+        altLink.textContent = 'pay annually';
+      }
+    });
+    
+    // Update toggle UI
+    toggle.classList.toggle('annual', isAnnual);
+    monthlyLabel.classList.toggle('active', !isAnnual);
+    annualLabel.classList.toggle('active', isAnnual);
+  }
+  
+  // Toggle click
+  toggle.addEventListener('click', () => {
+    isAnnual = !isAnnual;
+    updatePricing();
+  });
+  
+  // Label clicks
+  monthlyLabel.addEventListener('click', () => {
+    if (isAnnual) {
+      isAnnual = false;
+      updatePricing();
+    }
+  });
+  
+  annualLabel.addEventListener('click', () => {
+    if (!isAnnual) {
+      isAnnual = true;
+      updatePricing();
+    }
+  });
+  
+  // Alt billing link clicks
+  document.querySelectorAll('.alt-billing').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      isAnnual = !isAnnual;
+      updatePricing();
+    });
+  });
+  
+  // Initialize
+  updatePricing();
+});
+</script>
 </body>
 </html>
