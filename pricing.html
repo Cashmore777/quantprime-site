@@ -9,245 +9,277 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-.pricing-section {
-  padding: 4rem 0 6rem;
+body {
+  background: #0a0a0f;
 }
 
-/* TradingView-inspired comparison table */
-.comparison-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+.page-header {
+  background: linear-gradient(180deg, #0d1117 0%, #0a0a0f 100%);
 }
 
-.comparison-table {
-  width: 100%;
-  min-width: 950px;
-  border-collapse: collapse;
-  font-size: 0.88rem;
-}
-
-/* Header row with plans */
-.comparison-table thead th {
-  padding: 0;
-  vertical-align: top;
-  background: var(--bg);
-  position: sticky;
-  top: 60px;
-  z-index: 10;
-}
-
-.plan-header {
-  padding: 1.5rem 0.8rem 1.2rem;
-  text-align: center;
-  border-bottom: 2px solid var(--border);
-}
-
-.plan-header.features-col {
-  text-align: left;
-  padding-left: 1rem;
-  font-size: 0.7rem;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  vertical-align: bottom;
-  padding-bottom: 1rem;
-}
-
-/* Plan badges */
-.plan-badge {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  padding: 0.2rem 0.6rem;
-  border-radius: 100px;
-  margin-bottom: 0.6rem;
-  text-transform: uppercase;
-}
-
-.badge-popular {
-  background: var(--gold);
+.page-header h1, .page-header p, .page-header .label {
   color: #fff;
 }
 
-.badge-valuable {
-  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+.page-header h1 em {
   color: var(--gold);
-  border: 1px solid var(--gold);
 }
 
-.plan-name {
+.page-header p {
+  color: rgba(255,255,255,0.6);
+}
+
+.pricing-section {
+  padding: 2rem 0 6rem;
+  background: #0a0a0f;
+}
+
+/* Card grid */
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Individual card */
+.price-card {
+  background: #12121a;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.price-card:last-child {
+  border-right: none;
+}
+
+/* Card header */
+.card-header {
+  padding: 1.8rem 1.2rem 1.5rem;
+  background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.card-name {
+  font-size: 0.95rem;
   font-weight: 600;
-  font-size: 1rem;
-  color: var(--text);
-  margin-bottom: 0.4rem;
+  color: #fff;
+  margin-bottom: 0.6rem;
 }
 
-.plan-price {
+.card-price {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.8rem;
-  font-weight: 500;
-  color: var(--gold);
-  line-height: 1.1;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #fff;
 }
 
-.plan-price span {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
+.card-price span {
+  font-size: 0.8rem;
   font-weight: 400;
+  color: rgba(255,255,255,0.5);
 }
 
-.plan-alt {
-  font-size: 0.65rem;
-  color: var(--text-tertiary);
-  font-family: 'JetBrains Mono', monospace;
+.card-billing {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
   margin-top: 0.3rem;
 }
 
-.plan-btn {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.55rem 1.4rem;
-  font-size: 0.78rem;
+.card-save {
+  font-size: 0.7rem;
+  color: var(--gold);
+  margin-top: 0.2rem;
+}
+
+.card-btn {
+  display: block;
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 0.7rem 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
-  border: 1px solid var(--border);
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.2);
   background: transparent;
-  color: var(--text);
-  border-radius: 100px;
+  color: #fff;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s;
   text-decoration: none;
 }
 
-.plan-btn:hover {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
+.card-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.3);
 }
 
-/* Highlighted columns */
-.plan-header.highlight-popular {
-  background: var(--gold-bg);
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
-  border-top: 2px solid var(--gold);
+.card-skip {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin-top: 0.6rem;
 }
 
-.plan-header.highlight-popular .plan-btn {
-  background: var(--gold);
-  color: #fff;
-  border-color: var(--gold);
+.card-skip a {
+  color: var(--gold);
+  text-decoration: none;
 }
 
-.plan-header.highlight-valuable {
-  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
-  border-top: 2px solid var(--gold);
+/* Feature list */
+.card-features {
+  padding: 1.2rem;
+  flex: 1;
 }
 
-.plan-header.highlight-valuable .plan-name,
-.plan-header.highlight-valuable .plan-price,
-.plan-header.highlight-valuable .plan-alt {
-  color: #fff;
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.85);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
 
-.plan-header.highlight-valuable .plan-price {
+.feature-item:last-child {
+  border-bottom: none;
+}
+
+.feature-item.disabled {
+  color: rgba(255,255,255,0.25);
+}
+
+.feature-icon {
+  flex-shrink: 0;
+  width: 14px;
+  font-size: 0.75rem;
+}
+
+.feature-icon.check {
   color: var(--gold);
 }
 
-.plan-header.highlight-valuable .plan-btn {
+.feature-icon.x {
+  color: rgba(255,255,255,0.2);
+}
+
+.feature-value {
+  color: var(--gold);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  margin-right: 0.3rem;
+}
+
+/* Highlighted cards */
+.price-card.popular {
+  background: #16161f;
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  margin: -1px;
+  position: relative;
+  z-index: 2;
+}
+
+.price-card.popular .card-header {
+  background: linear-gradient(180deg, rgba(184,150,46,0.1) 0%, transparent 100%);
+}
+
+.price-card.popular .card-btn {
   background: var(--gold);
-  color: #1a1a1a;
   border-color: var(--gold);
+  color: #000;
   font-weight: 600;
 }
 
-/* Section header rows */
-.section-row td {
-  padding: 0.6rem 0.8rem;
-  font-size: 0.65rem;
+.price-card.popular .card-btn:hover {
+  background: #d4b94e;
+}
+
+.card-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
-  background: var(--surface-dim);
-  border-bottom: 1px solid var(--border-light);
+  padding: 0.25rem 0.8rem;
+  border-radius: 100px;
+  white-space: nowrap;
 }
 
-.section-row td.col-popular {
-  background: rgba(184, 150, 46, 0.08);
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
+.badge-popular {
+  background: var(--gold);
+  color: #000;
 }
 
-.section-row td.col-valuable {
-  background: #1a1a1a;
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
+.badge-valuable {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
   color: var(--gold);
+  border: 1px solid var(--gold);
 }
 
-/* Feature rows */
-.comparison-table tbody tr {
-  border-bottom: 1px solid var(--border-light);
+.price-card.valuable {
+  background: linear-gradient(180deg, #1a1a20 0%, #12121a 100%);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  margin: -1px;
+  position: relative;
+  z-index: 1;
 }
 
-.comparison-table tbody tr:hover {
-  background: rgba(0,0,0,0.01);
+.price-card.valuable .card-header {
+  background: linear-gradient(180deg, rgba(184,150,46,0.08) 0%, transparent 100%);
 }
 
-.comparison-table tbody td {
-  padding: 0.75rem 0.8rem;
-  text-align: center;
-  vertical-align: middle;
+.price-card.valuable .card-btn {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+  font-weight: 600;
 }
 
-.comparison-table tbody td:first-child {
-  text-align: left;
-  padding-left: 1rem;
-  color: var(--text);
-  font-weight: 400;
+/* Footer override for dark */
+footer {
+  background: #0a0a0f;
+  border-top: 1px solid rgba(255,255,255,0.06);
 }
 
-.comparison-table tbody td.col-popular {
-  background: rgba(184, 150, 46, 0.03);
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
+footer p, footer .nav-logo {
+  color: rgba(255,255,255,0.5);
 }
 
-.comparison-table tbody td.col-valuable {
-  background: rgba(26, 26, 26, 0.4);
-  border-left: 2px solid var(--gold);
-  border-right: 2px solid var(--gold);
-}
-
-/* Last row closes the border */
-.comparison-table tbody tr:last-child td.col-popular,
-.comparison-table tbody tr:last-child td.col-valuable {
-  border-bottom: 2px solid var(--gold);
-}
-
-/* Check and X marks */
-.check {
+footer .nav-logo span {
   color: var(--gold);
-  font-size: 1.1rem;
-}
-
-.dash {
-  color: var(--text-tertiary);
-  opacity: 0.3;
-  font-size: 1rem;
 }
 
 /* Responsive */
-@media (max-width: 1000px) {
-  .comparison-table {
-    font-size: 0.82rem;
+@media (max-width: 1100px) {
+  .pricing-cards {
+    grid-template-columns: repeat(3, 1fr);
   }
-  .plan-price {
-    font-size: 1.4rem;
+  .price-card:nth-child(4),
+  .price-card:nth-child(5) {
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+}
+
+@media (max-width: 700px) {
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+  .price-card {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .price-card:last-child {
+    border-bottom: none;
   }
 }
 </style>
@@ -285,293 +317,185 @@
 
 <section class="pricing-section">
   <div class="container">
-    <div class="comparison-wrapper">
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th class="plan-header features-col">Features</th>
-            
-            <th class="plan-header">
-              <div class="plan-name">Research</div>
-              <div class="plan-price">£8<span>/mo</span></div>
-              <div class="plan-alt">£80/yr · £179 lifetime</div>
-              <a href="#" class="plan-btn">Coming Soon</a>
-            </th>
-            
-            <th class="plan-header">
-              <div class="plan-name">Recoil</div>
-              <div class="plan-price">£28<span>/mo</span></div>
-              <div class="plan-alt">£280/yr · £549 lifetime</div>
-              <a href="#" class="plan-btn">Coming Soon</a>
-            </th>
-            
-            <th class="plan-header">
-              <div class="plan-name">Recoil + Meridian</div>
-              <div class="plan-price">£58<span>/mo</span></div>
-              <div class="plan-alt">£580/yr · £999 lifetime</div>
-              <a href="#" class="plan-btn">Coming Soon</a>
-            </th>
-            
-            <th class="plan-header highlight-popular">
-              <div class="plan-badge badge-popular">Most Popular</div>
-              <div class="plan-name">Full Suite</div>
-              <div class="plan-price">£88<span>/mo</span></div>
-              <div class="plan-alt">£880/yr · £1,499 lifetime</div>
-              <a href="#" class="plan-btn">Coming Soon</a>
-            </th>
-            
-            <th class="plan-header highlight-valuable">
-              <div class="plan-badge badge-valuable">Most Valuable</div>
-              <div class="plan-name">Ascension</div>
-              <div class="plan-price">£258<span>/mo</span></div>
-              <div class="plan-alt">£2,580/yr · £4,995 lifetime</div>
-              <a href="#" class="plan-btn">Join Waitlist</a>
-            </th>
-          </tr>
-        </thead>
-        
-        <tbody>
-          <!-- Section: Research -->
-          <tr class="section-row">
-            <td>Research & Analysis</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="col-popular"></td>
-            <td class="col-valuable"></td>
-          </tr>
-          
-          <tr>
-            <td>Weekly market analysis</td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Pair-by-pair metrics</td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Volatility reports</td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Event breakdowns</td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-
-          <!-- Section: Recoil -->
-          <tr class="section-row">
-            <td>Recoil Instrument</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="col-popular"></td>
-            <td class="col-valuable"></td>
-          </tr>
-          
-          <tr>
-            <td>Recoil indicator</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Real-time alerts</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Operator's Guide</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>3 trading style presets</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-
-          <!-- Section: Meridian -->
-          <tr class="section-row">
-            <td>Meridian Instrument</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="col-popular"></td>
-            <td class="col-valuable"></td>
-          </tr>
-          
-          <tr>
-            <td>Meridian indicator</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Prime Signal alerts</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Multi-timeframe sync</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Priority support</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="check">✓</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-
-          <!-- Section: Full Suite -->
-          <tr class="section-row">
-            <td>Full Suite</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="col-popular"></td>
-            <td class="col-valuable"></td>
-          </tr>
-          
-          <tr>
-            <td>The Cockpit analyzer</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Automated execution</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Custom signal providing</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Dedicated support</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="check">✓</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-
-          <!-- Section: Ascension -->
-          <tr class="section-row">
-            <td>Ascension Program</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td class="col-popular"></td>
-            <td class="col-valuable"></td>
-          </tr>
-          
-          <tr>
-            <td>9-level education series</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="dash">—</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>1-on-1 deployment call</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="dash">—</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Full automation pipeline</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="dash">—</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Self-hosted execution</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="dash">—</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-          <tr>
-            <td>Completion guarantee</td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td><span class="dash">—</span></td>
-            <td class="col-popular"><span class="dash">—</span></td>
-            <td class="col-valuable"><span class="check">✓</span></td>
-          </tr>
-          
-        </tbody>
-      </table>
+    <div class="pricing-cards">
+      
+      <!-- Research -->
+      <div class="price-card">
+        <div class="card-header">
+          <div class="card-name">Research</div>
+          <div class="card-price">£8<span>/mo</span></div>
+          <div class="card-billing">billed monthly</div>
+          <div class="card-save">Save £17 with annual</div>
+          <a href="#" class="card-btn">Coming Soon</a>
+          <div class="card-skip">or <a href="#">pay annually</a></div>
+        </div>
+        <div class="card-features">
+          <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Pair-by-pair metrics</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Volatility reports</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Event breakdowns</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Recoil indicator</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Real-time alerts</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Operator's Guide</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 3 trading style presets</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Meridian indicator</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Prime Signal alerts</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Multi-timeframe sync</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Priority support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> The Cockpit analyzer</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Automated execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Custom signal providing</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Dedicated support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 9-level education series</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 1-on-1 deployment call</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Full automation pipeline</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Self-hosted execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Completion guarantee</div>
+        </div>
+      </div>
+      
+      <!-- Recoil -->
+      <div class="price-card">
+        <div class="card-header">
+          <div class="card-name">Recoil</div>
+          <div class="card-price">£28<span>/mo</span></div>
+          <div class="card-billing">billed monthly</div>
+          <div class="card-save">Save £56 with annual</div>
+          <a href="#" class="card-btn">Coming Soon</a>
+          <div class="card-skip">or <a href="#">pay annually</a></div>
+        </div>
+        <div class="card-features">
+          <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Pair-by-pair metrics</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Volatility reports</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Event breakdowns</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Recoil indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Real-time alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Operator's Guide</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 3 trading style presets</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Meridian indicator</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Prime Signal alerts</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Multi-timeframe sync</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Priority support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> The Cockpit analyzer</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Automated execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Custom signal providing</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Dedicated support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 9-level education series</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 1-on-1 deployment call</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Full automation pipeline</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Self-hosted execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Completion guarantee</div>
+        </div>
+      </div>
+      
+      <!-- Recoil + Meridian -->
+      <div class="price-card">
+        <div class="card-header">
+          <div class="card-name">Recoil + Meridian</div>
+          <div class="card-price">£58<span>/mo</span></div>
+          <div class="card-billing">billed monthly</div>
+          <div class="card-save">Save £116 with annual</div>
+          <a href="#" class="card-btn">Coming Soon</a>
+          <div class="card-skip">or <a href="#">pay annually</a></div>
+        </div>
+        <div class="card-features">
+          <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Pair-by-pair metrics</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Volatility reports</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Event breakdowns</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Recoil indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Real-time alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Operator's Guide</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 3 trading style presets</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Meridian indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Prime Signal alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Multi-timeframe sync</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Priority support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> The Cockpit analyzer</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Automated execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Custom signal providing</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Dedicated support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 9-level education series</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 1-on-1 deployment call</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Full automation pipeline</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Self-hosted execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Completion guarantee</div>
+        </div>
+      </div>
+      
+      <!-- Full Suite (Popular) -->
+      <div class="price-card popular">
+        <div class="card-badge badge-popular">Most Popular</div>
+        <div class="card-header">
+          <div class="card-name">Full Suite</div>
+          <div class="card-price">£88<span>/mo</span></div>
+          <div class="card-billing">billed monthly</div>
+          <div class="card-save">Save £176 with annual</div>
+          <a href="#" class="card-btn">Coming Soon</a>
+          <div class="card-skip">or <a href="#">pay annually</a></div>
+        </div>
+        <div class="card-features">
+          <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Pair-by-pair metrics</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Volatility reports</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Event breakdowns</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Recoil indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Real-time alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Operator's Guide</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 3 trading style presets</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Meridian indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Prime Signal alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Multi-timeframe sync</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Priority support</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> The Cockpit analyzer</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Automated execution</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Custom signal providing</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Dedicated support</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 9-level education series</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> 1-on-1 deployment call</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Full automation pipeline</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Self-hosted execution</div>
+          <div class="feature-item disabled"><span class="feature-icon x">✗</span> Completion guarantee</div>
+        </div>
+      </div>
+      
+      <!-- Ascension (Valuable) -->
+      <div class="price-card valuable">
+        <div class="card-badge badge-valuable">Most Valuable</div>
+        <div class="card-header">
+          <div class="card-name">Ascension</div>
+          <div class="card-price">£258<span>/mo</span></div>
+          <div class="card-billing">billed monthly</div>
+          <div class="card-save">Save £516 with annual</div>
+          <a href="#" class="card-btn">Join Waitlist</a>
+          <div class="card-skip">or <a href="#">pay annually</a></div>
+        </div>
+        <div class="card-features">
+          <div class="feature-item"><span class="feature-icon check">✓</span> Weekly market analysis</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Pair-by-pair metrics</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Volatility reports</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Event breakdowns</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Recoil indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Real-time alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Operator's Guide</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 3 trading style presets</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Meridian indicator</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Prime Signal alerts</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Multi-timeframe sync</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Priority support</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> The Cockpit analyzer</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Automated execution</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Custom signal providing</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Dedicated support</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 9-level education series</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> 1-on-1 deployment call</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Full automation pipeline</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Self-hosted execution</div>
+          <div class="feature-item"><span class="feature-icon check">✓</span> Completion guarantee</div>
+        </div>
+      </div>
+      
     </div>
   </div>
 </section>
