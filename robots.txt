@@ -1,0 +1,9 @@
+# Quant Prime - robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://quantprime.uk/sitemap.xml
+
+# Block dashboard (requires login)
+Disallow: /dashboard/
