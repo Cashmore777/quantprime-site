@@ -41,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── TYPOGRAPHY ── */
 h1, h2, h3 { font-weight: 300; letter-spacing: -0.03em; line-height: 1.15; }
 h1 { font-size: clamp(2.4rem, 5vw, 4rem); }
 h2 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
@@ -58,11 +57,9 @@ h3 { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 500; }
   font-weight: 500;
 }
 
-/* ── LAYOUT ── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 section { padding: 8rem 0; }
 
-/* ── NAV ── */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   background: rgba(250,250,248,0.85);
@@ -92,7 +89,6 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
 }
 .nav-cta:hover { background: var(--gold); }
 
-/* ── HERO ── */
 .hero {
   min-height: 100vh;
   display: flex; align-items: center;
@@ -103,11 +99,7 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
 .hero-content { max-width: 680px; }
 .hero-label { margin-bottom: 2rem; }
 .hero h1 { margin-bottom: 1.5rem; }
-.hero h1 em {
-  font-style: normal;
-  color: var(--gold);
-  font-weight: 300;
-}
+.hero h1 em { font-style: normal; color: var(--gold); font-weight: 300; }
 .hero-sub {
   font-size: 1.15rem;
   color: var(--text-secondary);
@@ -130,8 +122,6 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
 }
 .hero-cta:hover { background: var(--text); transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .hero-cta svg { width: 16px; height: 16px; }
-
-/* Hero ambient decoration */
 .hero-glow {
   position: absolute;
   top: 10%; right: -5%;
@@ -140,256 +130,83 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
   pointer-events: none;
 }
 
-/* ── MISSION ── */
 .mission { background: var(--surface); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); }
-.mission-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 3rem;
-}
+.mission-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; }
 .mission-item { padding: 2rem 0; }
 .mission-item .label { margin-bottom: 1rem; }
 .mission-item h3 { margin-bottom: 0.8rem; color: var(--text); }
 .mission-item p { color: var(--text-secondary); font-size: 0.95rem; }
 
-/* ── INSTRUMENTS ── */
 .instrument-section { padding: 6rem 0; }
 .instrument-section:nth-child(even) { background: var(--surface); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); }
-.instrument-header {
-  display: flex;
-  align-items: baseline;
-  gap: 1.5rem;
-  margin-bottom: 1rem;
-}
-.instrument-header .label { flex-shrink: 0; }
-.instrument-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
-}
+.instrument-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
 .instrument-text h2 { margin-bottom: 1.2rem; }
 .instrument-text h2 em { font-style: normal; color: var(--gold); font-weight: 300; }
-.instrument-desc {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  margin-bottom: 2rem;
-  line-height: 1.75;
-}
-.instrument-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.2rem;
-}
-.stat-card {
-  padding: 1.2rem 1.4rem;
-  background: var(--surface-dim);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-light);
-}
-.stat-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: var(--text);
-}
-.stat-label {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-  margin-top: 0.2rem;
-}
+.instrument-desc { color: var(--text-secondary); font-size: 1rem; margin-bottom: 2rem; line-height: 1.75; }
+.instrument-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.stat-card { padding: 1.2rem 1.4rem; background: var(--surface-dim); border-radius: var(--radius-sm); border: 1px solid var(--border-light); }
+.stat-value { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 500; color: var(--text); }
+.stat-label { font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.2rem; }
 
-/* ── ANIMATION CANVAS ── */
-.instrument-visual {
-  aspect-ratio: 4/3;
-  background: var(--surface-dim);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  overflow: hidden;
-  position: relative;
-}
-.instrument-visual canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+.instrument-visual { aspect-ratio: 4/3; background: var(--surface-dim); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; position: relative; }
+.instrument-visual canvas { width: 100%; height: 100%; display: block; }
 
-/* ── PERFORMANCE ── */
 .performance { background: var(--surface); border-top: 1px solid var(--border-light); }
 .perf-intro { color: var(--text-secondary); max-width: 600px; margin-top: 1rem; margin-bottom: 2rem; }
-.compound-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1rem;
-  margin-bottom: 3rem;
-}
-.compound-card {
-  padding: 1.5rem;
-  background: var(--bg);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  text-align: center;
-}
-.compound-period {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--text-tertiary);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
-.compound-value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.4rem;
-  font-weight: 500;
-  color: var(--gold);
-}
-.compound-note {
-  font-size: 0.7rem;
-  color: var(--text-tertiary);
-  margin-top: 0.3rem;
-}
-.perf-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-.perf-card {
-  padding: 2.5rem;
-  background: var(--bg);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-.perf-card-header {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
-}
-.perf-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--gold);
-}
+.compound-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.8rem; margin-bottom: 3rem; }
+.compound-card { padding: 1.2rem 0.8rem; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border); text-align: center; }
+.compound-period { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-tertiary); letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.compound-value { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 500; color: var(--gold); }
+.compound-note { font-size: 0.65rem; color: var(--text-tertiary); margin-top: 0.2rem; }
+.perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.perf-card { padding: 2.5rem; background: var(--bg); border-radius: var(--radius); border: 1px solid var(--border); }
+.perf-card-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1.5rem; }
+.perf-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
 .perf-card h3 { font-weight: 500; font-size: 1rem; }
-.perf-stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.perf-stat-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
+.perf-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.perf-stat-val { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 500; }
 .perf-stat-lbl { font-size: 0.72rem; color: var(--text-tertiary); }
-.perf-note {
-  font-size: 0.78rem;
-  color: var(--text-tertiary);
-  margin-top: 1.2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-light);
-}
+.perf-note { font-size: 0.78rem; color: var(--text-tertiary); margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border-light); }
 
-/* ── PRICING ── */
 .pricing { padding: 8rem 0; }
 .pricing h2 { text-align: center; margin-bottom: 1rem; }
 .pricing-sub { text-align: center; color: var(--text-secondary); margin-bottom: 3rem; }
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.2rem;
-}
-.price-card {
-  padding: 2rem;
-  background: var(--surface);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  transition: all 0.3s;
-  position: relative;
-}
+.pricing-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.price-card { padding: 1.8rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--border); transition: all 0.3s; position: relative; }
 .price-card:hover { border-color: var(--gold); box-shadow: var(--shadow-md); }
 .price-card.featured { border-color: var(--gold); background: var(--gold-bg); }
 .price-card.featured::before {
-  content: 'RECOMMENDED';
+  content: 'MOST POPULAR';
   position: absolute; top: -0.6rem; left: 50%; transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem; letter-spacing: 0.12em;
+  font-size: 0.55rem; letter-spacing: 0.1em;
   background: var(--gold); color: #fff;
-  padding: 0.2rem 0.8rem; border-radius: 100px;
+  padding: 0.2rem 0.6rem; border-radius: 100px;
+  white-space: nowrap;
 }
-.price-name { font-weight: 600; font-size: 1rem; margin-bottom: 0.4rem; }
-.price-amount {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: var(--gold);
-}
-.price-amount span { font-size: 0.8rem; color: var(--text-tertiary); font-weight: 400; }
-.price-desc {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin: 1rem 0;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-light);
-}
+.price-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.3rem; }
+.price-amount { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 500; color: var(--gold); }
+.price-amount span { font-size: 0.75rem; color: var(--text-tertiary); font-weight: 400; }
+.price-alt { font-size: 0.7rem; color: var(--text-tertiary); margin-top: 0.3rem; font-family: 'JetBrains Mono', monospace; }
+.price-desc { font-size: 0.8rem; color: var(--text-secondary); margin: 0.8rem 0; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-light); }
 .price-features { list-style: none; }
-.price-features li {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-  padding: 0.35rem 0;
-  padding-left: 1.2rem;
-  position: relative;
-}
-.price-features li::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0.7rem;
-  width: 5px; height: 5px;
-  background: var(--gold);
-  border-radius: 50%;
-}
-.price-btn {
-  display: block;
-  width: 100%;
-  margin-top: 1.5rem;
-  padding: 0.7rem;
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  border-radius: 100px;
-  cursor: pointer;
-  transition: all 0.3s;
-  text-decoration: none;
-}
+.price-features li { font-size: 0.78rem; color: var(--text-secondary); padding: 0.3rem 0; padding-left: 1rem; position: relative; }
+.price-features li::before { content: ''; position: absolute; left: 0; top: 0.6rem; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+.price-btn { display: block; width: 100%; margin-top: 1.2rem; padding: 0.6rem; text-align: center; font-size: 0.78rem; font-weight: 500; border: 1px solid var(--border); background: transparent; color: var(--text); border-radius: 100px; cursor: pointer; transition: all 0.3s; text-decoration: none; }
 .price-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
 .price-card.featured .price-btn { background: var(--gold); color: #fff; border-color: var(--gold); }
 .price-card.featured .price-btn:hover { background: var(--text); border-color: var(--text); }
 
-/* ── FOOTER ── */
-footer {
-  padding: 3rem 0;
-  border-top: 1px solid var(--border-light);
-  text-align: center;
-}
+footer { padding: 3rem 0; border-top: 1px solid var(--border-light); text-align: center; }
 footer p { font-size: 0.75rem; color: var(--text-tertiary); max-width: 600px; margin: 0 auto; }
 footer .nav-logo { display: block; margin-bottom: 1rem; }
 
-/* ── SCROLL ANIMATIONS ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .pricing-grid { grid-template-columns: repeat(3, 1fr); }
+}
 @media (max-width: 900px) {
   .mission-grid, .instrument-grid, .perf-grid { grid-template-columns: 1fr; }
   .pricing-grid { grid-template-columns: 1fr 1fr; }
@@ -406,7 +223,6 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="container">
     <a href="#" class="nav-logo">QUANT<span>PRIME</span></a>
@@ -414,7 +230,6 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="container">
     <div class="hero-content">
@@ -430,14 +245,13 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
   <div class="hero-glow"></div>
 </section>
 
-<!-- MISSION -->
 <section class="mission">
   <div class="container">
     <div class="mission-grid">
       <div class="mission-item reveal">
         <div class="label">PHILOSOPHY</div>
         <h3>Transparent by design</h3>
-        <p>Every trade tracked on Myfxbook. Every metric auditable. We don't sell dreams, we publish data.</p>
+        <p>Every metric tracked. Every trade auditable. We don't sell dreams, we publish data.</p>
       </div>
       <div class="mission-item reveal">
         <div class="label">METHODOLOGY</div>
@@ -453,7 +267,6 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
   </div>
 </section>
 
-<!-- INSTRUMENTS -->
 <section id="instruments" class="instrument-section">
   <div class="container">
     <div class="instrument-grid">
@@ -508,7 +321,7 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
             <div class="stat-label">Prime Signal</div>
           </div>
           <div class="stat-card">
-            <div class="stat-value">103</div>
+            <div class="stat-value">700+</div>
             <div class="stat-label">Verified trades</div>
           </div>
         </div>
@@ -520,7 +333,6 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
   </div>
 </section>
 
-<!-- PERFORMANCE -->
 <section class="performance">
   <div class="container">
     <div class="label">VERIFIED PERFORMANCE</div>
@@ -529,9 +341,19 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
     
     <div class="compound-grid reveal">
       <div class="compound-card">
+        <div class="compound-period">1 WEEK</div>
+        <div class="compound-value">+1.9%</div>
+        <div class="compound-note">avg return</div>
+      </div>
+      <div class="compound-card">
         <div class="compound-period">1 MONTH</div>
         <div class="compound-value">+8.2%</div>
-        <div class="compound-note">avg return</div>
+        <div class="compound-note">compounded</div>
+      </div>
+      <div class="compound-card">
+        <div class="compound-period">3 MONTHS</div>
+        <div class="compound-value">+27%</div>
+        <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">6 MONTHS</div>
@@ -539,18 +361,13 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
+        <div class="compound-period">9 MONTHS</div>
+        <div class="compound-value">+105%</div>
+        <div class="compound-note">compounded</div>
+      </div>
+      <div class="compound-card">
         <div class="compound-period">1 YEAR</div>
         <div class="compound-value">+159%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">5 YEARS</div>
-        <div class="compound-value">+3,847%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">10 YEARS</div>
-        <div class="compound-value">+151,891%</div>
         <div class="compound-note">compounded</div>
       </div>
     </div>
@@ -562,14 +379,14 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
           <h3>Recoil — Intra-Day (21M)</h3>
         </div>
         <div class="perf-stats-row">
-          <div><div class="perf-stat-val gold">+24.04%</div><div class="perf-stat-lbl">Return</div></div>
+          <div><div class="perf-stat-val gold">+24.04%</div><div class="perf-stat-lbl">Return (6 months)</div></div>
           <div><div class="perf-stat-val">4.56%</div><div class="perf-stat-lbl">Max drawdown</div></div>
         </div>
         <div class="perf-stats-row">
           <div><div class="perf-stat-val">65.5%</div><div class="perf-stat-lbl">Win rate</div></div>
           <div><div class="perf-stat-val">1.507</div><div class="perf-stat-lbl">Profit factor</div></div>
         </div>
-        <div class="perf-note">Verified on Myfxbook · EURUSD · Auditable history</div>
+        <div class="perf-note">Data collected by Quant Prime analysts · EURUSD · 2.1k+ trades analyzed</div>
       </div>
       <div class="perf-card reveal">
         <div class="perf-card-header">
@@ -577,80 +394,106 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
           <h3>Meridian — Prime Signals (3M)</h3>
         </div>
         <div class="perf-stats-row">
-          <div><div class="perf-stat-val gold">+9.34%</div><div class="perf-stat-lbl">Return</div></div>
+          <div><div class="perf-stat-val gold">+9.34%</div><div class="perf-stat-lbl">Return (1 month)</div></div>
           <div><div class="perf-stat-val">5.34%</div><div class="perf-stat-lbl">Max drawdown</div></div>
         </div>
         <div class="perf-stats-row">
           <div><div class="perf-stat-val">70.9%</div><div class="perf-stat-lbl">Win rate</div></div>
           <div><div class="perf-stat-val">2.185</div><div class="perf-stat-lbl">Profit factor</div></div>
         </div>
-        <div class="perf-note">Verified on Myfxbook · EURUSD · Auditable history</div>
+        <div class="perf-note">Data collected by Quant Prime analysts · EURUSD · 700+ trades analyzed</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRICING -->
 <section class="pricing" id="pricing">
   <div class="container">
     <div class="label" style="text-align:center">ACCESS TIERS</div>
     <h2>Choose your level</h2>
     <p class="pricing-sub">Start with Research. Scale when ready.</p>
     <div class="pricing-grid">
+      
       <div class="price-card reveal">
         <div class="price-name">Research</div>
-        <div class="price-amount">£28<span>/mo</span></div>
-        <p class="price-desc">Learn the framework</p>
+        <div class="price-amount">£8<span>/mo</span></div>
+        <div class="price-alt">£80/yr · £179 lifetime</div>
+        <p class="price-desc">Weekly Observer Paper</p>
         <ul class="price-features">
           <li>Weekly market analysis</li>
-          <li>Educational content</li>
+          <li>Pair-by-pair metrics</li>
+          <li>Volatility reports</li>
+          <li>Event breakdowns</li>
           <li>Discord community</li>
-          <li>System documentation</li>
         </ul>
         <a href="#" class="price-btn">Coming Soon</a>
       </div>
+      
       <div class="price-card reveal">
-        <div class="price-name">Terminal</div>
-        <div class="price-amount">£58<span>/mo</span></div>
-        <p class="price-desc">Manual trading toolkit</p>
+        <div class="price-name">Recoil</div>
+        <div class="price-amount">£28<span>/mo</span></div>
+        <div class="price-alt">£280/yr · £549 lifetime</div>
+        <p class="price-desc">Flow Compression Engine</p>
         <ul class="price-features">
           <li>Everything in Research</li>
           <li>Recoil indicator</li>
           <li>Real-time alerts</li>
           <li>Operator's Guide</li>
+          <li>3 trading style presets</li>
         </ul>
         <a href="#" class="price-btn">Coming Soon</a>
       </div>
+      
       <div class="price-card featured reveal">
-        <div class="price-name">Suite</div>
-        <div class="price-amount">£88<span>/mo</span></div>
-        <p class="price-desc">Full instrument stack</p>
+        <div class="price-name">Recoil + Meridian</div>
+        <div class="price-amount">£58<span>/mo</span></div>
+        <div class="price-alt">£580/yr · £999 lifetime</div>
+        <p class="price-desc">Full Signal Stack</p>
         <ul class="price-features">
-          <li>Everything in Terminal</li>
+          <li>Everything in Recoil</li>
           <li>Meridian indicator</li>
-          <li>Cockpit analytics</li>
-          <li>Automated execution</li>
+          <li>Prime Signal alerts</li>
+          <li>Multi-timeframe sync</li>
           <li>Priority support</li>
         </ul>
         <a href="#" class="price-btn">Coming Soon</a>
       </div>
+      
       <div class="price-card reveal">
-        <div class="price-name">Academy</div>
-        <div class="price-amount">£258<span>/mo</span></div>
-        <p class="price-desc">Or £2,495 lifetime</p>
+        <div class="price-name">Full Suite</div>
+        <div class="price-amount">£88<span>/mo</span></div>
+        <div class="price-alt">£880/yr · £1,499 lifetime</div>
+        <p class="price-desc">Complete Analysis Hub</p>
         <ul class="price-features">
-          <li>Everything in Suite</li>
-          <li>1-on-1 deployment</li>
-          <li>Custom configuration</li>
+          <li>Everything in R+M</li>
+          <li>The Cockpit analyzer</li>
+          <li>Automated execution</li>
+          <li>Telegram signals</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="#" class="price-btn">Coming Soon</a>
+      </div>
+      
+      <div class="price-card reveal">
+        <div class="price-name">Ascension</div>
+        <div class="price-amount">£258<span>/mo</span></div>
+        <div class="price-alt">£2,580/yr · £4,995 lifetime</div>
+        <p class="price-desc">Learn → Master → Automate</p>
+        <ul class="price-features">
+          <li>Everything in Full Suite</li>
+          <li>9-level education series</li>
+          <li>1-on-1 deployment call</li>
+          <li>Full automation pipeline</li>
+          <li>Self-hosted execution</li>
           <li>Completion guarantee</li>
         </ul>
         <a href="#" class="price-btn">Join Waitlist</a>
       </div>
+      
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="container">
     <a href="#" class="nav-logo">QUANT<span>PRIME</span></a>
@@ -660,7 +503,6 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
 </footer>
 
 <script>
-// ── SCROLL REVEAL ──
 const reveals = document.querySelectorAll('.reveal');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
@@ -668,7 +510,6 @@ const observer = new IntersectionObserver((entries) => {
 reveals.forEach(el => observer.observe(el));
 
 // ── RECOIL ANIMATION ──
-// Single candle expands, then snap-back entry appears
 (function() {
   const c = document.getElementById('recoilCanvas');
   if (!c) return;
@@ -688,8 +529,6 @@ reveals.forEach(el => observer.observe(el));
     frame++;
     const w = W / 2, h = H / 2;
     ctx.clearRect(0, 0, w, h);
-
-    // Background
     ctx.fillStyle = '#f2f1ed';
     ctx.fillRect(0, 0, w, h);
 
@@ -697,27 +536,20 @@ reveals.forEach(el => observer.observe(el));
     const centerY = h / 2;
     const progress = (frame % 120) / 120;
 
-    // Phase 1: Candle grows down aggressively (0-0.4)
-    // Phase 2: Pause at bottom (0.4-0.5)
-    // Phase 3: Entry arrow appears, price snaps back (0.5-1.0)
-
     const candleWidth = 40;
     let bodyHeight = 0;
     let candleY = centerY - 20;
 
     if (progress < 0.4) {
-      // Growing phase
       const growProgress = progress / 0.4;
       bodyHeight = growProgress * 120;
     } else {
       bodyHeight = 120;
     }
 
-    // Draw the candle body
     const bodyTop = candleY;
     const bodyBot = candleY + bodyHeight;
 
-    // Wick
     ctx.strokeStyle = '#b8962e';
     ctx.lineWidth = 2;
     ctx.beginPath();
@@ -725,19 +557,16 @@ reveals.forEach(el => observer.observe(el));
     ctx.lineTo(centerX, bodyBot + 20);
     ctx.stroke();
 
-    // Body (bearish - red/gold)
     const gradient = ctx.createLinearGradient(0, bodyTop, 0, bodyBot);
     gradient.addColorStop(0, '#c9a84c');
     gradient.addColorStop(1, '#b8962e');
     ctx.fillStyle = gradient;
     ctx.fillRect(centerX - candleWidth/2, bodyTop, candleWidth, bodyHeight);
 
-    // Border
     ctx.strokeStyle = '#8a7020';
     ctx.lineWidth = 1;
     ctx.strokeRect(centerX - candleWidth/2, bodyTop, candleWidth, bodyHeight);
 
-    // Band indicator (volatility zone)
     if (progress > 0.3) {
       const bandAlpha = Math.min((progress - 0.3) / 0.1, 1);
       ctx.fillStyle = `rgba(184, 150, 46, ${0.1 * bandAlpha})`;
@@ -748,12 +577,10 @@ reveals.forEach(el => observer.observe(el));
       ctx.fillText('COMPRESSION ZONE', centerX - 70, bodyBot + 10);
     }
 
-    // Entry signal (snap-back)
     if (progress > 0.55) {
       const entryProgress = (progress - 0.55) / 0.45;
       const entryY = bodyBot - (entryProgress * 80);
       
-      // Entry line
       ctx.setLineDash([4, 3]);
       ctx.strokeStyle = `rgba(0, 136, 204, ${Math.min(entryProgress * 2, 1)})`;
       ctx.lineWidth = 2;
@@ -763,7 +590,6 @@ reveals.forEach(el => observer.observe(el));
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Arrow pointing up
       ctx.fillStyle = `rgba(0, 136, 204, ${Math.min(entryProgress * 2, 1)})`;
       ctx.beginPath();
       ctx.moveTo(centerX + 65, entryY);
@@ -772,7 +598,6 @@ reveals.forEach(el => observer.observe(el));
       ctx.closePath();
       ctx.fill();
 
-      // Label
       if (entryProgress > 0.3) {
         ctx.font = '600 11px "JetBrains Mono"';
         ctx.fillStyle = `rgba(0, 136, 204, ${Math.min((entryProgress - 0.3) * 2, 1)})`;
@@ -788,7 +613,6 @@ reveals.forEach(el => observer.observe(el));
 })();
 
 // ── MERIDIAN ANIMATION ──
-// Focus on levels, Quant Nodes, and the mathematical alignment
 (function() {
   const c = document.getElementById('meridianCanvas');
   if (!c) return;
@@ -813,15 +637,13 @@ reveals.forEach(el => observer.observe(el));
 
     const progress = (frame % 140) / 140;
 
-    // Quant Node levels (horizontal lines at specific prices)
     const nodes = [
-      { y: h * 0.25, label: '1.14500' },
-      { y: h * 0.45, label: '1.14200' },
-      { y: h * 0.65, label: '1.13900' },
-      { y: h * 0.85, label: '1.13600' },
+      { y: h * 0.2, label: '1.14500' },
+      { y: h * 0.4, label: '1.14200' },
+      { y: h * 0.6, label: '1.13900' },
+      { y: h * 0.8, label: '1.13600' },
     ];
 
-    // Draw Quant Node levels
     nodes.forEach((node, i) => {
       const nodeAlpha = Math.min(progress * 3 - i * 0.15, 1);
       if (nodeAlpha > 0) {
@@ -834,7 +656,6 @@ reveals.forEach(el => observer.observe(el));
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Quant Node markers
         ctx.fillStyle = `rgba(184, 150, 46, ${0.4 * nodeAlpha})`;
         ctx.beginPath();
         ctx.arc(35, node.y, 3, 0, Math.PI * 2);
@@ -846,7 +667,10 @@ reveals.forEach(el => observer.observe(el));
       }
     });
 
-    // Price path approaching node then reversing
+    // Track the actual lowest point of the price path
+    let lowestY = 0;
+    let lowestX = 0;
+
     if (progress > 0.2) {
       const pathProgress = (progress - 0.2) / 0.8;
       const points = [];
@@ -857,14 +681,18 @@ reveals.forEach(el => observer.observe(el));
         const x = 60 + t * (w - 120);
         let y;
         if (t < 0.6) {
-          // Descending toward node
-          y = h * 0.3 + t * h * 0.5 + Math.sin(i * 0.4) * 8;
+          y = h * 0.25 + t * h * 0.55 + Math.sin(i * 0.4) * 8;
         } else {
-          // Reversal
           const rt = (t - 0.6) / 0.4;
-          y = h * 0.75 - rt * h * 0.3 + Math.sin(i * 0.5) * 5;
+          y = h * 0.8 - rt * h * 0.35 + Math.sin(i * 0.5) * 5;
         }
         points.push({ x, y });
+        
+        // Track lowest point
+        if (y > lowestY) {
+          lowestY = y;
+          lowestX = x;
+        }
       }
 
       if (points.length > 1) {
@@ -878,31 +706,29 @@ reveals.forEach(el => observer.observe(el));
         ctx.stroke();
       }
 
-      // Vortex alignment indicator
-      if (pathProgress > 0.55) {
-        const vortexAlpha = Math.min((pathProgress - 0.55) / 0.15, 1);
-        const vortexX = 60 + 0.58 * (w - 120);
-        const vortexY = h * 0.72;
+      // Vortex rings and Prime Signal at the ACTUAL lowest point
+      if (pathProgress > 0.6) {
+        const vortexAlpha = Math.min((pathProgress - 0.6) / 0.15, 1);
+        
+        // Position at lowest point (with small offset below)
+        const signalX = lowestX;
+        const signalY = lowestY + 5;
 
         // Concentric circles (vortex visualization)
         for (let r = 0; r < 3; r++) {
           ctx.strokeStyle = `rgba(184, 150, 46, ${(0.3 - r * 0.08) * vortexAlpha})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.arc(vortexX, vortexY, 10 + r * 8, 0, Math.PI * 2);
+          ctx.arc(signalX, signalY, 10 + r * 8, 0, Math.PI * 2);
           ctx.stroke();
         }
-
-        ctx.font = '500 8px "JetBrains Mono"';
-        ctx.fillStyle = `rgba(184, 150, 46, ${0.6 * vortexAlpha})`;
-        ctx.fillText('VORTEX ALIGNED', vortexX + 30, vortexY - 5);
       }
 
       // Prime Signal diamond
       if (pathProgress > 0.7) {
         const primeAlpha = Math.min((pathProgress - 0.7) / 0.1, 1);
-        const px = 60 + 0.62 * (w - 120);
-        const py = h * 0.7;
+        const px = lowestX;
+        const py = lowestY + 5;
         const size = 10 * primeAlpha;
 
         ctx.save();
@@ -918,7 +744,7 @@ reveals.forEach(el => observer.observe(el));
 
         ctx.font = '700 11px "JetBrains Mono"';
         ctx.fillStyle = `rgba(184, 150, 46, ${primeAlpha})`;
-        ctx.fillText('◆ PRIME SIGNAL', px + 18, py + 4);
+        ctx.fillText('◆ PRIME SIGNAL', px + 20, py + 4);
       }
     }
 
