@@ -8,6 +8,180 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
+<style>
+/* Pricing Grid Override for TradingView-style */
+.pricing-comparison {
+  overflow-x: auto;
+  margin: 0 -1rem;
+  padding: 0 1rem;
+}
+.pricing-table {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(5, 1fr);
+  gap: 0;
+  min-width: 900px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+.pricing-table-header {
+  display: contents;
+}
+.pricing-col-header {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border-light);
+}
+.pricing-col-header:last-child {
+  border-right: none;
+}
+.pricing-col-header.featured {
+  background: var(--gold-bg);
+  position: relative;
+}
+.pricing-col-header.featured::before {
+  content: 'MOST POPULAR';
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  background: var(--gold);
+  color: #fff;
+  padding: 0.15rem 0.5rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.pricing-col-header.featured .tier-name {
+  margin-top: 0.8rem;
+}
+.tier-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.3rem;
+}
+.tier-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--gold);
+}
+.tier-price span {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+.tier-alt {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0.2rem;
+}
+.tier-btn {
+  display: inline-block;
+  margin-top: 0.8rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.tier-btn:hover {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.pricing-col-header.featured .tier-btn {
+  background: var(--gold);
+  color: #fff;
+  border-color: var(--gold);
+}
+.pricing-col-header.featured .tier-btn:hover {
+  background: var(--text);
+  border-color: var(--text);
+}
+.feature-label-col {
+  padding: 0;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+}
+.feature-row {
+  display: contents;
+}
+.feature-label {
+  padding: 0.7rem 1rem;
+  font-size: 0.82rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+}
+.feature-cell {
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+  font-size: 0.9rem;
+}
+.feature-cell:last-child {
+  border-right: none;
+}
+.feature-cell.featured {
+  background: rgba(184, 150, 46, 0.03);
+}
+.feature-check {
+  color: var(--gold);
+  font-weight: 600;
+}
+.feature-x {
+  color: var(--text-tertiary);
+  opacity: 0.4;
+}
+.section-divider {
+  display: contents;
+}
+.section-divider-cell {
+  padding: 0.5rem 1rem;
+  font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+}
+.section-divider-cell:first-child {
+  border-right: 1px solid var(--border);
+}
+.section-divider-cell:last-child {
+  border-right: none;
+}
+.section-divider-cell.featured {
+  background: rgba(184, 150, 46, 0.08);
+}
+
+@media (max-width: 1000px) {
+  .pricing-table {
+    font-size: 0.9rem;
+  }
+  .tier-price {
+    font-size: 1.2rem;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -36,90 +210,295 @@
   <div class="container">
     <div class="label">ACCESS TIERS</div>
     <h1>Choose your level.<br><em>Scale when ready.</em></h1>
-    <p>Start with Research to learn the framework. Add instruments as you grow.</p>
+    <p>Start with Research to learn the framework. Unlock instruments as you grow.</p>
   </div>
 </section>
 
 <section class="pricing-section">
   <div class="container">
-    <div class="pricing-grid">
-      
-      <div class="price-card reveal">
-        <div class="price-name">Research</div>
-        <div class="price-amount">£8<span>/mo</span></div>
-        <div class="price-alt">£80/yr · £179 lifetime</div>
-        <p class="price-desc">Weekly Observer Paper</p>
-        <ul class="price-features">
-          <li>Weekly market analysis</li>
-          <li>Pair-by-pair metrics</li>
-          <li>Volatility reports</li>
-          <li>Event breakdowns</li>
-          <li>Discord community</li>
-        </ul>
-        <a href="#" class="price-btn">Coming Soon</a>
+    <div class="pricing-comparison">
+      <div class="pricing-table">
+        
+        <!-- Header Row -->
+        <div class="pricing-table-header">
+          <div class="pricing-col-header" style="background:var(--bg);"></div>
+          
+          <div class="pricing-col-header">
+            <div class="tier-name">Research</div>
+            <div class="tier-price">£8<span>/mo</span></div>
+            <div class="tier-alt">£80/yr · £179 lifetime</div>
+            <a href="#" class="tier-btn">Coming Soon</a>
+          </div>
+          
+          <div class="pricing-col-header">
+            <div class="tier-name">Recoil</div>
+            <div class="tier-price">£28<span>/mo</span></div>
+            <div class="tier-alt">£280/yr · £549 lifetime</div>
+            <a href="#" class="tier-btn">Coming Soon</a>
+          </div>
+          
+          <div class="pricing-col-header featured">
+            <div class="tier-name">Recoil + Meridian</div>
+            <div class="tier-price">£58<span>/mo</span></div>
+            <div class="tier-alt">£580/yr · £999 lifetime</div>
+            <a href="#" class="tier-btn">Coming Soon</a>
+          </div>
+          
+          <div class="pricing-col-header">
+            <div class="tier-name">Full Suite</div>
+            <div class="tier-price">£88<span>/mo</span></div>
+            <div class="tier-alt">£880/yr · £1,499 lifetime</div>
+            <a href="#" class="tier-btn">Coming Soon</a>
+          </div>
+          
+          <div class="pricing-col-header">
+            <div class="tier-name">Ascension</div>
+            <div class="tier-price">£258<span>/mo</span></div>
+            <div class="tier-alt">£2,580/yr · £4,995 lifetime</div>
+            <a href="#" class="tier-btn">Join Waitlist</a>
+          </div>
+        </div>
+
+        <!-- Section: Research -->
+        <div class="section-divider">
+          <div class="section-divider-cell">Research & Analysis</div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell featured"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Weekly market analysis</div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Pair-by-pair metrics</div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Volatility reports</div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Event breakdowns</div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <!-- Section: Recoil -->
+        <div class="section-divider">
+          <div class="section-divider-cell">Recoil Instrument</div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell featured"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Recoil indicator</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Real-time alerts</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Operator's Guide</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">3 trading style presets</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <!-- Section: Meridian -->
+        <div class="section-divider">
+          <div class="section-divider-cell">Meridian Instrument</div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell featured"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Meridian indicator</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Prime Signal alerts</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Multi-timeframe sync</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Priority support</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <!-- Section: Full Suite -->
+        <div class="section-divider">
+          <div class="section-divider-cell">Full Suite</div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell featured"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">The Cockpit analyzer</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Automated execution</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Custom signal providing</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Dedicated support</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <!-- Section: Ascension -->
+        <div class="section-divider">
+          <div class="section-divider-cell">Ascension Program</div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell featured"></div>
+          <div class="section-divider-cell"></div>
+          <div class="section-divider-cell"></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">9-level education series</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">1-on-1 deployment call</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Full automation pipeline</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Self-hosted execution</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
+        <div class="feature-row">
+          <div class="feature-label">Completion guarantee</div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell featured"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-x">—</span></div>
+          <div class="feature-cell"><span class="feature-check">✓</span></div>
+        </div>
+
       </div>
-      
-      <div class="price-card reveal">
-        <div class="price-name">Recoil</div>
-        <div class="price-amount">£28<span>/mo</span></div>
-        <div class="price-alt">£280/yr · £549 lifetime</div>
-        <p class="price-desc">Flow Compression Engine</p>
-        <ul class="price-features">
-          <li>Everything in Research</li>
-          <li>Recoil indicator</li>
-          <li>Real-time alerts</li>
-          <li>Operator's Guide</li>
-          <li>3 trading style presets</li>
-        </ul>
-        <a href="#" class="price-btn">Coming Soon</a>
-      </div>
-      
-      <div class="price-card featured reveal">
-        <div class="price-name">Recoil + Meridian</div>
-        <div class="price-amount">£58<span>/mo</span></div>
-        <div class="price-alt">£580/yr · £999 lifetime</div>
-        <p class="price-desc">Full Signal Stack</p>
-        <ul class="price-features">
-          <li>Everything in Recoil</li>
-          <li>Meridian indicator</li>
-          <li>Prime Signal alerts</li>
-          <li>Multi-timeframe sync</li>
-          <li>Priority support</li>
-        </ul>
-        <a href="#" class="price-btn">Coming Soon</a>
-      </div>
-      
-      <div class="price-card reveal">
-        <div class="price-name">Full Suite</div>
-        <div class="price-amount">£88<span>/mo</span></div>
-        <div class="price-alt">£880/yr · £1,499 lifetime</div>
-        <p class="price-desc">Complete Analysis Hub</p>
-        <ul class="price-features">
-          <li>Everything in R+M</li>
-          <li>The Cockpit analyzer</li>
-          <li>Automated execution</li>
-          <li>Telegram signals</li>
-          <li>Dedicated support</li>
-        </ul>
-        <a href="#" class="price-btn">Coming Soon</a>
-      </div>
-      
-      <div class="price-card reveal">
-        <div class="price-name">Ascension</div>
-        <div class="price-amount">£258<span>/mo</span></div>
-        <div class="price-alt">£2,580/yr · £4,995 lifetime</div>
-        <p class="price-desc">Learn → Master → Automate</p>
-        <ul class="price-features">
-          <li>Everything in Full Suite</li>
-          <li>9-level education series</li>
-          <li>1-on-1 deployment call</li>
-          <li>Full automation pipeline</li>
-          <li>Self-hosted execution</li>
-          <li>Completion guarantee</li>
-        </ul>
-        <a href="#" class="price-btn">Join Waitlist</a>
-      </div>
-      
     </div>
   </div>
 </section>
