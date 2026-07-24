@@ -27,7 +27,6 @@ if (dropdownBtn && dropdownMenu) {
 }
 
 // ── RECOIL ANIMATION ──
-// Single candle expansion → compression zone → recoil entry
 (function() {
   const c = document.getElementById('recoilCanvas');
   if (!c) return;
@@ -52,17 +51,15 @@ if (dropdownBtn && dropdownMenu) {
     const w = W / 2, h = H / 2;
     ctx.clearRect(0, 0, w, h);
     
-    // Background
     ctx.fillStyle = '#f2f1ed';
     ctx.fillRect(0, 0, w, h);
 
-    // 240 frame cycle
     const progress = (frame % 240) / 240;
 
     const centerX = w * 0.4;
     const candleWidth = 50;
     
-    // Compression zone (always visible, at bottom)
+    // Compression zone
     const zoneTop = h * 0.68;
     const zoneBottom = h * 0.88;
     
@@ -86,22 +83,13 @@ if (dropdownBtn && dropdownMenu) {
     ctx.fillStyle = 'rgba(184, 150, 46, 0.5)';
     ctx.fillText('COMPRESSION ZONE', 50, zoneBottom + 15);
 
-    // Phase 1: Big red candle expanding down (0 - 0.35)
-    // Phase 2: Candle closes, new candle opens, pushes down, makes wick (0.35 - 0.50)
-    // Phase 3: Recoil signal appears (0.50 - 0.55)
-    // Phase 4: Second candle pushes up and closes (0.55 - 0.75)
-    // Phase 5: Third candle opens and pushes up (0.75 - 0.95)
-    // Phase 6: Hold (0.95 - 1.0)
-
     const candle1Open = h * 0.15;
-    const candle1MaxClose = zoneTop + 30; // Enters compression zone
+    const candle1MaxClose = zoneTop + 30;
     
     if (progress < 0.35) {
-      // Phase 1: Big red candle expanding
       const expandProgress = easeOutCubic(progress / 0.35);
       const candle1Close = candle1Open + expandProgress * (candle1MaxClose - candle1Open);
       
-      // Wick
       ctx.strokeStyle = '#8B4513';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -109,7 +97,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.lineTo(centerX, candle1Close + 15);
       ctx.stroke();
       
-      // Body
       const bodyGrad = ctx.createLinearGradient(0, candle1Open, 0, candle1Close);
       bodyGrad.addColorStop(0, '#c0392b');
       bodyGrad.addColorStop(1, '#a93226');
@@ -121,7 +108,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.strokeRect(centerX - candleWidth/2, candle1Open, candleWidth, candle1Close - candle1Open);
       
     } else {
-      // Candle 1 is fully drawn (static)
       ctx.strokeStyle = '#8B4513';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -140,17 +126,14 @@ if (dropdownBtn && dropdownMenu) {
       ctx.strokeRect(centerX - candleWidth/2, candle1Open, candleWidth, candle1MaxClose - candle1Open);
     }
 
-    // Candle 2 position
     const candle2X = centerX + candleWidth + 15;
     const candle2Open = candle1MaxClose;
-    const candle2Low = candle2Open + 25; // Bottom wick into zone
+    const candle2Low = candle2Open + 25;
     
     if (progress >= 0.35 && progress < 0.50) {
-      // Phase 2: New candle opens, pushes down, makes wick
       const phase2Progress = (progress - 0.35) / 0.15;
       const wickLength = easeOutCubic(phase2Progress) * (candle2Low - candle2Open);
       
-      // Just the wick pushing down
       ctx.strokeStyle = '#2E7D32';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -158,7 +141,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.lineTo(candle2X, candle2Open + wickLength);
       ctx.stroke();
       
-      // Small body forming
       if (phase2Progress > 0.5) {
         const bodyProgress = (phase2Progress - 0.5) / 0.5;
         const bodyHeight = bodyProgress * 8;
@@ -167,7 +149,6 @@ if (dropdownBtn && dropdownMenu) {
       }
     }
 
-    // Recoil signal
     let showSignal = false;
     let signalAlpha = 0;
     
@@ -181,13 +162,9 @@ if (dropdownBtn && dropdownMenu) {
     }
 
     if (progress >= 0.50 && progress < 0.75) {
-      // Phase 3-4: Signal appears, candle pushes up
       const phase34Progress = (progress - 0.50) / 0.25;
-      
-      // Candle 2 body growing upward (bullish)
       const candle2Close = candle2Open - 10 - easeOutCubic(phase34Progress) * 50;
       
-      // Wick
       ctx.strokeStyle = '#2E7D32';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -195,7 +172,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.lineTo(candle2X, candle2Close - 5);
       ctx.stroke();
       
-      // Body
       const bodyGrad = ctx.createLinearGradient(0, candle2Close, 0, candle2Open);
       bodyGrad.addColorStop(0, '#27ae60');
       bodyGrad.addColorStop(1, '#2ecc71');
@@ -207,15 +183,12 @@ if (dropdownBtn && dropdownMenu) {
       ctx.strokeRect(candle2X - candleWidth/2, candle2Close, candleWidth, candle2Open - candle2Close);
     }
 
-    // Candle 3
     const candle3X = candle2X + candleWidth + 15;
     const candle2FinalClose = candle2Open - 60;
     
     if (progress >= 0.75 && progress < 0.95) {
-      // Phase 5: Third candle pushing up
       const phase5Progress = (progress - 0.75) / 0.20;
       
-      // Candle 2 stays static
       ctx.strokeStyle = '#2E7D32';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -232,7 +205,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.lineWidth = 1;
       ctx.strokeRect(candle2X - candleWidth/2, candle2FinalClose, candleWidth, candle2Open - candle2FinalClose);
       
-      // Candle 3
       const candle3Open = candle2FinalClose;
       const candle3Close = candle3Open - easeOutCubic(phase5Progress) * 45;
       
@@ -254,8 +226,6 @@ if (dropdownBtn && dropdownMenu) {
     }
 
     if (progress >= 0.95) {
-      // Hold - all candles static
-      // Candle 2
       ctx.strokeStyle = '#2E7D32';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -272,7 +242,6 @@ if (dropdownBtn && dropdownMenu) {
       ctx.lineWidth = 1;
       ctx.strokeRect(candle2X - candleWidth/2, candle2FinalClose, candleWidth, candle2Open - candle2FinalClose);
       
-      // Candle 3
       const candle3Open = candle2FinalClose;
       const candle3Close = candle3Open - 45;
       
@@ -293,7 +262,7 @@ if (dropdownBtn && dropdownMenu) {
       ctx.strokeRect(candle3X - candleWidth/2, candle3Close, candleWidth, candle3Open - candle3Close);
     }
 
-    // Recoil Signal Box
+    // Recoil Signal Box with PROPER arrow
     if (showSignal) {
       const signalX = candle2X + candleWidth/2 + 20;
       const signalY = candle2Low + 10;
@@ -301,23 +270,25 @@ if (dropdownBtn && dropdownMenu) {
       // Signal box
       ctx.fillStyle = `rgba(0, 136, 204, ${0.95 * signalAlpha})`;
       ctx.beginPath();
-      ctx.roundRect(signalX, signalY, 85, 32, 6);
+      ctx.roundRect(signalX, signalY, 90, 32, 6);
       ctx.fill();
       
-      // Arrow
+      // Proper upward arrow (triangle pointing up)
       ctx.fillStyle = `rgba(255, 255, 255, ${signalAlpha})`;
       ctx.beginPath();
-      ctx.moveTo(signalX + 15, signalY + 20);
-      ctx.lineTo(signalX + 10, signalY + 25);
-      ctx.lineTo(signalX + 20, signalY + 25);
+      ctx.moveTo(signalX + 18, signalY + 8);  // Top point
+      ctx.lineTo(signalX + 12, signalY + 18); // Bottom left
+      ctx.lineTo(signalX + 24, signalY + 18); // Bottom right
       ctx.closePath();
       ctx.fill();
-      ctx.fillRect(signalX + 13, signalY + 10, 4, 12);
+      
+      // Arrow stem
+      ctx.fillRect(signalX + 15, signalY + 17, 6, 8);
       
       // Text
       ctx.font = '700 11px "JetBrains Mono"';
       ctx.fillStyle = `rgba(255, 255, 255, ${signalAlpha})`;
-      ctx.fillText('RECOIL', signalX + 30, signalY + 21);
+      ctx.fillText('RECOIL', signalX + 35, signalY + 21);
     }
 
     requestAnimationFrame(draw);
@@ -326,7 +297,7 @@ if (dropdownBtn && dropdownMenu) {
 })();
 
 // ── MERIDIAN ANIMATION ──
-// Slower line drawing, Prime Signal at the tip
+// Slow line draw, diamond at tip as low is created
 (function() {
   const c = document.getElementById('meridianCanvas');
   if (!c) return;
@@ -342,21 +313,16 @@ if (dropdownBtn && dropdownMenu) {
   resize();
   window.addEventListener('resize', resize);
 
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-
   function draw() {
     frame++;
     const w = W / 2, h = H / 2;
     ctx.clearRect(0, 0, w, h);
     
-    // Background
     ctx.fillStyle = '#f2f1ed';
     ctx.fillRect(0, 0, w, h);
 
-    // 360 frame cycle (30% slower than before)
-    const progress = (frame % 360) / 360;
+    // 480 frame cycle - MUCH slower
+    const progress = (frame % 480) / 480;
 
     // Quant Node levels
     const nodes = [
@@ -366,9 +332,8 @@ if (dropdownBtn && dropdownMenu) {
       { y: h * 0.78, label: '1.13600' },
     ];
 
-    // Draw Quant Node levels
     nodes.forEach((node, i) => {
-      const nodeAlpha = Math.min(progress * 5 - i * 0.08, 1);
+      const nodeAlpha = Math.min(progress * 6 - i * 0.05, 1);
       if (nodeAlpha > 0) {
         const isBottom = i === 3;
         
@@ -394,21 +359,27 @@ if (dropdownBtn && dropdownMenu) {
       }
     });
 
-    // Price path - SLOWER drawing (0.1 to 0.7 = 60% of cycle)
-    const lineStartProgress = 0.1;
-    const lineEndProgress = 0.7;
+    // Line drawing from 0.08 to 0.85 (very slow)
+    const lineStart = 0.08;
+    const lineEnd = 0.85;
     
-    // The actual lowest point
+    // The lowest point position
     const lowestY = h * 0.78;
-    const lowestX = w * 0.58;
+    const lowestX = w * 0.55;
+    
+    // At what progress does the line reach the lowest point?
+    const lowPointProgress = 0.55; // 55% through the line drawing
 
-    if (progress > lineStartProgress) {
-      const lineProgress = Math.min((progress - lineStartProgress) / (lineEndProgress - lineStartProgress), 1);
-      const easedProgress = easeOutCubic(lineProgress);
+    if (progress > lineStart) {
+      const rawLineProgress = (progress - lineStart) / (lineEnd - lineStart);
+      const lineProgress = Math.min(rawLineProgress, 1);
       
       const points = [];
-      const totalPoints = 100;
-      const numPts = Math.floor(easedProgress * totalPoints);
+      const totalPoints = 120;
+      const numPts = Math.floor(lineProgress * totalPoints);
+
+      let currentLowestY = 0;
+      let currentLowestX = 0;
 
       for (let i = 0; i < numPts; i++) {
         const t = i / totalPoints;
@@ -416,17 +387,24 @@ if (dropdownBtn && dropdownMenu) {
         let y;
         
         if (t < 0.55) {
-          // Descent
+          // Descent to low
           const descT = t / 0.55;
-          y = h * 0.22 + easeOutCubic(descT) * (lowestY - h * 0.22) + Math.sin(i * 0.25) * 5;
+          y = h * 0.22 + descT * (lowestY - h * 0.22) + Math.sin(i * 0.2) * 4;
         } else {
-          // Reversal
+          // Reversal up
           const revT = (t - 0.55) / 0.45;
-          y = lowestY - easeOutCubic(revT) * (lowestY - h * 0.35) + Math.sin(i * 0.3) * 4;
+          y = lowestY - revT * (lowestY - h * 0.38) + Math.sin(i * 0.25) * 3;
         }
         points.push({ x, y });
+        
+        // Track the current lowest point as line draws
+        if (y > currentLowestY) {
+          currentLowestY = y;
+          currentLowestX = x;
+        }
       }
 
+      // Draw the line
       if (points.length > 1) {
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
@@ -436,47 +414,30 @@ if (dropdownBtn && dropdownMenu) {
           const yc = (points[i].y + points[i + 1].y) / 2;
           ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
         }
-        if (points.length > 1) {
-          ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-        }
+        ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
         
         ctx.strokeStyle = '#1a1a1a';
         ctx.lineWidth = 2;
         ctx.stroke();
       }
 
-      // Check if we've reached the bottom (around t=0.55 of line progress)
-      const bottomReached = lineProgress > 0.55;
+      // Has the line reached near the lowest point? (t >= 0.53)
+      const currentT = numPts / totalPoints;
+      const hasReachedLow = currentT >= 0.53;
       
-      if (bottomReached) {
-        // Calculate how long since bottom was reached
-        const timeSinceBottom = (lineProgress - 0.55) / 0.45;
+      if (hasReachedLow) {
+        // Signal appears AS the low is being created
+        const timeSinceLow = Math.max(0, currentT - 0.53) / 0.1;
+        const signalAlpha = Math.min(timeSinceLow, 1);
         
-        // Prime Signal appears immediately when reaction starts
-        const signalAlpha = Math.min(timeSinceBottom * 3, 1);
-        
-        // Vortex rings
-        const glowGrad = ctx.createRadialGradient(lowestX, lowestY, 0, lowestX, lowestY, 35);
-        glowGrad.addColorStop(0, `rgba(184, 150, 46, ${0.15 * signalAlpha})`);
-        glowGrad.addColorStop(1, 'rgba(184, 150, 46, 0)');
-        ctx.fillStyle = glowGrad;
-        ctx.beginPath();
-        ctx.arc(lowestX, lowestY, 35, 0, Math.PI * 2);
-        ctx.fill();
+        // NO RINGS - just the diamond directly below the lowest point
+        const diamondX = currentLowestX;
+        const diamondY = currentLowestY + 12; // Directly below the tip
+        const size = 10;
 
-        for (let r = 0; r < 3; r++) {
-          const ringAlpha = (0.4 - r * 0.1) * signalAlpha;
-          ctx.strokeStyle = `rgba(184, 150, 46, ${ringAlpha})`;
-          ctx.lineWidth = 1.5 - r * 0.3;
-          ctx.beginPath();
-          ctx.arc(lowestX, lowestY, 8 + r * 9, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-
-        // Diamond - RIGHT AT THE TIP
-        const size = 11 * signalAlpha;
+        // Diamond
         ctx.save();
-        ctx.translate(lowestX, lowestY);
+        ctx.translate(diamondX, diamondY);
         ctx.rotate(Math.PI / 4);
         
         const diamondGrad = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
@@ -487,12 +448,14 @@ if (dropdownBtn && dropdownMenu) {
         ctx.fillRect(-size/2, -size/2, size, size);
         ctx.restore();
 
-        // Label
+        // Label - centered below diamond
         if (signalAlpha > 0.3) {
           const labelAlpha = (signalAlpha - 0.3) / 0.7;
-          ctx.font = '700 11px "JetBrains Mono"';
+          ctx.font = '700 10px "JetBrains Mono"';
           ctx.fillStyle = `rgba(184, 150, 46, ${labelAlpha})`;
-          ctx.fillText('◆ PRIME SIGNAL', lowestX + 20, lowestY + 4);
+          ctx.textAlign = 'center';
+          ctx.fillText('PRIME SIGNAL', diamondX, diamondY + 22);
+          ctx.textAlign = 'left';
         }
       }
     }
