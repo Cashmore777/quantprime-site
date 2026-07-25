@@ -79,32 +79,18 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  display: block;
   padding: 0 28px 32px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--text-1);
   text-decoration: none;
 }
 
 .brand span { color: var(--gold); }
 
-.brand-ring {
-  width: 36px;
-  height: 36px;
-  border: 2px solid var(--gold);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--gold);
-  background: linear-gradient(135deg, var(--gold-glow), transparent);
-}
+.brand:hover { text-decoration: none; }
 
 .nav-section {
   margin-bottom: 24px;
@@ -1506,10 +1492,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 </div>
 
 <aside id="sidebar">
-  <a href="/" class="brand">
-    <div class="brand-ring">Q</div>
-    QUANT<span>PRIME</span>
-  </a>
+  <a href="/" class="brand">QUANT<span>PRIME</span></a>
   
   <nav>
     <div class="nav-section">
