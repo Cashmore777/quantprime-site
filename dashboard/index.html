@@ -1557,7 +1557,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
     <div class="coming-soon-card">
       <div class="lock-icon">📚</div>
       <h3>Academy Access</h3>
-      <p>The full curriculum — Levels 1–18, the notebook system, and the completion guarantee — is part of the Ascension plan. Upgrade to unlock 40+ hours of structured education.</p>
+      <p>The full curriculum — Levels 1–9, the notebook system, and the completion guarantee — is part of the Ascension plan. Upgrade to unlock 40+ hours of structured education.</p>
       <a href="/pricing" class="btn">Upgrade to Ascension</a>
     </div>
   </div>
@@ -1921,6 +1921,17 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authUser = null;
+let userTier = 'free';
+
+// Tier access definitions
+const TIER_ACCESS = {
+  'free': ['community', 'marketplace'],
+  'research': ['community', 'marketplace', 'research'],
+  'recoil': ['community', 'marketplace', 'research', 'recoil'],
+  'terminal': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
+  'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
+  'ascension': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence']
+};
 
 // Check authentication on page load
 async function checkAuth() {
@@ -1934,13 +1945,25 @@ async function checkAuth() {
   
   authUser = session.user;
   
+  // Fetch user profile from database
+  const { data: profile, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', authUser.id)
+    .single();
+  
+  if (profile) {
+    userTier = (profile.tier || 'free').toLowerCase();
+    currentUser = profile.display_name || authUser.email.split('@')[0];
+  } else {
+    userTier = 'free';
+    currentUser = authUser.email.split('@')[0];
+  }
+  
   // Update UI with user info
-  const userMeta = authUser.user_metadata || {};
-  document.getElementById('user-tier').textContent = (userMeta.tier || 'FREE').toUpperCase();
+  document.getElementById('user-tier').textContent = userTier.toUpperCase();
   document.getElementById('user-email').textContent = authUser.email;
   
-  // Set display name for chat
-  currentUser = userMeta.display_name || authUser.email.split('@')[0];
   localStorage.setItem('qp_username', currentUser);
   
   // Update welcome message
@@ -1949,6 +1972,9 @@ async function checkAuth() {
     welcomeHeader.innerHTML = `Welcome back, <em>${currentUser}</em>.`;
   }
   
+  // Apply tier-based access control
+  applyTierAccess();
+  
   // Hide username modal since we have auth
   document.getElementById('username-modal').classList.add('hidden');
   
@@ -1956,6 +1982,49 @@ async function checkAuth() {
   if (chatEnabled) {
     subscribeToRoom(currentRoom);
   }
+}
+
+// Apply tier-based locking/unlocking
+function applyTierAccess() {
+  const allowedViews = TIER_ACCESS[userTier] || TIER_ACCESS['free'];
+  
+  // Products that can be locked
+  const lockableViews = ['research', 'recoil', 'meridian', 'cockpit', 'academy', 'intelligence'];
+  
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const view = item.dataset.view;
+    
+    if (lockableViews.includes(view)) {
+      if (allowedViews.includes(view)) {
+        // Unlock this item
+        item.classList.remove('locked');
+        item.dataset.locked = 'false';
+        const lock = item.querySelector('.lock');
+        if (lock) lock.style.display = 'none';
+        const pip = item.querySelector('.status-pip');
+        if (pip) pip.style.display = 'block';
+      } else {
+        // Lock this item
+        item.classList.add('locked');
+        item.dataset.locked = 'true';
+        const lock = item.querySelector('.lock');
+        if (lock) lock.style.display = 'block';
+        const pip = item.querySelector('.status-pip');
+        if (pip) pip.style.display = 'none';
+      }
+    }
+  });
+  
+  // Update home page instrument status
+  updateInstrumentStatus(allowedViews);
+}
+
+function updateInstrumentStatus(allowedViews) {
+  const statusContainer = document.querySelector('#view-home .panel:nth-of-type(1)');
+  if (!statusContainer) return;
+  
+  const statuses = statusContainer.querySelectorAll('[class*="status-dot"]');
+  // This will be styled based on what's active for the user
 }
 
 async function logout() {
@@ -2010,7 +2079,7 @@ function showLockedModal(view) {
     'intelligence': 'Intelligence Access'
   };
   const texts = {
-    'academy': 'The full curriculum — Levels 1–18, the notebook system, and the completion guarantee — is part of the Ascension plan.',
+    'academy': 'The full curriculum — Levels 1–9, the notebook system, and the completion guarantee — is part of the Ascension plan.',
     'cockpit': 'The Cockpit automation layer is currently in private beta with Ascension members. Coming Q4 2026.',
     'intelligence': 'QP Intelligence is your AI-powered analysis assistant. Currently in development — stay tuned.'
   };
