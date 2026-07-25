@@ -323,17 +323,25 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: var(--text-3);
+  flex-shrink: 0;
 }
 
-.nav-item.active .icon { color: var(--gold); }
+.nav-item .icon svg {
+  stroke: var(--text-3);
+}
+
+.nav-item.active .icon svg { stroke: var(--gold); }
+.nav-item:hover .icon svg { stroke: var(--text-1); }
 
 .nav-item .lock {
   margin-left: auto;
-  font-size: 11px;
-  color: var(--text-3);
-  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+}
+
+.nav-item .lock svg {
+  stroke: var(--text-3);
 }
 
 .nav-item.locked { opacity: 0.5; }
@@ -870,19 +878,87 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 @media (max-width: 820px) {
   .community-layout { 
-    grid-template-columns: 1fr; 
-    height: auto;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - var(--header-height) - var(--nav-height) - 120px);
+    min-height: 400px;
     max-height: none;
   }
   
   .rooms-list {
-    max-height: 200px;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0 0 12px 12px;
+    box-shadow: var(--shadow-lg);
+    max-height: 300px;
     overflow-y: auto;
+    z-index: 20;
+  }
+  
+  .rooms-list.open {
+    display: block;
   }
   
   .chat-panel {
-    height: calc(100vh - 400px);
-    min-height: 350px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+}
+
+/* Mobile room selector bar */
+.mobile-room-selector {
+  display: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  position: relative;
+}
+
+.mobile-room-selector .current-room {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mobile-room-selector .room-hash {
+  color: var(--gold);
+  font-family: var(--mono);
+  margin-right: 8px;
+}
+
+.mobile-room-selector .dropdown-arrow {
+  transition: transform 0.2s;
+}
+
+.mobile-room-selector.open .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 820px) {
+  .mobile-room-selector {
+    display: block;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 821px) {
+  .mobile-room-selector {
+    display: none !important;
   }
 }
 
@@ -1367,9 +1443,14 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .coming-soon-card .lock-icon {
-  font-size: 48px;
   margin-bottom: 20px;
   opacity: 0.4;
+  display: flex;
+  justify-content: center;
+}
+
+.coming-soon-card .lock-icon svg {
+  stroke: var(--text-3);
 }
 
 .coming-soon-card h3 {
@@ -1439,8 +1520,14 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 #mobile-nav .icon { 
-  font-size: 22px;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+}
+
+#mobile-nav .icon svg {
+  stroke: currentColor;
 }
 
 @media (max-width: 820px) {
@@ -1684,9 +1771,14 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 #modal .lock-icon {
-  font-size: 40px;
   margin-bottom: 16px;
   opacity: 0.5;
+  display: flex;
+  justify-content: center;
+}
+
+#modal .lock-icon svg {
+  stroke: var(--text-3);
 }
 
 #modal h3 {
@@ -2109,36 +2201,36 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <nav>
     <div class="nav-section">
       <div class="nav-section-label">Dashboard</div>
-      <button class="nav-item active" data-view="home"><span class="icon">◆</span>Home</button>
+      <button class="nav-item active" data-view="home"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg></span>Home</button>
     </div>
     
     <div class="nav-section">
       <div class="nav-section-label">Products</div>
-      <button class="nav-item locked" data-view="research" data-locked="true"><span class="icon">¶</span>Research<span class="lock">🔒</span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="recoil" data-locked="true"><span class="icon">⟲</span>Recoil<span class="lock">🔒</span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="meridian" data-locked="true"><span class="icon">◎</span>Meridian<span class="lock">🔒</span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="cockpit" data-locked="true"><span class="icon">⬡</span>Cockpit<span class="lock">🔒</span><span class="status-pip" style="display:none;"></span></button>
+      <button class="nav-item locked" data-view="research" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg></span>Research<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
+      <button class="nav-item locked" data-view="recoil" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></span>Recoil<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
+      <button class="nav-item locked" data-view="meridian" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg></span>Meridian<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
+      <button class="nav-item locked" data-view="cockpit" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>Cockpit<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
     </div>
     
     <div class="nav-section">
       <div class="nav-section-label">Learn</div>
-      <button class="nav-item locked" data-view="academy" data-locked="true"><span class="icon">▤</span>Academy<span class="lock">🔒</span></button>
+      <button class="nav-item locked" data-view="academy" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg></span>Academy<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
     </div>
     
     <div class="nav-section">
       <div class="nav-section-label">Connect</div>
-      <button class="nav-item" data-view="community"><span class="icon">💬</span>Community</button>
-      <button class="nav-item" data-view="marketplace"><span class="icon">🏪</span>Marketplace</button>
-      <button class="nav-item locked" data-view="intelligence" data-locked="true"><span class="icon">🧠</span>Intelligence<span class="lock">🔒</span></button>
+      <button class="nav-item" data-view="community"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg></span>Community</button>
+      <button class="nav-item" data-view="marketplace"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg></span>Marketplace</button>
+      <button class="nav-item locked" data-view="intelligence" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>Intelligence<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
     </div>
     
     <div class="nav-section" id="admin-nav" style="display: none;">
       <div class="nav-section-label">Admin</div>
-      <button class="nav-item" data-view="admin"><span class="icon">👑</span>Admin Panel</button>
+      <button class="nav-item" data-view="admin"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15l-2 5l9-13h-7l2-5l-9 13h7z"/></svg></span>Admin Panel</button>
     </div>
     
     <div class="nav-section" style="margin-top: auto;">
-      <button class="nav-item" data-view="settings"><span class="icon">⚙</span>Settings</button>
+      <button class="nav-item" data-view="settings"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>Settings</button>
     </div>
   </nav>
   
@@ -2184,7 +2276,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div><span class="status-dot"></span>RESEARCH · ACTIVE</div>
         <div><span class="status-dot"></span>RECOIL · ACTIVE</div>
         <div><span class="status-dot"></span>MERIDIAN · ACTIVE</div>
-        <div style="color: var(--text-3);"><span class="status-dot inactive"></span>COCKPIT · Q4 2026</div>
+        <div><span class="status-dot"></span>COCKPIT · ACTIVE</div>
       </div>
     </div>
     
@@ -2319,18 +2411,33 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
   </div>
 
-  <!-- COCKPIT (Locked) -->
+  <!-- COCKPIT -->
   <div class="view" id="view-cockpit">
     <div class="view-header">
       <div class="eyebrow">Product</div>
-      <h2>Cockpit — <em>Multi-timeframe visual analysis</em></h2>
+      <h2>Cockpit — <em>Fractal command center</em></h2>
     </div>
     
-    <div class="coming-soon-card">
-      <div class="lock-icon">⬡</div>
-      <h3>Coming Q4 2026</h3>
-      <p>The Cockpit is Quant Prime's analytical overlay — EMAs, liquidity pools, FVGs, AMD phases, volatility bands, and a fractal dashboard across multiple timeframes. Pure market-state awareness. Currently in development.</p>
-      <button class="btn" onclick="switchView('settings')">Join the waitlist</button>
+    <div class="instrument-card" style="margin-bottom: 24px;">
+      <div class="instrument-header">
+        <h4>COCKPIT</h4>
+        <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+      </div>
+      <p>Multi-timeframe analytical overlay. EMAs, liquidity pools, FVGs, AMD phases, volatility bands, and a fractal dashboard across four timeframes. Pure market-state awareness — no trades, no signals.</p>
+      <div class="actions">
+        <button class="btn sm">Open on TradingView</button>
+        <button class="btn outline sm">Operator's Guide</button>
+        <button class="btn outline sm">Regime Dashboard</button>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <h4>TradingView Access</h4>
+      <div class="form-row">
+        <label>Your TradingView username</label>
+        <input class="mono" value="QP_Member_041" readonly style="max-width: 320px;">
+      </div>
+      <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
   </div>
 
@@ -2431,8 +2538,13 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <h2>The <em>floor</em>.</h2>
     </div>
     
-    <div class="community-layout">
-      <div class="rooms-list">
+    <!-- Mobile Room Selector (visible only on mobile) -->
+    <div class="mobile-room-selector" id="mobileRoomSelector" onclick="toggleMobileRooms()">
+      <div class="current-room">
+        <span><span class="room-hash">#</span><span id="mobileCurrentRoom">general</span></span>
+        <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="rooms-list" id="mobileRoomsList">
         <div class="room-category">Official</div>
         <div class="room active" data-room="general"><span class="hash">#</span>general</div>
         <div class="room" data-room="research-discussion"><span class="hash">#</span>research-discussion</div>
@@ -2441,7 +2553,26 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="room" data-room="market-chat"><span class="hash">#</span>market-chat</div>
         <div class="room" data-room="academy-chat"><span class="hash">#</span>academy-chat</div>
         <div class="room" data-room="automation"><span class="hash">#</span>automation</div>
-        
+        <div class="room-category">Member Rooms</div>
+        <div class="room" data-room="london-session-desk"><span class="hash">◦</span>london-session-desk</div>
+        <div class="room" data-room="NY-session-desk"><span class="hash">◦</span>NY-session-desk</div>
+        <div class="room" data-room="asia-session-desk"><span class="hash">◦</span>asia-session-desk</div>
+        <div class="room" data-room="gold-only-gang"><span class="hash">◦</span>gold-only-gang</div>
+        <div class="room" data-room="fx-only-gang"><span class="hash">◦</span>fx-only-gang</div>
+      </div>
+    </div>
+    
+    <div class="community-layout">
+      <!-- Desktop Rooms List (hidden on mobile) -->
+      <div class="rooms-list desktop-only" id="desktopRoomsList">
+        <div class="room-category">Official</div>
+        <div class="room active" data-room="general"><span class="hash">#</span>general</div>
+        <div class="room" data-room="research-discussion"><span class="hash">#</span>research-discussion</div>
+        <div class="room" data-room="recoil"><span class="hash">#</span>recoil</div>
+        <div class="room" data-room="meridian"><span class="hash">#</span>meridian</div>
+        <div class="room" data-room="market-chat"><span class="hash">#</span>market-chat</div>
+        <div class="room" data-room="academy-chat"><span class="hash">#</span>academy-chat</div>
+        <div class="room" data-room="automation"><span class="hash">#</span>automation</div>
         <div class="room-category">Member Rooms</div>
         <div class="room" data-room="london-session-desk"><span class="hash">◦</span>london-session-desk</div>
         <div class="room" data-room="NY-session-desk"><span class="hash">◦</span>NY-session-desk</div>
@@ -2506,25 +2637,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
       </div>
       
-      <!-- 2. Vortex Digital Root Engine (from Meridian) -->
-      <div class="marketplace-item" data-category="vortex">
-        <div class="code-preview"><span class="var">get_digital_root</span>(num) =&gt;
-    <span class="keyword">int</span> result = num
-    <span class="keyword">while</span> result &gt; <span class="string">9</span>
-        sum = 0, temp = result
-        <span class="keyword">while</span> temp &gt; 0
-            sum += temp % <span class="string">10</span>
-        result := sum</div>
-        <span class="item-tag">Vortex</span>
-        <h4>Vortex Digital Root Engine</h4>
-        <div class="description">The 3-6-9 digital-root alignment engine from Meridian. Detects T=0/T=1/T=2 time windows with price vortex confluence.</div>
-        <div class="purchase-row">
-          <div class="price">£9.99</div>
-          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
-        </div>
-      </div>
-      
-      <!-- 3. Volatility Band Classifier (from Recoil) -->
+      <!-- 2. Volatility Band Classifier (from Recoil) -->
       <div class="marketplace-item" data-category="structure">
         <div class="code-preview"><span class="var">atr</span> = ta.atr(<span class="string">8</span>)
 <span class="var">ratio</span> = math.abs(close - open) / atr
@@ -2574,22 +2687,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
       </div>
       
-      <!-- 6. AMD Phase Engine (from Meridian) -->
-      <div class="marketplace-item" data-category="vortex">
-        <div class="code-preview"><span class="var">is_t0</span> = bar_hour == <span class="string">0</span> <span class="keyword">or</span> bar_hour == <span class="string">3</span> <span class="keyword">or</span>
-        bar_hour == <span class="string">6</span> <span class="keyword">or</span> bar_hour == <span class="string">9</span> <span class="keyword">or</span>
-        bar_hour == <span class="string">12</span> <span class="keyword">or</span> bar_hour == <span class="string">15</span>
-<span class="var">amd_phase</span> = is_t0 ? <span class="string">"A"</span> : <span class="string">"M/D"</span></div>
-        <span class="item-tag">Vortex</span>
-        <h4>AMD Phase Engine</h4>
-        <div class="description">Accumulation-Manipulation-Distribution cycle engine from Meridian. 12H/6H/3H cycle detection with A-line sweep tracking.</div>
-        <div class="purchase-row">
-          <div class="price">£6.99</div>
-          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
-        </div>
-      </div>
-      
-      <!-- 7. Trend Alignment Risk Scaler (from Recoil) -->
+      <!-- 6. Trend Alignment Risk Scaler (from Recoil) -->
       <div class="marketplace-item" data-category="risk">
         <div class="code-preview"><span class="var">trend_with_mult</span>    = <span class="string">2.0</span>
 <span class="var">trend_against_mult</span> = <span class="string">0.5</span>
@@ -2647,7 +2745,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
     
     <div class="coming-soon-card">
-      <div class="lock-icon">🧠</div>
+      <div class="lock-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
       <h3>Intelligence — Coming Soon</h3>
       <p>QP Intelligence is your AI-powered second opinion. Ask about your charts, get framework-aware analysis, and review your journal with systematic precision. Currently in development.</p>
       <button class="btn outline" onclick="switchView('home')">Back to Dashboard</button>
@@ -2843,17 +2941,32 @@ button, .nav-item, .room, .video-item, .filter-chip {
 </main>
 
 <nav id="mobile-nav">
-  <button class="active" data-view="home"><span class="icon">◆</span>Home</button>
-  <button data-view="research"><span class="icon">📊</span>Research</button>
-  <button data-view="community"><span class="icon">💬</span>Chat</button>
-  <button data-view="marketplace"><span class="icon">🛒</span>Shop</button>
-  <button data-view="settings"><span class="icon">⚙️</span>More</button>
+  <button class="active" data-view="home">
+    <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M9 22V12h6v10"/></svg></span>
+    Home
+  </button>
+  <button data-view="research">
+    <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg></span>
+    Research
+  </button>
+  <button data-view="community">
+    <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg></span>
+    Chat
+  </button>
+  <button data-view="marketplace">
+    <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg></span>
+    Shop
+  </button>
+  <button data-view="settings">
+    <span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+    Profile
+  </button>
 </nav>
 
 <!-- Tier Lock Modal -->
 <div id="modal">
   <div class="modal-box">
-    <div class="lock-icon">🔒</div>
+    <div class="lock-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
     <h3 id="modal-title">Feature Locked</h3>
     <p id="modal-text">This feature requires a higher tier. Upgrade to unlock access.</p>
     <a href="/pricing" class="btn">View Plans</a>
@@ -3071,6 +3184,31 @@ function updateMobileTier() {
   const mobileTier = document.getElementById('mobile-tier');
   if (mobileTier && userTier) {
     mobileTier.textContent = userTier.toUpperCase();
+  }
+}
+
+// ==========================================
+// MOBILE CHAT ROOM SELECTOR
+// ==========================================
+function toggleMobileRooms() {
+  const selector = document.getElementById('mobileRoomSelector');
+  const roomsList = document.getElementById('mobileRoomsList');
+  selector.classList.toggle('open');
+  roomsList.classList.toggle('open');
+}
+
+function closeMobileRooms() {
+  const selector = document.getElementById('mobileRoomSelector');
+  const roomsList = document.getElementById('mobileRoomsList');
+  if (selector) selector.classList.remove('open');
+  if (roomsList) roomsList.classList.remove('open');
+}
+
+// Update mobile room display
+function updateMobileRoomDisplay(roomName) {
+  const mobileCurrentRoom = document.getElementById('mobileCurrentRoom');
+  if (mobileCurrentRoom) {
+    mobileCurrentRoom.textContent = roomName;
   }
 }
 
@@ -3301,6 +3439,11 @@ rooms.forEach(room => {
     currentRoom = room.dataset.room;
     document.getElementById('current-room-name').textContent = currentRoom;
     document.getElementById('chat-input').placeholder = `Message #${currentRoom}`;
+    
+    // Update mobile display and close dropdown
+    updateMobileRoomDisplay(currentRoom);
+    closeMobileRooms();
+    
     if (chatEnabled) {
       subscribeToRoom(currentRoom);
     }
