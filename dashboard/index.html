@@ -1050,6 +1050,193 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   #mobile-nav { display: flex; }
 }
 
+/* Academy Layout */
+.academy-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+  min-height: 600px;
+}
+
+@media (max-width: 900px) {
+  .academy-layout { grid-template-columns: 1fr; }
+}
+
+.level-nav {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  max-height: 700px;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.progress-ring {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.ring-svg { width: 52px; height: 52px; }
+
+.level-group {
+  margin-bottom: 8px;
+}
+
+.level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.15s;
+}
+
+.level-header:hover {
+  background: var(--surface-raised);
+  color: var(--text-1);
+}
+
+.level-group.open .level-header {
+  color: var(--text-1);
+  background: var(--gold-glow);
+}
+
+.level-header .level-progress {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.level-videos {
+  display: none;
+  padding: 6px 0;
+}
+
+.level-group.open .level-videos { display: block; }
+
+.video-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 24px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.video-item:hover {
+  background: var(--surface-raised);
+  color: var(--text-1);
+}
+
+.video-item.active {
+  background: var(--gold-glow);
+  color: var(--text-1);
+}
+
+.video-item.completed .video-status { color: var(--success); }
+.video-item.active .video-status { color: var(--gold); }
+
+.video-item .video-status {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.video-item .video-duration {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.video-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.video-player {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+}
+
+.player-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #fff;
+}
+
+.play-btn-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.play-btn-large:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,0.3);
+  transform: scale(1.05);
+}
+
+.player-placeholder .video-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.player-placeholder .video-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+}
+
+.video-info {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.video-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.video-info p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
 /* Modal */
 #modal {
   position: fixed;
@@ -1541,13 +1728,13 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   <div class="view" id="view-cockpit">
     <div class="view-header">
       <div class="eyebrow">Product</div>
-      <h2>Cockpit — <em>Full automation</em></h2>
+      <h2>Cockpit — <em>Multi-timeframe visual analysis</em></h2>
     </div>
     
     <div class="coming-soon-card">
-      <div class="lock-icon">🚀</div>
+      <div class="lock-icon">⬡</div>
       <h3>Coming Q4 2026</h3>
-      <p>The Cockpit is Quant Prime's full automation layer — signal to execution in under a second. Currently in private beta with Ascension members.</p>
+      <p>The Cockpit is Quant Prime's analytical overlay — EMAs, liquidity pools, FVGs, AMD phases, volatility bands, and a fractal dashboard across multiple timeframes. Pure market-state awareness. Currently in development.</p>
       <button class="btn" onclick="switchView('settings')">Join the waitlist</button>
     </div>
   </div>
@@ -1559,11 +1746,86 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
       <h2>The <em>curriculum</em>.</h2>
     </div>
     
-    <div class="coming-soon-card">
-      <div class="lock-icon">📚</div>
-      <h3>Academy Access</h3>
-      <p>The full curriculum — Levels 1–9, the notebook system, and the completion guarantee — is part of the Ascension plan. Upgrade to unlock 40+ hours of structured education.</p>
-      <a href="/pricing" class="btn">Upgrade to Ascension</a>
+    <div class="academy-layout">
+      <!-- Level Navigation -->
+      <div class="level-nav" id="academy-levels">
+        <div class="progress-ring">
+          <svg class="ring-svg" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="20" fill="none" stroke="#f0f0f0" stroke-width="4"/>
+            <circle id="progress-circle" cx="24" cy="24" r="20" fill="none" stroke="#c9a84c" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="125.6" stroke-linecap="round" transform="rotate(-90 24 24)"/>
+            <text id="progress-percent" x="24" y="28" text-anchor="middle" fill="#1a1a1a" font-family="monospace" font-size="11">0%</text>
+          </svg>
+          <div>
+            <div style="font-size: 13px; font-weight: 600;">Your Progress</div>
+            <div class="mono" style="font-size: 10px; color: var(--text-3);"><span id="videos-completed">0</span> / <span id="videos-total">27</span> COMPLETE</div>
+          </div>
+        </div>
+        
+        <div id="level-list">
+          <!-- Levels loaded dynamically -->
+          <div style="padding: 20px; text-align: center; color: var(--text-3); font-size: 13px;">Loading curriculum...</div>
+        </div>
+      </div>
+      
+      <!-- Video Player -->
+      <div class="video-section">
+        <div class="video-player" id="video-player">
+          <div class="player-placeholder" id="player-placeholder">
+            <div class="play-btn-large">▶</div>
+            <div class="video-title" id="current-video-title">Select a lesson to begin</div>
+            <div class="video-meta" id="current-video-meta">27 lessons across 9 levels</div>
+          </div>
+          <iframe id="video-iframe" style="display: none; width: 100%; height: 100%; border: none; border-radius: 10px;" allowfullscreen></iframe>
+        </div>
+        
+        <div class="video-info" id="video-info" style="display: none;">
+          <h3 id="video-info-title"></h3>
+          <p id="video-info-desc"></p>
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button class="btn sm" onclick="markVideoComplete()">Mark Complete</button>
+            <button class="btn outline sm" onclick="playNextVideo()">Next Lesson →</button>
+          </div>
+        </div>
+        
+        <!-- Admin: Add Video (only visible to admins) -->
+        <div class="panel admin-only" id="academy-admin" style="margin-top: 20px; display: none;">
+          <h4>Add New Video</h4>
+          <div class="grid-2">
+            <div class="form-row">
+              <label>Level (1-9)</label>
+              <input type="number" id="new-video-level" min="1" max="9" value="1">
+            </div>
+            <div class="form-row">
+              <label>Position in Level</label>
+              <input type="number" id="new-video-position" min="1" value="1">
+            </div>
+          </div>
+          <div class="form-row">
+            <label>Title</label>
+            <input type="text" id="new-video-title" placeholder="Lesson title">
+          </div>
+          <div class="form-row">
+            <label>Description</label>
+            <input type="text" id="new-video-desc" placeholder="Brief description">
+          </div>
+          <div class="form-row">
+            <label>Video URL (Bunny/Vimeo embed URL)</label>
+            <input type="text" id="new-video-url" placeholder="https://iframe.mediadelivery.net/embed/...">
+          </div>
+          <div class="grid-2">
+            <div class="form-row">
+              <label>Duration (seconds)</label>
+              <input type="number" id="new-video-duration" value="600">
+            </div>
+            <div class="form-row">
+              <label>Thumbnail URL (optional)</label>
+              <input type="text" id="new-video-thumb" placeholder="https://...">
+            </div>
+          </div>
+          <button class="btn sm" onclick="addAcademyVideo()">Add Video</button>
+          <div id="add-video-result" style="margin-top: 12px; font-size: 13px;"></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2201,12 +2463,12 @@ function switchView(viewId) {
 function showLockedModal(view) {
   const titles = {
     'academy': 'Academy Access',
-    'cockpit': 'Cockpit Access',
+    'cockpit': 'Cockpit — Visual Analysis',
     'intelligence': 'Intelligence Access'
   };
   const texts = {
     'academy': 'The full curriculum — Levels 1–9, the notebook system, and the completion guarantee — is part of the Ascension plan.',
-    'cockpit': 'The Cockpit automation layer is currently in private beta with Ascension members. Coming Q4 2026.',
+    'cockpit': 'The Cockpit is the multi-timeframe visual analysis overlay — EMAs, liquidity pools, FVGs, AMD phases, and fractal dashboards. Available with higher tiers.',
     'intelligence': 'QP Intelligence is your AI-powered analysis assistant. Currently in development — stay tuned.'
   };
   
@@ -2740,6 +3002,256 @@ function showAddResearchModal() {
 function showAddProductModal() {
   alert('Product CMS coming soon. For now, products are stored in the HTML. I can build a full Supabase-backed marketplace with Stripe if you want.');
 }
+
+// ==========================================
+// ACADEMY FUNCTIONS
+// ==========================================
+let academyVideos = [];
+let academyProgress = {};
+let currentVideoId = null;
+
+async function loadAcademyVideos() {
+  try {
+    // Load all videos
+    const { data: videos, error } = await supabaseClient
+      .from('academy_videos')
+      .select('*')
+      .order('level', { ascending: true })
+      .order('position', { ascending: true });
+    
+    if (error) throw error;
+    academyVideos = videos || [];
+    
+    // Load user progress
+    if (authUser) {
+      const { data: progress } = await supabaseClient
+        .from('academy_progress')
+        .select('*')
+        .eq('user_id', authUser.id);
+      
+      if (progress) {
+        progress.forEach(p => {
+          academyProgress[p.video_id] = p;
+        });
+      }
+    }
+    
+    renderAcademyLevels();
+    updateProgressRing();
+    
+    // Show admin controls if admin
+    if (userTier === 'admin') {
+      document.getElementById('academy-admin').style.display = 'block';
+    }
+  } catch (e) {
+    console.error('Error loading academy:', e);
+    document.getElementById('level-list').innerHTML = '<p style="padding: 20px; color: var(--danger);">Error loading curriculum</p>';
+  }
+}
+
+function renderAcademyLevels() {
+  const container = document.getElementById('level-list');
+  
+  if (academyVideos.length === 0) {
+    container.innerHTML = '<p style="padding: 20px; text-align: center; color: var(--text-3);">No videos yet. Admin can add videos below.</p>';
+    return;
+  }
+  
+  // Group by level
+  const levels = {};
+  academyVideos.forEach(v => {
+    if (!levels[v.level]) levels[v.level] = [];
+    levels[v.level].push(v);
+  });
+  
+  let html = '';
+  Object.keys(levels).sort((a, b) => a - b).forEach(level => {
+    const vids = levels[level];
+    const completed = vids.filter(v => academyProgress[v.id]?.completed).length;
+    
+    html += `
+      <div class="level-group" data-level="${level}">
+        <div class="level-header" onclick="toggleLevel(${level})">
+          <span>Level ${level}</span>
+          <span class="level-progress">${completed}/${vids.length}</span>
+        </div>
+        <div class="level-videos">
+          ${vids.map(v => {
+            const prog = academyProgress[v.id];
+            const status = prog?.completed ? '✓' : '○';
+            const statusClass = prog?.completed ? 'completed' : '';
+            const duration = formatDuration(v.duration_seconds);
+            return `
+              <div class="video-item ${statusClass}" data-video-id="${v.id}" onclick="playVideo('${v.id}')">
+                <span class="video-status">${status}</span>
+                <span class="video-name">${v.title}</span>
+                <span class="video-duration">${duration}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+  
+  container.innerHTML = html;
+  document.getElementById('videos-total').textContent = academyVideos.length;
+}
+
+function toggleLevel(level) {
+  const group = document.querySelector(`.level-group[data-level="${level}"]`);
+  group.classList.toggle('open');
+}
+
+function formatDuration(seconds) {
+  if (!seconds) return '--:--';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function playVideo(videoId) {
+  const video = academyVideos.find(v => v.id === videoId);
+  if (!video) return;
+  
+  currentVideoId = videoId;
+  
+  // Update active state
+  document.querySelectorAll('.video-item').forEach(el => el.classList.remove('active'));
+  document.querySelector(`.video-item[data-video-id="${videoId}"]`)?.classList.add('active');
+  
+  // Show video
+  const placeholder = document.getElementById('player-placeholder');
+  const iframe = document.getElementById('video-iframe');
+  const info = document.getElementById('video-info');
+  
+  if (video.video_url) {
+    placeholder.style.display = 'none';
+    iframe.style.display = 'block';
+    iframe.src = video.video_url;
+  } else {
+    placeholder.style.display = 'flex';
+    iframe.style.display = 'none';
+    document.getElementById('current-video-title').textContent = video.title;
+    document.getElementById('current-video-meta').textContent = 'Video URL not set';
+  }
+  
+  // Show info
+  info.style.display = 'block';
+  document.getElementById('video-info-title').textContent = video.title;
+  document.getElementById('video-info-desc').textContent = video.description || 'No description available.';
+  
+  // Open the level group
+  const levelGroup = document.querySelector(`.level-group[data-level="${video.level}"]`);
+  if (levelGroup) levelGroup.classList.add('open');
+}
+
+async function markVideoComplete() {
+  if (!currentVideoId || !authUser) return;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('academy_progress')
+      .upsert({
+        user_id: authUser.id,
+        video_id: currentVideoId,
+        completed: true,
+        progress_seconds: academyVideos.find(v => v.id === currentVideoId)?.duration_seconds || 0,
+        last_watched: new Date().toISOString()
+      });
+    
+    if (error) throw error;
+    
+    academyProgress[currentVideoId] = { completed: true };
+    renderAcademyLevels();
+    updateProgressRing();
+    
+    // Keep current video highlighted
+    document.querySelector(`.video-item[data-video-id="${currentVideoId}"]`)?.classList.add('active');
+  } catch (e) {
+    alert('Error saving progress: ' + e.message);
+  }
+}
+
+function playNextVideo() {
+  if (!currentVideoId) return;
+  
+  const currentIdx = academyVideos.findIndex(v => v.id === currentVideoId);
+  if (currentIdx < academyVideos.length - 1) {
+    playVideo(academyVideos[currentIdx + 1].id);
+  }
+}
+
+function updateProgressRing() {
+  const completed = Object.values(academyProgress).filter(p => p.completed).length;
+  const total = academyVideos.length || 1;
+  const percent = Math.round((completed / total) * 100);
+  
+  document.getElementById('videos-completed').textContent = completed;
+  document.getElementById('progress-percent').textContent = percent + '%';
+  
+  // Update circle
+  const circle = document.getElementById('progress-circle');
+  const circumference = 125.6; // 2 * PI * 20
+  const offset = circumference - (percent / 100) * circumference;
+  circle.style.strokeDashoffset = offset;
+}
+
+async function addAcademyVideo() {
+  const level = parseInt(document.getElementById('new-video-level').value);
+  const position = parseInt(document.getElementById('new-video-position').value);
+  const title = document.getElementById('new-video-title').value.trim();
+  const description = document.getElementById('new-video-desc').value.trim();
+  const video_url = document.getElementById('new-video-url').value.trim();
+  const duration_seconds = parseInt(document.getElementById('new-video-duration').value) || 0;
+  const thumbnail_url = document.getElementById('new-video-thumb').value.trim();
+  
+  const resultEl = document.getElementById('add-video-result');
+  
+  if (!title) {
+    resultEl.innerHTML = '<span style="color: var(--danger);">Title is required</span>';
+    return;
+  }
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('academy_videos')
+      .insert({
+        level,
+        position,
+        title,
+        description,
+        video_url,
+        duration_seconds,
+        thumbnail_url
+      })
+      .select();
+    
+    if (error) throw error;
+    
+    resultEl.innerHTML = '<span style="color: var(--success);">✓ Video added!</span>';
+    
+    // Clear form
+    document.getElementById('new-video-title').value = '';
+    document.getElementById('new-video-desc').value = '';
+    document.getElementById('new-video-url').value = '';
+    document.getElementById('new-video-thumb').value = '';
+    
+    // Reload videos
+    loadAcademyVideos();
+  } catch (e) {
+    resultEl.innerHTML = '<span style="color: var(--danger);">Error: ' + e.message + '</span>';
+  }
+}
+
+// Load academy when switching to that view
+const originalSwitchView = switchView;
+switchView = function(viewId) {
+  originalSwitchView(viewId);
+  if (viewId === 'academy' && academyVideos.length === 0) {
+    loadAcademyVideos();
+  }
+};
 </script>
 
 </body>
