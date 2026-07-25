@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Create Account — Quant Prime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-raised: #f5f5f5;
+  --border: rgba(0,0,0,0.08);
+  --text-1: #1a1a1a;
+  --text-2: #666;
+  --text-3: #999;
+  --success: #22c55e;
+  --danger: #ef4444;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', -apple-system, system-ui, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--text-1);
+  text-decoration: none;
+}
+
+.brand span { color: var(--gold); }
+
+.brand-ring {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  background: linear-gradient(135deg, var(--gold-glow), transparent);
+}
+
+.auth-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.auth-card h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.auth-card .subtitle {
+  font-size: 14px;
+  color: var(--text-2);
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.form-row label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.form-row input {
+  width: 100%;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: var(--text-1);
+  font-family: var(--sans);
+  outline: none;
+  transition: all 0.2s;
+}
+
+.form-row input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.form-row input.error {
+  border-color: var(--danger);
+}
+
+.form-row .hint {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 6px;
+}
+
+.error-message {
+  display: none;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--danger);
+  margin-bottom: 20px;
+}
+
+.error-message.show { display: block; }
+
+.success-message {
+  display: none;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.success-message.show { display: block; }
+
+.success-message h3 {
+  font-size: 16px;
+  color: var(--success);
+  margin-bottom: 8px;
+}
+
+.success-message p {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 16px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 4px 12px rgba(201,168,76,0.25);
+  margin-top: 8px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.35);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 28px 0;
+  font-size: 12px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.alt-link {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-2);
+}
+
+.terms {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+  <a href="/" class="brand">
+    <div class="brand-ring">Q</div>
+    QUANT<span>PRIME</span>
+  </a>
+  
+  <div class="auth-card">
+    <h1>Create your account</h1>
+    <p class="subtitle">Join the Quant Prime trading floor</p>
+    
+    <div class="error-message" id="error-message"></div>
+    
+    <div class="success-message" id="success-message">
+      <h3>Check your email</h3>
+      <p>We've sent you a confirmation link. Click it to activate your account.</p>
+    </div>
+    
+    <form id="register-form">
+      <div class="form-row">
+        <label>Display Name</label>
+        <input type="text" id="display-name" placeholder="How others will see you" required minlength="2" maxlength="30">
+      </div>
+      
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
+      </div>
+      
+      <div class="form-row">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="••••••••" required minlength="8">
+        <div class="hint">Minimum 8 characters</div>
+      </div>
+      
+      <div class="form-row">
+        <label>TradingView Username (Optional)</label>
+        <input type="text" id="tradingview" placeholder="For indicator access">
+        <div class="hint">You can add this later in settings</div>
+      </div>
+      
+      <button type="submit" class="btn" id="submit-btn">
+        Create account
+      </button>
+      
+      <p class="terms">
+        By creating an account, you agree to our Terms of Service and Privacy Policy.
+      </p>
+    </form>
+    
+    <div class="divider">or</div>
+    
+    <p class="alt-link">
+      Already have an account? <a href="/dashboard/login.html">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Check if already logged in
+supabase.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    window.location.href = '/dashboard/';
+  }
+});
+
+const form = document.getElementById('register-form');
+const errorEl = document.getElementById('error-message');
+const successEl = document.getElementById('success-message');
+const submitBtn = document.getElementById('submit-btn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const displayName = document.getElementById('display-name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const tradingview = document.getElementById('tradingview').value.trim();
+  
+  // Reset state
+  errorEl.classList.remove('show');
+  successEl.classList.remove('show');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="loading-spinner"></span>Creating account...';
+  
+  try {
+    // Sign up with Supabase Auth
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          display_name: displayName,
+          tradingview_username: tradingview,
+          tier: 'free'
+        }
+      }
+    });
+    
+    if (error) throw error;
+    
+    // Check if email confirmation is required
+    if (data.user && data.user.identities && data.user.identities.length === 0) {
+      throw new Error('This email is already registered. Please sign in instead.');
+    }
+    
+    // Show success message
+    form.style.display = 'none';
+    successEl.classList.add('show');
+    
+  } catch (error) {
+    errorEl.textContent = error.message || 'Failed to create account. Please try again.';
+    errorEl.classList.add('show');
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = 'Create account';
+  }
+});
+</script>
+
+</body>
+</html>

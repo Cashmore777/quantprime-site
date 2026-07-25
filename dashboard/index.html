@@ -13,6 +13,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 :root {
   --gold: #c9a84c;
@@ -1353,9 +1356,10 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   </nav>
   
   <div class="tier-badge">
-    TIER <b>SUITE</b><br>
-    NEXT BILLING <b>08 AUG</b>
+    TIER <b id="user-tier">FREE</b><br>
+    <span id="user-email" style="font-size: 10px; word-break: break-all;"></span>
     <a href="/pricing" class="upgrade-link">Upgrade to Ascension →</a>
+    <button onclick="logout()" style="display: block; margin-top: 12px; width: 100%; padding: 8px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text-2); cursor: pointer;">Sign out</button>
   </div>
 </aside>
 
@@ -1910,31 +1914,66 @@ if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
 }
 
 // ==========================================
+// SUPABASE AUTH
+// ==========================================
+const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let authUser = null;
+
+// Check authentication on page load
+async function checkAuth() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  
+  if (!session) {
+    // Not logged in - redirect to login
+    window.location.href = '/dashboard/login.html';
+    return;
+  }
+  
+  authUser = session.user;
+  
+  // Update UI with user info
+  const userMeta = authUser.user_metadata || {};
+  document.getElementById('user-tier').textContent = (userMeta.tier || 'FREE').toUpperCase();
+  document.getElementById('user-email').textContent = authUser.email;
+  
+  // Set display name for chat
+  currentUser = userMeta.display_name || authUser.email.split('@')[0];
+  localStorage.setItem('qp_username', currentUser);
+  
+  // Update welcome message
+  const welcomeHeader = document.querySelector('#view-home .view-header h2');
+  if (welcomeHeader) {
+    welcomeHeader.innerHTML = `Welcome back, <em>${currentUser}</em>.`;
+  }
+  
+  // Hide username modal since we have auth
+  document.getElementById('username-modal').classList.add('hidden');
+  
+  // Initialize chat with authenticated user
+  if (chatEnabled) {
+    subscribeToRoom(currentRoom);
+  }
+}
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+  localStorage.removeItem('qp_username');
+  window.location.href = '/dashboard/login.html';
+}
+
+// Run auth check
+checkAuth();
+
+// ==========================================
 // USER STATE
 // ==========================================
 let currentUser = localStorage.getItem('qp_username') || null;
 let currentRoom = 'general';
 
-// Check if user needs to set username
-if (!currentUser) {
-  document.getElementById('username-modal').classList.remove('hidden');
-}
-
-function saveUsername() {
-  const input = document.getElementById('username-input');
-  const name = input.value.trim();
-  if (name.length < 2) {
-    input.style.borderColor = 'var(--danger)';
-    return;
-  }
-  currentUser = name;
-  localStorage.setItem('qp_username', name);
-  document.getElementById('username-modal').classList.add('hidden');
-  document.getElementById('settings-display-name').value = name;
-  if (chatEnabled) {
-    subscribeToRoom(currentRoom);
-  }
-}
+// saveUsername no longer needed - using Supabase auth
 
 // ==========================================
 // NAVIGATION
