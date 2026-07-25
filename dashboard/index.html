@@ -1350,6 +1350,11 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
       <button class="nav-item locked" data-view="intelligence" data-locked="true"><span class="icon">🧠</span>Intelligence<span class="lock">🔒</span></button>
     </div>
     
+    <div class="nav-section" id="admin-nav" style="display: none;">
+      <div class="nav-section-label">Admin</div>
+      <button class="nav-item" data-view="admin"><span class="icon">👑</span>Admin Panel</button>
+    </div>
+    
     <div class="nav-section" style="margin-top: auto;">
       <button class="nav-item" data-view="settings"><span class="icon">⚙</span>Settings</button>
     </div>
@@ -1852,6 +1857,124 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
     </div>
   </div>
 
+  <!-- ADMIN PANEL -->
+  <div class="view" id="view-admin">
+    <div class="view-header">
+      <div class="eyebrow">Admin Panel</div>
+      <h2>Manage <em>everything</em>.</h2>
+    </div>
+    
+    <div class="grid-2" style="margin-bottom: 24px;">
+      <div class="stat-card">
+        <div class="label">Total Users</div>
+        <div class="value" id="admin-total-users">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Paid Members</div>
+        <div class="value gold" id="admin-paid-users">--</div>
+      </div>
+    </div>
+    
+    <!-- Admin Tabs -->
+    <div style="display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;">
+      <button class="filter-chip active" onclick="showAdminTab('users')">Users</button>
+      <button class="filter-chip" onclick="showAdminTab('research')">Research</button>
+      <button class="filter-chip" onclick="showAdminTab('community')">Community</button>
+      <button class="filter-chip" onclick="showAdminTab('marketplace')">Marketplace</button>
+    </div>
+    
+    <!-- Users Tab -->
+    <div class="admin-tab active" id="admin-tab-users">
+      <div class="panel">
+        <h4>User Management</h4>
+        <p style="color: var(--text-2); font-size: 13px; margin-bottom: 16px;">Search and manage user tiers.</p>
+        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+          <input type="text" id="user-search" placeholder="Search by email..." style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;">
+          <button class="btn sm" onclick="searchUsers()">Search</button>
+        </div>
+        <div id="user-results" style="font-size: 13px; color: var(--text-2);">
+          Enter an email to search for users.
+        </div>
+      </div>
+      
+      <div class="panel" style="margin-top: 20px;">
+        <h4>Quick Tier Update</h4>
+        <div class="form-row">
+          <label>User Email</label>
+          <input type="email" id="tier-update-email" placeholder="user@example.com">
+        </div>
+        <div class="form-row">
+          <label>New Tier</label>
+          <select id="tier-update-tier" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-raised);">
+            <option value="free">Free</option>
+            <option value="research">Research (£8/mo)</option>
+            <option value="recoil">Recoil (£28/mo)</option>
+            <option value="terminal">Terminal (£58/mo)</option>
+            <option value="suite">Suite (£88/mo)</option>
+            <option value="ascension">Ascension (£258/mo)</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <button class="btn sm" onclick="updateUserTier()">Update Tier</button>
+        <div id="tier-update-result" style="margin-top: 12px; font-size: 13px;"></div>
+      </div>
+    </div>
+    
+    <!-- Research Tab -->
+    <div class="admin-tab" id="admin-tab-research" style="display: none;">
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h4 style="margin: 0;">Research Reports</h4>
+          <button class="btn sm" onclick="showAddResearchModal()">+ Add Report</button>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px;">Research reports are currently stored in-page. For a full CMS, we'd need to add a research table in Supabase. For now, you can edit the HTML directly or I can build that out.</p>
+      </div>
+    </div>
+    
+    <!-- Community Tab -->
+    <div class="admin-tab" id="admin-tab-community" style="display: none;">
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h4 style="margin: 0;">Chat Rooms</h4>
+          <button class="btn sm" onclick="addChatRoom()">+ Add Room</button>
+        </div>
+        <div id="admin-chat-rooms">
+          <p style="color: var(--text-2); font-size: 13px;">Loading rooms from Firebase...</p>
+        </div>
+      </div>
+      
+      <div class="panel" style="margin-top: 20px;">
+        <h4>Moderate Messages</h4>
+        <p style="color: var(--text-2); font-size: 13px; margin-bottom: 16px;">Delete messages from any chat room.</p>
+        <div class="form-row">
+          <label>Room</label>
+          <select id="mod-room-select" style="width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-raised);">
+            <option value="general">general</option>
+            <option value="research-discussion">research-discussion</option>
+            <option value="recoil">recoil</option>
+            <option value="meridian">meridian</option>
+            <option value="market-chat">market-chat</option>
+            <option value="academy-chat">academy-chat</option>
+            <option value="automation">automation</option>
+          </select>
+        </div>
+        <button class="btn sm outline" onclick="loadRoomForModeration()">Load Messages</button>
+        <div id="mod-messages" style="margin-top: 16px; max-height: 300px; overflow-y: auto;"></div>
+      </div>
+    </div>
+    
+    <!-- Marketplace Tab -->
+    <div class="admin-tab" id="admin-tab-marketplace" style="display: none;">
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h4 style="margin: 0;">Marketplace Products</h4>
+          <button class="btn sm" onclick="showAddProductModal()">+ Add Product</button>
+        </div>
+        <p style="color: var(--text-2); font-size: 13px;">Products are currently stored in-page. For a full product database with Stripe integration, I can build that out as a next step.</p>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <nav id="mobile-nav">
@@ -1930,8 +2053,11 @@ const TIER_ACCESS = {
   'recoil': ['community', 'marketplace', 'research', 'recoil'],
   'terminal': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
   'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
-  'ascension': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence']
+  'ascension': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence'],
+  'admin': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence', 'cockpit', 'admin']
 };
+
+const isAdmin = () => userTier === 'admin';
 
 // Check authentication on page load
 async function checkAuth() {
@@ -2426,6 +2552,194 @@ document.getElementById('marketplace-search').addEventListener('input', e => {
     }
   });
 });
+
+// ==========================================
+// ADMIN FUNCTIONS
+// ==========================================
+
+// Show admin nav if user is admin
+function showAdminNavIfAdmin() {
+  if (userTier === 'admin') {
+    document.getElementById('admin-nav').style.display = 'block';
+    loadAdminStats();
+  }
+}
+
+// Add to end of applyTierAccess function
+const originalApplyTierAccess = applyTierAccess;
+applyTierAccess = function() {
+  originalApplyTierAccess();
+  showAdminNavIfAdmin();
+};
+
+// Admin tab switching
+function showAdminTab(tabName) {
+  document.querySelectorAll('.admin-tab').forEach(tab => tab.style.display = 'none');
+  document.getElementById('admin-tab-' + tabName).style.display = 'block';
+  
+  // Update active chip
+  const chips = document.querySelectorAll('#view-admin .filter-chip');
+  chips.forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Load admin stats
+async function loadAdminStats() {
+  try {
+    const { count: totalUsers } = await supabaseClient
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
+    
+    const { count: paidUsers } = await supabaseClient
+      .from('profiles')
+      .select('*', { count: 'exact', head: true })
+      .neq('tier', 'free');
+    
+    document.getElementById('admin-total-users').textContent = totalUsers || 0;
+    document.getElementById('admin-paid-users').textContent = paidUsers || 0;
+  } catch (e) {
+    console.error('Error loading admin stats:', e);
+  }
+}
+
+// Search users
+async function searchUsers() {
+  const email = document.getElementById('user-search').value.trim();
+  if (!email) return;
+  
+  const resultsEl = document.getElementById('user-results');
+  resultsEl.innerHTML = 'Searching...';
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .ilike('email', `%${email}%`)
+      .limit(10);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      resultsEl.innerHTML = 'No users found.';
+      return;
+    }
+    
+    resultsEl.innerHTML = data.map(user => `
+      <div style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>${user.display_name || 'No name'}</strong><br>
+          <span style="font-family: var(--mono); font-size: 11px;">${user.email}</span>
+        </div>
+        <span style="background: var(--gold-glow); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${(user.tier || 'free').toUpperCase()}</span>
+      </div>
+    `).join('');
+  } catch (e) {
+    resultsEl.innerHTML = 'Error: ' + e.message;
+  }
+}
+
+// Update user tier
+async function updateUserTier() {
+  const email = document.getElementById('tier-update-email').value.trim();
+  const newTier = document.getElementById('tier-update-tier').value;
+  const resultEl = document.getElementById('tier-update-result');
+  
+  if (!email) {
+    resultEl.innerHTML = '<span style="color: var(--danger);">Please enter an email.</span>';
+    return;
+  }
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .update({ tier: newTier, updated_at: new Date().toISOString() })
+      .eq('email', email)
+      .select();
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      resultEl.innerHTML = '<span style="color: var(--danger);">User not found.</span>';
+      return;
+    }
+    
+    resultEl.innerHTML = `<span style="color: var(--success);">✓ Updated ${email} to ${newTier.toUpperCase()}</span>`;
+    loadAdminStats();
+  } catch (e) {
+    resultEl.innerHTML = '<span style="color: var(--danger);">Error: ' + e.message + '</span>';
+  }
+}
+
+// Load room for moderation
+function loadRoomForModeration() {
+  const roomId = document.getElementById('mod-room-select').value;
+  const container = document.getElementById('mod-messages');
+  container.innerHTML = 'Loading...';
+  
+  if (!db) {
+    container.innerHTML = 'Firebase not configured.';
+    return;
+  }
+  
+  const roomRef = db.ref('rooms/' + roomId + '/messages');
+  roomRef.orderByChild('timestamp').limitToLast(20).once('value', snapshot => {
+    const messages = [];
+    snapshot.forEach(child => {
+      messages.push({ key: child.key, ...child.val() });
+    });
+    
+    if (messages.length === 0) {
+      container.innerHTML = 'No messages in this room.';
+      return;
+    }
+    
+    container.innerHTML = messages.map(msg => `
+      <div style="padding: 10px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: flex-start; font-size: 12px;">
+        <div style="flex: 1;">
+          <strong>${escapeHtml(msg.username)}</strong>
+          <p style="margin: 4px 0 0; color: var(--text-2);">${escapeHtml(msg.text)}</p>
+        </div>
+        <button onclick="deleteMessage('${roomId}', '${msg.key}')" style="background: var(--danger); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">Delete</button>
+      </div>
+    `).join('');
+  });
+}
+
+// Delete message
+function deleteMessage(roomId, messageKey) {
+  if (!confirm('Delete this message?')) return;
+  
+  db.ref('rooms/' + roomId + '/messages/' + messageKey).remove()
+    .then(() => {
+      loadRoomForModeration();
+    })
+    .catch(e => alert('Error: ' + e.message));
+}
+
+// Add chat room
+function addChatRoom() {
+  const name = prompt('Room name (lowercase, no spaces):');
+  if (!name) return;
+  
+  const cleanName = name.toLowerCase().replace(/\s+/g, '-');
+  
+  // Add to Firebase structure
+  db.ref('rooms/' + cleanName).set({
+    created: Date.now(),
+    createdBy: currentUser
+  }).then(() => {
+    alert('Room "' + cleanName + '" created! Refresh to see it in the sidebar.');
+  }).catch(e => alert('Error: ' + e.message));
+}
+
+// Placeholder functions for future CMS
+function showAddResearchModal() {
+  alert('Research CMS coming soon. For now, reports are stored in the HTML. I can build a full Supabase-backed research system if you want.');
+}
+
+function showAddProductModal() {
+  alert('Product CMS coming soon. For now, products are stored in the HTML. I can build a full Supabase-backed marketplace with Stripe if you want.');
+}
 </script>
 
 </body>
