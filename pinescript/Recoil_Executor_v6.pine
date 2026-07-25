@@ -4,33 +4,10 @@ indicator("Quant Prime — Recoil [Executor]", shorttitle="RECOIL·EX", overlay=
 // ═══════════════════════════════════════════════════════════════
 // QUANT PRIME — RECOIL [EXECUTOR EDITION]
 // Webhook payloads on every trade event.
-// A standalone volatility fade engine. When a statistically
-// exceptional candle closes (volatility bands 6/7/8 -- yellow /
-// orange / red), Recoil fades it: a bearish closure triggers a
-// LONG, a bullish closure triggers a SHORT, on the premise that
-// overextended candles snap back. Each band carries its own risk
-// multiplier (1x / 2x / 5x by default) expressed against the
-// user's own base unit -- e.g. with a 0.01 base lot: yellow=0.01,
-// orange=0.02, red=0.05.
-//
-// Fully independent of the Meridian sweep/vortex engine. The EMA
-// stack provides the trend state, which scales risk rather than
-// gating trades: with-trend fades run at 2x the band foundation,
-// counter-trend at 0.5x, and consolidation fades both directions
-// at 1x (all adjustable). Fair value gaps are detected internally
-// PURELY to power the "FVG Gap" stop-loss mode -- they are never
-// drawn at low opacity (toggleable). No LP liquidity lines --
-// FVGs and the EMA stack are the only context layers.
-//
-// No P&L, no win counting, no dollars -- consistent with the
-// Quant Prime line: the tool defines the trade study; the account
-// is yours.
 // ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
-// PRESETS — backtested configurations per trading style.
-// Selecting a preset overrides TP, SL, and engine settings.
-// Choose Custom to use the manual inputs below.
+// PRESETS
 // ═══════════════════════════════════════════════════════════════
 preset = input.string("Custom", "Trading Style", options=[
      "Scalping (3M)",
@@ -58,17 +35,17 @@ volThresh5 = input.float(2.10, "Threshold 5 (Medium → High Medium)",         g
 volThresh6 = input.float(2.55, "Threshold 6 (High Medium → High)",          group="Volatility", step=0.05)
 volThresh7 = input.float(3.00, "Threshold 7 (High → Very High)",            group="Volatility", step=0.05)
 
-volColor1 = input.color(#001f2e,       "Extremely Low",  group="Volatility — Colors")
-volColor2 = input.color(#00334c,       "Very Low",       group="Volatility — Colors")
-volColor3 = input.color(#00476a,       "Low",            group="Volatility — Colors")
-volColor4 = input.color(#005b88,       "Lower Medium",   group="Volatility — Colors")
-volColor5 = input.color(#006fa5,       "Medium",         group="Volatility — Colors")
-volColor6 = input.color(#ffeb3b,       "High Medium (Trigger 1x)",  group="Volatility — Colors")
-volColor7 = input.color(#ff9800,       "High (Trigger 2x)",         group="Volatility — Colors")
+volColor1 = input.color(#1e1e28,       "Extremely Low",  group="Volatility — Colors")
+volColor2 = input.color(#2a2a36,       "Very Low",       group="Volatility — Colors")
+volColor3 = input.color(#363644,       "Low",            group="Volatility — Colors")
+volColor4 = input.color(#424252,       "Lower Medium",   group="Volatility — Colors")
+volColor5 = input.color(#4e4e60,       "Medium",         group="Volatility — Colors")
+volColor6 = input.color(#e6a830,       "High Medium (Trigger 1x)",  group="Volatility — Colors")
+volColor7 = input.color(#c9a84c,       "High (Trigger 2x)",         group="Volatility — Colors")
 volColor8 = input.color(#f23645,       "Very High (Trigger 5x)",    group="Volatility — Colors")
 
 volTagFromBand = input.int(6, "Show Tag From Band # Upward", minval=1, maxval=8, group="Volatility",
-     tooltip="The small '#.##x' text tag only appears on candles whose volatility band is this number or higher (1=Extremely Low ... 8=Very High). Default 6 tags only the trigger bands.")
+     tooltip="The small '#.##x' text tag only appears on candles whose volatility band is this number or higher.")
 
 // ═══════════════════════════════════════════════════════════════
 // DISPLAY INPUTS
@@ -85,73 +62,53 @@ ema1Len   = input.int(8,      "EMA 1 Length", group="EMAs")
 ema2Len   = input.int(26,     "EMA 2 Length", group="EMAs")
 ema3Len   = input.int(80,     "EMA 3 Length", group="EMAs")
 ema4Len   = input.int(233,    "EMA 4 Length", group="EMAs")
-ema1Color = input.color(#bbdefb, "EMA 1 Color", group="EMAs")
-ema2Color = input.color(#64b5f6, "EMA 2 Color", group="EMAs")
-ema3Color = input.color(#2962ff, "EMA 3 Color", group="EMAs")
-ema4Color = input.color(#1848b8, "EMA 4 Color", group="EMAs")
+ema1Color = input.color(#7fdbff, "EMA 1 Color", group="EMAs")
+ema2Color = input.color(#00abff, "EMA 2 Color", group="EMAs")
+ema3Color = input.color(#0085c7, "EMA 3 Color", group="EMAs")
+ema4Color = input.color(#005e8c, "EMA 4 Color", group="EMAs")
 
 // ═══════════════════════════════════════════════════════════════
 // RECOIL ENGINE
 // ═══════════════════════════════════════════════════════════════
-fade_band6_on = input.bool(true, "Fade Band 6 (Yellow)", group="Recoil Engine", inline="b6")
-band6_mult    = input.float(1.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b6",
-     tooltip="Risk multiplier for Band 6 triggers, expressed against your own base unit. With a 0.01 base lot: 1x = 0.01.")
-fade_band7_on = input.bool(true, "Fade Band 7 (Orange)", group="Recoil Engine", inline="b7")
-band7_mult    = input.float(2.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b7",
-     tooltip="Risk multiplier for Band 7 triggers. With a 0.01 base lot: 2x = 0.02.")
+fade_band6_on = input.bool(true, "Fade Band 6 (Amber)", group="Recoil Engine", inline="b6")
+band6_mult    = input.float(1.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b6")
+fade_band7_on = input.bool(true, "Fade Band 7 (Gold)", group="Recoil Engine", inline="b7")
+band7_mult    = input.float(2.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b7")
 fade_band8_on = input.bool(true, "Fade Band 8 (Red)", group="Recoil Engine", inline="b8")
-band8_mult    = input.float(5.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b8",
-     tooltip="Risk multiplier for Band 8 triggers. With a 0.01 base lot: 5x = 0.05.")
+band8_mult    = input.float(5.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b8")
 
-trend_with_mult    = input.float(2.0, "Risk Mult — With Trend",     minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment",
-     tooltip="Multiplies the band foundation when the fade's direction AGREES with a genuine EMA trend (e.g. a SHORT fade during a fully-aligned bearish stack).")
-trend_against_mult = input.float(0.5, "Risk Mult — Against Trend",  minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment",
-     tooltip="Multiplies the band foundation when the fade's direction OPPOSES a genuine EMA trend. Set to 0 to skip counter-trend fades entirely.")
-trend_consol_mult  = input.float(1.0, "Risk Mult — Consolidation",  minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment",
-     tooltip="Multiplies the band foundation when the EMA stack is NOT in a genuine trend -- any direction fades at this rate. 1.0 = the band foundation unchanged.")
-close_on_trend_flip = input.bool(true, "Emergency Close on Opposite Trend Flip", group="Recoil Engine — Trend Alignment",
-     tooltip="The moment the EMA stack TRANSITIONS into a genuine trend (e.g. consolidation -> bearish), every open fade in the opposite direction closes immediately at that bar's close.")
+trend_with_mult    = input.float(2.0, "Risk Mult — With Trend",     minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment")
+trend_against_mult = input.float(0.5, "Risk Mult — Against Trend",  minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment")
+trend_consol_mult  = input.float(1.0, "Risk Mult — Consolidation",  minval=0.0, step=0.25, group="Recoil Engine — Trend Alignment")
+close_on_trend_flip = input.bool(true, "Emergency Close on Opposite Trend Flip", group="Recoil Engine — Trend Alignment")
 
-min_body_atr = input.float(0.5, "Min Body Size (x ATR)", minval=0.0, step=0.05, group="Recoil Engine",
-     tooltip="A trigger candle's BODY (open-to-close) must be at least this many ATRs for a fade to fire.")
-fade_timeout_bars = input.int(0, "Max Bars In Trade (0 = no limit)", minval=0, group="Recoil Engine",
-     tooltip="Optional time stop: if neither TP nor SL has been hit after this many bars, the fade closes at market on that bar's close.")
+min_body_atr = input.float(0.5, "Min Body Size (x ATR)", minval=0.0, step=0.05, group="Recoil Engine")
+fade_timeout_bars = input.int(0, "Max Bars In Trade (0 = no limit)", minval=0, group="Recoil Engine")
 
 // ═══════════════════════════════════════════════════════════════
 // TAKE PROFIT
 // ═══════════════════════════════════════════════════════════════
-tp_mode = input.string("% of Body", "TP Mode", options=["% of Body", "% of Range", "R Multiple"], group="Take Profit",
-     tooltip="% of Body: TP distance = the chosen % of the trigger candle's open-to-close body, measured from entry.")
+tp_mode = input.string("% of Body", "TP Mode", options=["% of Body", "% of Range", "R Multiple"], group="Take Profit")
 tp_pct  = input.float(50.0, "TP % (of Body / Range)", minval=1.0, maxval=200.0, step=5.0, group="Take Profit")
 tp_r    = input.float(1.0,  "TP R Multiple", minval=0.1, step=0.1, group="Take Profit")
 
-// Preset overrides for TP
 float eff_tp_pct = is_scalp ? 100.0 : is_intra ? 50.0 : is_swing ? 100.0 : tp_pct
 string eff_tp_mode = is_custom ? tp_mode : "% of Body"
 float eff_tp_r = is_custom ? tp_r : 1.0
 
-// TP1 partial settings (internal use only - no webhook alerts)
-tp1_on      = input.bool(false, "Enable Partial TP (TP1)", group="Take Profit — Partial",
-     tooltip="Adds an intermediate target between entry and the full TP. When price reaches TP1, the stop moves to breakeven.")
-tp1_pct     = input.float(25.0, "TP1 % (of Body / Range)", minval=1.0, maxval=100.0, step=5.0, group="Take Profit — Partial",
-     tooltip="TP1 distance as a percentage of the trigger candle's body.")
-tp1_close_pct = input.float(50.0, "Close % at TP1", minval=10.0, maxval=90.0, step=5.0, group="Take Profit — Partial",
-     tooltip="What percentage of the position to close when TP1 is hit.")
-tp1_move_be = input.bool(false, "Move SL to Breakeven at TP1", group="Take Profit — Partial",
-     tooltip="When TP1 is hit, automatically move the stop loss to the entry price (breakeven).")
+tp1_on      = input.bool(false, "Enable Partial TP (TP1)", group="Take Profit — Partial")
+tp1_pct     = input.float(25.0, "TP1 % (of Body / Range)", minval=1.0, maxval=100.0, step=5.0, group="Take Profit — Partial")
+tp1_close_pct = input.float(50.0, "Close % at TP1", minval=10.0, maxval=90.0, step=5.0, group="Take Profit — Partial")
+tp1_move_be = input.bool(false, "Move SL to Breakeven at TP1", group="Take Profit — Partial")
 
 // ═══════════════════════════════════════════════════════════════
 // STOP LOSS
 // ═══════════════════════════════════════════════════════════════
 sl_mode = input.string("Wick + Buffer", "SL Mode", options=["Wick + Buffer", "FVG Gap"], group="Stop Loss")
-sl_wick_buffer_atr = input.float(3.0, "Wick Buffer (x ATR)", minval=0.0, step=0.05, group="Stop Loss",
-     tooltip="Wick + Buffer mode: the stop sits this many ATRs beyond the trigger candle's extreme.")
-sl_gap_atr_mult = input.float(1.0, "FVG Gap Threshold (x ATR)", minval=0.1, step=0.1, group="Stop Loss",
-     tooltip="FVG Gap mode: minimum clear space (in ATR multiples) between FVG zones to count as a safe gap.")
-sl_gap_mode = input.string("2nd Gap", "FVG Gap Selection", options=["Closest Gap", "2nd Gap", "3rd Gap", "4th Gap"], group="Stop Loss",
-     tooltip="FVG Gap mode: which consolidated clear gap beyond entry the stop lands in.")
+sl_wick_buffer_atr = input.float(3.0, "Wick Buffer (x ATR)", minval=0.0, step=0.05, group="Stop Loss")
+sl_gap_atr_mult = input.float(1.0, "FVG Gap Threshold (x ATR)", minval=0.1, step=0.1, group="Stop Loss")
+sl_gap_mode = input.string("2nd Gap", "FVG Gap Selection", options=["Closest Gap", "2nd Gap", "3rd Gap", "4th Gap"], group="Stop Loss")
 
-// Preset overrides for SL
 float eff_sl_buffer = is_scalp ? 3.0 : is_intra ? 1.0 : is_swing ? 1.0 : sl_wick_buffer_atr
 string eff_sl_mode = is_custom ? sl_mode : "Wick + Buffer"
 
@@ -165,8 +122,7 @@ fvg2_tf = input.timeframe("3",  "",   group="FVG SL Engine — Timeframe 2", inl
 fvg3_on = input.bool(true,  "Enable", group="FVG SL Engine — Timeframe 3", inline="f3")
 fvg3_tf = input.timeframe("30", "",   group="FVG SL Engine — Timeframe 3", inline="f3")
 
-show_fvg_zones = input.bool(false, "Show FVG Zones", group="FVG SL Engine",
-     tooltip="Draws the tracked FVGs at low opacity so you can see where an FVG Gap stop comes from.")
+show_fvg_zones = input.bool(false, "Show FVG Zones", group="FVG SL Engine")
 fvg_zone_color = input.color(color.new(#00abff, 88), "FVG Zone Color", group="FVG SL Engine")
 fvg_max_store  = input.int(250, "Max FVGs Tracked (per timeframe)", minval=50, maxval=500, group="FVG SL Engine")
 
@@ -176,13 +132,12 @@ fvg_max_store  = input.int(250, "Max FVGs Tracked (per timeframe)", minval=50, m
 show_pos_boxes   = input.bool(true,  "Show Trade Boxes",   group="Trade Display")
 show_pos_labels  = input.bool(true,  "Show Entry Labels (Direction + Risk Mult)", group="Trade Display")
 pos_box_gap_bars = input.int(0, "Gap Between Closed Trade Boxes (bars)", minval=0, maxval=20, group="Trade Display")
-pos_tp_color     = input.color(color.new(color.green, 75), "TP Box Color", group="Trade Display")
-pos_sl_color     = input.color(color.new(color.red,   75), "SL Box Color", group="Trade Display")
+pos_tp_color     = input.color(color.new(#26a269, 75), "TP Box Color", group="Trade Display")
+pos_sl_color     = input.color(color.new(#f23645, 75), "SL Box Color", group="Trade Display")
 pos_label_size_str = input.string("Small", "Label Size", options=["Tiny","Small","Normal","Large"], group="Trade Display")
-pos_label_text_color = input.color(#e2e2e2, "Label Text Color", group="Trade Display")
+pos_label_text_color = input.color(#e8e6e1, "Label Text Color", group="Trade Display")
 pos_label_bg_color   = input.color(color.new(color.black, 15), "Label Background", group="Trade Display")
-reset_weekly     = input.bool(true, "Reset Trade Boxes Weekly", group="Trade Display",
-     tooltip="ON: trade boxes wipe every Sunday 22:00 UTC.")
+reset_weekly     = input.bool(true, "Reset Trade Boxes Weekly", group="Trade Display")
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD INPUTS
@@ -193,18 +148,17 @@ dash_size_str  = input.string("Large", "Text Size", options=["Tiny","Small","Nor
 
 dash_bg_color     = input.color(#131313, "Background",  group="Dashboard — Colors")
 dash_title_color  = input.color(#00abff, "Title",       group="Dashboard — Colors")
-dash_white        = input.color(#e2e2e2, "Text White",  group="Dashboard — Colors")
-dash_label_color  = input.color(#93979a, "Labels",      group="Dashboard — Colors")
-dash_border_color = input.color(#194866, "Border",      group="Dashboard — Colors")
+dash_white        = input.color(#e8e6e1, "Text White",  group="Dashboard — Colors")
+dash_label_color  = input.color(#8a877f, "Labels",      group="Dashboard — Colors")
+dash_border_color = input.color(#1a1d24, "Border",      group="Dashboard — Colors")
 dash_bull_color   = input.color(#00abff, "Bull",        group="Dashboard — Colors")
-dash_bear_color   = input.color(#005e8c, "Bear",        group="Dashboard — Colors")
+dash_bear_color   = input.color(#c9a84c, "Bear",        group="Dashboard — Colors")
 
 // ═══════════════════════════════════════════════════════════════
 // EXECUTOR
 // ═══════════════════════════════════════════════════════════════
 executor_on    = input.bool(true,  "Enable Executor Alerts", group="Executor")
 executor_secret = input.string("", "Webhook Secret", group="Executor")
-
 
 // ═══════════════════════════════════════════════════════════════
 // VOLATILITY CALCULATIONS
@@ -721,7 +675,6 @@ if barstate.isconfirmed
         for fi = 0 to fsz - 1
             p = array.get(fades, fi)
             if p.is_open and bar_index > p.entry_bar
-                // TP1 partial check - internal only, no webhook alert
                 if tp1_on and not p.tp1_hit and not na(p.tp1_price)
                     bool hit_tp1 = p.is_long ? high >= p.tp1_price : low <= p.tp1_price
                     if hit_tp1
@@ -802,7 +755,6 @@ if barstate.isconfirmed
                     new_long_fade_this_bar := true
                 else
                     new_short_fade_this_bar := true
-                // Executor: OPEN alert only
                 if executor_on
                     int _fsz = array.size(fades)
                     if _fsz > 0
@@ -820,10 +772,10 @@ alertcondition(new_short_fade_this_bar, title="Recoil — Short Fade", message="
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════
-dash_txt_sz = size.normal
+dash_txt_sz = size.large
 dash_txt_sz := dash_size_str == "Tiny"  ? size.tiny  : dash_txt_sz
 dash_txt_sz := dash_size_str == "Small" ? size.small : dash_txt_sz
-dash_txt_sz := dash_size_str == "Large" ? size.large : dash_txt_sz
+dash_txt_sz := dash_size_str == "Normal" ? size.normal : dash_txt_sz
 
 dash_pos = dash_position == "Bottom" ? position.bottom_right : position.top_right
 
@@ -832,11 +784,11 @@ var table dash = na
 if show_dashboard
     if na(dash)
         dash := table.new(
-             dash_pos, 2, 6,
+             dash_pos, 2, 5,
              bgcolor=dash_bg_color,
              border_color=dash_border_color,
              border_width=1,
-             frame_color=dash_title_color,
+             frame_color=#c9a84c,
              frame_width=1)
 
     table.cell(dash, 0, 0, " QUANT PRIME — RECOIL ",
@@ -866,13 +818,6 @@ if show_dashboard
                 open_fades += 1
     table.cell(dash, 0, 4, " OPEN FADES ", text_color=dash_label_color, text_size=dash_txt_sz, bgcolor=dash_bg_color)
     table.cell(dash, 1, 4, " " + str.tostring(open_fades) + " ", text_color=open_fades > 0 ? dash_bull_color : dash_white, text_size=dash_txt_sz, bgcolor=dash_bg_color)
-
-    table.cell(dash, 0, 5, " use on 3M or 30M ",
-         text_color=dash_label_color,
-         text_size=size.tiny,
-         bgcolor=dash_bg_color,
-         text_formatting=text.format_italic)
-    table.merge_cells(dash, 0, 5, 1, 5)
 
 // ═══════════════════════════════════════════════════════════════
 // RENDER PASS

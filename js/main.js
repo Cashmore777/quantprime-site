@@ -495,3 +495,165 @@ if (dropdownBtn && dropdownMenu) {
   }
   draw();
 })();
+
+// ── COCKPIT ANIMATION ──
+// Multi-timeframe dashboard visualization
+(function() {
+  const c = document.getElementById('cockpitCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let W, H, frame = 0;
+
+  function resize() {
+    const r = c.getBoundingClientRect();
+    c.width = r.width * 2; c.height = r.height * 2;
+    W = c.width; H = c.height;
+    ctx.scale(2, 2);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Helper to convert hex to rgb
+  function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '0, 0, 0';
+  }
+
+  function draw() {
+    frame++;
+    const w = W / 2, h = H / 2;
+    ctx.clearRect(0, 0, w, h);
+    
+    ctx.fillStyle = '#f2f1ed';
+    ctx.fillRect(0, 0, w, h);
+
+    const progress = (frame % 480) / 480;
+
+    // Draw 4 timeframe panels
+    const panels = [
+      { label: '1H', regime: 'BULL', emaAlign: true },
+      { label: '4H', regime: 'BULL', emaAlign: true },
+      { label: '1D', regime: 'NEUT', emaAlign: false },
+      { label: '1W', regime: 'BEAR', emaAlign: false },
+    ];
+
+    const panelWidth = (w - 80) / 4;
+    const panelHeight = h * 0.55;
+    const panelY = 35;
+
+    panels.forEach((panel, i) => {
+      const fadeIn = Math.min((progress * 5) - i * 0.1, 1);
+      if (fadeIn <= 0) return;
+
+      const px = 30 + i * (panelWidth + 10);
+
+      // Panel background
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.9 * fadeIn})`;
+      ctx.beginPath();
+      ctx.roundRect(px, panelY, panelWidth, panelHeight, 6);
+      ctx.fill();
+
+      ctx.strokeStyle = `rgba(0, 0, 0, ${0.08 * fadeIn})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // TF label
+      ctx.font = '700 9px "JetBrains Mono"';
+      ctx.fillStyle = `rgba(26, 26, 26, ${0.9 * fadeIn})`;
+      ctx.textAlign = 'center';
+      ctx.fillText(panel.label, px + panelWidth/2, panelY + 16);
+
+      // Mini EMA lines
+      const emaY = panelY + 28;
+      const emaH = panelHeight * 0.4;
+      const emas = [
+        { offset: 0, color: '#7fdbff' },
+        { offset: panel.emaAlign ? 4 : -2, color: '#00abff' },
+        { offset: panel.emaAlign ? 8 : 2, color: '#0085c7' },
+        { offset: panel.emaAlign ? 12 : -4, color: '#005e8c' },
+      ];
+
+      emas.forEach((ema, j) => {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${hexToRgb(ema.color)}, ${0.7 * fadeIn})`;
+        ctx.lineWidth = 1;
+        
+        const points = [];
+        for (let x = 0; x <= 20; x++) {
+          const xPos = px + 8 + (panelWidth - 16) * (x / 20);
+          const wave = Math.sin((frame / 60 + x / 4 + j) * 0.8) * (8 - j);
+          const yPos = emaY + emaH/2 + ema.offset + wave;
+          points.push({ x: xPos, y: yPos });
+        }
+
+        ctx.moveTo(points[0].x, points[0].y);
+        for (let k = 1; k < points.length; k++) {
+          ctx.lineTo(points[k].x, points[k].y);
+        }
+        ctx.stroke();
+      });
+
+      // Regime indicator
+      const regimeY = panelY + panelHeight - 24;
+      const regimeColors = {
+        'BULL': { bg: 'rgba(34, 197, 94, 0.15)', text: '#22c55e' },
+        'BEAR': { bg: 'rgba(239, 68, 68, 0.15)', text: '#ef4444' },
+        'NEUT': { bg: 'rgba(150, 150, 150, 0.15)', text: '#888888' },
+      };
+      const rc = regimeColors[panel.regime];
+
+      ctx.fillStyle = rc.bg;
+      ctx.globalAlpha = fadeIn;
+      ctx.beginPath();
+      ctx.roundRect(px + 8, regimeY, panelWidth - 16, 16, 3);
+      ctx.fill();
+
+      ctx.font = '600 8px "JetBrains Mono"';
+      ctx.fillStyle = rc.text;
+      ctx.textAlign = 'center';
+      ctx.fillText(panel.regime, px + panelWidth/2, regimeY + 11);
+      ctx.globalAlpha = 1;
+    });
+
+    // Aggregated score at bottom
+    const scoreY = panelY + panelHeight + 20;
+    const scoreAlpha = Math.min((progress - 0.3) * 3, 1);
+    
+    if (scoreAlpha > 0) {
+      // Background bar
+      ctx.globalAlpha = scoreAlpha;
+      ctx.fillStyle = 'rgba(240, 240, 235, 1)';
+      ctx.beginPath();
+      ctx.roundRect(30, scoreY, w - 60, 40, 8);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(201, 168, 76, 0.3)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Score text
+      ctx.font = '600 9px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(100, 100, 90, 0.8)';
+      ctx.textAlign = 'left';
+      ctx.fillText('AGGREGATE REGIME', 45, scoreY + 16);
+
+      // Animated score value
+      const score = Math.round(55 + Math.sin(frame / 40) * 15);
+      ctx.font = '700 18px "JetBrains Mono"';
+      ctx.fillStyle = '#c9a84c';
+      ctx.textAlign = 'right';
+      ctx.fillText(score, w - 50, scoreY + 28);
+
+      // Score label
+      ctx.font = '400 10px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(150, 140, 120, 0.7)';
+      ctx.fillText('/ 100', w - 45, scoreY + 28);
+      ctx.textAlign = 'left';
+      ctx.globalAlpha = 1;
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();

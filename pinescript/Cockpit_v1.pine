@@ -1,0 +1,482 @@
+//@version=6
+indicator("Quant Prime — Cockpit", shorttitle="COCKPIT", overlay=true,
+     max_lines_count=500, max_boxes_count=500, max_labels_count=500)
+
+// ═══════════════════════════════════════════════════════════════
+// QUANT PRIME — COCKPIT
+// Analytical multi-timeframe fractal view. No entries, no trades,
+// no signals. Pure market-state awareness across timeframes.
+//
+// Sections:
+//   1. EMAs (4-layer stack with trend detection)
+//   2. Liquidity Pool levels (3 timeframes)
+//   3. Fair Value Gaps (2 timeframes)
+//   4. AMD Phase Shading (12H/6H cycle overlays)
+//   5. Volatility Candle Colouring (ATR ratio bands)
+//   6. HTF Candle Overlay (draws higher-TF candles on chart)
+//   7. Fractal Dashboard (multi-TF regime, trend, vol, bias)
+// ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// 1. EMAs
+// ═══════════════════════════════════════════════════════════════
+ema_on   = input.bool(true, "Show EMAs", group="EMAs")
+ema1_len = input.int(8,   "Fast",   group="EMAs", inline="e")
+ema2_len = input.int(26,  "Medium", group="EMAs", inline="e")
+ema3_len = input.int(80,  "Slow",   group="EMAs", inline="e2")
+ema4_len = input.int(233, "Anchor", group="EMAs", inline="e2")
+
+ema1 = ta.ema(close, ema1_len)
+ema2 = ta.ema(close, ema2_len)
+ema3 = ta.ema(close, ema3_len)
+ema4 = ta.ema(close, ema4_len)
+
+// EMA colors: cyan gradient (lightest = fastest)
+plot(ema_on ? ema1 : na, "EMA Fast",   color=color.new(#7fdbff, 0), linewidth=1)
+plot(ema_on ? ema2 : na, "EMA Medium", color=color.new(#00abff, 0), linewidth=1)
+plot(ema_on ? ema3 : na, "EMA Slow",   color=color.new(#0085c7, 0), linewidth=1)
+plot(ema_on ? ema4 : na, "EMA Anchor", color=color.new(#005e8c, 0), linewidth=2)
+
+is_trend_bull = ema4 < ema3 and ema3 < ema2
+is_trend_bear = ema4 > ema3 and ema3 > ema2
+
+// ═══════════════════════════════════════════════════════════════
+// 2. LIQUIDITY POOL LEVELS
+// ═══════════════════════════════════════════════════════════════
+lp_on = input.bool(true, "Show LP Levels", group="Liquidity Pool")
+
+lp1_tf    = input.timeframe("3",  "TF1", group="Liquidity Pool", inline="lp1")
+lp1_left  = input.int(4, "L", minval=1, group="Liquidity Pool", inline="lp1")
+lp1_right = input.int(2, "R", minval=1, group="Liquidity Pool", inline="lp1")
+lp1_col   = input.color(#005e8c, "", group="Liquidity Pool", inline="lp1")
+
+lp2_tf    = input.timeframe("15", "TF2", group="Liquidity Pool", inline="lp2")
+lp2_left  = input.int(4, "L", minval=1, group="Liquidity Pool", inline="lp2")
+lp2_right = input.int(2, "R", minval=1, group="Liquidity Pool", inline="lp2")
+lp2_col   = input.color(#0085c7, "", group="Liquidity Pool", inline="lp2")
+
+lp3_tf    = input.timeframe("30", "TF3", group="Liquidity Pool", inline="lp3")
+lp3_left  = input.int(4, "L", minval=1, group="Liquidity Pool", inline="lp3")
+lp3_right = input.int(2, "R", minval=1, group="Liquidity Pool", inline="lp3")
+lp3_col   = input.color(#00abff, "", group="Liquidity Pool", inline="lp3")
+
+type Level
+    float price
+    bool  is_high
+    int   state       // 0=live, 1=swept
+    line  ln
+
+var Level[] levels = array.new<Level>()
+
+add_lp(float price, bool is_high, color col, int right_bars) =>
+    if lp_on and not na(price)
+        bool exists = false
+        int sz = array.size(levels)
+        if sz > 0
+            for i = 0 to sz - 1
+                if math.abs(array.get(levels, i).price - price) < syminfo.mintick * 2
+                    exists := true
+        if not exists
+            float tf_ratio = math.max(1.0, timeframe.in_seconds(timeframe.period) > 0 ? 1.0 : 1.0)
+            int off = math.min(math.max(1, right_bars), 480)
+            l = line.new(bar_index - off, price, bar_index + 1, price,
+                 extend=extend.right, color=col, width=1)
+            array.push(levels, Level.new(price, is_high, 0, l))
+            if array.size(levels) > 200
+                old = array.shift(levels)
+                line.delete(old.ln)
+
+[sec1_hi, sec1_lo] = request.security(syminfo.tickerid, lp1_tf,
+     [ta.pivothigh(high, lp1_left, lp1_right), ta.pivotlow(low, lp1_left, lp1_right)],
+     lookahead=barmerge.lookahead_off)
+[sec2_hi, sec2_lo] = request.security(syminfo.tickerid, lp2_tf,
+     [ta.pivothigh(high, lp2_left, lp2_right), ta.pivotlow(low, lp2_left, lp2_right)],
+     lookahead=barmerge.lookahead_off)
+[sec3_hi, sec3_lo] = request.security(syminfo.tickerid, lp3_tf,
+     [ta.pivothigh(high, lp3_left, lp3_right), ta.pivotlow(low, lp3_left, lp3_right)],
+     lookahead=barmerge.lookahead_off)
+
+add_lp(sec1_hi, true,  lp1_col, lp1_right)
+add_lp(sec1_lo, false, lp1_col, lp1_right)
+add_lp(sec2_hi, true,  lp2_col, lp2_right)
+add_lp(sec2_lo, false, lp2_col, lp2_right)
+add_lp(sec3_hi, true,  lp3_col, lp3_right)
+add_lp(sec3_lo, false, lp3_col, lp3_right)
+
+// Sweep + freeze
+if lp_on
+    int lsz = array.size(levels)
+    if lsz > 0
+        for i = 0 to lsz - 1
+            lv = array.get(levels, i)
+            if lv.state == 0
+                bool swept = lv.is_high ? high >= lv.price : low <= lv.price
+                if swept
+                    lv.state := 1
+                    line.set_extend(lv.ln, extend.none)
+                    line.set_x2(lv.ln, bar_index)
+                else
+                    line.set_x2(lv.ln, bar_index + 1)
+
+// ═══════════════════════════════════════════════════════════════
+// 3. FAIR VALUE GAPS
+// ═══════════════════════════════════════════════════════════════
+fvg_on     = input.bool(true, "Show FVGs", group="FVG")
+fvg1_tf    = input.timeframe("3",  "TF1", group="FVG", inline="f1")
+fvg1_bull  = input.color(color.new(#00abff, 88), "Bull", group="FVG", inline="f1")
+fvg1_bear  = input.color(color.new(#c9a84c, 88), "Bear", group="FVG", inline="f1")
+fvg2_tf    = input.timeframe("30", "TF2", group="FVG", inline="f2")
+fvg2_bull  = input.color(color.new(#00abff, 82), "Bull", group="FVG", inline="f2")
+fvg2_bear  = input.color(color.new(#c9a84c, 82), "Bear", group="FVG", inline="f2")
+fvg_max    = input.int(750, "Max Bars Back", minval=50, maxval=5000, group="FVG")
+
+type FVG
+    float top
+    float bot
+    bool  is_bull
+    int   state    // 0=untouched, 1=50%tapped, 2=filled
+    box   bx
+
+var FVG[] fvgs = array.new<FVG>()
+
+// Deduplicated FVG detection: only creates when top/bot differ from last
+fvg_exists(float t, float b) =>
+    bool found = false
+    int sz = array.size(fvgs)
+    if sz > 0
+        int check = math.min(sz - 1, 20)
+        for i = sz - 1 to sz - 1 - check
+            FVG f = array.get(fvgs, i)
+            if math.abs(f.top - t) < syminfo.mintick * 2 and math.abs(f.bot - b) < syminfo.mintick * 2
+                found := true
+    found
+
+detect_fvg(float h1, float l1, float h3, float l3, int bar_t, bool is_tf1) =>
+    if fvg_on and not na(h1) and not na(l1) and not na(h3) and not na(l3)
+        // Bullish FVG: bar[2]high < bar[0]low (gap up)
+        if l1 > h3 and not fvg_exists(l1, h3)
+            color c = is_tf1 ? fvg1_bull : fvg2_bull
+            b = box.new(bar_t, l1, bar_t, h3, xloc=xloc.bar_time, border_color=c, bgcolor=c, extend=extend.right)
+            array.push(fvgs, FVG.new(l1, h3, true, 0, b))
+        // Bearish FVG: bar[2]low > bar[0]high (gap down)
+        else if h1 < l3 and not fvg_exists(l3, h1)
+            color c2 = is_tf1 ? fvg1_bear : fvg2_bear
+            b2 = box.new(bar_t, l3, bar_t, h1, xloc=xloc.bar_time, border_color=c2, bgcolor=c2, extend=extend.right)
+            array.push(fvgs, FVG.new(l3, h1, false, 0, b2))
+        if array.size(fvgs) > 200
+            oldf = array.shift(fvgs)
+            box.delete(oldf.bx)
+
+[f1_h1, f1_l1, f1_h3, f1_l3] = request.security(syminfo.tickerid, fvg1_tf,
+     [high[0], low[0], high[2], low[2]], lookahead=barmerge.lookahead_off)
+[f2_h1, f2_l1, f2_h3, f2_l3] = request.security(syminfo.tickerid, fvg2_tf,
+     [high[0], low[0], high[2], low[2]], lookahead=barmerge.lookahead_off)
+
+if barstate.isconfirmed
+    detect_fvg(f1_h1, f1_l1, f1_h3, f1_l3, time, true)
+    detect_fvg(f2_h1, f2_l1, f2_h3, f2_l3, time, false)
+
+// FVG fill detection
+if fvg_on
+    int fsz = array.size(fvgs)
+    if fsz > 0
+        for fi = fsz - 1 to 0
+            f = array.get(fvgs, fi)
+            if f.state < 2
+                float mid = (f.top + f.bot) / 2
+                bool filled = f.is_bull ? low <= f.bot : high >= f.top
+                bool tapped = f.is_bull ? low <= mid : high >= mid
+                if filled
+                    f.state := 2
+                    box.set_extend(f.bx, extend.none)
+                    box.set_right(f.bx, time)
+                else if tapped and f.state == 0
+                    f.state := 1
+
+// ═══════════════════════════════════════════════════════════════
+// 4. VOLATILITY CANDLE COLOURING (QP BRAND)
+// ═══════════════════════════════════════════════════════════════
+vol_on     = input.bool(true, "Volatility Candle Colors", group="Volatility")
+vol_atr    = input.int(8, "ATR Length", group="Volatility")
+vol_t6     = input.float(2.10, "Band 6 Threshold", step=0.05, group="Volatility")
+vol_t7     = input.float(2.55, "Band 7 Threshold", step=0.05, group="Volatility")
+vol_t8     = input.float(3.00, "Band 8 Threshold", step=0.05, group="Volatility")
+vol_c6     = input.color(#00abff, "B6 (Trigger)", group="Volatility", inline="vc")
+vol_c7     = input.color(#c9a84c, "B7 (High)", group="Volatility", inline="vc")
+vol_c8     = input.color(#f23645, "B8 (Extreme)", group="Volatility", inline="vc")
+
+atr_val   = ta.atr(vol_atr)
+vol_ratio = ta.tr(true) / atr_val
+vol_band  = vol_ratio < vol_t6 ? 5 : vol_ratio < vol_t7 ? 6 : vol_ratio < vol_t8 ? 7 : 8
+
+color vol_color = vol_band == 6 ? vol_c6 : vol_band == 7 ? vol_c7 : vol_band == 8 ? vol_c8 : na
+barcolor(vol_on ? vol_color : na, title="Volatility")
+
+// ═══════════════════════════════════════════════════════════════
+// 5. AMD PHASE SHADING
+// ═══════════════════════════════════════════════════════════════
+amd_on    = input.bool(false, "Show AMD Phases", group="AMD Shading")
+amd_tz    = input.string("UTC+1", "Timezone", group="AMD Shading",
+     options=["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+     "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"])
+amd_12h   = input.bool(true, "12H Cycle", group="AMD Shading")
+amd_6h    = input.bool(true, "6H Cycle",  group="AMD Shading")
+amd_transp = input.int(95, "Transparency", minval=80, maxval=100, group="AMD Shading")
+amd_a_col = input.color(#00abff, "A", group="AMD Shading", inline="ac")
+amd_m_col = input.color(#c9a84c, "M", group="AMD Shading", inline="ac")
+amd_d_col = input.color(#f23645, "D", group="AMD Shading", inline="ac")
+
+f_cycle_phase(float cycle_hrs) =>
+    float hr = hour(time, amd_tz) + minute(time, amd_tz) / 60.0
+    int idx = int(math.floor(hr / cycle_hrs))
+    float pos = hr - idx * cycle_hrs
+    float a_end = cycle_hrs * 0.50
+    float m_end = cycle_hrs * 0.75
+    pos < a_end ? 0 : pos < m_end ? 1 : 2
+
+color amd_bg = na
+if amd_on
+    int ph = -1
+    if amd_12h
+        ph := f_cycle_phase(12.0)
+    if amd_6h and ph < 0
+        ph := f_cycle_phase(6.0)
+    if ph == 0
+        amd_bg := color.new(amd_a_col, amd_transp)
+    else if ph == 1
+        amd_bg := color.new(amd_m_col, amd_transp)
+    else if ph == 2
+        amd_bg := color.new(amd_d_col, amd_transp)
+bgcolor(amd_bg, title="AMD Phase")
+
+// ═══════════════════════════════════════════════════════════════
+// 6. HTF CANDLE OVERLAY
+// ═══════════════════════════════════════════════════════════════
+htf_on    = input.bool(true, "Show HTF Candles", group="HTF Candles")
+htf_tf1   = input.timeframe("30",  "TF1", group="HTF Candles", inline="htf1")
+htf_tf2   = input.timeframe("180", "TF2", group="HTF Candles", inline="htf1")
+htf_width = input.int(6, "Bar Width", minval=2, maxval=20, group="HTF Candles")
+htf_offset = input.int(10, "Offset Right", minval=5, maxval=50, group="HTF Candles")
+htf_bull  = input.color(#26a269, "Bull", group="HTF Candles", inline="htfc")
+htf_bear  = input.color(#f23645, "Bear", group="HTF Candles", inline="htfc")
+htf_wick  = input.color(#1a1d24, "Wick", group="HTF Candles", inline="htfc")
+
+[htf1_o, htf1_h, htf1_l, htf1_c] = request.security(syminfo.tickerid, htf_tf1,
+     [open, high, low, close], lookahead=barmerge.lookahead_off)
+[htf2_o, htf2_h, htf2_l, htf2_c] = request.security(syminfo.tickerid, htf_tf2,
+     [open, high, low, close], lookahead=barmerge.lookahead_off)
+
+var box  htf1_body = na
+var line htf1_wick_hi = na
+var line htf1_wick_lo = na
+var box  htf2_body = na
+var line htf2_wick_hi = na
+var line htf2_wick_lo = na
+var label htf1_lbl = na
+var label htf2_lbl = na
+
+if barstate.islast and htf_on
+    int x1_1 = bar_index + htf_offset
+    int x2_1 = bar_index + htf_offset + htf_width
+    int x1_2 = bar_index + htf_offset + htf_width + 4
+    int x2_2 = bar_index + htf_offset + htf_width * 2 + 4
+    int xm_1 = int((x1_1 + x2_1) / 2)
+    int xm_2 = int((x1_2 + x2_2) / 2)
+
+    // TF1 candle
+    bool bull1 = htf1_c >= htf1_o
+    float body_top1 = math.max(htf1_o, htf1_c)
+    float body_bot1 = math.min(htf1_o, htf1_c)
+    color bc1 = bull1 ? htf_bull : htf_bear
+
+    box.delete(htf1_body)
+    line.delete(htf1_wick_hi)
+    line.delete(htf1_wick_lo)
+    label.delete(htf1_lbl)
+    htf1_body := box.new(x1_1, body_top1, x2_1, body_bot1, border_color=bc1, bgcolor=color.new(bc1, 60))
+    htf1_wick_hi := line.new(xm_1, body_top1, xm_1, htf1_h, color=htf_wick, width=1)
+    htf1_wick_lo := line.new(xm_1, body_bot1, xm_1, htf1_l, color=htf_wick, width=1)
+    htf1_lbl := label.new(xm_1, htf1_l, htf_tf1, style=label.style_label_up,
+         color=color.new(color.black, 100), textcolor=#8a877f, size=size.tiny)
+
+    // TF2 candle
+    bool bull2 = htf2_c >= htf2_o
+    float body_top2 = math.max(htf2_o, htf2_c)
+    float body_bot2 = math.min(htf2_o, htf2_c)
+    color bc2 = bull2 ? htf_bull : htf_bear
+
+    box.delete(htf2_body)
+    line.delete(htf2_wick_hi)
+    line.delete(htf2_wick_lo)
+    label.delete(htf2_lbl)
+    htf2_body := box.new(x1_2, body_top2, x2_2, body_bot2, border_color=bc2, bgcolor=color.new(bc2, 60))
+    htf2_wick_hi := line.new(xm_2, body_top2, xm_2, htf2_h, color=htf_wick, width=1)
+    htf2_wick_lo := line.new(xm_2, body_bot2, xm_2, htf2_l, color=htf_wick, width=1)
+    htf2_lbl := label.new(xm_2, htf2_l, htf_tf2, style=label.style_label_up,
+         color=color.new(color.black, 100), textcolor=#8a877f, size=size.tiny)
+
+// ═══════════════════════════════════════════════════════════════
+// 7. FRACTAL DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+dash_on   = input.bool(true, "Show Dashboard", group="Dashboard")
+dash_pos  = input.string("Bottom Left", "Position", options=["Top Right","Top Left","Bottom Right","Bottom Left"], group="Dashboard")
+dash_sz   = input.string("Normal", "Size", options=["Tiny","Small","Normal","Large"], group="Dashboard")
+
+// Regime scanner
+f_adx(int len) =>
+    [_p, _m, adx] = ta.dmi(len, len)
+    adx
+
+f_regime(float atr_v, float atr_avg, float adx_v) =>
+    float r = atr_avg > 0 ? atr_v / atr_avg : 1.0
+    bool vp = r > 0.85 and r < 1.2
+    bool vo = r > 0.7  and r < 1.4
+    float vs = vp ? 40.0 : vo ? 20.0 : 0.0
+    float ts = math.min(adx_v, 50.0)
+    float score = vs + ts
+    string lbl = score > 70 ? "PRIME" : score > 55 ? "FAVORABLE" : score > 40 ? "MARGINAL" : "DEGRADED"
+    [score, lbl]
+
+f_tf_lbl(string tf) =>
+    tf == "D" or tf == "1D" ? "1D" : tf == "W" or tf == "1W" ? "1W" : tf == "60" ? "1H" : tf == "120" ? "2H" :
+     tf == "180" ? "3H" : tf == "240" ? "4H" : tf == "360" ? "6H" : tf == "720" ? "12H" :
+     tf == "1" ? "1M" : tf == "3" ? "3M" : tf == "5" ? "5M" : tf == "15" ? "15M" :
+     tf == "30" ? "30M" : tf == "45" ? "45M" : tf
+
+// Multi-TF data
+reg_tf1 = input.timeframe("D",   "Row 1 (Top)", group="Dashboard — Timeframes", tooltip="Top row. Default: Daily (1D).")
+reg_tf2 = input.timeframe("180", "Row 2", group="Dashboard — Timeframes", tooltip="Second row. Default: 3H.")
+reg_tf3 = input.timeframe("30",  "Row 3", group="Dashboard — Timeframes", tooltip="Third row. Default: 30M.")
+reg_tf4 = input.timeframe("",    "Row 4 (Bottom/Current)", group="Dashboard — Timeframes", tooltip="Bottom row. Leave blank for current chart timeframe.")
+
+[r1_atr, r1_avg, r1_adx] = request.security(syminfo.tickerid, reg_tf1,
+     [ta.atr(14), ta.sma(ta.atr(14), 50), f_adx(14)], lookahead=barmerge.lookahead_off)
+[r2_atr, r2_avg, r2_adx] = request.security(syminfo.tickerid, reg_tf2,
+     [ta.atr(14), ta.sma(ta.atr(14), 50), f_adx(14)], lookahead=barmerge.lookahead_off)
+[r3_atr, r3_avg, r3_adx] = request.security(syminfo.tickerid, reg_tf3,
+     [ta.atr(14), ta.sma(ta.atr(14), 50), f_adx(14)], lookahead=barmerge.lookahead_off)
+[r4_atr, r4_avg, r4_adx] = request.security(syminfo.tickerid, reg_tf4,
+     [ta.atr(14), ta.sma(ta.atr(14), 50), f_adx(14)], lookahead=barmerge.lookahead_off)
+
+[r1_score, r1_lbl] = f_regime(r1_atr, r1_avg, r1_adx)
+[r2_score, r2_lbl] = f_regime(r2_atr, r2_avg, r2_adx)
+[r3_score, r3_lbl] = f_regime(r3_atr, r3_avg, r3_adx)
+[r4_score, r4_lbl] = f_regime(r4_atr, r4_avg, r4_adx)
+
+// HTF EMA bias
+get_ema_trend() =>
+    e2 = ta.ema(close, 26)
+    e3 = ta.ema(close, 80)
+    e4 = ta.ema(close, 233)
+    bool bull = e4 < e3 and e3 < e2
+    bool bear = e4 > e3 and e3 > e2
+    string t = bull ? "▲ BULL" : bear ? "▼ BEAR" : "— FLAT"
+    t
+
+get_ema_bias() =>
+    e2 = ta.ema(close, 26)
+    e3 = ta.ema(close, 80)
+    e4 = ta.ema(close, 233)
+    bool bull = e4 < e3 and e3 < e2
+    bool bear = e4 > e3 and e3 > e2
+    string bias = bull ? "LONG" : bear ? "SHORT" : "NEUTRAL"
+    bias
+
+htf_trend_1 = request.security(syminfo.tickerid, reg_tf1, get_ema_trend(), lookahead=barmerge.lookahead_off)
+htf_trend_2 = request.security(syminfo.tickerid, reg_tf2, get_ema_trend(), lookahead=barmerge.lookahead_off)
+htf_trend_3 = request.security(syminfo.tickerid, reg_tf3, get_ema_trend(), lookahead=barmerge.lookahead_off)
+
+htf_bias_1 = request.security(syminfo.tickerid, reg_tf1, get_ema_bias(), lookahead=barmerge.lookahead_off)
+htf_bias_2 = request.security(syminfo.tickerid, reg_tf2, get_ema_bias(), lookahead=barmerge.lookahead_off)
+htf_bias_3 = request.security(syminfo.tickerid, reg_tf3, get_ema_bias(), lookahead=barmerge.lookahead_off)
+
+// Volatility per TF
+[v_tf1_r] = request.security(syminfo.tickerid, reg_tf1, [ta.tr(true) / ta.atr(8)], lookahead=barmerge.lookahead_off)
+[v_tf2_r] = request.security(syminfo.tickerid, reg_tf2, [ta.tr(true) / ta.atr(8)], lookahead=barmerge.lookahead_off)
+[v_tf3_r] = request.security(syminfo.tickerid, reg_tf3, [ta.tr(true) / ta.atr(8)], lookahead=barmerge.lookahead_off)
+
+f_vol_str(float r) =>
+    r >= 3.0 ? "B8" : r >= 2.55 ? "B7" : r >= 2.10 ? "B6" : r >= 1.5 ? "B4" : "B1-3"
+
+f_reg_col(string lbl) =>
+    lbl == "PRIME" ? #26a269 : lbl == "FAVORABLE" ? #00abff : lbl == "MARGINAL" ? #c9a84c : #f23645
+
+f_bias_col(string b) =>
+    b == "LONG" ? #00abff : b == "SHORT" ? #c9a84c : #8a877f
+
+// Render dashboard
+d_sz = size.normal
+d_sz := dash_sz == "Tiny" ? size.tiny : d_sz
+d_sz := dash_sz == "Small" ? size.small : d_sz
+d_sz := dash_sz == "Large" ? size.large : d_sz
+d_pos = dash_pos == "Bottom Right" ? position.bottom_right : dash_pos == "Bottom Left" ? position.bottom_left : dash_pos == "Top Left" ? position.top_left : position.top_right
+
+var table dtbl = na
+if dash_on and barstate.islast
+    if na(dtbl)
+        dtbl := table.new(d_pos, 6, 8, bgcolor=#131313, border_color=#1a1d24,
+             border_width=1, frame_color=#c9a84c, frame_width=1)
+
+    // Header
+    table.cell(dtbl, 0, 0, " QUANT PRIME — COCKPIT ", text_color=#c9a84c, text_size=d_sz,
+         bgcolor=color.rgb(10,10,25))
+    table.merge_cells(dtbl, 0, 0, 5, 0)
+
+    // Column headers
+    string[] headers = array.from("", "REGIME", "SCORE", "EMA BIAS", "VOL", "TREND")
+    for ci = 0 to 5
+        table.cell(dtbl, ci, 1, " " + array.get(headers, ci) + " ",
+             text_color=#4a4f54, text_size=size.tiny, bgcolor=#131313)
+
+    // Current TF
+    string cur_trend = is_trend_bull ? "▲ BULL" : is_trend_bear ? "▼ BEAR" : "— FLAT"
+    color  cur_t_col = is_trend_bull ? #00abff : is_trend_bear ? #c9a84c : #8a877f
+    string cur_bias = is_trend_bull ? "LONG" : is_trend_bear ? "SHORT" : "NEUTRAL"
+
+    // Row data: [tf_label, regime_label, score, ema_bias, vol_band, trend]
+    // Row order: 1D (highest) → 3H → 30M → Current (lowest) — descending
+    
+    // Row 2: 1D (Daily)
+    table.cell(dtbl, 0, 2, " " + f_tf_lbl(reg_tf1) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 1, 2, " " + r1_lbl + " ", text_color=f_reg_col(r1_lbl), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 2, 2, " " + str.tostring(r1_score, "#") + "/90 ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 3, 2, " " + htf_bias_1 + " ", text_color=f_bias_col(htf_bias_1), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 4, 2, " " + f_vol_str(v_tf1_r) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    color _tc1 = htf_trend_1 == "▲ BULL" ? #00abff : htf_trend_1 == "▼ BEAR" ? #c9a84c : #8a877f
+    table.cell(dtbl, 5, 2, " " + htf_trend_1 + " ", text_color=_tc1, text_size=d_sz, bgcolor=#131313)
+
+    // Row 3: 3H
+    table.cell(dtbl, 0, 3, " " + f_tf_lbl(reg_tf2) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 1, 3, " " + r2_lbl + " ", text_color=f_reg_col(r2_lbl), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 2, 3, " " + str.tostring(r2_score, "#") + "/90 ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 3, 3, " " + htf_bias_2 + " ", text_color=f_bias_col(htf_bias_2), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 4, 3, " " + f_vol_str(v_tf2_r) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    color _tc2 = htf_trend_2 == "▲ BULL" ? #00abff : htf_trend_2 == "▼ BEAR" ? #c9a84c : #8a877f
+    table.cell(dtbl, 5, 3, " " + htf_trend_2 + " ", text_color=_tc2, text_size=d_sz, bgcolor=#131313)
+
+    // Row 4: 30M
+    table.cell(dtbl, 0, 4, " " + f_tf_lbl(reg_tf3) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 1, 4, " " + r3_lbl + " ", text_color=f_reg_col(r3_lbl), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 2, 4, " " + str.tostring(r3_score, "#") + "/90 ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 3, 4, " " + htf_bias_3 + " ", text_color=f_bias_col(htf_bias_3), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 4, 4, " " + f_vol_str(v_tf3_r) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    color _tc3 = htf_trend_3 == "▲ BULL" ? #00abff : htf_trend_3 == "▼ BEAR" ? #c9a84c : #8a877f
+    table.cell(dtbl, 5, 4, " " + htf_trend_3 + " ", text_color=_tc3, text_size=d_sz, bgcolor=#131313)
+
+    // Row 5: Current TF (bottom)
+    table.cell(dtbl, 0, 5, " " + f_tf_lbl(timeframe.period) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 1, 5, " " + r4_lbl + " ", text_color=f_reg_col(r4_lbl), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 2, 5, " " + str.tostring(r4_score, "#") + "/90 ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 3, 5, " " + cur_bias + " ", text_color=f_bias_col(cur_bias), text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 4, 5, " " + f_vol_str(vol_ratio) + " ", text_color=#e8e6e1, text_size=d_sz, bgcolor=#131313)
+    table.cell(dtbl, 5, 5, " " + cur_trend + " ", text_color=cur_t_col, text_size=d_sz, bgcolor=#131313)
+
+    // Row 6: separator
+    table.cell(dtbl, 0, 6, "", bgcolor=#131313)
+    table.merge_cells(dtbl, 0, 6, 5, 6)
+
+    // Row 7: current vol + ATR
+    string vol_txt = "VOL " + str.tostring(vol_ratio, "#.##") + "x · ATR " + str.tostring(atr_val, format.mintick) + " · Band " + str.tostring(vol_band)
+    table.cell(dtbl, 0, 7, " " + vol_txt + " ", text_color=#8a877f, text_size=size.tiny, bgcolor=#131313,
+         text_formatting=text.format_italic)
+    table.merge_cells(dtbl, 0, 7, 5, 7)

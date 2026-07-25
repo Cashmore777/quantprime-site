@@ -1,9 +1,8 @@
 //@version=6
-indicator("Quant Prime — Recoil [Executor]", shorttitle="RECOIL·EX", overlay=true, max_lines_count=500, max_boxes_count=500, max_labels_count=500)
+indicator("Quant Prime — Recoil", shorttitle="RECOIL", overlay=true, max_lines_count=500, max_boxes_count=500, max_labels_count=500)
 
 // ═══════════════════════════════════════════════════════════════
-// QUANT PRIME — RECOIL [EXECUTOR EDITION]
-// Webhook payloads on every trade event.
+// QUANT PRIME — RECOIL
 // A standalone volatility fade engine. When a statistically
 // exceptional candle closes (volatility bands 6/7/8 -- yellow /
 // orange / red), Recoil fades it: a bearish closure triggers a
@@ -63,8 +62,8 @@ volColor2 = input.color(#00334c,       "Very Low",       group="Volatility — C
 volColor3 = input.color(#00476a,       "Low",            group="Volatility — Colors")
 volColor4 = input.color(#005b88,       "Lower Medium",   group="Volatility — Colors")
 volColor5 = input.color(#006fa5,       "Medium",         group="Volatility — Colors")
-volColor6 = input.color(#ffeb3b,       "High Medium (Trigger 1x)",  group="Volatility — Colors")
-volColor7 = input.color(#ff9800,       "High (Trigger 2x)",         group="Volatility — Colors")
+volColor6 = input.color(#00abff,       "High Medium (Trigger 1x)",  group="Volatility — Colors")
+volColor7 = input.color(#c9a84c,       "High (Trigger 2x)",         group="Volatility — Colors")
 volColor8 = input.color(#f23645,       "Very High (Trigger 5x)",    group="Volatility — Colors")
 
 volTagFromBand = input.int(6, "Show Tag From Band # Upward", minval=1, maxval=8, group="Volatility",
@@ -85,18 +84,18 @@ ema1Len   = input.int(8,      "EMA 1 Length", group="EMAs")
 ema2Len   = input.int(26,     "EMA 2 Length", group="EMAs")
 ema3Len   = input.int(80,     "EMA 3 Length", group="EMAs")
 ema4Len   = input.int(233,    "EMA 4 Length", group="EMAs")
-ema1Color = input.color(#bbdefb, "EMA 1 Color", group="EMAs")
-ema2Color = input.color(#64b5f6, "EMA 2 Color", group="EMAs")
-ema3Color = input.color(#2962ff, "EMA 3 Color", group="EMAs")
-ema4Color = input.color(#1848b8, "EMA 4 Color", group="EMAs")
+ema1Color = input.color(#7fdbff, "EMA 1 Color", group="EMAs")
+ema2Color = input.color(#00abff, "EMA 2 Color", group="EMAs")
+ema3Color = input.color(#0085c7, "EMA 3 Color", group="EMAs")
+ema4Color = input.color(#005e8c, "EMA 4 Color", group="EMAs")
 
 // ═══════════════════════════════════════════════════════════════
 // RECOIL ENGINE
 // ═══════════════════════════════════════════════════════════════
-fade_band6_on = input.bool(true, "Fade Band 6 (Yellow)", group="Recoil Engine", inline="b6")
+fade_band6_on = input.bool(true, "Fade Band 6 (Cyan)", group="Recoil Engine", inline="b6")
 band6_mult    = input.float(1.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b6",
      tooltip="Risk multiplier for Band 6 triggers, expressed against your own base unit. With a 0.01 base lot: 1x = 0.01.")
-fade_band7_on = input.bool(true, "Fade Band 7 (Orange)", group="Recoil Engine", inline="b7")
+fade_band7_on = input.bool(true, "Fade Band 7 (Gold)", group="Recoil Engine", inline="b7")
 band7_mult    = input.float(2.0, "Risk Mult", minval=0.0, step=0.5, group="Recoil Engine", inline="b7",
      tooltip="Risk multiplier for Band 7 triggers. With a 0.01 base lot: 2x = 0.02.")
 fade_band8_on = input.bool(true, "Fade Band 8 (Red)", group="Recoil Engine", inline="b8")
@@ -130,7 +129,7 @@ float eff_tp_pct = is_scalp ? 100.0 : is_intra ? 50.0 : is_swing ? 100.0 : tp_pc
 string eff_tp_mode = is_custom ? tp_mode : "% of Body"
 float eff_tp_r = is_custom ? tp_r : 1.0
 
-// TP1 partial settings (internal use only - no webhook alerts)
+// TP1 partial settings
 tp1_on      = input.bool(false, "Enable Partial TP (TP1)", group="Take Profit — Partial",
      tooltip="Adds an intermediate target between entry and the full TP. When price reaches TP1, the stop moves to breakeven.")
 tp1_pct     = input.float(25.0, "TP1 % (of Body / Range)", minval=1.0, maxval=100.0, step=5.0, group="Take Profit — Partial",
@@ -176,10 +175,10 @@ fvg_max_store  = input.int(250, "Max FVGs Tracked (per timeframe)", minval=50, m
 show_pos_boxes   = input.bool(true,  "Show Trade Boxes",   group="Trade Display")
 show_pos_labels  = input.bool(true,  "Show Entry Labels (Direction + Risk Mult)", group="Trade Display")
 pos_box_gap_bars = input.int(0, "Gap Between Closed Trade Boxes (bars)", minval=0, maxval=20, group="Trade Display")
-pos_tp_color     = input.color(color.new(color.green, 75), "TP Box Color", group="Trade Display")
-pos_sl_color     = input.color(color.new(color.red,   75), "SL Box Color", group="Trade Display")
+pos_tp_color     = input.color(color.new(#26a269, 75), "TP Box Color", group="Trade Display")
+pos_sl_color     = input.color(color.new(#f23645, 75), "SL Box Color", group="Trade Display")
 pos_label_size_str = input.string("Small", "Label Size", options=["Tiny","Small","Normal","Large"], group="Trade Display")
-pos_label_text_color = input.color(#e2e2e2, "Label Text Color", group="Trade Display")
+pos_label_text_color = input.color(#e8e6e1, "Label Text Color", group="Trade Display")
 pos_label_bg_color   = input.color(color.new(color.black, 15), "Label Background", group="Trade Display")
 reset_weekly     = input.bool(true, "Reset Trade Boxes Weekly", group="Trade Display",
      tooltip="ON: trade boxes wipe every Sunday 22:00 UTC.")
@@ -193,18 +192,11 @@ dash_size_str  = input.string("Large", "Text Size", options=["Tiny","Small","Nor
 
 dash_bg_color     = input.color(#131313, "Background",  group="Dashboard — Colors")
 dash_title_color  = input.color(#00abff, "Title",       group="Dashboard — Colors")
-dash_white        = input.color(#e2e2e2, "Text White",  group="Dashboard — Colors")
-dash_label_color  = input.color(#93979a, "Labels",      group="Dashboard — Colors")
-dash_border_color = input.color(#194866, "Border",      group="Dashboard — Colors")
+dash_white        = input.color(#e8e6e1, "Text White",  group="Dashboard — Colors")
+dash_label_color  = input.color(#8a877f, "Labels",      group="Dashboard — Colors")
+dash_border_color = input.color(#1a1d24, "Border",      group="Dashboard — Colors")
 dash_bull_color   = input.color(#00abff, "Bull",        group="Dashboard — Colors")
-dash_bear_color   = input.color(#005e8c, "Bear",        group="Dashboard — Colors")
-
-// ═══════════════════════════════════════════════════════════════
-// EXECUTOR
-// ═══════════════════════════════════════════════════════════════
-executor_on    = input.bool(true,  "Enable Executor Alerts", group="Executor")
-executor_secret = input.string("", "Webhook Secret", group="Executor")
-
+dash_bear_color   = input.color(#c9a84c, "Bear",        group="Dashboard — Colors")
 
 // ═══════════════════════════════════════════════════════════════
 // VOLATILITY CALCULATIONS
@@ -510,22 +502,10 @@ find_sl_gap(float entry_price, bool is_long_pos) =>
     result_sl
 
 // ═══════════════════════════════════════════════════════════════
-// EXECUTOR JSON BUILDERS
+// FADE POSITION TYPE
 // ═══════════════════════════════════════════════════════════════
 var float pip_size = syminfo.mintick * 10
 
-f_ex(string action) =>
-    '{"secret":"' + executor_secret + '","indicator":"RECOIL","action":"' + action + '","symbol":"' + syminfo.ticker + '","timestamp":' + str.tostring(math.round(timenow / 1000)) + '}'
-
-f_ex_trade(string action, string dir, float entry, float close_at, float pips) =>
-    '{"secret":"' + executor_secret + '","indicator":"RECOIL","action":"' + action + '","symbol":"' + syminfo.ticker + '","direction":"' + dir + '","entry":' + str.tostring(entry, format.mintick) + ',"close_price":' + str.tostring(close_at, format.mintick) + ',"pips":' + str.tostring(pips, "#.#") + ',"timestamp":' + str.tostring(math.round(timenow / 1000)) + '}'
-
-f_ex_open(string dir, float entry, float sl, float tp, float r_mult, int band_n, string trend_label) =>
-    '{"secret":"' + executor_secret + '","indicator":"RECOIL","action":"OPEN","symbol":"' + syminfo.ticker + '","direction":"' + dir + '","entry":' + str.tostring(entry, format.mintick) + ',"sl":' + str.tostring(sl, format.mintick) + ',"tp":' + str.tostring(tp, format.mintick) + ',"risk_mult":' + str.tostring(r_mult, "#.##") + ',"band":' + str.tostring(band_n) + ',"regime":"' + trend_label + '","timeframe":"' + timeframe.period + '","timestamp":' + str.tostring(math.round(timenow / 1000)) + '}'
-
-// ═══════════════════════════════════════════════════════════════
-// FADE POSITION TYPE
-// ═══════════════════════════════════════════════════════════════
 type Fade
     int    entry_bar
     int    entry_time
@@ -721,7 +701,6 @@ if barstate.isconfirmed
         for fi = 0 to fsz - 1
             p = array.get(fades, fi)
             if p.is_open and bar_index > p.entry_bar
-                // TP1 partial check - internal only, no webhook alert
                 if tp1_on and not p.tp1_hit and not na(p.tp1_price)
                     bool hit_tp1 = p.is_long ? high >= p.tp1_price : low <= p.tp1_price
                     if hit_tp1
@@ -737,20 +716,12 @@ if barstate.isconfirmed
                     p.close_price      := p.sl_price
                     p.close_reason     := "SL"
                     p.frozen_right_bar := bar_index
-                    if executor_on
-                        string _ds = p.is_long ? "LONG" : "SHORT"
-                        float _pipssl = (p.is_long ? p.sl_price - p.entry_price : p.entry_price - p.sl_price) / pip_size
-                        alert(f_ex_trade("SL_HIT", _ds, p.entry_price, p.sl_price, _pipssl), alert.freq_once_per_bar)
                 else if hit_tp
                     p.is_open          := false
                     p.close_bar        := bar_index
                     p.close_price      := p.tp_price
                     p.close_reason     := p.tp1_hit ? "TP2" : "TP"
                     p.frozen_right_bar := bar_index
-                    if executor_on
-                        string _d2 = p.is_long ? "LONG" : "SHORT"
-                        float _pips2 = (p.is_long ? p.tp_price - p.entry_price : p.entry_price - p.tp_price) / pip_size
-                        alert(f_ex_trade("TP2_HIT", _d2, p.entry_price, p.tp_price, _pips2), alert.freq_once_per_bar)
                 else if fade_timeout_bars > 0 and bar_index - p.entry_bar >= fade_timeout_bars
                     p.is_open          := false
                     p.close_bar        := bar_index
@@ -771,10 +742,6 @@ if barstate.isconfirmed
                     fp.close_price      := close
                     fp.close_reason     := "FLIP"
                     fp.frozen_right_bar := bar_index
-                    if executor_on
-                        string _fd = fp.is_long ? "LONG" : "SHORT"
-                        float _fp_pips = (fp.is_long ? close - fp.entry_price : fp.entry_price - close) / pip_size
-                        alert(f_ex_trade("FLIP", _fd, fp.entry_price, close, _fp_pips), alert.freq_once_per_bar)
     prev_trend_bull_rc := is_trend_bull
     prev_trend_bear_rc := is_trend_bear
 
@@ -802,14 +769,6 @@ if barstate.isconfirmed
                     new_long_fade_this_bar := true
                 else
                     new_short_fade_this_bar := true
-                // Executor: OPEN alert only
-                if executor_on
-                    int _fsz = array.size(fades)
-                    if _fsz > 0
-                        Fade _last = array.get(fades, _fsz - 1)
-                        string _dir = _last.is_long ? "LONG" : "SHORT"
-                        string _trend = is_trend_bull ? "BULL" : is_trend_bear ? "BEAR" : "CONSOLIDATION"
-                        alert(f_ex_open(_dir, close, _last.sl_price, _last.tp_price, _last.risk_mult, _last.band, _trend), alert.freq_once_per_bar)
 
 // ═══════════════════════════════════════════════════════════════
 // ALERTS
@@ -820,10 +779,10 @@ alertcondition(new_short_fade_this_bar, title="Recoil — Short Fade", message="
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════
-dash_txt_sz = size.normal
+dash_txt_sz = size.large
 dash_txt_sz := dash_size_str == "Tiny"  ? size.tiny  : dash_txt_sz
 dash_txt_sz := dash_size_str == "Small" ? size.small : dash_txt_sz
-dash_txt_sz := dash_size_str == "Large" ? size.large : dash_txt_sz
+dash_txt_sz := dash_size_str == "Normal" ? size.normal : dash_txt_sz
 
 dash_pos = dash_position == "Bottom" ? position.bottom_right : position.top_right
 
@@ -836,7 +795,7 @@ if show_dashboard
              bgcolor=dash_bg_color,
              border_color=dash_border_color,
              border_width=1,
-             frame_color=dash_title_color,
+             frame_color=#c9a84c,
              frame_width=1)
 
     table.cell(dash, 0, 0, " QUANT PRIME — RECOIL ",
@@ -867,7 +826,7 @@ if show_dashboard
     table.cell(dash, 0, 4, " OPEN FADES ", text_color=dash_label_color, text_size=dash_txt_sz, bgcolor=dash_bg_color)
     table.cell(dash, 1, 4, " " + str.tostring(open_fades) + " ", text_color=open_fades > 0 ? dash_bull_color : dash_white, text_size=dash_txt_sz, bgcolor=dash_bg_color)
 
-    table.cell(dash, 0, 5, " use on 3M or 30M ",
+    table.cell(dash, 0, 5, " use on 3M or 21M ",
          text_color=dash_label_color,
          text_size=size.tiny,
          bgcolor=dash_bg_color,

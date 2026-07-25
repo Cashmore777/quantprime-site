@@ -1,0 +1,460 @@
+//@version=6
+indicator("Quant Prime — Meridian [Executor]", shorttitle="MERIDIAN·EX", overlay=true,
+     max_lines_count=500, max_labels_count=500, max_boxes_count=500)
+
+// ═══════════════════════════════════════════════════════════════
+// MERIDIAN GOLD [EXECUTOR] — with webhook alerts
+// ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// DISPLAY
+// ═══════════════════════════════════════════════════════════════
+show_boxes   = input.bool(true, "Show Trade Boxes", group="Display")
+show_labels  = input.bool(true, "Show Labels", group="Display")
+tp_color     = input.color(color.new(#26a269, 75), "TP Box", group="Display")
+sl_color     = input.color(color.new(#f23645, 75), "SL Box", group="Display")
+lbl_col      = input.color(#e8e6e1, "Label Text", group="Display")
+lbl_bg       = input.color(color.new(color.black, 15), "Label BG", group="Display")
+dash_size_str = input.string("Large", "Dashboard Size", options=["Tiny","Small","Normal","Large"], group="Display")
+dash_position = input.string("Top Right", "Dashboard Position", options=["Top Right","Top Left","Bottom Right","Bottom Left"], group="Display")
+
+// ═══════════════════════════════════════════════════════════════
+// EXIT MODE
+// ═══════════════════════════════════════════════════════════════
+exit_mode   = input.string("Opposite Gold + Tight SL", "Exit Mode",
+     options=["Opposite Gold Only", "Opposite Gold + Tight SL"], group="Exit Mode")
+sl_buffer   = input.float(1.0, "SL Wick Buffer (×ATR)", minval=0.1, step=0.1, group="Exit Mode")
+sl_atr_len  = input.int(8, "ATR Length", group="Exit Mode")
+bool use_tight_sl = exit_mode == "Opposite Gold + Tight SL"
+
+// ═══════════════════════════════════════════════════════════════
+// EXECUTOR
+// ═══════════════════════════════════════════════════════════════
+executor_on    = input.bool(true, "Enable Alerts", group="Executor")
+executor_secret = input.string("", "Secret", group="Executor")
+var float pip_size = syminfo.mintick * 10
+
+f_ex(string action, string dir, float entry, float close_at, float pips) =>
+    '{"secret":"' + executor_secret + '","indicator":"MERIDIAN","action":"' + action + '","symbol":"' + syminfo.ticker + '","direction":"' + dir + '","entry":' + str.tostring(entry, format.mintick) + ',"close_price":' + str.tostring(close_at, format.mintick) + ',"pips":' + str.tostring(pips, "#.#") + ',"timestamp":' + str.tostring(math.round(timenow / 1000)) + '}'
+
+f_ex_open(string dir, float entry, float sl) =>
+    '{"secret":"' + executor_secret + '","indicator":"MERIDIAN","action":"OPEN","symbol":"' + syminfo.ticker + '","direction":"' + dir + '","entry":' + str.tostring(entry, format.mintick) + (na(sl) ? "" : ',"sl":' + str.tostring(sl, format.mintick)) + ',"timestamp":' + str.tostring(math.round(timenow / 1000)) + '}'
+
+bool use_wide_sl  = false
+local_atr = ta.atr(sl_atr_len)
+daily_atr = float(na)
+
+// AMD INPUTS
+amd_on = input.bool(true, "Enable AMD Engine", group="AMD Time Cycles")
+amd_tz = input.string("UTC+1", "Timezone (cycle anchor)", group="AMD Time Cycles",
+     options=["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+     "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12","UTC+13","UTC+14"])
+amd_12h_on = input.bool(true, "12H Cycle", group="AMD Time Cycles")
+amd_6h_on  = input.bool(true, "6H Cycle",  group="AMD Time Cycles")
+amd_3h_on  = input.bool(false, "3H Cycle",  group="AMD Time Cycles")
+amd_12h_line_col = input.color(color.new(#c9a84c, 70), "12H A-Line Color", group="AMD Time Cycles")
+amd_12h_line_width = input.int(2, "12H A-Line Width", minval=1, maxval=10, group="AMD Time Cycles")
+amd_6h_line_col = input.color(color.new(#00abff, 70), "6H A-Line Color", group="AMD Time Cycles")
+amd_6h_line_width = input.int(1, "6H A-Line Width", minval=1, maxval=10, group="AMD Time Cycles")
+amd_3h_line_col = input.color(color.new(#8a877f, 70), "3H A-Line Color", group="AMD Time Cycles")
+amd_3h_line_width = input.int(1, "3H A-Line Width", minval=1, maxval=10, group="AMD Time Cycles")
+amd_mss_on = input.bool(true, "Enable Gold Signals", group="AMD Time Cycles")
+
+// VORTEX INPUTS
+check_1_digit = input.bool(true,  "Check last 1 digit",                       group="Vortex — Core")
+check_2_digit = input.bool(true,  "Check sum of last 2 digits (digital root)", group="Vortex — Core")
+check_3_digit = input.bool(true, "Check sum of last 3 digits (digital root)", group="Vortex — Core")
+check_4_digit = input.bool(true, "Check sum of last 4 digits (digital root)", group="Vortex — Core")
+check_5_digit = input.bool(false, "Check sum of last 5 digits (digital root)", group="Vortex — Core")
+check_6_digit = input.bool(false, "Check sum of last 6 digits (digital root)", group="Vortex — Core")
+mark_highs = input.bool(true, "Mark highs", group="Vortex — Core")
+mark_lows  = input.bool(true, "Mark lows",  group="Vortex — Core")
+enable_t0_p1 = input.bool(true, "3", group="Vortex — Enable T=0 (3,6,9)", inline="t0")
+enable_t0_p2 = input.bool(true, "6", group="Vortex — Enable T=0 (3,6,9)", inline="t0")
+enable_t0_p3 = input.bool(true, "9", group="Vortex — Enable T=0 (3,6,9)", inline="t0")
+enable_t1_p1 = input.bool(true, "1", group="Vortex — Enable T=1 (1,4,7)", inline="t1")
+enable_t1_p2 = input.bool(true, "4", group="Vortex — Enable T=1 (1,4,7)", inline="t1")
+enable_t1_p3 = input.bool(true, "7", group="Vortex — Enable T=1 (1,4,7)", inline="t1")
+enable_t2_p1 = input.bool(true, "2", group="Vortex — Enable T=2 (2,5,8)", inline="t2")
+enable_t2_p2 = input.bool(true, "5", group="Vortex — Enable T=2 (2,5,8)", inline="t2")
+enable_t2_p3 = input.bool(true, "8", group="Vortex — Enable T=2 (2,5,8)", inline="t2")
+
+// ═══════════════════════════════════════════════════════════════
+// VORTEX HELPERS
+// ═══════════════════════════════════════════════════════════════
+string TZ = "UTC-4"
+
+get_last_decimals(float price, int digits) =>
+    str_price = str.tostring(price, format.mintick)
+    parts = str.split(str_price, ".")
+    string result = ""
+    if array.size(parts) > 1
+        decimals = array.get(parts, 1)
+        len = str.length(decimals)
+        result := len >= digits ? str.substring(decimals, len - digits, len) : decimals
+    result
+
+get_last_full_digits(float price, int digits) =>
+    s = str.tostring(price, format.mintick)
+    s := str.replace_all(s, ".", "")
+    s := str.replace_all(s, ",", "")
+    len = str.length(s)
+    len >= digits ? str.substring(s, len - digits, len) : s
+
+get_digital_root(int num) =>
+    int result = num
+    while result > 9
+        int sum  = 0
+        int temp = result
+        while temp > 0
+            sum  += (temp % 10)
+            temp := int(temp / 10)
+        result := sum
+    result
+
+check_digit_vortex(float price, int target, int N) =>
+    s  = get_last_full_digits(price, N)
+    ok = false
+    if str.length(s) == N
+        sumN = 0
+        for i = 0 to N - 1
+            d = str.tonumber(str.substring(s, i, i + 1))
+            if na(d)
+                break
+            sumN += int(d)
+        dr = get_digital_root(sumN)
+        ok := dr == target
+    ok
+
+check_price_condition(float price, int target) =>
+    bool matched = false
+    if check_1_digit
+        one = get_last_decimals(price, 1)
+        lf  = str.tonumber(one)
+        if not na(lf) and int(lf) == target
+            matched := true
+    if not matched and check_2_digit and check_digit_vortex(price, target, 2)
+        matched := true
+    if not matched and check_3_digit and check_digit_vortex(price, target, 3)
+        matched := true
+    if not matched and check_4_digit and check_digit_vortex(price, target, 4)
+        matched := true
+    if not matched and check_5_digit and check_digit_vortex(price, target, 5)
+        matched := true
+    if not matched and check_6_digit and check_digit_vortex(price, target, 6)
+        matched := true
+    matched
+
+vortex_matches(float price, int bar_hour) =>
+    bool is_t0 = bar_hour == 0  or bar_hour == 3  or bar_hour == 6  or
+                 bar_hour == 9  or bar_hour == 12 or bar_hour == 15 or
+                 bar_hour == 18 or bar_hour == 21
+    bool is_t1 = bar_hour == 1  or bar_hour == 4  or bar_hour == 7  or
+                 bar_hour == 10 or bar_hour == 13 or bar_hour == 16 or
+                 bar_hour == 19 or bar_hour == 22
+    bool is_t2 = bar_hour == 2  or bar_hour == 5  or bar_hour == 8  or
+                 bar_hour == 11 or bar_hour == 14 or bar_hour == 17 or
+                 bar_hour == 20 or bar_hour == 23
+    bool hit = false
+    if is_t0
+        if enable_t0_p1 and check_price_condition(price, 3)
+            hit := true
+        if enable_t0_p2 and check_price_condition(price, 6)
+            hit := true
+        if enable_t0_p3 and check_price_condition(price, 9)
+            hit := true
+    if is_t1
+        if enable_t1_p1 and check_price_condition(price, 1)
+            hit := true
+        if enable_t1_p2 and check_price_condition(price, 4)
+            hit := true
+        if enable_t1_p3 and check_price_condition(price, 7)
+            hit := true
+    if is_t2
+        if enable_t2_p1 and check_price_condition(price, 2)
+            hit := true
+        if enable_t2_p2 and check_price_condition(price, 5)
+            hit := true
+        if enable_t2_p3 and check_price_condition(price, 8)
+            hit := true
+    hit
+
+// ═══════════════════════════════════════════════════════════════
+// AMD TYPES + STATE
+// ═══════════════════════════════════════════════════════════════
+type AmdLine
+    float price
+    line  ln
+
+var int   amd12h_cyc_start = na
+var float amd12h_a_hi     = na
+var float amd12h_a_lo     = na
+var float amd12h_m_hi     = na
+var float amd12h_m_lo     = na
+var float amd12h_d_hi     = na
+var float amd12h_d_lo     = na
+var bool  amd12h_a_done   = false
+var bool  amd12h_m_done   = false
+var bool  amd12h_armed_hi_this_cycle = false
+var bool  amd12h_armed_lo_this_cycle = false
+var AmdLine[] amd12h_hi_lines = array.new<AmdLine>()
+var AmdLine[] amd12h_lo_lines = array.new<AmdLine>()
+var AmdLine amd12h_cur_hi_ln = na
+var AmdLine amd12h_cur_lo_ln = na
+
+var int   amd6h_cyc_start = na
+var float amd6h_a_hi     = na
+var float amd6h_a_lo     = na
+var float amd6h_m_hi     = na
+var float amd6h_m_lo     = na
+var float amd6h_d_hi     = na
+var float amd6h_d_lo     = na
+var bool  amd6h_a_done   = false
+var bool  amd6h_m_done   = false
+var bool  amd6h_armed_hi_this_cycle = false
+var bool  amd6h_armed_lo_this_cycle = false
+var AmdLine[] amd6h_hi_lines = array.new<AmdLine>()
+var AmdLine[] amd6h_lo_lines = array.new<AmdLine>()
+var AmdLine amd6h_cur_hi_ln = na
+var AmdLine amd6h_cur_lo_ln = na
+
+var int   amd3h_cyc_start = na
+var float amd3h_a_hi     = na
+var float amd3h_a_lo     = na
+var float amd3h_m_hi     = na
+var float amd3h_m_lo     = na
+var float amd3h_d_hi     = na
+var float amd3h_d_lo     = na
+var bool  amd3h_a_done   = false
+var bool  amd3h_m_done   = false
+var bool  amd3h_armed_hi_this_cycle = false
+var bool  amd3h_armed_lo_this_cycle = false
+var AmdLine[] amd3h_hi_lines = array.new<AmdLine>()
+var AmdLine[] amd3h_lo_lines = array.new<AmdLine>()
+var AmdLine amd3h_cur_hi_ln = na
+var AmdLine amd3h_cur_lo_ln = na
+
+var int  amd_liq_bias_eng           = 0
+var bool amd_sweep_signal_fired_eng = false
+
+// ═══════════════════════════════════════════════════════════════
+// AMD PHASE FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+f_amd_cycle_start(int t, float cycle_hours) =>
+    int yy = year(t, amd_tz)
+    int mm = month(t, amd_tz)
+    int dd = dayofmonth(t, amd_tz)
+    float hr = hour(t, amd_tz) + minute(t, amd_tz) / 60.0
+    int cycle_index = int(math.floor(hr / cycle_hours))
+    float cycle_start_hr = cycle_index * cycle_hours
+    int midnight = timestamp(amd_tz, yy, mm, dd, 0, 0)
+    midnight + math.round(cycle_start_hr * 3600000)
+
+f_amd_phase(int t, float cycle_hours) =>
+    int cyc_start = f_amd_cycle_start(t, cycle_hours)
+    int a_end_t   = cyc_start + math.round(cycle_hours * 0.5 * 3600000)
+    int m_end_t   = cyc_start + math.round(cycle_hours * 0.75 * 3600000)
+    int cyc_end_t = cyc_start + math.round(cycle_hours * 1.0 * 3600000)
+    string phase = t < a_end_t ? "A" : t < m_end_t ? "M" : "D"
+    [cyc_start, a_end_t, m_end_t, cyc_end_t, phase]
+
+// ═══════════════════════════════════════════════════════════════
+// POSITION TRACKING
+// ═══════════════════════════════════════════════════════════════
+type GoldTrade
+    int    entry_bar
+    int    entry_time
+    float  entry_price
+    bool   is_long
+    float  sl_price
+    float  max_fav
+    float  max_adv
+    bool   is_open
+    int    close_bar
+    float  close_price
+    string close_reason
+    box    tp_box
+    box    sl_box
+    line   pnl_line
+    label  info_lbl
+
+var GoldTrade[] trades = array.new<GoldTrade>()
+var int   gold_n = 0
+var float gold_sl_price = na
+var bool  gold_is_long = false
+
+// ═══════════════════════════════════════════════════════════════
+// AMD ENGINE
+// ═══════════════════════════════════════════════════════════════
+if barstate.isconfirmed
+    // --- 12 HOUR ---
+    if amd_on and amd_12h_on
+        [c12_start, c12_a_end, c12_m_end, c12_end, c12_phase] = f_amd_phase(time, 24.0)
+        if na(amd12h_cyc_start) or c12_start != amd12h_cyc_start
+            amd12h_cyc_start := c12_start
+            amd12h_a_hi      := high
+            amd12h_a_lo      := low
+            amd12h_m_hi      := na
+            amd12h_m_lo      := na
+            amd12h_d_hi      := na
+            amd12h_d_lo      := na
+            amd12h_a_done    := false
+            amd12h_m_done    := false
+            amd12h_armed_hi_this_cycle := false
+            amd12h_armed_lo_this_cycle := false
+            new_hi_ln = AmdLine.new(high, line.new(c12_start, high, time, high, xloc=xloc.bar_time,
+                 color=amd_12h_line_col, width=amd_12h_line_width))
+            array.push(amd12h_hi_lines, new_hi_ln)
+            amd12h_cur_hi_ln := new_hi_ln
+            new_lo_ln = AmdLine.new(low, line.new(c12_start, low, time, low, xloc=xloc.bar_time,
+                 color=amd_12h_line_col, width=amd_12h_line_width))
+            array.push(amd12h_lo_lines, new_lo_ln)
+            amd12h_cur_lo_ln := new_lo_ln
+
+        if c12_phase == "A"
+            amd12h_a_hi := math.max(amd12h_a_hi, high)
+            amd12h_a_lo := math.min(amd12h_a_lo, low)
+            amd12h_cur_hi_ln.price := amd12h_a_hi
+            line.set_y1(amd12h_cur_hi_ln.ln, amd12h_a_hi)
+            line.set_y2(amd12h_cur_hi_ln.ln, amd12h_a_hi)
+            amd12h_cur_lo_ln.price := amd12h_a_lo
+            line.set_y1(amd12h_cur_lo_ln.ln, amd12h_a_lo)
+            line.set_y2(amd12h_cur_lo_ln.ln, amd12h_a_lo)
+        else
+            amd12h_a_done := true
+
+        if c12_phase == "M"
+            amd12h_m_hi := na(amd12h_m_hi) ? high : math.max(amd12h_m_hi, high)
+            amd12h_m_lo := na(amd12h_m_lo) ? low  : math.min(amd12h_m_lo, low)
+        else if not na(amd12h_m_hi)
+            amd12h_m_done := true
+
+        if c12_phase == "D"
+            amd12h_d_hi := na(amd12h_d_hi) ? high : math.max(amd12h_d_hi, high)
+            amd12h_d_lo := na(amd12h_d_lo) ? low  : math.min(amd12h_d_lo, low)
+
+        int hi12_sz = array.size(amd12h_hi_lines)
+        if hi12_sz > 0
+            for hi12i = hi12_sz - 1 to 0
+                hln = array.get(amd12h_hi_lines, hi12i)
+                if high > hln.price
+                    line.delete(hln.ln)
+                    array.remove(amd12h_hi_lines, hi12i)
+                    amd_liq_bias_eng           := -1
+                    amd_sweep_signal_fired_eng := false
+                else
+                    line.set_x2(hln.ln, time)
+        int lo12_sz = array.size(amd12h_lo_lines)
+        if lo12_sz > 0
+            for lo12i = lo12_sz - 1 to 0
+                lln = array.get(amd12h_lo_lines, lo12i)
+                if low < lln.price
+                    line.delete(lln.ln)
+                    array.remove(amd12h_lo_lines, lo12i)
+                    amd_liq_bias_eng           := 1
+                    amd_sweep_signal_fired_eng := false
+                else
+                    line.set_x2(lln.ln, time)
+
+    // --- 6 HOUR ---
+    if amd_on and amd_6h_on
+        [c6_start, c6_a_end, c6_m_end, c6_end, c6_phase] = f_amd_phase(time, 12.0)
+        if na(amd6h_cyc_start) or c6_start != amd6h_cyc_start
+            amd6h_cyc_start := c6_start
+            amd6h_a_hi      := high
+            amd6h_a_lo      := low
+            amd6h_m_hi      := na
+            amd6h_m_lo      := na
+            amd6h_d_hi      := na
+            amd6h_d_lo      := na
+            amd6h_a_done    := false
+            amd6h_m_done    := false
+            amd6h_armed_hi_this_cycle := false
+            amd6h_armed_lo_this_cycle := false
+            new_hi_ln6 = AmdLine.new(high, line.new(c6_start, high, time, high, xloc=xloc.bar_time,
+                 color=amd_6h_line_col, width=amd_6h_line_width))
+            array.push(amd6h_hi_lines, new_hi_ln6)
+            amd6h_cur_hi_ln := new_hi_ln6
+            new_lo_ln6 = AmdLine.new(low, line.new(c6_start, low, time, low, xloc=xloc.bar_time,
+                 color=amd_6h_line_col, width=amd_6h_line_width))
+            array.push(amd6h_lo_lines, new_lo_ln6)
+            amd6h_cur_lo_ln := new_lo_ln6
+
+        if c6_phase == "A"
+            amd6h_a_hi := math.max(amd6h_a_hi, high)
+            amd6h_a_lo := math.min(amd6h_a_lo, low)
+            amd6h_cur_hi_ln.price := amd6h_a_hi
+            line.set_y1(amd6h_cur_hi_ln.ln, amd6h_a_hi)
+            line.set_y2(amd6h_cur_hi_ln.ln, amd6h_a_hi)
+            amd6h_cur_lo_ln.price := amd6h_a_lo
+            line.set_y1(amd6h_cur_lo_ln.ln, amd6h_a_lo)
+            line.set_y2(amd6h_cur_lo_ln.ln, amd6h_a_lo)
+        else
+            amd6h_a_done := true
+
+        if c6_phase == "M"
+            amd6h_m_hi := na(amd6h_m_hi) ? high : math.max(amd6h_m_hi, high)
+            amd6h_m_lo := na(amd6h_m_lo) ? low  : math.min(amd6h_m_lo, low)
+        else if not na(amd6h_m_hi)
+            amd6h_m_done := true
+
+        if c6_phase == "D"
+            amd6h_d_hi := na(amd6h_d_hi) ? high : math.max(amd6h_d_hi, high)
+            amd6h_d_lo := na(amd6h_d_lo) ? low  : math.min(amd6h_d_lo, low)
+
+        int hi6_sz = array.size(amd6h_hi_lines)
+        if hi6_sz > 0
+            for hi6i = hi6_sz - 1 to 0
+                hln6 = array.get(amd6h_hi_lines, hi6i)
+                if high > hln6.price
+                    line.delete(hln6.ln)
+                    array.remove(amd6h_hi_lines, hi6i)
+                    amd_liq_bias_eng           := -1
+                    amd_sweep_signal_fired_eng := false
+                else
+                    line.set_x2(hln6.ln, time)
+        int lo6_sz = array.size(amd6h_lo_lines)
+        if lo6_sz > 0
+            for lo6i = lo6_sz - 1 to 0
+                lln6 = array.get(amd6h_lo_lines, lo6i)
+                if low < lln6.price
+                    line.delete(lln6.ln)
+                    array.remove(amd6h_lo_lines, lo6i)
+                    amd_liq_bias_eng           := 1
+                    amd_sweep_signal_fired_eng := false
+                else
+                    line.set_x2(lln6.ln, time)
+
+    // --- 3 HOUR ---
+    if amd_on and amd_3h_on
+        [c3_start, c3_a_end, c3_m_end, c3_end, c3_phase] = f_amd_phase(time, 6.0)
+        if na(amd3h_cyc_start) or c3_start != amd3h_cyc_start
+            amd3h_cyc_start := c3_start
+            amd3h_a_hi      := high
+            amd3h_a_lo      := low
+            amd3h_m_hi      := na
+            amd3h_m_lo      := na
+            amd3h_d_hi      := na
+            amd3h_d_lo      := na
+            amd3h_a_done    := false
+            amd3h_m_done    := false
+            amd3h_armed_hi_this_cycle := false
+            amd3h_armed_lo_this_cycle := false
+            new_hi_ln3 = AmdLine.new(high, line.new(c3_start, high, time, high, xloc=xloc.bar_time,
+                 color=amd_3h_line_col, width=amd_3h_line_width))
+            array.push(amd3h_hi_lines, new_hi_ln3)
+            amd3h_cur_hi_ln := new_hi_ln3
+            new_lo_ln3 = AmdLine.new(low, line.new(c3_start, low, time, low, xloc=xloc.bar_time,
+                 color=amd_3h_line_col, width=amd_3h_line_width))
+            array.push(amd3h_lo_lines, new_lo_ln3)
+            amd3h_cur_lo_ln := new_lo_ln3
+
+        if c3_phase == "A"
+            amd3h_a_hi := math.max(amd3h_a_hi, high)
+            amd3h_a_lo := math.min(amd3h_a_lo, low)
+            amd3h_cur_hi_ln.price := amd3h_a_hi
+            line.set_y1(amd3h_cur_hi_ln.ln, amd3h_a_hi)
+            line.set_y2(amd3h_cur_hi_ln.ln, amd3h_a_hi)
+            amd3h_cur_lo_ln.price := amd3h_a_lo
+            line.set_y1(amd3h_cur_lo_ln.ln, amd3h_a_lo)
+            line.set_y2(amd3h_cur_lo_

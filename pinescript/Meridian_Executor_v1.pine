@@ -20,6 +20,7 @@ tp_color     = input.color(color.new(#26a269, 75), "TP Box", group="Display")
 sl_color     = input.color(color.new(#f23645, 75), "SL Box", group="Display")
 lbl_col      = input.color(#e8e6e1, "Label Text", group="Display")
 lbl_bg       = input.color(color.new(color.black, 15), "Label BG", group="Display")
+dash_size_str = input.string("Large", "Dashboard Size", options=["Tiny","Small","Normal","Large"], group="Display")
 
 // ═══════════════════════════════════════════════════════════════
 // EXIT MODE
@@ -54,7 +55,7 @@ amd_tz = input.string("UTC+1", "Timezone (cycle anchor)", group="AMD Time Cycles
      "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12","UTC+13","UTC+14"])
 amd_12h_on = input.bool(true, "12H Cycle", group="AMD Time Cycles")
 amd_6h_on  = input.bool(true, "6H Cycle",  group="AMD Time Cycles")
-amd_3h_on  = input.bool(true, "3H Cycle",  group="AMD Time Cycles")
+amd_3h_on  = input.bool(false, "3H Cycle",  group="AMD Time Cycles")
 amd_12h_line_col = input.color(color.new(#ff9800, 70), "12H A-Line Color", group="AMD Time Cycles")
 amd_12h_line_width = input.int(2, "12H A-Line Width", minval=1, maxval=10, group="AMD Time Cycles")
 amd_6h_line_col = input.color(color.new(#ffeb3b, 70), "6H A-Line Color", group="AMD Time Cycles")
@@ -66,8 +67,8 @@ amd_mss_on = input.bool(true, "Enable Gold Signals", group="AMD Time Cycles")
 // VORTEX INPUTS
 check_1_digit = input.bool(true,  "Check last 1 digit",                       group="Vortex — Core")
 check_2_digit = input.bool(true,  "Check sum of last 2 digits (digital root)", group="Vortex — Core")
-check_3_digit = input.bool(false, "Check sum of last 3 digits (digital root)", group="Vortex — Core")
-check_4_digit = input.bool(false, "Check sum of last 4 digits (digital root)", group="Vortex — Core")
+check_3_digit = input.bool(true, "Check sum of last 3 digits (digital root)", group="Vortex — Core")
+check_4_digit = input.bool(true, "Check sum of last 4 digits (digital root)", group="Vortex — Core")
 check_5_digit = input.bool(false, "Check sum of last 5 digits (digital root)", group="Vortex — Core")
 check_6_digit = input.bool(false, "Check sum of last 6 digits (digital root)", group="Vortex — Core")
 mark_highs = input.bool(true, "Mark highs", group="Vortex — Core")
@@ -667,24 +668,29 @@ if barstate.islast and show_boxes
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════════
+dash_txt_sz = size.large
+dash_txt_sz := dash_size_str == "Tiny"  ? size.tiny  : dash_txt_sz
+dash_txt_sz := dash_size_str == "Small" ? size.small : dash_txt_sz
+dash_txt_sz := dash_size_str == "Normal" ? size.normal : dash_txt_sz
+
 var table dash = na
 if barstate.islast
     if na(dash)
         dash := table.new(position.top_right, 2, 4, bgcolor=#131313,
              border_color=#1a1d24, border_width=1, frame_color=#c9a84c, frame_width=1)
     table.cell(dash, 0, 0, " QUANT PRIME — MERIDIAN ", text_color=#c9a84c,
-         text_size=size.normal, bgcolor=color.rgb(10,10,25))
+         text_size=dash_txt_sz, bgcolor=color.rgb(10,10,25))
     table.merge_cells(dash, 0, 0, 1, 0)
 
     string bias_str = amd_liq_bias_eng == 1 ? "LONG" : amd_liq_bias_eng == -1 ? "SHORT" : "NEUTRAL"
     color  bias_col = amd_liq_bias_eng == 1 ? #00abff : amd_liq_bias_eng == -1 ? #c9a84c : #8a877f
-    table.cell(dash, 0, 1, " AMD BIAS ", text_color=#8a877f, text_size=size.small, bgcolor=#131313)
-    table.cell(dash, 1, 1, " " + bias_str + " ", text_color=bias_col, text_size=size.small, bgcolor=#131313)
+    table.cell(dash, 0, 1, " AMD BIAS ", text_color=#8a877f, text_size=dash_txt_sz, bgcolor=#131313)
+    table.cell(dash, 1, 1, " " + bias_str + " ", text_color=bias_col, text_size=dash_txt_sz, bgcolor=#131313)
 
     string armed_str = amd_sweep_signal_fired_eng ? "FIRED" : amd_liq_bias_eng != 0 ? "ARMED" : "SCANNING"
     color  armed_col = amd_sweep_signal_fired_eng ? #8a877f : amd_liq_bias_eng != 0 ? #00abff : #8a877f
-    table.cell(dash, 0, 2, " SIGNAL ", text_color=#8a877f, text_size=size.small, bgcolor=#131313)
-    table.cell(dash, 1, 2, " " + armed_str + " ", text_color=armed_col, text_size=size.small, bgcolor=#131313)
+    table.cell(dash, 0, 2, " SIGNAL ", text_color=#8a877f, text_size=dash_txt_sz, bgcolor=#131313)
+    table.cell(dash, 1, 2, " " + armed_str + " ", text_color=armed_col, text_size=dash_txt_sz, bgcolor=#131313)
 
     int _open = 0
     int _tsz3 = array.size(trades)
@@ -692,5 +698,5 @@ if barstate.islast
         for _ti3 = 0 to _tsz3 - 1
             if array.get(trades, _ti3).is_open
                 _open += 1
-    table.cell(dash, 0, 3, " OPEN ", text_color=#8a877f, text_size=size.small, bgcolor=#131313)
-    table.cell(dash, 1, 3, " " + str.tostring(_open) + " ", text_color=_open > 0 ? #00abff : #e8e6e1, text_size=size.small, bgcolor=#131313)
+    table.cell(dash, 0, 3, " OPEN ", text_color=#8a877f, text_size=dash_txt_sz, bgcolor=#131313)
+    table.cell(dash, 1, 3, " " + str.tostring(_open) + " ", text_color=_open > 0 ? #00abff : #e8e6e1, text_size=dash_txt_sz, bgcolor=#131313)

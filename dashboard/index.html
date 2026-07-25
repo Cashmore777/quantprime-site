@@ -2,12 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Quant Prime">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="format-detection" content="telephone=no">
 <title>Dashboard — Quant Prime</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
@@ -41,10 +48,60 @@
   --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
   --shadow-glow: 0 0 40px var(--gold-glow);
+  
+  /* Responsive spacing */
+  --sidebar-width: 280px;
+  --header-height: 0px;
+  --nav-height: 0px;
+  --content-padding: 48px 56px;
+  --card-padding: 26px;
+  --card-radius: 14px;
+  --grid-gap: 20px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* Tablet breakpoint */
+@media (max-width: 1100px) {
+  :root {
+    --sidebar-width: 240px;
+    --content-padding: 36px 40px;
+    --card-padding: 22px;
+    --grid-gap: 16px;
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 820px) {
+  :root {
+    --sidebar-width: 0px;
+    --header-height: 60px;
+    --nav-height: calc(70px + var(--safe-bottom));
+    --content-padding: 20px;
+    --card-padding: 18px;
+    --card-radius: 12px;
+    --grid-gap: 12px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 400px) {
+  :root {
+    --content-padding: 16px;
+    --card-padding: 14px;
+    --card-radius: 10px;
+    --grid-gap: 10px;
+  }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth;
+  height: 100%;
+  overflow: hidden;
+}
 body {
   background: var(--bg);
   color: var(--text-1);
@@ -54,6 +111,11 @@ body {
   -webkit-font-smoothing: antialiased;
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 a { color: var(--gold); text-decoration: none; transition: all 0.2s; }
@@ -61,10 +123,85 @@ a:hover { text-decoration: underline; }
 button { font-family: var(--sans); cursor: pointer; border: none; background: none; color: inherit; transition: all 0.2s; }
 .mono { font-family: var(--mono); }
 
+/* Mobile Header */
+#mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  padding-top: var(--safe-top);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  z-index: 45;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: calc(16px + var(--safe-left));
+  padding-right: calc(16px + var(--safe-right));
+  box-shadow: var(--shadow-sm);
+}
+
+#mobile-header .mobile-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-1);
+}
+
+#mobile-header .mobile-brand span { color: var(--gold); }
+
+#mobile-header .header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+#mobile-header .header-tier {
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--gold);
+  background: var(--gold-glow);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.menu-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+}
+
+.menu-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-1);
+  border-radius: 1px;
+  transition: all 0.2s;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
 /* Sidebar */
 #sidebar {
-  width: 280px;
-  min-width: 280px;
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: 28px 0;
@@ -74,8 +211,49 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   top: 0;
   left: 0;
   height: 100vh;
+  height: 100dvh;
   z-index: 40;
   box-shadow: var(--shadow-sm);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sidebar overlay for mobile */
+#sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 39;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#sidebar-overlay.visible {
+  opacity: 1;
+}
+
+@media (max-width: 820px) {
+  #mobile-header { display: flex; }
+  
+  #sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+    top: 0;
+    padding-top: calc(var(--header-height) + var(--safe-top) + 20px);
+  }
+  
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  
+  #sidebar-overlay {
+    display: block;
+    pointer-events: none;
+  }
+  
+  #sidebar-overlay.visible {
+    pointer-events: auto;
+  }
 }
 
 .brand {
@@ -197,9 +375,32 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 /* Main content */
 #main {
   flex: 1;
-  margin-left: 280px;
-  padding: 48px 56px;
-  max-width: 1200px;
+  margin-left: var(--sidebar-width);
+  padding: var(--content-padding);
+  padding-top: calc(var(--header-height) + var(--safe-top) + 24px);
+  padding-bottom: calc(var(--nav-height) + 24px);
+  max-width: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 20px;
+}
+
+@media (min-width: 821px) {
+  #main {
+    max-width: calc(1200px + var(--sidebar-width));
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+}
+
+@media (max-width: 820px) {
+  #main {
+    margin-left: 0;
+    padding-left: calc(var(--content-padding) + var(--safe-left));
+    padding-right: calc(var(--content-padding) + var(--safe-right));
+  }
 }
 
 /* View switching */
@@ -209,23 +410,24 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 /* Section headers */
 .view-header {
-  margin-bottom: 36px;
+  margin-bottom: clamp(24px, 5vw, 36px);
 }
 
 .eyebrow {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .view-header h2 {
-  font-size: 32px;
+  font-size: clamp(22px, 6vw, 32px);
   font-weight: 700;
   color: var(--text-1);
   letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .view-header h2 em {
@@ -233,46 +435,100 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--gold);
 }
 
+@media (max-width: 600px) {
+  .eyebrow { font-size: 8px; }
+}
+
 /* Panels */
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 26px;
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
   box-shadow: var(--shadow-sm);
   transition: all 0.2s;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.panel:hover {
-  box-shadow: var(--shadow-md);
+@media (hover: hover) {
+  .panel:hover {
+    box-shadow: var(--shadow-md);
+  }
 }
 
 .panel h4 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
-/* Grids */
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-@media (max-width: 1100px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 900px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .panel h4 { font-size: 10px; margin-bottom: 12px; }
+}
+
+/* Grids - fluid responsive */
+.grid-2 { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: var(--grid-gap); 
+}
+.grid-3 { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: var(--grid-gap); 
+}
+.grid-4 { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: var(--grid-gap); 
+}
+
+/* Auto-fit grids for responsive layouts */
+.grid-auto-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--grid-gap);
+}
+
+.grid-auto-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: var(--grid-gap);
+}
+
+@media (max-width: 1100px) { 
+  .grid-4 { grid-template-columns: repeat(2, 1fr); } 
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) { 
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) { 
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 400px) { 
+  .grid-4 { grid-template-columns: 1fr; } 
+}
 
 /* Stat cards */
 .stat-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 22px 26px;
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
   box-shadow: var(--shadow-sm);
   transition: all 0.25s;
   position: relative;
   overflow: hidden;
+  min-width: 0; /* Prevent grid blowout */
 }
 
 .stat-card::before {
@@ -287,27 +543,40 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   transition: opacity 0.2s;
 }
 
-.stat-card:hover::before { opacity: 1; }
-.stat-card:hover { box-shadow: var(--shadow-md); }
+@media (hover: hover) {
+  .stat-card:hover::before { opacity: 1; }
+  .stat-card:hover { box-shadow: var(--shadow-md); }
+}
 
 .stat-card .label {
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-card .value {
   font-family: var(--mono);
-  font-size: 20px;
+  font-size: clamp(16px, 4vw, 20px);
   font-weight: 600;
   color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .stat-card .value.gold { color: var(--gold); }
 .stat-card .value.success { color: var(--success); }
+
+@media (max-width: 600px) {
+  .stat-card .label { font-size: 8px; }
+  .stat-card .value { font-size: 16px; }
+}
 
 /* Status indicators */
 .status-dot {
@@ -350,8 +619,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .research-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px;
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
   transition: all 0.25s;
   cursor: pointer;
   position: relative;
@@ -361,7 +630,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .research-card::after {
   content: '→';
   position: absolute;
-  right: 24px;
+  right: 20px;
   top: 50%;
   transform: translateY(-50%) translateX(10px);
   opacity: 0;
@@ -370,31 +639,38 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   transition: all 0.2s;
 }
 
-.research-card:hover {
-  border-color: var(--gold);
-  box-shadow: var(--shadow-md), var(--shadow-glow);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .research-card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-md), var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  
+  .research-card:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
 }
 
-.research-card:hover::after {
-  opacity: 1;
-  transform: translateY(-50%) translateX(0);
+.research-card:active {
+  transform: scale(0.99);
 }
 
 .research-card .date {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-3);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .research-card h4 {
-  font-size: 16px;
+  font-size: clamp(14px, 3.5vw, 16px);
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--text-1);
   letter-spacing: -0.01em;
   text-transform: none;
+  line-height: 1.3;
 }
 
 .research-card p {
@@ -578,13 +854,36 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 /* Community layout */
 .community-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 24px;
-  height: 640px;
+  grid-template-columns: 260px 1fr;
+  gap: var(--grid-gap);
+  height: calc(100vh - 200px);
+  min-height: 500px;
+  max-height: 700px;
 }
 
-@media (max-width: 900px) {
-  .community-layout { grid-template-columns: 1fr; height: auto; }
+@media (max-width: 1100px) {
+  .community-layout { 
+    grid-template-columns: 220px 1fr;
+    height: calc(100vh - 180px);
+  }
+}
+
+@media (max-width: 820px) {
+  .community-layout { 
+    grid-template-columns: 1fr; 
+    height: auto;
+    max-height: none;
+  }
+  
+  .rooms-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .chat-panel {
+    height: calc(100vh - 400px);
+    min-height: 350px;
+  }
 }
 
 .rooms-list {
@@ -701,13 +1000,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  min-height: 380px;
-  max-height: 460px;
+  gap: 16px;
+  min-height: 300px;
   background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 20%);
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 820px) {
+  .messages {
+    padding: 16px;
+    gap: 14px;
+  }
 }
 
 .message .msg-header {
@@ -748,6 +1054,42 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--text-3);
 }
 
+/* Admin delete button */
+.admin-delete-msg {
+  opacity: 0;
+  margin-left: auto;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.message:hover .admin-delete-msg {
+  opacity: 1;
+}
+
+.admin-delete-msg:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* Coming soon button style */
+.buy-btn.coming-soon-btn {
+  background: var(--surface-raised);
+  color: var(--text-3);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.buy-btn.coming-soon-btn:hover {
+  transform: none;
+  box-shadow: none;
+}
+
 .message p {
   font-size: 14px;
   color: var(--text-2);
@@ -767,8 +1109,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .chat-input {
   display: flex;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 10px;
+  padding: 14px 16px;
   border-top: 1px solid var(--border);
   background: var(--surface);
 }
@@ -777,12 +1119,13 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   flex: 1;
   background: var(--surface-raised);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
+  border-radius: 10px;
+  padding: 12px 14px;
   color: var(--text-1);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
   font-family: var(--sans);
+  min-width: 0;
 }
 
 .chat-input input:focus { 
@@ -794,10 +1137,32 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: #000;
   font-weight: 600;
-  font-size: 13px;
-  border-radius: 8px;
-  padding: 0 24px;
+  font-size: 14px;
+  border-radius: 10px;
+  padding: 0 20px;
   box-shadow: 0 2px 8px rgba(201,168,76,0.25);
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+@media (max-width: 600px) {
+  .chat-input {
+    padding: 12px;
+    gap: 8px;
+  }
+  .chat-input input {
+    padding: 10px 12px;
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+  .chat-input .send-btn {
+    padding: 0 16px;
+    font-size: 13px;
+  }
+}
+
+.chat-input .send-btn:active {
+  transform: scale(0.97);
+  box-shadow: 0 1px 4px rgba(201,168,76,0.25);
 }
 
 .chat-input .send-btn:hover {
@@ -849,41 +1214,61 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .marketplace-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: var(--grid-gap);
 }
 
-@media (max-width: 1100px) { .marketplace-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 700px) { .marketplace-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { 
+  .marketplace-grid { 
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); 
+  } 
+}
+
+@media (max-width: 600px) { 
+  .marketplace-grid { 
+    grid-template-columns: 1fr; 
+  } 
+}
 
 .marketplace-item {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px;
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   transition: all 0.25s;
   box-shadow: var(--shadow-sm);
+  min-width: 0;
 }
 
-.marketplace-item:hover {
-  border-color: var(--gold);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .marketplace-item:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
 }
 
 .marketplace-item .code-preview {
   background: #1a1a1a;
   border-radius: 8px;
-  padding: 14px;
+  padding: 12px;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10px;
   color: #a0a0a0;
-  line-height: 1.8;
-  overflow: hidden;
+  line-height: 1.7;
+  overflow-x: auto;
   white-space: pre;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 600px) {
+  .marketplace-item .code-preview {
+    font-size: 9px;
+    padding: 10px;
+  }
 }
 
 .marketplace-item .code-preview .keyword { color: var(--cyan); }
@@ -1012,40 +1397,83 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-top: 1px solid var(--border);
   z-index: 50;
   justify-content: space-around;
-  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  padding: 10px 8px calc(10px + var(--safe-bottom));
+  padding-left: calc(8px + var(--safe-left));
+  padding-right: calc(8px + var(--safe-right));
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.92);
 }
 
 #mobile-nav button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 500;
+  justify-content: center;
+  gap: 3px;
+  font-size: 9px;
+  font-weight: 600;
   color: var(--text-3);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
+  min-width: 56px;
+  min-height: 48px;
+  border-radius: 10px;
+  transition: all 0.2s;
+  position: relative;
 }
 
-#mobile-nav button.active { color: var(--gold); }
-#mobile-nav .icon { font-size: 20px; }
+#mobile-nav button.active { 
+  color: var(--gold);
+}
+
+#mobile-nav button.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+#mobile-nav .icon { 
+  font-size: 22px;
+  line-height: 1;
+}
 
 @media (max-width: 820px) {
-  #sidebar { display: none; }
-  #main { margin-left: 0; padding: 28px 20px 120px; }
   #mobile-nav { display: flex; }
 }
 
 /* Academy Layout */
 .academy-layout {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 24px;
-  min-height: 600px;
+  grid-template-columns: 300px 1fr;
+  gap: var(--grid-gap);
+  min-height: 500px;
 }
 
-@media (max-width: 900px) {
-  .academy-layout { grid-template-columns: 1fr; }
+@media (max-width: 1100px) {
+  .academy-layout { 
+    grid-template-columns: 260px 1fr; 
+  }
+}
+
+@media (max-width: 820px) {
+  .academy-layout { 
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .level-nav {
+    max-height: 250px;
+  }
+  
+  .video-section {
+    min-height: 400px;
+  }
 }
 
 .level-nav {
@@ -1409,8 +1837,32 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   font-weight: 500;
 }
 
-@media (max-width: 640px) {
-  #modal, #research-modal { align-items: flex-end; padding: 0; }
+@media (max-width: 700px) {
+  #modal, #research-modal { 
+    align-items: flex-end; 
+    padding: 0;
+    padding-bottom: var(--safe-bottom);
+  }
+  
+  #modal .modal-box {
+    border-radius: 20px 20px 0 0;
+    padding: 28px 24px calc(24px + var(--safe-bottom));
+    max-width: none;
+  }
+  
+  #research-modal .modal-content {
+    border-radius: 20px 20px 0 0;
+    max-height: 90vh;
+    max-width: none;
+  }
+  
+  #research-modal .modal-header {
+    padding: 20px 20px 16px;
+  }
+  
+  #research-modal .modal-body {
+    padding: 20px;
+  }
   #modal .modal-box, #research-modal .modal-content { 
     border-radius: 20px 20px 0 0; 
     max-width: none;
@@ -1477,6 +1929,150 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   width: 100%;
   justify-content: center;
 }
+
+/* Responsive form elements */
+.form-row input,
+.form-row select {
+  font-size: 16px; /* Prevent iOS zoom */
+}
+
+@media (max-width: 820px) {
+  .form-row input,
+  .form-row select {
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+}
+
+/* Touch-friendly buttons */
+@media (max-width: 820px) {
+  .btn {
+    min-height: 48px;
+    padding: 14px 24px;
+  }
+  
+  .btn.sm {
+    min-height: 44px;
+    padding: 12px 18px;
+  }
+}
+
+/* Better scrolling */
+.rooms-list,
+.level-nav,
+.messages,
+#mod-messages,
+#user-results {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent text selection on buttons */
+button, .nav-item, .room, .video-item, .filter-chip {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Active states for touch */
+@media (hover: none) {
+  .nav-item:active,
+  .room:active,
+  .filter-chip:active {
+    background: var(--gold-glow);
+  }
+  
+  .btn:active {
+    transform: scale(0.97);
+  }
+  
+  .stat-card:active,
+  .research-card:active,
+  .marketplace-item:active {
+    transform: scale(0.99);
+    opacity: 0.9;
+  }
+}
+
+/* Notch/dynamic island safe area for landscape */
+@media (orientation: landscape) and (max-width: 900px) {
+  #mobile-header {
+    padding-left: calc(20px + var(--safe-left));
+    padding-right: calc(20px + var(--safe-right));
+  }
+  
+  #main {
+    padding-left: calc(var(--content-padding) + var(--safe-left) + 20px);
+    padding-right: calc(var(--content-padding) + var(--safe-right) + 20px);
+  }
+}
+
+/* Compact view for very small screens */
+@media (max-height: 600px) {
+  .view-header {
+    margin-bottom: 16px;
+  }
+  
+  .view-header h2 {
+    font-size: 20px;
+  }
+}
+
+/* Filter chips scroll on mobile */
+.marketplace-bar {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .marketplace-bar {
+    gap: 8px;
+  }
+  
+  .marketplace-bar input {
+    min-width: 100%;
+    flex: none;
+    order: -1;
+    margin-bottom: 8px;
+  }
+  
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+}
+
+/* Admin panel mobile improvements */
+@media (max-width: 700px) {
+  #view-admin .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  #admin-tab-users .panel input,
+  #admin-tab-users .panel select {
+    width: 100%;
+  }
+}
+
+/* Instrument card mobile */
+.instrument-card {
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+}
+
+@media (max-width: 600px) {
+  .instrument-card .actions {
+    flex-direction: column;
+  }
+  
+  .instrument-card .actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
 </style>
 </head>
 <body>
@@ -1490,6 +2086,22 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
     <button class="btn" onclick="saveUsername()">Continue</button>
   </div>
 </div>
+
+<!-- Mobile Header -->
+<header id="mobile-header">
+  <div class="mobile-brand">QUANT<span>PRIME</span></div>
+  <div class="header-actions">
+    <span class="header-tier" id="mobile-tier">SUITE</span>
+    <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Sidebar Overlay -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
 <aside id="sidebar">
   <a href="/" class="brand">QUANT<span>PRIME</span></a>
@@ -1878,160 +2490,150 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
     </div>
     
     <div class="marketplace-grid">
+      <!-- 1. EMA Regime Pack (from Cockpit) -->
       <div class="marketplace-item" data-category="structure">
-        <div class="code-preview"><span class="keyword">//@version=6</span>
-<span class="var">regime</span> = ema4 &lt; ema3 and ema3 &lt; ema2
-<span class="var">bias</span>   = regime ? <span class="string">1</span> : <span class="string">-1</span></div>
+        <div class="code-preview"><span class="var">ema1</span> = ta.ema(close, <span class="string">8</span>)
+<span class="var">ema2</span> = ta.ema(close, <span class="string">26</span>)
+<span class="var">ema3</span> = ta.ema(close, <span class="string">80</span>)
+<span class="var">ema4</span> = ta.ema(close, <span class="string">233</span>)
+<span class="var">is_bull</span> = ema4 &lt; ema3 <span class="keyword">and</span> ema3 &lt; ema2</div>
         <span class="item-tag">Structure</span>
         <h4>EMA Regime Pack</h4>
-        <div class="description">The full four-layer regime classifier as a standalone drop-in. Includes bullish, bearish, and neutral state detection.</div>
+        <div class="description">The full four-layer regime classifier from Cockpit. Detects bullish, bearish, and neutral states via EMA stack alignment. Drop-in ready.</div>
         <div class="purchase-row">
           <div class="price">£2.99</div>
-          <button class="buy-btn">Purchase</button>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
         </div>
       </div>
       
+      <!-- 2. Vortex Digital Root Engine (from Meridian) -->
       <div class="marketplace-item" data-category="vortex">
-        <div class="code-preview"><span class="var">t0</span> = hr % <span class="string">3</span> == <span class="string">0</span>
-<span class="var">root</span> = digitalRoot(price)
-<span class="var">hit</span>  = t0 <span class="keyword">and</span> root == <span class="string">9</span></div>
+        <div class="code-preview"><span class="var">get_digital_root</span>(num) =&gt;
+    <span class="keyword">int</span> result = num
+    <span class="keyword">while</span> result &gt; <span class="string">9</span>
+        sum = 0, temp = result
+        <span class="keyword">while</span> temp &gt; 0
+            sum += temp % <span class="string">10</span>
+        result := sum</div>
         <span class="item-tag">Vortex</span>
-        <h4>Vortex Time × Price Alignment</h4>
-        <div class="description">The 3-6-9 digital-root alignment engine — Pi & Fibonacci vortex windows for time-price confluence.</div>
+        <h4>Vortex Digital Root Engine</h4>
+        <div class="description">The 3-6-9 digital-root alignment engine from Meridian. Detects T=0/T=1/T=2 time windows with price vortex confluence.</div>
         <div class="purchase-row">
           <div class="price">£9.99</div>
-          <button class="buy-btn">Purchase</button>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
         </div>
       </div>
       
+      <!-- 3. Volatility Band Classifier (from Recoil) -->
       <div class="marketplace-item" data-category="structure">
-        <div class="code-preview"><span class="var">gap</span> = fvgTop - fvgBot
-<span class="var">zone</span> = merge(gaps, atr)
-<span class="var">sl</span>   = nthGap(zone, <span class="string">2</span>)</div>
+        <div class="code-preview"><span class="var">atr</span> = ta.atr(<span class="string">8</span>)
+<span class="var">ratio</span> = math.abs(close - open) / atr
+<span class="var">band</span> = ratio &gt; <span class="string">3.0</span> ? <span class="string">8</span> :
+       ratio &gt; <span class="string">2.55</span> ? <span class="string">7</span> :
+       ratio &gt; <span class="string">2.10</span> ? <span class="string">6</span> : <span class="string">5</span></div>
         <span class="item-tag">Structure</span>
-        <h4>FVG Gap-Scan Engine</h4>
-        <div class="description">The consolidated stop-placement engine from Recoil, extracted for any strategy. Identifies and ranks imbalance zones.</div>
-        <div class="purchase-row">
-          <div class="price">£7.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="risk">
-        <div class="code-preview"><span class="var">riskPct</span> = <span class="string">1.0</span>
-<span class="var">sl</span> = entry - stopDist
-<span class="var">size</span> = (balance * riskPct) / sl</div>
-        <span class="item-tag">Risk</span>
-        <h4>Position Size Calculator</h4>
-        <div class="description">Dynamic position sizing based on account balance, risk percentage, and stop distance. Auto-adjusts for volatility.</div>
+        <h4>Volatility Band Classifier</h4>
+        <div class="description">The 8-level ATR volatility classifier from Recoil. Trigger bands 6/7/8 for fade setups. Includes all threshold calculations.</div>
         <div class="purchase-row">
           <div class="price">£4.99</div>
-          <button class="buy-btn">Purchase</button>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
         </div>
       </div>
       
-      <div class="marketplace-item" data-category="automation">
-        <div class="code-preview"><span class="keyword">alert</span>(<span class="string">"QUANT_PRIME|BUY"</span>)
-<span class="var">bridge</span>.send(signal)
-<span class="var">executor</span>.place(order)</div>
-        <span class="item-tag">Automation</span>
-        <h4>Webhook Bridge Template</h4>
-        <div class="description">Complete webhook integration template for connecting TradingView alerts to any broker API. Includes auth handling.</div>
-        <div class="purchase-row">
-          <div class="price">£14.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="vortex">
-        <div class="code-preview"><span class="var">fib</span> = [<span class="string">0.236</span>, <span class="string">0.382</span>, <span class="string">0.618</span>]
-<span class="var">level</span> = swing * fib[i]
-<span class="var">confluence</span> = timeAlign(level)</div>
-        <span class="item-tag">Vortex</span>
-        <h4>Fibonacci Cluster Scanner</h4>
-        <div class="description">Auto-detects multi-timeframe Fibonacci confluence zones. Highlights areas where multiple levels stack within tolerance.</div>
-        <div class="purchase-row">
-          <div class="price">£12.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
+      <!-- 4. FVG Detection Engine (from Cockpit) -->
       <div class="marketplace-item" data-category="structure">
-        <div class="code-preview"><span class="var">sweep</span> = low &lt; prior_low
-<span class="var">reclaim</span> = close &gt; prior_low
-<span class="var">valid</span> = sweep <span class="keyword">and</span> reclaim</div>
+        <div class="code-preview"><span class="keyword">type</span> FVG
+    <span class="keyword">float</span> top
+    <span class="keyword">float</span> bot
+    <span class="keyword">bool</span>  is_bull
+    <span class="keyword">int</span>   state  <span class="comment">// 0=untouched, 2=filled</span>
+    box   bx</div>
         <span class="item-tag">Structure</span>
-        <h4>Liquidity Sweep Detector</h4>
-        <div class="description">Identifies liquidity sweeps and stop hunts in real-time. Tracks equal highs/lows and monitors for sweeps with reclaims.</div>
-        <div class="purchase-row">
-          <div class="price">£8.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="risk">
-        <div class="code-preview"><span class="var">dailyPnL</span> = sumTrades(today)
-<span class="keyword">if</span> dailyPnL &lt; -maxLoss:
-    <span class="var">halt</span> = <span class="string">true</span></div>
-        <span class="item-tag">Risk</span>
-        <h4>Daily Loss Limiter</h4>
-        <div class="description">Automatic daily loss limit enforcement. Stops new trades when drawdown threshold hit. Resets at configurable time.</div>
-        <div class="purchase-row">
-          <div class="price">£5.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="automation">
-        <div class="code-preview"><span class="var">tp1</span> = entry + (sl * <span class="string">1.5</span>)
-<span class="var">tp2</span> = entry + (sl * <span class="string">3.0</span>)
-<span class="keyword">partial</span>(tp1, <span class="string">50</span>%)</div>
-        <span class="item-tag">Automation</span>
-        <h4>Partial Take-Profit Manager</h4>
-        <div class="description">Automated partial profit taking with trailing stop. Configurable TP levels and percentages. Break-even after TP1.</div>
-        <div class="purchase-row">
-          <div class="price">£11.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="vortex">
-        <div class="code-preview"><span class="var">moon</span> = lunarPhase(time)
-<span class="var">aspect</span> = planetaryAspect()
-<span class="var">window</span> = moon == <span class="string">"full"</span></div>
-        <span class="item-tag">Vortex</span>
-        <h4>Lunar Cycle Overlay</h4>
-        <div class="description">Tracks lunar phases and planetary aspects. Highlights historically significant cycle windows for timing confluence.</div>
-        <div class="purchase-row">
-          <div class="price">£6.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="structure">
-        <div class="code-preview"><span class="var">orderBlock</span> = lastBullOB()
-<span class="var">valid</span> = !mitigated(ob)
-<span class="keyword">draw</span>(ob, extend=<span class="string">true</span>)</div>
-        <span class="item-tag">Structure</span>
-        <h4>Order Block Scanner</h4>
-        <div class="description">Detects and tracks institutional order blocks. Auto-invalidates when mitigated. Multi-timeframe support.</div>
-        <div class="purchase-row">
-          <div class="price">£9.99</div>
-          <button class="buy-btn">Purchase</button>
-        </div>
-      </div>
-      
-      <div class="marketplace-item" data-category="automation">
-        <div class="code-preview"><span class="var">journal</span> = []
-<span class="keyword">onTrade</span>(t):
-    journal.push(t.toCSV())
-    <span class="var">webhook</span>(journal)</div>
-        <span class="item-tag">Automation</span>
-        <h4>Trade Journal Exporter</h4>
-        <div class="description">Automatic trade journaling with webhook export. Logs entry, exit, P&L, R-multiple, and chart screenshot reference.</div>
+        <h4>FVG Detection Engine</h4>
+        <div class="description">Fair Value Gap detector from Cockpit. Multi-timeframe support with state tracking (untouched, 50% tapped, filled). Auto-deduplicated.</div>
         <div class="purchase-row">
           <div class="price">£7.99</div>
-          <button class="buy-btn">Purchase</button>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+      
+      <!-- 5. Liquidity Pool Scanner (from Cockpit) -->
+      <div class="marketplace-item" data-category="structure">
+        <div class="code-preview"><span class="keyword">type</span> Level
+    <span class="keyword">float</span> price
+    <span class="keyword">bool</span>  is_high
+    <span class="keyword">int</span>   state  <span class="comment">// 0=live, 1=swept</span>
+    line  ln
+<span class="var">add_lp</span>(price, is_high, col, right_bars)</div>
+        <span class="item-tag">Structure</span>
+        <h4>Liquidity Pool Scanner</h4>
+        <div class="description">Multi-timeframe pivot-based LP level detector from Cockpit. Auto-freezes swept levels. Configurable left/right pivot bars.</div>
+        <div class="purchase-row">
+          <div class="price">£8.99</div>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+      
+      <!-- 6. AMD Phase Engine (from Meridian) -->
+      <div class="marketplace-item" data-category="vortex">
+        <div class="code-preview"><span class="var">is_t0</span> = bar_hour == <span class="string">0</span> <span class="keyword">or</span> bar_hour == <span class="string">3</span> <span class="keyword">or</span>
+        bar_hour == <span class="string">6</span> <span class="keyword">or</span> bar_hour == <span class="string">9</span> <span class="keyword">or</span>
+        bar_hour == <span class="string">12</span> <span class="keyword">or</span> bar_hour == <span class="string">15</span>
+<span class="var">amd_phase</span> = is_t0 ? <span class="string">"A"</span> : <span class="string">"M/D"</span></div>
+        <span class="item-tag">Vortex</span>
+        <h4>AMD Phase Engine</h4>
+        <div class="description">Accumulation-Manipulation-Distribution cycle engine from Meridian. 12H/6H/3H cycle detection with A-line sweep tracking.</div>
+        <div class="purchase-row">
+          <div class="price">£6.99</div>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+      
+      <!-- 7. Trend Alignment Risk Scaler (from Recoil) -->
+      <div class="marketplace-item" data-category="risk">
+        <div class="code-preview"><span class="var">trend_with_mult</span>    = <span class="string">2.0</span>
+<span class="var">trend_against_mult</span> = <span class="string">0.5</span>
+<span class="var">trend_consol_mult</span>  = <span class="string">1.0</span>
+<span class="var">risk_mult</span> = is_with_trend ? trend_with_mult :
+            is_against ? trend_against_mult : <span class="string">1.0</span></div>
+        <span class="item-tag">Risk</span>
+        <h4>Trend Alignment Risk Scaler</h4>
+        <div class="description">Dynamic risk multiplier from Recoil. Scales position size based on EMA trend alignment: with-trend=2x, against=0.5x, neutral=1x.</div>
+        <div class="purchase-row">
+          <div class="price">£5.99</div>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+      
+      <!-- 8. TP/SL Calculator (from Recoil) -->
+      <div class="marketplace-item" data-category="automation">
+        <div class="code-preview"><span class="var">tp_mode</span> = <span class="string">"% of Body"</span>
+<span class="var">tp_pct</span>  = <span class="string">50.0</span>
+<span class="var">body</span> = math.abs(close - open)
+<span class="var">tp</span> = entry + (body * tp_pct / <span class="string">100</span>)
+<span class="var">sl</span> = entry - (atr * sl_buffer)</div>
+        <span class="item-tag">Automation</span>
+        <h4>TP/SL Calculator</h4>
+        <div class="description">Take-profit and stop-loss calculator from Recoil. Supports % of body, % of range, and R-multiple modes. Includes wick buffer logic.</div>
+        <div class="purchase-row">
+          <div class="price">£4.99</div>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
+        </div>
+      </div>
+      
+      <!-- 9. Partial TP Manager (from Recoil) -->
+      <div class="marketplace-item" data-category="automation">
+        <div class="code-preview"><span class="var">tp1_on</span>       = <span class="string">true</span>
+<span class="var">tp1_pct</span>      = <span class="string">25.0</span>   <span class="comment">// % of body</span>
+<span class="var">tp1_close_pct</span> = <span class="string">50.0</span>  <span class="comment">// close 50%</span>
+<span class="var">tp1_move_be</span>  = <span class="string">true</span>   <span class="comment">// move SL to BE</span>
+<span class="keyword">if</span> price &gt;= tp1: <span class="var">close_partial</span>()</div>
+        <span class="item-tag">Automation</span>
+        <h4>Partial TP Manager</h4>
+        <div class="description">Partial take-profit system from Recoil. TP1 closes configurable %, moves SL to breakeven. Full TP logic with timeout option.</div>
+        <div class="purchase-row">
+          <div class="price">£11.99</div>
+          <button class="buy-btn coming-soon-btn" disabled>Coming Soon</button>
         </div>
       </div>
     </div>
@@ -2133,12 +2735,30 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
       <div class="panel">
         <h4>User Management</h4>
         <p style="color: var(--text-2); font-size: 13px; margin-bottom: 16px;">Search and manage user tiers.</p>
-        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-          <input type="text" id="user-search" placeholder="Search by email..." style="flex: 1; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap;">
+          <input type="text" id="user-search" placeholder="Search by email or username..." style="flex: 1; min-width: 200px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px;">
+          <select id="user-search-field" style="padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-raised);">
+            <option value="all">All Fields</option>
+            <option value="email">Email Only</option>
+            <option value="username">Username Only</option>
+          </select>
+          <select id="user-tier-filter" style="padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-raised);">
+            <option value="all">All Tiers</option>
+            <option value="free">Free</option>
+            <option value="research">Research</option>
+            <option value="recoil">Recoil</option>
+            <option value="terminal">Terminal</option>
+            <option value="suite">Suite</option>
+            <option value="ascension">Ascension</option>
+            <option value="admin">Admin</option>
+          </select>
           <button class="btn sm" onclick="searchUsers()">Search</button>
         </div>
+        <div style="margin-bottom: 16px;">
+          <button class="btn outline sm" onclick="listAllUsers()" style="font-size: 12px;">Show All Users</button>
+        </div>
         <div id="user-results" style="font-size: 13px; color: var(--text-2);">
-          Enter an email to search for users.
+          Enter an email or username to search, or click "Show All Users".
         </div>
       </div>
       
@@ -2224,9 +2844,10 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 <nav id="mobile-nav">
   <button class="active" data-view="home"><span class="icon">◆</span>Home</button>
+  <button data-view="research"><span class="icon">📊</span>Research</button>
   <button data-view="community"><span class="icon">💬</span>Chat</button>
-  <button data-view="marketplace"><span class="icon">🏪</span>Shop</button>
-  <button data-view="settings"><span class="icon">⚙</span>More</button>
+  <button data-view="marketplace"><span class="icon">🛒</span>Shop</button>
+  <button data-view="settings"><span class="icon">⚙️</span>More</button>
 </nav>
 
 <!-- Tier Lock Modal -->
@@ -2346,6 +2967,9 @@ async function checkAuth() {
   // Apply tier-based access control
   applyTierAccess();
   
+  // Update mobile tier badge
+  updateMobileTier();
+  
   // Hide username modal since we have auth
   document.getElementById('username-modal').classList.add('hidden');
   
@@ -2416,6 +3040,41 @@ let currentRoom = 'general';
 // saveUsername no longer needed - using Supabase auth
 
 // ==========================================
+// MOBILE SIDEBAR
+// ==========================================
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const toggle = document.getElementById('menuToggle');
+  
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+  toggle.classList.toggle('open');
+  
+  // Prevent body scroll when sidebar is open
+  document.body.style.overflow = sidebar.classList.contains('open') ? 'hidden' : '';
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const toggle = document.getElementById('menuToggle');
+  
+  sidebar.classList.remove('open');
+  overlay.classList.remove('visible');
+  toggle.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Update mobile tier badge
+function updateMobileTier() {
+  const mobileTier = document.getElementById('mobile-tier');
+  if (mobileTier && userTier) {
+    mobileTier.textContent = userTier.toUpperCase();
+  }
+}
+
+// ==========================================
 // NAVIGATION
 // ==========================================
 document.querySelectorAll('.nav-item, #mobile-nav button').forEach(btn => {
@@ -2426,6 +3085,7 @@ document.querySelectorAll('.nav-item, #mobile-nav button').forEach(btn => {
       return;
     }
     switchView(view);
+    closeSidebar(); // Close sidebar on mobile after navigation
   });
 });
 
@@ -2440,7 +3100,9 @@ function switchView(viewId) {
     b.classList.toggle('active', b.dataset.view === viewId);
   });
   
-  window.scrollTo(0, 0);
+  // Scroll to top of main content
+  const main = document.getElementById('main');
+  if (main) main.scrollTo(0, 0);
 }
 
 function showLockedModal(view) {
@@ -2663,17 +3325,24 @@ function subscribeToRoom(roomId) {
   // Listen for new messages
   messagesListener = currentRoomRef.orderByChild('timestamp').limitToLast(50).on('child_added', snapshot => {
     const msg = snapshot.val();
-    addMessageToUI(msg);
+    addMessageToUI(msg, snapshot.key);
+  });
+  
+  // Listen for deleted messages (real-time removal)
+  currentRoomRef.on('child_removed', snapshot => {
+    const msgEl = document.querySelector(`[data-message-key="${snapshot.key}"]`);
+    if (msgEl) msgEl.remove();
   });
   
   // Update online count
   updateOnlineCount(roomId);
 }
 
-function addMessageToUI(msg) {
+function addMessageToUI(msg, messageKey = null) {
   const messagesContainer = document.getElementById('messages');
   const div = document.createElement('div');
   div.className = 'message' + (msg.username === currentUser ? ' self' : '');
+  if (messageKey) div.dataset.messageKey = messageKey;
   
   const isStaff = msg.username === 'Sean' || msg.username === 'QP';
   const tierClass = isStaff ? 'qp' : '';
@@ -2681,17 +3350,40 @@ function addMessageToUI(msg) {
   
   const time = new Date(msg.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   
+  // Admin delete button (only visible to admins on hover)
+  const adminDeleteBtn = isAdmin() && messageKey ? `
+    <button class="admin-delete-msg" onclick="deleteMessageInline('${currentRoom}', '${messageKey}')" title="Delete message">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14"/>
+      </svg>
+    </button>
+  ` : '';
+  
   div.innerHTML = `
     <div class="msg-header">
       <span class="username ${usernameClass}">${escapeHtml(msg.username)}</span>
       <span class="tier-tag ${tierClass}">${msg.tier || 'MEMBER'}</span>
       <span class="time">${time}</span>
+      ${adminDeleteBtn}
     </div>
     <p>${escapeHtml(msg.text)}</p>
   `;
   
   messagesContainer.appendChild(div);
   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Delete message inline (from chat view)
+function deleteMessageInline(roomId, messageKey) {
+  if (!confirm('Delete this message?')) return;
+  
+  db.ref('rooms/' + roomId + '/messages/' + messageKey).remove()
+    .then(() => {
+      // Remove from UI immediately
+      const msgEl = document.querySelector(`[data-message-key="${messageKey}"]`);
+      if (msgEl) msgEl.remove();
+    })
+    .catch(e => alert('Error: ' + e.message));
 }
 
 function sendMessage() {
@@ -2847,20 +3539,41 @@ async function loadAdminStats() {
   }
 }
 
-// Search users
+// Search users with username + email + tier filter
 async function searchUsers() {
-  const email = document.getElementById('user-search').value.trim();
-  if (!email) return;
+  const query = document.getElementById('user-search').value.trim();
+  const field = document.getElementById('user-search-field').value;
+  const tierFilter = document.getElementById('user-tier-filter').value;
+  
+  if (!query && tierFilter === 'all') {
+    document.getElementById('user-results').innerHTML = 'Enter a search term or select a tier filter.';
+    return;
+  }
   
   const resultsEl = document.getElementById('user-results');
   resultsEl.innerHTML = 'Searching...';
   
   try {
-    const { data, error } = await supabaseClient
-      .from('profiles')
-      .select('*')
-      .ilike('email', `%${email}%`)
-      .limit(10);
+    let dbQuery = supabaseClient.from('profiles').select('*');
+    
+    // Apply search based on field selection
+    if (query) {
+      if (field === 'email') {
+        dbQuery = dbQuery.ilike('email', `%${query}%`);
+      } else if (field === 'username') {
+        dbQuery = dbQuery.ilike('display_name', `%${query}%`);
+      } else {
+        // All fields - use OR filter
+        dbQuery = dbQuery.or(`email.ilike.%${query}%,display_name.ilike.%${query}%`);
+      }
+    }
+    
+    // Apply tier filter
+    if (tierFilter !== 'all') {
+      dbQuery = dbQuery.eq('tier', tierFilter);
+    }
+    
+    const { data, error } = await dbQuery.limit(20);
     
     if (error) throw error;
     
@@ -2869,18 +3582,62 @@ async function searchUsers() {
       return;
     }
     
-    resultsEl.innerHTML = data.map(user => `
-      <div style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <strong>${user.display_name || 'No name'}</strong><br>
-          <span style="font-family: var(--mono); font-size: 11px;">${user.email}</span>
-        </div>
-        <span style="background: var(--gold-glow); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${(user.tier || 'free').toUpperCase()}</span>
-      </div>
-    `).join('');
+    renderUserResults(data);
   } catch (e) {
     resultsEl.innerHTML = 'Error: ' + e.message;
   }
+}
+
+// List all users
+async function listAllUsers() {
+  const resultsEl = document.getElementById('user-results');
+  resultsEl.innerHTML = 'Loading all users...';
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(50);
+    
+    if (error) throw error;
+    
+    if (!data || data.length === 0) {
+      resultsEl.innerHTML = 'No users found.';
+      return;
+    }
+    
+    renderUserResults(data);
+  } catch (e) {
+    resultsEl.innerHTML = 'Error: ' + e.message;
+  }
+}
+
+// Render user results
+function renderUserResults(users) {
+  const resultsEl = document.getElementById('user-results');
+  resultsEl.innerHTML = `
+    <div style="margin-bottom: 12px; font-family: var(--mono); font-size: 11px; color: var(--text-3);">${users.length} user(s) found</div>
+    ${users.map(user => `
+      <div style="padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="min-width: 200px;">
+          <strong>${escapeHtml(user.display_name || 'No name')}</strong><br>
+          <span style="font-family: var(--mono); font-size: 11px; color: var(--text-2);">${escapeHtml(user.email)}</span>
+          ${user.tradingview_username ? `<br><span style="font-family: var(--mono); font-size: 10px; color: var(--text-3);">TV: ${escapeHtml(user.tradingview_username)}</span>` : ''}
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <span style="background: var(--gold-glow); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;">${(user.tier || 'free').toUpperCase()}</span>
+          <button onclick="quickEditUser('${user.email}')" style="background: var(--surface-raised); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-size: 10px; cursor: pointer;">Edit</button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+// Quick edit user (fills the tier update form)
+function quickEditUser(email) {
+  document.getElementById('tier-update-email').value = email;
+  document.getElementById('tier-update-email').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Update user tier
