@@ -805,16 +805,29 @@ function initSnippetCheckout() {
     ? 'Enter your email to receive the code snippet.' 
     : 'Complete your purchase to get instant access.';
   
-  // Hide billing toggle for snippets
-  const billingToggle = document.querySelector('.billing-toggle');
-  if (billingToggle) billingToggle.style.display = 'none';
+  // Hide billing cycle section for snippets (it's the first .form-section)
+  const formSections = document.querySelectorAll('.form-section');
+  formSections.forEach(section => {
+    const title = section.querySelector('.form-section-title');
+    if (title && title.textContent.includes('Billing Cycle')) {
+      section.style.display = 'none';
+    }
+  });
+  
+  // Hide TradingView username field for snippets (not needed)
+  const tvField = document.getElementById('tvUsername');
+  if (tvField) {
+    tvField.closest('.form-row').style.display = 'none';
+  }
   
   // Hide card section for free products
   if (isFree) {
-    const cardSection = document.querySelector('.form-section:last-of-type');
-    if (cardSection && cardSection.querySelector('#cardNumber')) {
-      cardSection.style.display = 'none';
-    }
+    formSections.forEach(section => {
+      const title = section.querySelector('.form-section-title');
+      if (title && title.textContent.includes('Payment')) {
+        section.style.display = 'none';
+      }
+    });
   }
   
   // Update order summary
@@ -856,6 +869,12 @@ function initSnippetCheckout() {
       <span>Use the code in any Pine Script project.</span>
     </div>
   `;
+  
+  // Update terms text for snippets (no subscription language)
+  const termsText = document.querySelector('.terms-text');
+  if (termsText) {
+    termsText.innerHTML = 'By completing this purchase, you agree to our <a href="/terms">Terms & Conditions</a>. One-time purchase, no recurring charges.';
+  }
 }
 
 function selectBilling(billing) {
