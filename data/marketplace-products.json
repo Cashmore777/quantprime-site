@@ -1,0 +1,242 @@
+{
+  "products": [
+    {
+      "id": "ema-ribbon",
+      "name": "EMA Ribbon (4-Layer)",
+      "category": "trend",
+      "price": 0,
+      "priceLabel": "FREE",
+      "description": "Draws 4 EMAs in a gradient. When stacked in order, you're trending. The foundation of trend reading.",
+      "preview": "ema1 = ta.ema(close, 8)\nema2 = ta.ema(close, 26)\nema3 = ta.ema(close, 80)\nema4 = ta.ema(close, 233)"
+    },
+    {
+      "id": "ema-classifier",
+      "name": "EMA Trend Classifier",
+      "category": "trend",
+      "price": 3,
+      "description": "Returns BULL/BEAR/NEUTRAL based on EMA stack alignment. Simple true/false values for any strategy.",
+      "preview": "is_trend_bull = ema4 < ema3 and ema3 < ema2\nis_trend_bear = ema4 > ema3 and ema3 > ema2\nema_bias = is_trend_bull ? \"BULL\" : \"BEAR\""
+    },
+    {
+      "id": "vol-bands",
+      "name": "Volatility Band System",
+      "category": "volatility",
+      "price": 5,
+      "description": "8-level ATR classifier. Colors candles by volatility intensity. Bands 6/7/8 = trigger zones for fades.",
+      "preview": "ratio = trueRange / ta.atr(8)\nvolBand = ratio > 3.0 ? 8 :\n         ratio > 2.55 ? 7 :\n         ratio > 2.10 ? 6 : 5"
+    },
+    {
+      "id": "lp-detector",
+      "name": "Liquidity Pool Detector",
+      "category": "structure",
+      "price": 5,
+      "description": "Finds swing highs/lows and draws horizontal levels. Where stop losses cluster — the levels institutions target.",
+      "preview": "ph = ta.pivothigh(high, left, right)\npl = ta.pivotlow(low, left, right)\n// Auto-draws lines, detects sweeps"
+    },
+    {
+      "id": "fvg-detector",
+      "name": "Fair Value Gap Detector",
+      "category": "structure",
+      "price": 5,
+      "description": "Finds gaps where buyers/sellers didn't overlap. Tracks lifecycle: fresh → tapped → filled.",
+      "preview": "bull_fvg = high[2] < low[0]\nbear_fvg = low[2] > high[0]\n// Draws boxes, tracks 50% taps"
+    },
+    {
+      "id": "session-highlighter",
+      "name": "Session Highlighter",
+      "category": "structure",
+      "price": 2,
+      "description": "Colors chart background during London, New York, Tokyo, Sydney sessions. Know which session you're trading.",
+      "preview": "is_london = t >= 480 and t < 990\nis_ny = t >= 810 and t < 1200\nbgcolor(is_london ? london_col : na)"
+    },
+    {
+      "id": "atr-stop",
+      "name": "ATR Stop Loss Calculator",
+      "category": "risk",
+      "price": 3,
+      "description": "Dynamic stop loss based on ATR. Shows exact price and pip distance. No more guessing where to put your stop.",
+      "preview": "atr_val = ta.atr(14)\nsl_dist = atr_val * multiplier\nsl_price = close - sl_dist"
+    },
+    {
+      "id": "candle-patterns",
+      "name": "Candle Pattern Detector",
+      "category": "patterns",
+      "price": 4,
+      "description": "Detects Engulfing, Doji, Hammer, Shooting Star, Morning/Evening Star. Visual markers on your chart.",
+      "preview": "bull_engulf = is_bear[1] and is_bull\n             and body > body[1]\nhammer = lower_wick > body * 2"
+    },
+    {
+      "id": "regime-scanner",
+      "name": "Regime Scanner",
+      "category": "dashboard",
+      "price": 5,
+      "description": "Scores trading conditions 0-90. Grades: PRIME, FAVORABLE, MARGINAL, DEGRADED. Know if conditions are worth trading.",
+      "preview": "vs = volatility_normal ? 40 : 20\nts = math.min(adx, 50)\nscore = vs + ts\nlabel = score > 70 ? \"PRIME\" : ..."
+    },
+    {
+      "id": "rr-box",
+      "name": "Risk/Reward Box Drawer",
+      "category": "risk",
+      "price": 3,
+      "description": "Click entry, stop, and target — draws green/red boxes showing your R:R ratio. Visual risk management.",
+      "preview": "risk = math.abs(entry - sl)\nreward = math.abs(tp - entry)\nrr = reward / risk\n// Draws TP/SL boxes"
+    },
+    {
+      "id": "mtf-dashboard",
+      "name": "Multi-Timeframe Dashboard",
+      "category": "dashboard",
+      "price": 4,
+      "description": "EMA trend direction across 4 timeframes at once. See the full picture in one glance.",
+      "preview": "[b1,d1] = request.security(tf1, get_trend())\n[b2,d2] = request.security(tf2, get_trend())\n// Table display"
+    },
+    {
+      "id": "htf-candle",
+      "name": "HTF Candle Overlay",
+      "category": "structure",
+      "price": 4,
+      "description": "Draws higher-timeframe candle as a box on your chart. See the 4H candle while trading 15M.",
+      "preview": "[o,h,l,c] = request.security(\"240\", [open,high,low,close])\n// Draws candle box on right side"
+    },
+    {
+      "id": "bb-squeeze",
+      "name": "Bollinger Squeeze Detector",
+      "category": "volatility",
+      "price": 3,
+      "description": "Detects when BB squeezes inside KC — volatility compression. When it fires, a big move is coming.",
+      "preview": "squeeze_on = bb_lower > kc_lower\n            and bb_upper < kc_upper\nmom = ta.linreg(close - basis, 20, 0)"
+    },
+    {
+      "id": "rsi-divergence",
+      "name": "RSI with Divergence Detection",
+      "category": "patterns",
+      "price": 4,
+      "description": "Standard RSI with automatic bullish/bearish divergence detection. Labels appear when price and RSI disagree.",
+      "preview": "bull_div = rsi_higher_low and price_lower_low\nbear_div = rsi_lower_high and price_higher_high"
+    },
+    {
+      "id": "vwap-bands",
+      "name": "VWAP with Deviation Bands",
+      "category": "structure",
+      "price": 3,
+      "description": "VWAP with configurable σ bands. Institutions use VWAP as fair price — deviations show extremes.",
+      "preview": "vwap = ta.vwap(close)\nupper_1 = vwap + 1 * stdev\nlower_1 = vwap - 1 * stdev"
+    },
+    {
+      "id": "pdhl",
+      "name": "Previous Day High/Low/Close",
+      "category": "structure",
+      "price": 0,
+      "priceLabel": "FREE",
+      "description": "Horizontal lines at yesterday's High, Low, and Close. Simple but powerful institutional levels.",
+      "preview": "[pd_h, pd_l, pd_c] = request.security(\"D\",\n    [high[1], low[1], close[1]])"
+    },
+    {
+      "id": "ma-crossover",
+      "name": "MA Crossover Signals",
+      "category": "trend",
+      "price": 2,
+      "description": "Two MAs with golden cross and death cross arrows. Classic trend-following entry signals.",
+      "preview": "cross_up = ta.crossover(fast, slow)\ncross_down = ta.crossunder(fast, slow)"
+    },
+    {
+      "id": "position-sizer",
+      "name": "Position Size Calculator",
+      "category": "risk",
+      "price": 3,
+      "description": "Shows lot size based on account, risk %, and stop distance. Never risk more than intended.",
+      "preview": "risk_amt = account * (risk_pct / 100)\nlot_size = risk_amt / (sl_pips * pip_value)"
+    },
+    {
+      "id": "daily-range",
+      "name": "Daily Range Percentage",
+      "category": "volatility",
+      "price": 2,
+      "description": "Shows what % of average daily range today's candle has consumed. 120% = overextended, 30% = room to run.",
+      "preview": "range_pct = (today_range / adr) * 100\n// 100% = normal, >120% = extended"
+    },
+    {
+      "id": "opening-range",
+      "name": "Opening Range Breakout",
+      "category": "structure",
+      "price": 4,
+      "description": "Draws first 30/60 min high/low as a box. Breakouts from opening range often trend all session.",
+      "preview": "if bars_elapsed * tf_mins < or_minutes\n    or_high = math.max(or_high, high)\n    or_low = math.min(or_low, low)"
+    },
+    {
+      "id": "spread-monitor",
+      "name": "Spread Monitor",
+      "category": "dashboard",
+      "price": 2,
+      "description": "Live bid-ask spread in pips. Know when your broker widens spreads before you trade.",
+      "preview": "spread_raw = syminfo.ask - syminfo.bid\nspread_pips = spread_raw / pip_size"
+    },
+    {
+      "id": "auto-fib",
+      "name": "Fibonacci Auto-Draw",
+      "category": "structure",
+      "price": 4,
+      "description": "Automatically draws Fib retracements between recent swing high/low. Updates dynamically.",
+      "preview": "levels = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]\n// Auto-detects swings, draws levels"
+    },
+    {
+      "id": "trend-strength",
+      "name": "Trend Strength Meter (ADX)",
+      "category": "trend",
+      "price": 2,
+      "description": "Visual meter showing trend strength. Green = strong trend, red = no trend. Avoid choppy markets.",
+      "preview": "[di_plus, di_minus, adx] = ta.dmi(14, 14)\ntrending = adx > 25"
+    },
+    {
+      "id": "volume-spikes",
+      "name": "Volume Spike Detector",
+      "category": "patterns",
+      "price": 2,
+      "description": "Highlights bars where volume is above average. High volume confirms moves — without it, breakouts fail.",
+      "preview": "vol_avg = ta.sma(volume, 20)\nis_spike = volume > vol_avg * 2.0"
+    },
+    {
+      "id": "weekly-open",
+      "name": "Weekly Open Line",
+      "category": "structure",
+      "price": 0,
+      "priceLabel": "FREE",
+      "description": "Horizontal line at weekly open. Above = bullish week bias, below = bearish. Institutional key level.",
+      "preview": "weekly_open = request.security(\"W\", open)"
+    },
+    {
+      "id": "alert-template",
+      "name": "Alert Template (Webhook-Ready)",
+      "category": "automation",
+      "price": 3,
+      "description": "Copy-paste template for webhook-ready JSON alerts. Define your condition, get formatted payloads.",
+      "preview": "alert('{\"action\":\"OPEN\",\"direction\":\"LONG\",\n\"symbol\":\"' + syminfo.ticker + '\"}')"
+    },
+    {
+      "id": "pivot-points",
+      "name": "Pivot Point Levels",
+      "category": "structure",
+      "price": 2,
+      "description": "Classic floor trader pivots from yesterday's price. Central pivot + 3 support + 3 resistance levels.",
+      "preview": "pp = (pd_h + pd_l + pd_c) / 3\nr1 = 2 * pp - pd_l\ns1 = 2 * pp - pd_h"
+    },
+    {
+      "id": "countdown",
+      "name": "Candle Countdown Timer",
+      "category": "dashboard",
+      "price": 0,
+      "priceLabel": "FREE",
+      "description": "Countdown to current candle close. Never get caught off guard by a candle closing.",
+      "preview": "remaining = tf_ms - elapsed\nmins = remaining / 60000\nsecs = remaining / 1000 % 60"
+    }
+  ],
+  "categories": {
+    "all": "All",
+    "trend": "Trend",
+    "volatility": "Volatility",
+    "structure": "Structure",
+    "risk": "Risk",
+    "patterns": "Patterns",
+    "dashboard": "Dashboard",
+    "automation": "Automation"
+  }
+}
