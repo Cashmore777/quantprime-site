@@ -167,6 +167,32 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-radius: 4px;
 }
 
+/* User ID Badge */
+.user-id-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  padding: 6px 10px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.user-id-badge .label {
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.user-id-badge .user-id-value {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
 .menu-toggle {
   width: 40px;
   height: 40px;
@@ -2843,7 +2869,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
 <header id="mobile-header">
   <div class="mobile-brand">QUANT<span>PRIME</span></div>
   <div class="header-actions">
-    <span class="header-tier" id="mobile-tier">SUITE</span>
+    <div class="user-id-badge">
+      <span class="label">ID</span>
+      <span class="user-id-value">--------</span>
+    </div>
+    <span class="header-tier" id="mobile-tier">FREE</span>
     <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">
       <span></span>
       <span></span>
@@ -2895,9 +2925,12 @@ button, .nav-item, .room, .video-item, .filter-chip {
   </nav>
   
   <div class="tier-badge">
-    TIER <b id="user-tier">FREE</b><br>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+      <span>TIER <b id="user-tier">FREE</b></span>
+      <span style="font-size: 9px; color: var(--text-3);">ID: <span class="user-id-value" style="color: var(--text-1);">--------</span></span>
+    </div>
     <span id="user-email" style="font-size: 10px; word-break: break-all;"></span>
-    <a href="/pricing" class="upgrade-link">Upgrade to Ascension →</a>
+    <a href="/pricing" class="upgrade-link" id="upgrade-link">Upgrade to Ascension →</a>
     <button onclick="logout()" style="display: block; margin-top: 12px; width: 100%; padding: 8px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; font-size: 12px; color: var(--text-2); cursor: pointer;">Sign out</button>
   </div>
 </aside>
@@ -3801,10 +3834,13 @@ const TIER_ACCESS = {
   'research': ['community', 'marketplace', 'research'],
   'recoil': ['community', 'marketplace', 'research', 'recoil'],
   'terminal': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
-  'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
-  'ascension': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence'],
-  'admin': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'academy', 'intelligence', 'cockpit', 'admin']
+  'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit'],
+  'ascension': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit', 'academy', 'intelligence'],
+  'admin': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit', 'academy', 'intelligence', 'admin']
 };
+
+// User profile data (populated from Supabase)
+let userProfile = null;
 
 const isAdmin = () => userTier === 'admin';
 
@@ -3828,27 +3864,40 @@ async function checkAuth() {
     .single();
   
   if (profile) {
+    userProfile = profile;
     userTier = (profile.tier || 'free').toLowerCase();
     currentUser = profile.display_name || authUser.email.split('@')[0];
   } else {
+    userProfile = { id: authUser.id, tier: 'free' };
     userTier = 'free';
     currentUser = authUser.email.split('@')[0];
   }
+  
+  // Generate short user ID from UUID (first 8 chars uppercase)
+  const userId = authUser.id.substring(0, 8).toUpperCase();
   
   // Update UI with user info
   document.getElementById('user-tier').textContent = userTier.toUpperCase();
   document.getElementById('user-email').textContent = authUser.email;
   
-  localStorage.setItem('qp_username', currentUser);
+  // Update user ID displays
+  const userIdEls = document.querySelectorAll('.user-id-value');
+  userIdEls.forEach(el => el.textContent = userId);
   
-  // Update welcome message
-  const welcomeHeader = document.querySelector('#view-home .view-header h2');
-  if (welcomeHeader) {
-    welcomeHeader.innerHTML = `Welcome back, <em>${currentUser}</em>.`;
+  localStorage.setItem('qp_username', currentUser);
+  localStorage.setItem('qp_user_id', userId);
+  
+  // Update welcome message with name
+  const welcomeName = document.getElementById('user-display-name');
+  if (welcomeName) {
+    welcomeName.textContent = currentUser;
   }
   
   // Apply tier-based access control
   applyTierAccess();
+  
+  // Update all dashboard data with real values
+  updateDashboardData();
   
   // Update mobile tier badge
   updateMobileTier();
@@ -3930,6 +3979,84 @@ function updateInstrumentStatus(allowedViews) {
   const displayTier = document.getElementById('display-tier');
   if (displayTier) {
     displayTier.textContent = userTier.toUpperCase();
+  }
+}
+
+// Update all dashboard data from profile
+function updateDashboardData() {
+  if (!userProfile || !authUser) return;
+  
+  // Tier prices for reference
+  const tierPrices = {
+    'free': '£0',
+    'research': '£8',
+    'recoil': '£28',
+    'terminal': '£58',
+    'suite': '£88',
+    'ascension': '£258',
+    'admin': '∞'
+  };
+  
+  // Update tier display everywhere
+  const tierUpper = userTier.toUpperCase();
+  document.querySelectorAll('#display-tier, #mobile-tier').forEach(el => {
+    el.textContent = tierUpper;
+  });
+  
+  // Update member since (use created_at from profile or auth)
+  const memberSince = userProfile.created_at || authUser.created_at;
+  if (memberSince) {
+    const joinDate = new Date(memberSince);
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const memberSinceStr = `${months[joinDate.getMonth()]} ${joinDate.getFullYear()}`;
+    
+    const memberSinceEl = document.getElementById('member-since');
+    if (memberSinceEl) memberSinceEl.textContent = memberSinceStr;
+    
+    // Calculate days active
+    const now = new Date();
+    const daysActive = Math.floor((now - joinDate) / (1000 * 60 * 60 * 24));
+    const memberDaysEl = document.getElementById('member-days');
+    if (memberDaysEl) memberDaysEl.textContent = `${daysActive} days active`;
+  }
+  
+  // Update next billing (use subscription data if available, otherwise estimate)
+  const nextBillingEl = document.getElementById('next-billing');
+  const daysUntilEl = document.getElementById('days-until-billing');
+  
+  if (userProfile.subscription_ends_at) {
+    const endDate = new Date(userProfile.subscription_ends_at);
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    if (nextBillingEl) nextBillingEl.textContent = `${endDate.getDate().toString().padStart(2, '0')} ${months[endDate.getMonth()]}`;
+    
+    const daysUntil = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
+    if (daysUntilEl) daysUntilEl.textContent = `${daysUntil} days remaining`;
+  } else if (userTier === 'free' || userTier === 'admin') {
+    if (nextBillingEl) nextBillingEl.textContent = userTier === 'admin' ? 'NEVER' : 'N/A';
+    if (daysUntilEl) daysUntilEl.textContent = userTier === 'admin' ? 'Admin account' : 'No subscription';
+  }
+  
+  // Update settings page
+  const settingsName = document.getElementById('settings-display-name');
+  if (settingsName) settingsName.value = currentUser;
+  
+  // Update settings subscription display
+  const settingsTier = document.querySelector('#view-settings .panel:last-child div[style*="font-size: 18px"]');
+  if (settingsTier) {
+    settingsTier.textContent = `${tierUpper} · ${tierPrices[userTier] || '£0'}/mo`;
+  }
+  
+  // Hide upgrade link for admin
+  const upgradeLink = document.getElementById('upgrade-link');
+  if (upgradeLink && userTier === 'admin') {
+    upgradeLink.style.display = 'none';
+  }
+  
+  // Update TradingView username fields if available
+  if (userProfile.tradingview_username) {
+    document.querySelectorAll('.tv-username-input').forEach(input => {
+      input.value = userProfile.tradingview_username;
+    });
   }
 }
 
@@ -4333,11 +4460,11 @@ function sendMessage() {
   if (!text || !currentUser) return;
   
   if (chatEnabled && db) {
-    // Send to Firebase
+    // Send to Firebase with actual user tier
     currentRoomRef.push({
       username: currentUser,
       text: text,
-      tier: 'SUITE', // Would come from auth in production
+      tier: userTier.toUpperCase(),
       timestamp: firebase.database.ServerValue.TIMESTAMP
     });
   } else {
@@ -4345,7 +4472,7 @@ function sendMessage() {
     addMessageToUI({
       username: currentUser,
       text: text,
-      tier: 'SUITE',
+      tier: userTier.toUpperCase(),
       timestamp: Date.now()
     });
   }
