@@ -3856,12 +3856,45 @@ async function checkAuth() {
   
   authUser = session.user;
   
+  // Admin emails (auto-assigned admin tier)
+  const ADMIN_EMAILS = [
+    'cashmoretrades@pm.me',
+    'cash@themoneyprinter.uk',
+    'seandavies41@gmail.com'
+  ];
+  
   // Fetch user profile from database
-  const { data: profile, error } = await supabaseClient
+  let { data: profile, error } = await supabaseClient
     .from('profiles')
     .select('*')
     .eq('id', authUser.id)
     .single();
+  
+  // If no profile exists, create one
+  if (!profile || error) {
+    const isAdmin = ADMIN_EMAILS.includes(authUser.email.toLowerCase());
+    const newProfile = {
+      id: authUser.id,
+      email: authUser.email,
+      tier: isAdmin ? 'admin' : 'free',
+      display_name: authUser.email.split('@')[0],
+      created_at: new Date().toISOString()
+    };
+    
+    const { data: inserted, error: insertError } = await supabaseClient
+      .from('profiles')
+      .insert(newProfile)
+      .select()
+      .single();
+    
+    if (inserted) {
+      profile = inserted;
+      console.log('Created profile:', profile);
+    } else {
+      console.error('Failed to create profile:', insertError);
+      profile = newProfile; // Use local copy
+    }
+  }
   
   if (profile) {
     userProfile = profile;
