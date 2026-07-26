@@ -1,0 +1,145 @@
+Level 1, Part 3: How To Get Started
+
+Welcome back to the Quant Prime Academy.
+
+In Part 1, we covered the truth about this journey. In Part 2, we broke down the myths that hold most traders back. Now it's time to get practical.
+
+This is where the real work begins. Setting up your foundation properly so everything that follows can actually be applied. Think of this module as building the workbench before you start using the tools. If the workbench is unstable, everything you build on it will be unstable too.
+
+Start With A Clean Slate
+
+This is important whether you're brand new to trading or whether you've been at it for years.
+
+Approach Quant Prime as a blank canvas. If you've traded before, whether successfully or not, it's important to temporarily set aside your past lessons, wins, and failures. Not permanently. Temporarily.
+
+Here's why. Most traders who come into a structured programme like this are carrying baggage. They've got half-learned strategies from five different YouTube channels. They've got habits they picked up from a prop firm challenge that don't apply to real account management. They've got emotional scars from blown accounts that make them hesitant at the worst possible moments.
+
+All of that creates noise. And noise prevents you from hearing what's actually being taught.
+
+The Quant Prime framework may challenge some of what you've previously learned. That's intentional. Many common strategies taught online are incomplete at best, misleading at worst. They teach you the entry but not the exit. The setup but not the risk management. The pattern but not the context in which that pattern actually works.
+
+Come into this with a student mindset. The members who progress fastest are the ones who remain open to seeing things differently. The ones who struggle most are the ones who keep saying "but the other course I took said something different." That other course might have been right about some things and wrong about others. The only way to know is to learn this framework fully, apply it, and compare the results.
+
+Forget About The Money, For Now
+
+This might sound counterintuitive from a trading education programme, but it's crucial.
+
+Forget about your goals of making huge sums of money. At least for now.
+
+When you start trading with dollar signs in your eyes, your decision-making changes in specific, measurable ways. You take setups that don't fully meet your criteria because you need to "get your daily target." You hold losing trades longer than you should because taking the loss means falling behind on your goal. You close winning trades too early because the profit number looks good enough and you don't want to give it back.
+
+Every single one of those behaviours is driven by focusing on money instead of process. And every single one of them reduces your edge over time.
+
+Here's what I want you to focus on instead. Process metrics. Not dollar amounts.
+
+Did I follow my entry criteria? Yes or no. Did I calculate my position size correctly? Yes or no. Did I place my stop loss where the strategy says it should go? Yes or no. Did I let the trade play out without interfering? Yes or no.
+
+If you can answer yes to all four of those questions, the trade was a success, regardless of whether it won or lost. Because a losing trade that was executed perfectly is infinitely more valuable than a winning trade that was a lucky guess. The perfect loss teaches your system. The lucky win teaches you nothing except bad habits.
+
+Balance growth will come naturally when the process is right. Profits will come when the execution is consistent. Right now, your only job is to learn.
+
+Choosing A Broker
+
+You need a broker to execute trades. This is the company that connects your orders to the actual market. And choosing the right one matters more than most beginners realise.
+
+First, let me tell you what Quant Prime does not do. We do not operate as a broker affiliate. There's no hidden commission. No kickback. No incentive to push you toward any specific platform.
+
+Why? Because most people trying to convince you to join a broker are only doing it for the referral income. It's a shady area filled with shady practices. Some affiliates earn commission based on your trading volume, which means they quite literally benefit when you overtrade and lose money. That's a conflict of interest that should make anyone uncomfortable.
+
+So here's what actually matters when choosing a broker. There are four things to evaluate.
+
+First, regulation. Your broker must be regulated by a recognised authority. In the UK, that's the FCA. In Australia, ASIC. In Cyprus, CySEC. Regulation means your funds have a degree of protection and the broker operates under rules. Unregulated brokers can do whatever they want with your money. Avoid them completely.
+
+Second, spreads. The spread is the difference between the buy price and the sell price. It's effectively a cost on every trade you take. Lower spreads mean lower costs. This matters especially on lower timeframes where you're taking more trades and the spread represents a larger percentage of your target profit.
+
+Third, execution speed. When you click buy, how quickly does your order get filled? Slow execution means slippage, where you enter at a worse price than you intended. For the strategies taught in this academy, clean execution matters.
+
+Fourth, withdrawal reliability. Can you actually get your money out when you want to? Read reviews. Check forums. A broker that makes deposits easy but withdrawals difficult is a massive red flag.
+
+For what it's worth, IC Markets is a solid choice. Low spreads, fast execution, widely trusted in the industry. But do your own research. Find a broker that works for your location and your needs.
+
+The Tools You Need
+
+To follow along with this academy and trade effectively, you'll need three essential tools. Let me explain not just what they are, but why each one matters.
+
+TradingView. This is your charting platform. It's where you'll analyse the markets, mark up levels, identify setups, and eventually run the Quant Prime indicators. TradingView is browser-based, meaning you can access it from any computer, and there's a mobile app for checking charts on the go.
+
+The free version works fine to start with. You'll get access to most chart types, basic indicators, and a limited number of saved charts. As you progress, the paid plans offer features like more indicators per chart, more chart layouts, server-side alerts, and second-based timeframes. But none of that is necessary right now. Start with free. Upgrade when you know exactly why you need to.
+
+One thing to learn early is TradingView's replay feature. This lets you scroll back in time and replay price action bar by bar. It's one of the most powerful learning tools available because it lets you practise identifying setups in historical data without knowing what happens next. That simulates live trading conditions without waiting for the market to move in real time.
+
+MetaTrader 5. This is your execution platform. While TradingView is where you analyse, MetaTrader 5 is where you actually place trades. It connects directly to your broker, and it's where your orders are submitted, your positions are managed, and your trade history is recorded.
+
+Most brokers provide MT5 for free. Download it from your broker's website rather than from a third-party source to make sure you get the correct version with your broker's servers pre-loaded.
+
+Take time to learn the basics. How to open a chart. How to place a market order and a pending order. How to set a stop loss and take profit when placing a trade. How to modify an existing position. How to view your trade history and account statement. These are mechanical skills that should become second nature.
+
+Eventually, MetaTrader 5 is also where automated strategies execute. The Quant Prime execution pipeline sends signals from TradingView through a webhook bridge to an Expert Advisor running on MT5. But that's an advanced topic. For now, just get comfortable navigating the platform.
+
+A Lot Size Calculator. This is essential for risk management, and it's arguably the most important tool of the three.
+
+Before every single trade, you need to know exactly how much you're risking. Not approximately. Not roughly. Exactly. To the penny.
+
+A lot size calculator takes three inputs. Your account balance, the percentage you want to risk, and the distance to your stop loss in pips. It then tells you exactly what lot size to use so that if your stop loss is hit, you lose precisely the amount you intended to risk.
+
+There are free apps and websites that do this calculation instantly. MyFXBook has one. BabyPips has one. There are dedicated mobile apps that work well too. Find one you like and use it on every trade without exception.
+
+Here's why this matters. If you risk two percent on one trade and five percent on the next because you eyeballed the lot size, your results become meaningless. You might win five trades in a row at two percent risk and then lose one trade at five percent risk and give back more than you made. Consistency in position sizing is what makes your edge work over a large sample of trades. Without it, you have no edge at all.
+
+Building Your Routine
+
+Consistency beats intensity. Every time.
+
+You don't need to spend ten hours a day on charts, especially at the beginning. What you need is a routine that gives you dedicated, focused time every single day to develop your knowledge and skills.
+
+Even thirty minutes to an hour of focused learning is enough. But the key word is focused. Thirty minutes of active learning where you're taking notes, pausing to think about concepts, and practising on charts is worth more than three hours of passively watching videos while scrolling your phone.
+
+Here's a structure that works well for most people starting out. Spend the first fifteen minutes reviewing what you learned yesterday. Open your notes. Look at the chart examples you saved. Refresh your memory. Then spend the next thirty minutes on new material. Watch the next module, study a concept, or practise identifying setups on the replay feature. Then spend the final fifteen minutes journaling. Write down what you learned. Write down what confused you. Write down questions to ask in the community.
+
+Think of it like going to the gym. One intense session won't transform your body. But showing up every day, putting in the work, staying disciplined, that's what creates change. Trading is the same.
+
+Your First Practical Tasks
+
+Before moving on to the next level, there are four tasks to complete. Don't skip any of them.
+
+Task one. Download the tools. Get TradingView on your phone and computer. Download MetaTrader 5 from your broker. Find a lot size calculator app or bookmark a web-based one.
+
+Task two. Create your accounts. Set up a demo account with your chosen broker. This is free and gives you virtual money to practise with. Treat it like real money. If you develop bad habits on demo, those habits will follow you to live trading.
+
+Task three. Explore the platforms. Spend genuine time clicking around both TradingView and MetaTrader 5. Open different charts. Change timeframes. Add a moving average and then remove it. Place a demo trade. Set a stop loss. Close the trade. Navigate to your trade history. The goal is familiarity. You should be able to find anything you need without thinking about it.
+
+Task four. Practise measuring pips. On TradingView, use the long or short position tool, which you can find in the drawing tools sidebar. Click on a price, drag to another price, and the tool shows you the distance in pips, the potential profit or loss, and the risk-to-reward ratio. Understanding pips is fundamental. It's how risk and reward are calculated in forex. A pip is the smallest standard price movement. On most currency pairs, it's the fourth decimal place, so 1.0850 to 1.0851 is one pip. On Japanese Yen pairs, it's the second decimal place, so 150.50 to 150.51 is one pip.
+
+Practise this until measuring distances on a chart feels as natural as reading a ruler. Because that's exactly what it is. A ruler for price.
+
+A Note On Progression
+
+The Quant Prime Academy is structured intentionally. Each level builds on the one before it. Skipping ahead might feel tempting, especially if you've traded before, but it will leave gaps in your understanding.
+
+Trust the process. Work through each level in order. Complete the tasks before moving on.
+
+By the time you reach the higher levels, you'll have a complete framework for understanding and trading the markets. And for those who want to go further, there are advanced tools and automation available. But all of that comes later.
+
+Right now, focus on the foundations. A building is only as strong as what it's built on.
+
+The Quant Prime Difference
+
+Here's what separates this academy from everything else out there.
+
+No gatekeeping. Everything you need to become profitable is inside this education. There's no secret advanced course being held back behind another paywall. No "real" strategy that only gets revealed if you pay more.
+
+No pressure. Progress at your own pace. Rewatch modules as many times as needed. Ask questions in the community. There's no timer. There's no deadline.
+
+Real support. The CEO of Quant Prime is accessible. Getting direct feedback from someone who's actually profitable, who's actually built the systems you're learning, is rare in this industry. Most course creators disappear after the sale.
+
+Honest guidance. No fake screenshots. No inflated promises. Verified performance on Myfxbook, where every trade is tracked, time-stamped, and publicly auditable.
+
+This is what trading education should be.
+
+Before You Move On
+
+Make sure you've completed every task from this module. Downloaded TradingView. Downloaded MetaTrader 5. Found a lot size calculator. Created a demo account. Practised navigating both platforms. Measured pips on a chart.
+
+If you've done all of that, you're ready for the next level. If not, pause here. Get it done. There is genuinely no rush. The market will be there tomorrow. And next week. And next year. The only thing that matters is that when you do start trading, you're prepared.
+
+In the next part, we'll dive into managing risk. This is the single most important skill that separates profitable traders from everyone else. Strategy gets the attention. Risk management gets the results.
