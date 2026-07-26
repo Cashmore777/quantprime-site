@@ -360,6 +360,25 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Parse URL params for promo tier assignment
+const urlParams = new URLSearchParams(window.location.search);
+const promoEmail = urlParams.get('email') || '';
+const promoTier = urlParams.get('tier') || '';
+const promoCode = urlParams.get('promo') || '';
+
+// Pre-fill email if provided from promo
+if (promoEmail) {
+  document.getElementById('email').value = promoEmail;
+}
+
+// Show promo notice if applicable
+if (promoCode && promoTier) {
+  const notice = document.createElement('div');
+  notice.style.cssText = 'background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #22c55e; text-align: center;';
+  notice.innerHTML = `🎉 <strong>${promoTier.toUpperCase()}</strong> access will be activated when you create your account`;
+  document.querySelector('.auth-card').insertBefore(notice, document.querySelector('.error-message'));
+}
+
 // Check if already logged in
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (session) {
@@ -380,6 +399,9 @@ form.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
   const tradingview = document.getElementById('tradingview').value.trim();
   
+  // Determine tier - use promo tier if email matches, otherwise free
+  const userTier = (promoCode && promoTier && email === promoEmail) ? promoTier : 'free';
+  
   // Reset state
   errorEl.classList.remove('show');
   successEl.classList.remove('show');
@@ -395,7 +417,7 @@ form.addEventListener('submit', async (e) => {
         data: {
           display_name: displayName,
           tradingview_username: tradingview,
-          tier: 'free'
+          tier: userTier
         }
       }
     });
@@ -405,6 +427,14 @@ form.addEventListener('submit', async (e) => {
     // Check if email confirmation is required
     if (data.user && data.user.identities && data.user.identities.length === 0) {
       throw new Error('This email is already registered. Please sign in instead.');
+    }
+    
+    // Update success message if promo was applied
+    if (userTier !== 'free') {
+      successEl.innerHTML = `
+        <h3>🎉 Account Created!</h3>
+        <p><strong>${userTier.toUpperCase()}</strong> access has been activated. Check your email to confirm, then log in to your dashboard.</p>
+      `;
     }
     
     // Show success message

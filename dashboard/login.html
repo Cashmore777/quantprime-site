@@ -311,12 +311,60 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Parse URL params for promo tier assignment
+const urlParams = new URLSearchParams(window.location.search);
+const promoEmail = urlParams.get('email') || '';
+const promoTier = urlParams.get('tier') || '';
+const promoCode = urlParams.get('promo') || '';
+const isSignup = urlParams.get('signup') === 'true';
+
+// Pre-fill email if provided from promo
+if (promoEmail) {
+  document.getElementById('email').value = promoEmail;
+}
+
+// Update UI if signup mode
+if (isSignup) {
+  document.querySelector('h1').textContent = 'Create your account';
+  document.querySelector('.subtitle').textContent = 'Set up your Quant Prime dashboard access';
+  document.querySelector('.alt-link').innerHTML = 'Already have an account? <a href="/dashboard/login.html">Sign in</a>';
+}
+
+// Show promo notice if applicable
+if (promoCode && promoTier) {
+  const notice = document.createElement('div');
+  notice.style.cssText = 'background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: #22c55e; text-align: center;';
+  notice.innerHTML = `🎉 <strong>${promoTier.toUpperCase()}</strong> access will be activated for <strong>${promoEmail}</strong>`;
+  document.querySelector('.auth-card').insertBefore(notice, document.querySelector('.error-message'));
+}
+
 // Check if already logged in
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (session) {
-    window.location.href = '/dashboard/';
+    // If logged in with promo, update tier first
+    if (promoCode && promoTier && session.user.email === promoEmail) {
+      updateUserTierForPromo(session.user.id, promoTier).then(() => {
+        window.location.href = '/dashboard/';
+      });
+    } else {
+      window.location.href = '/dashboard/';
+    }
   }
 });
+
+// Update user tier for promo code
+async function updateUserTierForPromo(userId, tier) {
+  try {
+    const { error } = await supabaseClient
+      .from('profiles')
+      .update({ tier: tier })
+      .eq('id', userId);
+    
+    if (error) console.error('Error updating tier:', error);
+  } catch (e) {
+    console.error('Promo tier update error:', e);
+  }
+}
 
 const form = document.getElementById('login-form');
 const errorEl = document.getElementById('error-message');
@@ -340,6 +388,11 @@ form.addEventListener('submit', async (e) => {
     });
     
     if (error) throw error;
+    
+    // If promo tier needs to be applied
+    if (promoCode && promoTier && email === promoEmail) {
+      await updateUserTierForPromo(data.user.id, promoTier);
+    }
     
     // Success - redirect to dashboard
     window.location.href = '/dashboard/';

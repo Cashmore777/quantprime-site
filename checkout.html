@@ -878,10 +878,11 @@ function initSnippetCheckout() {
     }
   });
   
-  // Hide TradingView username field for snippets (not needed)
+  // Hide TradingView username field for snippets (not needed) and remove required
   const tvField = document.getElementById('tvUsername');
   if (tvField) {
     tvField.closest('.form-row').style.display = 'none';
+    tvField.removeAttribute('required');
   }
   
   // Hide card section for free products
@@ -1016,7 +1017,7 @@ function applyPromoCode() {
   
   // Valid promo codes
   const validCodes = {
-    'QP2026': { discount: 100, tier: 'suite', message: '🎉 Full Suite access unlocked!' }
+    'QP2026': { discount: 100, tier: 'suite' }
   };
   
   if (validCodes[code]) {
@@ -1024,7 +1025,12 @@ function applyPromoCode() {
     promoCode = code;
     input.classList.add('promo-applied');
     input.setAttribute('readonly', true);
-    result.innerHTML = `<span class="promo-success">${validCodes[code].message}</span>`;
+    
+    // Different message for snippets vs tiers
+    const promoMessage = (productType === 'snippet') 
+      ? '🎉 Script unlocked!' 
+      : '🎉 Full Suite access unlocked!';
+    result.innerHTML = `<span class="promo-success">${promoMessage}</span>`;
     
     // Update pricing display
     document.getElementById('totalValue').textContent = '£0.00';
