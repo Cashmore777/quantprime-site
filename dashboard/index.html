@@ -3898,11 +3898,39 @@ function applyTierAccess() {
 }
 
 function updateInstrumentStatus(allowedViews) {
-  const statusContainer = document.querySelector('#view-home .panel:nth-of-type(1)');
-  if (!statusContainer) return;
+  const grid = document.getElementById('instrument-status-grid');
+  if (!grid) return;
   
-  const statuses = statusContainer.querySelectorAll('[class*="status-dot"]');
-  // This will be styled based on what's active for the user
+  // Use passed allowedViews or fall back to tier lookup
+  const accessList = allowedViews || TIER_ACCESS[userTier] || [];
+  
+  grid.querySelectorAll('.instrument-status-item').forEach(item => {
+    const instrument = item.dataset.instrument;
+    const pip = item.querySelector('.status-pip');
+    const statusText = item.querySelector('.status-text');
+    
+    if (accessList.includes(instrument)) {
+      pip.classList.remove('locked');
+      statusText.textContent = 'ACTIVE';
+      statusText.classList.remove('locked');
+    } else {
+      pip.classList.add('locked');
+      statusText.textContent = 'LOCKED';
+      statusText.classList.add('locked');
+    }
+  });
+  
+  // Update active products count
+  const activeCount = document.getElementById('active-products');
+  if (activeCount) {
+    activeCount.textContent = accessList.length;
+  }
+  
+  // Update display tier card
+  const displayTier = document.getElementById('display-tier');
+  if (displayTier) {
+    displayTier.textContent = userTier.toUpperCase();
+  }
 }
 
 async function logout() {
@@ -5234,48 +5262,6 @@ function animateCounters() {
   });
 }
 
-// Update instrument status based on user tier
-function updateInstrumentStatus() {
-  const grid = document.getElementById('instrument-status-grid');
-  if (!grid) return;
-  
-  // Tier access mapping
-  const tierAccess = {
-    'free': [],
-    'research': ['research'],
-    'recoil': ['research', 'recoil'],
-    'terminal': ['research', 'recoil', 'meridian'],
-    'suite': ['research', 'recoil', 'meridian', 'cockpit'],
-    'ascension': ['research', 'recoil', 'meridian', 'cockpit', 'academy'],
-    'admin': ['research', 'recoil', 'meridian', 'cockpit', 'academy']
-  };
-  
-  const accessList = tierAccess[userTier] || [];
-  
-  grid.querySelectorAll('.instrument-status-item').forEach(item => {
-    const instrument = item.dataset.instrument;
-    const pip = item.querySelector('.status-pip');
-    const statusText = item.querySelector('.status-text');
-    
-    if (accessList.includes(instrument)) {
-      pip.classList.remove('locked');
-      statusText.textContent = 'ACTIVE';
-      statusText.classList.remove('locked');
-    } else {
-      pip.classList.add('locked');
-      statusText.textContent = 'LOCKED';
-      statusText.classList.add('locked');
-    }
-  });
-  
-  // Update active products count
-  const activeCount = document.getElementById('active-products');
-  if (activeCount) {
-    activeCount.textContent = accessList.length;
-    activeCount.dataset.target = accessList.length;
-  }
-}
-
 // Update days until billing
 function updateBillingInfo() {
   const billingEl = document.getElementById('next-billing');
@@ -5327,15 +5313,7 @@ switchView = function(viewId) {
   originalSwitchView(viewId);
   if (viewId === 'home') {
     setTimeout(animateCounters, 100);
-    updateInstrumentStatus();
   }
-};
-
-// Update instruments when tier is loaded
-const originalApplyTierAccessForHome = applyTierAccess;
-applyTierAccess = function() {
-  originalApplyTierAccessForHome();
-  updateInstrumentStatus();
 };
 </script>
 
