@@ -3330,6 +3330,30 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <button class="btn sm" onclick="addAcademyVideo()">Add Video</button>
           <div id="add-video-result" style="margin-top: 12px; font-size: 13px;"></div>
         </div>
+        
+        <!-- Notebook -->
+        <div class="panel" id="notebook-panel" style="margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h4 style="margin: 0; display: flex; align-items: center; gap: 10px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+              Your Notebook
+            </h4>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" id="notebook-search" placeholder="Search notes..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 180px;">
+              <span id="notebook-status" style="font-size: 11px; color: var(--text-3);"></span>
+            </div>
+          </div>
+          <textarea id="notebook-content" placeholder="Take notes while watching... Your notes are saved automatically and linked to this lesson." style="width: 100%; min-height: 180px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; line-height: 1.7; resize: vertical; font-family: var(--sans); background: var(--surface-raised);"></textarea>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
+            <div style="font-size: 11px; color: var(--text-3);">
+              <span id="notebook-lesson-tag" style="background: var(--gold-glow); color: var(--gold); padding: 3px 8px; border-radius: 4px; font-weight: 500;">No lesson selected</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn outline sm" onclick="viewAllNotes()">View All Notes</button>
+              <button class="btn sm" onclick="saveNote()">Save Note</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -4923,6 +4947,9 @@ function playVideo(videoId) {
   // Open the level group
   const levelGroup = document.querySelector(`.level-group[data-level="${video.level}"]`);
   if (levelGroup) levelGroup.classList.add('open');
+  
+  // Load notebook for this video
+  loadNotebookForVideo(videoId);
 }
 
 async function markVideoComplete() {
@@ -5031,6 +5058,161 @@ switchView = function(viewId) {
     loadAcademyVideos();
   }
 };
+
+// ========================================
+// NOTEBOOK SYSTEM
+// ========================================
+let notebookSaveTimeout = null;
+let currentNotes = {};
+
+// Load notes for current video
+async function loadNotebookForVideo(videoId) {
+  const lessonTag = document.getElementById('notebook-lesson-tag');
+  const textarea = document.getElementById('notebook-content');
+  const video = academyVideos.find(v => v.id === videoId);
+  
+  if (video) {
+    lessonTag.textContent = `L${video.level}.${video.position}: ${video.title}`;
+  }
+  
+  // Try to load existing note
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    
+    const { data, error } = await supabaseClient
+      .from('academy_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('video_id', videoId)
+      .single();
+    
+    if (data && !error) {
+      textarea.value = data.content || '';
+      currentNotes[videoId] = data.content || '';
+    } else {
+      textarea.value = '';
+      currentNotes[videoId] = '';
+    }
+  } catch (e) {
+    console.log('No existing note for this video');
+    textarea.value = '';
+  }
+}
+
+// Auto-save notes with debounce
+document.getElementById('notebook-content')?.addEventListener('input', function() {
+  const statusEl = document.getElementById('notebook-status');
+  statusEl.textContent = 'Saving...';
+  statusEl.style.color = 'var(--text-3)';
+  
+  clearTimeout(notebookSaveTimeout);
+  notebookSaveTimeout = setTimeout(() => saveNote(true), 1500);
+});
+
+// Save note
+async function saveNote(silent = false) {
+  if (!currentVideoId) {
+    if (!silent) alert('Please select a lesson first');
+    return;
+  }
+  
+  const content = document.getElementById('notebook-content').value;
+  const statusEl = document.getElementById('notebook-status');
+  
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    
+    const { error } = await supabaseClient
+      .from('academy_notes')
+      .upsert({
+        user_id: user.id,
+        video_id: currentVideoId,
+        content: content,
+        updated_at: new Date().toISOString()
+      });
+    
+    if (error) throw error;
+    
+    currentNotes[currentVideoId] = content;
+    statusEl.textContent = '✓ Saved';
+    statusEl.style.color = 'var(--success)';
+    
+    setTimeout(() => {
+      statusEl.textContent = '';
+    }, 2000);
+  } catch (e) {
+    statusEl.textContent = 'Error saving';
+    statusEl.style.color = 'var(--danger)';
+    console.error('Note save error:', e);
+  }
+}
+
+// View all notes modal
+async function viewAllNotes() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    
+    const { data: notes, error } = await supabaseClient
+      .from('academy_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false });
+    
+    if (error) throw error;
+    
+    if (!notes || notes.length === 0) {
+      alert('No notes yet. Start taking notes while watching lessons!');
+      return;
+    }
+    
+    // Build notes list
+    let notesHtml = '<div style="max-height: 60vh; overflow-y: auto;">';
+    for (const note of notes) {
+      const video = academyVideos.find(v => v.id === note.video_id);
+      const title = video ? `L${video.level}.${video.position}: ${video.title}` : 'Unknown Lesson';
+      const preview = note.content.substring(0, 200) + (note.content.length > 200 ? '...' : '');
+      const date = new Date(note.updated_at).toLocaleDateString();
+      
+      notesHtml += `
+        <div style="border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer;" onclick="jumpToNote('${note.video_id}')">
+          <div style="font-weight: 600; color: var(--gold); margin-bottom: 6px;">${title}</div>
+          <div style="font-size: 13px; color: var(--text-2); line-height: 1.5;">${preview}</div>
+          <div style="font-size: 11px; color: var(--text-3); margin-top: 8px;">${date}</div>
+        </div>
+      `;
+    }
+    notesHtml += '</div>';
+    
+    showModal('Your Notes', notesHtml);
+  } catch (e) {
+    console.error('Error loading notes:', e);
+    alert('Error loading notes');
+  }
+}
+
+function jumpToNote(videoId) {
+  closeModal();
+  playVideo(videoId);
+}
+
+// Search notes
+document.getElementById('notebook-search')?.addEventListener('input', async function(e) {
+  const query = e.target.value.trim().toLowerCase();
+  if (query.length < 2) return;
+  
+  // Search through local notes first
+  const results = Object.entries(currentNotes)
+    .filter(([id, content]) => content.toLowerCase().includes(query))
+    .map(([id]) => id);
+  
+  if (results.length > 0) {
+    // Highlight first result
+    console.log('Found in notes:', results);
+  }
+});
 
 // ========================================
 // TRADINGVIEW USERNAME EDIT
