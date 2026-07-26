@@ -2151,31 +2151,30 @@ button, .nav-item, .room, .video-item, .filter-chip {
    HOME PAGE BEDAZZLE - Make it HOLY SHIT AMAZING
    ===================================================== */
 
-/* Hero section with animated gradient */
+/* Hero section with subtle gradient */
 .home-hero {
   position: relative;
-  background: linear-gradient(135deg, #0a0a0f 0%, #141420 50%, #0a0a0f 100%);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-raised) 100%);
   border-radius: 20px;
   padding: 40px 36px;
   margin-bottom: 28px;
   overflow: hidden;
-  border: 1px solid rgba(201, 168, 76, 0.15);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
+/* Subtle left accent bar like instrument status */
 .home-hero::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(ellipse at 20% 20%, rgba(201, 168, 76, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(0, 171, 255, 0.06) 0%, transparent 50%);
-  pointer-events: none;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold), var(--cyan));
 }
 
-/* Animated grid background */
+/* Very subtle radial glow */
 .home-hero::after {
   content: '';
   position: absolute;
@@ -2183,17 +2182,10 @@ button, .nav-item, .room, .video-item, .filter-chip {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  animation: gridPulse 8s ease-in-out infinite;
+  background: 
+    radial-gradient(ellipse at 10% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 90% 50%, rgba(0, 171, 255, 0.04) 0%, transparent 40%);
   pointer-events: none;
-}
-
-@keyframes gridPulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.7; }
 }
 
 .home-hero-content {
@@ -2219,7 +2211,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
 .home-hero-text h2 {
   font-size: clamp(26px, 5vw, 36px);
   font-weight: 700;
-  color: #fff;
+  color: var(--text-1);
   letter-spacing: -0.02em;
   line-height: 1.2;
   margin-bottom: 12px;
@@ -2235,7 +2227,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
 
 .home-hero-text .subtitle {
   font-size: 14px;
-  color: rgba(255,255,255,0.6);
+  color: var(--text-2);
   max-width: 400px;
 }
 
@@ -2245,10 +2237,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
   flex-direction: column;
   gap: 10px;
   padding: 20px 24px;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
   border-radius: 14px;
-  backdrop-filter: blur(8px);
 }
 
 .system-status .status-row {
@@ -2257,7 +2248,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
   gap: 10px;
   font-family: var(--mono);
   font-size: 11px;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-2);
 }
 
 .system-status .status-indicator {
@@ -2275,11 +2266,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
 }
 
 .system-status .status-label {
-  color: rgba(255,255,255,0.5);
+  color: var(--text-3);
 }
 
 .system-status .status-value {
-  color: #fff;
+  color: var(--text-1);
   font-weight: 500;
 }
 
