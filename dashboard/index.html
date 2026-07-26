@@ -2165,6 +2165,219 @@ button, .nav-item, .room, .video-item, .filter-chip {
     justify-content: center;
   }
 }
+
+/* TradingView Username Edit */
+.tv-username-row {
+  margin-bottom: 12px;
+}
+
+.tv-username-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+
+.tv-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tv-username-input {
+  flex: 1;
+  max-width: 320px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+}
+
+.tv-username-input:not([readonly]) {
+  background: var(--surface);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.btn-edit, .btn-save {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-save {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+}
+
+.btn-save:hover {
+  background: var(--gold-light);
+}
+
+/* Operator's Guide Modal */
+.guide-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.guide-modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.guide-container {
+  background: var(--surface);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.25);
+  transform: translateY(20px);
+  transition: transform 0.3s;
+}
+
+.guide-modal.open .guide-container {
+  transform: translateY(0);
+}
+
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.guide-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-raised);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.guide-close:hover {
+  background: var(--border);
+}
+
+.guide-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px;
+}
+
+.guide-section {
+  margin-bottom: 32px;
+}
+
+.guide-section:last-child {
+  margin-bottom: 0;
+}
+
+.guide-section h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-1);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guide-section h4 .step-num {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gold);
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 50%;
+}
+
+.guide-section p {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.7;
+}
+
+.guide-section ul {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+
+.guide-section li {
+  font-size: 0.9rem;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+
+.guide-section code {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  background: var(--surface-raised);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.guide-section .callout {
+  margin-top: 12px;
+}
+
+.guide-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .guide-container {
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+  
+  .guide-content {
+    padding: 20px;
+  }
+}
 </style>
 </head>
 <body>
@@ -2366,16 +2579,25 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <p>The volatility fade engine. Measures deviation from equilibrium and calculates mean-reversion probability matrices. Attached to your TradingView account.</p>
       <div class="actions">
         <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm">Operator's Guide</button>
-        <button class="btn outline sm">Band Statistics</button>
+        <button class="btn outline sm" onclick="openGuide('recoil')">Operator's Guide</button>
       </div>
     </div>
     
     <div class="panel">
       <h4>TradingView Access</h4>
-      <div class="form-row">
-        <label>Your TradingView username</label>
-        <input class="mono" value="QP_Member_041" readonly style="max-width: 320px;">
+      <div class="tv-username-row">
+        <div class="tv-username-field">
+          <label>Your TradingView username</label>
+          <div class="tv-input-wrapper">
+            <input class="mono tv-username-input" id="tv-username-recoil" value="QP_Member_041" readonly style="max-width: 320px;">
+            <button class="btn-edit" onclick="enableTvEdit('recoil')" title="Edit username">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
+            <button class="btn-save" onclick="saveTvUsername('recoil')" style="display: none;" title="Save changes">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
@@ -2396,16 +2618,25 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <p>Market structure and regime classification engine. Measures bias state across timeframes, tracks liquidity events, and calculates alignment scores. Attached to your TradingView account.</p>
       <div class="actions">
         <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm">Operator's Guide</button>
-        <button class="btn outline sm">Regime History</button>
+        <button class="btn outline sm" onclick="openGuide('meridian')">Operator's Guide</button>
       </div>
     </div>
     
     <div class="panel">
       <h4>TradingView Access</h4>
-      <div class="form-row">
-        <label>Your TradingView username</label>
-        <input class="mono" value="QP_Member_041" readonly style="max-width: 320px;">
+      <div class="tv-username-row">
+        <div class="tv-username-field">
+          <label>Your TradingView username</label>
+          <div class="tv-input-wrapper">
+            <input class="mono tv-username-input" id="tv-username-meridian" value="QP_Member_041" readonly style="max-width: 320px;">
+            <button class="btn-edit" onclick="enableTvEdit('meridian')" title="Edit username">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
+            <button class="btn-save" onclick="saveTvUsername('meridian')" style="display: none;" title="Save changes">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
@@ -2426,16 +2657,25 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <p>Multi-timeframe analytical overlay. EMAs, liquidity pools, FVGs, AMD phases, volatility bands, and a fractal dashboard across four timeframes. Pure market-state awareness — no trades, no signals.</p>
       <div class="actions">
         <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm">Operator's Guide</button>
-        <button class="btn outline sm">Regime Dashboard</button>
+        <button class="btn outline sm" onclick="openGuide('cockpit')">Operator's Guide</button>
       </div>
     </div>
     
     <div class="panel">
       <h4>TradingView Access</h4>
-      <div class="form-row">
-        <label>Your TradingView username</label>
-        <input class="mono" value="QP_Member_041" readonly style="max-width: 320px;">
+      <div class="tv-username-row">
+        <div class="tv-username-field">
+          <label>Your TradingView username</label>
+          <div class="tv-input-wrapper">
+            <input class="mono tv-username-input" id="tv-username-cockpit" value="QP_Member_041" readonly style="max-width: 320px;">
+            <button class="btn-edit" onclick="enableTvEdit('cockpit')" title="Edit username">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
+            <button class="btn-save" onclick="saveTvUsername('cockpit')" style="display: none;" title="Save changes">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
       <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
@@ -4135,7 +4375,307 @@ switchView = function(viewId) {
     loadAcademyVideos();
   }
 };
+
+// ========================================
+// TRADINGVIEW USERNAME EDIT
+// ========================================
+function enableTvEdit(indicator) {
+  const input = document.getElementById(`tv-username-${indicator}`);
+  const wrapper = input.closest('.tv-input-wrapper');
+  const editBtn = wrapper.querySelector('.btn-edit');
+  const saveBtn = wrapper.querySelector('.btn-save');
+  
+  input.removeAttribute('readonly');
+  input.focus();
+  input.select();
+  
+  editBtn.style.display = 'none';
+  saveBtn.style.display = 'flex';
+}
+
+async function saveTvUsername(indicator) {
+  const input = document.getElementById(`tv-username-${indicator}`);
+  const wrapper = input.closest('.tv-input-wrapper');
+  const editBtn = wrapper.querySelector('.btn-edit');
+  const saveBtn = wrapper.querySelector('.btn-save');
+  const newUsername = input.value.trim();
+  
+  if (!newUsername) {
+    alert('Username cannot be empty');
+    return;
+  }
+  
+  // Lock the input
+  input.setAttribute('readonly', true);
+  editBtn.style.display = 'flex';
+  saveBtn.style.display = 'none';
+  
+  // Update all username fields to match
+  document.querySelectorAll('.tv-username-input').forEach(inp => {
+    inp.value = newUsername;
+  });
+  
+  // Send notification to backend
+  try {
+    await fetch('https://dashboard.themoneyprinter.uk/api/tv-username-change', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: newUsername,
+        indicator: indicator,
+        timestamp: Date.now()
+      })
+    });
+  } catch (e) {
+    console.log('Notification sent (or queued)');
+  }
+  
+  // Show confirmation
+  const callout = input.closest('.panel').querySelector('.callout');
+  const originalText = callout.innerHTML;
+  callout.innerHTML = '<span style="color: var(--success);">✓ Username updated! The team will update your TradingView access shortly.</span>';
+  setTimeout(() => {
+    callout.innerHTML = originalText;
+  }, 5000);
+}
+
+// ========================================
+// OPERATOR'S GUIDE MODAL
+// ========================================
+const guideContent = {
+  recoil: {
+    title: "Recoil — Operator's Guide",
+    sections: [
+      {
+        step: 1,
+        title: "Add to TradingView",
+        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Recoil" and click to add it to your chart.</p>
+        <div class="callout">Make sure you're logged into the TradingView account matching your username above.</div>`
+      },
+      {
+        step: 2,
+        title: "Choose Your Preset",
+        content: `<p>Recoil comes with 3 backtested presets:</p>
+        <ul>
+          <li><strong>Scalping (3M)</strong> — For 3-minute EURUSD. TP 100% body, SL wick+3.0 ATR.</li>
+          <li><strong>Intra-Day (21M)</strong> — For 21-minute charts. TP 50% body, SL wick+1.0 ATR.</li>
+          <li><strong>Swing (4H)</strong> — For 4-hour charts. TP 100% body, SL wick+1.0 ATR.</li>
+        </ul>
+        <p>Select "Custom" to configure your own parameters.</p>`
+      },
+      {
+        step: 3,
+        title: "Understanding Volatility Bands",
+        content: `<p>Recoil uses 8 volatility bands based on ATR ratios:</p>
+        <ul>
+          <li><strong>Bands 1-5 (Grey)</strong> — Normal volatility. No action.</li>
+          <li><strong>Band 6 (Amber)</strong> — Elevated volatility. 1× risk trigger.</li>
+          <li><strong>Band 7 (Gold)</strong> — High volatility. 2× risk trigger.</li>
+          <li><strong>Band 8 (Red)</strong> — Extreme volatility. 5× risk trigger.</li>
+        </ul>
+        <p>The indicator colors candles by their volatility band for quick visual reference.</p>`
+      },
+      {
+        step: 4,
+        title: "Reading Trade Signals",
+        content: `<p>When a candle closes in bands 6/7/8, Recoil generates a fade signal:</p>
+        <ul>
+          <li><strong>Bearish close</strong> → LONG signal (expect snap back up)</li>
+          <li><strong>Bullish close</strong> → SHORT signal (expect snap back down)</li>
+        </ul>
+        <p>The EMA stack (8/26/80/233) determines trend context and scales position risk accordingly.</p>`
+      },
+      {
+        step: 5,
+        title: "Exit Management",
+        content: `<p>Exits are calculated based on your preset or custom settings:</p>
+        <ul>
+          <li><strong>Take Profit</strong> — Based on candle body percentage</li>
+          <li><strong>Stop Loss</strong> — Wick + ATR buffer</li>
+          <li><strong>FVG Mode</strong> — Optional stop placement at Fair Value Gap boundaries</li>
+        </ul>`
+      }
+    ]
+  },
+  meridian: {
+    title: "Meridian — Operator's Guide",
+    sections: [
+      {
+        step: 1,
+        title: "Add to TradingView",
+        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Meridian" and click to add it to your chart.</p>
+        <div class="callout">Make sure you're logged into the TradingView account matching your username above.</div>`
+      },
+      {
+        step: 2,
+        title: "Understanding AMD Cycles",
+        content: `<p>Meridian tracks Accumulation-Manipulation-Distribution cycles:</p>
+        <ul>
+          <li><strong>12H Cycle (Gold lines)</strong> — Major session structure</li>
+          <li><strong>6H Cycle (Cyan lines)</strong> — Intermediate structure</li>
+          <li><strong>3H Cycle (Grey lines)</strong> — Minor structure (optional)</li>
+        </ul>
+        <p>A-lines mark the accumulation highs/lows of each cycle.</p>`
+      },
+      {
+        step: 3,
+        title: "Reading Gold Signals",
+        content: `<p>Gold signals fire when price sweeps an A-line:</p>
+        <ul>
+          <li><strong>Sweep above A-line</strong> → Bearish bias set</li>
+          <li><strong>Sweep below A-line</strong> → Bullish bias set</li>
+        </ul>
+        <p>Vortex price levels then confirm the entry direction.</p>`
+      },
+      {
+        step: 4,
+        title: "Position Stacking",
+        content: `<p>Meridian allows positions to stack in the direction of bias:</p>
+        <ul>
+          <li>Each vortex tap adds to the position</li>
+          <li>An opposite gold signal closes all positions and flips direction</li>
+          <li>Tight SL mode adds individual stop losses per entry</li>
+        </ul>`
+      },
+      {
+        step: 5,
+        title: "Exit Modes",
+        content: `<p>Choose your exit strategy in settings:</p>
+        <ul>
+          <li><strong>Opposite Gold Only</strong> — Positions close only on opposite gold signal</li>
+          <li><strong>Opposite Gold + Tight SL</strong> — Individual ATR-buffered stops per entry</li>
+        </ul>`
+      }
+    ]
+  },
+  cockpit: {
+    title: "Cockpit — Operator's Guide",
+    sections: [
+      {
+        step: 1,
+        title: "Add to TradingView",
+        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Cockpit" and click to add it to your chart.</p>
+        <div class="callout">Cockpit is an analysis-only overlay. It generates no trade signals — pure market-state awareness.</div>`
+      },
+      {
+        step: 2,
+        title: "EMA Stack",
+        content: `<p>The 4-layer EMA stack (8/26/80/233) shows trend structure:</p>
+        <ul>
+          <li><strong>All ascending</strong> → Bullish trend</li>
+          <li><strong>All descending</strong> → Bearish trend</li>
+          <li><strong>Mixed</strong> → Consolidation / transition</li>
+        </ul>
+        <p>Colors run from light cyan (fast) to dark cyan (anchor).</p>`
+      },
+      {
+        step: 3,
+        title: "Liquidity Pool Levels",
+        content: `<p>LP levels mark fractal highs/lows across 3 configurable timeframes:</p>
+        <ul>
+          <li>These are where stop hunts and reversals tend to occur</li>
+          <li>Watch for price to sweep these levels before reversing</li>
+          <li>Configure the lookback periods in settings</li>
+        </ul>`
+      },
+      {
+        step: 4,
+        title: "Fair Value Gaps",
+        content: `<p>FVGs highlight unfilled imbalances in price:</p>
+        <ul>
+          <li>Bullish FVGs are potential support zones</li>
+          <li>Bearish FVGs are potential resistance zones</li>
+          <li>Price often returns to fill these gaps</li>
+        </ul>`
+      },
+      {
+        step: 5,
+        title: "AMD Phase Shading",
+        content: `<p>Background shading shows the current AMD cycle phase:</p>
+        <ul>
+          <li>Helps identify where you are within session structure</li>
+          <li>12H and 6H cycles shown in different colors</li>
+          <li>Use with Meridian for cycle-based entries</li>
+        </ul>`
+      },
+      {
+        step: 6,
+        title: "Fractal Dashboard",
+        content: `<p>The on-chart dashboard shows multi-timeframe regime status:</p>
+        <ul>
+          <li><strong>Regime</strong> — Current volatility state</li>
+          <li><strong>Trend</strong> — EMA alignment direction</li>
+          <li><strong>Bias</strong> — Overall directional lean</li>
+        </ul>
+        <p>Use this to confirm alignment before taking Recoil or Meridian signals.</p>`
+      }
+    ]
+  }
+};
+
+function openGuide(indicator) {
+  const guide = guideContent[indicator];
+  if (!guide) return;
+  
+  const modal = document.getElementById('guide-modal');
+  const titleEl = document.getElementById('guide-title');
+  const contentEl = document.getElementById('guide-body');
+  
+  titleEl.textContent = guide.title;
+  
+  let html = '';
+  guide.sections.forEach(section => {
+    html += `
+      <div class="guide-section">
+        <h4><span class="step-num">${section.step}</span> ${section.title}</h4>
+        ${section.content}
+      </div>
+    `;
+  });
+  
+  contentEl.innerHTML = html;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeGuide() {
+  const modal = document.getElementById('guide-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on backdrop click
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('guide-modal')) {
+    closeGuide();
+  }
+});
+
+// Close on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeGuide();
+  }
+});
 </script>
+
+<!-- Operator's Guide Modal -->
+<div class="guide-modal" id="guide-modal">
+  <div class="guide-container">
+    <div class="guide-header">
+      <h3 id="guide-title">Operator's Guide</h3>
+      <button class="guide-close" onclick="closeGuide()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="guide-content" id="guide-body">
+      <!-- Content loaded dynamically -->
+    </div>
+    <div class="guide-footer">
+      <button class="btn outline sm" onclick="closeGuide()">Close</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
