@@ -1726,6 +1726,26 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--text-3);
 }
 
+.video-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-left: 8px;
+  opacity: 0;
+  transition: all 0.2s;
+}
+
+.video-item:hover .video-edit-btn {
+  opacity: 1;
+}
+
+.video-edit-btn:hover {
+  color: var(--gold);
+}
+
 .video-section {
   display: flex;
   flex-direction: column;
@@ -4842,6 +4862,9 @@ async function loadAcademyVideos() {
     renderAcademyLevels();
     updateProgressRing();
     
+    // Auto-resume to next uncompleted video
+    autoResumeVideo();
+    
     // Show admin controls if admin
     if (userTier === 'admin') {
       document.getElementById('academy-admin').style.display = 'block';
@@ -4884,11 +4907,13 @@ function renderAcademyLevels() {
             const status = prog?.completed ? '✓' : '○';
             const statusClass = prog?.completed ? 'completed' : '';
             const duration = formatDuration(v.duration_seconds);
+            const editBtn = userTier === 'admin' ? `<button class="video-edit-btn" onclick="event.stopPropagation(); editVideo('${v.id}')" title="Edit">✎</button>` : '';
             return `
               <div class="video-item ${statusClass}" data-video-id="${v.id}" onclick="playVideo('${v.id}')">
                 <span class="video-status">${status}</span>
                 <span class="video-name">${v.title}</span>
                 <span class="video-duration">${duration}</span>
+                ${editBtn}
               </div>
             `;
           }).join('')}
@@ -4911,6 +4936,142 @@ function formatDuration(seconds) {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// Auto-resume: find next uncompleted video and play it
+function autoResumeVideo() {
+  // Sort videos by level then position
+  const sortedVideos = [...academyVideos].sort((a, b) => {
+    if (a.level !== b.level) return a.level - b.level;
+    return a.position - b.position;
+  });
+  
+  // Find first uncompleted video
+  const nextVideo = sortedVideos.find(v => !academyProgress[v.id]?.completed);
+  
+  if (nextVideo) {
+    playVideo(nextVideo.id);
+  } else if (sortedVideos.length > 0) {
+    // All completed - play the last one
+    playVideo(sortedVideos[sortedVideos.length - 1].id);
+  }
+}
+
+// Edit video modal
+function editVideo(videoId) {
+  const video = academyVideos.find(v => v.id === videoId);
+  if (!video) return;
+  
+  const mins = Math.floor((video.duration_seconds || 0) / 60);
+  const secs = (video.duration_seconds || 0) % 60;
+  
+  const content = `
+    <form id="edit-video-form" style="display: flex; flex-direction: column; gap: 16px;">
+      <input type="hidden" id="edit-video-id" value="${video.id}">
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" id="edit-video-title" value="${video.title || ''}" required>
+      </div>
+      <div class="form-row">
+        <label>Description</label>
+        <textarea id="edit-video-desc" rows="3" style="width:100%; padding:12px; border:1px solid var(--border); border-radius:8px; font-family:inherit;">${video.description || ''}</textarea>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-row">
+          <label>Level</label>
+          <input type="number" id="edit-video-level" value="${video.level}" min="1" max="9">
+        </div>
+        <div class="form-row">
+          <label>Position</label>
+          <input type="number" id="edit-video-position" value="${video.position}" min="1">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <div class="form-row">
+          <label>Duration (minutes)</label>
+          <input type="number" id="edit-video-mins" value="${mins}" min="0">
+        </div>
+        <div class="form-row">
+          <label>Duration (seconds)</label>
+          <input type="number" id="edit-video-secs" value="${secs}" min="0" max="59">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Video URL</label>
+        <input type="text" id="edit-video-url" value="${video.video_url || ''}" placeholder="https://iframe.mediadelivery.net/embed/...">
+      </div>
+      <div class="form-row">
+        <label>Thumbnail URL</label>
+        <input type="text" id="edit-video-thumb" value="${video.thumbnail_url || ''}" placeholder="https://...">
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+        <button type="button" class="btn outline sm" onclick="closeModal()">Cancel</button>
+        <button type="button" class="btn sm" style="background: var(--danger);" onclick="deleteVideo('${video.id}')">Delete</button>
+        <button type="submit" class="btn sm">Save Changes</button>
+      </div>
+    </form>
+  `;
+  
+  showModal('Edit Video', content);
+  
+  // Handle form submit
+  document.getElementById('edit-video-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await saveVideoEdit();
+  });
+}
+
+async function saveVideoEdit() {
+  const id = document.getElementById('edit-video-id').value;
+  const title = document.getElementById('edit-video-title').value.trim();
+  const description = document.getElementById('edit-video-desc').value.trim();
+  const level = parseInt(document.getElementById('edit-video-level').value);
+  const position = parseInt(document.getElementById('edit-video-position').value);
+  const mins = parseInt(document.getElementById('edit-video-mins').value) || 0;
+  const secs = parseInt(document.getElementById('edit-video-secs').value) || 0;
+  const duration_seconds = (mins * 60) + secs;
+  const video_url = document.getElementById('edit-video-url').value.trim();
+  const thumbnail_url = document.getElementById('edit-video-thumb').value.trim();
+  
+  try {
+    const { error } = await supabaseClient
+      .from('academy_videos')
+      .update({
+        title,
+        description,
+        level,
+        position,
+        duration_seconds,
+        video_url,
+        thumbnail_url
+      })
+      .eq('id', id);
+    
+    if (error) throw error;
+    
+    closeModal();
+    loadAcademyVideos(); // Refresh
+  } catch (e) {
+    alert('Error saving: ' + e.message);
+  }
+}
+
+async function deleteVideo(videoId) {
+  if (!confirm('Are you sure you want to delete this video?')) return;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('academy_videos')
+      .delete()
+      .eq('id', videoId);
+    
+    if (error) throw error;
+    
+    closeModal();
+    loadAcademyVideos();
+  } catch (e) {
+    alert('Error deleting: ' + e.message);
+  }
 }
 
 function playVideo(videoId) {
