@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1, Part 2: The Myths — Quant Prime Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --cyan: #00abff;
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --text: #ffffff;
+  --text-dim: #888;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+.slide {
+  width: 1920px;
+  height: 1080px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 120px;
+  position: relative;
+  background: var(--bg);
+}
+
+.slide.active { display: flex; }
+
+/* Subtle grid background */
+.slide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* Corner accents */
+.slide::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  width: 80px;
+  height: 80px;
+  border-left: 2px solid var(--gold);
+  border-top: 2px solid var(--gold);
+  opacity: 0.4;
+}
+
+.corner-br {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  border-right: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  opacity: 0.4;
+}
+
+/* QP Logo */
+.qp-logo {
+  position: absolute;
+  top: 50px;
+  right: 60px;
+  width: 60px;
+  height: 60px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: #000;
+  box-shadow: 0 0 40px rgba(201,168,76,0.3);
+}
+
+/* Typography */
+.eyebrow {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+h1 {
+  font-size: 72px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  max-width: 1400px;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+h1 .highlight {
+  background: var(--cyan);
+  color: #000;
+  padding: 4px 20px;
+  border-radius: 8px;
+}
+
+h2 {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  max-width: 1200px;
+}
+
+h2 em {
+  font-style: normal;
+  color: var(--gold);
+}
+
+h3 {
+  font-size: 42px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  max-width: 1100px;
+  color: var(--text-dim);
+}
+
+.subtitle {
+  font-size: 28px;
+  color: var(--text-dim);
+  margin-top: 32px;
+  text-align: center;
+  max-width: 900px;
+  line-height: 1.5;
+}
+
+/* Myth number badge */
+.myth-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gold);
+  background: rgba(201,168,76,0.15);
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: 1px solid rgba(201,168,76,0.3);
+  margin-bottom: 40px;
+}
+
+/* Strike through for myth text */
+.myth-text {
+  font-size: 64px;
+  font-weight: 700;
+  text-decoration: line-through;
+  text-decoration-color: #ef4444;
+  text-decoration-thickness: 4px;
+  opacity: 0.7;
+}
+
+/* Truth text */
+.truth-text {
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: 40px;
+}
+
+/* List styling */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 48px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 32px;
+  font-weight: 500;
+}
+
+.list-item .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 600;
+  color: #000;
+  background: var(--gold);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Quote styling */
+.quote {
+  font-size: 42px;
+  font-style: italic;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 1000px;
+  line-height: 1.5;
+  position: relative;
+  padding: 0 60px;
+}
+
+.quote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -20px;
+  font-size: 120px;
+  color: var(--gold);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+}
+
+/* Stat boxes */
+.stats-row {
+  display: flex;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.stat-label {
+  font-size: 20px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 100;
+}
+
+.controls button {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.controls button:hover {
+  border-color: var(--gold);
+}
+
+.slide-counter {
+  position: fixed;
+  bottom: 40px;
+  right: 60px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  color: var(--text-dim);
+}
+
+/* Two column layout */
+.two-col {
+  display: flex;
+  gap: 80px;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1600px;
+}
+
+.col {
+  flex: 1;
+}
+
+.col h4 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-bottom: 24px;
+}
+
+.col ul {
+  list-style: none;
+  font-size: 24px;
+  line-height: 2;
+}
+
+.col ul li::before {
+  content: '→';
+  color: var(--gold);
+  margin-right: 16px;
+}
+
+/* Phases visualization */
+.phases {
+  display: flex;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.phase {
+  text-align: center;
+  padding: 40px;
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.05);
+  flex: 1;
+}
+
+.phase-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.phase-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.phase-desc {
+  font-size: 18px;
+  color: var(--text-dim);
+}
+
+/* Big number */
+.big-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 180px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 0 60px rgba(201,168,76,0.4);
+}
+
+/* Cross out animation */
+.crossed {
+  position: relative;
+}
+
+.crossed::after {
+  content: '';
+  position: absolute;
+  left: -10px;
+  right: -10px;
+  top: 50%;
+  height: 6px;
+  background: #ef4444;
+  transform: rotate(-3deg);
+}
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" id="slide-1">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="eyebrow">Level 1 · Part 2</div>
+  <h1>The <em>Myths</em></h1>
+  <p class="subtitle">The lies that keep traders stuck, confused, and losing money.</p>
+</div>
+
+<!-- SLIDE 2: Intro -->
+<div class="slide" id="slide-2">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>Understanding what's <em>false</em><br>is just as important as<br>learning what's <em>true</em></h2>
+</div>
+
+<!-- SLIDE 3: Myth 1 Title -->
+<div class="slide" id="slide-3">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 01</div>
+  <div class="myth-text">"It's Just Random"</div>
+  <div class="truth-text">There is an algorithm.</div>
+</div>
+
+<!-- SLIDE 4: The Algorithm -->
+<div class="slide" id="slide-4">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>The market operates on<br><em>repeating structural principles</em></h2>
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-num">01</div>
+      <div class="phase-title">Accumulation</div>
+      <div class="phase-desc">Positions built at<br>favourable prices</div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">02</div>
+      <div class="phase-title">Manipulation</div>
+      <div class="phase-desc">Liquidity created by<br>triggering stop losses</div>
+    </div>
+    <div class="phase">
+      <div class="phase-num">03</div>
+      <div class="phase-title">Distribution</div>
+      <div class="phase-desc">Positions closed<br>for profit</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: Volume stat -->
+<div class="slide" id="slide-5">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="big-number">$7T</div>
+  <p class="subtitle">Daily forex volume. Institutions don't move that randomly.</p>
+</div>
+
+<!-- SLIDE 6: Myth 2 Title -->
+<div class="slide" id="slide-6">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 02</div>
+  <div class="myth-text">"It's Too Hard"</div>
+  <div class="truth-text">Trading is simple. Psychology is hard.</div>
+</div>
+
+<!-- SLIDE 7: The real challenge -->
+<div class="slide" id="slide-7">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>The mechanics can be<br>learned by <em>anyone</em></h2>
+  <p class="subtitle">The internal work is what nobody wants to talk about.</p>
+</div>
+
+<!-- SLIDE 8: Psychology -->
+<div class="slide" id="slide-8">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h3>When a trade goes against you,<br>your brain treats it as a <em>physical threat</em></h3>
+  <div class="list">
+    <div class="list-item"><span class="num">1</span> Amygdala activates</div>
+    <div class="list-item"><span class="num">2</span> Cortisol releases</div>
+    <div class="list-item"><span class="num">3</span> Decision-making impaired</div>
+  </div>
+</div>
+
+<!-- SLIDE 9: Myth 3 Title -->
+<div class="slide" id="slide-9">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 03</div>
+  <div class="myth-text">"This Strategy Is Best"</div>
+  <div class="truth-text">All strategies work. Execution matters.</div>
+</div>
+
+<!-- SLIDE 10: What actually matters -->
+<div class="slide" id="slide-10">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>What actually <em>matters</em></h2>
+  <div class="list">
+    <div class="list-item"><span class="num">→</span> Depth of understanding</div>
+    <div class="list-item"><span class="num">→</span> Risk management</div>
+    <div class="list-item"><span class="num">→</span> Consistency of application</div>
+    <div class="list-item"><span class="num">→</span> Emotional discipline</div>
+  </div>
+</div>
+
+<!-- SLIDE 11: Myth 4 Title -->
+<div class="slide" id="slide-11">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 04</div>
+  <div class="myth-text">"Make £10,000 Today"</div>
+  <div class="truth-text">Greed is the most destructive emotion.</div>
+</div>
+
+<!-- SLIDE 12: Real numbers -->
+<div class="slide" id="slide-12">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="eyebrow">Real Numbers</div>
+  <h2>£1,000 account · 1% risk · 1:2 R:R</h2>
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-value">£10</div>
+      <div class="stat-label">Risk per trade</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">£20</div>
+      <div class="stat-label">Win value</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">3%</div>
+      <div class="stat-label">Daily target</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: Compound -->
+<div class="slide" id="slide-13">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>3% daily, compounded over 20 days</h2>
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-value">£1,000</div>
+      <div class="stat-label">Start</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">→</div>
+      <div class="stat-label">&nbsp;</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-value">£1,800</div>
+      <div class="stat-label">One month</div>
+    </div>
+  </div>
+  <p class="subtitle">80% return. If you're patient enough to let it work.</p>
+</div>
+
+<!-- SLIDE 14: Myth 5 Title -->
+<div class="slide" id="slide-14">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 05</div>
+  <div class="myth-text">"Trade All Day"</div>
+  <div class="truth-text">Overtrading kills accounts.</div>
+</div>
+
+<!-- SLIDE 15: Quality -->
+<div class="slide" id="slide-15">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h1><em>Quality</em> over quantity</h1>
+  <p class="subtitle">The most profitable traders are the least active.</p>
+</div>
+
+<!-- SLIDE 16: Myth 6 Title -->
+<div class="slide" id="slide-16">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="myth-badge">MYTH 06</div>
+  <div class="myth-text">"Demo Is Pointless"</div>
+  <div class="truth-text">Demo is where you learn without bleeding.</div>
+</div>
+
+<!-- SLIDE 17: Demo comparison -->
+<div class="slide" id="slide-17">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="quote">Would you expect a surgeon to perform their first operation on a live patient?</div>
+</div>
+
+<!-- SLIDE 18: Demo process -->
+<div class="slide" id="slide-18">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>The progression</h2>
+  <div class="list">
+    <div class="list-item"><span class="num">1</span> Learn the process on demo</div>
+    <div class="list-item"><span class="num">2</span> Prove your edge over 50-100 trades</div>
+    <div class="list-item"><span class="num">3</span> Transition to live with small account</div>
+    <div class="list-item"><span class="num">4</span> Scale</div>
+  </div>
+</div>
+
+<!-- SLIDE 19: The truth -->
+<div class="slide" id="slide-19">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>The forex industry<br><em>profits from your confusion</em></h2>
+</div>
+
+<!-- SLIDE 20: Cut through -->
+<div class="slide" id="slide-20">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <h2>Quant Prime exists to<br><em>cut through the noise</em></h2>
+  <p class="subtitle">No gatekeeping. No hidden agendas. Just clear, honest education.</p>
+</div>
+
+<!-- SLIDE 21: Reflection -->
+<div class="slide" id="slide-21">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="eyebrow">Reflection</div>
+  <h2>Which of these myths<br>have <em>you</em> believed?</h2>
+</div>
+
+<!-- SLIDE 22: Next -->
+<div class="slide" id="slide-22">
+  <div class="corner-br"></div>
+  <div class="qp-logo">QP</div>
+  <div class="eyebrow">Up Next</div>
+  <h1>How To <em>Get Started</em></h1>
+  <p class="subtitle">The tools, the mindset, and the first practical steps.</p>
+</div>
+
+<div class="controls">
+  <button onclick="prevSlide()">← Prev</button>
+  <button onclick="nextSlide()">Next →</button>
+</div>
+
+<div class="slide-counter">
+  <span id="current">1</span> / <span id="total">22</span>
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 22;
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById(`slide-${n}`).classList.add('active');
+  document.getElementById('current').textContent = n;
+  currentSlide = n;
+}
+
+function nextSlide() {
+  if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  if (currentSlide > 1) showSlide(currentSlide - 1);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+</script>
+
+</body>
+</html>
