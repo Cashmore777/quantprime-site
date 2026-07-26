@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Level 1 Part 1: The Truth — Quant Prime Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.3);
+  --cyan: #00abff;
+  --cyan-glow: rgba(0,171,255,0.3);
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.6);
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Logo watermark */
+.logo {
+  position: fixed;
+  bottom: 40px;
+  right: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+  z-index: 100;
+}
+.logo span { color: var(--gold); }
+
+/* Slide container */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Common layouts */
+.slide-content {
+  text-align: center;
+  max-width: 1400px;
+  padding: 60px;
+}
+
+.slide-title {
+  font-size: 72px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 30px;
+  line-height: 1.1;
+}
+
+.slide-title .accent { color: var(--gold); }
+.slide-title .cyan { color: var(--cyan); }
+
+.slide-subtitle {
+  font-size: 28px;
+  color: var(--text-dim);
+  font-weight: 400;
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Background effects */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(60px, 60px); }
+}
+
+.bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 60%);
+}
+
+.bg-gradient-cyan {
+  background: radial-gradient(ellipse at 50% 50%, rgba(0,171,255,0.08) 0%, transparent 60%);
+}
+
+/* Animated elements */
+.float { animation: float 6s ease-in-out infinite; }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.pulse { animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+.glow-gold {
+  box-shadow: 0 0 60px var(--gold-glow), 0 0 120px rgba(201,168,76,0.1);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 60px var(--cyan-glow), 0 0 120px rgba(0,171,255,0.1);
+}
+
+/* Stats display */
+.stat-big {
+  font-size: 180px;
+  font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  text-shadow: 0 0 80px var(--gold-glow);
+}
+
+.stat-label {
+  font-size: 32px;
+  color: var(--text-dim);
+  margin-top: 20px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Chart animation */
+.chart-container {
+  width: 800px;
+  height: 400px;
+  position: relative;
+  margin: 40px auto;
+}
+
+.chart-line {
+  stroke: var(--gold);
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: drawLine 3s ease forwards;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+.chart-area {
+  fill: url(#goldGradient);
+  opacity: 0;
+  animation: fadeIn 1s ease 2s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 0.3; }
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  margin-top: 60px;
+}
+
+.timeline-item {
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUp 0.6s ease forwards;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.3s; }
+.timeline-item:nth-child(2) { animation-delay: 0.6s; }
+.timeline-item:nth-child(3) { animation-delay: 0.9s; }
+
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.timeline-year {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.timeline-label {
+  font-size: 18px;
+  color: var(--text-dim);
+  margin-top: 10px;
+}
+
+.timeline-connector {
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  opacity: 0;
+  animation: fadeIn 0.5s ease 1.2s forwards;
+}
+
+/* Icon grid */
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1000px;
+  margin: 60px auto;
+}
+
+.icon-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: popIn 0.5s ease forwards;
+}
+
+.icon-card:nth-child(1) { animation-delay: 0.2s; }
+.icon-card:nth-child(2) { animation-delay: 0.4s; }
+.icon-card:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes popIn {
+  to { opacity: 1; transform: scale(1); }
+}
+
+.icon-card svg {
+  width: 60px;
+  height: 60px;
+  stroke: var(--gold);
+  margin-bottom: 20px;
+}
+
+.icon-card h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.icon-card p {
+  font-size: 14px;
+  color: var(--text-dim);
+}
+
+/* Progress bar */
+.progress-bar {
+  width: 600px;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  margin: 40px auto;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--danger), var(--gold));
+  width: 0%;
+  animation: fillProgress 3s ease forwards;
+}
+
+@keyframes fillProgress {
+  to { width: 85%; }
+}
+
+/* Candlestick animation */
+.candle-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  height: 300px;
+  margin: 40px auto;
+}
+
+.candle {
+  width: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  animation: candleAppear 0.3s ease forwards;
+}
+
+.candle:nth-child(1) { animation-delay: 0.1s; }
+.candle:nth-child(2) { animation-delay: 0.2s; }
+.candle:nth-child(3) { animation-delay: 0.3s; }
+.candle:nth-child(4) { animation-delay: 0.4s; }
+.candle:nth-child(5) { animation-delay: 0.5s; }
+.candle:nth-child(6) { animation-delay: 0.6s; }
+.candle:nth-child(7) { animation-delay: 0.7s; }
+.candle:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes candleAppear {
+  to { opacity: 1; }
+}
+
+.candle-wick {
+  width: 2px;
+  background: currentColor;
+}
+
+.candle-body {
+  width: 100%;
+  border-radius: 3px;
+}
+
+.candle.green { color: var(--success); }
+.candle.green .candle-body { background: var(--success); }
+
+.candle.red { color: var(--danger); }
+.candle.red .candle-body { background: var(--danger); }
+
+/* Orbit animation */
+.orbit-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+.orbit-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: 800;
+  box-shadow: 0 0 80px var(--gold-glow);
+}
+
+.orbit-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  animation: rotate 20s linear infinite;
+}
+
+.orbit-ring:nth-child(1) { width: 200px; height: 200px; }
+.orbit-ring:nth-child(2) { width: 280px; height: 280px; animation-direction: reverse; animation-duration: 25s; }
+.orbit-ring:nth-child(3) { width: 360px; height: 360px; animation-duration: 30s; }
+
+@keyframes rotate {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.orbit-dot {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+/* Wave animation */
+.wave-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: -100%;
+  width: 300%;
+  height: 200px;
+  background: linear-gradient(180deg, transparent, rgba(201,168,76,0.05));
+  border-radius: 100% 100% 0 0;
+  animation: wave 8s ease-in-out infinite;
+}
+
+.wave:nth-child(2) {
+  animation-delay: -2s;
+  opacity: 0.5;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(33%); }
+}
+
+/* Split layout */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  padding: 80px 120px;
+  height: 100%;
+}
+
+.split-text {
+  text-align: left;
+}
+
+.split-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Quote style */
+.quote {
+  font-size: 42px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-dim);
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  padding: 0 60px;
+}
+
+.quote::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -20px;
+  font-size: 120px;
+  color: var(--gold);
+  opacity: 0.3;
+  font-family: Georgia, serif;
+}
+
+/* Particle system */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: particleFloat 10s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  50% { transform: translateY(-100px) translateX(50px); opacity: 0.6; }
+}
+
+/* Counter animation */
+.counter {
+  font-size: 160px;
+  font-weight: 800;
+  color: var(--danger);
+  text-shadow: 0 0 80px rgba(239,68,68,0.5);
+}
+
+/* Module preview */
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  max-width: 1400px;
+  margin: 60px auto;
+}
+
+.module-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.4s ease forwards;
+}
+
+.module-card:nth-child(1) { animation-delay: 0.1s; }
+.module-card:nth-child(2) { animation-delay: 0.2s; }
+.module-card:nth-child(3) { animation-delay: 0.3s; }
+.module-card:nth-child(4) { animation-delay: 0.4s; }
+.module-card:nth-child(5) { animation-delay: 0.5s; }
+
+.module-num {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.module-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Reflection */
+.reflection-container {
+  position: relative;
+  padding: 100px;
+}
+
+.reflection-question {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeIn 1s ease 0.5s forwards;
+}
+
+.reflection-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.reflection-prompt {
+  font-size: 24px;
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideRight 0.5s ease forwards;
+}
+
+.reflection-prompt:nth-child(1) { animation-delay: 1s; }
+.reflection-prompt:nth-child(2) { animation-delay: 1.3s; }
+.reflection-prompt:nth-child(3) { animation-delay: 1.6s; }
+.reflection-prompt:nth-child(4) { animation-delay: 1.9s; }
+
+@keyframes slideRight {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 16px;
+  z-index: 200;
+}
+
+.controls button {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.controls button:hover {
+  background: var(--gold);
+  color: #000;
+}
+
+.slide-indicator {
+  position: fixed;
+  top: 40px;
+  right: 50px;
+  font-size: 14px;
+  color: var(--text-dim);
+  z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<!-- Logo watermark -->
+<div class="logo">QUANT<span>PRIME</span></div>
+
+<!-- Slide indicator -->
+<div class="slide-indicator"><span id="currentSlide">1</span> / <span id="totalSlides">12</span></div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" id="slide-1">
+  <div class="bg-grid"></div>
+  <div class="bg-gradient"></div>
+  <div class="particles">
+    <div class="particle" style="left: 10%; top: 20%;"></div>
+    <div class="particle" style="left: 30%; top: 60%; animation-delay: -2s;"></div>
+    <div class="particle" style="left: 70%; top: 30%; animation-delay: -4s;"></div>
+    <div class="particle" style="left: 85%; top: 70%; animation-delay: -6s;"></div>
+    <div class="particle" style="left: 50%; top: 80%; animation-delay: -8s;"></div>
+  </div>
+  <div class="slide-content">
+    <div style="font-size: 18px; color: var(--gold); letter-spacing: 0.3em; margin-bottom: 30px; opacity: 0; animation: fadeIn 0.5s ease 0.3s forwards;">LEVEL ONE</div>
+    <h1 class="slide-title" style="opacity: 0; animation: fadeIn 0.8s ease 0.5s forwards;">
+      The <span class="accent">Truth</span>
+    </h1>
+    <p class="slide-subtitle" style="opacity: 0; animation: fadeIn 0.8s ease 0.8s forwards;">
+      Welcome to the Quant Prime Academy
+    </p>
+    <div style="margin-top: 60px; opacity: 0; animation: fadeIn 1s ease 1.2s forwards;">
+      <div style="width: 100px; height: 2px; background: var(--gold); margin: 0 auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: Foundation -->
+<div class="slide" id="slide-2">
+  <div class="bg-grid"></div>
+  <div class="orbit-container float">
+    <div class="orbit-ring"></div>
+    <div class="orbit-ring"></div>
+    <div class="orbit-ring"></div>
+    <div class="orbit-center">QP</div>
+  </div>
+  <div class="slide-content" style="position: absolute; bottom: 120px;">
+    <h2 class="slide-title" style="font-size: 48px;">
+      Building <span class="accent">Solid Foundations</span>
+    </h2>
+    <p class="slide-subtitle" style="font-size: 22px;">
+      Something real. Something that actually lasts.
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 3: The Statistics -->
+<div class="slide" id="slide-3">
+  <div class="bg-gradient" style="background: radial-gradient(ellipse at 50% 50%, rgba(239,68,68,0.1) 0%, transparent 60%);"></div>
+  <div class="slide-content">
+    <div class="stat-big" style="color: var(--danger);">70-90%</div>
+    <div class="stat-label">of retail traders lose money</div>
+    <div class="progress-bar" style="margin-top: 60px;">
+      <div class="progress-fill"></div>
+    </div>
+    <p class="slide-subtitle" style="margin-top: 40px; font-size: 20px;">
+      FCA-regulated brokers are required to publish these figures
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 4: Why They Fail -->
+<div class="slide" id="slide-4">
+  <div class="bg-grid"></div>
+  <div class="icon-grid" style="margin-top: 0;">
+    <div class="icon-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 6v6l4 2"/>
+      </svg>
+      <h3>Lottery Ticket</h3>
+      <p>Expecting instant riches without understanding the game</p>
+    </div>
+    <div class="icon-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      <h3>Get Rich Quick</h3>
+      <p>Chasing shortcuts that don't exist</p>
+    </div>
+    <div class="icon-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2v20M2 12h20"/>
+        <circle cx="12" cy="12" r="4"/>
+      </svg>
+      <h3>No Respect</h3>
+      <p>Treating a professional skill like a hobby</p>
+    </div>
+  </div>
+  <div class="slide-content" style="position: absolute; bottom: 100px;">
+    <h2 class="slide-title" style="font-size: 42px;">
+      Why Do So Many <span class="accent">Fail?</span>
+    </h2>
+  </div>
+</div>
+
+<!-- SLIDE 5: Three Years -->
+<div class="slide" id="slide-5">
+  <div class="bg-gradient"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 48px; margin-bottom: 60px;">
+      The Journey to <span class="accent">Consistency</span>
+    </h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">3</div>
+        <div class="timeline-label">Years of Learning</div>
+      </div>
+      <div class="timeline-connector"></div>
+      <div class="timeline-item">
+        <div class="timeline-year" style="color: var(--cyan);">10+</div>
+        <div class="timeline-label">Hours Daily</div>
+      </div>
+      <div class="timeline-connector"></div>
+      <div class="timeline-item">
+        <div class="timeline-year">∞</div>
+        <div class="timeline-label">Tests & Adjustments</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: The Cycle -->
+<div class="slide" id="slide-6">
+  <div class="bg-grid"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 42px; margin-bottom: 20px;">
+      The <span class="accent">Almost There</span> Cycle
+    </h2>
+    <div class="candle-container">
+      <div class="candle green" style="--h: 120px;">
+        <div class="candle-wick" style="height: 30px;"></div>
+        <div class="candle-body" style="height: 120px;"></div>
+        <div class="candle-wick" style="height: 15px;"></div>
+      </div>
+      <div class="candle green" style="--h: 80px;">
+        <div class="candle-wick" style="height: 20px;"></div>
+        <div class="candle-body" style="height: 80px;"></div>
+        <div class="candle-wick" style="height: 25px;"></div>
+      </div>
+      <div class="candle green" style="--h: 140px;">
+        <div class="candle-wick" style="height: 15px;"></div>
+        <div class="candle-body" style="height: 140px;"></div>
+        <div class="candle-wick" style="height: 10px;"></div>
+      </div>
+      <div class="candle red" style="--h: 100px;">
+        <div class="candle-wick" style="height: 25px;"></div>
+        <div class="candle-body" style="height: 100px;"></div>
+        <div class="candle-wick" style="height: 40px;"></div>
+      </div>
+      <div class="candle red" style="--h: 160px;">
+        <div class="candle-wick" style="height: 10px;"></div>
+        <div class="candle-body" style="height: 160px;"></div>
+        <div class="candle-wick" style="height: 20px;"></div>
+      </div>
+      <div class="candle red" style="--h: 90px;">
+        <div class="candle-wick" style="height: 20px;"></div>
+        <div class="candle-body" style="height: 90px;"></div>
+        <div class="candle-wick" style="height: 35px;"></div>
+      </div>
+      <div class="candle green" style="--h: 60px;">
+        <div class="candle-wick" style="height: 15px;"></div>
+        <div class="candle-body" style="height: 60px;"></div>
+        <div class="candle-wick" style="height: 20px;"></div>
+      </div>
+      <div class="candle green" style="--h: 110px;">
+        <div class="candle-wick" style="height: 25px;"></div>
+        <div class="candle-body" style="height: 110px;"></div>
+        <div class="candle-wick" style="height: 15px;"></div>
+      </div>
+    </div>
+    <p class="slide-subtitle" style="margin-top: 40px;">
+      Profitability feels close... then slips away.<br>
+      <span style="color: var(--gold);">The reason most people quit.</span>
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 7: Social Media -->
+<div class="slide" id="slide-7">
+  <div class="bg-gradient" style="background: radial-gradient(ellipse at 50% 50%, rgba(239,68,68,0.08) 0%, transparent 60%);"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 56px;">
+      The Social Media <span style="color: var(--danger);">Illusion</span>
+    </h2>
+    <div style="display: flex; gap: 60px; justify-content: center; margin-top: 60px;">
+      <div style="text-align: center; opacity: 0; animation: slideUp 0.5s ease 0.3s forwards;">
+        <div style="font-size: 80px; margin-bottom: 20px;">🚗</div>
+        <div style="font-size: 18px; color: var(--text-dim);">Rented Lambos</div>
+      </div>
+      <div style="text-align: center; opacity: 0; animation: slideUp 0.5s ease 0.5s forwards;">
+        <div style="font-size: 80px; margin-bottom: 20px;">📸</div>
+        <div style="font-size: 18px; color: var(--text-dim);">Cherry-picked Screenshots</div>
+      </div>
+      <div style="text-align: center; opacity: 0; animation: slideUp 0.5s ease 0.7s forwards;">
+        <div style="font-size: 80px; margin-bottom: 20px;">💰</div>
+        <div style="font-size: 18px; color: var(--text-dim);">Overpriced Courses</div>
+      </div>
+    </div>
+    <p class="slide-subtitle" style="margin-top: 60px; color: var(--danger);">
+      These people are not traders. They are marketers.
+    </p>
+  </div>
+</div>
+
+<!-- SLIDE 8: How They Profit -->
+<div class="slide" id="slide-8">
+  <div class="bg-grid"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 42px; margin-bottom: 50px;">
+      How <span style="color: var(--danger);">Influencers</span> Actually Profit
+    </h2>
+    <div class="icon-grid">
+      <div class="icon-card" style="border-color: rgba(239,68,68,0.3);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+        </svg>
+        <h3>Broker Affiliations</h3>
+        <p>Profit from your trading volume — even when you lose</p>
+      </div>
+      <div class="icon-card" style="border-color: rgba(239,68,68,0.3);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18M9 21V9"/>
+        </svg>
+        <h3>Prop Firm Affiliations</h3>
+        <p>Knowing most will fail and pay again</p>
+      </div>
+      <div class="icon-card" style="border-color: rgba(239,68,68,0.3);">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="1.5">
+          <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+        </svg>
+        <h3>Course Sales</h3>
+        <p>Just enough to learn, never enough to be independent</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: QP Difference -->
+<div class="slide" id="slide-9">
+  <div class="bg-gradient"></div>
+  <div class="wave-container">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+  <div class="slide-content">
+    <h2 class="slide-title">
+      Built for <span class="accent">Independence</span>
+    </h2>
+    <p class="slide-subtitle" style="margin-bottom: 60px;">
+      Not dependency. Independence.
+    </p>
+    <div style="display: flex; gap: 40px; justify-content: center;">
+      <div style="background: var(--surface); border: 1px solid var(--gold); border-radius: 16px; padding: 30px 40px; opacity: 0; animation: slideUp 0.5s ease 0.3s forwards;">
+        <div style="color: var(--gold); font-size: 14px; letter-spacing: 0.1em; margin-bottom: 10px;">VOLATILITY STATE</div>
+        <div style="font-size: 24px; font-weight: 600;">Recoil</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--cyan); border-radius: 16px; padding: 30px 40px; opacity: 0; animation: slideUp 0.5s ease 0.5s forwards;">
+        <div style="color: var(--cyan); font-size: 14px; letter-spacing: 0.1em; margin-bottom: 10px;">LIQUIDITY STRUCTURE</div>
+        <div style="font-size: 24px; font-weight: 600;">Meridian</div>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--gold); border-radius: 16px; padding: 30px 40px; opacity: 0; animation: slideUp 0.5s ease 0.7s forwards;">
+        <div style="color: var(--gold); font-size: 14px; letter-spacing: 0.1em; margin-bottom: 10px;">TREND REGIME</div>
+        <div style="font-size: 24px; font-weight: 600;">Cockpit</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: The Psychology -->
+<div class="slide" id="slide-10">
+  <div class="bg-gradient" style="background: radial-gradient(ellipse at 50% 30%, rgba(0,171,255,0.08) 0%, transparent 60%);"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 48px;">
+      The <span class="cyan">Psychology</span> of Trading
+    </h2>
+    <div style="display: flex; gap: 30px; justify-content: center; margin-top: 60px;">
+      <div style="text-align: center; padding: 40px; opacity: 0; animation: slideUp 0.4s ease 0.2s forwards;">
+        <div style="font-size: 48px; margin-bottom: 15px;">😊</div>
+        <div style="font-size: 16px; color: var(--success);">Excitement</div>
+        <div style="font-size: 12px; color: var(--text-dim); margin-top: 5px;">Everything is new</div>
+      </div>
+      <div style="font-size: 32px; color: var(--text-dim); align-self: center;">→</div>
+      <div style="text-align: center; padding: 40px; opacity: 0; animation: slideUp 0.4s ease 0.4s forwards;">
+        <div style="font-size: 48px; margin-bottom: 15px;">📉</div>
+        <div style="font-size: 16px; color: var(--danger);">First Loss</div>
+        <div style="font-size: 12px; color: var(--text-dim); margin-top: 5px;">Something shifts</div>
+      </div>
+      <div style="font-size: 32px; color: var(--text-dim); align-self: center;">→</div>
+      <div style="text-align: center; padding: 40px; opacity: 0; animation: slideUp 0.4s ease 0.6s forwards;">
+        <div style="font-size: 48px; margin-bottom: 15px;">🤔</div>
+        <div style="font-size: 16px; color: var(--cyan);">Doubt</div>
+        <div style="font-size: 12px; color: var(--text-dim); margin-top: 5px;">Questioning everything</div>
+      </div>
+      <div style="font-size: 32px; color: var(--text-dim); align-self: center;">→</div>
+      <div style="text-align: center; padding: 40px; opacity: 0; animation: slideUp 0.4s ease 0.8s forwards;">
+        <div style="font-size: 48px; margin-bottom: 15px;">💡</div>
+        <div style="font-size: 16px; color: var(--gold);">Clarity</div>
+        <div style="font-size: 12px; color: var(--text-dim); margin-top: 5px;">For those who persist</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: What's Coming -->
+<div class="slide" id="slide-11">
+  <div class="bg-grid"></div>
+  <div class="slide-content">
+    <h2 class="slide-title" style="font-size: 48px; margin-bottom: 50px;">
+      What's <span class="accent">Coming Next</span>
+    </h2>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-num">PART 2</div>
+        <div class="module-name">The Myths</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">PART 3</div>
+        <div class="module-name">Getting Started</div>
+      </div>
+      <div class="module-card" style="border-color: var(--gold);">
+        <div class="module-num">LEVEL 2</div>
+        <div class="module-name">Risk Management</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">LEVEL 3</div>
+        <div class="module-name">The Algorithm</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">LEVEL 4+</div>
+        <div class="module-name">Strategies</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: Reflection -->
+<div class="slide" id="slide-12">
+  <div class="bg-gradient"></div>
+  <div class="particles">
+    <div class="particle" style="left: 15%; top: 25%;"></div>
+    <div class="particle" style="left: 25%; top: 65%; animation-delay: -3s;"></div>
+    <div class="particle" style="left: 75%; top: 35%; animation-delay: -5s;"></div>
+    <div class="particle" style="left: 80%; top: 75%; animation-delay: -7s;"></div>
+  </div>
+  <div class="reflection-container">
+    <div class="reflection-question">Why are you here?</div>
+    <div class="reflection-prompts">
+      <div class="reflection-prompt">→ Not having to check your bank balance before groceries</div>
+      <div class="reflection-prompt">→ Taking your family on holiday without stress</div>
+      <div class="reflection-prompt">→ Leaving a job that drains your energy</div>
+      <div class="reflection-prompt">→ Waking up without an alarm</div>
+    </div>
+    <div style="margin-top: 60px; text-align: center; opacity: 0; animation: fadeIn 1s ease 2.5s forwards;">
+      <div style="font-size: 24px; color: var(--gold);">Write it down. Keep it visible.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button onclick="prevSlide()">← Previous</button>
+  <button onclick="nextSlide()">Next →</button>
+  <button onclick="toggleAutoPlay()" id="autoPlayBtn">▶ Auto Play</button>
+</div>
+
+<script>
+let currentSlide = 1;
+const totalSlides = 12;
+let autoPlayInterval = null;
+let isAutoPlaying = false;
+
+document.getElementById('totalSlides').textContent = totalSlides;
+
+function showSlide(n) {
+  // Wrap around
+  if (n > totalSlides) n = 1;
+  if (n < 1) n = totalSlides;
+  
+  currentSlide = n;
+  
+  // Hide all slides
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  
+  // Show current slide
+  document.getElementById(`slide-${n}`).classList.add('active');
+  
+  // Update indicator
+  document.getElementById('currentSlide').textContent = n;
+}
+
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function toggleAutoPlay() {
+  isAutoPlaying = !isAutoPlaying;
+  const btn = document.getElementById('autoPlayBtn');
+  
+  if (isAutoPlaying) {
+    btn.textContent = '⏸ Pause';
+    autoPlayInterval = setInterval(nextSlide, 8000); // 8 seconds per slide
+  } else {
+    btn.textContent = '▶ Auto Play';
+    clearInterval(autoPlayInterval);
+  }
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    nextSlide();
+  } else if (e.key === 'ArrowLeft') {
+    prevSlide();
+  }
+});
+
+// Click to advance
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.controls') && !e.target.closest('button')) {
+    nextSlide();
+  }
+});
+</script>
+
+</body>
+</html>
