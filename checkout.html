@@ -186,6 +186,58 @@ body {
   position: relative;
 }
 
+/* Promo Code */
+.promo-input-wrapper {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.promo-input-wrapper input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.promo-input-wrapper input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.promo-apply-btn {
+  padding: 0 1.5rem;
+  background: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.promo-apply-btn:hover {
+  background: #333;
+}
+
+.promo-success {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.promo-error {
+  color: #ef4444;
+}
+
+.promo-applied {
+  background: rgba(34,197,94,0.1);
+  border-color: #22c55e !important;
+}
+
 /* Trust Badges */
 .trust-badges {
   display: flex;
@@ -565,6 +617,18 @@ body {
         </div>
       </div>
       
+      <!-- Promo Code -->
+      <div class="form-section" id="promo-section">
+        <div class="form-section-title">Discount Code</div>
+        <div class="form-row">
+          <div class="promo-input-wrapper">
+            <input type="text" id="promoCode" placeholder="Enter promo code" style="text-transform: uppercase;">
+            <button type="button" class="promo-apply-btn" onclick="applyPromoCode()">Apply</button>
+          </div>
+          <div id="promo-result" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
+        </div>
+      </div>
+      
       <!-- Payment -->
       <div class="form-section">
         <div class="form-section-title">Payment</div>
@@ -935,6 +999,59 @@ function updateDisplay() {
   });
 }
 
+// Promo code state
+let promoApplied = false;
+let promoCode = '';
+
+// Apply promo code
+function applyPromoCode() {
+  const input = document.getElementById('promoCode');
+  const result = document.getElementById('promo-result');
+  const code = input.value.trim().toUpperCase();
+  
+  if (!code) {
+    result.innerHTML = '<span class="promo-error">Please enter a code</span>';
+    return;
+  }
+  
+  // Valid promo codes
+  const validCodes = {
+    'QP2026': { discount: 100, tier: 'suite', message: '🎉 Full Suite access unlocked!' }
+  };
+  
+  if (validCodes[code]) {
+    promoApplied = true;
+    promoCode = code;
+    input.classList.add('promo-applied');
+    input.setAttribute('readonly', true);
+    result.innerHTML = `<span class="promo-success">${validCodes[code].message}</span>`;
+    
+    // Update pricing display
+    document.getElementById('totalValue').textContent = '£0.00';
+    document.getElementById('submitText').textContent = 'Complete Registration';
+    
+    // Hide payment section
+    const formSections = document.querySelectorAll('.form-section');
+    formSections.forEach(section => {
+      const title = section.querySelector('.form-section-title');
+      if (title && title.textContent.includes('Payment')) {
+        section.style.display = 'none';
+      }
+    });
+    
+    // Update order summary
+    const discountLine = document.getElementById('discountLine');
+    if (discountLine) {
+      discountLine.style.display = 'flex';
+      discountLine.querySelector('.label').textContent = 'Promo: ' + code;
+      discountLine.querySelector('.value').textContent = '-100%';
+      discountLine.querySelector('.value').style.color = '#22c55e';
+    }
+  } else {
+    result.innerHTML = '<span class="promo-error">Invalid promo code</span>';
+  }
+}
+
 // Form handling
 document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
   e.preventDefault();
@@ -942,26 +1059,47 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
   const btn = document.getElementById('submitBtn');
   const originalText = document.getElementById('submitText').textContent;
   const email = document.getElementById('email').value;
+  const tvUsername = document.getElementById('tvUsername')?.value || '';
   
   btn.disabled = true;
   document.getElementById('submitText').textContent = 'Processing...';
+  
+  // Check if promo code was applied
+  if (promoApplied && promoCode === 'QP2026') {
+    // Grant full suite access without payment
+    try {
+      // Call backend to register user with suite tier
+      const response = await fetch('https://dashboard.themoneyprinter.uk/api/promo-register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          tvUsername: tvUsername,
+          promoCode: promoCode,
+          tier: 'suite',
+          timestamp: Date.now()
+        })
+      });
+      
+      // Redirect to success
+      const tierParam = productType === 'snippet' ? snippetData?.name : (currentTier || 'suite');
+      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}`;
+    } catch (err) {
+      console.error('Promo registration error:', err);
+      // Still redirect - backend can be set up later
+      const tierParam = productType === 'snippet' ? snippetData?.name : (currentTier || 'suite');
+      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}`;
+    }
+    return;
+  }
   
   // Handle snippet vs tier differently
   if (productType === 'snippet' && snippetData) {
     const isFree = snippetData.price === 0;
     
-    if (isFree) {
-      // Free snippet - just send to email (no payment needed)
-      try {
-        // TODO: API call to send snippet to email
-        setTimeout(() => {
-          window.location.href = `/success.html?type=snippet&name=${encodeURIComponent(snippetData.name)}&email=${encodeURIComponent(email)}`;
-        }, 1500);
-      } catch (err) {
-        btn.disabled = false;
-        document.getElementById('submitText').textContent = originalText;
-        alert('Something went wrong. Please try again.');
-      }
+    if (isFree || promoApplied) {
+      // Free snippet or promo applied
+      window.location.href = `/success.html?type=snippet&name=${encodeURIComponent(snippetData.name)}&email=${encodeURIComponent(email)}&id=${snippetData.id}`;
     } else {
       // Paid snippet - Stripe checkout
       // TODO: Create Stripe checkout session for snippet

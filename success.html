@@ -20,6 +20,7 @@
   --text-muted: rgba(0,0,0,0.4);
   --success: #22c55e;
   --success-glow: rgba(34,197,94,0.15);
+  --mono: 'JetBrains Mono', monospace;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,7 +41,7 @@ body {
   background: var(--surface);
   border-radius: 20px;
   padding: 3rem;
-  max-width: 480px;
+  max-width: 520px;
   width: 100%;
   text-align: center;
   box-shadow: 0 4px 24px rgba(0,0,0,0.06);
@@ -78,14 +79,28 @@ body {
 }
 
 .success-card .email {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--mono);
   font-size: 0.9rem;
   background: var(--gold-glow);
   color: var(--gold);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   display: inline-block;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.success-card .promo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  background: var(--success-glow);
+  color: var(--success);
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
 }
 
 .success-card .btn {
@@ -94,8 +109,8 @@ body {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 2rem;
-  background: var(--text-primary);
-  color: white;
+  background: var(--gold);
+  color: #000;
   border: none;
   border-radius: 10px;
   font-size: 0.9rem;
@@ -103,10 +118,23 @@ body {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.2s;
+  width: 100%;
+  margin-bottom: 0.75rem;
 }
 
 .success-card .btn:hover {
+  background: var(--gold-light);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+}
+
+.success-card .btn.secondary {
+  background: var(--text-primary);
+  color: white;
+}
+
+.success-card .btn.secondary:hover {
+  background: #333;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
@@ -114,11 +142,11 @@ body {
   background: transparent;
   color: var(--text-primary);
   border: 1px solid rgba(0,0,0,0.1);
-  margin-top: 0.75rem;
 }
 
 .success-card .btn.outline:hover {
   background: var(--bg);
+  transform: translateY(-2px);
 }
 
 .logo {
@@ -177,6 +205,124 @@ body {
   font-weight: 700;
   flex-shrink: 0;
 }
+
+/* Code Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal-overlay.visible {
+  display: flex;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: 16px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.modal-body {
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: 50vh;
+}
+
+.code-block {
+  background: #1a1a1f;
+  border-radius: 10px;
+  padding: 1.25rem;
+  overflow-x: auto;
+}
+
+.code-block pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.code-block .keyword { color: #c792ea; }
+.code-block .function { color: #82aaff; }
+.code-block .string { color: #c3e88d; }
+.code-block .number { color: #f78c6c; }
+.code-block .comment { color: #546e7a; }
+.code-block .var { color: #ffcb6b; }
+
+.modal-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  background: var(--bg);
+}
+
+.modal-footer .btn {
+  flex: 1;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .success-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .modal {
+    margin: 0.5rem;
+    max-height: 90vh;
+  }
+  
+  .modal-body {
+    max-height: 60vh;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
@@ -191,30 +337,68 @@ body {
   </div>
   
   <h1 id="title">You're all set!</h1>
-  <p id="description">Your purchase was successful. We've sent confirmation details to:</p>
-  <div class="email" id="email">user@example.com</div>
+  <p id="description">Your purchase was successful.</p>
+  
+  <div class="promo-badge" id="promoBadge" style="display: none;">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+    <span id="promoText">PROMO APPLIED</span>
+  </div>
+  
+  <div class="email" id="email" style="display: none;">user@example.com</div>
   
   <div class="next-steps" id="nextSteps">
     <h3>What's Next</h3>
     <div class="next-step">
       <span class="num">1</span>
-      <span>Check your email for the code snippet</span>
+      <span>Check your email for confirmation</span>
     </div>
     <div class="next-step">
       <span class="num">2</span>
-      <span>Copy the code into TradingView's Pine Editor</span>
+      <span>Log in to your dashboard</span>
     </div>
     <div class="next-step">
       <span class="num">3</span>
-      <span>Customize and use in your own indicators</span>
+      <span>Start using Quant Prime</span>
     </div>
   </div>
   
-  <a href="/dashboard" class="btn">
+  <button class="btn" id="accessCodeBtn" style="display: none;" onclick="showCodeModal()">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Access Your Code
+  </button>
+  
+  <a href="/dashboard" class="btn secondary" id="dashboardBtn">
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
     Go to Dashboard
   </a>
   <a href="/" class="btn outline">Return Home</a>
+</div>
+
+<!-- Code Modal -->
+<div class="modal-overlay" id="codeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Your Code Snippet</h2>
+      <button class="modal-close" onclick="closeCodeModal()">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="code-block">
+        <pre id="codeContent">// Loading...</pre>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn outline" onclick="copyCode()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy Code
+      </button>
+      <button class="btn" onclick="downloadCode()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .pine
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -222,21 +406,259 @@ const params = new URLSearchParams(window.location.search);
 const type = params.get('type') || 'tier';
 const name = params.get('name') || 'Purchase';
 const email = params.get('email') || '';
+const promo = params.get('promo') || '';
+const snippetId = params.get('id') || '';
 
-// Update email display
-if (email) {
-  document.getElementById('email').textContent = email;
-} else {
-  document.getElementById('email').style.display = 'none';
+// Sample code snippets (in production, fetch from backend based on ID)
+const codeSnippets = {
+  'ema-ribbon': `// EMA Ribbon (4-Layer)
+// Draws 4 EMAs in a gradient. When stacked in order, you're trending.
+
+//@version=6
+indicator("EMA Ribbon", overlay=true)
+
+ema1 = ta.ema(close, 8)
+ema2 = ta.ema(close, 21)
+ema3 = ta.ema(close, 55)
+ema4 = ta.ema(close, 200)
+
+plot(ema1, "EMA 8", color=color.new(#c9a84c, 0), linewidth=2)
+plot(ema2, "EMA 21", color=color.new(#c9a84c, 20), linewidth=2)
+plot(ema3, "EMA 55", color=color.new(#c9a84c, 40), linewidth=2)
+plot(ema4, "EMA 200", color=color.new(#c9a84c, 60), linewidth=2)
+
+// Trend detection
+is_bullish = ema1 > ema2 and ema2 > ema3 and ema3 > ema4
+is_bearish = ema1 < ema2 and ema2 < ema3 and ema3 < ema4
+
+bgcolor(is_bullish ? color.new(#22c55e, 90) : is_bearish ? color.new(#ef4444, 90) : na)`,
+  
+  'ema-trend-classifier': `// EMA Trend Classifier
+// Returns BULL/BEAR/NEUTRAL based on EMA stack alignment.
+
+//@version=6
+indicator("EMA Trend Classifier", overlay=true)
+
+ema1 = ta.ema(close, 8)
+ema2 = ta.ema(close, 21)
+ema3 = ta.ema(close, 55)
+ema4 = ta.ema(close, 200)
+
+is_trend_bull = ema1 > ema2 and ema2 > ema3 and ema3 > ema4
+is_trend_bear = ema1 < ema2 and ema2 < ema3 and ema3 < ema4
+ema_bias = is_trend_bull ? "BULL" : is_trend_bear ? "BEAR" : "NEUTRAL"
+
+var label info = na
+label.delete(info)
+info := label.new(bar_index, high, ema_bias, 
+     color=is_trend_bull ? color.green : is_trend_bear ? color.red : color.gray,
+     style=label.style_label_down, textcolor=color.white)`,
+
+  'volatility-band-system': `// Volatility Band Classifier
+// 8-level ATR classifier for volatility intensity.
+
+//@version=6
+indicator("Volatility Bands", overlay=true)
+
+ratio = ta.trueRange / ta.atr(8)
+volBand = ratio > 3.0 ? 8 :
+          ratio > 2.55 ? 7 :
+          ratio > 2.10 ? 6 :
+          ratio > 1.65 ? 5 :
+          ratio > 1.20 ? 4 :
+          ratio > 0.75 ? 3 :
+          ratio > 0.30 ? 2 : 1
+
+// Color by band
+bandColor = volBand >= 7 ? color.red :
+            volBand == 6 ? color.orange :
+            volBand == 5 ? color.yellow :
+            color.gray
+
+barcolor(bandColor)
+
+// Table display
+var table t = table.new(position.top_right, 1, 1)
+table.cell(t, 0, 0, "Band: " + str.tostring(volBand), 
+     bgcolor=bandColor, text_color=color.white)`,
+
+  'liquidity-pool-detector': `// Liquidity Pool Detector
+// Finds swing highs/lows and draws horizontal levels.
+
+//@version=6
+indicator("Liquidity Pools", overlay=true)
+
+ph = ta.pivothigh(high, 5, 5)
+pl = ta.pivotlow(low, 5, 5)
+
+// Draw levels
+if not na(ph)
+    line.new(bar_index[5], ph, bar_index, ph, 
+         color=color.new(#ef4444, 50), style=line.style_dashed)
+    label.new(bar_index[5], ph, "LP", style=label.style_label_down,
+         color=color.new(#ef4444, 80), textcolor=color.white, size=size.tiny)
+
+if not na(pl)
+    line.new(bar_index[5], pl, bar_index, pl,
+         color=color.new(#22c55e, 50), style=line.style_dashed)
+    label.new(bar_index[5], pl, "LP", style=label.style_label_up,
+         color=color.new(#22c55e, 80), textcolor=color.white, size=size.tiny)`,
+
+  'fvg-detector': `// Fair Value Gap Detector
+// Finds gaps where buyers/sellers didn't overlap.
+
+//@version=6
+indicator("FVG Detector", overlay=true)
+
+// Bullish FVG: current low > 2 bars ago high
+bull_fvg = low > high[2] and close > open
+
+// Bearish FVG: current high < 2 bars ago low  
+bear_fvg = high < low[2] and close < open
+
+// Draw boxes
+if bull_fvg
+    box.new(bar_index - 2, high[2], bar_index, low,
+         bgcolor=color.new(#22c55e, 85), border_color=color.new(#22c55e, 50))
+
+if bear_fvg
+    box.new(bar_index - 2, low[2], bar_index, high,
+         bgcolor=color.new(#ef4444, 85), border_color=color.new(#ef4444, 50))`,
+
+  'session-highlighter': `// Session Highlighter
+// Colors chart background during London, New York, Tokyo, Sydney sessions.
+
+//@version=6
+indicator("Session Highlighter", overlay=true)
+
+// Session times (UTC)
+is_london = hour >= 8 and hour < 16
+is_ny = hour >= 13 and hour < 21  
+is_tokyo = hour >= 0 and hour < 9
+is_sydney = hour >= 22 or hour < 7
+
+// Pick dominant session
+session_color = is_london and is_ny ? color.new(#c9a84c, 90) :  // Overlap
+                is_london ? color.new(#00abff, 90) :
+                is_ny ? color.new(#22c55e, 90) :
+                is_tokyo ? color.new(#ef4444, 90) :
+                is_sydney ? color.new(#a855f7, 90) : na
+
+bgcolor(session_color)`,
+
+  'atr-stop-loss': `// ATR Stop Loss Calculator
+// Dynamic stop loss based on ATR.
+
+//@version=6
+indicator("ATR Stop Loss", overlay=true)
+
+atr_val = ta.atr(14)
+multiplier = input.float(1.5, "ATR Multiplier")
+
+sl_long = close - (atr_val * multiplier)
+sl_short = close + (atr_val * multiplier)
+
+plot(sl_long, "Long SL", color=color.green, style=plot.style_stepline)
+plot(sl_short, "Short SL", color=color.red, style=plot.style_stepline)
+
+// Info table
+var table t = table.new(position.top_right, 2, 2)
+table.cell(t, 0, 0, "ATR", bgcolor=color.gray)
+table.cell(t, 1, 0, str.tostring(atr_val, "#.####"))
+table.cell(t, 0, 1, "SL Dist", bgcolor=color.gray)
+table.cell(t, 1, 1, str.tostring(atr_val * multiplier, "#.####"))`,
+
+  'candle-pattern-detector': `// Candle Pattern Detector
+// Detects Engulfing, Doji, Hammer, Shooting Star, Morning/Evening Star.
+
+//@version=6
+indicator("Candle Patterns", overlay=true)
+
+body = math.abs(close - open)
+upper_wick = high - math.max(close, open)
+lower_wick = math.min(close, open) - low
+
+// Pattern detection
+bull_engulf = close > open and close[1] < open[1] and close > open[1] and open < close[1]
+bear_engulf = close < open and close[1] > open[1] and close < open[1] and open > close[1]
+doji = body < (high - low) * 0.1
+hammer = lower_wick > body * 2 and upper_wick < body * 0.5 and close > open
+
+// Plot signals
+plotshape(bull_engulf, "Bull Engulf", shape.triangleup, location.belowbar, color.green)
+plotshape(bear_engulf, "Bear Engulf", shape.triangledown, location.abovebar, color.red)
+plotshape(doji, "Doji", shape.diamond, location.abovebar, color.orange)
+plotshape(hammer, "Hammer", shape.triangleup, location.belowbar, color.blue)`
+};
+
+// Default snippet for unknown IDs
+const defaultSnippet = `// Quant Prime Code Snippet
+// Thank you for your purchase!
+
+//@version=6
+indicator("My Snippet", overlay=true)
+
+// Your code here
+plot(close, "Close", color=color.new(#c9a84c, 0))`;
+
+let currentCode = '';
+let currentName = name;
+
+// Initialize page
+function init() {
+  // Show email if provided
+  if (email) {
+    document.getElementById('email').textContent = email;
+    document.getElementById('email').style.display = 'inline-block';
+  }
+  
+  // Show promo badge if applied
+  if (promo) {
+    document.getElementById('promoBadge').style.display = 'inline-flex';
+    document.getElementById('promoText').textContent = promo + ' APPLIED';
+  }
+  
+  // Handle different purchase types
+  if (type === 'snippet') {
+    initSnippetSuccess();
+  } else if (promo === 'QP2026') {
+    initPromoSuccess();
+  } else {
+    initTierSuccess();
+  }
 }
 
-// Update content based on purchase type
-if (type === 'snippet') {
-  document.getElementById('title').textContent = 'Snippet on its way!';
-  document.getElementById('description').textContent = `Your ${name} code snippet has been sent to:`;
-} else if (type === 'tier') {
+function initSnippetSuccess() {
+  document.getElementById('title').textContent = 'Your code is ready!';
+  document.getElementById('description').textContent = `Your "${name}" snippet is ready to use.`;
+  document.getElementById('accessCodeBtn').style.display = 'flex';
+  document.getElementById('dashboardBtn').style.display = 'none';
+  
+  // Get code based on snippet ID
+  const snippetKey = snippetId || name.toLowerCase().replace(/\s+/g, '-');
+  currentCode = codeSnippets[snippetKey] || defaultSnippet;
+  currentName = name;
+  
+  document.getElementById('nextSteps').innerHTML = `
+    <h3>What's Next</h3>
+    <div class="next-step">
+      <span class="num">1</span>
+      <span>Click "Access Your Code" below</span>
+    </div>
+    <div class="next-step">
+      <span class="num">2</span>
+      <span>Copy or download the Pine Script code</span>
+    </div>
+    <div class="next-step">
+      <span class="num">3</span>
+      <span>Paste into TradingView's Pine Editor</span>
+    </div>
+  `;
+}
+
+function initPromoSuccess() {
   document.getElementById('title').textContent = 'Welcome to Quant Prime!';
-  document.getElementById('description').textContent = 'Your subscription is now active. We\'ve sent a welcome email to:';
+  document.getElementById('description').textContent = 'Full Suite access has been unlocked with your promo code.';
   
   document.getElementById('nextSteps').innerHTML = `
     <h3>What's Next</h3>
@@ -246,7 +668,7 @@ if (type === 'snippet') {
     </div>
     <div class="next-step">
       <span class="num">2</span>
-      <span>We'll grant access within 24 hours (usually sooner)</span>
+      <span>We'll grant indicator access within 24 hours</span>
     </div>
     <div class="next-step">
       <span class="num">3</span>
@@ -254,6 +676,77 @@ if (type === 'snippet') {
     </div>
   `;
 }
+
+function initTierSuccess() {
+  document.getElementById('title').textContent = 'Welcome to Quant Prime!';
+  document.getElementById('description').textContent = `Your ${name} subscription is now active.`;
+  
+  document.getElementById('nextSteps').innerHTML = `
+    <h3>What's Next</h3>
+    <div class="next-step">
+      <span class="num">1</span>
+      <span>Go to your dashboard and set your TradingView username</span>
+    </div>
+    <div class="next-step">
+      <span class="num">2</span>
+      <span>We'll grant indicator access within 24 hours</span>
+    </div>
+    <div class="next-step">
+      <span class="num">3</span>
+      <span>Find your indicators in TradingView under "Invite-only scripts"</span>
+    </div>
+  `;
+}
+
+function showCodeModal() {
+  document.getElementById('modalTitle').textContent = currentName;
+  document.getElementById('codeContent').textContent = currentCode;
+  document.getElementById('codeModal').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCodeModal() {
+  document.getElementById('codeModal').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(currentCode).then(() => {
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+    }, 2000);
+  });
+}
+
+function downloadCode() {
+  const filename = currentName.toLowerCase().replace(/\s+/g, '_') + '.pine';
+  const blob = new Blob([currentCode], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Close modal on overlay click
+document.getElementById('codeModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeCodeModal();
+  }
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeCodeModal();
+  }
+});
+
+init();
 </script>
 </body>
 </html>
