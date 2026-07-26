@@ -3846,101 +3846,122 @@ const isAdmin = () => userTier === 'admin';
 
 // Check authentication on page load
 async function checkAuth() {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  
-  if (!session) {
-    // Not logged in - redirect to login
-    window.location.href = '/dashboard/login.html';
-    return;
-  }
-  
-  authUser = session.user;
-  
-  // Admin emails (auto-assigned admin tier)
-  const ADMIN_EMAILS = [
-    'cashmoretrades@pm.me',
-    'cash@themoneyprinter.uk',
-    'seandavies41@gmail.com'
-  ];
-  
-  // Fetch user profile from database
-  let { data: profile, error } = await supabaseClient
-    .from('profiles')
-    .select('*')
-    .eq('id', authUser.id)
-    .single();
-  
-  // If no profile exists, create one
-  if (!profile || error) {
-    const isAdmin = ADMIN_EMAILS.includes(authUser.email.toLowerCase());
-    const newProfile = {
-      id: authUser.id,
-      email: authUser.email,
-      tier: isAdmin ? 'admin' : 'free',
-      display_name: authUser.email.split('@')[0],
-      created_at: new Date().toISOString()
-    };
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
     
-    const { data: inserted, error: insertError } = await supabaseClient
-      .from('profiles')
-      .insert(newProfile)
-      .select()
-      .single();
-    
-    if (inserted) {
-      profile = inserted;
-      console.log('Created profile:', profile);
-    } else {
-      console.error('Failed to create profile:', insertError);
-      profile = newProfile; // Use local copy
+    if (!session) {
+      window.location.href = '/dashboard/login.html';
+      return;
     }
-  }
-  
-  if (profile) {
-    userProfile = profile;
-    userTier = (profile.tier || 'free').toLowerCase();
-    currentUser = profile.display_name || authUser.email.split('@')[0];
-  } else {
-    userProfile = { id: authUser.id, tier: 'free' };
+    
+    authUser = session.user;
+    
+    // Admin emails (auto-assigned admin tier)
+    const ADMIN_EMAILS = [
+      'cashmoretrades@pm.me',
+      'cash@themoneyprinter.uk',
+      'seandavies41@gmail.com'
+    ];
+    
+    // Check if user is admin by email
+    const isAdminEmail = ADMIN_EMAILS.includes(authUser.email.toLowerCase());
+    
+    // Try to fetch profile, but don't let errors break the page
+    let profile = null;
+    try {
+      const { data, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
+      
+      if (data && !error) {
+        profile = data;
+      }
+    } catch (e) {
+      console.log('Profile fetch failed, using defaults:', e);
+    }
+    
+    // If no profile, try to create one (but don't break if it fails)
+    if (!profile) {
+      try {
+        const newProfile = {
+          id: authUser.id,
+          email: authUser.email,
+          tier: isAdminEmail ? 'admin' : 'free',
+          display_name: authUser.email.split('@')[0],
+          created_at: new Date().toISOString()
+        };
+        
+        const { data: inserted } = await supabaseClient
+          .from('profiles')
+          .insert(newProfile)
+          .select()
+          .single();
+        
+        if (inserted) {
+          profile = inserted;
+          console.log('Created profile:', profile);
+        }
+      } catch (e) {
+        console.log('Profile creation failed:', e);
+      }
+    }
+    
+    // Set tier - prioritize admin email check
+    if (isAdminEmail) {
+      userTier = 'admin';
+    } else if (profile && profile.tier) {
+      userTier = profile.tier.toLowerCase();
+    } else {
+      userTier = 'free';
+    }
+    
+    userProfile = profile || { id: authUser.id, tier: userTier, email: authUser.email };
+    currentUser = (profile && profile.display_name) || authUser.email.split('@')[0];
+    
+    // Generate short user ID from UUID (first 8 chars uppercase)
+    const userId = authUser.id.substring(0, 8).toUpperCase();
+    
+    // Update UI with user info
+    document.getElementById('user-tier').textContent = userTier.toUpperCase();
+    document.getElementById('user-email').textContent = authUser.email;
+    
+    // Update user ID displays
+    const userIdEls = document.querySelectorAll('.user-id-value');
+    userIdEls.forEach(el => el.textContent = userId);
+    
+    localStorage.setItem('qp_username', currentUser);
+    localStorage.setItem('qp_user_id', userId);
+    
+    // Update welcome message with name
+    const welcomeName = document.getElementById('user-display-name');
+    if (welcomeName) {
+      welcomeName.textContent = currentUser;
+    }
+    
+    // Apply tier-based access control
+    applyTierAccess();
+    
+    // Update all dashboard data with real values
+    updateDashboardData();
+    
+    // Update mobile tier badge
+    updateMobileTier();
+    
+    // Hide username modal since we have auth
+    document.getElementById('username-modal').classList.add('hidden');
+    
+    // Initialize chat with authenticated user
+    if (chatEnabled) {
+      subscribeToRoom(currentRoom);
+    }
+    
+  } catch (err) {
+    console.error('Auth error:', err);
+    // Don't redirect on error, just show default state
     userTier = 'free';
-    currentUser = authUser.email.split('@')[0];
-  }
-  
-  // Generate short user ID from UUID (first 8 chars uppercase)
-  const userId = authUser.id.substring(0, 8).toUpperCase();
-  
-  // Update UI with user info
-  document.getElementById('user-tier').textContent = userTier.toUpperCase();
-  document.getElementById('user-email').textContent = authUser.email;
-  
-  // Update user ID displays
-  const userIdEls = document.querySelectorAll('.user-id-value');
-  userIdEls.forEach(el => el.textContent = userId);
-  
-  localStorage.setItem('qp_username', currentUser);
-  localStorage.setItem('qp_user_id', userId);
-  
-  // Update welcome message with name
-  const welcomeName = document.getElementById('user-display-name');
-  if (welcomeName) {
-    welcomeName.textContent = currentUser;
-  }
-  
-  // Apply tier-based access control
-  applyTierAccess();
-  
-  // Update all dashboard data with real values
-  updateDashboardData();
-  
-  // Update mobile tier badge
-  updateMobileTier();
-  
-  // Hide username modal since we have auth
-  document.getElementById('username-modal').classList.add('hidden');
-  
-  // Initialize chat with authenticated user
-  if (chatEnabled) {
-    subscribeToRoom(currentRoom);
+    applyTierAccess();
   }
 }
 
