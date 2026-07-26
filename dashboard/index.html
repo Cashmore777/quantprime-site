@@ -3473,9 +3473,21 @@ button, .nav-item, .room, .video-item, .filter-chip {
       
       <div class="panel">
         <h4>TradingView</h4>
-        <div class="form-row">
-          <label>Username</label>
-          <input class="mono" value="QP_Member_041">
+        <div class="tv-username-row">
+          <div class="tv-username-field">
+            <label>Username</label>
+            <div class="tv-input-wrapper">
+              <input class="mono tv-username-input" id="tv-username-settings" value="QP_Member_041" readonly style="max-width: 320px;">
+              <button class="btn sm btn-edit" onclick="enableTvEdit('settings')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.85 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                Edit
+              </button>
+              <button class="btn sm btn-save" onclick="saveTvUsername('settings')" style="display: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Save
+              </button>
+            </div>
+          </div>
         </div>
         <div class="callout">This controls your indicator access. Check it character-for-character.</div>
       </div>
@@ -3722,6 +3734,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authUser = null;
 let userTier = 'free';
+let currentUserEmail = null;
 
 // Tier access definitions
 const TIER_ACCESS = {
@@ -3776,6 +3789,7 @@ async function checkAuth() {
   
   currentUser = currentUser || authUser.email.split('@')[0];
   userProfile = { id: authUser.id, tier: userTier, email: authUser.email };
+  currentUserEmail = authUser.email;
   
   // Generate short user ID
   const userId = authUser.id.substring(0, 8).toUpperCase();
@@ -4470,15 +4484,15 @@ function purchaseProduct(productId) {
   const product = marketplaceProducts.find(p => p.id === productId);
   if (!product) return;
   
-  if (product.price === 0) {
-    // Free product - show code directly or download
-    alert('Free download! Check your email for the code snippet.');
-    // TODO: Send to email or show modal with code
-  } else {
-    // Paid product - redirect to Stripe checkout
-    // TODO: Integrate with Stripe
-    alert('Stripe checkout coming soon! Price: £' + product.price);
-  }
+  // Redirect to product checkout page with product details
+  const params = new URLSearchParams({
+    id: productId,
+    name: product.name,
+    price: product.price,
+    type: 'snippet'
+  });
+  
+  window.location.href = `/checkout.html?${params.toString()}`;
 }
 
 // Filter functionality
@@ -5047,6 +5061,11 @@ async function saveTvUsername(indicator) {
     return;
   }
   
+  // Get current/old username before updating
+  const oldUsername = userProfile?.tradingview_username || 'Not set';
+  const userEmail = userProfile?.email || currentUserEmail || 'Unknown';
+  const qpUserId = localStorage.getItem('qp_user_id') || 'Unknown';
+  
   // Lock the input
   input.setAttribute('readonly', true);
   editBtn.style.display = 'flex';
@@ -5057,14 +5076,44 @@ async function saveTvUsername(indicator) {
     inp.value = newUsername;
   });
   
-  // Send notification to backend
+  // Save to Supabase
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      const { error } = await supabaseClient
+        .from('profiles')
+        .update({ tradingview_username: newUsername })
+        .eq('id', user.id);
+      
+      if (error) {
+        console.error('Error saving TV username:', error);
+        alert('Failed to save username. Please try again.');
+        return;
+      }
+      
+      // Update local userProfile
+      if (userProfile) {
+        userProfile.tradingview_username = newUsername;
+      }
+      
+      console.log('[Dashboard] TV username saved to Supabase:', newUsername);
+    }
+  } catch (e) {
+    console.error('Error updating TV username:', e);
+  }
+  
+  // Send notification to backend with full user details
   try {
     await fetch('https://dashboard.themoneyprinter.uk/api/tv-username-change', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        username: newUsername,
+        qpUserId: qpUserId,
+        email: userEmail,
+        oldUsername: oldUsername,
+        newUsername: newUsername,
         indicator: indicator,
+        tier: userTier,
         timestamp: Date.now()
       })
     });
@@ -5073,12 +5122,14 @@ async function saveTvUsername(indicator) {
   }
   
   // Show confirmation
-  const callout = input.closest('.panel').querySelector('.callout');
-  const originalText = callout.innerHTML;
-  callout.innerHTML = '<span style="color: var(--success);">✓ Username updated! The team will update your TradingView access shortly.</span>';
-  setTimeout(() => {
-    callout.innerHTML = originalText;
-  }, 5000);
+  const callout = input.closest('.panel')?.querySelector('.callout');
+  if (callout) {
+    const originalText = callout.innerHTML;
+    callout.innerHTML = '<span style="color: var(--success);">✓ Username saved! The team will update your TradingView access shortly.</span>';
+    setTimeout(() => {
+      callout.innerHTML = originalText;
+    }, 5000);
+  }
 }
 
 // ========================================

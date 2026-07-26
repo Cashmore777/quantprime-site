@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Success — Quant Prime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.12);
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0,0,0,0.6);
+  --text-muted: rgba(0,0,0,0.4);
+  --success: #22c55e;
+  --success-glow: rgba(34,197,94,0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.success-card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--success-glow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.success-icon svg {
+  width: 40px;
+  height: 40px;
+  stroke: var(--success);
+}
+
+.success-card h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.success-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.success-card .email {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  background: var(--gold-glow);
+  color: var(--gold);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 2rem;
+}
+
+.success-card .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.success-card .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.success-card .btn.outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(0,0,0,0.1);
+  margin-top: 0.75rem;
+}
+
+.success-card .btn.outline:hover {
+  background: var(--bg);
+}
+
+.logo {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.logo span { color: var(--gold); }
+
+.next-steps {
+  text-align: left;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.next-steps h3 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.next-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.next-step:last-child {
+  margin-bottom: 0;
+}
+
+.next-step .num {
+  width: 22px;
+  height: 22px;
+  background: var(--gold-glow);
+  color: var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<a href="/" class="logo">QUANT<span>PRIME</span></a>
+
+<div class="success-card">
+  <div class="success-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 6L9 17l-5-5"/>
+    </svg>
+  </div>
+  
+  <h1 id="title">You're all set!</h1>
+  <p id="description">Your purchase was successful. We've sent confirmation details to:</p>
+  <div class="email" id="email">user@example.com</div>
+  
+  <div class="next-steps" id="nextSteps">
+    <h3>What's Next</h3>
+    <div class="next-step">
+      <span class="num">1</span>
+      <span>Check your email for the code snippet</span>
+    </div>
+    <div class="next-step">
+      <span class="num">2</span>
+      <span>Copy the code into TradingView's Pine Editor</span>
+    </div>
+    <div class="next-step">
+      <span class="num">3</span>
+      <span>Customize and use in your own indicators</span>
+    </div>
+  </div>
+  
+  <a href="/dashboard" class="btn">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Go to Dashboard
+  </a>
+  <a href="/" class="btn outline">Return Home</a>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const type = params.get('type') || 'tier';
+const name = params.get('name') || 'Purchase';
+const email = params.get('email') || '';
+
+// Update email display
+if (email) {
+  document.getElementById('email').textContent = email;
+} else {
+  document.getElementById('email').style.display = 'none';
+}
+
+// Update content based on purchase type
+if (type === 'snippet') {
+  document.getElementById('title').textContent = 'Snippet on its way!';
+  document.getElementById('description').textContent = `Your ${name} code snippet has been sent to:`;
+} else if (type === 'tier') {
+  document.getElementById('title').textContent = 'Welcome to Quant Prime!';
+  document.getElementById('description').textContent = 'Your subscription is now active. We\'ve sent a welcome email to:';
+  
+  document.getElementById('nextSteps').innerHTML = `
+    <h3>What's Next</h3>
+    <div class="next-step">
+      <span class="num">1</span>
+      <span>Go to your dashboard and set your TradingView username</span>
+    </div>
+    <div class="next-step">
+      <span class="num">2</span>
+      <span>We'll grant access within 24 hours (usually sooner)</span>
+    </div>
+    <div class="next-step">
+      <span class="num">3</span>
+      <span>Find your indicators in TradingView under "Invite-only scripts"</span>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

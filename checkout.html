@@ -770,14 +770,92 @@ const tiers = {
 const params = new URLSearchParams(window.location.search);
 let currentTier = params.get('tier') || 'suite';
 let currentBilling = params.get('billing') || 'annual';
+let productType = params.get('type') || 'tier';
+let snippetData = null;
+
+// Check if this is a marketplace snippet
+if (productType === 'snippet') {
+  snippetData = {
+    id: params.get('id'),
+    name: params.get('name') || 'Code Snippet',
+    price: parseFloat(params.get('price')) || 0
+  };
+}
 
 // Initialize
 function init() {
-  const tier = tiers[currentTier];
-  if (!tier) {
-    currentTier = 'suite';
+  if (productType === 'snippet' && snippetData) {
+    initSnippetCheckout();
+  } else {
+    const tier = tiers[currentTier];
+    if (!tier) {
+      currentTier = 'suite';
+    }
+    updateDisplay();
   }
-  updateDisplay();
+}
+
+// Initialize snippet checkout (marketplace products)
+function initSnippetCheckout() {
+  const isFree = snippetData.price === 0;
+  
+  // Update page title
+  document.querySelector('.checkout-form-section h1').textContent = isFree ? 'Get Your Code' : 'Purchase Snippet';
+  document.querySelector('.checkout-form-section > p').textContent = isFree 
+    ? 'Enter your email to receive the code snippet.' 
+    : 'Complete your purchase to get instant access.';
+  
+  // Hide billing toggle for snippets
+  const billingToggle = document.querySelector('.billing-toggle');
+  if (billingToggle) billingToggle.style.display = 'none';
+  
+  // Hide card section for free products
+  if (isFree) {
+    const cardSection = document.querySelector('.form-section:last-of-type');
+    if (cardSection && cardSection.querySelector('#cardNumber')) {
+      cardSection.style.display = 'none';
+    }
+  }
+  
+  // Update order summary
+  document.getElementById('tierName').textContent = snippetData.name;
+  document.getElementById('tierBadge').textContent = isFree ? 'FREE' : 'ONE-TIME';
+  
+  // Update features with single item
+  document.getElementById('tierFeatures').innerHTML = `
+    <div class="tier-feature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      Pine Script v6 source code
+    </div>
+    <div class="tier-feature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      Copy, paste, customize
+    </div>
+    <div class="tier-feature">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      Use in your own indicators
+    </div>
+  `;
+  
+  // Update pricing
+  document.getElementById('subtotalLabel').textContent = snippetData.name;
+  const priceStr = isFree ? 'FREE' : `£${snippetData.price.toFixed(2)}`;
+  document.getElementById('subtotalValue').textContent = priceStr;
+  document.getElementById('discountLine').style.display = 'none';
+  document.getElementById('totalValue').textContent = priceStr;
+  document.getElementById('submitText').textContent = isFree ? 'Get Free Snippet' : `Pay £${snippetData.price.toFixed(2)}`;
+  
+  // Update guarantees
+  document.querySelector('.guarantees').innerHTML = `
+    <div class="guarantee-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Instant delivery to your email after purchase.</span>
+    </div>
+    <div class="guarantee-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Use the code in any Pine Script project.</span>
+    </div>
+  `;
 }
 
 function selectBilling(billing) {
@@ -839,21 +917,50 @@ function updateDisplay() {
 }
 
 // Form handling
-document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
   const btn = document.getElementById('submitBtn');
   const originalText = document.getElementById('submitText').textContent;
+  const email = document.getElementById('email').value;
   
   btn.disabled = true;
   document.getElementById('submitText').textContent = 'Processing...';
   
-  // Simulate processing (replace with actual Stripe integration)
-  setTimeout(() => {
-    alert('Payment integration coming soon! This is a demo checkout page.');
-    btn.disabled = false;
-    document.getElementById('submitText').textContent = originalText;
-  }, 2000);
+  // Handle snippet vs tier differently
+  if (productType === 'snippet' && snippetData) {
+    const isFree = snippetData.price === 0;
+    
+    if (isFree) {
+      // Free snippet - just send to email (no payment needed)
+      try {
+        // TODO: API call to send snippet to email
+        setTimeout(() => {
+          window.location.href = `/success.html?type=snippet&name=${encodeURIComponent(snippetData.name)}&email=${encodeURIComponent(email)}`;
+        }, 1500);
+      } catch (err) {
+        btn.disabled = false;
+        document.getElementById('submitText').textContent = originalText;
+        alert('Something went wrong. Please try again.');
+      }
+    } else {
+      // Paid snippet - Stripe checkout
+      // TODO: Create Stripe checkout session for snippet
+      setTimeout(() => {
+        alert('Stripe integration coming soon for marketplace purchases!');
+        btn.disabled = false;
+        document.getElementById('submitText').textContent = originalText;
+      }, 1500);
+    }
+  } else {
+    // Tier subscription checkout
+    // TODO: Create Stripe checkout session for subscription
+    setTimeout(() => {
+      alert('Payment integration coming soon! This is a demo checkout page.');
+      btn.disabled = false;
+      document.getElementById('submitText').textContent = originalText;
+    }, 2000);
+  }
 });
 
 // Card number formatting
