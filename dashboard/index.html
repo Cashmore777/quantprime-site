@@ -4748,16 +4748,15 @@ const TIER_HIERARCHY = ['free', 'research', 'recoil', 'meridian', 'cockpit', 'as
 
 // Check if user has access to a tier
 function hasAccessToTier(requiredTier) {
-  const userTier = (currentUserTier || 'free').toLowerCase();
-  const userIndex = TIER_HIERARCHY.indexOf(userTier);
+  const currentTier = (window.userTier || 'free').toLowerCase();
   const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
   
   // Map terminal -> meridian, suite -> cockpit for access checks
   const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
-  const mappedUserTier = tierMap[userTier] || userTier;
-  const mappedUserIndex = TIER_HIERARCHY.indexOf(mappedUserTier);
+  const mappedTier = tierMap[currentTier] || currentTier;
+  const mappedIndex = TIER_HIERARCHY.indexOf(mappedTier);
   
-  return mappedUserIndex >= requiredIndex || userTier === 'admin';
+  return mappedIndex >= requiredIndex || currentTier === 'admin';
 }
 
 // Get upgrade tier name for display
