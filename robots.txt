@@ -1,9 +1,25 @@
 # Quant Prime - robots.txt
+# https://quantprime.uk
+
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://quantprime.uk/sitemap.xml
 
-# Block dashboard (requires login)
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Block admin/private areas
 Disallow: /dashboard/
+Disallow: /api/
+Disallow: /*.json$
+
+# Allow important assets
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+
+# Block duplicate content
+Disallow: /checkout.html
+Disallow: /success.html
