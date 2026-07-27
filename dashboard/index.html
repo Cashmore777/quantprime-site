@@ -1415,6 +1415,113 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .marketplace-item .code-preview .var { color: var(--gold); }
 .marketplace-item .code-preview .string { color: var(--success); }
 
+/* Tier filter chips */
+.tier-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-chip.tier-free { --chip-color: #22c55e; }
+.filter-chip.tier-research { --chip-color: #00abff; }
+.filter-chip.tier-recoil { --chip-color: #c9a84c; }
+.filter-chip.tier-meridian { --chip-color: #8b5cf6; }
+.filter-chip.tier-cockpit { --chip-color: #ef4444; }
+.filter-chip.tier-ascension { --chip-color: #ffd700; background: linear-gradient(135deg, #c9a84c, #ffd700); }
+.filter-chip[data-tier]:not(.active):hover { border-color: var(--chip-color, var(--border)); color: var(--chip-color, var(--text-1)); }
+
+/* Tier badge on items */
+.marketplace-item .tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  padding: 4px 10px;
+  align-self: flex-start;
+}
+.tier-badge.free { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tier-badge.research { background: rgba(0,171,255,0.15); color: #00abff; }
+.tier-badge.recoil { background: rgba(201,168,76,0.15); color: #c9a84c; }
+.tier-badge.meridian { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+.tier-badge.cockpit { background: rgba(239,68,68,0.15); color: #ef4444; }
+.tier-badge.ascension { 
+  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(255,215,0,0.2)); 
+  color: #ffd700;
+  border: 1px solid rgba(255,215,0,0.3);
+}
+
+/* Locked item styling */
+.marketplace-item.locked {
+  position: relative;
+  pointer-events: none;
+}
+.marketplace-item.locked .code-preview,
+.marketplace-item.locked h4,
+.marketplace-item.locked .description,
+.marketplace-item.locked .purchase-row {
+  filter: blur(4px);
+  opacity: 0.5;
+  user-select: none;
+}
+.marketplace-item.locked .tier-badge { filter: none; opacity: 1; }
+.marketplace-item.locked .lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.6);
+  border-radius: var(--card-radius);
+  z-index: 2;
+  pointer-events: all;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.marketplace-item.locked .lock-overlay:hover {
+  background: rgba(255,255,255,0.8);
+}
+.marketplace-item.locked .lock-overlay svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--text-3);
+  margin-bottom: 8px;
+}
+.marketplace-item.locked .lock-overlay .unlock-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-align: center;
+}
+.marketplace-item.locked .lock-overlay .unlock-tier {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Ascension featured items - golden glow */
+.marketplace-item.ascension-featured {
+  border: 1px solid rgba(255,215,0,0.4);
+  background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, var(--surface) 50%);
+  box-shadow: 0 0 20px rgba(255,215,0,0.1);
+}
+.marketplace-item.ascension-featured:hover {
+  border-color: #ffd700;
+  box-shadow: 0 0 30px rgba(255,215,0,0.2), var(--shadow-md);
+}
+.marketplace-item.ascension-featured::before {
+  content: '★ ASCENSION EXCLUSIVE';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #ffd700;
+  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(255,215,0,0.15));
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,215,0,0.3);
+}
+
 .marketplace-item h4 {
   font-size: 15px;
   font-weight: 600;
@@ -3456,19 +3563,20 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <div class="view-header">
       <div class="eyebrow">Quant Prime Labs</div>
       <h2>The <em>code library</em>.</h2>
-      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">28 Pine Script v6 modules. Copy, paste, done.</p>
+      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Pine Script modules unlocked by tier. Upgrade to access more.</p>
     </div>
     
     <div class="marketplace-bar" id="marketplace-filters">
       <input placeholder="Search snippets…" id="marketplace-search">
-      <button class="filter-chip active" data-filter="all">All</button>
-      <button class="filter-chip" data-filter="trend">Trend</button>
-      <button class="filter-chip" data-filter="volatility">Volatility</button>
-      <button class="filter-chip" data-filter="structure">Structure</button>
-      <button class="filter-chip" data-filter="risk">Risk</button>
-      <button class="filter-chip" data-filter="patterns">Patterns</button>
-      <button class="filter-chip" data-filter="dashboard">Dashboard</button>
-      <button class="filter-chip" data-filter="automation">Automation</button>
+      <div class="tier-filters">
+        <button class="filter-chip active" data-tier="all">All</button>
+        <button class="filter-chip tier-free" data-tier="free">Free</button>
+        <button class="filter-chip tier-research" data-tier="research">Research</button>
+        <button class="filter-chip tier-recoil" data-tier="recoil">Recoil</button>
+        <button class="filter-chip tier-meridian" data-tier="meridian">Meridian</button>
+        <button class="filter-chip tier-cockpit" data-tier="cockpit">Cockpit</button>
+        <button class="filter-chip tier-ascension" data-tier="ascension">Ascension</button>
+      </div>
     </div>
     
     <div class="marketplace-grid" id="marketplace-grid">
@@ -4511,9 +4619,37 @@ if (!chatEnabled) {
 }
 
 // ==========================================
-// MARKETPLACE - DYNAMIC LOADING
+// MARKETPLACE - TIER-BASED UNLOCKS
 // ==========================================
 let marketplaceProducts = [];
+let marketplaceTiers = {};
+const TIER_HIERARCHY = ['free', 'research', 'recoil', 'meridian', 'cockpit', 'ascension', 'admin'];
+
+// Check if user has access to a tier
+function hasAccessToTier(requiredTier) {
+  const userTier = (currentUserTier || 'free').toLowerCase();
+  const userIndex = TIER_HIERARCHY.indexOf(userTier);
+  const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
+  
+  // Map terminal -> meridian, suite -> cockpit for access checks
+  const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
+  const mappedUserTier = tierMap[userTier] || userTier;
+  const mappedUserIndex = TIER_HIERARCHY.indexOf(mappedUserTier);
+  
+  return mappedUserIndex >= requiredIndex || userTier === 'admin';
+}
+
+// Get upgrade tier name for display
+function getUpgradeTierName(tier) {
+  const names = {
+    'research': 'Research',
+    'recoil': 'Recoil',
+    'meridian': 'Terminal',
+    'cockpit': 'Full Suite',
+    'ascension': 'Ascension'
+  };
+  return names[tier] || tier;
+}
 
 async function loadMarketplaceProducts() {
   const grid = document.getElementById('marketplace-grid');
@@ -4522,6 +4658,7 @@ async function loadMarketplaceProducts() {
     const res = await fetch('/data/marketplace-products.json');
     const data = await res.json();
     marketplaceProducts = data.products;
+    marketplaceTiers = data.tiers || {};
     renderMarketplaceProducts(marketplaceProducts);
   } catch (e) {
     console.error('Failed to load products:', e);
@@ -4538,58 +4675,134 @@ function renderMarketplaceProducts(products) {
   }
   
   grid.innerHTML = products.map(p => {
-    const priceDisplay = p.priceLabel || `£${p.price}`;
-    const isFree = p.price === 0;
-    const btnClass = isFree ? 'buy-btn' : 'buy-btn';
-    const btnText = isFree ? 'Get Free' : 'Purchase';
+    const tier = p.tier || 'free';
+    const isUnlocked = hasAccessToTier(tier);
+    const isFeatured = p.featured && tier === 'ascension';
+    const tierLabel = marketplaceTiers[tier]?.label || tier;
+    
+    const lockedClass = isUnlocked ? '' : 'locked';
+    const featuredClass = isFeatured ? 'ascension-featured' : '';
+    
+    const lockOverlay = !isUnlocked ? `
+      <div class="lock-overlay" onclick="promptUpgrade('${tier}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+        <div class="unlock-text">Unlock with <span class="unlock-tier">${getUpgradeTierName(tier)}</span></div>
+      </div>
+    ` : '';
+    
+    const btnText = isUnlocked ? 'Copy Code' : 'Locked';
+    const btnDisabled = isUnlocked ? '' : 'disabled';
     
     return `
-      <div class="marketplace-item" data-category="${p.category}" data-id="${p.id}">
+      <div class="marketplace-item ${lockedClass} ${featuredClass}" data-tier="${tier}" data-category="${p.category}" data-id="${p.id}" style="position: relative;">
+        ${lockOverlay}
+        <span class="tier-badge ${tier}">${tierLabel}</span>
         <div class="code-preview">${escapeHtml(p.preview)}</div>
-        <span class="item-tag">${p.category.charAt(0).toUpperCase() + p.category.slice(1)}</span>
         <h4>${escapeHtml(p.name)}</h4>
         <div class="description">${escapeHtml(p.description)}</div>
         <div class="purchase-row">
-          <div class="price">${priceDisplay}</div>
-          <button class="${btnClass}" onclick="purchaseProduct('${p.id}')">${btnText}</button>
+          <div class="price" style="color: var(--success);">Included</div>
+          <button class="buy-btn" onclick="copySnippet('${p.id}')" ${btnDisabled}>${btnText}</button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function purchaseProduct(productId) {
+function copySnippet(productId) {
   const product = marketplaceProducts.find(p => p.id === productId);
   if (!product) return;
   
-  // Redirect to product checkout page with product details
-  const params = new URLSearchParams({
-    id: productId,
-    name: product.name,
-    price: product.price,
-    type: 'snippet'
-  });
-  
-  window.location.href = `/checkout.html?${params.toString()}`;
+  // Show modal with full code
+  showCodeModal(product);
 }
 
-// Filter functionality
-document.querySelectorAll('#marketplace-filters .filter-chip').forEach(chip => {
+function showCodeModal(product) {
+  // Create modal if it doesn't exist
+  let modal = document.getElementById('code-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'code-modal';
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width: 700px;">
+        <div class="modal-header">
+          <h3 id="code-modal-title"></h3>
+          <button class="modal-close" onclick="closeCodeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <pre id="code-modal-code" style="background: #1a1a1a; color: #e0e0e0; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.6;"></pre>
+          <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button class="btn gold" onclick="copyToClipboard()">Copy to Clipboard</button>
+            <button class="btn outline" onclick="downloadCode()">Download .pine</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // Set content
+  document.getElementById('code-modal-title').textContent = product.name;
+  document.getElementById('code-modal-code').textContent = product.preview;
+  modal.dataset.filename = product.id + '.pine';
+  modal.dataset.code = product.preview;
+  
+  // Show modal
+  modal.classList.add('active');
+}
+
+function closeCodeModal() {
+  document.getElementById('code-modal')?.classList.remove('active');
+}
+
+function copyToClipboard() {
+  const code = document.getElementById('code-modal-code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    showToast('Code copied to clipboard!', 'success');
+  });
+}
+
+function downloadCode() {
+  const modal = document.getElementById('code-modal');
+  const code = modal.dataset.code;
+  const filename = modal.dataset.filename;
+  
+  const blob = new Blob([code], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function promptUpgrade(requiredTier) {
+  const tierName = getUpgradeTierName(requiredTier);
+  showToast(`Upgrade to ${tierName} to unlock this code`, 'info');
+  // Could also open pricing modal or redirect to /pricing
+}
+
+// Tier filter functionality
+document.querySelectorAll('#marketplace-filters .filter-chip[data-tier]').forEach(chip => {
   chip.addEventListener('click', () => {
     document.querySelectorAll('#marketplace-filters .filter-chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     
-    const filter = chip.dataset.filter;
-    if (filter === 'all') {
+    const tier = chip.dataset.tier;
+    if (tier === 'all') {
       renderMarketplaceProducts(marketplaceProducts);
     } else {
-      renderMarketplaceProducts(marketplaceProducts.filter(p => p.category === filter));
+      renderMarketplaceProducts(marketplaceProducts.filter(p => p.tier === tier));
     }
   });
 });
 
 // Search functionality
-document.getElementById('marketplace-search').addEventListener('input', e => {
+document.getElementById('marketplace-search')?.addEventListener('input', e => {
   const query = e.target.value.toLowerCase();
   if (!query) {
     renderMarketplaceProducts(marketplaceProducts);
@@ -4599,6 +4812,7 @@ document.getElementById('marketplace-search').addEventListener('input', e => {
   const filtered = marketplaceProducts.filter(p => 
     p.name.toLowerCase().includes(query) || 
     p.description.toLowerCase().includes(query) ||
+    p.tier.toLowerCase().includes(query) ||
     p.category.toLowerCase().includes(query)
   );
   renderMarketplaceProducts(filtered);

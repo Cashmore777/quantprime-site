@@ -3,241 +3,237 @@
     {
       "id": "ema-ribbon",
       "name": "EMA Ribbon (4-Layer)",
+      "tier": "free",
       "category": "trend",
-      "price": 0,
-      "priceLabel": "FREE",
       "description": "Draws 4 EMAs in a gradient. When stacked in order, you're trending. The foundation of trend reading.",
       "preview": "ema1 = ta.ema(close, 8)\nema2 = ta.ema(close, 26)\nema3 = ta.ema(close, 80)\nema4 = ta.ema(close, 233)"
     },
     {
       "id": "pdhl",
       "name": "Previous Day High/Low/Close",
+      "tier": "free",
       "category": "structure",
-      "price": 0,
-      "priceLabel": "FREE",
       "description": "Horizontal lines at yesterday's High, Low, and Close. Simple but powerful institutional levels.",
       "preview": "[pd_h, pd_l, pd_c] = request.security(\"D\",\n    [high[1], low[1], close[1]])"
     },
     {
       "id": "weekly-open",
       "name": "Weekly Open Line",
+      "tier": "free",
       "category": "structure",
-      "price": 0,
-      "priceLabel": "FREE",
       "description": "Horizontal line at weekly open. Above = bullish week bias, below = bearish. Institutional key level.",
       "preview": "weekly_open = request.security(\"W\", open)"
     },
     {
       "id": "countdown",
       "name": "Candle Countdown Timer",
+      "tier": "free",
       "category": "dashboard",
-      "price": 0,
-      "priceLabel": "FREE",
       "description": "Countdown to current candle close. Never get caught off guard by a candle closing.",
       "preview": "remaining = tf_ms - elapsed\nmins = remaining / 60000\nsecs = remaining / 1000 % 60"
     },
     {
       "id": "session-highlighter",
       "name": "Session Highlighter",
+      "tier": "free",
       "category": "structure",
-      "price": 0,
-      "priceLabel": "FREE",
       "description": "Colors chart background during London, New York, Tokyo, Sydney sessions. Know which session you're trading.",
       "preview": "is_london = t >= 480 and t < 990\nis_ny = t >= 810 and t < 1200\nbgcolor(is_london ? london_col : na)"
     },
     {
-      "id": "ma-crossover",
-      "name": "MA Crossover Signals",
-      "category": "trend",
-      "price": 2,
-      "description": "Two MAs with golden cross and death cross arrows. Classic trend-following entry signals.",
-      "preview": "cross_up = ta.crossover(fast, slow)\ncross_down = ta.crossunder(fast, slow)"
+      "id": "market-analysis-template",
+      "name": "Weekly Analysis Template",
+      "tier": "research",
+      "category": "analysis",
+      "description": "Framework for weekly market analysis. Tracks key levels, bias, and events to watch.",
+      "preview": "// Weekly Analysis Framework\n// 1. HTF Bias (D1/W1)\n// 2. Key Levels\n// 3. Event Calendar"
     },
     {
-      "id": "trend-strength",
-      "name": "Trend Strength Meter (ADX)",
-      "category": "trend",
-      "price": 2,
-      "description": "Visual meter showing trend strength. Green = strong trend, red = no trend. Avoid choppy markets.",
-      "preview": "[di_plus, di_minus, adx] = ta.dmi(14, 14)\ntrending = adx > 25"
+      "id": "volatility-report",
+      "name": "Volatility Report Generator",
+      "tier": "research",
+      "category": "analysis",
+      "description": "Calculates ATR ratios and ranks pairs by volatility. Find the movers before they move.",
+      "preview": "atr_ratio = ta.atr(14) / ta.atr(50)\nvolatility_rank = atr_ratio > 1.2 ? \"HIGH\" : \"NORMAL\""
     },
     {
-      "id": "volume-spikes",
-      "name": "Volume Spike Detector",
-      "category": "patterns",
-      "price": 2,
-      "description": "Highlights bars where volume is above average. High volume confirms moves — without it, breakouts fail.",
-      "preview": "vol_avg = ta.sma(volume, 20)\nis_spike = volume > vol_avg * 2.0"
-    },
-    {
-      "id": "pivot-points",
-      "name": "Pivot Point Levels",
-      "category": "structure",
-      "price": 2,
-      "description": "Classic floor trader pivots from yesterday's price. Central pivot + 3 support + 3 resistance levels.",
-      "preview": "pp = (pd_h + pd_l + pd_c) / 3\nr1 = 2 * pp - pd_l\ns1 = 2 * pp - pd_h"
-    },
-    {
-      "id": "daily-range",
-      "name": "Daily Range Percentage",
-      "category": "volatility",
-      "price": 2,
-      "description": "Shows what % of average daily range today's candle has consumed. 120% = overextended, 30% = room to run.",
-      "preview": "range_pct = (today_range / adr) * 100\n// 100% = normal, >120% = extended"
-    },
-    {
-      "id": "spread-monitor",
-      "name": "Spread Monitor",
-      "category": "dashboard",
-      "price": 2,
-      "description": "Live bid-ask spread in pips. Know when your broker widens spreads before you trade.",
-      "preview": "spread_raw = syminfo.ask - syminfo.bid\nspread_pips = spread_raw / pip_size"
-    },
-    {
-      "id": "ema-classifier",
-      "name": "EMA Trend Classifier",
-      "category": "trend",
-      "price": 3,
-      "description": "Returns BULL/BEAR/NEUTRAL based on EMA stack alignment. Simple true/false values for any strategy.",
-      "preview": "is_trend_bull = ema4 < ema3 and ema3 < ema2\nis_trend_bear = ema4 > ema3 and ema3 > ema2\nema_bias = is_trend_bull ? \"BULL\" : \"BEAR\""
-    },
-    {
-      "id": "atr-stop",
-      "name": "ATR Stop Loss Calculator",
-      "category": "risk",
-      "price": 3,
-      "description": "Dynamic stop loss based on ATR. Shows exact price and pip distance. No more guessing where to put your stop.",
-      "preview": "atr_val = ta.atr(14)\nsl_dist = atr_val * multiplier\nsl_price = close - sl_dist"
-    },
-    {
-      "id": "position-sizer",
-      "name": "Position Size Calculator",
-      "category": "risk",
-      "price": 4,
-      "description": "Shows lot size based on account, risk %, and stop distance. Never risk more than intended.",
-      "preview": "risk_amt = account * (risk_pct / 100)\nlot_size = risk_amt / (sl_pips * pip_value)"
-    },
-    {
-      "id": "alert-template",
-      "name": "Alert Template (Webhook-Ready)",
-      "category": "automation",
-      "price": 4,
-      "description": "Copy-paste template for webhook-ready JSON alerts. Define your condition, get formatted payloads.",
-      "preview": "alert('{\"action\":\"OPEN\",\"direction\":\"LONG\",\n\"symbol\":\"' + syminfo.ticker + '\"}')"
-    },
-    {
-      "id": "rr-box",
-      "name": "Risk/Reward Box Drawer",
-      "category": "risk",
-      "price": 4,
-      "description": "Click entry, stop, and target — draws green/red boxes showing your R:R ratio. Visual risk management.",
-      "preview": "risk = math.abs(entry - sl)\nreward = math.abs(tp - entry)\nrr = reward / risk\n// Draws TP/SL boxes"
-    },
-    {
-      "id": "vwap-bands",
-      "name": "VWAP with Deviation Bands",
-      "category": "structure",
-      "price": 4,
-      "description": "VWAP with configurable σ bands. Institutions use VWAP as fair price — deviations show extremes.",
-      "preview": "vwap = ta.vwap(close)\nupper_1 = vwap + 1 * stdev\nlower_1 = vwap - 1 * stdev"
-    },
-    {
-      "id": "candle-patterns",
-      "name": "Candle Pattern Detector",
-      "category": "patterns",
-      "price": 5,
-      "description": "Detects Engulfing, Doji, Hammer, Shooting Star, Morning/Evening Star. Visual markers on your chart.",
-      "preview": "bull_engulf = is_bear[1] and is_bull\n             and body > body[1]\nhammer = lower_wick > body * 2"
-    },
-    {
-      "id": "bb-squeeze",
-      "name": "Bollinger Squeeze Detector",
-      "category": "volatility",
-      "price": 5,
-      "description": "Detects when BB squeezes inside KC — volatility compression. When it fires, a big move is coming.",
-      "preview": "squeeze_on = bb_lower > kc_lower\n            and bb_upper < kc_upper\nmom = ta.linreg(close - basis, 20, 0)"
-    },
-    {
-      "id": "mtf-dashboard",
-      "name": "Multi-Timeframe Dashboard",
-      "category": "dashboard",
-      "price": 5,
-      "description": "EMA trend direction across 4 timeframes at once. See the full picture in one glance.",
-      "preview": "[b1,d1] = request.security(tf1, get_trend())\n[b2,d2] = request.security(tf2, get_trend())\n// Table display"
-    },
-    {
-      "id": "htf-candle",
-      "name": "HTF Candle Overlay",
-      "category": "structure",
-      "price": 5,
-      "description": "Draws higher-timeframe candle as a box on your chart. See the 4H candle while trading 15M.",
-      "preview": "[o,h,l,c] = request.security(\"240\", [open,high,low,close])\n// Draws candle box on right side"
-    },
-    {
-      "id": "rsi-divergence",
-      "name": "RSI with Divergence Detection",
-      "category": "patterns",
-      "price": 6,
-      "description": "Standard RSI with automatic bullish/bearish divergence detection. Labels appear when price and RSI disagree.",
-      "preview": "bull_div = rsi_higher_low and price_lower_low\nbear_div = rsi_lower_high and price_higher_high"
-    },
-    {
-      "id": "opening-range",
-      "name": "Opening Range Breakout",
-      "category": "structure",
-      "price": 6,
-      "description": "Draws first 30/60 min high/low as a box. Breakouts from opening range often trend all session.",
-      "preview": "if bars_elapsed * tf_mins < or_minutes\n    or_high = math.max(or_high, high)\n    or_low = math.min(or_low, low)"
-    },
-    {
-      "id": "auto-fib",
-      "name": "Fibonacci Auto-Draw",
-      "category": "structure",
-      "price": 8,
-      "description": "Automatically draws Fib retracements between recent swing high/low. Updates dynamically.",
-      "preview": "levels = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1.0]\n// Auto-detects swings, draws levels"
+      "id": "pair-metrics",
+      "name": "Pair-by-Pair Metrics",
+      "tier": "research",
+      "category": "analysis",
+      "description": "Daily stats per pair: range, ATR, session performance. Know your pairs.",
+      "preview": "daily_range = high - low\natr_14 = ta.atr(14)\nlondon_range = london_high - london_low"
     },
     {
       "id": "vol-bands",
       "name": "Volatility Band System",
+      "tier": "recoil",
       "category": "volatility",
-      "price": 10,
-      "description": "8-level ATR classifier. Colors candles by volatility intensity. Bands 6/7/8 = trigger zones for fades. Core Recoil concept.",
+      "description": "8-level ATR classifier. Colors candles by volatility intensity. Bands 6/7/8 = trigger zones. Core Recoil logic.",
       "preview": "ratio = trueRange / ta.atr(8)\nvolBand = ratio > 3.0 ? 8 :\n         ratio > 2.55 ? 7 :\n         ratio > 2.10 ? 6 : 5"
+    },
+    {
+      "id": "atr-stop",
+      "name": "ATR Stop Loss Calculator",
+      "tier": "recoil",
+      "category": "risk",
+      "description": "Dynamic stop loss based on ATR. Shows exact price and pip distance. From Recoil's risk engine.",
+      "preview": "atr_val = ta.atr(14)\nsl_dist = atr_val * multiplier\nsl_price = close - sl_dist"
+    },
+    {
+      "id": "trend-alignment",
+      "name": "Trend Alignment Risk Scaler",
+      "tier": "recoil",
+      "category": "risk",
+      "description": "Scales position size based on trend alignment. Full size with trend, half size counter-trend.",
+      "preview": "alignment = ema_bias == trade_direction\nsize_mult = alignment ? 1.0 : 0.5\nadjusted_lots = base_lots * size_mult"
+    },
+    {
+      "id": "partial-tp",
+      "name": "Partial TP Manager",
+      "tier": "recoil",
+      "category": "risk",
+      "description": "Logic for taking partials at TP1/TP2. Moves SL to breakeven after first partial.",
+      "preview": "if hit_tp1\n    close_percent(50)\n    move_sl_to_entry()\nif hit_tp2\n    close_percent(30)"
+    },
+    {
+      "id": "tp-sl-calculator",
+      "name": "TP/SL Price Calculator",
+      "tier": "recoil",
+      "category": "risk",
+      "description": "Calculates exact TP and SL prices based on entry, direction, and R:R ratio.",
+      "preview": "risk_pips = math.abs(entry - sl) / pip\ntp1_price = entry + (risk_pips * 1.5 * pip)\ntp2_price = entry + (risk_pips * 3.0 * pip)"
+    },
+    {
+      "id": "vortex-engine",
+      "name": "Vortex Digital Root Engine",
+      "tier": "meridian",
+      "category": "cycles",
+      "description": "The core Meridian cycle detection. Converts vortex oscillator to digital root for phase alignment.",
+      "preview": "vi_plus = ta.vwma(tr_plus, 14) / ta.atr(14)\nvi_minus = ta.vwma(tr_minus, 14) / ta.atr(14)\ndigital_root = reduce_to_root(vi_plus - vi_minus)"
+    },
+    {
+      "id": "amd-phase",
+      "name": "AMD Phase Engine",
+      "tier": "meridian",
+      "category": "cycles",
+      "description": "Accumulation → Manipulation → Distribution phase detection. Know where you are in the cycle.",
+      "preview": "phase = volume_spike and range_tight ? \"ACCUMULATION\" :\n        sweep_detected ? \"MANIPULATION\" :\n        expansion ? \"DISTRIBUTION\" : \"NEUTRAL\""
+    },
+    {
+      "id": "cycle-confluence",
+      "name": "Cycle Confluence Detector",
+      "tier": "meridian",
+      "category": "cycles",
+      "description": "Finds where multiple cycle lengths align. High confluence = high probability reversal zones.",
+      "preview": "c1 = cycle_phase(8)\nc2 = cycle_phase(21)\nc3 = cycle_phase(55)\nconfluence = c1 == c2 and c2 == c3"
+    },
+    {
+      "id": "regime-scanner",
+      "name": "Regime Scanner",
+      "tier": "cockpit",
+      "category": "dashboard",
+      "description": "Scores trading conditions 0-90. PRIME/FAVORABLE/MARGINAL/DEGRADED. The Cockpit decision engine.",
+      "preview": "vs = volatility_normal ? 40 : 20\nts = math.min(adx, 50)\nscore = vs + ts\nregime = score > 70 ? \"PRIME\" : ..."
     },
     {
       "id": "fvg-detector",
       "name": "Fair Value Gap Detector",
+      "tier": "cockpit",
       "category": "structure",
-      "price": 12,
-      "description": "Finds gaps where buyers/sellers didn't overlap. Tracks lifecycle: fresh → tapped → filled. ICT/SMC essential.",
+      "description": "Finds imbalance zones. Tracks lifecycle: fresh → tapped → filled. From Cockpit's structure engine.",
       "preview": "bull_fvg = high[2] < low[0]\nbear_fvg = low[2] > high[0]\n// Draws boxes, tracks 50% taps"
     },
     {
       "id": "lp-detector",
       "name": "Liquidity Pool Detector",
+      "tier": "cockpit",
       "category": "structure",
-      "price": 12,
-      "description": "Finds swing highs/lows and draws horizontal levels. Where stop losses cluster — the levels institutions target.",
+      "description": "Swing high/low detection with sweep tracking. Where stops cluster — where institutions hunt.",
       "preview": "ph = ta.pivothigh(high, left, right)\npl = ta.pivotlow(low, left, right)\n// Auto-draws lines, detects sweeps"
     },
     {
-      "id": "regime-scanner",
-      "name": "Regime Scanner",
+      "id": "mtf-regime",
+      "name": "Multi-TF Regime Aggregator",
+      "tier": "cockpit",
       "category": "dashboard",
-      "price": 15,
-      "description": "Scores trading conditions 0-90. Grades: PRIME, FAVORABLE, MARGINAL, DEGRADED. The decision-making engine behind Cockpit.",
-      "preview": "vs = volatility_normal ? 40 : 20\nts = math.min(adx, 50)\nscore = vs + ts\nlabel = score > 70 ? \"PRIME\" : ..."
+      "description": "Pulls regime scores from 4 timeframes. Aggregate score tells you if all TFs agree.",
+      "preview": "[r1] = request.security(tf1, regime_score)\n[r2] = request.security(tf2, regime_score)\naggregate = (r1 + r2 + r3 + r4) / 4"
+    },
+    {
+      "id": "htf-bias-overlay",
+      "name": "HTF Bias Overlay",
+      "tier": "cockpit",
+      "category": "dashboard",
+      "description": "Shows D1/W1 bias as colored bar on any timeframe. Never trade against the higher timeframe.",
+      "preview": "[d1_bias] = request.security(\"D\", ema_stack_bias)\n[w1_bias] = request.security(\"W\", ema_stack_bias)\nbgcolor(d1_bias == \"BULL\" ? bull_col : bear_col)"
+    },
+    {
+      "id": "mt5-signal-receiver",
+      "name": "MT5 Signal Receiver Module",
+      "tier": "ascension",
+      "category": "automation",
+      "featured": true,
+      "description": "The EA module that receives webhook signals. Parses JSON, extracts parameters, queues for execution.",
+      "preview": "// OnTimer() poll endpoint\nstring response = WebRequest(url);\nif(response != \"\") {\n    ParseSignal(response);\n    QueueTrade(signal);\n}"
+    },
+    {
+      "id": "mt5-position-manager",
+      "name": "MT5 Position Manager",
+      "tier": "ascension",
+      "category": "automation",
+      "featured": true,
+      "description": "Full position lifecycle: open, partials, breakeven, trailing, close. The execution core.",
+      "preview": "void ManagePosition(ulong ticket) {\n    CheckPartialTP();\n    CheckBreakeven();\n    CheckTrailingStop();\n    CheckDailyLimits();\n}"
+    },
+    {
+      "id": "mt5-risk-engine",
+      "name": "MT5 Risk Engine",
+      "tier": "ascension",
+      "category": "automation",
+      "featured": true,
+      "description": "Lot sizing, daily loss limits, max positions. Never blow an account with proper risk code.",
+      "preview": "double CalcLotSize(double riskPct, double slPips) {\n    double riskAmt = AccountBalance() * riskPct;\n    return riskAmt / (slPips * pipValue);\n}"
+    },
+    {
+      "id": "mt5-dashboard",
+      "name": "MT5 On-Chart Dashboard",
+      "tier": "ascension",
+      "category": "automation",
+      "featured": true,
+      "description": "Live P&L, trade count, daily stats, connection status. All info on your MT5 chart.",
+      "preview": "void DrawDashboard() {\n    ObjectSetString(0, \"pnl\", dailyPnL);\n    ObjectSetString(0, \"trades\", tradeCount);\n    ObjectSetString(0, \"status\", connected);\n}"
+    },
+    {
+      "id": "webhook-bridge",
+      "name": "TradingView → MT5 Webhook Bridge",
+      "tier": "ascension",
+      "category": "automation",
+      "featured": true,
+      "description": "Node.js server that receives TV webhooks and queues for MT5. The missing link for automation.",
+      "preview": "app.post('/webhook', (req, res) => {\n    const signal = parseSignal(req.body);\n    signalQueue.push(signal);\n    res.json({queued: true});\n});"
     }
   ],
+  "tiers": {
+    "free": { "label": "Free", "color": "#22c55e" },
+    "research": { "label": "Research", "color": "#00abff" },
+    "recoil": { "label": "Recoil", "color": "#c9a84c" },
+    "meridian": { "label": "Meridian", "color": "#8b5cf6" },
+    "cockpit": { "label": "Cockpit", "color": "#ef4444" },
+    "ascension": { "label": "Ascension", "color": "linear-gradient(135deg, #c9a84c, #ffd700, #c9a84c)", "featured": true }
+  },
   "categories": {
     "all": "All",
     "trend": "Trend",
     "volatility": "Volatility",
     "structure": "Structure",
     "risk": "Risk",
-    "patterns": "Patterns",
+    "cycles": "Cycles",
     "dashboard": "Dashboard",
-    "automation": "Automation"
-  }
+    "automation": "Automation",
+    "analysis": "Analysis"
+  },
+  "tierHierarchy": ["free", "research", "recoil", "meridian", "cockpit", "ascension"],
+  "premiumProducts": [],
+  "communityProducts": []
 }
