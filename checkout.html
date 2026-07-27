@@ -992,7 +992,18 @@ function updateDisplay() {
   document.getElementById('subtotalLabel').textContent = subtotalText;
   document.getElementById('subtotalValue').textContent = `£${total.toFixed(2)}`;
   document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
-  document.getElementById('submitText').textContent = `Pay £${total.toFixed(2)}`;
+  document.getElementById('submitText').textContent = `Continue to Payment`;
+  
+  // Hide payment section for tier checkouts (Stripe Checkout handles card collection)
+  const formSections = document.querySelectorAll('.form-section');
+  formSections.forEach(section => {
+    const title = section.querySelector('.form-section-title');
+    if (title && title.textContent.includes('Payment')) {
+      section.style.display = 'none';
+      // Remove required from card inputs
+      section.querySelectorAll('input').forEach(inp => inp.removeAttribute('required'));
+    }
+  });
   
   // Update billing selector state
   document.querySelectorAll('.billing-option').forEach(opt => {
@@ -1111,22 +1122,58 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
       // Free snippet or promo applied
       window.location.href = `/success.html?type=snippet&name=${encodeURIComponent(snippetData.name)}&email=${encodeURIComponent(email)}&id=${snippetData.id}`;
     } else {
-      // Paid snippet - Stripe checkout
-      // TODO: Create Stripe checkout session for snippet
-      setTimeout(() => {
-        alert('Stripe integration coming soon for marketplace purchases!');
-        btn.disabled = false;
-        document.getElementById('submitText').textContent = originalText;
-      }, 1500);
-    }
-  } else {
-    // Tier subscription checkout
-    // TODO: Create Stripe checkout session for subscription
-    setTimeout(() => {
-      alert('Payment integration coming soon! This is a demo checkout page.');
+      // Paid snippet - redirect to Stripe
+      alert('Marketplace payments coming soon!');
       btn.disabled = false;
       document.getElementById('submitText').textContent = originalText;
-    }, 2000);
+    }
+  } else {
+    // Tier subscription checkout - create Stripe Checkout Session
+    try {
+      // Get the price ID for this tier
+      const priceIds = {
+        research: 'price_1Txkaq15x1S5u1oiJwZrI1Hd',
+        recoil: 'price_1Txkc115x1S5u1oiwzO6XDl3',
+        terminal: 'price_1Txkcl15x1S5u1oiOzoawxOp',
+        suite: 'price_1TxkdT15x1S5u1oiqElyXsjn',
+        ascension: 'price_1TxkeV15x1S5u1oiMI5HK9SF'
+      };
+      
+      const priceId = priceIds[currentTier];
+      if (!priceId) {
+        throw new Error('Invalid tier selected');
+      }
+      
+      const response = await fetch('https://dashboard.themoneyprinter.uk/api/stripe/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          priceId: priceId,
+          email: email,
+          tvUsername: tvUsername,
+          tier: currentTier,
+          billing: currentBilling
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL returned');
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Error creating checkout session: ' + err.message);
+      btn.disabled = false;
+      document.getElementById('submitText').textContent = originalText;
+    }
   }
 });
 
