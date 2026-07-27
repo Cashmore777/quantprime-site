@@ -4033,7 +4033,9 @@ const isAdmin = () => userTier === 'admin';
 
 // Admin emails list
 const ADMIN_EMAILS = [
-  'cash@themoneyprinter.uk'
+  'cash@themoneyprinter.uk',
+  'cashmoretrades@pm.me',
+  'seandavies41@gmail.com'
 ];
 
 // Check authentication on page load
@@ -4048,8 +4050,12 @@ async function checkAuth() {
   authUser = session.user;
   
   // Simple admin check by email
-  if (ADMIN_EMAILS.includes(authUser.email.toLowerCase())) {
+  const userEmail = authUser.email.toLowerCase();
+  console.log('[Auth] User email:', userEmail, '| Is admin:', ADMIN_EMAILS.includes(userEmail));
+  
+  if (ADMIN_EMAILS.includes(userEmail)) {
     userTier = 'admin';
+    console.log('[Auth] Set tier to admin');
   } else {
     // Check for pending tier from registration (RLS blocked the write)
     const pendingTier = localStorage.getItem('qp_pending_tier');
