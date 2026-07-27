@@ -4012,7 +4012,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authUser = null;
-let userTier = 'free';
+var userTier = 'free';  // var so it's accessible as window.userTier
 let currentUserEmail = null;
 
 // Tier access definitions
