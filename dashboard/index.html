@@ -4108,6 +4108,44 @@ async function checkAuth() {
     }
   }
   
+  // Check for pending tier from payment queue (auto-apply after Stripe payment)
+  if (userTier === 'free' || !userTier) {
+    try {
+      const pendingRes = await fetch(`https://dashboard.themoneyprinter.uk/api/pending-tier?email=${encodeURIComponent(authUser.email)}`);
+      const pendingData = await pendingRes.json();
+      
+      if (pendingData.tier) {
+        console.log('[Auth] Found pending tier from payment:', pendingData.tier);
+        
+        // Update Supabase profile with the paid tier
+        const { error: updateError } = await supabaseClient
+          .from('profiles')
+          .upsert({
+            id: authUser.id,
+            email: authUser.email,
+            tier: pendingData.tier,
+            created_at: new Date().toISOString()
+          }, { onConflict: 'id' });
+        
+        if (!updateError) {
+          userTier = pendingData.tier.toLowerCase();
+          console.log('[Auth] Applied pending tier:', userTier);
+          
+          // Mark as applied in the queue
+          fetch('https://dashboard.themoneyprinter.uk/api/pending-tier/applied', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ entryId: pendingData.entryId })
+          }).catch(e => console.warn('Could not mark tier as applied:', e));
+        } else {
+          console.error('[Auth] Failed to apply pending tier:', updateError.message);
+        }
+      }
+    } catch (e) {
+      console.warn('[Auth] Could not check pending tier:', e.message);
+    }
+  }
+  
   currentUser = currentUser || authUser.email.split('@')[0];
   userProfile = { id: authUser.id, tier: userTier, email: authUser.email };
   currentUserEmail = authUser.email;
