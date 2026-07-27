@@ -4132,6 +4132,10 @@ async function checkAuth() {
   updateDashboardData();
   updateMobileTier();
   
+  // Load marketplace AFTER tier is set
+  console.log('[Auth] Loading marketplace with tier:', userTier);
+  loadMarketplaceProducts();
+  
   document.getElementById('username-modal').classList.add('hidden');
   
   if (chatEnabled) {
@@ -4952,8 +4956,8 @@ document.getElementById('marketplace-search')?.addEventListener('input', e => {
   renderMarketplaceProducts(filtered);
 });
 
-// Load products when page loads
-loadMarketplaceProducts();
+// Marketplace loaded after auth in checkAuth() - don't load here
+// loadMarketplaceProducts();
 
 // ==========================================
 // ADMIN FUNCTIONS
