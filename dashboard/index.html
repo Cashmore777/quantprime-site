@@ -4769,12 +4769,17 @@ function hasAccessToTier(requiredTier) {
   const currentTier = (window.userTier || 'free').toLowerCase();
   const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
   
+  // Admin gets everything
+  if (currentTier === 'admin') {
+    return true;
+  }
+  
   // Map terminal -> meridian, suite -> cockpit for access checks
   const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
   const mappedTier = tierMap[currentTier] || currentTier;
   const mappedIndex = TIER_HIERARCHY.indexOf(mappedTier);
   
-  return mappedIndex >= requiredIndex || currentTier === 'admin';
+  return mappedIndex >= requiredIndex;
 }
 
 // Get upgrade tier name for display
