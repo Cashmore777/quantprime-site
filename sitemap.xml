@@ -54,4 +54,16 @@
     <priority>0.7</priority>
   </url>
   
+  <!-- Ascension Program -->
+  <url>
+    <loc>https://quantprime.uk/ascension.html</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://quantprime.uk/assets/og-ascension.png</image:loc>
+      <image:title>Ascension Program - 90-Day Trading Transformation</image:title>
+    </image:image>
+  </url>
+  
 </urlset>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Ascension Program — 90-Day Trading Transformation | Quant Prime</title>
+<meta name="description" content="The Ascension Program: 90 days of 1-on-1 coaching, complete education, all indicators, and a results guarantee. Limited spots. £3,497 one-time investment.">
+<meta name="keywords" content="trading mentorship, 1-on-1 trading coaching, quant prime ascension, trading education program, forex mentorship">
+<link rel="canonical" href="https://quantprime.uk/ascension">
+<meta property="og:title" content="Ascension Program — 90-Day Transformation">
+<meta property="og:description" content="12 weeks of 1-on-1 coaching, complete education, all indicators, and an automation guarantee. £3,497.">
+<meta property="og:url" content="https://quantprime.uk/ascension">
+<meta property="og:image" content="https://quantprime.uk/assets/og-ascension.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --bg: #0a0a0f;
+  --bg-elevated: #101018;
+  --surface: #16161f;
+  --border: rgba(255,255,255,0.08);
+  --text-primary: #f0f0f5;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1200px;
+  height: 800px;
+  background: radial-gradient(ellipse at center top, rgba(201,168,76,0.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+}
+
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-label::before,
+.hero-label::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+
+.hero-label::after {
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 3rem;
+  line-height: 1.7;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--gold);
+  color: #000;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.hero-cta:hover {
+  background: var(--gold-light);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+}
+
+.hero-cta svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-price {
+  margin-top: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.hero-price strong {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+/* Section Base */
+section {
+  padding: 6rem 0;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.section-header h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Program Structure */
+.program-section {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.timeline {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 24px;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--gold) 0%, var(--gold-glow) 100%);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timeline-marker {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold);
+  z-index: 1;
+}
+
+.timeline-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-content p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.timeline-content ul {
+  margin-top: 1rem;
+  list-style: none;
+}
+
+.timeline-content li {
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.timeline-content li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+
+/* What's Included */
+.included-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.included-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s;
+}
+
+.included-card:hover {
+  border-color: rgba(201,168,76,0.3);
+  transform: translateY(-4px);
+}
+
+.included-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--gold-glow);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.included-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--gold);
+}
+
+.included-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.included-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Guarantee */
+.guarantee-section {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-elevated) 100%);
+}
+
+.guarantee-box {
+  max-width: 700px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.guarantee-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gold);
+}
+
+.guarantee-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--gold-glow);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.guarantee-badge svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gold);
+}
+
+.guarantee-box h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.guarantee-box p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
+/* Who This Is For */
+.fit-section {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+}
+
+.fit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+  .fit-grid { grid-template-columns: 1fr; }
+}
+
+.fit-column h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fit-column.good h3 { color: #4ade80; }
+.fit-column.bad h3 { color: #f87171; }
+
+.fit-column ul {
+  list-style: none;
+}
+
+.fit-column li {
+  padding: 0.75rem 0;
+  padding-left: 2rem;
+  color: var(--text-secondary);
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+
+.fit-column li:last-child {
+  border-bottom: none;
+}
+
+.fit-column.good li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.fit-column.bad li::before {
+  content: '✗';
+  position: absolute;
+  left: 0;
+  color: #f87171;
+  font-weight: 600;
+}
+
+/* Final CTA */
+.final-cta {
+  padding: 8rem 0;
+  text-align: center;
+  position: relative;
+}
+
+.final-cta::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1000px;
+  height: 600px;
+  background: radial-gradient(ellipse at center bottom, rgba(201,168,76,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.final-cta h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.final-cta p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.final-price {
+  margin-bottom: 2rem;
+}
+
+.final-price .amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.final-price .note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--gold);
+  color: #000;
+  padding: 1.25rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.cta-btn:hover {
+  background: var(--gold-light);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+}
+
+.cta-note {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Footer */
+footer {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border);
+  padding: 3rem 0;
+}
+
+footer .container {
+  text-align: center;
+}
+
+footer .nav-logo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+footer .nav-logo span { color: var(--gold); }
+
+footer p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+footer p a { color: var(--gold); }
+
+/* Mobile */
+@media (max-width: 600px) {
+  .timeline::before {
+    left: 15px;
+  }
+  
+  .timeline-marker {
+    width: 32px;
+    height: 32px;
+    font-size: 0.65rem;
+  }
+  
+  .timeline-item {
+    gap: 1rem;
+  }
+  
+  .guarantee-box {
+    padding: 2rem 1.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+      <button class="nav-dropdown-btn" id="navDropdown">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4.5L6 7.5L9 4.5"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" id="navMenu">
+        <a href="/">Home</a>
+        <a href="/framework">The Framework</a>
+        <a href="/compounding">Compounding</a>
+        <a href="/results">Results</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/dashboard/login.html">Login</a>
+      </div>
+    </div>
+    <a href="/ascension-apply" class="nav-cta">Apply Now</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-label">The Ascension Program</div>
+    <h1>90 days to<br><em>systematic trading.</em></h1>
+    <p>Weekly 1-on-1 calls. Complete education. Every indicator. And a guarantee that you'll get results — or we build your automation for free.</p>
+    <a href="/ascension-apply" class="hero-cta">
+      Apply Now
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+    <div class="hero-price">
+      One-time investment: <strong>£3,497</strong>
+    </div>
+  </div>
+</section>
+
+<!-- Program Structure -->
+<section class="program-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">The 90-Day Journey</div>
+      <h2>A structured path to consistent results</h2>
+      <p>Not a course you watch alone. A guided transformation with accountability, feedback, and direct access.</p>
+    </div>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-marker">W1-4</div>
+        <div class="timeline-content">
+          <h3>Foundation Phase</h3>
+          <p>Build the mindset and understanding. No charts yet — just rewiring how you think about markets.</p>
+          <ul>
+            <li>Weekly 30-min 1-on-1 calls</li>
+            <li>Complete Level 1-3 education modules</li>
+            <li>Access to all indicators unlocked</li>
+            <li>Private community channel</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-marker">W5-8</div>
+        <div class="timeline-content">
+          <h3>Implementation Phase</h3>
+          <p>Apply the system. Start with sim trading, refine your execution, build your playbook.</p>
+          <ul>
+            <li>Configure your indicator stack</li>
+            <li>Complete Level 4-6 education modules</li>
+            <li>Trade review on every 1-on-1 call</li>
+            <li>Refine entries, exits, and risk rules</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-marker">W9-12</div>
+        <div class="timeline-content">
+          <h3>Optimization Phase</h3>
+          <p>Scale what works. Eliminate what doesn't. Prepare for either manual mastery or full automation.</p>
+          <ul>
+            <li>Complete Level 7-9 education modules</li>
+            <li>Performance analytics review</li>
+            <li>Automation setup (if choosing that path)</li>
+            <li>Graduation + ongoing monthly check-ins</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What's Included -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Everything Included</div>
+      <h2>The complete system</h2>
+      <p>No upsells. No locked content. Everything you need is in the box.</p>
+    </div>
+    
+    <div class="included-grid">
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>12 Weekly 1-on-1 Calls</h3>
+        <p>30 minutes each week with direct access to review your progress, refine your approach, and stay accountable.</p>
+      </div>
+      
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </div>
+        <h3>9-Level Education</h3>
+        <p>The complete curriculum. From market truth to full automation. Video lessons, slideshows, and practical exercises.</p>
+      </div>
+      
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <h3>Full Indicator Suite</h3>
+        <p>Recoil, Meridian, Cockpit — plus executors. Every instrument in the Quant Prime arsenal, lifetime access.</p>
+      </div>
+      
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+        </div>
+        <h3>All Marketplace Code</h3>
+        <p>Every snippet, every tool. Ascension members get a permanent discount code for free access to the entire marketplace.</p>
+      </div>
+      
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h3>Automation Setup</h3>
+        <p>Choose manual trading or full automation. If you want hands-off execution, we configure your entire pipeline.</p>
+      </div>
+      
+      <div class="included-card">
+        <div class="included-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <h3>Monthly Check-ins</h3>
+        <p>After graduation, you're not abandoned. Monthly calls continue to ensure you stay on track and keep improving.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Guarantee -->
+<section class="guarantee-section">
+  <div class="container">
+    <div class="guarantee-box">
+      <div class="guarantee-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        90-Day Results Guarantee
+      </div>
+      <h3>If you don't see improvement,<br>we build your automation for free.</h3>
+      <p>Complete the 9-level curriculum. Show up to your calls. Document your trades for 90 days. If you haven't seen measurable improvement in your trading by day 90, we'll personally set up your full automation pipeline at no additional cost. That's not a refund — that's us doing the work for you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Who This Is For -->
+<section class="fit-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Right Fit?</div>
+      <h2>This isn't for everyone</h2>
+      <p>The Ascension program requires commitment. Make sure we're aligned before applying.</p>
+    </div>
+    
+    <div class="fit-grid">
+      <div class="fit-column good">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <path d="M22 4L12 14.01l-3-3"/>
+          </svg>
+          Ascension is for you if:
+        </h3>
+        <ul>
+          <li>You're serious about systematic trading, not gambling</li>
+          <li>You can commit to 90 days of focused work</li>
+          <li>You're ready to invest in yourself</li>
+          <li>You want accountability and direct feedback</li>
+          <li>You're open to changing how you think about markets</li>
+          <li>You value results over entertainment</li>
+        </ul>
+      </div>
+      
+      <div class="fit-column bad">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+          This is not for you if:
+        </h3>
+        <ul>
+          <li>You're looking for get-rich-quick signals</li>
+          <li>You won't show up to scheduled calls</li>
+          <li>You're not willing to document your trades</li>
+          <li>You expect results without putting in work</li>
+          <li>You want to be told exactly what to do without understanding why</li>
+          <li>You're not ready to invest at this level</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Ready to transform your trading?</h2>
+    <p>Applications are reviewed individually. If accepted, you'll book your onboarding call within 48 hours.</p>
+    
+    <div class="final-price">
+      <div class="amount">£3,497</div>
+      <div class="note">One-time investment · Payment plans available</div>
+    </div>
+    
+    <a href="/ascension-apply" class="cta-btn">
+      Apply for Ascension
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+    
+    <div class="cta-note">Limited spots available · Applications typically reviewed within 24 hours</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results. Trading leveraged products involves substantial risk of loss. Nothing on this site constitutes financial advice.</p>
+    <p style="margin-top:1rem">© 2026 Quant Prime. All rights reserved. | <a href="/terms">Terms & Conditions</a></p>
+  </div>
+</footer>
+
+<script src="/js/main.js?v=3"></script>
+</body>
+</html>

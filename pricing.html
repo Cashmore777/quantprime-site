@@ -634,27 +634,27 @@ footer p { color: var(--text-secondary); }
         </div>
       </div>
       
-      <!-- Ascension -->
-      <div class="tier-card featured" data-tier="ascension" data-monthly="258" data-annual="215" data-save="516">
-        <div class="tier-badge premium">Ultimate</div>
+      <!-- Ascension (High-Ticket) -->
+      <div class="tier-card featured ascension-card" data-tier="ascension">
+        <div class="tier-badge premium">90-Day Program</div>
         <div class="tier-header">
           <div class="tier-name">Ascension</div>
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">215</span><span class="period">/mo</span>
+            <span class="currency">£</span><span class="amount">3,497</span>
           </div>
-          <div class="tier-billing billing-text">billed annually</div>
-          <div class="tier-save visible">Save £516/year</div>
+          <div class="tier-billing billing-text">one-time investment</div>
+          <div class="tier-save visible" style="color: var(--gold);">Payment plans available</div>
         </div>
-        <a href="/checkout?tier=ascension&billing=annual" class="tier-cta primary">Apply Now</a>
-        <div class="tier-alt">or <a href="#" class="alt-billing">pay monthly</a> · <a href="/checkout?tier=ascension&billing=lifetime">£4,995 lifetime</a></div>
+        <a href="/ascension-apply" class="tier-cta primary">Apply Now</a>
+        <div class="tier-alt"><a href="/ascension">Learn more about the program →</a></div>
         <div class="tier-features">
           <div class="feature-group">
-            <div class="feature-group-label">Everything in Suite, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>9-level education series</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>1-on-1 deployment call</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Full automation pipeline</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Self-hosted execution</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Completion guarantee</div>
+            <div class="feature-group-label">The Complete Transformation</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>12 weekly 1-on-1 calls (30 min)</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Complete 9-level education</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>All indicators (lifetime access)</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Free marketplace access</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Automation setup guarantee</div>
           </div>
         </div>
       </div>
@@ -700,7 +700,8 @@ footer p { color: var(--text-secondary); }
 document.addEventListener('DOMContentLoaded', function() {
   const monthlyBtn = document.getElementById('monthlyBtn');
   const annualBtn = document.getElementById('annualBtn');
-  const cards = document.querySelectorAll('.tier-card');
+  // Only select subscription cards (not Ascension)
+  const cards = document.querySelectorAll('.tier-card:not(.ascension-card)');
   
   let isAnnual = true;
   
