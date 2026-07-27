@@ -1102,14 +1102,16 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
         })
       });
       
-      // Redirect to success
-      const tierParam = productType === 'snippet' ? snippetData?.name : (currentTier || 'suite');
-      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}`;
+      // Redirect to success - QP2026 promo grants suite tier
+      const grantedTier = 'suite';
+      const tierParam = productType === 'snippet' ? snippetData?.name : grantedTier;
+      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}&tier=${grantedTier}`;
     } catch (err) {
       console.error('Promo registration error:', err);
       // Still redirect - backend can be set up later
-      const tierParam = productType === 'snippet' ? snippetData?.name : (currentTier || 'suite');
-      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}`;
+      const grantedTier = 'suite';
+      const tierParam = productType === 'snippet' ? snippetData?.name : grantedTier;
+      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}&tier=${grantedTier}`;
     }
     return;
   }

@@ -399,8 +399,12 @@ form.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
   const tradingview = document.getElementById('tradingview').value.trim();
   
-  // Determine tier - use promo tier if email matches, otherwise free
-  const userTier = (promoCode && promoTier && email === promoEmail) ? promoTier : 'free';
+  // Determine tier - use promo tier if promo params exist, otherwise free
+  // (removed strict email matching - if they came from promo flow, grant the tier)
+  const userTier = (promoCode && promoTier) ? promoTier.toLowerCase() : 'free';
+  
+  console.log('[Register] Promo params:', { promoCode, promoTier, promoEmail });
+  console.log('[Register] Assigning tier:', userTier);
   
   // Reset state
   errorEl.classList.remove('show');
