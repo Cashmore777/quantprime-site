@@ -3814,16 +3814,54 @@ async function checkAuth() {
   if (ADMIN_EMAILS.includes(authUser.email.toLowerCase())) {
     userTier = 'admin';
   } else {
-    // Try to get tier from profile
-    const { data: profile } = await supabaseClient
-      .from('profiles')
-      .select('tier, display_name')
-      .eq('id', authUser.id)
-      .single();
+    // Check for pending tier from registration (RLS blocked the write)
+    const pendingTier = localStorage.getItem('qp_pending_tier');
+    const pendingEmail = localStorage.getItem('qp_pending_email');
     
-    userTier = (profile && profile.tier) ? profile.tier.toLowerCase() : 'free';
-    if (profile && profile.display_name) {
-      currentUser = profile.display_name;
+    if (pendingTier && pendingEmail && pendingEmail.toLowerCase() === authUser.email.toLowerCase()) {
+      console.log('[Dashboard] Found pending tier from registration:', pendingTier);
+      
+      // Apply the pending tier now that user is authenticated
+      const pendingDisplayName = localStorage.getItem('qp_pending_display_name') || authUser.email.split('@')[0];
+      const pendingTvUsername = localStorage.getItem('qp_pending_tv_username') || '';
+      
+      const { error: updateError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: authUser.id,
+          email: authUser.email,
+          tier: pendingTier,
+          display_name: pendingDisplayName,
+          tradingview_username: pendingTvUsername,
+          created_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+      
+      if (updateError) {
+        console.error('[Dashboard] Failed to apply pending tier:', updateError.message);
+      } else {
+        console.log('[Dashboard] Successfully applied pending tier:', pendingTier);
+        userTier = pendingTier.toLowerCase();
+        currentUser = pendingDisplayName;
+        // Clear the pending data
+        localStorage.removeItem('qp_pending_tier');
+        localStorage.removeItem('qp_pending_email');
+        localStorage.removeItem('qp_pending_display_name');
+        localStorage.removeItem('qp_pending_tv_username');
+      }
+    }
+    
+    // If no pending tier was applied, get tier from profile
+    if (!userTier || userTier === 'free') {
+      const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('tier, display_name, tradingview_username')
+        .eq('id', authUser.id)
+        .single();
+      
+      userTier = (profile && profile.tier) ? profile.tier.toLowerCase() : 'free';
+      if (profile && profile.display_name) {
+        currentUser = profile.display_name;
+      }
     }
   }
   

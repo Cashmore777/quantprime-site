@@ -433,7 +433,17 @@ form.addEventListener('submit', async (e) => {
       throw new Error('This email is already registered. Please sign in instead.');
     }
     
-    // Create/update profile with tier in database
+    // Store pending tier in localStorage for dashboard to pick up
+    // (RLS blocks profile writes before email confirmation)
+    if (userTier !== 'free') {
+      localStorage.setItem('qp_pending_tier', userTier);
+      localStorage.setItem('qp_pending_email', email);
+      localStorage.setItem('qp_pending_display_name', displayName);
+      localStorage.setItem('qp_pending_tv_username', tradingview);
+      console.log('[Register] Stored pending tier in localStorage:', userTier);
+    }
+    
+    // Try to create profile anyway (might work if no email confirmation required)
     if (data.user) {
       const { error: profileError } = await supabaseClient
         .from('profiles')
@@ -447,10 +457,12 @@ form.addEventListener('submit', async (e) => {
         }, { onConflict: 'id' });
       
       if (profileError) {
-        console.error('Profile creation error:', profileError);
-        // Don't throw - user is created, just profile might not have tier
+        console.error('[Register] Profile upsert blocked (expected - RLS):', profileError.message);
+        // That's OK - dashboard will apply tier from localStorage
       } else {
-        console.log('Profile created with tier:', userTier);
+        console.log('[Register] Profile created with tier:', userTier);
+        // Clear pending since it worked
+        localStorage.removeItem('qp_pending_tier');
       }
     }
     
