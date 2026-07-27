@@ -1445,9 +1445,9 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .tier-badge.meridian { background: rgba(139,92,246,0.15); color: #8b5cf6; }
 .tier-badge.cockpit { background: rgba(239,68,68,0.15); color: #ef4444; }
 .tier-badge.ascension { 
-  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(255,215,0,0.2)); 
-  color: #ffd700;
-  border: 1px solid rgba(255,215,0,0.3);
+  background: linear-gradient(135deg, #c9a84c, #d4b85a); 
+  color: #1a1a1a;
+  font-weight: 700;
 }
 
 /* Locked item styling */
@@ -1500,13 +1500,13 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 /* Ascension featured items - golden glow */
 .marketplace-item.ascension-featured {
-  border: 1px solid rgba(255,215,0,0.4);
-  background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, var(--surface) 50%);
-  box-shadow: 0 0 20px rgba(255,215,0,0.1);
+  border: 2px solid #c9a84c;
+  background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, var(--surface) 50%);
+  box-shadow: 0 0 20px rgba(201,168,76,0.15), var(--shadow-sm);
 }
 .marketplace-item.ascension-featured:hover {
-  border-color: #ffd700;
-  box-shadow: 0 0 30px rgba(255,215,0,0.2), var(--shadow-md);
+  border-color: #d4b85a;
+  box-shadow: 0 0 30px rgba(201,168,76,0.25), var(--shadow-md);
 }
 .marketplace-item.ascension-featured::before {
   content: '★ ASCENSION EXCLUSIVE';
@@ -1516,11 +1516,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  color: #ffd700;
-  background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(255,215,0,0.15));
-  padding: 4px 8px;
+  color: #1a1a1a;
+  background: linear-gradient(135deg, #c9a84c, #d4b85a);
+  padding: 5px 10px;
   border-radius: 4px;
-  border: 1px solid rgba(255,215,0,0.3);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.marketplace-item.ascension-featured h4 {
+  color: #8b6914;
+}
+.marketplace-item.ascension-featured .tier-badge.ascension {
+  background: linear-gradient(135deg, #c9a84c, #d4b85a);
+  color: #1a1a1a;
+  border: none;
 }
 
 .marketplace-item h4 {
@@ -4958,6 +4966,10 @@ const originalApplyTierAccess = applyTierAccess;
 applyTierAccess = function() {
   originalApplyTierAccess();
   showAdminNavIfAdmin();
+  // Re-render marketplace with correct tier access
+  if (marketplaceProducts && marketplaceProducts.length > 0) {
+    renderMarketplaceProducts(marketplaceProducts);
+  }
 };
 
 // Admin tab switching
