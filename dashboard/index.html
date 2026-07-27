@@ -4765,14 +4765,22 @@ let marketplaceTiers = {};
 const TIER_HIERARCHY = ['free', 'research', 'recoil', 'meridian', 'cockpit', 'ascension', 'admin'];
 
 // Check if user has access to a tier
+let accessCheckLogged = false;
 function hasAccessToTier(requiredTier) {
   const currentTier = (window.userTier || 'free').toLowerCase();
-  const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
+  
+  // Debug first call only
+  if (!accessCheckLogged) {
+    console.log('[Access] First check - currentTier:', currentTier, '| requiredTier:', requiredTier, '| isAdmin:', currentTier === 'admin');
+    accessCheckLogged = true;
+  }
   
   // Admin gets everything
   if (currentTier === 'admin') {
     return true;
   }
+  
+  const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
   
   // Map terminal -> meridian, suite -> cockpit for access checks
   const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
@@ -4811,6 +4819,8 @@ async function loadMarketplaceProducts() {
 
 function renderMarketplaceProducts(products) {
   const grid = document.getElementById('marketplace-grid');
+  
+  console.log('[Marketplace] Rendering with userTier:', window.userTier);
   
   if (!products || products.length === 0) {
     grid.innerHTML = '<div style="text-align: center; color: var(--text-3); padding: 40px; grid-column: 1/-1;">No products found</div>';
