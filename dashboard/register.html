@@ -429,6 +429,27 @@ form.addEventListener('submit', async (e) => {
       throw new Error('This email is already registered. Please sign in instead.');
     }
     
+    // Create/update profile with tier in database
+    if (data.user) {
+      const { error: profileError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: data.user.id,
+          email: email,
+          display_name: displayName,
+          tradingview_username: tradingview,
+          tier: userTier,
+          created_at: new Date().toISOString()
+        }, { onConflict: 'id' });
+      
+      if (profileError) {
+        console.error('Profile creation error:', profileError);
+        // Don't throw - user is created, just profile might not have tier
+      } else {
+        console.log('Profile created with tier:', userTier);
+      }
+    }
+    
     // Update success message if promo was applied
     if (userTier !== 'free') {
       successEl.innerHTML = `

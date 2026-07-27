@@ -318,16 +318,15 @@ const promoTier = urlParams.get('tier') || '';
 const promoCode = urlParams.get('promo') || '';
 const isSignup = urlParams.get('signup') === 'true';
 
+// If signup mode, redirect to register page with all params
+if (isSignup) {
+  const registerUrl = `/dashboard/register.html?email=${encodeURIComponent(promoEmail)}&tier=${encodeURIComponent(promoTier)}&promo=${encodeURIComponent(promoCode)}`;
+  window.location.href = registerUrl;
+}
+
 // Pre-fill email if provided from promo
 if (promoEmail) {
   document.getElementById('email').value = promoEmail;
-}
-
-// Update UI if signup mode
-if (isSignup) {
-  document.querySelector('h1').textContent = 'Create your account';
-  document.querySelector('.subtitle').textContent = 'Set up your Quant Prime dashboard access';
-  document.querySelector('.alt-link').innerHTML = 'Already have an account? <a href="/dashboard/login.html">Sign in</a>';
 }
 
 // Show promo notice if applicable
