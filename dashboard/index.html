@@ -3785,8 +3785,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
           <a href="/pricing" class="btn sm">Upgrade to Ascension</a>
-          <button class="btn outline sm">Manage plan</button>
+          <button class="btn outline sm" onclick="checkPendingUpgrade()">Check for Upgrade</button>
         </div>
+        <div id="upgrade-status" style="margin-top: 12px; font-size: 13px; display: none;"></div>
       </div>
     </div>
   </div>
@@ -4175,6 +4176,59 @@ async function checkAuth() {
   loadMarketplaceProducts();
   
   document.getElementById('username-modal').classList.add('hidden');
+}
+
+// Manual check for pending tier upgrades (called from Profile)
+async function checkPendingUpgrade() {
+  const statusEl = document.getElementById('upgrade-status');
+  statusEl.style.display = 'block';
+  statusEl.innerHTML = '<span style="color: var(--text-3);">Checking for upgrades...</span>';
+  
+  try {
+    const res = await fetch(`https://dashboard.themoneyprinter.uk/api/pending-tier?email=${encodeURIComponent(authUser.email)}`);
+    const data = await res.json();
+    
+    if (data.tier) {
+      console.log('[Upgrade] Found pending tier:', data.tier);
+      
+      // Update Supabase profile
+      const { error } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: authUser.id,
+          email: authUser.email,
+          tier: data.tier
+        }, { onConflict: 'id' });
+      
+      if (error) {
+        statusEl.innerHTML = `<span style="color: var(--danger);">Failed to apply: ${error.message}</span>`;
+        return;
+      }
+      
+      // Mark as applied
+      fetch('https://dashboard.themoneyprinter.uk/api/pending-tier/applied', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId: data.entryId })
+      }).catch(e => {});
+      
+      // Update local state and UI
+      userTier = data.tier.toLowerCase();
+      document.getElementById('user-tier').textContent = userTier.toUpperCase();
+      applyTierAccess();
+      updateMobileTier();
+      if (marketplaceProducts.length > 0) renderMarketplaceProducts(marketplaceProducts);
+      
+      statusEl.innerHTML = `<span style="color: var(--success);">✓ Upgraded to ${data.tier.toUpperCase()}! Refreshing...</span>`;
+      setTimeout(() => location.reload(), 1500);
+    } else {
+      statusEl.innerHTML = '<span style="color: var(--text-3);">No pending upgrades found</span>';
+      setTimeout(() => statusEl.style.display = 'none', 3000);
+    }
+  } catch (e) {
+    console.error('[Upgrade] Error:', e);
+    statusEl.innerHTML = `<span style="color: var(--danger);">Error checking: ${e.message}</span>`;
+  }
   
   if (chatEnabled) {
     subscribeToRoom(currentRoom);
@@ -4188,6 +4242,7 @@ function applyTierAccess() {
   // Products that can be locked
   const lockableViews = ['research', 'recoil', 'meridian', 'cockpit', 'academy', 'notebook', 'mentorship', 'automation', 'intelligence'];
   
+  // Apply to sidebar nav items
   document.querySelectorAll('.nav-item').forEach(item => {
     const view = item.dataset.view;
     
@@ -4208,6 +4263,23 @@ function applyTierAccess() {
         if (lock) lock.style.display = 'block';
         const pip = item.querySelector('.status-pip');
         if (pip) pip.style.display = 'none';
+      }
+    }
+  });
+  
+  // Apply to mobile nav buttons too
+  document.querySelectorAll('#mobile-nav button').forEach(btn => {
+    const view = btn.dataset.view;
+    
+    if (lockableViews.includes(view)) {
+      if (allowedViews.includes(view)) {
+        btn.classList.remove('locked');
+        btn.dataset.locked = 'false';
+        btn.style.opacity = '1';
+      } else {
+        btn.classList.add('locked');
+        btn.dataset.locked = 'true';
+        btn.style.opacity = '0.4';
       }
     }
   });
