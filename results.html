@@ -11,17 +11,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
+/* Light Theme Results Page */
 :root {
-  --bg-darker: #050508;
-  --bg-card: rgba(255,255,255,0.02);
-  --border: rgba(255,255,255,0.06);
-  --green: #22c55e;
-  --red: #ef4444;
+  --bg-light: #fafafa;
+  --bg-white: #fff;
+  --border-light: rgba(0,0,0,0.08);
+  --text-dark: #1a1a1a;
+  --text-mid: #555;
+  --text-light: #888;
+  --green: #16a34a;
+  --red: #dc2626;
+  --gold: #c9a84c;
 }
 
 .results-page {
-  background: var(--bg-darker);
+  background: var(--bg-light);
   min-height: 100vh;
+}
+
+.results-page .page-header {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.results-page .page-header h1 {
+  color: var(--text-dark);
+}
+
+.results-page .page-header h1 em {
+  color: var(--gold);
+}
+
+.results-page .page-header p,
+.results-page .label {
+  color: var(--text-mid);
 }
 
 .risk-control {
@@ -29,23 +52,23 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
   margin-bottom: 2rem;
 }
 
 .risk-control span {
   font-size: 0.75rem;
-  color: var(--text-3);
+  color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
 .risk-btn {
   padding: 0.5rem 1.25rem;
-  background: transparent;
-  border: 1px solid var(--border);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
   border-radius: 6px;
-  color: var(--text-2);
+  color: var(--text-mid);
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
@@ -53,37 +76,38 @@
 }
 
 .risk-btn:hover {
-  border-color: rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.03);
+  border-color: rgba(0,0,0,0.15);
+  background: #f5f5f5;
 }
 
 .risk-btn.active {
   background: var(--gold);
   border-color: var(--gold);
-  color: #000;
+  color: #fff;
 }
 
 .disclaimer-bar {
-  background: rgba(201,168,76,0.06);
-  border: 1px solid rgba(201,168,76,0.15);
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
   border-radius: 8px;
   padding: 1rem 1.25rem;
   margin-bottom: 2rem;
   font-size: 0.8rem;
-  color: var(--text-2);
+  color: var(--text-mid);
   line-height: 1.5;
 }
 
 .disclaimer-bar strong {
-  color: var(--gold);
+  color: #b8963f;
 }
 
 .indicator-block {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
   margin-bottom: 2rem;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .indicator-header {
@@ -91,7 +115,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .indicator-title {
@@ -113,17 +137,18 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
+  color: var(--text-dark);
 }
 
 .indicator-meta {
   font-size: 0.75rem;
-  color: var(--text-3);
+  color: var(--text-light);
 }
 
 .stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 @media (max-width: 600px) {
@@ -133,7 +158,7 @@
 .stat-cell {
   padding: 1.25rem;
   text-align: center;
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--border-light);
 }
 
 .stat-cell:last-child { border-right: none; }
@@ -143,6 +168,7 @@
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
   margin-bottom: 0.25rem;
+  color: var(--text-dark);
 }
 
 .stat-value.green { color: var(--green); }
@@ -150,7 +176,7 @@
 
 .stat-label {
   font-size: 0.65rem;
-  color: var(--text-3);
+  color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -169,27 +195,27 @@
 .trades-table th {
   position: sticky;
   top: 0;
-  background: #0a0a0f;
+  background: #f8f8f8;
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 500;
-  color: var(--text-3);
+  color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 0.65rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .trades-table td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  color: var(--text-2);
+  color: var(--text-mid);
 }
 
 .trades-table tr:hover td {
-  background: rgba(255,255,255,0.02);
+  background: rgba(0,0,0,0.02);
 }
 
 .trades-table .long { color: var(--green); }
@@ -200,23 +226,24 @@
 .lot-info {
   padding: 0.75rem 1.5rem;
   font-size: 0.7rem;
-  color: var(--text-3);
-  border-top: 1px solid var(--border);
-  background: rgba(0,0,0,0.2);
+  color: var(--text-light);
+  border-top: 1px solid var(--border-light);
+  background: #f8f8f8;
 }
 
 .methodology {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
   padding: 1.5rem;
   margin-top: 2rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 
 .methodology h3 {
   font-size: 0.9rem;
   margin-bottom: 1rem;
-  color: var(--text-1);
+  color: var(--text-dark);
 }
 
 .methodology ul {
@@ -230,7 +257,7 @@
   padding-left: 1.25rem;
   position: relative;
   font-size: 0.8rem;
-  color: var(--text-2);
+  color: var(--text-mid);
 }
 
 .methodology li::before {
@@ -243,18 +270,29 @@
 .cta-section {
   text-align: center;
   padding: 4rem 0;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-light);
   margin-top: 3rem;
+  background: var(--bg-white);
 }
 
 .cta-section h2 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+  color: var(--text-dark);
 }
 
 .cta-section p {
-  color: var(--text-2);
+  color: var(--text-mid);
   margin-bottom: 1.5rem;
+}
+
+.results-page footer {
+  background: var(--bg-white);
+  border-top: 1px solid var(--border-light);
+}
+
+.results-page footer p {
+  color: var(--text-mid);
 }
 </style>
 </head>
