@@ -79,29 +79,35 @@ body {
   max-width: 800px;
 }
 
-.hero-label {
+.brand-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+.brand-label .white {
+  color: #fff;
+}
+
+.brand-label .gold {
+  color: var(--gold);
+}
+
+.program-label {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.hero-label::before,
-.hero-label::after {
-  content: '';
-  width: 40px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold));
-}
-
-.hero-label::after {
-  background: linear-gradient(90deg, var(--gold), transparent);
+  padding: 0.5rem 1.5rem;
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 4px;
+  background: rgba(201,168,76,0.08);
+  margin-top: 2rem;
 }
 
 .hero h1 {
@@ -610,9 +616,10 @@ footer p a { color: var(--gold); }
 <!-- Hero -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-label">The Ascension Program</div>
-    <h1>90 days to<br><em>systematic trading.</em></h1>
+    <div class="brand-label"><span class="white">QUANT</span> <span class="gold">PRIME</span></div>
+    <h1>Transform your trading<br>in <em>90 days.</em></h1>
     <p>Weekly 1-on-1 calls. Complete education. Every indicator. And a guarantee that you'll get results — or we build your automation for free.</p>
+    <div class="program-label">ASCENSION</div>
     <a href="/ascension-apply" class="hero-cta">
       Apply Now
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
