@@ -4009,6 +4009,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
 </div>
 
 <script>
+console.log('[Dashboard] Script starting...');
+
 // ==========================================
 // FIREBASE CONFIGURATION
 // ==========================================
@@ -4553,7 +4555,11 @@ async function logout() {
 }
 
 // Run auth check
-checkAuth();
+// Run auth check with error handling
+checkAuth().catch(err => {
+  console.error('[FATAL] checkAuth failed:', err);
+  alert('Dashboard error: ' + err.message);
+});
 
 // ==========================================
 // USER STATE
