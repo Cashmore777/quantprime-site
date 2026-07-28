@@ -1216,6 +1216,47 @@ document.getElementById('cvc').addEventListener('input', function(e) {
 });
 
 init();
+
+// Check if user is logged in and pre-fill email
+async function checkLoggedInUser() {
+  if (typeof window.supabase === 'undefined') return;
+  
+  const supabaseClient = window.supabase.createClient(
+    'https://pjqwnqhnuxwinwxdritp.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ'
+  );
+  
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session && session.user) {
+      const emailInput = document.getElementById('email');
+      if (emailInput && !emailInput.value) {
+        emailInput.value = session.user.email;
+        emailInput.classList.add('prefilled');
+      }
+      
+      // Also get their TradingView username from profile
+      const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('tradingview_username, display_name')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (profile && profile.tradingview_username) {
+        const tvInput = document.getElementById('tvUsername');
+        if (tvInput && !tvInput.value) {
+          tvInput.value = profile.tradingview_username;
+        }
+      }
+    }
+  } catch (e) {
+    console.log('[Checkout] Auth check:', e.message);
+  }
+}
+
+// Run after page loads
+setTimeout(checkLoggedInUser, 500);
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
