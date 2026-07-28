@@ -3,337 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- SEO -->
-<title>Verified Trading Results — Quant Prime Indicators Performance</title>
-<meta name="description" content="Real performance data from Quant Prime's Recoil and Meridian trading indicators. Verified trade statistics, win rates, and returns — no cherry-picked results.">
-<meta name="keywords" content="trading indicator results, verified trading performance, recoil indicator results, meridian indicator performance, quant prime proof">
+<title>Verified Results — Quant Prime</title>
+<meta name="description" content="Real performance data from Quant Prime's Recoil and Meridian trading indicators. Verified trade history with full transparency.">
 <link rel="canonical" href="https://quantprime.uk/results">
-<meta property="og:title" content="Verified Results — Quant Prime">
-<meta property="og:description" content="Real performance data from Quant Prime trading indicators. No cherry-picked results.">
-<meta property="og:url" content="https://quantprime.uk/results">
-<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
-
 <style>
-/* Results Page Styles */
-.risk-selector {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 2rem;
+:root {
+  --bg-darker: #050508;
+  --bg-card: rgba(255,255,255,0.02);
+  --border: rgba(255,255,255,0.06);
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+.results-page {
+  background: var(--bg-darker);
+  min-height: 100vh;
+}
+
+.risk-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 2rem;
 }
 
-.risk-selector h3 {
-  font-size: 1rem;
-  color: var(--text-2);
-  margin-bottom: 1.5rem;
+.risk-control span {
+  font-size: 0.75rem;
+  color: var(--text-3);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
 }
 
-.risk-tabs {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.risk-tab {
-  padding: 0.75rem 1.5rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
+.risk-btn {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
   color: var(--text-2);
-  cursor: pointer;
-  transition: all 0.2s;
+  font-size: 0.8rem;
   font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-.risk-tab:hover {
-  background: rgba(255,255,255,0.08);
+.risk-btn:hover {
   border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
 }
 
-.risk-tab.active {
+.risk-btn.active {
   background: var(--gold);
   border-color: var(--gold);
   color: #000;
 }
 
-.risk-tab .lot-size {
-  font-size: 0.75rem;
-  opacity: 0.7;
-  display: block;
-  margin-top: 0.25rem;
+.disclaimer-bar {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  font-size: 0.8rem;
+  color: var(--text-2);
+  line-height: 1.5;
 }
 
-.indicator-section {
-  margin-bottom: 3rem;
+.disclaimer-bar strong {
+  color: var(--gold);
+}
+
+.indicator-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  overflow: hidden;
 }
 
 .indicator-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.indicator-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .indicator-dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--gold);
 }
 
-.indicator-dot.cyan {
-  background: var(--cyan);
-}
+.indicator-dot.cyan { background: var(--cyan); }
 
-.indicator-header h2 {
-  font-size: 1.5rem;
+.indicator-title h2 {
+  font-size: 1.1rem;
   font-weight: 600;
+  margin: 0;
 }
 
-.indicator-header .period {
-  font-size: 0.875rem;
+.indicator-meta {
+  font-size: 0.75rem;
   color: var(--text-3);
-  margin-left: auto;
 }
 
-.stats-grid {
+.stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 600px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
 }
 
-.stat-card {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 10px;
+.stat-cell {
   padding: 1.25rem;
   text-align: center;
+  border-right: 1px solid var(--border);
 }
 
-.stat-card .value {
-  font-size: 1.75rem;
+.stat-cell:last-child { border-right: none; }
+
+.stat-value {
+  font-size: 1.5rem;
   font-weight: 700;
   font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 0.25rem;
 }
 
-.stat-card .value.positive {
-  color: var(--green);
-}
+.stat-value.green { color: var(--green); }
+.stat-value.gold { color: var(--gold); }
 
-.stat-card .value.gold {
-  color: var(--gold);
-}
-
-.stat-card .label {
-  font-size: 0.75rem;
+.stat-label {
+  font-size: 0.65rem;
   color: var(--text-3);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 0.5rem;
+  letter-spacing: 0.08em;
 }
 
-.trade-history {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.trade-history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.trade-history-header h4 {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-2);
-}
-
-.trade-toggle {
-  font-size: 0.75rem;
-  color: var(--cyan);
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.trade-table-wrapper {
-  max-height: 400px;
+.trades-section {
+  max-height: 500px;
   overflow-y: auto;
 }
 
-.trade-table {
+.trades-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8rem;
 }
 
-.trade-table th {
+.trades-table th {
   position: sticky;
   top: 0;
-  background: rgba(10,10,15,0.95);
+  background: #0a0a0f;
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 500;
   color: var(--text-3);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  font-size: 0.7rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  letter-spacing: 0.05em;
+  font-size: 0.65rem;
+  border-bottom: 1px solid var(--border);
 }
 
-.trade-table td {
-  padding: 0.6rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+.trades-table td {
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
+  color: var(--text-2);
 }
 
-.trade-table tr:hover {
+.trades-table tr:hover td {
   background: rgba(255,255,255,0.02);
 }
 
-.trade-table .pnl-positive {
-  color: var(--green);
-}
+.trades-table .long { color: var(--green); }
+.trades-table .short { color: var(--red); }
+.trades-table .positive { color: var(--green); }
+.trades-table .negative { color: var(--red); }
 
-.trade-table .pnl-negative {
-  color: var(--danger);
-}
-
-.trade-table .type-long {
-  color: var(--green);
-}
-
-.trade-table .type-short {
-  color: var(--danger);
-}
-
-.disclaimer-box {
-  background: rgba(201, 168, 76, 0.08);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  border-radius: 10px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.disclaimer-box h4 {
-  color: var(--gold);
-  font-size: 0.875rem;
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.disclaimer-box p {
-  font-size: 0.8rem;
+.lot-info {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.7rem;
   color: var(--text-3);
-  line-height: 1.6;
+  border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.2);
 }
 
-.methodology-section {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid rgba(255,255,255,0.08);
+.methodology {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 2rem;
-  margin-top: 3rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
 }
 
-.methodology-section h3 {
-  font-size: 1.25rem;
+.methodology h3 {
+  font-size: 0.9rem;
   margin-bottom: 1rem;
+  color: var(--text-1);
 }
 
-.methodology-section ul {
+.methodology ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
-.methodology-section li {
-  padding: 0.5rem 0;
-  padding-left: 1.5rem;
+.methodology li {
+  padding: 0.4rem 0;
+  padding-left: 1.25rem;
   position: relative;
+  font-size: 0.8rem;
   color: var(--text-2);
-  font-size: 0.9rem;
 }
 
-.methodology-section li::before {
-  content: "→";
+.methodology li::before {
+  content: "•";
   position: absolute;
   left: 0;
   color: var(--gold);
 }
 
-.summary-row {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-.summary-card {
-  flex: 1;
-  min-width: 200px;
-  background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.02));
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 12px;
-  padding: 1.5rem;
+.cta-section {
   text-align: center;
+  padding: 4rem 0;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
 }
 
-.summary-card .label {
-  font-size: 0.75rem;
-  color: var(--text-3);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.cta-section h2 {
+  font-size: 1.5rem;
   margin-bottom: 0.5rem;
 }
 
-.summary-card .value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--gold);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.summary-card .subtext {
-  font-size: 0.75rem;
-  color: var(--text-3);
-  margin-top: 0.25rem;
+.cta-section p {
+  color: var(--text-2);
+  margin-bottom: 1.5rem;
 }
 </style>
 </head>
-<body>
+<body class="results-page">
 
 <nav>
   <div class="container">
     <div class="nav-left">
       <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
       <button class="nav-dropdown-btn" id="navDropdown">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-          <path d="M3 4.5L6 7.5L9 4.5"/>
-        </svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 4.5L6 7.5L9 4.5"/></svg>
       </button>
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home</a>
@@ -351,395 +283,197 @@
 <section class="page-header">
   <div class="container">
     <div class="label">VERIFIED RESULTS</div>
-    <h1>Data, not promises.<br><em>Numbers, not hype.</em></h1>
-    <p>Every trade logged and analyzed. Adjust risk level to see potential returns at different lot sizes.</p>
+    <h1>Full trade history.<br><em>Every signal. Every outcome.</em></h1>
+    <p>206 Meridian trades. Complete transparency. Scroll through every single one.</p>
   </div>
 </section>
 
-<section class="results-section">
+<section style="padding: 2rem 0 4rem;">
   <div class="container">
-    
-    <!-- Risk Selector -->
-    <div class="risk-selector reveal">
-      <h3>Select Risk Level</h3>
-      <div class="risk-tabs">
-        <button class="risk-tab active" data-risk="low" onclick="setRisk('low')">
-          Low Risk
-          <span class="lot-size">Conservative</span>
-        </button>
-        <button class="risk-tab" data-risk="medium" onclick="setRisk('medium')">
-          Medium Risk
-          <span class="lot-size">Balanced</span>
-        </button>
-        <button class="risk-tab" data-risk="high" onclick="setRisk('high')">
-          High Risk
-          <span class="lot-size">Aggressive</span>
-        </button>
-      </div>
+
+    <!-- Risk Control -->
+    <div class="risk-control">
+      <span>Risk Level:</span>
+      <button class="risk-btn active" data-mult="1" onclick="setRisk(1)">1× Base</button>
+      <button class="risk-btn" data-mult="2" onclick="setRisk(2)">2× Medium</button>
+      <button class="risk-btn" data-mult="4" onclick="setRisk(4)">4× Aggressive</button>
     </div>
 
     <!-- Disclaimer -->
-    <div class="disclaimer-box">
-      <h4>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        Important Disclaimer
-      </h4>
-      <p><strong>Past performance is not indicative of future results.</strong> Trading involves substantial risk of loss. The results shown are backtested using historical data from January 1, 2026 to present. Actual trading results may vary significantly due to slippage, spreads, execution delays, and market conditions. These projections assume perfect execution at signal prices. Only trade with capital you can afford to lose.</p>
+    <div class="disclaimer-bar">
+      <strong>Risk Disclaimer:</strong> Past performance does not guarantee future results. All data shown is from backtesting on historical data (Jan 1 - Jul 28, 2026). Actual results may vary due to slippage, spreads, and market conditions. Trade only with capital you can afford to lose.
     </div>
 
-    <!-- Combined Summary -->
-    <div class="summary-row reveal" id="summary-row">
-      <div class="summary-card">
-        <div class="label">Combined YTD Return</div>
-        <div class="value" id="combined-pnl">$313.77</div>
-        <div class="subtext">Recoil + Meridian</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Trading Days</div>
-        <div class="value">145</div>
-        <div class="subtext">Jan 1 - Jul 28, 2026</div>
-      </div>
-      <div class="summary-card">
-        <div class="label">Daily Average</div>
-        <div class="value" id="daily-avg">$2.16</div>
-        <div class="subtext">At selected risk</div>
-      </div>
-    </div>
-
-    <!-- Recoil Section -->
-    <div class="indicator-section reveal" id="recoil-section">
+    <!-- Meridian Block -->
+    <div class="indicator-block">
       <div class="indicator-header">
-        <div class="indicator-dot"></div>
-        <h2>Recoil</h2>
-        <span class="period">Jan 1 - Jul 28, 2026 · EURUSD</span>
+        <div class="indicator-title">
+          <div class="indicator-dot cyan"></div>
+          <h2>Meridian</h2>
+        </div>
+        <div class="indicator-meta">EURUSD · Jan 1 - Jul 28, 2026</div>
       </div>
       
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="value gold" id="recoil-pnl">$197.86</div>
-          <div class="label">Total P&L</div>
+      <div class="stats-row">
+        <div class="stat-cell">
+          <div class="stat-value gold" id="meridian-pnl">$115.77</div>
+          <div class="stat-label">Total P&L</div>
         </div>
-        <div class="stat-card">
-          <div class="value">73.43%</div>
-          <div class="label">Win Rate</div>
+        <div class="stat-cell">
+          <div class="stat-value">64.39%</div>
+          <div class="stat-label">Win Rate</div>
         </div>
-        <div class="stat-card">
-          <div class="value">1.98</div>
-          <div class="label">Profit Factor</div>
+        <div class="stat-cell">
+          <div class="stat-value">1.395</div>
+          <div class="stat-label">Profit Factor</div>
         </div>
-        <div class="stat-card">
-          <div class="value" id="recoil-dd">$57.56</div>
-          <div class="label">Max Drawdown</div>
-        </div>
-      </div>
-      
-      <div class="trade-history" id="recoil-trades">
-        <div class="trade-history-header">
-          <h4>Trade History (412 trades)</h4>
-          <span class="trade-toggle" onclick="toggleTrades('recoil')">Show trades</span>
-        </div>
-        <div class="trade-table-wrapper" style="display:none">
-          <table class="trade-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Entry</th>
-                <th>Exit</th>
-                <th>P&L</th>
-                <th>Cumulative</th>
-              </tr>
-            </thead>
-            <tbody id="recoil-tbody">
-              <!-- Populated by JS -->
-            </tbody>
-          </table>
+        <div class="stat-cell">
+          <div class="stat-value" id="meridian-dd">$30.70</div>
+          <div class="stat-label">Max Drawdown</div>
         </div>
       </div>
       
-      <p style="font-size:0.75rem;color:var(--text-3);margin-top:1rem">
-        Base lot size: <span id="recoil-lot">0.02</span> · Multiplier: <span id="recoil-mult">1x</span>
-      </p>
+      <div class="trades-section" id="meridian-trades">
+        <table class="trades-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Direction</th>
+              <th>Exit Price</th>
+              <th>P&L</th>
+              <th>Cumulative</th>
+            </tr>
+          </thead>
+          <tbody id="meridian-tbody"></tbody>
+        </table>
+      </div>
+      
+      <div class="lot-info">
+        Base lot: <strong>0.01</strong> · Multiplier: <strong id="meridian-mult">1×</strong> · 206 total trades
+      </div>
     </div>
 
-    <!-- Meridian Section -->
-    <div class="indicator-section reveal" id="meridian-section">
+    <!-- Recoil Block (Placeholder until we have data) -->
+    <div class="indicator-block" style="opacity: 0.5;">
       <div class="indicator-header">
-        <div class="indicator-dot cyan"></div>
-        <h2>Meridian</h2>
-        <span class="period">Jan 1 - Jul 28, 2026 · EURUSD</span>
+        <div class="indicator-title">
+          <div class="indicator-dot"></div>
+          <h2>Recoil</h2>
+        </div>
+        <div class="indicator-meta">Coming soon — awaiting backtest data</div>
       </div>
       
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="value gold" id="meridian-pnl">$115.91</div>
-          <div class="label">Total P&L</div>
+      <div class="stats-row">
+        <div class="stat-cell">
+          <div class="stat-value gold">—</div>
+          <div class="stat-label">Total P&L</div>
         </div>
-        <div class="stat-card">
-          <div class="value">64.39%</div>
-          <div class="label">Win Rate</div>
+        <div class="stat-cell">
+          <div class="stat-value">73.43%</div>
+          <div class="stat-label">Win Rate</div>
         </div>
-        <div class="stat-card">
-          <div class="value">1.395</div>
-          <div class="label">Profit Factor</div>
+        <div class="stat-cell">
+          <div class="stat-value">1.98</div>
+          <div class="stat-label">Profit Factor</div>
         </div>
-        <div class="stat-card">
-          <div class="value" id="meridian-dd">$122.03</div>
-          <div class="label">Max Drawdown</div>
-        </div>
-      </div>
-      
-      <div class="trade-history" id="meridian-trades">
-        <div class="trade-history-header">
-          <h4>Trade History (206 trades)</h4>
-          <span class="trade-toggle" onclick="toggleTrades('meridian')">Show trades</span>
-        </div>
-        <div class="trade-table-wrapper" style="display:none">
-          <table class="trade-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Entry</th>
-                <th>Exit</th>
-                <th>P&L</th>
-                <th>Cumulative</th>
-              </tr>
-            </thead>
-            <tbody id="meridian-tbody">
-              <!-- Populated by JS -->
-            </tbody>
-          </table>
+        <div class="stat-cell">
+          <div class="stat-value">—</div>
+          <div class="stat-label">Max Drawdown</div>
         </div>
       </div>
       
-      <p style="font-size:0.75rem;color:var(--text-3);margin-top:1rem">
-        Base lot size: <span id="meridian-lot">0.01</span> · Multiplier: <span id="meridian-mult">1x</span>
-      </p>
+      <div style="padding: 2rem; text-align: center; color: var(--text-3); font-size: 0.85rem;">
+        Recoil trade history will be added once backtest CSV is provided.
+      </div>
     </div>
 
     <!-- Methodology -->
-    <div class="methodology-section reveal">
+    <div class="methodology">
       <h3>Methodology</h3>
       <ul>
-        <li>All trades executed on TradingView strategy tester using exact indicator signals</li>
-        <li>Commission: $0.14 per round trip (realistic broker rates)</li>
-        <li>No slippage adjustment — actual results may include minor slippage</li>
-        <li>Signals taken at session open prices as indicated by the indicator</li>
-        <li>Data period: January 1, 2026 to present (ongoing)</li>
-        <li>Instrument: EURUSD on 3-minute timeframe</li>
+        <li>All trades executed via TradingView strategy tester using exact indicator signals</li>
+        <li>Commission: $0.07-0.14 per trade (realistic broker rates)</li>
+        <li>No slippage adjustment — actual execution may include minor slippage</li>
+        <li>Signals taken at session times as indicated by the indicator logic</li>
+        <li>Instrument: EURUSD · Timeframe: 3-minute chart</li>
+        <li>Max drawdown calculated as worst peak-to-trough decline in cumulative P&L</li>
       </ul>
     </div>
 
   </div>
 </section>
 
-<section class="next-section">
+<section class="cta-section">
   <div class="container">
-    <h2>Ready to trade with data-driven signals?</h2>
-    <p>Join the Quant Prime research platform and access both Recoil and Meridian.</p>
+    <h2>Ready to trade with verified signals?</h2>
+    <p>Access Meridian and Recoil through the Quant Prime platform.</p>
     <a href="/pricing" class="btn gold lg">View Pricing</a>
   </div>
 </section>
 
 <footer>
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-col">
-        <a href="/" class="footer-logo">QUANT<span>PRIME</span></a>
-        <p>Systematic trading research for serious operators.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Platform</h4>
-        <a href="/framework">The Framework</a>
-        <a href="/compounding">Compounding</a>
-        <a href="/results">Results</a>
-        <a href="/pricing">Pricing</a>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/terms">Terms of Use</a>
-        <a href="https://discord.gg/quantprime" target="_blank">Discord</a>
-      </div>
-    </div>
     <div class="footer-bottom">
-      <p>© 2026 Quant Prime. Trading involves risk. Past performance ≠ future results.</p>
+      <p>© 2026 Quant Prime. Trading involves substantial risk. Past performance ≠ future results.</p>
     </div>
   </div>
 </footer>
 
 <script src="/js/main.js"></script>
 <script>
-// Risk level configurations
-const riskLevels = {
-  low: {
-    recoil: { lot: 0.02, mult: 1 },
-    meridian: { lot: 0.01, mult: 1 }
-  },
-  medium: {
-    recoil: { lot: 0.06, mult: 3 },
-    meridian: { lot: 0.05, mult: 5 }
-  },
-  high: {
-    recoil: { lot: 1.0, mult: 50 },
-    meridian: { lot: 1.0, mult: 100 }
-  }
-};
+// Meridian trade data (all 206 trades)
+const meridianTrades = [  {    "num": 1,    "date": "2026-01-02",    "type": "short",    "exit": 1.17184,    "pnl": 3.17,    "cumulative": 3.17  },  {    "num": 2,    "date": "2026-01-05",    "type": "long",    "exit": 1.17257,    "pnl": 0.63,    "cumulative": 3.73  },  {    "num": 3,    "date": "2026-01-05",    "type": "long",    "exit": 1.17257,    "pnl": 1.77,    "cumulative": 5.56  },  {    "num": 4,    "date": "2026-01-06",    "type": "short",    "exit": 1.16882,    "pnl": 3.61,    "cumulative": 9.17  },  {    "num": 5,    "date": "2026-01-12",    "type": "long",    "exit": 1.1661,    "pnl": -2.8,    "cumulative": 6.09  },  {    "num": 6,    "date": "2026-01-12",    "type": "long",    "exit": 1.1661,    "pnl": -1.3,    "cumulative": 4.85  },  {    "num": 7,    "date": "2026-01-12",    "type": "long",    "exit": 1.1661,    "pnl": 1.64,    "cumulative": 6.56  },  {    "num": 8,    "date": "2026-01-12",    "type": "long",    "exit": 1.1661,    "pnl": 2.54,    "cumulative": 9.16  },  {    "num": 9,    "date": "2026-01-12",    "type": "long",    "exit": 1.1661,    "pnl": 3.76,    "cumulative": 12.99  },  {    "num": 10,    "date": "2026-01-14",    "type": "short",    "exit": 1.16378,    "pnl": 2.23,    "cumulative": 15.08  },  {    "num": 11,    "date": "2026-01-14",    "type": "short",    "exit": 1.16378,    "pnl": 3.23,    "cumulative": 18.37  },  {    "num": 12,    "date": "2026-01-14",    "type": "short",    "exit": 1.16378,    "pnl": 1.14,    "cumulative": 19.58  },  {    "num": 13,    "date": "2026-01-19",    "type": "long",    "exit": 1.16216,    "pnl": -1.71,    "cumulative": 17.73  },  {    "num": 14,    "date": "2026-01-19",    "type": "long",    "exit": 1.16216,    "pnl": 0.85,    "cumulative": 18.64  },  {    "num": 15,    "date": "2026-01-19",    "type": "long",    "exit": 1.16216,    "pnl": 2.61,    "cumulative": 21.32  },  {    "num": 16,    "date": "2026-01-21",    "type": "short",    "exit": 1.16964,    "pnl": -7.57,    "cumulative": 13.61  },  {    "num": 17,    "date": "2026-01-21",    "type": "short",    "exit": 1.16964,    "pnl": -5.34,    "cumulative": 8.33  },  {    "num": 18,    "date": "2026-01-21",    "type": "short",    "exit": 1.16964,    "pnl": 2.76,    "cumulative": 11.16  },  {    "num": 19,    "date": "2026-01-22",    "type": "long",    "exit": 1.17472,    "pnl": 4.94,    "cumulative": 16.1  },  {    "num": 20,    "date": "2026-01-28",    "type": "short",    "exit": 1.19067,    "pnl": -16.03,    "cumulative": -0.21  },  {    "num": 21,    "date": "2026-01-28",    "type": "short",    "exit": 1.19067,    "pnl": -11.02,    "cumulative": -11.17  },  {    "num": 22,    "date": "2026-01-28",    "type": "short",    "exit": 1.19067,    "pnl": -5.78,    "cumulative": -16.88  },  {    "num": 23,    "date": "2026-01-28",    "type": "short",    "exit": 1.19067,    "pnl": -3.18,    "cumulative": -20  },  {    "num": 24,    "date": "2026-01-28",    "type": "short",    "exit": 1.19067,    "pnl": 6.85,    "cumulative": -13.08  },  {    "num": 25,    "date": "2026-02-02",    "type": "long",    "exit": 1.18606,    "pnl": -4.7,    "cumulative": -17.92  },  {    "num": 26,    "date": "2026-02-02",    "type": "long",    "exit": 1.18606,    "pnl": -9.59,    "cumulative": -27.45  },  {    "num": 27,    "date": "2026-02-02",    "type": "long",    "exit": 1.18606,    "pnl": -2.02,    "cumulative": -29.4  },  {    "num": 28,    "date": "2026-02-02",    "type": "short",    "exit": 1.17773,    "pnl": 8.19,    "cumulative": -21.21  },  {    "num": 29,    "date": "2026-02-03",    "type": "long",    "exit": 1.18072,    "pnl": 2.85,    "cumulative": -18.36  },  {    "num": 30,    "date": "2026-02-04",    "type": "short",    "exit": 1.17987,    "pnl": 0.71,    "cumulative": -17.65  },  {    "num": 31,    "date": "2026-02-05",    "type": "long",    "exit": 1.17938,    "pnl": -0.63,    "cumulative": -18.28  },  {    "num": 32,    "date": "2026-02-06",    "type": "short",    "exit": 1.17781,    "pnl": 1.43,    "cumulative": -16.85  },  {    "num": 33,    "date": "2026-02-06",    "type": "long",    "exit": 1.18197,    "pnl": 4.02,    "cumulative": -12.83  },  {    "num": 34,    "date": "2026-02-11",    "type": "short",    "exit": 1.1882,    "pnl": -6.32,    "cumulative": -19.36  },  {    "num": 35,    "date": "2026-02-11",    "type": "short",    "exit": 1.1882,    "pnl": -5.48,    "cumulative": -24.76  },  {    "num": 36,    "date": "2026-02-11",    "type": "short",    "exit": 1.1882,    "pnl": 3,    "cumulative": -21.69  },  {    "num": 37,    "date": "2026-02-11",    "type": "short",    "exit": 1.1882,    "pnl": 0.84,    "cumulative": -20.78  },  {    "num": 38,    "date": "2026-02-12",    "type": "long",    "exit": 1.18612,    "pnl": -2.22,    "cumulative": -23  },  {    "num": 39,    "date": "2026-02-16",    "type": "short",    "exit": 1.18661,    "pnl": -0.59,    "cumulative": -23.66  },  {    "num": 40,    "date": "2026-02-16",    "type": "short",    "exit": 1.18661,    "pnl": 0.56,    "cumulative": -23.04  },  {    "num": 41,    "date": "2026-02-17",    "type": "long",    "exit": 1.18496,    "pnl": -1.75,    "cumulative": -24.86  },  {    "num": 42,    "date": "2026-02-17",    "type": "long",    "exit": 1.18496,    "pnl": -0.23,    "cumulative": -25.03  },  {    "num": 43,    "date": "2026-02-18",    "type": "short",    "exit": 1.17886,    "pnl": 5.96,    "cumulative": -19.07  },  {    "num": 44,    "date": "2026-02-20",    "type": "long",    "exit": 1.17884,    "pnl": -0.12,    "cumulative": -19.26  },  {    "num": 45,    "date": "2026-02-20",    "type": "long",    "exit": 1.17884,    "pnl": 1.66,    "cumulative": -17.54  },  {    "num": 46,    "date": "2026-02-23",    "type": "short",    "exit": 1.17975,    "pnl": -1.01,    "cumulative": -18.62  },  {    "num": 47,    "date": "2026-02-23",    "type": "short",    "exit": 1.17975,    "pnl": 2.91,    "cumulative": -15.65  },  {    "num": 48,    "date": "2026-02-25",    "type": "long",    "exit": 1.17969,    "pnl": -0.16,    "cumulative": -15.88  },  {    "num": 49,    "date": "2026-02-25",    "type": "long",    "exit": 1.17969,    "pnl": 1.79,    "cumulative": -14.03  },  {    "num": 50,    "date": "2026-02-26",    "type": "short",    "exit": 1.17861,    "pnl": 0.98,    "cumulative": -13.12  },  {    "num": 51,    "date": "2026-02-26",    "type": "short",    "exit": 1.17861,    "pnl": 2.19,    "cumulative": -10.86  },  {    "num": 52,    "date": "2026-02-27",    "type": "long",    "exit": 1.18191,    "pnl": 3.16,    "cumulative": -7.7  },  {    "num": 53,    "date": "2026-03-02",    "type": "short",    "exit": 1.1699,    "pnl": 11.91,    "cumulative": 4.14  },  {    "num": 54,    "date": "2026-03-02",    "type": "short",    "exit": 1.1699,    "pnl": 5.99,    "cumulative": 10.19  },  {    "num": 55,    "date": "2026-03-04",    "type": "long",    "exit": 1.16273,    "pnl": -7.26,    "cumulative": 2.79  },  {    "num": 56,    "date": "2026-03-04",    "type": "long",    "exit": 1.16273,    "pnl": -4.26,    "cumulative": -1.41  },  {    "num": 57,    "date": "2026-03-04",    "type": "long",    "exit": 1.16273,    "pnl": 1.06,    "cumulative": -0.28  },  {    "num": 58,    "date": "2026-03-05",    "type": "short",    "exit": 1.15864,    "pnl": 3.95,    "cumulative": 3.67  },  {    "num": 59,    "date": "2026-03-06",    "type": "long",    "exit": 1.16023,    "pnl": 1.45,    "cumulative": 5.12  },  {    "num": 60,    "date": "2026-03-09",    "type": "short",    "exit": 1.15263,    "pnl": 7.46,    "cumulative": 12.58  },  {    "num": 61,    "date": "2026-03-09",    "type": "long",    "exit": 1.158,    "pnl": 5.23,    "cumulative": 17.81  },  {    "num": 62,    "date": "2026-03-11",    "type": "short",    "exit": 1.16109,    "pnl": -3.19,    "cumulative": 14.55  },  {    "num": 63,    "date": "2026-03-11",    "type": "short",    "exit": 1.16109,    "pnl": 1.36,    "cumulative": 15.97  },  {    "num": 64,    "date": "2026-03-16",    "type": "long",    "exit": 1.14423,    "pnl": -16.94,    "cumulative": -1.25  },  {    "num": 65,    "date": "2026-03-16",    "type": "long",    "exit": 1.14423,    "pnl": -12.79,    "cumulative": -13.98  },  {    "num": 66,    "date": "2026-03-16",    "type": "long",    "exit": 1.14423,    "pnl": -7.37,    "cumulative": -21.28  },  {    "num": 67,    "date": "2026-03-16",    "type": "long",    "exit": 1.14423,    "pnl": -6.7,    "cumulative": -27.92  },  {    "num": 68,    "date": "2026-03-16",    "type": "long",    "exit": 1.14423,    "pnl": 0.91,    "cumulative": -26.94  },  {    "num": 69,    "date": "2026-03-18",    "type": "short",    "exit": 1.14776,    "pnl": -3.62,    "cumulative": -30.7  },  {    "num": 70,    "date": "2026-03-18",    "type": "short",    "exit": 1.14776,    "pnl": 4.16,    "cumulative": -26.48  },  {    "num": 71,    "date": "2026-03-18",    "type": "short",    "exit": 1.14776,    "pnl": 6.08,    "cumulative": -20.33  },  {    "num": 72,    "date": "2026-03-19",    "type": "long",    "exit": 1.15922,    "pnl": 11.36,    "cumulative": -9.04  },  {    "num": 73,    "date": "2026-03-19",    "type": "long",    "exit": 1.15922,    "pnl": 12.26,    "cumulative": 3.28  },  {    "num": 74,    "date": "2026-03-20",    "type": "short",    "exit": 1.15539,    "pnl": 3.69,    "cumulative": 6.97  },  {    "num": 75,    "date": "2026-03-23",    "type": "long",    "exit": 1.15543,    "pnl": -0.1,    "cumulative": 6.87  },  {    "num": 76,    "date": "2026-03-23",    "type": "short",    "exit": 1.15359,    "pnl": 1.7,    "cumulative": 8.57  },  {    "num": 77,    "date": "2026-03-23",    "type": "long",    "exit": 1.16281,    "pnl": 9.08,    "cumulative": 17.65  },  {    "num": 78,    "date": "2026-03-24",    "type": "short",    "exit": 1.15854,    "pnl": 4.13,    "cumulative": 21.78  },  {    "num": 79,    "date": "2026-03-25",    "type": "long",    "exit": 1.16166,    "pnl": 2.98,    "cumulative": 24.76  },  {    "num": 80,    "date": "2026-03-25",    "type": "short",    "exit": 1.15623,    "pnl": 5.29,    "cumulative": 30.05  },  {    "num": 81,    "date": "2026-03-27",    "type": "long",    "exit": 1.15108,    "pnl": -5.25,    "cumulative": 24.73  },  {    "num": 82,    "date": "2026-03-27",    "type": "long",    "exit": 1.15108,    "pnl": -2.08,    "cumulative": 22.72  },  {    "num": 83,    "date": "2026-03-30",    "type": "short",    "exit": 1.14631,    "pnl": 4.67,    "cumulative": 27.32  },  {    "num": 84,    "date": "2026-03-30",    "type": "short",    "exit": 1.14631,    "pnl": 2.81,    "cumulative": 30.19  },  {    "num": 85,    "date": "2026-03-31",    "type": "long",    "exit": 1.15427,    "pnl": 7.82,    "cumulative": 38.01  },  {    "num": 86,    "date": "2026-04-02",    "type": "short",    "exit": 1.15458,    "pnl": -0.4,    "cumulative": 37.47  },  {    "num": 87,    "date": "2026-04-02",    "type": "short",    "exit": 1.15458,    "pnl": 2.61,    "cumulative": 40.14  },  {    "num": 88,    "date": "2026-04-02",    "type": "short",    "exit": 1.15458,    "pnl": 4.33,    "cumulative": 44.54  },  {    "num": 89,    "date": "2026-04-06",    "type": "long",    "exit": 1.15407,    "pnl": -0.6,    "cumulative": 43.73  },  {    "num": 90,    "date": "2026-04-06",    "type": "long",    "exit": 1.15407,    "pnl": 0.21,    "cumulative": 44.02  },  {    "num": 91,    "date": "2026-04-06",    "type": "long",    "exit": 1.15407,    "pnl": 1.93,    "cumulative": 46.02  },  {    "num": 92,    "date": "2026-04-06",    "type": "long",    "exit": 1.15407,    "pnl": 2.53,    "cumulative": 48.62  },  {    "num": 93,    "date": "2026-04-08",    "type": "short",    "exit": 1.16584,    "pnl": -11.86,    "cumulative": 36.55  },  {    "num": 94,    "date": "2026-04-08",    "type": "short",    "exit": 1.16584,    "pnl": -8.09,    "cumulative": 28.54  },  {    "num": 95,    "date": "2026-04-08",    "type": "short",    "exit": 1.16584,    "pnl": 0.98,    "cumulative": 29.59  },  {    "num": 96,    "date": "2026-04-08",    "type": "short",    "exit": 1.16584,    "pnl": 1.66,    "cumulative": 31.32  },  {    "num": 97,    "date": "2026-04-09",    "type": "long",    "exit": 1.17102,    "pnl": 5.04,    "cumulative": 36.36  },  {    "num": 98,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": -6.82,    "cumulative": 29.19  },  {    "num": 99,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": -5.66,    "cumulative": 23.6  },  {    "num": 100,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": -10.51,    "cumulative": 13.16  },  {    "num": 101,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": -4.19,    "cumulative": 9.03  },  {    "num": 102,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": 1.75,    "cumulative": 10.85  },  {    "num": 103,    "date": "2026-04-16",    "type": "short",    "exit": 1.17776,    "pnl": 1.81,    "cumulative": 12.73  },  {    "num": 104,    "date": "2026-04-17",    "type": "long",    "exit": 1.17939,    "pnl": 1.49,    "cumulative": 14.22  },  {    "num": 105,    "date": "2026-04-20",    "type": "short",    "exit": 1.17435,    "pnl": 4.9,    "cumulative": 19.12  },  {    "num": 106,    "date": "2026-04-20",    "type": "long",    "exit": 1.17852,    "pnl": 4.03,    "cumulative": 23.15  },  {    "num": 107,    "date": "2026-04-21",    "type": "short",    "exit": 1.17465,    "pnl": 3.73,    "cumulative": 26.88  },  {    "num": 108,    "date": "2026-04-23",    "type": "long",    "exit": 1.1694,    "pnl": -5.35,    "cumulative": 21.46  },  {    "num": 109,    "date": "2026-04-23",    "type": "long",    "exit": 1.1694,    "pnl": -1.92,    "cumulative": 19.6  },  {    "num": 110,    "date": "2026-04-28",    "type": "short",    "exit": 1.17151,    "pnl": -2.2,    "cumulative": 17.19  },  {    "num": 111,    "date": "2026-04-28",    "type": "short",    "exit": 1.17151,    "pnl": -0.25,    "cumulative": 17.02  },  {    "num": 112,    "date": "2026-04-28",    "type": "short",    "exit": 1.17151,    "pnl": -0.8,    "cumulative": 16.29  },  {    "num": 113,    "date": "2026-04-28",    "type": "short",    "exit": 1.17151,    "pnl": 0.56,    "cumulative": 16.92  },  {    "num": 114,    "date": "2026-04-30",    "type": "long",    "exit": 1.17286,    "pnl": 1.26,    "cumulative": 17.97  },  {    "num": 115,    "date": "2026-04-30",    "type": "long",    "exit": 1.17286,    "pnl": 5.21,    "cumulative": 23.26  },  {    "num": 116,    "date": "2026-04-30",    "type": "long",    "exit": 1.17286,    "pnl": 5.4,    "cumulative": 28.73  },  {    "num": 117,    "date": "2026-04-30",    "type": "long",    "exit": 1.17286,    "pnl": 6.18,    "cumulative": 34.98  },  {    "num": 118,    "date": "2026-05-04",    "type": "short",    "exit": 1.16945,    "pnl": 3.32,    "cumulative": 38.16  },  {    "num": 119,    "date": "2026-05-04",    "type": "short",    "exit": 1.16945,    "pnl": 3.27,    "cumulative": 41.49  },  {    "num": 120,    "date": "2026-05-04",    "type": "short",    "exit": 1.16945,    "pnl": 3.61,    "cumulative": 45.17  },  {    "num": 121,    "date": "2026-05-05",    "type": "long",    "exit": 1.16998,    "pnl": 0.39,    "cumulative": 45.56  },  {    "num": 122,    "date": "2026-05-07",    "type": "short",    "exit": 1.17512,    "pnl": -5.23,    "cumulative": 40.19  },  {    "num": 123,    "date": "2026-05-07",    "type": "short",    "exit": 1.17512,    "pnl": -1.17,    "cumulative": 39.08  },  {    "num": 124,    "date": "2026-05-07",    "type": "short",    "exit": 1.17512,    "pnl": -0.59,    "cumulative": 38.56  },  {    "num": 125,    "date": "2026-05-08",    "type": "long",    "exit": 1.17785,    "pnl": 2.59,    "cumulative": 41.15  },  {    "num": 126,    "date": "2026-05-12",    "type": "short",    "exit": 1.17318,    "pnl": 4.58,    "cumulative": 45.59  },  {    "num": 127,    "date": "2026-05-12",    "type": "short",    "exit": 1.17318,    "pnl": 3.15,    "cumulative": 48.8  },  {    "num": 128,    "date": "2026-05-12",    "type": "short",    "exit": 1.17318,    "pnl": 4.52,    "cumulative": 53.39  },  {    "num": 129,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": -11.13,    "cumulative": 41.91  },  {    "num": 130,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": -8.47,    "cumulative": 33.51  },  {    "num": 131,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": -5.62,    "cumulative": 27.96  },  {    "num": 132,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": -3.28,    "cumulative": 24.74  },  {    "num": 133,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": -3.4,    "cumulative": 21.41  },  {    "num": 134,    "date": "2026-05-18",    "type": "long",    "exit": 1.16213,    "pnl": 0.31,    "cumulative": 21.79  },  {    "num": 135,    "date": "2026-05-18",    "type": "short",    "exit": 1.16137,    "pnl": 0.62,    "cumulative": 22.41  },  {    "num": 136,    "date": "2026-05-18",    "type": "long",    "exit": 1.16478,    "pnl": 3.27,    "cumulative": 25.68  },  {    "num": 137,    "date": "2026-05-19",    "type": "short",    "exit": 1.16135,    "pnl": 3.29,    "cumulative": 28.97  },  {    "num": 138,    "date": "2026-05-20",    "type": "long",    "exit": 1.16208,    "pnl": 0.59,    "cumulative": 29.56  },  {    "num": 139,    "date": "2026-05-21",    "type": "short",    "exit": 1.16204,    "pnl": -0.1,    "cumulative": 29.46  },  {    "num": 140,    "date": "2026-05-25",    "type": "long",    "exit": 1.16453,    "pnl": 2.38,    "cumulative": 31.78  },  {    "num": 141,    "date": "2026-05-25",    "type": "long",    "exit": 1.16453,    "pnl": 3.03,    "cumulative": 34.87  },  {    "num": 142,    "date": "2026-05-26",    "type": "short",    "exit": 1.16236,    "pnl": 2.07,    "cumulative": 36.87  },  {    "num": 143,    "date": "2026-05-26",    "type": "short",    "exit": 1.16236,    "pnl": 1.75,    "cumulative": 38.68  },  {    "num": 144,    "date": "2026-05-28",    "type": "long",    "exit": 1.16532,    "pnl": 2.86,    "cumulative": 41.47  },  {    "num": 145,    "date": "2026-05-28",    "type": "long",    "exit": 1.16532,    "pnl": 2.75,    "cumulative": 44.28  },  {    "num": 146,    "date": "2026-06-01",    "type": "short",    "exit": 1.16348,    "pnl": 1.75,    "cumulative": 45.89  },  {    "num": 147,    "date": "2026-06-01",    "type": "short",    "exit": 1.16348,    "pnl": 2.76,    "cumulative": 48.71  },  {    "num": 148,    "date": "2026-06-01",    "type": "short",    "exit": 1.16348,    "pnl": 1.79,    "cumulative": 50.57  },  {    "num": 149,    "date": "2026-06-04",    "type": "long",    "exit": 1.16215,    "pnl": -1.42,    "cumulative": 49.01  },  {    "num": 150,    "date": "2026-06-04",    "type": "long",    "exit": 1.16215,    "pnl": -0.08,    "cumulative": 48.99  },  {    "num": 151,    "date": "2026-06-04",    "type": "long",    "exit": 1.16215,    "pnl": 2.15,    "cumulative": 51.21  },  {    "num": 152,    "date": "2026-06-05",    "type": "short",    "exit": 1.15222,    "pnl": 9.79,    "cumulative": 61  },  {    "num": 153,    "date": "2026-06-08",    "type": "long",    "exit": 1.15152,    "pnl": -0.84,    "cumulative": 60.16  },  {    "num": 154,    "date": "2026-06-11",    "type": "short",    "exit": 1.15305,    "pnl": -1.62,    "cumulative": 58.33  },  {    "num": 155,    "date": "2026-06-11",    "type": "short",    "exit": 1.15305,    "pnl": 0.95,    "cumulative": 59.36  },  {    "num": 156,    "date": "2026-06-11",    "type": "short",    "exit": 1.15305,    "pnl": 1.7,    "cumulative": 61.13  },  {    "num": 157,    "date": "2026-06-11",    "type": "short",    "exit": 1.15305,    "pnl": 2.38,    "cumulative": 63.58  },  {    "num": 158,    "date": "2026-06-11",    "type": "long",    "exit": 1.15471,    "pnl": 1.56,    "cumulative": 65.07  },  {    "num": 159,    "date": "2026-06-11",    "type": "long",    "exit": 1.15471,    "pnl": 1.88,    "cumulative": 67.01  },  {    "num": 160,    "date": "2026-06-16",    "type": "short",    "exit": 1.15894,    "pnl": -4.33,    "cumulative": 62.61  },  {    "num": 161,    "date": "2026-06-16",    "type": "short",    "exit": 1.15894,    "pnl": 1.42,    "cumulative": 64.09  },  {    "num": 162,    "date": "2026-06-16",    "type": "long",    "exit": 1.16134,    "pnl": 2.26,    "cumulative": 66.35  },  {    "num": 163,    "date": "2026-06-17",    "type": "short",    "exit": 1.15578,    "pnl": 5.42,    "cumulative": 71.77  },  {    "num": 164,    "date": "2026-06-19",    "type": "long",    "exit": 1.14748,    "pnl": -8.38,    "cumulative": 63.11  },  {    "num": 165,    "date": "2026-06-19",    "type": "long",    "exit": 1.14748,    "pnl": -3.11,    "cumulative": 60.06  },  {    "num": 166,    "date": "2026-06-19",    "type": "long",    "exit": 1.14748,    "pnl": 1.28,    "cumulative": 61.41  },  {    "num": 167,    "date": "2026-06-19",    "type": "long",    "exit": 1.14748,    "pnl": 2.99,    "cumulative": 64.46  },  {    "num": 168,    "date": "2026-06-19",    "type": "long",    "exit": 1.14748,    "pnl": 3.15,    "cumulative": 67.68  },  {    "num": 169,    "date": "2026-06-22",    "type": "short",    "exit": 1.1429,    "pnl": 4.47,    "cumulative": 72.08  },  {    "num": 170,    "date": "2026-06-22",    "type": "short",    "exit": 1.1429,    "pnl": 3.37,    "cumulative": 75.52  },  {    "num": 171,    "date": "2026-06-25",    "type": "long",    "exit": 1.13715,    "pnl": -5.84,    "cumulative": 69.54  },  {    "num": 172,    "date": "2026-06-25",    "type": "long",    "exit": 1.13715,    "pnl": -0.96,    "cumulative": 68.64  },  {    "num": 173,    "date": "2026-06-25",    "type": "long",    "exit": 1.13715,    "pnl": 1.99,    "cumulative": 70.7  },  {    "num": 174,    "date": "2026-06-29",    "type": "short",    "exit": 1.13866,    "pnl": -1.61,    "cumulative": 69.02  },  {    "num": 175,    "date": "2026-06-29",    "type": "short",    "exit": 1.13866,    "pnl": -0.04,    "cumulative": 69.05  },  {    "num": 176,    "date": "2026-06-29",    "type": "long",    "exit": 1.13874,    "pnl": -0.06,    "cumulative": 68.99  },  {    "num": 177,    "date": "2026-07-01",    "type": "short",    "exit": 1.13806,    "pnl": 0.59,    "cumulative": 69.44  },  {    "num": 178,    "date": "2026-07-01",    "type": "short",    "exit": 1.13806,    "pnl": 4.59,    "cumulative": 74.09  },  {    "num": 179,    "date": "2026-07-01",    "type": "short",    "exit": 1.13806,    "pnl": 4.09,    "cumulative": 78.25  },  {    "num": 180,    "date": "2026-07-02",    "type": "long",    "exit": 1.14331,    "pnl": 5.11,    "cumulative": 83.36  },  {    "num": 181,    "date": "2026-07-06",    "type": "short",    "exit": 1.14359,    "pnl": -0.42,    "cumulative": 82.94  },  {    "num": 182,    "date": "2026-07-06",    "type": "long",    "exit": 1.14395,    "pnl": 0.22,    "cumulative": 83.16  },  {    "num": 183,    "date": "2026-07-06",    "type": "short",    "exit": 1.14373,    "pnl": 0.08,    "cumulative": 83.24  },  {    "num": 184,    "date": "2026-07-06",    "type": "long",    "exit": 1.14416,    "pnl": 0.29,    "cumulative": 83.53  },  {    "num": 185,    "date": "2026-07-07",    "type": "short",    "exit": 1.14274,    "pnl": 1.28,    "cumulative": 84.81  },  {    "num": 186,    "date": "2026-07-09",    "type": "long",    "exit": 1.14365,    "pnl": 0.81,    "cumulative": 85.55  },  {    "num": 187,    "date": "2026-07-09",    "type": "long",    "exit": 1.14365,    "pnl": 1.35,    "cumulative": 86.96  },  {    "num": 188,    "date": "2026-07-10",    "type": "short",    "exit": 1.1417,    "pnl": 1.85,    "cumulative": 88.74  },  {    "num": 189,    "date": "2026-07-10",    "type": "short",    "exit": 1.1417,    "pnl": 3.94,    "cumulative": 92.74  },  {    "num": 190,    "date": "2026-07-14",    "type": "long",    "exit": 1.14249,    "pnl": 0.7,    "cumulative": 93.3  },  {    "num": 191,    "date": "2026-07-14",    "type": "long",    "exit": 1.14249,    "pnl": 2.91,    "cumulative": 96.27  },  {    "num": 192,    "date": "2026-07-14",    "type": "long",    "exit": 1.14249,    "pnl": 3.8,    "cumulative": 100.14  },  {    "num": 193,    "date": "2026-07-16",    "type": "short",    "exit": 1.14357,    "pnl": -1.18,    "cumulative": 98.89  },  {    "num": 194,    "date": "2026-07-16",    "type": "short",    "exit": 1.14357,    "pnl": 3.87,    "cumulative": 102.82  },  {    "num": 195,    "date": "2026-07-22",    "type": "long",    "exit": 1.14103,    "pnl": -2.62,    "cumulative": 99.92  },  {    "num": 196,    "date": "2026-07-22",    "type": "long",    "exit": 1.14103,    "pnl": -2.45,    "cumulative": 97.53  },  {    "num": 197,    "date": "2026-07-22",    "type": "long",    "exit": 1.14103,    "pnl": -1.61,    "cumulative": 95.99  },  {    "num": 198,    "date": "2026-07-22",    "type": "long",    "exit": 1.14103,    "pnl": -0.56,    "cumulative": 95.49  },  {    "num": 199,    "date": "2026-07-22",    "type": "long",    "exit": 1.14103,    "pnl": 0.75,    "cumulative": 96.31  },  {    "num": 200,    "date": "2026-07-23",    "type": "short",    "exit": 1.13723,    "pnl": 3.7,    "cumulative": 99.94  },  {    "num": 201,    "date": "2026-07-23",    "type": "short",    "exit": 1.13723,    "pnl": 5.46,    "cumulative": 105.46  },  {    "num": 202,    "date": "2026-07-27",    "type": "long",    "exit": 1.14035,    "pnl": 3.03,    "cumulative": 108.35  },  {    "num": 203,    "date": "2026-07-27",    "type": "long",    "exit": 1.14035,    "pnl": 3.45,    "cumulative": 111.86  },  {    "num": 204,    "date": "2026-07-27",    "type": "long",    "exit": 1.14035,    "pnl": 1.28,    "cumulative": 113.21  },  {    "num": 205,    "date": "2026-07-27",    "type": "short",    "exit": 1.13714,    "pnl": 3.07,    "cumulative": 116.28  },  {    "num": 206,    "date": "2026-07-28",    "type": "long",    "exit": 1.13684,    "pnl": -0.44,    "cumulative": 115.77  }];
 
-// Base values at 1x multiplier
+// Base values
 const baseValues = {
-  recoil: { pnl: 197.86, dd: 57.56 },
-  meridian: { pnl: 115.91, dd: 122.03 }
+  meridian: { pnl: 115.77, dd: 30.70 }
 };
 
-let currentRisk = 'low';
+let currentMult = 1;
 
-function setRisk(level) {
-  currentRisk = level;
+function setRisk(mult) {
+  currentMult = mult;
   
-  // Update tabs
-  document.querySelectorAll('.risk-tab').forEach(tab => {
-    tab.classList.toggle('active', tab.dataset.risk === level);
+  // Update buttons
+  document.querySelectorAll('.risk-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.mult) === mult);
   });
   
-  const config = riskLevels[level];
+  // Update Meridian stats
+  document.getElementById('meridian-pnl').textContent = '$' + (baseValues.meridian.pnl * mult).toFixed(2);
+  document.getElementById('meridian-dd').textContent = '$' + (baseValues.meridian.dd * mult).toFixed(2);
+  document.getElementById('meridian-mult').textContent = mult + '×';
   
-  // Update Recoil
-  const recoilMult = config.recoil.mult;
-  const recoilPnl = baseValues.recoil.pnl * recoilMult;
-  const recoilDd = baseValues.recoil.dd * recoilMult;
-  
-  document.getElementById('recoil-pnl').textContent = '$' + recoilPnl.toFixed(2);
-  document.getElementById('recoil-dd').textContent = '$' + recoilDd.toFixed(2);
-  document.getElementById('recoil-lot').textContent = config.recoil.lot;
-  document.getElementById('recoil-mult').textContent = recoilMult + 'x';
-  
-  // Update Meridian
-  const meridianMult = config.meridian.mult;
-  const meridianPnl = baseValues.meridian.pnl * meridianMult;
-  const meridianDd = baseValues.meridian.dd * meridianMult;
-  
-  document.getElementById('meridian-pnl').textContent = '$' + meridianPnl.toFixed(2);
-  document.getElementById('meridian-dd').textContent = '$' + meridianDd.toFixed(2);
-  document.getElementById('meridian-lot').textContent = config.meridian.lot;
-  document.getElementById('meridian-mult').textContent = meridianMult + 'x';
-  
-  // Update combined summary
-  const combinedPnl = recoilPnl + meridianPnl;
-  const dailyAvg = combinedPnl / 145; // trading days
-  
-  document.getElementById('combined-pnl').textContent = '$' + combinedPnl.toFixed(2);
-  document.getElementById('daily-avg').textContent = '$' + dailyAvg.toFixed(2);
-  
-  // Update trade tables if visible
-  updateTradeTable('recoil', recoilMult);
-  updateTradeTable('meridian', meridianMult);
+  // Re-render trades with new multiplier
+  renderTrades();
 }
 
-function toggleTrades(indicator) {
-  const section = document.getElementById(indicator + '-trades');
-  const wrapper = section.querySelector('.trade-table-wrapper');
-  const toggle = section.querySelector('.trade-toggle');
-  
-  if (wrapper.style.display === 'none') {
-    wrapper.style.display = 'block';
-    toggle.textContent = 'Hide trades';
-    
-    // Load trades if not already loaded
-    const tbody = document.getElementById(indicator + '-tbody');
-    if (tbody.children.length === 0) {
-      loadTrades(indicator);
-    }
-  } else {
-    wrapper.style.display = 'none';
-    toggle.textContent = 'Show trades';
-  }
-}
-
-// Sample trade data (abbreviated - full data would be loaded from JSON)
-const meridianTrades = [
-  { num: 1, date: '2026-01-02', type: 'short', entry: 1.17515, exit: 1.17184, pnl: 3.17, cumulative: 3.17 },
-  { num: 2, date: '2026-01-05', type: 'long', entry: 1.17184, exit: 1.17257, pnl: 0.63, cumulative: 3.73 },
-  { num: 3, date: '2026-01-05', type: 'long', entry: 1.1707, exit: 1.17257, pnl: 1.77, cumulative: 5.56 },
-  { num: 4, date: '2026-01-06', type: 'short', entry: 1.17257, exit: 1.16882, pnl: 3.61, cumulative: 9.17 },
-  { num: 5, date: '2026-01-12', type: 'long', entry: 1.16882, exit: 1.1661, pnl: -2.8, cumulative: 6.09 },
-  { num: 6, date: '2026-01-12', type: 'long', entry: 1.16732, exit: 1.1661, pnl: -1.3, cumulative: 4.85 },
-  { num: 7, date: '2026-01-12', type: 'long', entry: 1.16438, exit: 1.1661, pnl: 1.64, cumulative: 6.56 },
-  { num: 8, date: '2026-01-12', type: 'long', entry: 1.16348, exit: 1.1661, pnl: 2.54, cumulative: 9.16 },
-  { num: 9, date: '2026-01-12', type: 'long', entry: 1.16226, exit: 1.1661, pnl: 3.76, cumulative: 12.99 },
-  { num: 10, date: '2026-01-14', type: 'short', entry: 1.1661, exit: 1.16378, pnl: 2.23, cumulative: 15.08 },
-  // More trades loaded dynamically...
-  { num: 200, date: '2026-07-23', type: 'short', entry: 1.14103, exit: 1.13723, pnl: 3.70, cumulative: 99.94 },
-  { num: 201, date: '2026-07-23', type: 'short', entry: 1.14279, exit: 1.13723, pnl: 5.46, cumulative: 105.46 },
-  { num: 202, date: '2026-07-27', type: 'long', entry: 1.13723, exit: 1.14035, pnl: 3.03, cumulative: 108.35 },
-  { num: 203, date: '2026-07-27', type: 'long', entry: 1.13681, exit: 1.14035, pnl: 3.45, cumulative: 111.86 },
-  { num: 204, date: '2026-07-27', type: 'long', entry: 1.13898, exit: 1.14035, pnl: 1.28, cumulative: 113.21 },
-  { num: 205, date: '2026-07-27', type: 'short', entry: 1.14035, exit: 1.13714, pnl: 3.07, cumulative: 116.28 },
-  { num: 206, date: '2026-07-28', type: 'long', entry: 1.13714, exit: 1.13684, pnl: -0.44, cumulative: 115.77 }
-];
-
-// Sample Recoil trades (would be loaded from your existing data)
-const recoilTrades = [
-  { num: 1, date: '2026-01-02', type: 'long', entry: 1.1032, exit: 1.1048, pnl: 1.60, cumulative: 1.60 },
-  { num: 2, date: '2026-01-02', type: 'short', entry: 1.1048, exit: 1.1035, pnl: 1.30, cumulative: 2.90 },
-  { num: 3, date: '2026-01-03', type: 'long', entry: 1.1035, exit: 1.1052, pnl: 1.70, cumulative: 4.60 },
-  // ... more trades
-  { num: 410, date: '2026-07-28', type: 'long', entry: 1.0845, exit: 1.0862, pnl: 1.70, cumulative: 196.50 },
-  { num: 411, date: '2026-07-28', type: 'short', entry: 1.0862, exit: 1.0850, pnl: 1.20, cumulative: 197.70 },
-  { num: 412, date: '2026-07-28', type: 'long', entry: 1.0850, exit: 1.0852, pnl: 0.16, cumulative: 197.86 }
-];
-
-function loadTrades(indicator) {
-  const trades = indicator === 'meridian' ? meridianTrades : recoilTrades;
-  const tbody = document.getElementById(indicator + '-tbody');
-  const mult = riskLevels[currentRisk][indicator].mult;
-  
+function renderTrades() {
+  const tbody = document.getElementById('meridian-tbody');
   tbody.innerHTML = '';
   
-  trades.forEach(trade => {
-    const scaledPnl = trade.pnl * mult;
-    const scaledCum = trade.cumulative * mult;
+  meridianTrades.forEach(trade => {
+    const scaledPnl = trade.pnl * currentMult;
+    const scaledCum = trade.cumulative * currentMult;
     
     const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${trade.num}</td>
-      <td>${trade.date}</td>
-      <td class="type-${trade.type}">${trade.type.toUpperCase()}</td>
-      <td>${trade.entry.toFixed(5)}</td>
-      <td>${trade.exit.toFixed(5)}</td>
-      <td class="${scaledPnl >= 0 ? 'pnl-positive' : 'pnl-negative'}">$${scaledPnl.toFixed(2)}</td>
-      <td>$${scaledCum.toFixed(2)}</td>
-    `;
+    row.innerHTML = \`
+      <td>\${trade.num}</td>
+      <td>\${trade.date}</td>
+      <td class="\${trade.type}">\${trade.type.toUpperCase()}</td>
+      <td>\${trade.exit.toFixed(5)}</td>
+      <td class="\${scaledPnl >= 0 ? 'positive' : 'negative'}">\${scaledPnl >= 0 ? '+' : ''}\$\${scaledPnl.toFixed(2)}</td>
+      <td>\$\${scaledCum.toFixed(2)}</td>
+    \`;
     tbody.appendChild(row);
-  });
-}
-
-function updateTradeTable(indicator, mult) {
-  const tbody = document.getElementById(indicator + '-tbody');
-  if (tbody.children.length === 0) return;
-  
-  const trades = indicator === 'meridian' ? meridianTrades : recoilTrades;
-  
-  Array.from(tbody.children).forEach((row, i) => {
-    if (trades[i]) {
-      const scaledPnl = trades[i].pnl * mult;
-      const scaledCum = trades[i].cumulative * mult;
-      
-      row.children[5].textContent = '$' + scaledPnl.toFixed(2);
-      row.children[5].className = scaledPnl >= 0 ? 'pnl-positive' : 'pnl-negative';
-      row.children[6].textContent = '$' + scaledCum.toFixed(2);
-    }
   });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-  setRisk('low');
+  renderTrades();
 });
 </script>
-
 </body>
 </html>

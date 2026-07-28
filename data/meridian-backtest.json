@@ -1,0 +1,28 @@
+{
+  "indicator": "Meridian",
+  "pair": "EURUSD",
+  "timeframe": "3M",
+  "period": {
+    "start": "2026-01-02",
+    "end": "2026-07-28"
+  },
+  "baseLotSize": 0.01,
+  "stats": {
+    "totalTrades": 206,
+    "winRate": 64.39,
+    "profitFactor": 1.395,
+    "totalPnlUsd": 115.91,
+    "returnPercent": 11.59,
+    "maxDrawdownUsd": 122.03,
+    "maxDrawdownPercent": 11.95,
+    "profitableTrades": 132,
+    "losingTrades": 73
+  },
+  "riskMultipliers": {
+    "low": { "lot": 0.01, "multiplier": 1 },
+    "medium": { "lot": 0.05, "multiplier": 5 },
+    "high": { "lot": 1.0, "multiplier": 100 }
+  },
+  "notes": "Data from TradingView strategy tester. Commission $0.14/RT included.",
+  "exportedAt": "2026-07-28"
+}
