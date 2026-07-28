@@ -4207,11 +4207,15 @@ async function checkAuth() {
   document.getElementById('username-modal').classList.add('hidden');
 }
 
-// Manual check for pending tier upgrades (called from Profile)
+// Manual check for pending tier upgrades - auto-runs on login now, kept for manual trigger if needed
 async function checkPendingUpgrade() {
   const statusEl = document.getElementById('upgrade-status');
-  statusEl.style.display = 'block';
-  statusEl.innerHTML = '<span style="color: var(--text-3);">Checking for upgrades...</span>';
+  const setStatus = (html) => { if (statusEl) statusEl.innerHTML = html; };
+  const showStatus = () => { if (statusEl) statusEl.style.display = 'block'; };
+  const hideStatus = () => { if (statusEl) statusEl.style.display = 'none'; };
+  
+  showStatus();
+  setStatus('<span style="color: var(--text-3);">Checking for upgrades...</span>');
   
   try {
     const res = await fetch(`https://dashboard.themoneyprinter.uk/api/pending-tier?email=${encodeURIComponent(authUser.email)}`);
@@ -4230,7 +4234,7 @@ async function checkPendingUpgrade() {
         }, { onConflict: 'id' });
       
       if (error) {
-        statusEl.innerHTML = `<span style="color: var(--danger);">Failed to apply: ${error.message}</span>`;
+        setStatus(`<span style="color: var(--danger);">Failed to apply: ${error.message}</span>`);
         return;
       }
       
@@ -4248,15 +4252,15 @@ async function checkPendingUpgrade() {
       updateMobileTier();
       if (marketplaceProducts.length > 0) renderMarketplaceProducts(marketplaceProducts);
       
-      statusEl.innerHTML = `<span style="color: var(--success);">✓ Upgraded to ${data.tier.toUpperCase()}! Refreshing...</span>`;
+      setStatus(`<span style="color: var(--success);">✓ Upgraded to ${data.tier.toUpperCase()}! Refreshing...</span>`);
       setTimeout(() => location.reload(), 1500);
     } else {
-      statusEl.innerHTML = '<span style="color: var(--text-3);">No pending upgrades found</span>';
-      setTimeout(() => statusEl.style.display = 'none', 3000);
+      setStatus('<span style="color: var(--text-3);">No pending upgrades found</span>');
+      setTimeout(hideStatus, 3000);
     }
   } catch (e) {
     console.error('[Upgrade] Error:', e);
-    statusEl.innerHTML = `<span style="color: var(--danger);">Error checking: ${e.message}</span>`;
+    setStatus(`<span style="color: var(--danger);">Error checking: ${e.message}</span>`);
   }
 }
 
