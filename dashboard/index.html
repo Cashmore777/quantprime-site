@@ -2730,19 +2730,31 @@ button, .nav-item, .room, .video-item, .filter-chip {
 @media (max-width: 700px) {
   .marketplace-bar {
     gap: 8px;
+    margin-bottom: 16px;
   }
   
   .marketplace-bar input {
     min-width: 100%;
     flex: none;
     order: -1;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .tier-filters {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
   }
   
   .filter-chip {
     flex-shrink: 0;
-    padding: 10px 14px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 }
 
@@ -3743,13 +3755,14 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <h4>Profile</h4>
         <div class="form-row">
           <label>Display name</label>
-          <input id="settings-display-name" value="Member 041">
+          <input id="settings-display-name" placeholder="Your display name">
         </div>
         <div class="form-row">
           <label>Email</label>
-          <input value="member@example.com">
+          <input id="settings-email" readonly style="opacity: 0.6; cursor: not-allowed;" placeholder="your@email.com">
         </div>
-        <button class="btn sm" style="margin-top: 8px;">Save changes</button>
+        <button class="btn sm" style="margin-top: 8px;" onclick="saveProfile()">Save changes</button>
+        <div id="profile-save-status" style="margin-top: 8px; font-size: 13px;"></div>
       </div>
       
       <div class="panel">
@@ -3784,10 +3797,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </div>
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <a href="/pricing" class="btn sm">Upgrade to Ascension</a>
-          <button class="btn outline sm" onclick="checkPendingUpgrade()">Check for Upgrade</button>
+          <a href="/pricing" class="btn sm" id="upgrade-btn">Upgrade</a>
         </div>
-        <div id="upgrade-status" style="margin-top: 12px; font-size: 13px; display: none;"></div>
       </div>
     </div>
   </div>
@@ -4229,11 +4240,46 @@ async function checkPendingUpgrade() {
     console.error('[Upgrade] Error:', e);
     statusEl.innerHTML = `<span style="color: var(--danger);">Error checking: ${e.message}</span>`;
   }
-  
-  if (chatEnabled) {
-    subscribeToRoom(currentRoom);
-  }
 }
+
+// Save profile changes (display name, TV username)
+async function saveProfile() {
+  const statusEl = document.getElementById('profile-save-status');
+  const displayName = document.getElementById('settings-display-name')?.value?.trim();
+  
+  if (!displayName) {
+    statusEl.innerHTML = '<span style="color: var(--danger);">Display name required</span>';
+    return;
+  }
+  
+  statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
+  
+  try {
+    const { error } = await supabaseClient
+      .from('profiles')
+      .upsert({
+        id: authUser.id,
+        email: authUser.email,
+        display_name: displayName,
+        tier: userTier
+      }, { onConflict: 'id' });
+    
+    if (error) {
+      statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${error.message}</span>`;
+      return;
+    }
+    
+    // Update local state
+    currentUser = displayName;
+    const welcomeName = document.getElementById('user-display-name');
+    if (welcomeName) welcomeName.textContent = displayName;
+    
+    statusEl.innerHTML = '<span style="color: var(--success);">✓ Saved</span>';
+    setTimeout(() => statusEl.innerHTML = '', 3000);
+    
+  } catch (e) {
+    statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
+  }
 
 // Apply tier-based locking/unlocking
 function applyTierAccess() {
@@ -4381,6 +4427,9 @@ function updateDashboardData() {
   // Update settings page
   const settingsName = document.getElementById('settings-display-name');
   if (settingsName) settingsName.value = currentUser;
+  
+  const settingsEmail = document.getElementById('settings-email');
+  if (settingsEmail) settingsEmail.value = authUser.email;
   
   // Update settings subscription display
   const settingsTier = document.querySelector('#view-settings .panel:last-child div[style*="font-size: 18px"]');
