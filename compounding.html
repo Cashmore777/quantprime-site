@@ -56,8 +56,6 @@
   border: 1px solid rgba(184,150,46,0.2);
   border-radius: 8px;
   display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .baseline-note-wrapper {
@@ -156,48 +154,51 @@
   height: 2px;
 }
 
-.legend-line.compound { background: var(--gold); }
-.legend-line.linear { background: var(--text-tertiary); opacity: 0.5; }
+.legend-line.meridian { background: #0088cc; }
+.legend-line.recoil { background: var(--gold); }
 
 .chart-container {
   position: relative;
-  height: 280px;
+  height: 320px;
+  width: 100%;
 }
 
-.chart-svg {
+#equityChart {
   width: 100%;
   height: 100%;
 }
 
-.chart-grid line {
-  stroke: var(--border);
-  stroke-width: 1;
+.chart-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-light);
 }
 
-.chart-axis text {
+.chart-stat {
+  text-align: center;
+}
+
+.chart-stat-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  fill: var(--text-tertiary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
-.compound-line {
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.chart-stat-value.positive { color: #22c55e; }
+.chart-stat-value.negative { color: #ef4444; }
+
+.chart-stat-label {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
 }
 
-.linear-line {
-  fill: none;
-  stroke: var(--text-tertiary);
-  stroke-width: 1.5;
-  stroke-dasharray: 4 4;
-  opacity: 0.5;
-}
-
-.compound-area {
-  fill: url(#goldGradient);
+@media (max-width: 600px) {
+  .chart-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 .methodology-box {
@@ -332,84 +333,41 @@
       </div>
     </div>
 
-    <!-- Chart -->
+    <!-- Actual Equity Curve Chart -->
     <div class="chart-section reveal">
       <div class="chart-header">
-        <div class="chart-title">Growth Projection: $1,000 Starting Balance</div>
+        <div class="chart-title">Actual Equity Curve: $1,000 Starting Balance</div>
         <div class="chart-legend">
           <div class="legend-item">
-            <div class="legend-line compound"></div>
-            <span>Compounded</span>
+            <div class="legend-line meridian"></div>
+            <span>Meridian</span>
           </div>
           <div class="legend-item">
-            <div class="legend-line linear"></div>
-            <span>Linear (no compounding)</span>
+            <div class="legend-line recoil"></div>
+            <span>Recoil (2026)</span>
           </div>
         </div>
       </div>
       <div class="chart-container">
-        <!-- Chart: $1000 → $1480 over 12 months at ~3.4%/month compounded -->
-        <svg class="chart-svg" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet">
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:var(--gold);stop-opacity:0.25" />
-              <stop offset="100%" style="stop-color:var(--gold);stop-opacity:0" />
-            </linearGradient>
-          </defs>
-          
-          <!-- Grid Lines -->
-          <g class="chart-grid">
-            <line x1="50" y1="30" x2="580" y2="30" />
-            <line x1="50" y1="70" x2="580" y2="70" />
-            <line x1="50" y1="110" x2="580" y2="110" />
-            <line x1="50" y1="150" x2="580" y2="150" />
-            <line x1="50" y1="190" x2="580" y2="190" />
-          </g>
-          
-          <!-- Y-Axis Labels ($1000 to $1500) -->
-          <g class="chart-axis">
-            <text x="45" y="34" text-anchor="end">$1,500</text>
-            <text x="45" y="74" text-anchor="end">$1,375</text>
-            <text x="45" y="114" text-anchor="end">$1,250</text>
-            <text x="45" y="154" text-anchor="end">$1,125</text>
-            <text x="45" y="194" text-anchor="end">$1,000</text>
-          </g>
-          
-          <!-- X-Axis Labels -->
-          <g class="chart-axis">
-            <text x="50" y="215">0</text>
-            <text x="138" y="215">2mo</text>
-            <text x="226" y="215">4mo</text>
-            <text x="314" y="215">6mo</text>
-            <text x="402" y="215">8mo</text>
-            <text x="490" y="215">10mo</text>
-            <text x="570" y="215">12mo</text>
-          </g>
-          
-          <!-- Compounded growth: 1000 → 1034 → 1069 → 1105 → 1143 → 1182 → 1222 → 1263 → 1306 → 1350 → 1396 → 1443 → 1480 -->
-          <!-- Y scale: $1000 = y190, $1500 = y30, so $1 = 0.32 pixels, range = 160px -->
-          
-          <!-- Area Fill -->
-          <path class="compound-area" d="M50,190 L94,179 L138,168 L182,156 L226,144 L270,132 L314,119 L358,106 L402,93 L446,79 L490,65 L534,51 L580,37 L580,190 Z" />
-          
-          <!-- Linear Line (no compounding): $1000 + $40/month = $1480 at 12mo -->
-          <!-- Linear: y190 to y37 over 12 months -->
-          <path class="linear-line" d="M50,190 L138,177 L226,164 L314,151 L402,138 L490,125 L580,112" />
-          
-          <!-- Compound Line -->
-          <path class="compound-line" d="M50,190 L94,179 L138,168 L182,156 L226,144 L270,132 L314,119 L358,106 L402,93 L446,79 L490,65 L534,51 L580,37" />
-          
-          <!-- Data Points (every 2 months) -->
-          <g fill="var(--gold)">
-            <circle cx="50" cy="190" r="4" />
-            <circle cx="138" cy="168" r="4" />
-            <circle cx="226" cy="144" r="4" />
-            <circle cx="314" cy="119" r="4" />
-            <circle cx="402" cy="93" r="4" />
-            <circle cx="490" cy="65" r="4" />
-            <circle cx="580" cy="37" r="4" />
-          </g>
-        </svg>
+        <canvas id="equityChart"></canvas>
+      </div>
+      <div class="chart-stats">
+        <div class="chart-stat">
+          <div class="chart-stat-value positive" id="statFinalPnl">+$221</div>
+          <div class="chart-stat-label">Combined P&L</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-value" id="statMaxDD">-$30.70</div>
+          <div class="chart-stat-label">Max Drawdown</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-value" id="statPeakEquity">$1,221</div>
+          <div class="chart-stat-label">Peak Equity</div>
+        </div>
+        <div class="chart-stat">
+          <div class="chart-stat-value" id="statTrades">320</div>
+          <div class="chart-stat-label">Total Trades</div>
+        </div>
       </div>
     </div>
 
@@ -421,7 +379,7 @@
         <li>Meridian: $115.91 profit = 11.6% return (Jan–Jul 2026, 0.01 lot)</li>
         <li>Recoil: $105.18 profit = 10.5% return (Jan–Jul 2026, 0.02 lot)</li>
         <li>Combined: ~22% over 144 trading days = <strong>0.15%/day average</strong></li>
-        <li>Compounding assumes weekly reinvestment of gains</li>
+        <li>Chart shows actual trade-by-trade equity, not projections</li>
         <li>Returns scale linearly with position size and account balance</li>
       </ul>
       <div class="disclaimer-text">
@@ -450,5 +408,183 @@
 <script src="/js/main.js?v=3"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
+<script>
+// Load trade data and render equity curve
+async function renderEquityCurve() {
+  const canvas = document.getElementById('equityChart');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  
+  const width = rect.width;
+  const height = rect.height;
+  const padding = { top: 20, right: 20, bottom: 40, left: 60 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+
+  // Fetch trade data
+  let meridianTrades = [];
+  let recoilTrades = [];
+  
+  try {
+    const [mRes, rRes] = await Promise.all([
+      fetch('/data/meridian-trades.json'),
+      fetch('/data/recoil-trades.json')
+    ]);
+    meridianTrades = await mRes.json();
+    recoilTrades = await rRes.json();
+  } catch (e) {
+    console.error('Failed to load trade data:', e);
+    return;
+  }
+
+  // Filter Recoil to 2026 only and adjust cumulative
+  const recoil2025End = recoilTrades.find(t => t.date === '2025-12-31')?.cumulative || 30.18;
+  const recoil2026 = recoilTrades
+    .filter(t => t.date >= '2026-01-01')
+    .map(t => ({
+      ...t,
+      cumulative: t.cumulative - recoil2025End // Normalize to start from 0
+    }));
+
+  // Create daily equity points for both
+  const dailyEquity = {};
+  
+  // Process Meridian (starts at 0, add to $1000 base)
+  meridianTrades.forEach(t => {
+    dailyEquity[t.date] = dailyEquity[t.date] || { meridian: 0, recoil: 0 };
+    dailyEquity[t.date].meridian = t.cumulative;
+  });
+  
+  // Process Recoil 2026
+  recoil2026.forEach(t => {
+    dailyEquity[t.date] = dailyEquity[t.date] || { meridian: 0, recoil: 0 };
+    dailyEquity[t.date].recoil = t.cumulative;
+  });
+
+  // Sort dates and build equity arrays
+  const dates = Object.keys(dailyEquity).sort();
+  
+  // Forward-fill missing values
+  let lastMeridian = 0, lastRecoil = 0;
+  const equityData = dates.map(date => {
+    if (dailyEquity[date].meridian !== 0) lastMeridian = dailyEquity[date].meridian;
+    else dailyEquity[date].meridian = lastMeridian;
+    
+    if (dailyEquity[date].recoil !== 0) lastRecoil = dailyEquity[date].recoil;
+    else dailyEquity[date].recoil = lastRecoil;
+    
+    return {
+      date,
+      meridian: 1000 + dailyEquity[date].meridian,
+      recoil: 1000 + dailyEquity[date].recoil,
+      combined: 1000 + dailyEquity[date].meridian + dailyEquity[date].recoil
+    };
+  });
+
+  // Calculate min/max for Y axis
+  const allValues = equityData.flatMap(d => [d.meridian, d.recoil]);
+  const minVal = Math.min(...allValues) - 20;
+  const maxVal = Math.max(...allValues) + 20;
+  
+  // Scale functions
+  const xScale = (i) => padding.left + (i / (equityData.length - 1)) * chartWidth;
+  const yScale = (v) => padding.top + chartHeight - ((v - minVal) / (maxVal - minVal)) * chartHeight;
+
+  // Clear and draw background
+  ctx.fillStyle = '#fafaf8';
+  ctx.fillRect(0, 0, width, height);
+
+  // Draw grid lines
+  ctx.strokeStyle = '#e8e6e0';
+  ctx.lineWidth = 1;
+  const yTicks = 5;
+  for (let i = 0; i <= yTicks; i++) {
+    const y = padding.top + (i / yTicks) * chartHeight;
+    ctx.beginPath();
+    ctx.moveTo(padding.left, y);
+    ctx.lineTo(width - padding.right, y);
+    ctx.stroke();
+    
+    // Y-axis labels
+    const val = maxVal - (i / yTicks) * (maxVal - minVal);
+    ctx.fillStyle = '#9a9a9a';
+    ctx.font = '10px JetBrains Mono, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + Math.round(val).toLocaleString(), padding.left - 8, y + 3);
+  }
+
+  // X-axis labels (months)
+  ctx.textAlign = 'center';
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+  months.forEach((month, i) => {
+    const x = padding.left + (i / 6) * chartWidth;
+    ctx.fillText(month, x, height - 10);
+  });
+
+  // Draw $1000 baseline
+  ctx.strokeStyle = '#ccc';
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(padding.left, yScale(1000));
+  ctx.lineTo(width - padding.right, yScale(1000));
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw Recoil line (gold)
+  ctx.strokeStyle = '#b8962e';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  equityData.forEach((d, i) => {
+    const x = xScale(i);
+    const y = yScale(d.recoil);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Draw Meridian line (cyan)
+  ctx.strokeStyle = '#0088cc';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  equityData.forEach((d, i) => {
+    const x = xScale(i);
+    const y = yScale(d.meridian);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Update stats
+  const finalMeridian = equityData[equityData.length - 1]?.meridian || 1000;
+  const finalRecoil = equityData[equityData.length - 1]?.recoil || 1000;
+  const combinedPnl = (finalMeridian - 1000) + (finalRecoil - 1000);
+  const peakEquity = 1000 + Math.max(...equityData.map(d => (d.meridian - 1000) + (d.recoil - 1000)));
+  
+  // Find max drawdown from Meridian (it has the deeper DD)
+  let maxDD = 0;
+  let peak = 0;
+  meridianTrades.forEach(t => {
+    if (t.cumulative > peak) peak = t.cumulative;
+    const dd = peak - t.cumulative;
+    if (dd > maxDD) maxDD = dd;
+  });
+
+  document.getElementById('statFinalPnl').textContent = '+$' + Math.round(combinedPnl);
+  document.getElementById('statMaxDD').textContent = '-$' + maxDD.toFixed(2);
+  document.getElementById('statMaxDD').classList.add('negative');
+  document.getElementById('statPeakEquity').textContent = '$' + Math.round(peakEquity).toLocaleString();
+  document.getElementById('statTrades').textContent = (meridianTrades.length + recoil2026.length).toString();
+}
+
+// Render on load and resize
+window.addEventListener('load', renderEquityCurve);
+window.addEventListener('resize', renderEquityCurve);
+</script>
 </body>
 </html>
