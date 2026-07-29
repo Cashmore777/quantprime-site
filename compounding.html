@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO -->
-<title>Compounding Calculator — Quant Prime Trading Instruments</title>
-<meta name="description" content="See how systematic trading compounds over time. Calculate potential returns with Quant Prime's Recoil and Meridian indicators at various timeframes.">
+<title>Compounding Returns — Quant Prime Trading Instruments</title>
+<meta name="description" content="See how systematic trading compounds over time. Real performance data from Quant Prime's Recoil and Meridian indicators projected across timeframes.">
 <meta name="keywords" content="trading compounding calculator, compound interest trading, systematic trading returns, quant prime results">
 <link rel="canonical" href="https://quantprime.uk/compounding">
-<meta property="og:title" content="Compounding Calculator — Quant Prime">
+<meta property="og:title" content="Compounding Returns — Quant Prime">
 <meta property="og:description" content="See how systematic trading compounds over time with Quant Prime instruments.">
 <meta property="og:url" content="https://quantprime.uk/compounding">
 <meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
@@ -19,6 +19,217 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
+<style>
+.stats-source {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.source-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.source-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.source-dot.gold { background: var(--gold); }
+.source-dot.cyan { background: #0088cc; }
+
+.compound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.compound-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.compound-card.highlight {
+  border-color: var(--gold);
+  background: var(--gold-bg);
+}
+
+.compound-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+}
+
+.compound-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.compound-note {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
+}
+
+/* Chart Section */
+.chart-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.legend-line {
+  width: 20px;
+  height: 2px;
+}
+
+.legend-line.compound { background: var(--gold); }
+.legend-line.linear { background: var(--text-tertiary); opacity: 0.5; }
+
+.chart-container {
+  position: relative;
+  height: 280px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-grid line {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.chart-axis text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  fill: var(--text-tertiary);
+}
+
+.compound-line {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.linear-line {
+  fill: none;
+  stroke: var(--text-tertiary);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+  opacity: 0.5;
+}
+
+.compound-area {
+  fill: url(#goldGradient);
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: var(--surface-dim);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+
+.methodology-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.methodology-box h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.methodology-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.methodology-box li {
+  padding: 0.4rem 0;
+  padding-left: 1.25rem;
+  position: relative;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.methodology-box li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.disclaimer-text {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(201,168,76,0.08);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+</style>
 </head>
 <body>
 
@@ -34,8 +245,8 @@
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home</a>
         <a href="/framework">The Framework</a>
-        <a href="/compounding">Compounding</a>
         <a href="/results">Results</a>
+        <a href="/compounding">Compounding</a>
         <a href="/pricing">Get Access</a>
         <a href="/dashboard/login.html">Login</a>
       </div>
@@ -46,60 +257,161 @@
 
 <section class="page-header">
   <div class="container">
-    <div class="label">COMPOUNDING</div>
+    <div class="label">COMPOUNDING RETURNS</div>
     <h1>The edge isn't one trade.<br><em>It's a thousand.</em></h1>
-    <p>Small, consistent returns compound into something extraordinary. Here's what systematic consistency looks like over time.</p>
+    <p>Combined performance from Meridian + Recoil, projected across timeframes. Small, consistent returns compound into something extraordinary.</p>
   </div>
 </section>
 
 <section class="compound-section">
   <div class="container">
+    
+    <!-- Source Badges -->
+    <div class="stats-source reveal">
+      <div class="source-badge">
+        <div class="source-dot cyan"></div>
+        <span><strong>Meridian</strong> — 206 trades, 64.4% WR</span>
+      </div>
+      <div class="source-badge">
+        <div class="source-dot gold"></div>
+        <span><strong>Recoil</strong> — 114 trades, 71.1% WR</span>
+      </div>
+    </div>
+
+    <!-- Compound Cards -->
     <div class="compound-grid reveal">
+      <div class="compound-card">
+        <div class="compound-period">DAILY AVG</div>
+        <div class="compound-value">+0.38%</div>
+        <div class="compound-note">per trading day</div>
+      </div>
       <div class="compound-card">
         <div class="compound-period">1 WEEK</div>
         <div class="compound-value">+1.9%</div>
-        <div class="compound-note">avg return</div>
+        <div class="compound-note">5 trading days</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">1 MONTH</div>
-        <div class="compound-value">+8.2%</div>
+        <div class="compound-value">+8.4%</div>
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">3 MONTHS</div>
-        <div class="compound-value">+27%</div>
+        <div class="compound-value">+27.6%</div>
         <div class="compound-note">compounded</div>
       </div>
-      <div class="compound-card">
+      <div class="compound-card highlight">
         <div class="compound-period">6 MONTHS</div>
-        <div class="compound-value">+61%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">9 MONTHS</div>
-        <div class="compound-value">+105%</div>
+        <div class="compound-value">+62.9%</div>
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">1 YEAR</div>
-        <div class="compound-value">+159%</div>
+        <div class="compound-value">+165%</div>
         <div class="compound-note">compounded</div>
       </div>
     </div>
 
-    <div class="compound-explanation reveal">
-      <h3>How it works</h3>
-      <p>These projections assume an average weekly return of ~1.9%, compounded. No strategy wins every trade. The edge comes from consistency over hundreds of executions, not from any single position. Risk management and position sizing are critical — the system provides signals, you control the exposure.</p>
-      <p style="margin-top:1rem">The numbers above are projections based on historical performance. Actual results will vary. Past performance does not guarantee future returns.</p>
+    <!-- Chart -->
+    <div class="chart-section reveal">
+      <div class="chart-header">
+        <div class="chart-title">Growth Projection: $1,000 Starting Balance</div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-line compound"></div>
+            <span>Compounded</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-line linear"></div>
+            <span>Linear (no compounding)</span>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-svg" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--gold);stop-opacity:0.3" />
+              <stop offset="100%" style="stop-color:var(--gold);stop-opacity:0" />
+            </linearGradient>
+          </defs>
+          
+          <!-- Grid Lines -->
+          <g class="chart-grid">
+            <line x1="50" y1="30" x2="580" y2="30" />
+            <line x1="50" y1="80" x2="580" y2="80" />
+            <line x1="50" y1="130" x2="580" y2="130" />
+            <line x1="50" y1="180" x2="580" y2="180" />
+            <line x1="50" y1="220" x2="580" y2="220" />
+          </g>
+          
+          <!-- Y-Axis Labels -->
+          <g class="chart-axis">
+            <text x="45" y="34" text-anchor="end">$2,650</text>
+            <text x="45" y="84" text-anchor="end">$2,100</text>
+            <text x="45" y="134" text-anchor="end">$1,550</text>
+            <text x="45" y="184" text-anchor="end">$1,000</text>
+            <text x="45" y="224" text-anchor="end">$500</text>
+          </g>
+          
+          <!-- X-Axis Labels -->
+          <g class="chart-axis">
+            <text x="50" y="245">0</text>
+            <text x="138" y="245">2mo</text>
+            <text x="226" y="245">4mo</text>
+            <text x="314" y="245">6mo</text>
+            <text x="402" y="245">8mo</text>
+            <text x="490" y="245">10mo</text>
+            <text x="570" y="245">12mo</text>
+          </g>
+          
+          <!-- Area Fill -->
+          <path class="compound-area" d="M50,180 L94,172 L138,163 L182,152 L226,140 L270,126 L314,110 L358,92 L402,71 L446,48 L490,36 L534,30 L580,18 L580,220 L50,220 Z" />
+          
+          <!-- Linear Line (no compounding) -->
+          <path class="linear-line" d="M50,180 L138,166 L226,152 L314,138 L402,124 L490,110 L580,96" />
+          
+          <!-- Compound Line -->
+          <path class="compound-line" d="M50,180 L94,172 L138,163 L182,152 L226,140 L270,126 L314,110 L358,92 L402,71 L446,48 L490,36 L534,30 L580,18" />
+          
+          <!-- Data Points -->
+          <g fill="var(--gold)">
+            <circle cx="50" cy="180" r="4" />
+            <circle cx="138" cy="163" r="4" />
+            <circle cx="226" cy="140" r="4" />
+            <circle cx="314" cy="110" r="4" />
+            <circle cx="402" cy="71" r="4" />
+            <circle cx="490" cy="36" r="4" />
+            <circle cx="580" cy="18" r="4" />
+          </g>
+        </svg>
+      </div>
     </div>
+
+    <!-- Methodology -->
+    <div class="methodology-box reveal">
+      <h3>Methodology</h3>
+      <ul>
+        <li>Combined data from <strong>320 total trades</strong> across both indicators</li>
+        <li>Meridian: EURUSD, Jan 1 – Jul 28, 2026 (0.01 lot base)</li>
+        <li>Recoil: EURUSD, Jan 1, 2025 – Jul 1, 2026 (0.02 lot base)</li>
+        <li>Daily average calculated from total profit ÷ trading days</li>
+        <li>Compounding assumes reinvesting gains, weekly rebalancing</li>
+        <li>No leverage adjustment — results scale linearly with position size</li>
+      </ul>
+      <div class="disclaimer-text">
+        <strong>Risk Disclaimer:</strong> Past performance does not guarantee future results. These projections are based on historical backtesting data and assume consistent execution. Actual results will vary due to market conditions, slippage, and execution timing. Trade only with capital you can afford to lose.
+      </div>
+    </div>
+
   </div>
 </section>
 
 <section class="next-section">
   <div class="container">
-    <p>Want to see the actual performance data?</p>
-    <a href="/results" class="btn-primary">
-      View verified results
+    <p>Ready to see the numbers for yourself?</p>
+    <a href="/pricing" class="btn-primary">
+      Get Access
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
     </a>
   </div>
