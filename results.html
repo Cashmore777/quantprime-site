@@ -87,6 +87,10 @@
   color: var(--text-mid);
 }
 
+.risk-control-wrapper {
+  position: relative;
+}
+
 .risk-control {
   display: flex;
   align-items: center;
@@ -94,6 +98,42 @@
   padding: 1rem 0;
   border-bottom: 1px solid var(--border-light);
   margin-bottom: 2rem;
+  background: var(--bg-light);
+  transition: all 0.2s ease;
+}
+
+/* Sticky risk banner */
+.risk-control.sticky {
+  position: fixed;
+  top: 60px; /* Below nav */
+  left: 0;
+  right: 0;
+  z-index: 90;
+  padding: 0.75rem 2rem;
+  margin: 0;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.risk-control.sticky .container-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Placeholder to prevent jump when going sticky */
+.risk-control-placeholder {
+  display: none;
+  height: 58px;
+  margin-bottom: 2rem;
+}
+
+.risk-control-placeholder.visible {
+  display: block;
 }
 
 .risk-control span {
@@ -389,11 +429,14 @@
   <div class="container">
 
     <!-- Risk Control -->
-    <div class="risk-control">
-      <span>Risk Level:</span>
-      <button class="risk-btn active" data-mult="1" onclick="setRisk(1)">1× Base</button>
-      <button class="risk-btn" data-mult="2" onclick="setRisk(2)">2× Medium</button>
-      <button class="risk-btn" data-mult="4" onclick="setRisk(4)">4× Aggressive</button>
+    <div class="risk-control-wrapper" id="riskControlWrapper">
+      <div class="risk-control" id="riskControl">
+        <span>Risk Level:</span>
+        <button class="risk-btn active" data-mult="1" onclick="setRisk(1)">1× Base</button>
+        <button class="risk-btn" data-mult="2" onclick="setRisk(2)">2× Medium</button>
+        <button class="risk-btn" data-mult="4" onclick="setRisk(4)">4× Aggressive</button>
+      </div>
+      <div class="risk-control-placeholder" id="riskPlaceholder"></div>
     </div>
 
     <!-- Disclaimer -->
@@ -597,6 +640,33 @@ function renderTrades(indicator, trades) {
 document.addEventListener('DOMContentLoaded', () => {
   renderTrades('meridian', meridianTrades);
   renderTrades('recoil', recoilTrades);
+  
+  // Sticky risk control
+  const riskControl = document.getElementById('riskControl');
+  const riskWrapper = document.getElementById('riskControlWrapper');
+  const riskPlaceholder = document.getElementById('riskPlaceholder');
+  
+  if (riskControl && riskWrapper) {
+    const navHeight = 60; // Nav bar height
+    
+    function handleScroll() {
+      const wrapperRect = riskWrapper.getBoundingClientRect();
+      const shouldBeSticky = wrapperRect.top <= navHeight;
+      
+      if (shouldBeSticky && !riskControl.classList.contains('sticky')) {
+        // Going sticky
+        riskControl.classList.add('sticky');
+        riskPlaceholder.classList.add('visible');
+      } else if (!shouldBeSticky && riskControl.classList.contains('sticky')) {
+        // Leaving sticky
+        riskControl.classList.remove('sticky');
+        riskPlaceholder.classList.remove('visible');
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+  }
 });
 </script>
 </body>
