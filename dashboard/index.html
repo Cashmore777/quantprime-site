@@ -907,8 +907,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .room-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .room-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .room-cards {
+    grid-template-columns: 1fr;
+  }
 }
 
 .room-card {
@@ -4657,6 +4669,19 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
+          
+          <div class="room-card" data-room="introductions" data-tier="free">
+            <div class="room-card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#introductions</h4>
+              <p>Introduce yourself to the community</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
         </div>
         
         <!-- PAID CHAT ROOMS -->
@@ -4715,6 +4740,17 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <p>MT5 EAs, webhooks & bots</p>
             </div>
             <span class="room-card-tier">Ascension</span>
+          </div>
+          
+          <div class="room-card" data-room="cockpit" data-tier="cockpit">
+            <div class="room-card-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="8" cy="10" r="2"/><circle cx="16" cy="10" r="2"/><path d="M10 10h4"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#cockpit</h4>
+              <p>Visual analysis & multi-timeframe</p>
+            </div>
+            <span class="room-card-tier">Cockpit</span>
           </div>
         </div>
         
@@ -6978,10 +7014,12 @@ const ROOM_TIER_MAP = {
   // Community Chats (free)
   'general': 'free',
   'market-chat': 'free',
+  'introductions': 'free',
   // Paid Chat Rooms
   'research-discussion': 'research',
   'recoil': 'recoil',
   'meridian': 'meridian',
+  'cockpit': 'cockpit',
   'academy-chat': 'ascension',
   'automation': 'ascension',
   // Session Chat Rooms (free)
