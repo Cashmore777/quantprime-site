@@ -2849,6 +2849,53 @@ button, .nav-item, .room, .video-item, .filter-chip {
   transform: translateY(-50%) translateX(0);
 }
 
+/* Action cards */
+.action-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.action-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-card .action-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+}
+
+.action-card:hover .action-icon {
+  transform: scale(1.1);
+}
+
+.action-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.action-card p {
+  font-size: 12px;
+  color: var(--text-3);
+  margin: 0;
+}
+
 /* Filter chips scroll on mobile */
 .marketplace-bar {
   flex-wrap: nowrap;
@@ -3325,35 +3372,77 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
     </div>
     
-    <!-- Enhanced Research Section -->
+    <!-- Quick Actions Section -->
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-      <h4 style="font-size: 11px; letter-spacing: 0.1em; color: var(--text-3); margin: 0;">LATEST RESEARCH</h4>
-      <button class="btn outline sm" style="padding: 8px 14px; font-size: 11px;" onclick="switchView('research')">View All →</button>
+      <h4 style="font-size: 11px; letter-spacing: 0.1em; color: var(--text-3); margin: 0;">QUICK ACTIONS</h4>
     </div>
-    <div class="grid-3">
-      <div class="research-card-enhanced" onclick="openResearchModal(0)">
-        <div class="card-content">
-          <div class="date">18 JUL 2026 · WEEKLY</div>
-          <h4>Gold's regime shift: reading the 3D layer</h4>
-          <p>Why the higher-timeframe bias flip preceded the week's reversal — and what Meridian showed 14 hours early.</p>
+    <div class="grid-3" style="margin-bottom: 28px;">
+      <div class="action-card" onclick="switchView('recoil')">
+        <div class="action-icon" style="background: rgba(201,168,76,0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+          </svg>
         </div>
-        <span class="arrow">→</span>
+        <h4>Open Recoil</h4>
+        <p>Volatility fade signals</p>
       </div>
-      <div class="research-card-enhanced" onclick="openResearchModal(1)">
-        <div class="card-content">
-          <div class="date">15 JUL 2026 · WEEKLY</div>
-          <h4>Weekly recap: BTCUSD structure</h4>
-          <p>Liquidity sweep sequencing through the London sessions, mapped against the AMD cycles.</p>
+      <div class="action-card" onclick="switchView('meridian')">
+        <div class="action-icon" style="background: rgba(0,171,255,0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00abff" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/>
+          </svg>
         </div>
-        <span class="arrow">→</span>
+        <h4>Open Meridian</h4>
+        <p>Structure engine signals</p>
       </div>
-      <div class="research-card-enhanced" onclick="openResearchModal(2)">
-        <div class="card-content">
-          <div class="date">11 JUL 2026 · METHODOLOGY</div>
-          <h4>Recoil in practice: band-8 statistics</h4>
-          <p>Every red-candle fade this month, its alignment state, and what the sample says so far.</p>
+      <div class="action-card" onclick="switchView('marketplace')">
+        <div class="action-icon" style="background: rgba(139,92,246,0.1);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
         </div>
-        <span class="arrow">→</span>
+        <h4>Marketplace</h4>
+        <p>Code snippets & tools</p>
+      </div>
+    </div>
+    
+    <!-- System Performance -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+      <h4 style="font-size: 11px; letter-spacing: 0.1em; color: var(--text-3); margin: 0;">SYSTEM PERFORMANCE</h4>
+      <a href="/results" target="_blank" style="font-size: 11px; color: var(--gold); text-decoration: none;">View Full Results →</a>
+    </div>
+    <div class="grid-2">
+      <div class="panel" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; background: rgba(201,168,76,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/></svg>
+          </div>
+          <div>
+            <div style="font-weight: 600;">Recoil</div>
+            <div style="font-size: 12px; color: var(--text-3);">114 trades · Jan 2025 - Jul 2026</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+          <div><div style="font-family: var(--mono); font-size: 18px; color: var(--gold);">71.1%</div><div style="font-size: 10px; color: var(--text-3);">WIN RATE</div></div>
+          <div><div style="font-family: var(--mono); font-size: 18px; color: var(--gold);">1.40</div><div style="font-size: 10px; color: var(--text-3);">PROFIT FACTOR</div></div>
+          <div><div style="font-family: var(--mono); font-size: 18px; color: var(--success);">+$135</div><div style="font-size: 10px; color: var(--text-3);">TOTAL P&L</div></div>
+        </div>
+      </div>
+      <div class="panel" style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="width: 40px; height: 40px; background: rgba(0,171,255,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00abff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/></svg>
+          </div>
+          <div>
+            <div style="font-weight: 600;">Meridian</div>
+            <div style="font-size: 12px; color: var(--text-3);">206 trades · Jan - Jul 2026</div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; text-align: center;">
+          <div><div style="font-family: var(--mono); font-size: 18px; color: #00abff;">64.4%</div><div style="font-size: 10px; color: var(--text-3);">WIN RATE</div></div>
+          <div><div style="font-family: var(--mono); font-size: 18px; color: #00abff;">1.40</div><div style="font-size: 10px; color: var(--text-3);">PROFIT FACTOR</div></div>
+          <div><div style="font-family: var(--mono); font-size: 18px; color: var(--success);">+$116</div><div style="font-size: 10px; color: var(--text-3);">TOTAL P&L</div></div>
+        </div>
       </div>
     </div>
   </div>
