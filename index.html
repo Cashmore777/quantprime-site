@@ -11,7 +11,6 @@
 <meta name="author" content="Quant Prime Technologies">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="https://quantprime.uk/">
-<meta name="google-site-verification" content="">
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
@@ -29,7 +28,7 @@
 <meta name="twitter:description" content="Precision trading instruments for systematic traders. Market structure, volatility regimes, and liquidity alignment.">
 <meta name="twitter:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 
-<!-- Favicon - Multiple formats for maximum compatibility -->
+<!-- Favicon -->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
@@ -58,11 +57,6 @@
   "foundingDate": "2024",
   "foundingLocation": "United Kingdom",
   "slogan": "Institutional-Grade Trading Instruments",
-  "address": {
-    "@type": "PostalAddress",
-    "addressCountry": "GB",
-    "addressRegion": "England"
-  },
   "contactPoint": {
     "@type": "ContactPoint",
     "contactType": "customer support",
@@ -75,24 +69,7 @@
     "https://www.tiktok.com/@cashmoretrades",
     "https://www.youtube.com/@cashmoretrades",
     "https://discord.gg/EAHKwd7HvX"
-  ],
-  "knowsAbout": ["Trading", "Forex", "Technical Analysis", "TradingView", "Algorithmic Trading", "Volatility Trading"]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "@id": "https://quantprime.uk/#website",
-  "url": "https://quantprime.uk",
-  "name": "Quant Prime",
-  "description": "Professional trading indicators and education platform",
-  "publisher": {"@id": "https://quantprime.uk/#organization"},
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://quantprime.uk/search?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -102,7 +79,6 @@
   "name": "Quant Prime Trading Indicators",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "TradingView",
-  "applicationSubCategory": "Trading Tools",
   "offers": {
     "@type": "AggregateOffer",
     "lowPrice": "8",
@@ -114,26 +90,103 @@
     "@type": "AggregateRating",
     "ratingValue": "4.9",
     "bestRating": "5",
-    "worstRating": "1",
     "ratingCount": "127"
   },
   "provider": {"@id": "https://quantprime.uk/#organization"}
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  "name": "Quant Prime Academy",
-  "url": "https://quantprime.uk/dashboard/",
-  "description": "Trading education platform teaching systematic approaches to forex and indices trading",
-  "parentOrganization": {"@id": "https://quantprime.uk/#organization"}
 }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
+<style>
+/* Page-specific overrides */
+.hero-cta-group { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; }
+.hero-cta-primary {
+  display: inline-block;
+  font-size: 0.9rem; font-weight: 500;
+  padding: 0.9rem 2.2rem;
+  background: var(--gold);
+  color: #fff;
+  border: none; border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.hero-cta-primary:hover { background: var(--text); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.hero-cta-secondary {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.hero-cta-secondary:hover { color: var(--gold); border-color: var(--gold); }
+
+.instruments-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+@media (max-width: 768px) { .instruments-grid { grid-template-columns: 1fr; } }
+
+.instrument-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  transition: all 0.2s;
+}
+.instrument-card:hover { border-color: var(--gold); transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.instrument-badge {
+  display: inline-block;
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.instrument-badge.gold { background: var(--gold-bg); }
+.instrument-badge.cyan { background: var(--cyan-soft); }
+.instrument-card h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.25rem; color: var(--text); }
+.instrument-card .type { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem; }
+.instrument-card .desc { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; }
+.instrument-card .meta { display: flex; gap: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-tertiary); }
+
+.cta-section { padding: 6rem 0; text-align: center; }
+.cta-section h2 { margin-bottom: 1rem; }
+.cta-section .cta-desc { color: var(--text-secondary); margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn-outline {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-solid {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-solid:hover { background: var(--text); border-color: var(--text); }
+
+.included-section { padding: 5rem 0; background: var(--surface); border-top: 1px solid var(--border-light); }
+.included-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 700px; margin: 0 auto; }
+@media (max-width: 600px) { .included-grid { grid-template-columns: 1fr; } }
+.included-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; }
+.included-check { color: var(--gold); font-weight: bold; }
+.included-item span { font-size: 0.9rem; color: var(--text-secondary); }
+</style>
 </head>
 <body>
 
@@ -149,14 +202,13 @@
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home</a>
         <a href="/framework">The Framework</a>
-        
         <a href="/results">Results</a>
         <a href="/compounding">Compounding</a>
-        <a href="/pricing">Get Access</a>
+        <a href="/pricing">Pricing</a>
         <a href="/dashboard/login.html">Login</a>
       </div>
     </div>
-    <a href="/pricing" class="nav-cta">Get Access</a>
+    <a href="/framework" class="nav-cta">Learn More</a>
   </div>
 </nav>
 
@@ -165,11 +217,11 @@
     <div class="hero-content">
       <div class="label hero-label">QUANTITATIVE MARKET INSTRUMENTS</div>
       <h1>The algorithm doesn't <em>predict</em>.<br>It <em>measures</em>.</h1>
-      <p class="hero-sub">Quant Prime instruments decode Time × Price Vortex Alignment, measuring Flow Compression and Liquidity Gravity at Quant Nodes the market reveals only to those who know where to look.</p>
-      <a href="/framework" class="hero-cta">
-        Enter the framework
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
-      </a>
+      <p class="hero-sub">Quant Prime instruments decode volatility compression, market structure, and liquidity alignment—measuring conditions the market reveals only to those who know where to look.</p>
+      <div class="hero-cta-group">
+        <a href="/framework" class="hero-cta-primary">Enter the framework</a>
+        <a href="/results" class="hero-cta-secondary">View 320+ verified trades</a>
+      </div>
     </div>
   </div>
   <div class="hero-glow"></div>
@@ -209,42 +261,28 @@
     </div>
     <div class="instruments-grid">
       <div class="instrument-card reveal">
-        <div class="instrument-icon gold">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-          </svg>
-        </div>
+        <div class="instrument-badge gold">⚡</div>
         <h3>Recoil</h3>
-        <p class="instrument-type">Volatility System</p>
-        <p class="instrument-desc">Measures compression before expansion. Identifies when price is coiled and ready to move. 71% win rate across 114 trades.</p>
-        <div class="instrument-stats">
+        <p class="type">Volatility System</p>
+        <p class="desc">Measures compression before expansion. Identifies when price is coiled and ready to move. 71% win rate across 114 trades.</p>
+        <div class="meta">
           <span>EURUSD</span>
-          <span>•</span>
           <span>3-min TF</span>
         </div>
       </div>
       <div class="instrument-card reveal">
-        <div class="instrument-icon cyan">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 6v6l4 2"/>
-          </svg>
-        </div>
+        <div class="instrument-badge cyan">◎</div>
         <h3>Meridian</h3>
-        <p class="instrument-type">Structure Engine</p>
-        <p class="instrument-desc">Maps market structure and liquidity zones. Finds where price must travel. 64% win rate across 206 trades.</p>
-        <div class="instrument-stats">
+        <p class="type">Structure Engine</p>
+        <p class="desc">Maps market structure and liquidity zones. Finds where price must travel. 64% win rate across 206 trades.</p>
+        <div class="meta">
           <span>EURUSD</span>
-          <span>•</span>
           <span>3-min TF</span>
         </div>
       </div>
     </div>
-    <div class="instruments-cta reveal">
-      <a href="/framework" class="btn-secondary">
-        Learn how they work
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
-      </a>
+    <div style="text-align: center; margin-top: 2.5rem;" class="reveal">
+      <a href="/framework" class="btn-outline">Learn how they work</a>
     </div>
   </div>
 </section>
@@ -266,7 +304,7 @@
       <div class="philosophy-item reveal">
         <div class="label">EDUCATION</div>
         <h3>9-level curriculum</h3>
-        <p>From complete beginner to systematic operator. Video lessons, operator guides, and 1-on-1 support.</p>
+        <p>From complete beginner to systematic operator. Video lessons, operator guides, and direct support.</p>
       </div>
     </div>
   </div>
@@ -281,48 +319,42 @@
     </div>
     <div class="included-grid reveal">
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>TradingView indicators</span>
       </div>
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>MT4/MT5 automation bridge</span>
       </div>
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>Private Discord community</span>
       </div>
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>Academy video lessons</span>
       </div>
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>Operator guides</span>
       </div>
       <div class="included-item">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="included-check">✓</span>
         <span>Code snippets library</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA -->
-<section class="journey-cta">
+<!-- CTA Section -->
+<section class="cta-section">
   <div class="container">
-    <div class="journey-content reveal">
+    <div class="reveal">
       <h2>Start from £8/month</h2>
-      <p>Join traders using institutional-grade instruments. No contracts, cancel anytime.</p>
+      <p class="cta-desc">Join traders using institutional-grade instruments. No contracts, cancel anytime.</p>
       <div class="cta-buttons">
-        <a href="/results" class="btn-secondary">
-          View Results
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
-        </a>
-        <a href="/pricing" class="btn-primary">
-          Get Access
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
-        </a>
+        <a href="/results" class="btn-outline">View Results</a>
+        <a href="/framework" class="btn-solid">Learn the Framework</a>
       </div>
     </div>
   </div>
@@ -338,6 +370,28 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
-<script src="/js/main.js?v=3"></script>
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.15 });
+reveals.forEach(el => observer.observe(el));
+
+// Nav dropdown
+const dropdownBtn = document.getElementById('navDropdown');
+const dropdownMenu = document.getElementById('navMenu');
+if (dropdownBtn && dropdownMenu) {
+  dropdownBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdownBtn.classList.toggle('active');
+    dropdownMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', () => {
+    dropdownBtn.classList.remove('active');
+    dropdownMenu.classList.remove('open');
+  });
+}
+</script>
 </body>
 </html>
