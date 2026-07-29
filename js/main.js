@@ -651,13 +651,13 @@ if (dropdownBtn && dropdownMenu) {
       ctx.font = '700 18px "JetBrains Mono"';
       ctx.fillStyle = '#c9a84c';
       ctx.textAlign = 'right';
-      ctx.fillText(score, w - 50, scoreY + 28);
+      ctx.fillText(score, w - 55, scoreY + 28);
 
-      // Score label
+      // Score label - position after the score
       ctx.font = '400 10px "JetBrains Mono"';
       ctx.fillStyle = 'rgba(150, 140, 120, 0.7)';
-      ctx.fillText('/ 100', w - 45, scoreY + 28);
       ctx.textAlign = 'left';
+      ctx.fillText('/ 100', w - 50, scoreY + 28);
       ctx.globalAlpha = 1;
     }
 
