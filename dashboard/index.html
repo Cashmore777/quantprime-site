@@ -1738,12 +1738,15 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border: 1px solid var(--border);
   border-radius: var(--card-radius);
   padding: var(--card-padding);
+  padding-top: 36px; /* Space for corner badge */
   display: flex;
   flex-direction: column;
   gap: 14px;
   transition: all 0.25s;
   box-shadow: var(--shadow-sm);
   min-width: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 @media (hover: hover) {
@@ -1818,9 +1821,11 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 4px;
-  padding: 4px 10px;
-  align-self: flex-start;
+  border-radius: 0 0 6px 0;
+  padding: 6px 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .tier-badge.free { background: rgba(34,197,94,0.15); color: #22c55e; }
 .tier-badge.research { background: rgba(0,171,255,0.15); color: #00abff; }
