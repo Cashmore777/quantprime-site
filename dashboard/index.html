@@ -5369,30 +5369,26 @@ async function saveProfile() {
   statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
   
   try {
-    // Use update instead of upsert to avoid overwriting other fields
+    // Always use upsert to handle both create and update cases
+    // Supabase .update() returns success even if 0 rows match!
     const { error } = await supabaseClient
       .from('profiles')
-      .update({
-        display_name: displayName
-      })
-      .eq('id', authUser.id);
+      .upsert({
+        id: authUser.id,
+        email: authUser.email,
+        display_name: displayName,
+        tier: userTier || 'free',
+        tradingview_username: userProfile?.tradingview_username || '',
+        updated_at: new Date().toISOString()
+      }, { 
+        onConflict: 'id',
+        ignoreDuplicates: false
+      });
     
     if (error) {
-      // If no row exists yet, create one with all fields preserved
-      const { error: insertError } = await supabaseClient
-        .from('profiles')
-        .upsert({
-          id: authUser.id,
-          email: authUser.email,
-          display_name: displayName,
-          tier: userTier,
-          tradingview_username: userProfile?.tradingview_username || ''
-        }, { onConflict: 'id' });
-      
-      if (insertError) {
-        statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${insertError.message}</span>`;
-        return;
-      }
+      console.error('[Profile] Save error:', error);
+      statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${error.message}</span>`;
+      return;
     }
     
     // Update local state
@@ -5401,10 +5397,12 @@ async function saveProfile() {
     const welcomeName = document.getElementById('user-display-name');
     if (welcomeName) welcomeName.textContent = displayName;
     
+    console.log('[Profile] Display name saved:', displayName);
     statusEl.innerHTML = '<span style="color: var(--success);">✓ Saved</span>';
     setTimeout(() => statusEl.innerHTML = '', 3000);
     
   } catch (e) {
+    console.error('[Profile] Save exception:', e);
     statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
   }
 }
@@ -7656,14 +7654,25 @@ async function saveTvUsername(indicator) {
   try {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
+      // Use upsert to handle both create and update cases
+      // Supabase .update() returns success even if 0 rows match!
       const { error } = await supabaseClient
         .from('profiles')
-        .update({ tradingview_username: newUsername })
-        .eq('id', user.id);
+        .upsert({
+          id: user.id,
+          email: user.email,
+          tradingview_username: newUsername,
+          tier: userTier || 'free',
+          display_name: userProfile?.display_name || currentUser || user.email.split('@')[0],
+          updated_at: new Date().toISOString()
+        }, { 
+          onConflict: 'id',
+          ignoreDuplicates: false
+        });
       
       if (error) {
-        console.error('Error saving TV username:', error);
-        alert('Failed to save username. Please try again.');
+        console.error('[TV Username] Save error:', error);
+        alert('Failed to save username: ' + error.message);
         return;
       }
       
@@ -7672,10 +7681,11 @@ async function saveTvUsername(indicator) {
         userProfile.tradingview_username = newUsername;
       }
       
-      console.log('[Dashboard] TV username saved to Supabase:', newUsername);
+      console.log('[TV Username] Saved to Supabase:', newUsername);
     }
   } catch (e) {
-    console.error('Error updating TV username:', e);
+    console.error('[TV Username] Save exception:', e);
+    alert('Error saving username. Please try again.');
   }
   
   // Send notification to backend with full user details
