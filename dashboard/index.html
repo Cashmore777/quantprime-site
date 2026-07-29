@@ -2951,61 +2951,117 @@ button, .nav-item, .room, .video-item, .filter-chip {
   letter-spacing: 0.05em;
 }
 
-/* Recoil Animation */
-.recoil-animation .price-line {
-  stroke-dasharray: 500;
-  stroke-dashoffset: 500;
-  animation: drawLine 3s ease-out forwards;
-}
-
-.recoil-animation .trigger-flash {
-  animation: flash 3s ease-out infinite;
-  animation-delay: 2s;
-}
-
-.recoil-animation .band {
+/* Recoil Animation - Volatility bands & mean reversion */
+.recoil-animation .candles rect,
+.recoil-animation .candles line {
   opacity: 0;
-  animation: fadeIn 0.5s ease-out forwards;
+  animation: fadeIn 0.2s ease-out forwards;
 }
 
-.recoil-animation .band-1 { animation-delay: 0.1s; }
-.recoil-animation .band-2 { animation-delay: 0.2s; }
-.recoil-animation .band-3 { animation-delay: 0.3s; }
-.recoil-animation .band-4 { animation-delay: 0.4s; }
-.recoil-animation .band-trigger { animation-delay: 0.5s; }
+.recoil-animation .candles rect:nth-child(1) { animation-delay: 0.1s; }
+.recoil-animation .candles rect:nth-child(3) { animation-delay: 0.2s; }
+.recoil-animation .candles rect:nth-child(5) { animation-delay: 0.3s; }
+.recoil-animation .candles rect:nth-child(7) { animation-delay: 0.4s; }
+.recoil-animation .candles rect:nth-child(9) { animation-delay: 0.5s; }
+.recoil-animation .candles rect:nth-child(11) { animation-delay: 0.6s; }
+.recoil-animation .candles rect:nth-child(13) { animation-delay: 0.7s; }
+.recoil-animation .candles rect:nth-child(15) { animation-delay: 0.8s; }
+.recoil-animation .candles rect:nth-child(17) { animation-delay: 1.0s; }
+.recoil-animation .candles rect:nth-child(19) { animation-delay: 1.1s; }
+.recoil-animation .candles rect:nth-child(21) { animation-delay: 1.2s; }
 
-/* Meridian Animation */
-.meridian-animation .ema {
+.recoil-animation .trigger-candle-8 {
+  animation: pulseRed 2s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
+.recoil-animation .trigger-label {
+  animation: fadeIn 0.3s ease-out forwards;
+  animation-delay: 0.9s;
+}
+
+.recoil-animation .fade-arrow {
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 1.3s;
+}
+
+@keyframes pulseRed {
+  0%, 100% { fill: #f23645; }
+  50% { fill: #ff5c6a; }
+}
+
+/* Meridian Animation - AMD cycles & gold signals */
+.meridian-animation .price-candles rect {
+  opacity: 0;
+  animation: fadeIn 0.15s ease-out forwards;
+}
+
+.meridian-animation .price-candles rect:nth-child(1) { animation-delay: 0.1s; }
+.meridian-animation .price-candles rect:nth-child(2) { animation-delay: 0.2s; }
+.meridian-animation .price-candles rect:nth-child(3) { animation-delay: 0.3s; }
+.meridian-animation .price-candles rect:nth-child(4) { animation-delay: 0.4s; }
+.meridian-animation .price-candles rect:nth-child(5) { animation-delay: 0.5s; }
+.meridian-animation .price-candles rect:nth-child(6) { animation-delay: 0.6s; }
+
+.meridian-animation .gold-signal {
+  opacity: 0;
+  animation: goldSignalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: 0.8s;
+}
+
+.meridian-animation .gold-diamond {
+  animation: diamondPulse 2s ease-in-out infinite;
+  animation-delay: 1.3s;
+}
+
+.meridian-animation .distribution-candles rect {
+  opacity: 0;
+  animation: fadeIn 0.15s ease-out forwards;
+}
+
+.meridian-animation .distribution-candles rect:nth-child(1) { animation-delay: 1.0s; }
+.meridian-animation .distribution-candles rect:nth-child(2) { animation-delay: 1.1s; }
+.meridian-animation .distribution-candles rect:nth-child(3) { animation-delay: 1.2s; }
+.meridian-animation .distribution-candles rect:nth-child(4) { animation-delay: 1.3s; }
+.meridian-animation .distribution-candles rect:nth-child(5) { animation-delay: 1.4s; }
+.meridian-animation .distribution-candles rect:nth-child(6) { animation-delay: 1.5s; }
+.meridian-animation .distribution-candles rect:nth-child(7) { animation-delay: 1.6s; }
+.meridian-animation .distribution-candles rect:nth-child(8) { animation-delay: 1.7s; }
+
+@keyframes goldSignalPop {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes diamondPulse {
+  0%, 100% { fill: #c9a84c; }
+  50% { fill: #e6c05a; }
+}
+
+/* Cockpit Animation - Multi-TF dashboard */
+.cockpit-animation path {
   stroke-dasharray: 500;
   stroke-dashoffset: 500;
   animation: drawLine 2s ease-out forwards;
 }
 
-.meridian-animation .ema-1 { animation-delay: 0.1s; }
-.meridian-animation .ema-2 { animation-delay: 0.2s; }
-.meridian-animation .ema-3 { animation-delay: 0.3s; }
-.meridian-animation .ema-4 { animation-delay: 0.4s; }
-
-.meridian-animation .price-line {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: drawLine 2.5s ease-out forwards;
-  animation-delay: 0.5s;
-}
-
-.meridian-animation .regime-box,
-.meridian-animation .regime-text {
+.cockpit-animation .cockpit-candles rect {
   opacity: 0;
-  animation: fadeIn 0.5s ease-out forwards;
-  animation-delay: 2s;
+  animation: fadeIn 0.1s ease-out forwards;
 }
 
-.meridian-animation .sweep-marker,
-.meridian-animation .sweep-arrow {
-  opacity: 0;
-  animation: pulse 2s ease-out infinite;
-  animation-delay: 2.5s;
-}
+.cockpit-animation .cockpit-candles rect:nth-child(1) { animation-delay: 0.3s; }
+.cockpit-animation .cockpit-candles rect:nth-child(2) { animation-delay: 0.4s; }
+.cockpit-animation .cockpit-candles rect:nth-child(3) { animation-delay: 0.5s; }
+.cockpit-animation .cockpit-candles rect:nth-child(4) { animation-delay: 0.6s; }
+.cockpit-animation .cockpit-candles rect:nth-child(5) { animation-delay: 0.7s; }
+.cockpit-animation .cockpit-candles rect:nth-child(6) { animation-delay: 0.8s; }
+.cockpit-animation .cockpit-candles rect:nth-child(7) { animation-delay: 0.9s; }
+.cockpit-animation .cockpit-candles rect:nth-child(8) { animation-delay: 1.0s; }
+.cockpit-animation .cockpit-candles rect:nth-child(9) { animation-delay: 1.1s; }
+.cockpit-animation .cockpit-candles rect:nth-child(10) { animation-delay: 1.2s; }
+.cockpit-animation .cockpit-candles rect:nth-child(11) { animation-delay: 1.3s; }
+.cockpit-animation .cockpit-candles rect:nth-child(12) { animation-delay: 1.4s; }
 
 @keyframes drawLine {
   to { stroke-dashoffset: 0; }
@@ -3736,24 +3792,62 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <!-- Animated Hero -->
     <div class="instrument-hero recoil-hero" style="margin-bottom: 24px;">
       <div class="hero-visual">
-        <svg class="recoil-animation" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet">
-          <!-- Bands -->
-          <rect class="band band-1" x="0" y="100" width="400" height="10" fill="rgba(201,168,76,0.1)"/>
-          <rect class="band band-2" x="0" y="85" width="400" height="15" fill="rgba(201,168,76,0.15)"/>
-          <rect class="band band-3" x="0" y="65" width="400" height="20" fill="rgba(201,168,76,0.2)"/>
-          <rect class="band band-4" x="0" y="40" width="400" height="25" fill="rgba(201,168,76,0.25)"/>
-          <rect class="band band-trigger" x="0" y="10" width="400" height="30" fill="rgba(201,168,76,0.4)"/>
-          
-          <!-- Price line -->
-          <path class="price-line" d="M0,80 Q50,75 100,85 T200,60 T300,30 T350,70 T400,65" fill="none" stroke="var(--gold)" stroke-width="2"/>
-          
-          <!-- Trigger flash -->
-          <circle class="trigger-flash" cx="300" cy="30" r="8" fill="var(--gold)" opacity="0"/>
-          
-          <!-- Band labels -->
-          <text x="10" y="118" fill="var(--text-3)" font-size="8" font-family="var(--mono)">BAND 1-2</text>
-          <text x="10" y="78" fill="var(--text-3)" font-size="8" font-family="var(--mono)">BAND 3-5</text>
-          <text x="10" y="35" fill="var(--gold)" font-size="8" font-family="var(--mono)">BAND 6-8 (TRIGGER)</text>
+        <svg class="recoil-animation" viewBox="0 0 400 140" preserveAspectRatio="xMidYMid meet">
+          <!-- Candlestick chart with volatility-colored candles -->
+          <g class="candles">
+            <!-- Band 1-2: Dark (low vol) -->
+            <rect x="20" y="75" width="6" height="20" fill="#2a2a36"/>
+            <line x1="23" y1="70" x2="23" y2="100" stroke="#2a2a36" stroke-width="1"/>
+            <rect x="35" y="80" width="6" height="15" fill="#363644"/>
+            <line x1="38" y1="75" x2="38" y2="100" stroke="#363644" stroke-width="1"/>
+            <!-- Band 3-4: Medium -->
+            <rect x="50" y="65" width="6" height="25" fill="#424252"/>
+            <line x1="53" y1="60" x2="53" y2="95" stroke="#424252" stroke-width="1"/>
+            <rect x="65" y="70" width="6" height="20" fill="#4e4e60"/>
+            <line x1="68" y1="65" x2="68" y2="95" stroke="#4e4e60" stroke-width="1"/>
+            <!-- Band 5: Building -->
+            <rect x="80" y="55" width="6" height="35" fill="#4e4e60"/>
+            <line x1="83" y1="50" x2="83" y2="95" stroke="#4e4e60" stroke-width="1"/>
+            <!-- Band 6: Yellow trigger -->
+            <rect x="95" y="40" width="6" height="50" fill="#e6a830"/>
+            <line x1="98" y1="35" x2="98" y2="95" stroke="#e6a830" stroke-width="1"/>
+            <!-- Band 7: Gold trigger -->
+            <rect x="110" y="25" width="6" height="65" fill="#c9a84c" class="trigger-candle-7"/>
+            <line x1="113" y1="20" x2="113" y2="95" stroke="#c9a84c" stroke-width="1"/>
+            <!-- Band 8: RED extreme (biggest candle) -->
+            <rect x="125" y="10" width="6" height="80" fill="#f23645" class="trigger-candle-8"/>
+            <line x1="128" y1="5" x2="128" y2="95" stroke="#f23645" stroke-width="1"/>
+            <!-- SNAP BACK (mean reversion) -->
+            <rect x="140" y="45" width="6" height="40" fill="#26a269"/>
+            <line x1="143" y1="40" x2="143" y2="90" stroke="#26a269" stroke-width="1"/>
+            <rect x="155" y="55" width="6" height="30" fill="#26a269"/>
+            <line x1="158" y1="50" x2="158" y2="90" stroke="#26a269" stroke-width="1"/>
+            <!-- Return to normal -->
+            <rect x="170" y="65" width="6" height="20" fill="#363644"/>
+            <line x1="173" y1="60" x2="173" y2="90" stroke="#363644" stroke-width="1"/>
+          </g>
+          <!-- Trigger label -->
+          <g class="trigger-label" opacity="0">
+            <rect x="115" y="2" width="40" height="14" rx="3" fill="rgba(242,54,69,0.9)"/>
+            <text x="135" y="12" fill="white" font-size="8" font-family="var(--mono)" text-anchor="middle">BAND 8</text>
+          </g>
+          <!-- Fade arrow -->
+          <g class="fade-arrow" opacity="0">
+            <path d="M128,95 L128,105 L143,105 L143,50" fill="none" stroke="#26a269" stroke-width="2" stroke-dasharray="4"/>
+            <polygon points="143,55 140,62 146,62" fill="#26a269"/>
+            <text x="155" y="108" fill="#26a269" font-size="9" font-family="var(--mono)">FADE</text>
+          </g>
+          <!-- Band legend -->
+          <g transform="translate(200, 20)">
+            <rect x="0" y="0" width="8" height="8" fill="#2a2a36"/><text x="12" y="7" fill="var(--text-3)" font-size="8">1-2 Low</text>
+            <rect x="0" y="14" width="8" height="8" fill="#4e4e60"/><text x="12" y="21" fill="var(--text-3)" font-size="8">3-5 Medium</text>
+            <rect x="0" y="28" width="8" height="8" fill="#e6a830"/><text x="12" y="35" fill="#e6a830" font-size="8">6 Trigger 1×</text>
+            <rect x="0" y="42" width="8" height="8" fill="#c9a84c"/><text x="12" y="49" fill="#c9a84c" font-size="8">7 Trigger 2×</text>
+            <rect x="0" y="56" width="8" height="8" fill="#f23645"/><text x="12" y="63" fill="#f23645" font-size="8">8 Trigger 5×</text>
+          </g>
+          <!-- ATR indicator -->
+          <text x="200" y="95" fill="var(--text-3)" font-size="9" font-family="var(--mono)">ATR Ratio: <tspan fill="#f23645">3.2×</tspan> → BAND 8</text>
+          <text x="200" y="108" fill="var(--text-2)" font-size="8">Overextended candle → Fade for mean reversion</text>
         </svg>
       </div>
       <div class="hero-content">
@@ -3761,7 +3855,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <h4>RECOIL</h4>
           <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
         </div>
-        <p>Measures volatility compression before expansion. When price enters bands 6-8, mean-reversion probability peaks. Fade the overextension.</p>
+        <p>Colors candles by ATR ratio (8 bands). Bands 6-8 mark extreme volatility—statistically likely to snap back. Fade the overextension with scaled position sizes (1×/2×/5×).</p>
         <div class="hero-stats">
           <div><span class="stat-val gold">71.1%</span><span class="stat-lbl">Win Rate</span></div>
           <div><span class="stat-val">114</span><span class="stat-lbl">Trades</span></div>
@@ -3804,27 +3898,68 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <!-- Animated Hero -->
     <div class="instrument-hero meridian-hero" style="margin-bottom: 24px;">
       <div class="hero-visual">
-        <svg class="meridian-animation" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet">
-          <!-- EMA lines -->
-          <path class="ema ema-1" d="M0,80 Q100,75 200,65 T400,55" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.3"/>
-          <path class="ema ema-2" d="M0,85 Q100,80 200,70 T400,60" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.5"/>
-          <path class="ema ema-3" d="M0,90 Q100,85 200,75 T400,68" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.7"/>
-          <path class="ema ema-4" d="M0,95 Q100,90 200,82 T400,75" fill="none" stroke="#00abff" stroke-width="1.5"/>
+        <svg class="meridian-animation" viewBox="0 0 400 140" preserveAspectRatio="xMidYMid meet">
+          <!-- AMD Phase backgrounds -->
+          <rect x="0" y="20" width="100" height="100" fill="rgba(201,168,76,0.05)"/>
+          <rect x="100" y="20" width="100" height="100" fill="rgba(0,171,255,0.05)"/>
+          <rect x="200" y="20" width="100" height="100" fill="rgba(38,162,105,0.05)"/>
+          <rect x="300" y="20" width="100" height="100" fill="rgba(201,168,76,0.05)"/>
+          <!-- Phase labels -->
+          <text x="50" y="130" fill="var(--gold)" font-size="8" font-family="var(--mono)" text-anchor="middle" opacity="0.7">ACCUM</text>
+          <text x="150" y="130" fill="#00abff" font-size="8" font-family="var(--mono)" text-anchor="middle" opacity="0.7">MANIP</text>
+          <text x="250" y="130" fill="#26a269" font-size="8" font-family="var(--mono)" text-anchor="middle" opacity="0.7">DISTRIB</text>
+          <text x="350" y="130" fill="var(--gold)" font-size="8" font-family="var(--mono)" text-anchor="middle" opacity="0.7">ACCUM</text>
           
-          <!-- Structure levels -->
-          <line class="level" x1="0" y1="45" x2="180" y2="45" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4"/>
-          <line class="level" x1="220" y1="35" x2="400" y2="35" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4"/>
+          <!-- A-Line (12H cycle boundary) -->
+          <line x1="100" y1="20" x2="100" y2="120" stroke="var(--gold)" stroke-width="2" opacity="0.7"/>
+          <text x="104" y="30" fill="var(--gold)" font-size="7" font-family="var(--mono)">A-LINE</text>
           
-          <!-- Price action -->
-          <path class="price-line" d="M0,70 L50,75 L80,65 L120,80 L160,50 L200,60 L240,40 L280,55 L320,30 L360,45 L400,35" fill="none" stroke="#fff" stroke-width="2"/>
+          <!-- Price action with candles -->
+          <g class="price-candles">
+            <!-- Accumulation phase -->
+            <rect x="20" y="70" width="5" height="15" fill="#666"/>
+            <rect x="35" y="75" width="5" height="10" fill="#666"/>
+            <rect x="50" y="72" width="5" height="12" fill="#666"/>
+            <rect x="65" y="68" width="5" height="18" fill="#666"/>
+            <rect x="80" y="65" width="5" height="20" fill="#666"/>
+            <!-- Manipulation: sweep below A-line -->
+            <rect x="95" y="82" width="5" height="25" fill="#f23645"/>
+            <line x1="97" y1="107" x2="97" y2="112" stroke="#f23645" stroke-width="1"/>
+            <!-- Vortex point tap -->
+            <circle cx="97" cy="112" r="4" fill="none" stroke="#c9a84c" stroke-width="2"/>
+            <text x="97" y="122" fill="#c9a84c" font-size="7" font-family="var(--mono)" text-anchor="middle">369</text>
+          </g>
           
-          <!-- Regime indicator -->
-          <rect class="regime-box" x="320" y="8" width="70" height="20" rx="4" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="1"/>
-          <text class="regime-text" x="355" y="22" fill="#00abff" font-size="10" font-family="var(--mono)" text-anchor="middle">BULLISH</text>
+          <!-- Gold Signal diamond -->
+          <g class="gold-signal" transform="translate(115, 55)">
+            <polygon points="0,-10 8,0 0,10 -8,0" fill="#c9a84c" class="gold-diamond"/>
+            <text x="12" y="4" fill="#c9a84c" font-size="9" font-family="var(--mono)" font-weight="600">GOLD ▲</text>
+          </g>
           
-          <!-- Liquidity sweep marker -->
-          <circle class="sweep-marker" cx="320" cy="30" r="6" fill="none" stroke="#00abff" stroke-width="1.5"/>
-          <path class="sweep-arrow" d="M320,24 L320,36 M314,30 L326,30" stroke="#00abff" stroke-width="1.5"/>
+          <!-- Distribution phase: rally -->
+          <g class="distribution-candles">
+            <rect x="130" y="50" width="5" height="30" fill="#26a269"/>
+            <rect x="145" y="45" width="5" height="25" fill="#26a269"/>
+            <rect x="160" y="40" width="5" height="28" fill="#26a269"/>
+            <rect x="175" y="35" width="5" height="25" fill="#26a269"/>
+            <rect x="190" y="32" width="5" height="22" fill="#26a269"/>
+            <rect x="205" y="30" width="5" height="20" fill="#26a269"/>
+            <rect x="220" y="35" width="5" height="15" fill="#666"/>
+            <rect x="235" y="38" width="5" height="12" fill="#666"/>
+          </g>
+          
+          <!-- TP/SL boxes -->
+          <rect x="115" y="28" width="130" height="24" fill="rgba(38,162,105,0.15)" stroke="#26a269" stroke-width="1" stroke-dasharray="3"/>
+          <text x="180" y="40" fill="#26a269" font-size="7" font-family="var(--mono)" text-anchor="middle">TP ZONE</text>
+          <rect x="95" y="95" width="25" height="20" fill="rgba(242,54,69,0.15)" stroke="#f23645" stroke-width="1" stroke-dasharray="3"/>
+          <text x="107" y="107" fill="#f23645" font-size="6" font-family="var(--mono)" text-anchor="middle">SL</text>
+          
+          <!-- Legend -->
+          <g transform="translate(280, 25)">
+            <polygon points="6,-5 10,0 6,5 2,0" fill="#c9a84c"/><text x="16" y="3" fill="var(--text-3)" font-size="8">Gold Signal</text>
+            <circle cx="6" cy="18" r="4" fill="none" stroke="#c9a84c" stroke-width="1.5"/><text x="16" y="21" fill="var(--text-3)" font-size="8">Vortex Point</text>
+            <line x1="2" y1="35" x2="10" y2="35" stroke="var(--gold)" stroke-width="2"/><text x="16" y="38" fill="var(--text-3)" font-size="8">A-Line (12H)</text>
+          </g>
         </svg>
       </div>
       <div class="hero-content">
@@ -3832,7 +3967,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <h4>MERIDIAN</h4>
           <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
         </div>
-        <p>Maps market structure and regime states across timeframes. EMA alignment, liquidity zones, and bias classification. Know where you are before you trade.</p>
+        <p>AMD time cycles (12H/6H) mark market phases. A-line sweeps set directional bias. Vortex points (369) confirm entry. Gold signal fires when both align.</p>
         <div class="hero-stats">
           <div><span class="stat-val cyan">64.4%</span><span class="stat-lbl">Win Rate</span></div>
           <div><span class="stat-val">206</span><span class="stat-lbl">Trades</span></div>
@@ -3872,15 +4007,103 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <h2>Cockpit — <em>Fractal command center</em></h2>
     </div>
     
-    <div class="instrument-card" style="margin-bottom: 24px;">
-      <div class="instrument-header">
-        <h4>COCKPIT</h4>
-        <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+    <!-- Animated Hero -->
+    <div class="instrument-hero cockpit-hero" style="margin-bottom: 24px;">
+      <div class="hero-visual">
+        <svg class="cockpit-animation" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid meet">
+          <!-- AMD Phase shading -->
+          <rect x="0" y="30" width="120" height="90" fill="rgba(201,168,76,0.08)"/>
+          <rect x="120" y="30" width="120" height="90" fill="rgba(0,171,255,0.08)"/>
+          <rect x="240" y="30" width="160" height="90" fill="rgba(38,162,105,0.08)"/>
+          
+          <!-- EMA Stack (4 layers, cyan gradient) -->
+          <path d="M0,85 Q60,82 120,75 T240,65 T400,58" fill="none" stroke="#7fdbff" stroke-width="1" opacity="0.6"/>
+          <path d="M0,90 Q60,87 120,80 T240,70 T400,63" fill="none" stroke="#00abff" stroke-width="1" opacity="0.7"/>
+          <path d="M0,95 Q60,92 120,85 T240,75 T400,68" fill="none" stroke="#0085c7" stroke-width="1.5" opacity="0.8"/>
+          <path d="M0,100 Q60,97 120,92 T240,82 T400,75" fill="none" stroke="#005e8c" stroke-width="2"/>
+          
+          <!-- LP Levels (liquidity pools from 3 timeframes) -->
+          <line x1="0" y1="45" x2="180" y2="45" stroke="#005e8c" stroke-width="1" stroke-dasharray="4"/>
+          <text x="5" y="42" fill="#005e8c" font-size="6" font-family="var(--mono)">LP 3M</text>
+          <line x1="50" y1="55" x2="250" y2="55" stroke="#0085c7" stroke-width="1" stroke-dasharray="4"/>
+          <text x="55" y="52" fill="#0085c7" font-size="6" font-family="var(--mono)">LP 15M</text>
+          <line x1="100" y1="38" x2="320" y2="38" stroke="#00abff" stroke-width="1.5" stroke-dasharray="4"/>
+          <text x="105" y="35" fill="#00abff" font-size="6" font-family="var(--mono)">LP 30M</text>
+          
+          <!-- FVG (Fair Value Gap) box -->
+          <rect x="180" y="60" width="30" height="12" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="1"/>
+          <text x="195" y="68" fill="#00abff" font-size="5" font-family="var(--mono)" text-anchor="middle">FVG</text>
+          
+          <!-- Price candles -->
+          <g class="cockpit-candles">
+            <rect x="30" y="72" width="4" height="16" fill="#666"/>
+            <rect x="45" y="68" width="4" height="20" fill="#26a269"/>
+            <rect x="60" y="65" width="4" height="18" fill="#26a269"/>
+            <rect x="75" y="60" width="4" height="22" fill="#26a269"/>
+            <rect x="90" y="55" width="4" height="25" fill="#c9a84c"/>
+            <rect x="105" y="48" width="4" height="30" fill="#c9a84c"/>
+            <rect x="120" y="52" width="4" height="20" fill="#f23645"/>
+            <rect x="135" y="58" width="4" height="15" fill="#666"/>
+            <rect x="150" y="55" width="4" height="18" fill="#26a269"/>
+            <rect x="165" y="50" width="4" height="22" fill="#26a269"/>
+            <rect x="195" y="48" width="4" height="20" fill="#26a269"/>
+            <rect x="210" y="45" width="4" height="18" fill="#26a269"/>
+          </g>
+          
+          <!-- HTF Candle overlay (faded, larger) -->
+          <rect x="20" y="45" width="100" height="55" fill="none" stroke="rgba(102,102,102,0.3)" stroke-width="1" stroke-dasharray="2"/>
+          <text x="25" y="105" fill="var(--text-3)" font-size="6" font-family="var(--mono)" opacity="0.5">HTF 1H</text>
+          
+          <!-- Fractal Dashboard mini-panel -->
+          <g transform="translate(270, 30)">
+            <rect x="0" y="0" width="120" height="85" rx="4" fill="rgba(255,255,255,0.95)" stroke="var(--border)"/>
+            <text x="60" y="14" fill="var(--text-1)" font-size="8" font-family="var(--mono)" text-anchor="middle" font-weight="600">FRACTAL DASHBOARD</text>
+            <line x1="5" y1="20" x2="115" y2="20" stroke="var(--border)"/>
+            <!-- TF rows -->
+            <text x="8" y="32" fill="var(--text-3)" font-size="7">3M</text>
+            <rect x="28" y="26" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="33" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
+            <rect x="52" y="26" width="20" height="10" rx="2" fill="rgba(201,168,76,0.2)"/><text x="62" y="33" fill="var(--gold)" font-size="6" text-anchor="middle">HIGH</text>
+            <rect x="76" y="26" width="20" height="10" rx="2" fill="rgba(0,171,255,0.2)"/><text x="86" y="33" fill="#00abff" font-size="6" text-anchor="middle">BUY</text>
+            
+            <text x="8" y="46" fill="var(--text-3)" font-size="7">15M</text>
+            <rect x="28" y="40" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="47" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
+            <rect x="52" y="40" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="47" fill="var(--text-3)" font-size="6" text-anchor="middle">MED</text>
+            <rect x="76" y="40" width="20" height="10" rx="2" fill="rgba(0,171,255,0.2)"/><text x="86" y="47" fill="#00abff" font-size="6" text-anchor="middle">BUY</text>
+            
+            <text x="8" y="60" fill="var(--text-3)" font-size="7">1H</text>
+            <rect x="28" y="54" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="61" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
+            <rect x="52" y="54" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="61" fill="var(--text-3)" font-size="6" text-anchor="middle">LOW</text>
+            <rect x="76" y="54" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="86" y="61" fill="var(--text-3)" font-size="6" text-anchor="middle">—</text>
+            
+            <text x="8" y="74" fill="var(--text-3)" font-size="7">4H</text>
+            <rect x="28" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="38" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">FLAT</text>
+            <rect x="52" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">LOW</text>
+            <rect x="76" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="86" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">—</text>
+            
+            <!-- Column headers -->
+            <text x="38" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">TREND</text>
+            <text x="62" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">VOL</text>
+            <text x="86" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">BIAS</text>
+          </g>
+          
+          <!-- Legend -->
+          <g transform="translate(10, 125)">
+            <line x1="0" y1="5" x2="15" y2="5" stroke="#00abff" stroke-width="1.5"/><text x="20" y="8" fill="var(--text-3)" font-size="7">EMA Stack</text>
+            <line x1="75" y1="5" x2="90" y2="5" stroke="#0085c7" stroke-width="1" stroke-dasharray="3"/><text x="95" y="8" fill="var(--text-3)" font-size="7">LP Levels</text>
+            <rect x="150" y="1" width="10" height="8" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="0.5"/><text x="165" y="8" fill="var(--text-3)" font-size="7">FVG</text>
+          </g>
+        </svg>
       </div>
-      <p>Multi-timeframe analytical overlay. EMAs, liquidity pools, FVGs, AMD phases, volatility bands, and a fractal dashboard across four timeframes. Pure market-state awareness — no trades, no signals.</p>
-      <div class="actions">
-        <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm" onclick="openGuide('cockpit')">Operator's Guide</button>
+      <div class="hero-content">
+        <div class="instrument-header">
+          <h4>COCKPIT</h4>
+          <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+        </div>
+        <p>Multi-timeframe analytical overlay. 4-layer EMA stack, LP levels from 3 timeframes, FVGs, AMD phase shading, HTF candles, and a fractal dashboard showing trend/volatility/bias across 4 TFs. Pure awareness—no signals.</p>
+        <div class="actions">
+          <button class="btn sm">Open on TradingView</button>
+          <button class="btn outline sm" onclick="openGuide('cockpit')">Operator's Guide</button>
+        </div>
       </div>
     </div>
     
