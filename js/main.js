@@ -457,8 +457,13 @@ if (dropdownBtn && dropdownMenu) {
       const hasReachedLow = fullSegments >= majorLowIndex;
       
       if (hasReachedLow) {
-        const timeSinceLow = (fullSegments - majorLowIndex) / totalSegments;
-        const signalAlpha = Math.min(timeSinceLow * 8 + 0.3, 1);
+        // Smooth easing function
+        const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+        
+        // Calculate progress since reaching the low (0 to 1 over ~2 segments)
+        const segmentsSinceLow = fullSegments - majorLowIndex + segmentProgress;
+        const fadeProgress = Math.min(segmentsSinceLow / 2, 1); // Fade in over 2 segments
+        const signalAlpha = easeOutCubic(fadeProgress);
         
         // Position at the actual major low
         const majorLow = swingPoints[majorLowIndex];
@@ -466,27 +471,31 @@ if (dropdownBtn && dropdownMenu) {
         const diamondY = 20 + majorLow.y * drawHeight + 12;
         const size = 10;
 
-        // Diamond
+        // Diamond - smooth fade in
         ctx.save();
+        ctx.globalAlpha = signalAlpha;
         ctx.translate(diamondX, diamondY);
         ctx.rotate(Math.PI / 4);
         
         const diamondGrad = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
-        diamondGrad.addColorStop(0, `rgba(220, 190, 80, ${signalAlpha})`);
-        diamondGrad.addColorStop(0.5, `rgba(200, 165, 50, ${signalAlpha})`);
-        diamondGrad.addColorStop(1, `rgba(184, 150, 46, ${signalAlpha})`);
+        diamondGrad.addColorStop(0, 'rgba(220, 190, 80, 1)');
+        diamondGrad.addColorStop(0.5, 'rgba(200, 165, 50, 1)');
+        diamondGrad.addColorStop(1, 'rgba(184, 150, 46, 1)');
         ctx.fillStyle = diamondGrad;
         ctx.fillRect(-size/2, -size/2, size, size);
         ctx.restore();
 
-        // Label
-        if (signalAlpha > 0.3) {
-          const labelAlpha = (signalAlpha - 0.3) / 0.7;
+        // Label - fade in slightly after diamond
+        const labelProgress = Math.max(0, (fadeProgress - 0.3) / 0.7);
+        const labelAlpha = easeOutCubic(labelProgress);
+        if (labelAlpha > 0) {
+          ctx.globalAlpha = labelAlpha;
           ctx.font = '700 10px "JetBrains Mono"';
-          ctx.fillStyle = `rgba(184, 150, 46, ${labelAlpha})`;
+          ctx.fillStyle = 'rgba(184, 150, 46, 1)';
           ctx.textAlign = 'center';
           ctx.fillText('PRIME SIGNAL', diamondX, diamondY + 22);
           ctx.textAlign = 'left';
+          ctx.globalAlpha = 1;
         }
       }
     }
