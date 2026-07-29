@@ -8415,10 +8415,10 @@ async function refreshAffiliateStats() {
       return;
     }
     
-    // Get all profiles to map affiliate IDs to emails
+    // Get all profiles to map affiliate IDs to names
     const { data: profiles } = await supabaseClient
       .from('profiles')
-      .select('id, email, display_name, role');
+      .select('id, display_name, role');
     
     // Build lookup: first 8 chars of ID (uppercase) -> profile info
     const affiliateLookup = {};
@@ -8426,8 +8426,7 @@ async function refreshAffiliateStats() {
       profiles.forEach(p => {
         const affId = p.id.substring(0, 8).toUpperCase();
         affiliateLookup[affId] = {
-          email: p.email,
-          name: p.display_name || p.email?.split('@')[0] || 'Unknown',
+          name: p.display_name || affId,
           role: p.role
         };
       });
@@ -8443,8 +8442,7 @@ async function refreshAffiliateStats() {
           signups: 0, 
           conversions: 0, 
           earnings: 0, 
-          email: lookup?.email || row.affiliate_email || 'Unknown',
-          name: lookup?.name || 'Unknown',
+          name: lookup?.name || row.affiliate_id,
           role: lookup?.role || ''
         };
       }
