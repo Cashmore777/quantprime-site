@@ -1156,6 +1156,38 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   }
 }
 
+.message {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.message .msg-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #d4b85a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.message .msg-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.message .msg-content {
+  flex: 1;
+  min-width: 0;
+}
+
 .message .msg-header {
   display: flex;
   align-items: baseline;
@@ -4898,6 +4930,9 @@ async function checkPendingUpgrade() {
   }
 }
 
+// Global avatar URL for chat
+let userAvatarUrl = null;
+
 // Upload and save avatar
 async function uploadAvatar(event) {
   const file = event.target.files[0];
@@ -4914,13 +4949,31 @@ async function uploadAvatar(event) {
     return;
   }
   
-  // Convert to data URL
+  // Convert to data URL (also used for Supabase since we don't have storage bucket)
   const reader = new FileReader();
   reader.onload = async function(e) {
     const dataUrl = e.target.result;
     
-    // Save to localStorage (keyed by user ID)
+    // Save to localStorage (backup/cache)
     localStorage.setItem(`qp_avatar_${authUser.id}`, dataUrl);
+    
+    // Save to Supabase profiles (primary storage)
+    try {
+      const { error } = await supabaseClient
+        .from('profiles')
+        .update({ avatar_url: dataUrl })
+        .eq('id', authUser.id);
+      
+      if (error) {
+        console.error('Failed to save avatar to Supabase:', error);
+        // Still works locally
+      }
+    } catch (e) {
+      console.error('Avatar save error:', e);
+    }
+    
+    // Update global avatar URL for chat
+    userAvatarUrl = dataUrl;
     
     // Update display
     const avatarImg = document.getElementById('avatar-image');
@@ -4942,16 +4995,42 @@ async function uploadAvatar(event) {
   reader.readAsDataURL(file);
 }
 
-// Load saved avatar on page load
-function loadAvatar() {
+// Load saved avatar on page load (from Supabase or localStorage fallback)
+async function loadAvatar() {
   if (!authUser) return;
   
-  const savedAvatar = localStorage.getItem(`qp_avatar_${authUser.id}`);
-  if (savedAvatar) {
+  let avatarUrl = null;
+  
+  // Try to load from Supabase first
+  try {
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('avatar_url')
+      .eq('id', authUser.id)
+      .single();
+    
+    if (profile?.avatar_url) {
+      avatarUrl = profile.avatar_url;
+      // Cache locally
+      localStorage.setItem(`qp_avatar_${authUser.id}`, avatarUrl);
+    }
+  } catch (e) {
+    console.log('Could not load avatar from Supabase, using localStorage');
+  }
+  
+  // Fallback to localStorage
+  if (!avatarUrl) {
+    avatarUrl = localStorage.getItem(`qp_avatar_${authUser.id}`);
+  }
+  
+  // Set global for chat
+  userAvatarUrl = avatarUrl;
+  
+  if (avatarUrl) {
     const avatarImg = document.getElementById('avatar-image');
     const avatarInitial = document.getElementById('avatar-initial');
     if (avatarImg && avatarInitial) {
-      avatarImg.src = savedAvatar;
+      avatarImg.src = avatarUrl;
       avatarImg.style.display = 'block';
       avatarInitial.style.display = 'none';
     }
@@ -6009,6 +6088,12 @@ function addMessageToUI(msg, messageKey = null) {
   
   const time = new Date(msg.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
   
+  // Avatar: show image if available, otherwise show initial
+  const initial = msg.username.charAt(0).toUpperCase();
+  const avatarContent = msg.avatar 
+    ? `<img src="${msg.avatar}" alt="${escapeHtml(msg.username)}">`
+    : initial;
+  
   // Admin delete button (only visible to admins on hover)
   const adminDeleteBtn = isAdmin() && messageKey ? `
     <button class="admin-delete-msg" onclick="deleteMessageInline('${currentRoom}', '${messageKey}')" title="Delete message">
@@ -6019,13 +6104,16 @@ function addMessageToUI(msg, messageKey = null) {
   ` : '';
   
   div.innerHTML = `
-    <div class="msg-header">
-      <span class="username ${usernameClass}">${escapeHtml(msg.username)}</span>
-      <span class="tier-tag ${tierClass}">${msg.tier || 'MEMBER'}</span>
-      <span class="time">${time}</span>
-      ${adminDeleteBtn}
+    <div class="msg-avatar">${avatarContent}</div>
+    <div class="msg-content">
+      <div class="msg-header">
+        <span class="username ${usernameClass}">${escapeHtml(msg.username)}</span>
+        <span class="tier-tag ${tierClass}">${msg.tier || 'MEMBER'}</span>
+        <span class="time">${time}</span>
+        ${adminDeleteBtn}
+      </div>
+      <p>${escapeHtml(msg.text)}</p>
     </div>
-    <p>${escapeHtml(msg.text)}</p>
   `;
   
   messagesContainer.appendChild(div);
@@ -6051,11 +6139,12 @@ function sendMessage() {
   if (!text || !currentUser) return;
   
   if (chatEnabled && db) {
-    // Send to Firebase with actual user tier
+    // Send to Firebase with actual user tier and avatar
     currentRoomRef.push({
       username: currentUser,
       text: text,
       tier: userTier.toUpperCase(),
+      avatar: userAvatarUrl || null,
       timestamp: firebase.database.ServerValue.TIMESTAMP
     });
   } else {
@@ -6064,6 +6153,7 @@ function sendMessage() {
       username: currentUser,
       text: text,
       tier: userTier.toUpperCase(),
+      avatar: userAvatarUrl || null,
       timestamp: Date.now()
     });
   }
@@ -6091,10 +6181,10 @@ function updateOnlineCount(roomId) {
 function showLocalChat() {
   // Demo messages for when Firebase isn't configured
   const demoMessages = [
-    { username: 'Sean', text: 'Welcome to the floor. This is where the real conversations happen.', tier: 'QP', timestamp: Date.now() - 300000 },
-    { username: 'Marcus_T', text: 'Just caught the gold move from the 3D flip. That research report was spot on.', tier: 'SUITE', timestamp: Date.now() - 240000 },
-    { username: 'elena.fx', text: 'Recoil band-8 question — seeing 2.5x multipliers on against-trend. Is that the discount factor?', tier: 'TERMINAL', timestamp: Date.now() - 180000 },
-    { username: 'Sean', text: 'Exactly — 5x foundation × 0.5 against-trend = 2.5x. Section 5 of the guide has the full matrix.', tier: 'QP', timestamp: Date.now() - 120000 }
+    { username: 'Sean', text: 'Welcome to the floor. This is where the real conversations happen.', tier: 'QP', avatar: null, timestamp: Date.now() - 300000 },
+    { username: 'Marcus_T', text: 'Just caught the gold move from the 3D flip. That research report was spot on.', tier: 'SUITE', avatar: null, timestamp: Date.now() - 240000 },
+    { username: 'elena.fx', text: 'Recoil band-8 question — seeing 2.5x multipliers on against-trend. Is that the discount factor?', tier: 'TERMINAL', avatar: null, timestamp: Date.now() - 180000 },
+    { username: 'Sean', text: 'Exactly — 5x foundation × 0.5 against-trend = 2.5x. Section 5 of the guide has the full matrix.', tier: 'QP', avatar: null, timestamp: Date.now() - 120000 }
   ];
   
   const messagesContainer = document.getElementById('messages');
