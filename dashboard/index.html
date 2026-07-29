@@ -3053,7 +3053,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <div class="nav-section ascension-section">
       <div class="nav-section-label" style="color: #ffd700;">⭐ ASCENSION</div>
       <button class="nav-item locked" data-view="academy" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg></span>Academy<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
-      <button class="nav-item locked" data-view="notebook" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>Notebook<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
+      <button class="nav-item locked" data-view="notebook" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>Journal<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
       <button class="nav-item locked" data-view="mentorship" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Mentorship<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
       <button class="nav-item locked" data-view="automation" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Automation<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
     </div>
@@ -3626,19 +3626,113 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
   </div>
 
-  <!-- NOTEBOOK (Ascension) -->
+  <!-- JOURNAL (Ascension) -->
   <div class="view" id="view-notebook">
     <div class="view-header">
       <div class="eyebrow" style="color: #ffd700;">⭐ Ascension</div>
-      <h2>Your trading <em>notebook</em>.</h2>
-      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Journal your trades, track your progress, review your decisions.</p>
+      <h2>The Quant Prime <em>Journal</em>.</h2>
+      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Document your trades, track your mindset, review your decisions. Your entries are saved automatically.</p>
     </div>
     
-    <div class="coming-soon-card">
-      <div class="lock-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h8M8 15h4"/></svg></div>
-      <h3>Notebook — Coming Soon</h3>
-      <p>A systematic trading journal integrated with the Quant Prime framework. Track your trades, log your reasoning, identify patterns in your decision-making, and improve over time.</p>
-      <button class="btn outline" onclick="switchView('academy')">Back to Academy</button>
+    <div style="display: grid; gap: 24px; max-width: 900px;">
+      <!-- New Entry Form -->
+      <div class="panel" style="border: 1px solid rgba(255,215,0,0.15);">
+        <h4 style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          New Journal Entry
+        </h4>
+        <div style="display: grid; gap: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Date</label>
+              <input type="date" id="journal-date" style="width: 100%; padding: 10px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px;">
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Type</label>
+              <select id="journal-type" style="width: 100%; padding: 10px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px;">
+                <option value="trade">Trade Review</option>
+                <option value="mindset">Mindset Check</option>
+                <option value="lesson">Lesson Learned</option>
+                <option value="goal">Goal Setting</option>
+                <option value="general">General Note</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Mood</label>
+              <select id="journal-mood" style="width: 100%; padding: 10px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px;">
+                <option value="confident">😎 Confident</option>
+                <option value="focused">🎯 Focused</option>
+                <option value="neutral">😐 Neutral</option>
+                <option value="anxious">😰 Anxious</option>
+                <option value="frustrated">😤 Frustrated</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Title</label>
+            <input type="text" id="journal-title" placeholder="Brief summary of this entry..." style="width: 100%; padding: 10px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px;">
+          </div>
+          <div>
+            <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Entry</label>
+            <textarea id="journal-content" rows="6" placeholder="What happened? What did you learn? What will you do differently?" style="width: 100%; padding: 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px; resize: vertical; line-height: 1.6;"></textarea>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="btn outline sm" onclick="clearJournalForm()">Clear</button>
+            <button class="btn gold sm" onclick="saveJournalEntry()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              Save Entry
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Entries List -->
+      <div class="panel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h4 style="display: flex; align-items: center; gap: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--text-2)" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            Your Entries
+            <span id="journal-count" style="font-size: 12px; color: var(--text-3); font-weight: 400;">(0)</span>
+          </h4>
+          <select id="journal-filter" onchange="filterJournalEntries()" style="padding: 6px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-2); font-size: 13px;">
+            <option value="all">All Types</option>
+            <option value="trade">Trade Reviews</option>
+            <option value="mindset">Mindset Checks</option>
+            <option value="lesson">Lessons Learned</option>
+            <option value="goal">Goal Setting</option>
+            <option value="general">General Notes</option>
+          </select>
+        </div>
+        <div id="journal-entries" style="display: grid; gap: 12px; max-height: 500px; overflow-y: auto;">
+          <div style="text-align: center; padding: 40px; color: var(--text-3);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: 12px; opacity: 0.5;"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            <p>No entries yet. Start documenting your trading journey!</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Stats Panel -->
+      <div class="panel" style="background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, var(--surface) 50%);">
+        <h4 style="margin-bottom: 16px;">Journal Stats</h4>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;">
+          <div>
+            <div id="stat-total" style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--gold);">0</div>
+            <div style="font-size: 11px; color: var(--text-3); text-transform: uppercase;">Total Entries</div>
+          </div>
+          <div>
+            <div id="stat-streak" style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--gold);">0</div>
+            <div style="font-size: 11px; color: var(--text-3); text-transform: uppercase;">Day Streak</div>
+          </div>
+          <div>
+            <div id="stat-trades" style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--gold);">0</div>
+            <div style="font-size: 11px; color: var(--text-3); text-transform: uppercase;">Trade Reviews</div>
+          </div>
+          <div>
+            <div id="stat-lessons" style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 600; color: var(--gold);">0</div>
+            <div style="font-size: 11px; color: var(--text-3); text-transform: uppercase;">Lessons</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -4379,6 +4473,242 @@ async function saveProfile() {
   }
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// JOURNAL FUNCTIONALITY
+// ═══════════════════════════════════════════════════════════════════
+
+let journalEntries = [];
+
+// Initialize journal on load
+async function initJournal() {
+  if (!authUser) return;
+  
+  // Set today's date as default
+  const dateInput = document.getElementById('journal-date');
+  if (dateInput) {
+    dateInput.value = new Date().toISOString().split('T')[0];
+  }
+  
+  await loadJournalEntries();
+}
+
+// Load entries from Supabase
+async function loadJournalEntries() {
+  if (!authUser) return;
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('journal_entries')
+      .select('*')
+      .eq('user_id', authUser.id)
+      .order('date', { ascending: false });
+    
+    if (error) {
+      // Table might not exist yet - that's okay
+      console.log('Journal load:', error.message);
+      journalEntries = [];
+    } else {
+      journalEntries = data || [];
+    }
+    
+    renderJournalEntries();
+    updateJournalStats();
+  } catch (e) {
+    console.error('Journal load error:', e);
+    journalEntries = [];
+  }
+}
+
+// Save new entry
+async function saveJournalEntry() {
+  if (!authUser) {
+    alert('Please log in to save journal entries.');
+    return;
+  }
+  
+  const date = document.getElementById('journal-date')?.value;
+  const type = document.getElementById('journal-type')?.value;
+  const mood = document.getElementById('journal-mood')?.value;
+  const title = document.getElementById('journal-title')?.value?.trim();
+  const content = document.getElementById('journal-content')?.value?.trim();
+  
+  if (!title || !content) {
+    alert('Please fill in the title and entry content.');
+    return;
+  }
+  
+  try {
+    const entry = {
+      user_id: authUser.id,
+      date: date || new Date().toISOString().split('T')[0],
+      type: type || 'general',
+      mood: mood || 'neutral',
+      title: title,
+      content: content,
+      created_at: new Date().toISOString()
+    };
+    
+    const { data, error } = await supabaseClient
+      .from('journal_entries')
+      .insert([entry])
+      .select();
+    
+    if (error) {
+      console.error('Save error:', error);
+      alert('Failed to save entry. Please try again.');
+      return;
+    }
+    
+    // Add to local array
+    journalEntries.unshift(data[0]);
+    renderJournalEntries();
+    updateJournalStats();
+    clearJournalForm();
+    
+  } catch (e) {
+    console.error('Save error:', e);
+    alert('Failed to save entry.');
+  }
+}
+
+// Clear the entry form
+function clearJournalForm() {
+  document.getElementById('journal-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('journal-type').value = 'trade';
+  document.getElementById('journal-mood').value = 'focused';
+  document.getElementById('journal-title').value = '';
+  document.getElementById('journal-content').value = '';
+}
+
+// Render entries list
+function renderJournalEntries() {
+  const container = document.getElementById('journal-entries');
+  const filter = document.getElementById('journal-filter')?.value || 'all';
+  
+  let filtered = journalEntries;
+  if (filter !== 'all') {
+    filtered = journalEntries.filter(e => e.type === filter);
+  }
+  
+  document.getElementById('journal-count').textContent = `(${filtered.length})`;
+  
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: var(--text-3);">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: 12px; opacity: 0.5;"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <p>${filter === 'all' ? 'No entries yet. Start documenting your trading journey!' : 'No entries of this type.'}</p>
+      </div>`;
+    return;
+  }
+  
+  const typeColors = {
+    trade: '#c9a84c',
+    mindset: '#8b5cf6',
+    lesson: '#10b981',
+    goal: '#3b82f6',
+    general: '#6b7280'
+  };
+  
+  const moodEmojis = {
+    confident: '😎',
+    focused: '🎯',
+    neutral: '😐',
+    anxious: '😰',
+    frustrated: '😤'
+  };
+  
+  container.innerHTML = filtered.map(entry => `
+    <div class="journal-entry" style="padding: 16px; background: var(--surface-raised); border-radius: 8px; border-left: 3px solid ${typeColors[entry.type] || '#6b7280'};">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+        <div>
+          <span style="font-size: 12px; color: var(--text-3);">${formatJournalDate(entry.date)}</span>
+          <span style="margin-left: 8px; padding: 2px 8px; background: rgba(255,255,255,0.05); border-radius: 4px; font-size: 11px; text-transform: uppercase;">${entry.type}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 16px;">${moodEmojis[entry.mood] || '📝'}</span>
+          <button onclick="deleteJournalEntry('${entry.id}')" style="background: none; border: none; cursor: pointer; color: var(--text-3); padding: 4px;" title="Delete entry">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+          </button>
+        </div>
+      </div>
+      <h5 style="margin-bottom: 8px; font-weight: 600;">${escapeHtml(entry.title)}</h5>
+      <p style="color: var(--text-2); font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${escapeHtml(entry.content)}</p>
+    </div>
+  `).join('');
+}
+
+// Filter entries
+function filterJournalEntries() {
+  renderJournalEntries();
+}
+
+// Update stats
+function updateJournalStats() {
+  document.getElementById('stat-total').textContent = journalEntries.length;
+  document.getElementById('stat-trades').textContent = journalEntries.filter(e => e.type === 'trade').length;
+  document.getElementById('stat-lessons').textContent = journalEntries.filter(e => e.type === 'lesson').length;
+  
+  // Calculate streak (consecutive days with entries)
+  const dates = [...new Set(journalEntries.map(e => e.date))].sort().reverse();
+  let streak = 0;
+  const today = new Date().toISOString().split('T')[0];
+  let checkDate = new Date(today);
+  
+  for (const date of dates) {
+    const entryDate = checkDate.toISOString().split('T')[0];
+    if (date === entryDate) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  
+  document.getElementById('stat-streak').textContent = streak;
+}
+
+// Delete entry
+async function deleteJournalEntry(id) {
+  if (!confirm('Delete this journal entry?')) return;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('journal_entries')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', authUser.id);
+    
+    if (error) {
+      alert('Failed to delete entry.');
+      return;
+    }
+    
+    journalEntries = journalEntries.filter(e => e.id !== id);
+    renderJournalEntries();
+    updateJournalStats();
+    
+  } catch (e) {
+    console.error('Delete error:', e);
+  }
+}
+
+// Format date nicely
+function formatJournalDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+// Escape HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TIER ACCESS
+// ═══════════════════════════════════════════════════════════════════
+
 // Apply tier-based locking/unlocking
 function applyTierAccess() {
   const allowedViews = TIER_ACCESS[userTier] || TIER_ACCESS['free'];
@@ -4659,6 +4989,11 @@ function switchView(viewId) {
   // Scroll to top of main content
   const main = document.getElementById('main');
   if (main) main.scrollTo(0, 0);
+  
+  // Initialize view-specific features
+  if (viewId === 'notebook') {
+    initJournal();
+  }
 }
 
 function showLockedModal(view) {
