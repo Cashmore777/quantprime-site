@@ -7341,72 +7341,102 @@ function sendMessage() {
   input.value = '';
 }
 
-// Presence tracking - use consistent user key to prevent duplicates
+// Presence tracking - use authUser.id for guaranteed uniqueness
 let myPresenceRef = null;
 let presenceListener = null;
 let currentPresenceRoom = null;
-let myPresenceKey = null; // Unique key for this user across all rooms
 
-// Generate a stable presence key for this browser session
+// Get stable presence key from auth
 function getPresenceKey() {
-  if (!myPresenceKey) {
-    // Use user ID + session ID for uniqueness
-    const sessionId = sessionStorage.getItem('qp_session_id') || (sessionStorage.setItem('qp_session_id', Date.now() + '_' + Math.random().toString(36).substr(2, 9)), sessionStorage.getItem('qp_session_id'));
-    myPresenceKey = (currentUser || 'anon') + '_' + sessionId;
+  // Use Supabase auth user ID if available (most reliable)
+  if (authUser && authUser.id) {
+    return authUser.id;
   }
-  return myPresenceKey;
+  // Fallback to username
+  return currentUser || 'anon_' + Date.now();
 }
 
-async function updateOnlineCount(roomId) {
+function updateOnlineCount(roomId) {
   if (!db) {
     document.getElementById('online-count').textContent = '1';
     return;
   }
   
-  // Clean up previous presence FIRST and wait for it
-  await leaveRoomPresence();
+  // If already in a room, clean up first (synchronous removal attempt)
+  if (currentPresenceRoom && myPresenceRef) {
+    try {
+      myPresenceRef.onDisconnect().cancel();
+      myPresenceRef.remove();
+    } catch (e) {}
+    myPresenceRef = null;
+    
+    if (presenceListener && currentPresenceRoom) {
+      db.ref('rooms/' + currentPresenceRoom + '/presence').off('value', presenceListener);
+      presenceListener = null;
+    }
+  }
   
   currentPresenceRoom = roomId;
   const presenceRef = db.ref('rooms/' + roomId + '/presence');
   
-  // Use consistent key based on user, not random push()
+  // Use auth user ID as key - same user = same key = one entry
   const presenceKey = getPresenceKey();
   myPresenceRef = presenceRef.child(presenceKey);
   
-  // Set presence with disconnect handler
-  await myPresenceRef.onDisconnect().remove();
-  await myPresenceRef.set({ 
+  // Set presence - using same key overwrites any existing entry
+  myPresenceRef.onDisconnect().remove();
+  myPresenceRef.set({ 
     user: currentUser, 
-    timestamp: firebase.database.ServerValue.TIMESTAMP 
+    joinedAt: firebase.database.ServerValue.TIMESTAMP 
   });
   
   // Listen for presence changes
   presenceListener = presenceRef.on('value', snapshot => {
     const count = snapshot.numChildren() || 0;
-    document.getElementById('online-count').textContent = count;
+    const el = document.getElementById('online-count');
+    if (el) el.textContent = count;
   });
 }
 
-async function leaveRoomPresence() {
+function leaveRoomPresence() {
   // Stop listening first
   if (presenceListener && currentPresenceRoom && db) {
-    db.ref('rooms/' + currentPresenceRoom + '/presence').off('value', presenceListener);
+    try {
+      db.ref('rooms/' + currentPresenceRoom + '/presence').off('value', presenceListener);
+    } catch (e) {}
     presenceListener = null;
   }
   
-  // Remove my presence from the room and wait for completion
+  // Remove presence entry
   if (myPresenceRef) {
     try {
-      await myPresenceRef.onDisconnect().cancel(); // Cancel the auto-remove
-      await myPresenceRef.remove();
-    } catch (e) {
-      console.log('Presence cleanup:', e.message);
-    }
+      myPresenceRef.onDisconnect().cancel();
+      myPresenceRef.remove();
+    } catch (e) {}
     myPresenceRef = null;
   }
   
   currentPresenceRoom = null;
 }
+
+// Clean up presence when page closes or user navigates away
+window.addEventListener('beforeunload', () => {
+  leaveRoomPresence();
+});
+
+// Clean up when tab goes hidden (mobile app switch)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && myPresenceRef) {
+    leaveRoomPresence();
+  }
+});
+
+// Re-join room when coming back to tab
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && currentRoom && chatViewActive && !myPresenceRef) {
+    updateOnlineCount(currentRoom);
+  }
+});
 
 // Admin: Get all room presence counts
 async function getAllRoomPresenceCounts() {
