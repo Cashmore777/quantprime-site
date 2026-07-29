@@ -4971,7 +4971,7 @@ function updateHeaderAvatar(dataUrl) {
   }
 }
 
-// Save profile changes (display name, TV username)
+// Save profile changes (display name)
 async function saveProfile() {
   const statusEl = document.getElementById('profile-save-status');
   const displayName = document.getElementById('settings-display-name')?.value?.trim();
@@ -4984,22 +4984,35 @@ async function saveProfile() {
   statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
   
   try {
+    // Use update instead of upsert to avoid overwriting other fields
     const { error } = await supabaseClient
       .from('profiles')
-      .upsert({
-        id: authUser.id,
-        email: authUser.email,
-        display_name: displayName,
-        tier: userTier
-      }, { onConflict: 'id' });
+      .update({
+        display_name: displayName
+      })
+      .eq('id', authUser.id);
     
     if (error) {
-      statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${error.message}</span>`;
-      return;
+      // If no row exists yet, create one with all fields preserved
+      const { error: insertError } = await supabaseClient
+        .from('profiles')
+        .upsert({
+          id: authUser.id,
+          email: authUser.email,
+          display_name: displayName,
+          tier: userTier,
+          tradingview_username: userProfile?.tradingview_username || ''
+        }, { onConflict: 'id' });
+      
+      if (insertError) {
+        statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${insertError.message}</span>`;
+        return;
+      }
     }
     
     // Update local state
     currentUser = displayName;
+    if (userProfile) userProfile.display_name = displayName;
     const welcomeName = document.getElementById('user-display-name');
     if (welcomeName) welcomeName.textContent = displayName;
     
