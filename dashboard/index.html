@@ -2849,6 +2849,150 @@ button, .nav-item, .room, .video-item, .filter-chip {
   transform: translateY(-50%) translateX(0);
 }
 
+/* Instrument Hero (Animated) */
+.instrument-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 24px;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .instrument-hero {
+    grid-template-columns: 1fr;
+  }
+  .instrument-hero .hero-visual {
+    order: -1;
+  }
+}
+
+.instrument-hero .hero-visual {
+  background: linear-gradient(135deg, rgba(0,0,0,0.3), var(--surface));
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+}
+
+.instrument-hero .hero-visual svg {
+  width: 100%;
+  max-width: 400px;
+}
+
+.instrument-hero .hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.instrument-hero .hero-stats {
+  display: flex;
+  gap: 24px;
+  margin: 8px 0;
+}
+
+.instrument-hero .hero-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.instrument-hero .stat-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.instrument-hero .stat-val.gold { color: var(--gold); }
+.instrument-hero .stat-val.cyan { color: #00abff; }
+
+.instrument-hero .stat-lbl {
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Recoil Animation */
+.recoil-animation .price-line {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: drawLine 3s ease-out forwards;
+}
+
+.recoil-animation .trigger-flash {
+  animation: flash 3s ease-out infinite;
+  animation-delay: 2s;
+}
+
+.recoil-animation .band {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.recoil-animation .band-1 { animation-delay: 0.1s; }
+.recoil-animation .band-2 { animation-delay: 0.2s; }
+.recoil-animation .band-3 { animation-delay: 0.3s; }
+.recoil-animation .band-4 { animation-delay: 0.4s; }
+.recoil-animation .band-trigger { animation-delay: 0.5s; }
+
+/* Meridian Animation */
+.meridian-animation .ema {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.meridian-animation .ema-1 { animation-delay: 0.1s; }
+.meridian-animation .ema-2 { animation-delay: 0.2s; }
+.meridian-animation .ema-3 { animation-delay: 0.3s; }
+.meridian-animation .ema-4 { animation-delay: 0.4s; }
+
+.meridian-animation .price-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawLine 2.5s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+.meridian-animation .regime-box,
+.meridian-animation .regime-text {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: 2s;
+}
+
+.meridian-animation .sweep-marker,
+.meridian-animation .sweep-arrow {
+  opacity: 0;
+  animation: pulse 2s ease-out infinite;
+  animation-delay: 2.5s;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes flash {
+  0%, 100% { opacity: 0; r: 8; }
+  50% { opacity: 0.8; r: 12; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
 /* Action cards */
 .action-card {
   background: var(--surface);
@@ -3557,15 +3701,44 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <h2>Recoil — <em>Volatility fade engine</em></h2>
     </div>
     
-    <div class="instrument-card" style="margin-bottom: 24px;">
-      <div class="instrument-header">
-        <h4>RECOIL</h4>
-        <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+    <!-- Animated Hero -->
+    <div class="instrument-hero recoil-hero" style="margin-bottom: 24px;">
+      <div class="hero-visual">
+        <svg class="recoil-animation" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet">
+          <!-- Bands -->
+          <rect class="band band-1" x="0" y="100" width="400" height="10" fill="rgba(201,168,76,0.1)"/>
+          <rect class="band band-2" x="0" y="85" width="400" height="15" fill="rgba(201,168,76,0.15)"/>
+          <rect class="band band-3" x="0" y="65" width="400" height="20" fill="rgba(201,168,76,0.2)"/>
+          <rect class="band band-4" x="0" y="40" width="400" height="25" fill="rgba(201,168,76,0.25)"/>
+          <rect class="band band-trigger" x="0" y="10" width="400" height="30" fill="rgba(201,168,76,0.4)"/>
+          
+          <!-- Price line -->
+          <path class="price-line" d="M0,80 Q50,75 100,85 T200,60 T300,30 T350,70 T400,65" fill="none" stroke="var(--gold)" stroke-width="2"/>
+          
+          <!-- Trigger flash -->
+          <circle class="trigger-flash" cx="300" cy="30" r="8" fill="var(--gold)" opacity="0"/>
+          
+          <!-- Band labels -->
+          <text x="10" y="118" fill="var(--text-3)" font-size="8" font-family="var(--mono)">BAND 1-2</text>
+          <text x="10" y="78" fill="var(--text-3)" font-size="8" font-family="var(--mono)">BAND 3-5</text>
+          <text x="10" y="35" fill="var(--gold)" font-size="8" font-family="var(--mono)">BAND 6-8 (TRIGGER)</text>
+        </svg>
       </div>
-      <p>The volatility fade engine. Measures deviation from equilibrium and calculates mean-reversion probability matrices. Attached to your TradingView account.</p>
-      <div class="actions">
-        <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm" onclick="openGuide('recoil')">Operator's Guide</button>
+      <div class="hero-content">
+        <div class="instrument-header">
+          <h4>RECOIL</h4>
+          <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+        </div>
+        <p>Measures volatility compression before expansion. When price enters bands 6-8, mean-reversion probability peaks. Fade the overextension.</p>
+        <div class="hero-stats">
+          <div><span class="stat-val gold">71.1%</span><span class="stat-lbl">Win Rate</span></div>
+          <div><span class="stat-val">114</span><span class="stat-lbl">Trades</span></div>
+          <div><span class="stat-val">1.40</span><span class="stat-lbl">Profit Factor</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn sm">Open on TradingView</button>
+          <button class="btn outline sm" onclick="openGuide('recoil')">Operator's Guide</button>
+        </div>
       </div>
     </div>
     
@@ -3596,15 +3769,47 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <h2>Meridian — <em>Structure & regime engine</em></h2>
     </div>
     
-    <div class="instrument-card" style="margin-bottom: 24px;">
-      <div class="instrument-header">
-        <h4>MERIDIAN</h4>
-        <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+    <!-- Animated Hero -->
+    <div class="instrument-hero meridian-hero" style="margin-bottom: 24px;">
+      <div class="hero-visual">
+        <svg class="meridian-animation" viewBox="0 0 400 120" preserveAspectRatio="xMidYMid meet">
+          <!-- EMA lines -->
+          <path class="ema ema-1" d="M0,80 Q100,75 200,65 T400,55" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.3"/>
+          <path class="ema ema-2" d="M0,85 Q100,80 200,70 T400,60" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.5"/>
+          <path class="ema ema-3" d="M0,90 Q100,85 200,75 T400,68" fill="none" stroke="#00abff" stroke-width="1.5" opacity="0.7"/>
+          <path class="ema ema-4" d="M0,95 Q100,90 200,82 T400,75" fill="none" stroke="#00abff" stroke-width="1.5"/>
+          
+          <!-- Structure levels -->
+          <line class="level" x1="0" y1="45" x2="180" y2="45" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4"/>
+          <line class="level" x1="220" y1="35" x2="400" y2="35" stroke="var(--text-3)" stroke-width="1" stroke-dasharray="4"/>
+          
+          <!-- Price action -->
+          <path class="price-line" d="M0,70 L50,75 L80,65 L120,80 L160,50 L200,60 L240,40 L280,55 L320,30 L360,45 L400,35" fill="none" stroke="#fff" stroke-width="2"/>
+          
+          <!-- Regime indicator -->
+          <rect class="regime-box" x="320" y="8" width="70" height="20" rx="4" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="1"/>
+          <text class="regime-text" x="355" y="22" fill="#00abff" font-size="10" font-family="var(--mono)" text-anchor="middle">BULLISH</text>
+          
+          <!-- Liquidity sweep marker -->
+          <circle class="sweep-marker" cx="320" cy="30" r="6" fill="none" stroke="#00abff" stroke-width="1.5"/>
+          <path class="sweep-arrow" d="M320,24 L320,36 M314,30 L326,30" stroke="#00abff" stroke-width="1.5"/>
+        </svg>
       </div>
-      <p>Market structure and regime classification engine. Measures bias state across timeframes, tracks liquidity events, and calculates alignment scores. Attached to your TradingView account.</p>
-      <div class="actions">
-        <button class="btn sm">Open on TradingView</button>
-        <button class="btn outline sm" onclick="openGuide('meridian')">Operator's Guide</button>
+      <div class="hero-content">
+        <div class="instrument-header">
+          <h4>MERIDIAN</h4>
+          <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
+        </div>
+        <p>Maps market structure and regime states across timeframes. EMA alignment, liquidity zones, and bias classification. Know where you are before you trade.</p>
+        <div class="hero-stats">
+          <div><span class="stat-val cyan">64.4%</span><span class="stat-lbl">Win Rate</span></div>
+          <div><span class="stat-val">206</span><span class="stat-lbl">Trades</span></div>
+          <div><span class="stat-val">1.40</span><span class="stat-lbl">Profit Factor</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn sm">Open on TradingView</button>
+          <button class="btn outline sm" onclick="openGuide('meridian')">Operator's Guide</button>
+        </div>
       </div>
     </div>
     
