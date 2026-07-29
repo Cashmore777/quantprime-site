@@ -657,7 +657,7 @@ if (dropdownBtn && dropdownMenu) {
       ctx.font = '400 10px "JetBrains Mono"';
       ctx.fillStyle = 'rgba(150, 140, 120, 0.7)';
       ctx.textAlign = 'left';
-      ctx.fillText('/ 100', w - 50, scoreY + 28);
+      ctx.fillText('/ 90', w - 50, scoreY + 28);
       ctx.globalAlpha = 1;
     }
 
