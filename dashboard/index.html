@@ -5070,37 +5070,37 @@ async function checkAuth() {
         localStorage.removeItem('qp_pending_tv_username');
       }
     }
-    
-    // Always load profile to get full data including TV username
-    const { data: profile, error: profileError } = await supabaseClient
-      .from('profiles')
-      .select('tier, display_name, tradingview_username')
-      .eq('id', authUser.id)
-      .single();
-    
-    console.log('[Auth] Profile loaded from Supabase:', profile);
-    console.log('[Auth] Profile error:', profileError);
-    console.log('[Auth] display_name from DB:', profile?.display_name);
-    
-    // Only update tier if not already set (admin/pending takes priority)
-    if ((!userTier || userTier === 'free') && profile && profile.tier) {
-      userTier = profile.tier.toLowerCase();
-    }
-    if (profile && profile.display_name) {
-      currentUser = profile.display_name;
-      console.log('[Auth] Set currentUser from profile:', currentUser);
-    } else {
-      console.log('[Auth] No display_name in profile, keeping currentUser as:', currentUser);
-    }
-    // Store full profile including TV username
-    userProfile = { 
-      id: authUser.id, 
-      tier: userTier,
-      email: authUser.email,
-      display_name: profile?.display_name || '',
-      tradingview_username: profile?.tradingview_username || ''
-    };
   }
+  
+  // ALWAYS load profile (for ALL users including admins) to get display_name and TV username
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('tier, display_name, tradingview_username')
+    .eq('id', authUser.id)
+    .single();
+  
+  console.log('[Auth] Profile loaded from Supabase:', profile);
+  console.log('[Auth] Profile error:', profileError);
+  console.log('[Auth] display_name from DB:', profile?.display_name);
+  
+  // Only update tier if not already set (admin/pending takes priority)
+  if ((!userTier || userTier === 'free') && profile && profile.tier) {
+    userTier = profile.tier.toLowerCase();
+  }
+  if (profile && profile.display_name) {
+    currentUser = profile.display_name;
+    console.log('[Auth] Set currentUser from profile:', currentUser);
+  } else {
+    console.log('[Auth] No display_name in profile, keeping currentUser as:', currentUser);
+  }
+  // Store full profile including TV username
+  userProfile = { 
+    id: authUser.id, 
+    tier: userTier,
+    email: authUser.email,
+    display_name: profile?.display_name || '',
+    tradingview_username: profile?.tradingview_username || ''
+  };
   
   // Check for pending tier from payment queue (auto-apply after Stripe payment)
   if (userTier === 'free' || !userTier) {
