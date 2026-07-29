@@ -3414,7 +3414,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="tv-username-field">
           <label>Your TradingView username</label>
           <div class="tv-input-wrapper">
-            <input class="mono tv-username-input" id="tv-username-recoil" value="QP_Member_041" readonly style="max-width: 320px;">
+            <input class="mono tv-username-input" id="tv-username-recoil" placeholder="Enter your TradingView username" readonly style="max-width: 320px;">
             <button class="btn-edit" onclick="enableTvEdit('recoil')" title="Edit username">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
             </button>
@@ -3453,7 +3453,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="tv-username-field">
           <label>Your TradingView username</label>
           <div class="tv-input-wrapper">
-            <input class="mono tv-username-input" id="tv-username-meridian" value="QP_Member_041" readonly style="max-width: 320px;">
+            <input class="mono tv-username-input" id="tv-username-meridian" placeholder="Enter your TradingView username" readonly style="max-width: 320px;">
             <button class="btn-edit" onclick="enableTvEdit('meridian')" title="Edit username">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
             </button>
@@ -3492,7 +3492,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="tv-username-field">
           <label>Your TradingView username</label>
           <div class="tv-input-wrapper">
-            <input class="mono tv-username-input" id="tv-username-cockpit" value="QP_Member_041" readonly style="max-width: 320px;">
+            <input class="mono tv-username-input" id="tv-username-cockpit" placeholder="Enter your TradingView username" readonly style="max-width: 320px;">
             <button class="btn-edit" onclick="enableTvEdit('cockpit')" title="Edit username">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
             </button>
@@ -3993,7 +3993,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <div class="tv-username-field">
             <label>Username</label>
             <div class="tv-input-wrapper">
-              <input class="mono tv-username-input" id="tv-username-settings" value="QP_Member_041" readonly style="max-width: 320px;">
+              <input class="mono tv-username-input" id="tv-username-settings" placeholder="Enter your TradingView username" readonly style="max-width: 320px;">
               <button class="btn-edit" onclick="enableTvEdit('settings')" title="Edit username">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
               </button>
@@ -4372,19 +4372,28 @@ async function checkAuth() {
       }
     }
     
-    // If no pending tier was applied, get tier from profile
-    if (!userTier || userTier === 'free') {
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('tier, display_name, tradingview_username')
-        .eq('id', authUser.id)
-        .single();
-      
-      userTier = (profile && profile.tier) ? profile.tier.toLowerCase() : 'free';
-      if (profile && profile.display_name) {
-        currentUser = profile.display_name;
-      }
+    // Always load profile to get full data including TV username
+    const { data: profile } = await supabaseClient
+      .from('profiles')
+      .select('tier, display_name, tradingview_username')
+      .eq('id', authUser.id)
+      .single();
+    
+    // Only update tier if not already set (admin/pending takes priority)
+    if ((!userTier || userTier === 'free') && profile && profile.tier) {
+      userTier = profile.tier.toLowerCase();
     }
+    if (profile && profile.display_name) {
+      currentUser = profile.display_name;
+    }
+    // Store full profile including TV username
+    userProfile = { 
+      id: authUser.id, 
+      tier: userTier,
+      email: authUser.email,
+      display_name: profile?.display_name || '',
+      tradingview_username: profile?.tradingview_username || ''
+    };
   }
   
   // Check for pending tier from payment queue (auto-apply after Stripe payment)
@@ -4426,7 +4435,13 @@ async function checkAuth() {
   }
   
   currentUser = currentUser || authUser.email.split('@')[0];
-  userProfile = { id: authUser.id, tier: userTier, email: authUser.email };
+  // Ensure userProfile is populated (fallback if profile load failed)
+  if (!userProfile) {
+    userProfile = { id: authUser.id, tier: userTier, email: authUser.email, tradingview_username: '' };
+  } else {
+    // Make sure tier is up to date
+    userProfile.tier = userTier;
+  }
   currentUserEmail = authUser.email;
   
   // Generate short user ID
