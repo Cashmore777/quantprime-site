@@ -7448,17 +7448,17 @@ function showCodeModal(product) {
     modal.id = 'code-modal';
     modal.className = 'modal-overlay';
     modal.innerHTML = `
-      <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
         <div class="modal-header">
           <h3 id="code-modal-title"></h3>
           <button class="modal-close" onclick="closeCodeModal()">×</button>
         </div>
-        <div class="modal-body">
-          <pre id="code-modal-code" style="background: #1a1a1a; color: #e0e0e0; padding: 20px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.6;"></pre>
-          <div style="display: flex; gap: 12px; margin-top: 16px;">
-            <button class="btn gold" onclick="copyToClipboard()">Copy to Clipboard</button>
-            <button class="btn outline" onclick="downloadCode()">Download .pine</button>
-          </div>
+        <div class="modal-body" id="code-modal-body">
+          <!-- Content generated dynamically -->
+        </div>
+        <div style="display: flex; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--border);">
+          <button class="btn gold" onclick="copyToClipboard()">Copy All Code</button>
+          <button class="btn outline" onclick="downloadCode()">Download .pine</button>
         </div>
       </div>
     `;
@@ -7469,14 +7469,95 @@ function showCodeModal(product) {
   backdrop.style.opacity = '1';
   backdrop.style.pointerEvents = 'auto';
   
-  // Set content
+  // Set title
   document.getElementById('code-modal-title').textContent = product.name;
-  document.getElementById('code-modal-code').textContent = product.preview;
   modal.dataset.filename = product.id + '.pine';
   modal.dataset.code = product.preview;
   
+  // Parse code into sections and build step-by-step guide
+  const body = document.getElementById('code-modal-body');
+  body.innerHTML = buildStepByStepGuide(product);
+  
   // Show modal
   modal.classList.add('active');
+}
+
+// Parse code into step-by-step sections
+function buildStepByStepGuide(product) {
+  const code = product.preview;
+  
+  // Define section patterns and their display info
+  const sections = [
+    { pattern: /\/\/ ─── INPUTS[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Step 1: Add the Inputs', 
+      desc: 'Paste this at the top of your indicator, in the inputs section.' },
+    { pattern: /\/\/ ─── CALCULATIONS[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Step 2: Add the Calculations', 
+      desc: 'Paste this after your other calculations.' },
+    { pattern: /\/\/ ─── PLOTTING[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Step 3: Add the Plots', 
+      desc: 'Paste this in your plotting section.' },
+    { pattern: /\/\/ ─── USAGE[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Step 4: How to Use', 
+      desc: 'Reference these variables in your own logic.' },
+    { pattern: /\/\/ ─── DASHBOARD[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Optional: Add Dashboard', 
+      desc: 'For on-chart display panel.' },
+    { pattern: /\/\/ ─── HELPER[^─]*─+\n([\s\S]*?)(?=\/\/ ─── |$)/i, 
+      title: 'Helper Functions', 
+      desc: 'Required utility functions.' },
+  ];
+  
+  let html = `
+    <div style="background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.3); border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
+      <p style="font-size: 13px; color: var(--text-2); margin: 0;">
+        <strong style="color: var(--gold);">How to add to any indicator:</strong> 
+        Copy each section below into the corresponding part of your Pine Script. Each step shows exactly what to paste and where.
+      </p>
+    </div>
+  `;
+  
+  let foundSections = false;
+  
+  sections.forEach(section => {
+    const match = code.match(section.pattern);
+    if (match && match[1] && match[1].trim()) {
+      foundSections = true;
+      const sectionCode = match[1].trim();
+      html += `
+        <div class="code-step" style="margin-bottom: 20px;">
+          <h4 style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 4px;">${section.title}</h4>
+          <p style="font-size: 12px; color: var(--text-3); margin-bottom: 10px;">${section.desc}</p>
+          <div style="position: relative;">
+            <pre style="background: #1a1a1a; color: #e0e0e0; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 11px; line-height: 1.5; margin: 0; max-height: 200px; overflow-y: auto;">${escapeHtml(sectionCode)}</pre>
+            <button onclick="copySection(this)" style="position: absolute; top: 8px; right: 8px; padding: 4px 10px; background: var(--gold); color: #000; border: none; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer;">Copy</button>
+          </div>
+        </div>
+      `;
+    }
+  });
+  
+  // If no sections found, show full code
+  if (!foundSections) {
+    html += `
+      <div class="code-step">
+        <h4 style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 4px;">Full Code</h4>
+        <p style="font-size: 12px; color: var(--text-3); margin-bottom: 10px;">Paste this entire block into your indicator.</p>
+        <pre style="background: #1a1a1a; color: #e0e0e0; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 11px; line-height: 1.5; margin: 0;">${escapeHtml(code)}</pre>
+      </div>
+    `;
+  }
+  
+  return html;
+}
+
+// Copy a single section
+function copySection(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+  });
 }
 
 function closeCodeModal() {
@@ -7489,9 +7570,10 @@ function closeCodeModal() {
 }
 
 function copyToClipboard() {
-  const code = document.getElementById('code-modal-code').textContent;
+  const modal = document.getElementById('code-modal');
+  const code = modal.dataset.code;
   navigator.clipboard.writeText(code).then(() => {
-    showToast('Code copied to clipboard!', 'success');
+    showToast('All code copied to clipboard!', 'success');
   });
 }
 
