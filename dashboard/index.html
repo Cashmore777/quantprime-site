@@ -1103,11 +1103,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   margin-left: auto;
   font-family: var(--mono);
   font-size: 10px;
-  background: var(--gold);
-  color: #000;
+  background: var(--cyan);
+  color: #fff;
   border-radius: 10px;
   padding: 3px 8px;
   font-weight: 700;
+  min-width: 20px;
+  text-align: center;
+  animation: unread-pulse 2s ease-in-out infinite;
+}
+
+@keyframes unread-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .room .online-count {
@@ -6105,6 +6113,12 @@ function switchView(viewId) {
   if (viewId === 'notebook') {
     initJournal();
   }
+  
+  // Refresh unread badges when entering community
+  if (viewId === 'community' && chatEnabled) {
+    markRoomAsRead(currentRoom);
+    updateAllUnreadBadges();
+  }
 }
 
 function showLockedModal(view) {
@@ -6428,6 +6442,109 @@ const rooms = document.querySelectorAll('.room');
 let currentRoomRef = null;
 let messagesListener = null;
 
+// ==========================================
+// UNREAD MESSAGE TRACKING
+// ==========================================
+const UNREAD_STORAGE_KEY = 'qp_room_last_read';
+
+// Get last read timestamps from localStorage
+function getLastReadTimestamps() {
+  try {
+    const stored = localStorage.getItem(UNREAD_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+// Save last read timestamp for a room
+function markRoomAsRead(roomId) {
+  const timestamps = getLastReadTimestamps();
+  timestamps[roomId] = Date.now();
+  localStorage.setItem(UNREAD_STORAGE_KEY, JSON.stringify(timestamps));
+  updateUnreadBadge(roomId, 0); // Clear badge
+}
+
+// Update unread badge on room element
+function updateUnreadBadge(roomId, count) {
+  // Update both mobile and desktop room elements
+  document.querySelectorAll(`.room[data-room="${roomId}"]`).forEach(roomEl => {
+    let badge = roomEl.querySelector('.unread');
+    
+    if (count > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'unread';
+        roomEl.appendChild(badge);
+      }
+      badge.textContent = count > 99 ? '99+' : count;
+    } else if (badge) {
+      badge.remove();
+    }
+  });
+}
+
+// Fetch unread count for a single room
+async function fetchUnreadCount(roomId) {
+  if (!db) return 0;
+  
+  const timestamps = getLastReadTimestamps();
+  const lastRead = timestamps[roomId] || 0;
+  
+  try {
+    const snapshot = await db.ref('rooms/' + roomId + '/messages')
+      .orderByChild('timestamp')
+      .startAt(lastRead + 1)
+      .once('value');
+    
+    return snapshot.numChildren();
+  } catch (e) {
+    console.error('Error fetching unread for', roomId, e);
+    return 0;
+  }
+}
+
+// Update all room unread badges
+async function updateAllUnreadBadges() {
+  if (!db || !chatEnabled) return;
+  
+  const roomIds = Object.keys(ROOM_TIER_MAP);
+  
+  for (const roomId of roomIds) {
+    // Only check rooms user can access
+    if (canAccessRoom(roomId)) {
+      const count = await fetchUnreadCount(roomId);
+      // Don't show badge for current room
+      if (roomId !== currentRoom) {
+        updateUnreadBadge(roomId, count);
+      }
+    }
+  }
+}
+
+// Listen for new messages in all rooms (for real-time badge updates)
+let roomListeners = {};
+
+function setupRoomListeners() {
+  if (!db || !chatEnabled) return;
+  
+  const roomIds = Object.keys(ROOM_TIER_MAP);
+  
+  roomIds.forEach(roomId => {
+    if (roomListeners[roomId]) return; // Already listening
+    
+    const roomRef = db.ref('rooms/' + roomId + '/messages');
+    roomListeners[roomId] = roomRef.orderByChild('timestamp').startAt(Date.now()).on('child_added', snapshot => {
+      // New message arrived - update badge if not in this room
+      if (roomId !== currentRoom && canAccessRoom(roomId)) {
+        fetchUnreadCount(roomId).then(count => {
+          updateUnreadBadge(roomId, count);
+        });
+      }
+    });
+  });
+}
+
 // Room tier requirements mapping
 const ROOM_TIER_MAP = {
   'general': 'free',
@@ -6496,6 +6613,9 @@ rooms.forEach(room => {
     // Update mobile display and close dropdown
     updateMobileRoomDisplay(currentRoom);
     closeMobileRooms();
+    
+    // Mark room as read when entering
+    markRoomAsRead(roomId);
     
     if (chatEnabled) {
       subscribeToRoom(currentRoom);
@@ -6664,6 +6784,12 @@ if (!chatEnabled) {
   showLocalChat();
 } else if (currentUser) {
   subscribeToRoom(currentRoom);
+  // Mark current room as read on initial load
+  markRoomAsRead(currentRoom);
+  // Setup real-time listeners for all rooms
+  setupRoomListeners();
+  // Update all unread badges
+  updateAllUnreadBadges();
 }
 
 // ==========================================
