@@ -4292,8 +4292,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="room" data-room="recoil" data-tier="recoil"><span class="hash">#</span>recoil<span class="lock-icon">🔒</span></div>
         <div class="room" data-room="meridian" data-tier="meridian"><span class="hash">#</span>meridian<span class="lock-icon">🔒</span></div>
         <div class="room" data-room="market-chat" data-tier="free"><span class="hash">#</span>market-chat</div>
-        <div class="room" data-room="academy-chat" data-tier="cockpit"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
-        <div class="room" data-room="automation" data-tier="cockpit"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="academy-chat" data-tier="ascension"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="automation" data-tier="ascension"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
         <div class="room-category">Member Rooms</div>
         <div class="room" data-room="london-session-desk" data-tier="free"><span class="hash">◦</span>london-session-desk</div>
         <div class="room" data-room="NY-session-desk" data-tier="free"><span class="hash">◦</span>NY-session-desk</div>
@@ -4312,8 +4312,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="room" data-room="recoil" data-tier="recoil"><span class="hash">#</span>recoil<span class="lock-icon">🔒</span></div>
         <div class="room" data-room="meridian" data-tier="meridian"><span class="hash">#</span>meridian<span class="lock-icon">🔒</span></div>
         <div class="room" data-room="market-chat" data-tier="free"><span class="hash">#</span>market-chat</div>
-        <div class="room" data-room="academy-chat" data-tier="cockpit"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
-        <div class="room" data-room="automation" data-tier="cockpit"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="academy-chat" data-tier="ascension"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="automation" data-tier="ascension"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
         <div class="room-category">Member Rooms</div>
         <div class="room" data-room="london-session-desk" data-tier="free"><span class="hash">◦</span>london-session-desk</div>
         <div class="room" data-room="NY-session-desk" data-tier="free"><span class="hash">◦</span>NY-session-desk</div>
@@ -5361,6 +5361,18 @@ async function saveProfile() {
   const statusEl = document.getElementById('profile-save-status');
   const displayName = document.getElementById('settings-display-name')?.value?.trim();
   
+  console.log('[Profile] saveProfile called');
+  console.log('[Profile] authUser:', authUser?.id);
+  console.log('[Profile] displayName from input:', displayName);
+  console.log('[Profile] current userTier:', userTier);
+  console.log('[Profile] current userProfile:', userProfile);
+  
+  if (!authUser) {
+    statusEl.innerHTML = '<span style="color: var(--danger);">Not logged in</span>';
+    console.error('[Profile] No authUser!');
+    return;
+  }
+  
   if (!displayName) {
     statusEl.innerHTML = '<span style="color: var(--danger);">Display name required</span>';
     return;
@@ -5368,22 +5380,27 @@ async function saveProfile() {
   
   statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
   
+  const payload = {
+    id: authUser.id,
+    email: authUser.email,
+    display_name: displayName,
+    tier: userTier || 'free',
+    tradingview_username: userProfile?.tradingview_username || '',
+    updated_at: new Date().toISOString()
+  };
+  
+  console.log('[Profile] Upserting payload:', payload);
+  
   try {
-    // Always use upsert to handle both create and update cases
-    // Supabase .update() returns success even if 0 rows match!
-    const { error } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from('profiles')
-      .upsert({
-        id: authUser.id,
-        email: authUser.email,
-        display_name: displayName,
-        tier: userTier || 'free',
-        tradingview_username: userProfile?.tradingview_username || '',
-        updated_at: new Date().toISOString()
-      }, { 
+      .upsert(payload, { 
         onConflict: 'id',
         ignoreDuplicates: false
-      });
+      })
+      .select();
+    
+    console.log('[Profile] Upsert response - data:', data, 'error:', error);
     
     if (error) {
       console.error('[Profile] Save error:', error);
@@ -5397,7 +5414,7 @@ async function saveProfile() {
     const welcomeName = document.getElementById('user-display-name');
     if (welcomeName) welcomeName.textContent = displayName;
     
-    console.log('[Profile] Display name saved:', displayName);
+    console.log('[Profile] SUCCESS - Display name saved:', displayName);
     statusEl.innerHTML = '<span style="color: var(--success);">✓ Saved</span>';
     setTimeout(() => statusEl.innerHTML = '', 3000);
     
@@ -6338,8 +6355,8 @@ const ROOM_TIER_MAP = {
   'recoil': 'recoil',
   'meridian': 'meridian',
   'market-chat': 'free',
-  'academy-chat': 'cockpit',
-  'automation': 'cockpit',
+  'academy-chat': 'ascension',
+  'automation': 'ascension',
   'london-session-desk': 'free',
   'NY-session-desk': 'free',
   'asia-session-desk': 'free',
@@ -6372,7 +6389,8 @@ function getRoomTierName(roomId) {
     'research': 'Research',
     'recoil': 'Recoil',
     'meridian': 'Terminal',
-    'cockpit': 'Full Suite'
+    'cockpit': 'Full Suite',
+    'ascension': 'Ascension'
   };
   const tier = ROOM_TIER_MAP[roomId];
   return tierMap[tier] || tier;
