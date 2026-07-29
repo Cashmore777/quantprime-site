@@ -8418,7 +8418,7 @@ async function refreshAffiliateStats() {
     // Get all profiles to map affiliate IDs to names
     const { data: profiles } = await supabaseClient
       .from('profiles')
-      .select('id, display_name, role');
+      .select('*');
     
     // Build lookup: first 8 chars of ID (uppercase) -> profile info
     const affiliateLookup = {};
@@ -8426,8 +8426,8 @@ async function refreshAffiliateStats() {
       profiles.forEach(p => {
         const affId = p.id.substring(0, 8).toUpperCase();
         affiliateLookup[affId] = {
-          name: p.display_name || affId,
-          role: p.role
+          name: p.display_name || p.tier || affId,
+          role: p.tier || ''
         };
       });
     }
