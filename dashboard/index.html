@@ -917,7 +917,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .room-grid {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .room-category-label {
@@ -926,7 +926,16 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: -12px;
+  margin-bottom: -8px;
+}
+
+/* Tighter community view on desktop */
+#view-community .view-header {
+  margin-bottom: 20px;
+}
+
+#view-community .view-header h2 {
+  font-size: 28px;
 }
 
 .room-cards {
@@ -950,8 +959,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .room-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 12px;
+  padding: 14px 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -978,8 +987,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .room-card-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2565,6 +2574,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-radius: 20px;
   padding: 32px;
   max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
   width: 100%;
   position: relative;
   box-shadow: var(--shadow-lg), 0 0 60px rgba(201,168,76,0.1);
