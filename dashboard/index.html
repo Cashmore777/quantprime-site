@@ -2162,6 +2162,117 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   }
 }
 
+/* Welcome modal (first login onboarding) */
+#welcome-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  z-index: 250;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+#welcome-modal.open { display: flex; }
+
+#welcome-modal .welcome-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  position: relative;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(201,168,76,0.1);
+  animation: modalIn 0.3s ease;
+}
+
+#welcome-modal .welcome-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#welcome-modal .welcome-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  padding: 6px 16px;
+  background: linear-gradient(135deg, var(--gold), #d4b85a);
+  color: #000;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+#welcome-modal h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#welcome-modal .welcome-steps {
+  display: grid;
+  gap: 16px;
+}
+
+#welcome-modal .welcome-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px;
+  background: var(--surface-raised);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+#welcome-modal .welcome-step:hover {
+  border-color: rgba(201,168,76,0.3);
+}
+
+#welcome-modal .step-num {
+  width: 32px;
+  height: 32px;
+  background: var(--gold-glow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+#welcome-modal .step-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+#welcome-modal .step-content p {
+  font-size: 13px;
+  color: var(--text-2);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+#welcome-modal .step-content .btn {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  #welcome-modal .welcome-box {
+    padding: 24px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  #welcome-modal h2 { font-size: 20px; }
+}
+
 /* Username modal */
 #username-modal {
   position: fixed;
@@ -4102,6 +4213,49 @@ button, .nav-item, .room, .video-item, .filter-chip {
   </div>
 </div>
 
+<!-- Welcome Modal (First Login) -->
+<div id="welcome-modal">
+  <div class="welcome-box">
+    <div class="welcome-header">
+      <div class="welcome-badge" id="welcome-tier-badge">RECOIL</div>
+      <button class="close-btn" onclick="closeWelcomeModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 20px;">×</button>
+    </div>
+    <h2 style="margin-bottom: 8px;">Welcome to <span style="color: var(--gold);" id="welcome-product-name">Quant Prime</span></h2>
+    <p style="color: var(--text-2); margin-bottom: 24px;">Here's how to get started:</p>
+    
+    <div class="welcome-steps">
+      <div class="welcome-step" data-step="1">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Set up your profile</h4>
+          <p>Add your TradingView username so we can grant indicator access.</p>
+          <button class="btn sm outline" onclick="closeWelcomeModal(); switchView('settings');">Go to Settings →</button>
+        </div>
+      </div>
+      <div class="welcome-step" data-step="2">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Read the Operator Guide</h4>
+          <p>Step-by-step instructions to get your indicators running.</p>
+          <button class="btn sm outline" onclick="closeWelcomeModal(); openOperatorGuide();">Open Guide →</button>
+        </div>
+      </div>
+      <div class="welcome-step" data-step="3">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>Join the Community</h4>
+          <p>Connect with other traders in our Discord server.</p>
+          <a href="https://discord.gg/EAHKwd7HvX" target="_blank" class="btn sm outline">Join Discord →</a>
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+      <button class="btn gold" onclick="completeOnboarding()" style="width: 100%;">Got it, let's go!</button>
+    </div>
+  </div>
+</div>
+
 <script>
 console.log('[Dashboard] Script starting...');
 
@@ -4301,6 +4455,9 @@ async function checkAuth() {
   loadMarketplaceProducts();
   
   document.getElementById('username-modal').classList.add('hidden');
+  
+  // Check if we should show welcome modal (first-time users)
+  setTimeout(() => checkShowWelcome(), 500);
 }
 
 // Manual check for pending tier upgrades - auto-runs on login now, kept for manual trigger if needed
@@ -4471,6 +4628,86 @@ async function saveProfile() {
   } catch (e) {
     statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// WELCOME MODAL (ONBOARDING)
+// ═══════════════════════════════════════════════════════════════════
+
+function checkShowWelcome() {
+  if (!authUser) return;
+  
+  // Check if user has already completed onboarding
+  const onboardingKey = `qp_onboarding_${authUser.id}`;
+  const hasOnboarded = localStorage.getItem(onboardingKey);
+  
+  if (!hasOnboarded) {
+    showWelcomeModal();
+  }
+}
+
+function showWelcomeModal() {
+  const modal = document.getElementById('welcome-modal');
+  const badge = document.getElementById('welcome-tier-badge');
+  const productName = document.getElementById('welcome-product-name');
+  
+  // Customize based on tier
+  const tierNames = {
+    'free': 'FREE',
+    'research': 'RESEARCH',
+    'recoil': 'RECOIL',
+    'meridian': 'MERIDIAN',
+    'cockpit': 'COCKPIT',
+    'ascension': 'ASCENSION',
+    'admin': 'ADMIN'
+  };
+  
+  const productNames = {
+    'free': 'Quant Prime',
+    'research': 'Research Access',
+    'recoil': 'Recoil',
+    'meridian': 'Meridian',
+    'cockpit': 'The Cockpit',
+    'ascension': 'Ascension',
+    'admin': 'Admin Panel'
+  };
+  
+  badge.textContent = tierNames[userTier] || 'QUANT PRIME';
+  productName.textContent = productNames[userTier] || 'Quant Prime';
+  
+  modal.classList.add('open');
+}
+
+function closeWelcomeModal() {
+  document.getElementById('welcome-modal').classList.remove('open');
+}
+
+function completeOnboarding() {
+  if (authUser) {
+    localStorage.setItem(`qp_onboarding_${authUser.id}`, 'true');
+  }
+  closeWelcomeModal();
+}
+
+function openOperatorGuide() {
+  // Navigate to the appropriate indicator guide based on tier
+  const guideMappings = {
+    'recoil': 'recoil',
+    'meridian': 'meridian',
+    'cockpit': 'cockpit',
+    'ascension': 'academy'
+  };
+  
+  const targetView = guideMappings[userTier] || 'home';
+  switchView(targetView);
+  
+  // If on an indicator page, scroll to the operator guide section
+  setTimeout(() => {
+    const guideSection = document.querySelector('#view-' + targetView + ' .operator-guide');
+    if (guideSection) {
+      guideSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, 100);
 }
 
 // ═══════════════════════════════════════════════════════════════════
