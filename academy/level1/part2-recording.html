@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1 Part 2: The Myths</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --cyan: #00abff;
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.6);
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px;
+  max-width: 1600px;
+}
+
+/* Animations */
+.slide.active .anim { animation: fadeUp 0.7s ease forwards; }
+.slide.active .anim-1 { animation-delay: 0.1s; }
+.slide.active .anim-2 { animation-delay: 0.25s; }
+.slide.active .anim-3 { animation-delay: 0.4s; }
+.slide.active .anim-4 { animation-delay: 0.55s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .card-anim { animation: cardIn 0.5s ease forwards; }
+.slide.active .card-anim:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .card-anim:nth-child(2) { animation-delay: 0.35s; }
+.slide.active .card-anim:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.slide.active .myth-anim { animation: mythIn 0.6s ease forwards; }
+
+@keyframes mythIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.slide.active .check-anim { animation: checkIn 0.4s ease forwards; }
+.slide.active .check-anim:nth-child(1) { animation-delay: 0.15s; }
+.slide.active .check-anim:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .check-anim:nth-child(3) { animation-delay: 0.45s; }
+.slide.active .check-anim:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes checkIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.anim, .card-anim, .myth-anim, .check-anim { opacity: 0; }
+
+/* Backgrounds */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bg-glow-red {
+  background: radial-gradient(ellipse at center, rgba(239,68,68,0.1) 0%, transparent 60%);
+}
+
+.bg-glow-cyan {
+  background: radial-gradient(ellipse at center, rgba(0,171,255,0.1) 0%, transparent 60%);
+}
+
+.logo {
+  position: fixed;
+  bottom: 40px;
+  right: 60px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+  z-index: 100;
+}
+.logo span { color: var(--gold); }
+
+/* Typography */
+.label {
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 32px;
+}
+
+.title .gold { color: var(--gold); }
+.title .cyan { color: var(--cyan); }
+.title .red { color: var(--danger); }
+
+.subtitle {
+  font-size: 28px;
+  color: var(--text-dim);
+  font-weight: 400;
+  max-width: 900px;
+  line-height: 1.6;
+}
+
+.divider {
+  width: 120px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 40px;
+}
+
+/* Myth card */
+.myth-card {
+  background: var(--surface);
+  border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 20px;
+  padding: 48px 64px;
+  max-width: 1000px;
+  text-align: left;
+}
+
+.myth-label {
+  font-size: 14px;
+  color: var(--danger);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.myth-title {
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+
+.myth-text {
+  font-size: 22px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.myth-text strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Truth card */
+.truth-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 20px;
+  padding: 48px 64px;
+  max-width: 1000px;
+}
+
+.truth-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+/* Check list */
+.check-list {
+  text-align: left;
+  max-width: 800px;
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  font-size: 24px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+}
+
+.check-icon {
+  color: var(--gold);
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 16px;
+  z-index: 200;
+  background: rgba(0,0,0,0.9);
+  padding: 16px 24px;
+  border-radius: 12px;
+}
+
+.controls.visible { display: flex; }
+
+.controls button {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.controls button:hover { background: var(--gold); color: #000; }
+
+.counter {
+  position: fixed;
+  top: 30px;
+  right: 60px;
+  font-size: 14px;
+  color: var(--text-dim);
+  z-index: 100;
+  display: none;
+}
+
+.counter.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="logo">QUANT<span>PRIME</span></div>
+<div class="counter" id="counter"><span id="cur">1</span> / 10</div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" data-slide="1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="label anim anim-1">LEVEL ONE — PART TWO</div>
+    <h1 class="title anim anim-2">The <span class="red">Myths</span></h1>
+    <p class="subtitle anim anim-3">Breaking down the lies the forex industry sells</p>
+    <div class="divider anim anim-4"></div>
+  </div>
+</div>
+
+<!-- SLIDE 2: Intro -->
+<div class="slide" data-slide="2">
+  <div class="bg-glow-red"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">Understanding What's <span class="red">False</span></h1>
+    <p class="subtitle anim anim-2">Is just as important as learning what's true</p>
+    <div style="margin-top: 56px;" class="anim anim-3">
+      <p class="subtitle" style="font-size: 22px; color: var(--danger);">These misconceptions keep people stuck, confused, and losing money.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Myth 1 -->
+<div class="slide" data-slide="3">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #1</div>
+      <div class="myth-title">"There Is No Algorithm — It's Just Random"</div>
+      <div class="myth-text">
+        <strong>Absolutely false.</strong> There is an algorithm. A strict, mathematical system that the entire market runs on.<br><br>
+        Every move follows a pattern. A structure. A code.<br><br>
+        When you start seeing the algorithm for what it is, trading transforms from a gamble into a <strong>calculated process</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: Myth 2 -->
+<div class="slide" data-slide="4">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #2</div>
+      <div class="myth-title">"It's Too Hard"</div>
+      <div class="myth-text">
+        It's only hard because most people don't know where to look.<br><br>
+        The actual mechanics? <strong>They can be learned.</strong><br><br>
+        The only thing that's truly hard is overcoming your own mind. Your own emotional reactions to winning and losing. <strong>That's the real challenge — not the charts.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: Myth 3 -->
+<div class="slide" data-slide="5">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #3</div>
+      <div class="myth-title">"This Strategy Is The Best"</div>
+      <div class="myth-text">
+        Here's the truth: <strong>all strategies work as well as each other.</strong><br><br>
+        What actually matters is how much attention you give to improving it. How consistently you apply the rules.<br><br>
+        No single approach is inherently better — the difference is how <strong>refined and upgraded</strong> that strategy has become.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Myth 4 -->
+<div class="slide" data-slide="6">
+  <div class="bg-glow-red"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #4</div>
+      <div class="myth-title">"Make Ten Thousand Today"</div>
+      <div class="myth-text">
+        <strong>Pure marketing.</strong> Designed to trigger greed.<br><br>
+        There's no way to instantly get rich from trading. Anyone who tells you otherwise is lying or selling something.<br><br>
+        The reality: <strong>Small, consistent gains that compound over time.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Myth 5 -->
+<div class="slide" data-slide="7">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #5</div>
+      <div class="myth-title">"You Need To Trade All Day"</div>
+      <div class="myth-text">
+        One of the most damaging myths — especially for people with jobs and families.<br><br>
+        <strong>Overtrading is one of the biggest account killers.</strong><br><br>
+        Some of the most successful traders spend less than an hour a day. They know exactly what they're looking for, they wait, and they execute. <strong>Quality over quantity.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Myth 6 -->
+<div class="slide" data-slide="8">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <div class="myth-card myth-anim">
+      <div class="myth-label">Myth #6</div>
+      <div class="myth-title">"Demo Trading Is Pointless"</div>
+      <div class="myth-text">
+        <strong>Wrong.</strong><br><br>
+        Demo trading is where you learn without risk. Where you make mistakes that don't cost money. Where you build confidence before risking real capital.<br><br>
+        Members who skip demo <strong>are almost always the ones who blow their balance first.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: Truth -->
+<div class="slide" data-slide="9">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">The <span class="gold">Truth</span> Behind The Myths</h1>
+    <div class="truth-card anim anim-2" style="margin-top: 48px;">
+      <div class="truth-icon">💡</div>
+      <div class="myth-text" style="text-align: center;">
+        The forex industry <strong>profits from confusion</strong>.<br><br>
+        The more confused you are, the more courses you buy.<br>The more signals you subscribe to.<br><br>
+        Quant Prime exists to <strong>cut through that noise</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: Reflection -->
+<div class="slide" data-slide="10">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px; color: var(--gold);">Which myths have you believed?</h1>
+    <div class="check-list" style="margin-top: 48px;">
+      <div class="check-item check-anim"><span class="check-icon">→</span> Trading is pure gambling?</div>
+      <div class="check-item check-anim"><span class="check-icon">→</span> Fell for "get rich quick" marketing?</div>
+      <div class="check-item check-anim"><span class="check-icon">→</span> Burned out trying to trade all day?</div>
+      <div class="check-item check-anim"><span class="check-icon">→</span> Skipped demo and lost money?</div>
+    </div>
+    <p class="subtitle anim anim-4" style="margin-top: 48px; font-size: 22px;">That's okay. Most people have been there.<br><span style="color: var(--gold);">The important thing is that you're here now.</span></p>
+  </div>
+</div>
+
+<div class="controls" id="controls">
+  <button onclick="prev()">← Prev</button>
+  <button onclick="next()">Next →</button>
+</div>
+
+<script>
+let current = 1;
+const total = 10;
+
+function show(n) {
+  if (n > total) n = 1;
+  if (n < 1) n = total;
+  current = n;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`).classList.add('active');
+  document.getElementById('cur').textContent = n;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  else if (e.key === 'ArrowLeft') prev();
+  else if (e.key.toLowerCase() === 'c') {
+    document.getElementById('controls').classList.toggle('visible');
+    document.getElementById('counter').classList.toggle('visible');
+  }
+  else if (e.key.toLowerCase() === 'f') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.controls') && !e.target.closest('button')) next();
+});
+</script>
+</body>
+</html>

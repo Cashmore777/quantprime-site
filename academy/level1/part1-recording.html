@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1 Part 1: The Truth</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --cyan: #00abff;
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.6);
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+/* Slide container with smooth fade */
+.slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Content with entrance animation */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px;
+  max-width: 1600px;
+}
+
+/* Animated elements - fade in and rise */
+.slide.active .anim {
+  animation: fadeUp 0.7s ease forwards;
+}
+
+.slide.active .anim-1 { animation-delay: 0.1s; }
+.slide.active .anim-2 { animation-delay: 0.25s; }
+.slide.active .anim-3 { animation-delay: 0.4s; }
+.slide.active .anim-4 { animation-delay: 0.55s; }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cards animate in sequence */
+.slide.active .card-anim {
+  animation: cardIn 0.5s ease forwards;
+}
+
+.slide.active .card-anim:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .card-anim:nth-child(2) { animation-delay: 0.35s; }
+.slide.active .card-anim:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Timeline items */
+.slide.active .timeline-anim {
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.slide.active .timeline-anim:nth-child(1) { animation-delay: 0.15s; }
+.slide.active .timeline-anim:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .timeline-anim:nth-child(3) { animation-delay: 0.45s; }
+.slide.active .timeline-anim:nth-child(4) { animation-delay: 0.6s; }
+.slide.active .timeline-anim:nth-child(5) { animation-delay: 0.75s; }
+
+/* Candles grow up */
+.slide.active .candle-anim {
+  animation: candleGrow 0.4s ease forwards;
+}
+
+.slide.active .candle-anim:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .candle-anim:nth-child(2) { animation-delay: 0.18s; }
+.slide.active .candle-anim:nth-child(3) { animation-delay: 0.26s; }
+.slide.active .candle-anim:nth-child(4) { animation-delay: 0.34s; }
+.slide.active .candle-anim:nth-child(5) { animation-delay: 0.42s; }
+.slide.active .candle-anim:nth-child(6) { animation-delay: 0.5s; }
+.slide.active .candle-anim:nth-child(7) { animation-delay: 0.58s; }
+.slide.active .candle-anim:nth-child(8) { animation-delay: 0.66s; }
+
+@keyframes candleGrow {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* Emoji bounce in */
+.slide.active .emoji-anim {
+  animation: emojiIn 0.5s ease forwards;
+}
+
+.slide.active .emoji-anim:nth-child(1) { animation-delay: 0.15s; }
+.slide.active .emoji-anim:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .emoji-anim:nth-child(3) { animation-delay: 0.45s; }
+
+@keyframes emojiIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reflection items slide in */
+.slide.active .reflect-anim {
+  animation: slideIn 0.5s ease forwards;
+}
+
+.slide.active .reflect-anim:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .reflect-anim:nth-child(2) { animation-delay: 0.35s; }
+.slide.active .reflect-anim:nth-child(3) { animation-delay: 0.5s; }
+.slide.active .reflect-anim:nth-child(4) { animation-delay: 0.65s; }
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Progress bar fill */
+.slide.active .progress-fill {
+  animation: fillBar 1.5s ease forwards;
+  animation-delay: 0.3s;
+  width: 0;
+}
+
+@keyframes fillBar {
+  to { width: 85%; }
+}
+
+/* Stat number count effect via scale pulse */
+.slide.active .stat-anim {
+  animation: statPulse 0.8s ease forwards;
+}
+
+@keyframes statPulse {
+  0% { opacity: 0; transform: scale(0.9); }
+  60% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Module cards */
+.slide.active .module-anim {
+  animation: cardIn 0.4s ease forwards;
+}
+
+.slide.active .module-anim:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .module-anim:nth-child(2) { animation-delay: 0.2s; }
+.slide.active .module-anim:nth-child(3) { animation-delay: 0.3s; }
+.slide.active .module-anim:nth-child(4) { animation-delay: 0.4s; }
+.slide.active .module-anim:nth-child(5) { animation-delay: 0.5s; }
+
+/* Initial state for animated elements */
+.anim, .card-anim, .timeline-anim, .candle-anim, .emoji-anim, .reflect-anim, .stat-anim, .module-anim {
+  opacity: 0;
+}
+
+/* Backgrounds */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bg-glow-red {
+  background: radial-gradient(ellipse at center, rgba(239,68,68,0.1) 0%, transparent 60%);
+}
+
+.bg-glow-cyan {
+  background: radial-gradient(ellipse at center, rgba(0,171,255,0.1) 0%, transparent 60%);
+}
+
+/* Logo watermark */
+.logo {
+  position: fixed;
+  bottom: 40px;
+  right: 60px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+  z-index: 100;
+}
+.logo span { color: var(--gold); }
+
+/* Typography */
+.label {
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 32px;
+}
+
+.title .gold { color: var(--gold); }
+.title .cyan { color: var(--cyan); }
+.title .red { color: var(--danger); }
+
+.subtitle {
+  font-size: 28px;
+  color: var(--text-dim);
+  font-weight: 400;
+  max-width: 900px;
+  line-height: 1.6;
+}
+
+.divider {
+  width: 120px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 40px;
+}
+
+/* Stats */
+.stat-huge {
+  font-size: 180px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 32px;
+  color: var(--text-dim);
+  margin-top: 24px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Cards */
+.card-row {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  padding: 48px 40px;
+  text-align: center;
+  width: 320px;
+}
+
+.card.red { border-color: rgba(239,68,68,0.3); }
+
+.card-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  stroke: var(--gold);
+}
+
+.card.red .card-icon { stroke: var(--danger); }
+
+.card h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card p {
+  font-size: 16px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Timeline */
+.timeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  margin-top: 56px;
+}
+
+.timeline-item { text-align: center; }
+
+.timeline-num {
+  font-size: 72px;
+  font-weight: 800;
+  color: var(--gold);
+}
+
+.timeline-num.cyan { color: var(--cyan); }
+
+.timeline-text {
+  font-size: 20px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
+.timeline-arrow {
+  font-size: 32px;
+  color: rgba(255,255,255,0.2);
+}
+
+/* Progress bar */
+.progress {
+  width: 700px;
+  height: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  margin: 48px auto;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--danger), var(--gold));
+  border-radius: 6px;
+}
+
+/* Candles */
+.candles {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  height: 260px;
+  margin-top: 48px;
+}
+
+.candle {
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wick { width: 3px; background: currentColor; }
+.body { width: 100%; border-radius: 4px; }
+
+.candle.green { color: var(--success); }
+.candle.green .body { background: var(--success); }
+.candle.red { color: var(--danger); }
+.candle.red .body { background: var(--danger); }
+
+/* Emoji row */
+.emoji-row {
+  display: flex;
+  gap: 64px;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.emoji-item { text-align: center; }
+.emoji-icon { font-size: 72px; margin-bottom: 16px; }
+.emoji-label { font-size: 20px; color: var(--text-dim); }
+
+/* Journey */
+.journey {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 56px;
+}
+
+.journey-step { text-align: center; padding: 20px; }
+.journey-emoji { font-size: 56px; margin-bottom: 12px; }
+.journey-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.journey-sub { font-size: 14px; color: var(--text-dim); }
+.journey-arrow { font-size: 28px; color: rgba(255,255,255,0.2); }
+
+/* Tools */
+.tools {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.tool {
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: 16px;
+  padding: 32px 48px;
+}
+
+.tool.cyan { border-color: var(--cyan); }
+
+.tool-label {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.tool.cyan .tool-label { color: var(--cyan); }
+.tool-name { font-size: 28px; font-weight: 600; }
+
+/* Modules */
+.modules {
+  display: flex;
+  gap: 28px;
+  justify-content: center;
+  margin-top: 56px;
+}
+
+.module {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  width: 180px;
+}
+
+.module.featured { border-color: var(--gold); }
+.module-num { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: 0.1em; margin-bottom: 12px; }
+.module-name { font-size: 18px; font-weight: 600; }
+
+/* Reflection */
+.reflect-question {
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 48px;
+}
+
+.reflect-list { text-align: left; max-width: 800px; }
+
+.reflect-item {
+  font-size: 26px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  padding-left: 40px;
+  position: relative;
+}
+
+.reflect-item::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.reflect-note { margin-top: 48px; font-size: 22px; color: var(--gold); }
+.reflect-sub { font-size: 16px; color: var(--text-dim); margin-top: 12px; }
+
+/* Controls hidden */
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 16px;
+  z-index: 200;
+  background: rgba(0,0,0,0.9);
+  padding: 16px 24px;
+  border-radius: 12px;
+}
+
+.controls.visible { display: flex; }
+
+.controls button {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.controls button:hover { background: var(--gold); color: #000; }
+
+.counter {
+  position: fixed;
+  top: 30px;
+  right: 60px;
+  font-size: 14px;
+  color: var(--text-dim);
+  z-index: 100;
+  display: none;
+}
+
+.counter.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="logo">QUANT<span>PRIME</span></div>
+<div class="counter" id="counter"><span id="cur">1</span> / 12</div>
+
+<!-- SLIDE 1 -->
+<div class="slide active" data-slide="1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="label anim anim-1">LEVEL ONE</div>
+    <h1 class="title anim anim-2">The <span class="gold">Truth</span></h1>
+    <p class="subtitle anim anim-3">Welcome to the Quant Prime Academy</p>
+    <div class="divider anim anim-4"></div>
+  </div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide" data-slide="2">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1">Building <span class="gold">Solid Foundations</span></h1>
+    <p class="subtitle anim anim-2">Something real. Something that actually lasts.</p>
+  </div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide" data-slide="3">
+  <div class="bg-glow-red"></div>
+  <div class="content">
+    <div class="stat-huge stat-anim" style="color: var(--danger);">70-90%</div>
+    <div class="stat-label anim anim-2">of retail traders lose money</div>
+    <div class="progress anim anim-3"><div class="progress-fill"></div></div>
+    <p class="subtitle anim anim-4" style="font-size: 22px;">FCA-regulated brokers are required to publish these figures</p>
+  </div>
+</div>
+
+<!-- SLIDE 4 -->
+<div class="slide" data-slide="4">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">Why Do So Many <span class="gold">Fail?</span></h1>
+    <div class="card-row">
+      <div class="card card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <h3>Lottery Ticket</h3>
+        <p>Expecting instant riches without understanding the game</p>
+      </div>
+      <div class="card card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <h3>Get Rich Quick</h3>
+        <p>Chasing shortcuts that don't exist</p>
+      </div>
+      <div class="card card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+        <h3>No Respect</h3>
+        <p>Treating a professional skill like a hobby</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide" data-slide="5">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">The Journey to <span class="gold">Consistency</span></h1>
+    <div class="timeline">
+      <div class="timeline-item timeline-anim">
+        <div class="timeline-num">3</div>
+        <div class="timeline-text">Years of Learning</div>
+      </div>
+      <div class="timeline-arrow timeline-anim">→</div>
+      <div class="timeline-item timeline-anim">
+        <div class="timeline-num cyan">10+</div>
+        <div class="timeline-text">Hours Daily</div>
+      </div>
+      <div class="timeline-arrow timeline-anim">→</div>
+      <div class="timeline-item timeline-anim">
+        <div class="timeline-num">∞</div>
+        <div class="timeline-text">Tests & Adjustments</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6 -->
+<div class="slide" data-slide="6">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">The <span class="gold">"Almost There"</span> Cycle</h1>
+    <div class="candles">
+      <div class="candle green candle-anim"><div class="wick" style="height:24px"></div><div class="body" style="height:100px"></div><div class="wick" style="height:12px"></div></div>
+      <div class="candle green candle-anim"><div class="wick" style="height:16px"></div><div class="body" style="height:70px"></div><div class="wick" style="height:20px"></div></div>
+      <div class="candle green candle-anim"><div class="wick" style="height:12px"></div><div class="body" style="height:120px"></div><div class="wick" style="height:8px"></div></div>
+      <div class="candle red candle-anim"><div class="wick" style="height:20px"></div><div class="body" style="height:85px"></div><div class="wick" style="height:32px"></div></div>
+      <div class="candle red candle-anim"><div class="wick" style="height:8px"></div><div class="body" style="height:140px"></div><div class="wick" style="height:16px"></div></div>
+      <div class="candle red candle-anim"><div class="wick" style="height:16px"></div><div class="body" style="height:75px"></div><div class="wick" style="height:28px"></div></div>
+      <div class="candle green candle-anim"><div class="wick" style="height:12px"></div><div class="body" style="height:50px"></div><div class="wick" style="height:16px"></div></div>
+      <div class="candle green candle-anim"><div class="wick" style="height:20px"></div><div class="body" style="height:95px"></div><div class="wick" style="height:12px"></div></div>
+    </div>
+    <p class="subtitle anim anim-3" style="margin-top: 40px;">Profitability feels close... then slips away.<br><span style="color: var(--gold);">The reason most people quit.</span></p>
+  </div>
+</div>
+
+<!-- SLIDE 7 -->
+<div class="slide" data-slide="7">
+  <div class="bg-glow-red"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">The Social Media <span class="red">Illusion</span></h1>
+    <div class="emoji-row">
+      <div class="emoji-item emoji-anim"><div class="emoji-icon">🚗</div><div class="emoji-label">Rented Lambos</div></div>
+      <div class="emoji-item emoji-anim"><div class="emoji-icon">📸</div><div class="emoji-label">Cherry-picked Screenshots</div></div>
+      <div class="emoji-item emoji-anim"><div class="emoji-icon">💰</div><div class="emoji-label">Overpriced Courses</div></div>
+    </div>
+    <p class="subtitle anim anim-4" style="margin-top: 56px; color: var(--danger);">These people are not traders. They are marketers.</p>
+  </div>
+</div>
+
+<!-- SLIDE 8 -->
+<div class="slide" data-slide="8">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">How <span class="red">Influencers</span> Actually Profit</h1>
+    <div class="card-row">
+      <div class="card red card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        <h3>Broker Affiliations</h3>
+        <p>Profit from your volume — even when you lose</p>
+      </div>
+      <div class="card red card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <h3>Prop Firm Kickbacks</h3>
+        <p>Knowing most will fail and pay again</p>
+      </div>
+      <div class="card red card-anim">
+        <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        <h3>Course Sales</h3>
+        <p>Just enough to learn, never enough to succeed</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9 -->
+<div class="slide" data-slide="9">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1">Built for <span class="gold">Independence</span></h1>
+    <p class="subtitle anim anim-2" style="margin-bottom: 48px;">Not dependency. Independence.</p>
+    <div class="tools">
+      <div class="tool card-anim"><div class="tool-label">VOLATILITY STATE</div><div class="tool-name">Recoil</div></div>
+      <div class="tool cyan card-anim"><div class="tool-label">LIQUIDITY STRUCTURE</div><div class="tool-name">Meridian</div></div>
+      <div class="tool card-anim"><div class="tool-label">TREND REGIME</div><div class="tool-name">Cockpit</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 -->
+<div class="slide" data-slide="10">
+  <div class="bg-glow-cyan"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">The <span class="cyan">Psychology</span> of Trading</h1>
+    <div class="journey">
+      <div class="journey-step timeline-anim"><div class="journey-emoji">😊</div><div class="journey-title" style="color: var(--success);">Excitement</div><div class="journey-sub">Everything is new</div></div>
+      <div class="journey-arrow timeline-anim">→</div>
+      <div class="journey-step timeline-anim"><div class="journey-emoji">📉</div><div class="journey-title" style="color: var(--danger);">First Loss</div><div class="journey-sub">Something shifts</div></div>
+      <div class="journey-arrow timeline-anim">→</div>
+      <div class="journey-step timeline-anim"><div class="journey-emoji">🤔</div><div class="journey-title" style="color: var(--cyan);">Doubt</div><div class="journey-sub">Questioning everything</div></div>
+      <div class="journey-arrow timeline-anim">→</div>
+      <div class="journey-step timeline-anim"><div class="journey-emoji">💡</div><div class="journey-title" style="color: var(--gold);">Clarity</div><div class="journey-sub">For those who persist</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11 -->
+<div class="slide" data-slide="11">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 64px;">What's <span class="gold">Coming Next</span></h1>
+    <div class="modules">
+      <div class="module module-anim"><div class="module-num">PART 2</div><div class="module-name">The Myths</div></div>
+      <div class="module module-anim"><div class="module-num">PART 3</div><div class="module-name">Getting Started</div></div>
+      <div class="module featured module-anim"><div class="module-num">LEVEL 2</div><div class="module-name">Risk Management</div></div>
+      <div class="module module-anim"><div class="module-num">LEVEL 3</div><div class="module-name">The Algorithm</div></div>
+      <div class="module module-anim"><div class="module-num">LEVEL 4+</div><div class="module-name">Strategies</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12 -->
+<div class="slide" data-slide="12">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="reflect-question anim anim-1">Why are you here?</div>
+    <div class="reflect-list">
+      <div class="reflect-item reflect-anim">Not having to check your bank balance before groceries</div>
+      <div class="reflect-item reflect-anim">Taking your family on holiday without stress</div>
+      <div class="reflect-item reflect-anim">Leaving a job that drains your energy</div>
+      <div class="reflect-item reflect-anim">Waking up without an alarm</div>
+    </div>
+    <div class="reflect-note anim anim-3">Use your notebook below this video to capture your thoughts.</div>
+    <div class="reflect-sub anim anim-4">You can search through your notes anytime.</div>
+  </div>
+</div>
+
+<div class="controls" id="controls">
+  <button onclick="prev()">← Prev</button>
+  <button onclick="next()">Next →</button>
+</div>
+
+<script>
+let current = 1;
+const total = 12;
+
+function show(n) {
+  if (n > total) n = 1;
+  if (n < 1) n = total;
+  current = n;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`).classList.add('active');
+  document.getElementById('cur').textContent = n;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  else if (e.key === 'ArrowLeft') prev();
+  else if (e.key.toLowerCase() === 'c') {
+    document.getElementById('controls').classList.toggle('visible');
+    document.getElementById('counter').classList.toggle('visible');
+  }
+  else if (e.key.toLowerCase() === 'f') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.controls') && !e.target.closest('button')) next();
+});
+</script>
+</body>
+</html>

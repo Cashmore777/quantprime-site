@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1 Part 3: How To Get Started</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --cyan: #00abff;
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.6);
+  --danger: #ef4444;
+  --success: #22c55e;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+body {
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+}
+
+.slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px;
+  max-width: 1600px;
+}
+
+/* Animations */
+.slide.active .anim { animation: fadeUp 0.7s ease forwards; }
+.slide.active .anim-1 { animation-delay: 0.1s; }
+.slide.active .anim-2 { animation-delay: 0.25s; }
+.slide.active .anim-3 { animation-delay: 0.4s; }
+.slide.active .anim-4 { animation-delay: 0.55s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide.active .card-anim { animation: cardIn 0.5s ease forwards; }
+.slide.active .card-anim:nth-child(1) { animation-delay: 0.2s; }
+.slide.active .card-anim:nth-child(2) { animation-delay: 0.35s; }
+.slide.active .card-anim:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.slide.active .task-anim { animation: taskIn 0.4s ease forwards; }
+.slide.active .task-anim:nth-child(1) { animation-delay: 0.1s; }
+.slide.active .task-anim:nth-child(2) { animation-delay: 0.2s; }
+.slide.active .task-anim:nth-child(3) { animation-delay: 0.3s; }
+.slide.active .task-anim:nth-child(4) { animation-delay: 0.4s; }
+.slide.active .task-anim:nth-child(5) { animation-delay: 0.5s; }
+.slide.active .task-anim:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes taskIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.slide.active .tool-anim { animation: toolIn 0.5s ease forwards; }
+.slide.active .tool-anim:nth-child(1) { animation-delay: 0.15s; }
+.slide.active .tool-anim:nth-child(2) { animation-delay: 0.3s; }
+.slide.active .tool-anim:nth-child(3) { animation-delay: 0.45s; }
+
+@keyframes toolIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.anim, .card-anim, .task-anim, .tool-anim { opacity: 0; }
+
+/* Backgrounds */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.bg-glow-cyan {
+  background: radial-gradient(ellipse at center, rgba(0,171,255,0.1) 0%, transparent 60%);
+}
+
+.bg-glow-green {
+  background: radial-gradient(ellipse at center, rgba(34,197,94,0.1) 0%, transparent 60%);
+}
+
+.logo {
+  position: fixed;
+  bottom: 40px;
+  right: 60px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  opacity: 0.4;
+  z-index: 100;
+}
+.logo span { color: var(--gold); }
+
+/* Typography */
+.label {
+  font-size: 18px;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.title {
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 32px;
+}
+
+.title .gold { color: var(--gold); }
+.title .cyan { color: var(--cyan); }
+.title .green { color: var(--success); }
+
+.subtitle {
+  font-size: 28px;
+  color: var(--text-dim);
+  font-weight: 400;
+  max-width: 900px;
+  line-height: 1.6;
+}
+
+.divider {
+  width: 120px;
+  height: 3px;
+  background: var(--gold);
+  margin-top: 40px;
+}
+
+/* Info card */
+.info-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  padding: 48px 64px;
+  max-width: 1000px;
+  text-align: left;
+}
+
+.info-card.cyan { border-color: rgba(0,171,255,0.3); }
+.info-card.green { border-color: rgba(34,197,94,0.3); }
+
+.info-icon {
+  font-size: 56px;
+  margin-bottom: 24px;
+}
+
+.info-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.info-text {
+  font-size: 22px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.info-text strong {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.info-text .cyan { color: var(--cyan); }
+
+/* Tool cards */
+.tools-row {
+  display: flex;
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 16px;
+  padding: 36px 32px;
+  width: 280px;
+  text-align: center;
+}
+
+.tool-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.tool-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.tool-desc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Task list */
+.task-list {
+  text-align: left;
+  max-width: 800px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 22px;
+  color: var(--text);
+  margin-bottom: 20px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.task-num {
+  width: 36px;
+  height: 36px;
+  background: var(--gold);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Difference cards */
+.diff-row {
+  display: flex;
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.diff-card {
+  background: var(--surface);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 260px;
+  text-align: center;
+}
+
+.diff-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.diff-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--gold);
+}
+
+.diff-text {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* Controls */
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 16px;
+  z-index: 200;
+  background: rgba(0,0,0,0.9);
+  padding: 16px 24px;
+  border-radius: 12px;
+}
+
+.controls.visible { display: flex; }
+
+.controls button {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.controls button:hover { background: var(--gold); color: #000; }
+
+.counter {
+  position: fixed;
+  top: 30px;
+  right: 60px;
+  font-size: 14px;
+  color: var(--text-dim);
+  z-index: 100;
+  display: none;
+}
+
+.counter.visible { display: block; }
+</style>
+</head>
+<body>
+
+<div class="logo">QUANT<span>PRIME</span></div>
+<div class="counter" id="counter"><span id="cur">1</span> / 10</div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" data-slide="1">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="label anim anim-1">LEVEL ONE — PART THREE</div>
+    <h1 class="title anim anim-2">How To Get <span class="green">Started</span></h1>
+    <p class="subtitle anim anim-3">Setting up your foundation properly</p>
+    <div class="divider anim anim-4"></div>
+  </div>
+</div>
+
+<!-- SLIDE 2: Clean Slate -->
+<div class="slide" data-slide="2">
+  <div class="bg-glow-cyan"></div>
+  <div class="content">
+    <div class="info-card cyan anim anim-1">
+      <div class="info-icon">🧠</div>
+      <div class="info-title">Start With A Clean Slate</div>
+      <div class="info-text">
+        Approach forex as a <strong class="cyan">blank canvas</strong>.<br><br>
+        If you've traded before, temporarily set aside your past lessons, wins, and failures. This creates space for a new perspective.<br><br>
+        <strong>Leave your ego at the door.</strong> The members who progress fastest are the ones who remain open.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: Forget Money -->
+<div class="slide" data-slide="3">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <div class="info-card anim anim-1">
+      <div class="info-icon">💭</div>
+      <div class="info-title">Forget About The Money — For Now</div>
+      <div class="info-text">
+        When you start trading with dollar signs in your eyes, you make <strong>emotional decisions</strong>. You overtrade. You over-leverage.<br><br>
+        That's how accounts get blown.<br><br>
+        Right now, your only job is to <strong>learn</strong>. Profits will come later.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: Broker -->
+<div class="slide" data-slide="4">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">Choosing A <span class="gold">Broker</span></h1>
+    <p class="subtitle anim anim-2" style="margin-bottom: 40px;">Quant Prime does not operate as a broker affiliate. No hidden commission. No kickbacks.</p>
+    <div class="info-card anim anim-3" style="text-align: center; padding: 40px;">
+      <div class="info-text">
+        Focus on: <strong>best spreads, highest quality execution, reliable withdrawals</strong>.<br><br>
+        Do your own research. Find a broker that's <strong>regulated and reputable</strong>.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: Tools -->
+<div class="slide" data-slide="5">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">The <span class="gold">Tools</span> You Need</h1>
+    <div class="tools-row">
+      <div class="tool-card tool-anim">
+        <div class="tool-icon">📊</div>
+        <div class="tool-name">TradingView</div>
+        <div class="tool-desc">Your charting platform. Analyze markets, mark levels, identify setups.</div>
+      </div>
+      <div class="tool-card tool-anim">
+        <div class="tool-icon">⚡</div>
+        <div class="tool-name">MetaTrader 5</div>
+        <div class="tool-desc">Your execution platform. Place trades, manage positions.</div>
+      </div>
+      <div class="tool-card tool-anim">
+        <div class="tool-icon">🧮</div>
+        <div class="tool-name">Lot Size Calculator</div>
+        <div class="tool-desc">Essential for risk management. Know exactly how much you're risking.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Routine -->
+<div class="slide" data-slide="6">
+  <div class="bg-glow-cyan"></div>
+  <div class="content">
+    <div class="info-card cyan anim anim-1">
+      <div class="info-icon">🔁</div>
+      <div class="info-title">Building Your Routine</div>
+      <div class="info-text">
+        <strong class="cyan">Consistency beats intensity.</strong><br><br>
+        Even 30 minutes to an hour of focused learning every day is enough. Watch modules. Take notes. Apply on demo.<br><br>
+        Think of it like the gym. One intense session won't transform you. <strong>Showing up every day does.</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: Tasks -->
+<div class="slide" data-slide="7">
+  <div class="bg-grid"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">Your First <span class="gold">Tasks</span></h1>
+    <div class="task-list" style="margin-top: 40px;">
+      <div class="task-item task-anim"><span class="task-num">1</span> Download TradingView & MetaTrader 5</div>
+      <div class="task-item task-anim"><span class="task-num">2</span> Find a lot size calculator</div>
+      <div class="task-item task-anim"><span class="task-num">3</span> Create a demo account with your broker</div>
+      <div class="task-item task-anim"><span class="task-num">4</span> Explore the platforms — click around</div>
+      <div class="task-item task-anim"><span class="task-num">5</span> Practice measuring pips on TradingView</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Progression -->
+<div class="slide" data-slide="8">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">Trust The <span class="gold">Process</span></h1>
+    <div class="info-card anim anim-2" style="text-align: center; padding: 48px;">
+      <div class="info-text">
+        Each level builds on the one before it.<br><br>
+        <strong>Skipping ahead will leave gaps in your understanding.</strong><br><br>
+        Work through each level in order. Complete the tasks before moving on.<br><br>
+        <span style="color: var(--gold);">Right now, focus on the foundations.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: QP Difference -->
+<div class="slide" data-slide="9">
+  <div class="bg-glow"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px;">The Quant Prime <span class="gold">Difference</span></h1>
+    <div class="diff-row">
+      <div class="diff-card card-anim">
+        <div class="diff-icon">🔓</div>
+        <div class="diff-title">No Gatekeeping</div>
+        <div class="diff-text">Everything you need is inside this education. No "secret course" held back.</div>
+      </div>
+      <div class="diff-card card-anim">
+        <div class="diff-icon">⏰</div>
+        <div class="diff-title">No Pressure</div>
+        <div class="diff-text">Progress at your own pace. Rewatch modules as many times as needed.</div>
+      </div>
+      <div class="diff-card card-anim">
+        <div class="diff-icon">💬</div>
+        <div class="diff-title">Real Support</div>
+        <div class="diff-text">Direct access to the CEO. That golden ticket is rare — use it.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: Checklist -->
+<div class="slide" data-slide="10">
+  <div class="bg-glow-green"></div>
+  <div class="content">
+    <h1 class="title anim anim-1" style="font-size: 56px; color: var(--success);">Before You Move On</h1>
+    <div class="task-list" style="margin-top: 40px;">
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Downloaded TradingView</div>
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Downloaded MetaTrader 5</div>
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Found a lot size calculator</div>
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Created a demo account</div>
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Practiced navigating the platforms</div>
+      <div class="task-item task-anim" style="border-color: rgba(34,197,94,0.3);"><span class="task-num" style="background: var(--success);">✓</span> Measured some pips on a chart</div>
+    </div>
+    <p class="subtitle anim anim-4" style="margin-top: 40px; font-size: 20px;">If not, pause here. Get it done. <span style="color: var(--success);">There's no rush.</span></p>
+  </div>
+</div>
+
+<div class="controls" id="controls">
+  <button onclick="prev()">← Prev</button>
+  <button onclick="next()">Next →</button>
+</div>
+
+<script>
+let current = 1;
+const total = 10;
+
+function show(n) {
+  if (n > total) n = 1;
+  if (n < 1) n = total;
+  current = n;
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`).classList.add('active');
+  document.getElementById('cur').textContent = n;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  else if (e.key === 'ArrowLeft') prev();
+  else if (e.key.toLowerCase() === 'c') {
+    document.getElementById('controls').classList.toggle('visible');
+    document.getElementById('counter').classList.toggle('visible');
+  }
+  else if (e.key.toLowerCase() === 'f') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.controls') && !e.target.closest('button')) next();
+});
+</script>
+</body>
+</html>
