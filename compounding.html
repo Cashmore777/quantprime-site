@@ -24,7 +24,7 @@
   display: flex;
   gap: 2rem;
   justify-content: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
@@ -47,6 +47,32 @@
 
 .source-dot.gold { background: var(--gold); }
 .source-dot.cyan { background: #0088cc; }
+
+.baseline-note {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--gold-bg);
+  border: 1px solid rgba(184,150,46,0.2);
+  border-radius: 8px;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.baseline-note-wrapper {
+  text-align: center;
+}
+
+.baseline-note span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.baseline-note strong {
+  color: var(--gold);
+}
 
 .compound-grid {
   display: grid;
@@ -174,19 +200,6 @@
   fill: url(#goldGradient);
 }
 
-.chart-tooltip {
-  position: absolute;
-  background: var(--surface-dim);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.75rem;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s;
-  z-index: 10;
-}
-
 .methodology-box {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -247,7 +260,7 @@
         <a href="/framework">The Framework</a>
         <a href="/results">Results</a>
         <a href="/compounding">Compounding</a>
-        <a href="/pricing">Get Access</a>
+        <a href="/pricing">Pricing</a>
         <a href="/dashboard/login.html">Login</a>
       </div>
     </div>
@@ -270,11 +283,18 @@
     <div class="stats-source reveal">
       <div class="source-badge">
         <div class="source-dot cyan"></div>
-        <span><strong>Meridian</strong> — 206 trades, 64.4% WR</span>
+        <span><strong>Meridian</strong> — 206 trades, 64.4% WR, +11.6%</span>
       </div>
       <div class="source-badge">
         <div class="source-dot gold"></div>
-        <span><strong>Recoil</strong> — 114 trades, 71.1% WR</span>
+        <span><strong>Recoil</strong> — 114 trades, 71.1% WR, +10.5%</span>
+      </div>
+    </div>
+
+    <!-- Baseline Note -->
+    <div class="baseline-note-wrapper reveal">
+      <div class="baseline-note">
+        <span>All % figures calculated from a <strong>$1,000 account baseline</strong> using standard lot sizes</span>
       </div>
     </div>
 
@@ -282,33 +302,33 @@
     <div class="compound-grid reveal">
       <div class="compound-card">
         <div class="compound-period">DAILY AVG</div>
-        <div class="compound-value">+0.38%</div>
+        <div class="compound-value">+0.15%</div>
         <div class="compound-note">per trading day</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">1 WEEK</div>
-        <div class="compound-value">+1.9%</div>
+        <div class="compound-value">+0.77%</div>
         <div class="compound-note">5 trading days</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">1 MONTH</div>
-        <div class="compound-value">+8.4%</div>
+        <div class="compound-value">+3.4%</div>
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">3 MONTHS</div>
-        <div class="compound-value">+27.6%</div>
+        <div class="compound-value">+10.5%</div>
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card highlight">
         <div class="compound-period">6 MONTHS</div>
-        <div class="compound-value">+62.9%</div>
+        <div class="compound-value">+22%</div>
         <div class="compound-note">compounded</div>
       </div>
       <div class="compound-card">
         <div class="compound-period">1 YEAR</div>
-        <div class="compound-value">+165%</div>
-        <div class="compound-note">compounded</div>
+        <div class="compound-value">+48%</div>
+        <div class="compound-note">projected</div>
       </div>
     </div>
 
@@ -328,10 +348,11 @@
         </div>
       </div>
       <div class="chart-container">
+        <!-- Chart: $1000 → $1480 over 12 months at ~3.4%/month compounded -->
         <svg class="chart-svg" viewBox="0 0 600 250" preserveAspectRatio="xMidYMid meet">
           <defs>
             <linearGradient id="goldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" style="stop-color:var(--gold);stop-opacity:0.3" />
+              <stop offset="0%" style="stop-color:var(--gold);stop-opacity:0.25" />
               <stop offset="100%" style="stop-color:var(--gold);stop-opacity:0" />
             </linearGradient>
           </defs>
@@ -339,50 +360,54 @@
           <!-- Grid Lines -->
           <g class="chart-grid">
             <line x1="50" y1="30" x2="580" y2="30" />
-            <line x1="50" y1="80" x2="580" y2="80" />
-            <line x1="50" y1="130" x2="580" y2="130" />
-            <line x1="50" y1="180" x2="580" y2="180" />
-            <line x1="50" y1="220" x2="580" y2="220" />
+            <line x1="50" y1="70" x2="580" y2="70" />
+            <line x1="50" y1="110" x2="580" y2="110" />
+            <line x1="50" y1="150" x2="580" y2="150" />
+            <line x1="50" y1="190" x2="580" y2="190" />
           </g>
           
-          <!-- Y-Axis Labels -->
+          <!-- Y-Axis Labels ($1000 to $1500) -->
           <g class="chart-axis">
-            <text x="45" y="34" text-anchor="end">$2,650</text>
-            <text x="45" y="84" text-anchor="end">$2,100</text>
-            <text x="45" y="134" text-anchor="end">$1,550</text>
-            <text x="45" y="184" text-anchor="end">$1,000</text>
-            <text x="45" y="224" text-anchor="end">$500</text>
+            <text x="45" y="34" text-anchor="end">$1,500</text>
+            <text x="45" y="74" text-anchor="end">$1,375</text>
+            <text x="45" y="114" text-anchor="end">$1,250</text>
+            <text x="45" y="154" text-anchor="end">$1,125</text>
+            <text x="45" y="194" text-anchor="end">$1,000</text>
           </g>
           
           <!-- X-Axis Labels -->
           <g class="chart-axis">
-            <text x="50" y="245">0</text>
-            <text x="138" y="245">2mo</text>
-            <text x="226" y="245">4mo</text>
-            <text x="314" y="245">6mo</text>
-            <text x="402" y="245">8mo</text>
-            <text x="490" y="245">10mo</text>
-            <text x="570" y="245">12mo</text>
+            <text x="50" y="215">0</text>
+            <text x="138" y="215">2mo</text>
+            <text x="226" y="215">4mo</text>
+            <text x="314" y="215">6mo</text>
+            <text x="402" y="215">8mo</text>
+            <text x="490" y="215">10mo</text>
+            <text x="570" y="215">12mo</text>
           </g>
           
-          <!-- Area Fill -->
-          <path class="compound-area" d="M50,180 L94,172 L138,163 L182,152 L226,140 L270,126 L314,110 L358,92 L402,71 L446,48 L490,36 L534,30 L580,18 L580,220 L50,220 Z" />
+          <!-- Compounded growth: 1000 → 1034 → 1069 → 1105 → 1143 → 1182 → 1222 → 1263 → 1306 → 1350 → 1396 → 1443 → 1480 -->
+          <!-- Y scale: $1000 = y190, $1500 = y30, so $1 = 0.32 pixels, range = 160px -->
           
-          <!-- Linear Line (no compounding) -->
-          <path class="linear-line" d="M50,180 L138,166 L226,152 L314,138 L402,124 L490,110 L580,96" />
+          <!-- Area Fill -->
+          <path class="compound-area" d="M50,190 L94,179 L138,168 L182,156 L226,144 L270,132 L314,119 L358,106 L402,93 L446,79 L490,65 L534,51 L580,37 L580,190 Z" />
+          
+          <!-- Linear Line (no compounding): $1000 + $40/month = $1480 at 12mo -->
+          <!-- Linear: y190 to y37 over 12 months -->
+          <path class="linear-line" d="M50,190 L138,177 L226,164 L314,151 L402,138 L490,125 L580,112" />
           
           <!-- Compound Line -->
-          <path class="compound-line" d="M50,180 L94,172 L138,163 L182,152 L226,140 L270,126 L314,110 L358,92 L402,71 L446,48 L490,36 L534,30 L580,18" />
+          <path class="compound-line" d="M50,190 L94,179 L138,168 L182,156 L226,144 L270,132 L314,119 L358,106 L402,93 L446,79 L490,65 L534,51 L580,37" />
           
-          <!-- Data Points -->
+          <!-- Data Points (every 2 months) -->
           <g fill="var(--gold)">
-            <circle cx="50" cy="180" r="4" />
-            <circle cx="138" cy="163" r="4" />
-            <circle cx="226" cy="140" r="4" />
-            <circle cx="314" cy="110" r="4" />
-            <circle cx="402" cy="71" r="4" />
-            <circle cx="490" cy="36" r="4" />
-            <circle cx="580" cy="18" r="4" />
+            <circle cx="50" cy="190" r="4" />
+            <circle cx="138" cy="168" r="4" />
+            <circle cx="226" cy="144" r="4" />
+            <circle cx="314" cy="119" r="4" />
+            <circle cx="402" cy="93" r="4" />
+            <circle cx="490" cy="65" r="4" />
+            <circle cx="580" cy="37" r="4" />
           </g>
         </svg>
       </div>
@@ -392,12 +417,12 @@
     <div class="methodology-box reveal">
       <h3>Methodology</h3>
       <ul>
-        <li>Combined data from <strong>320 total trades</strong> across both indicators</li>
-        <li>Meridian: EURUSD, Jan 1 – Jul 28, 2026 (0.01 lot base)</li>
-        <li>Recoil: EURUSD, Jan 1, 2025 – Jul 1, 2026 (0.02 lot base)</li>
-        <li>Daily average calculated from total profit ÷ trading days</li>
-        <li>Compounding assumes reinvesting gains, weekly rebalancing</li>
-        <li>No leverage adjustment — results scale linearly with position size</li>
+        <li>All returns calculated on a <strong>$1,000 account baseline</strong></li>
+        <li>Meridian: $115.91 profit = 11.6% return (Jan–Jul 2026, 0.01 lot)</li>
+        <li>Recoil: $105.18 profit = 10.5% return (Jan–Jul 2026, 0.02 lot)</li>
+        <li>Combined: ~22% over 144 trading days = <strong>0.15%/day average</strong></li>
+        <li>Compounding assumes weekly reinvestment of gains</li>
+        <li>Returns scale linearly with position size and account balance</li>
       </ul>
       <div class="disclaimer-text">
         <strong>Risk Disclaimer:</strong> Past performance does not guarantee future results. These projections are based on historical backtesting data and assume consistent execution. Actual results will vary due to market conditions, slippage, and execution timing. Trade only with capital you can afford to lose.
@@ -410,10 +435,7 @@
 <section class="next-section">
   <div class="container">
     <p>Ready to see the numbers for yourself?</p>
-    <a href="/pricing" class="btn-primary">
-      Get Access
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 8h8m-3-3 3 3-3 3"/></svg>
-    </a>
+    <a href="/pricing" class="btn-primary">Get Access</a>
   </div>
 </section>
 
