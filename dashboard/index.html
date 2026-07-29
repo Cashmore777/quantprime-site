@@ -6457,6 +6457,19 @@ function getLastReadTimestamps() {
   }
 }
 
+// Initialize last read for all rooms (call on first visit to avoid showing all messages as unread)
+function initializeLastReadIfNeeded() {
+  const timestamps = getLastReadTimestamps();
+  if (Object.keys(timestamps).length === 0) {
+    // First time visiting - mark all rooms as read up to now
+    const now = Date.now();
+    Object.keys(ROOM_TIER_MAP).forEach(roomId => {
+      timestamps[roomId] = now;
+    });
+    localStorage.setItem(UNREAD_STORAGE_KEY, JSON.stringify(timestamps));
+  }
+}
+
 // Save last read timestamp for a room
 function markRoomAsRead(roomId) {
   const timestamps = getLastReadTimestamps();
@@ -6783,6 +6796,8 @@ function escapeHtml(text) {
 if (!chatEnabled) {
   showLocalChat();
 } else if (currentUser) {
+  // Initialize last read timestamps on first visit
+  initializeLastReadIfNeeded();
   subscribeToRoom(currentRoom);
   // Mark current room as read on initial load
   markRoomAsRead(currentRoom);
