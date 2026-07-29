@@ -8415,11 +8415,38 @@ async function refreshAffiliateStats() {
       return;
     }
     
+    // Get all profiles to map affiliate IDs to emails
+    const { data: profiles } = await supabaseClient
+      .from('profiles')
+      .select('id, email, display_name, role');
+    
+    // Build lookup: first 8 chars of ID (uppercase) -> profile info
+    const affiliateLookup = {};
+    if (profiles) {
+      profiles.forEach(p => {
+        const affId = p.id.substring(0, 8).toUpperCase();
+        affiliateLookup[affId] = {
+          email: p.email,
+          name: p.display_name || p.email?.split('@')[0] || 'Unknown',
+          role: p.role
+        };
+      });
+    }
+    
     // Group by affiliate ID
     const affiliateStats = {};
     trackingData.forEach(row => {
       if (!affiliateStats[row.affiliate_id]) {
-        affiliateStats[row.affiliate_id] = { clicks: 0, signups: 0, conversions: 0, earnings: 0, email: row.affiliate_email || 'Unknown' };
+        const lookup = affiliateLookup[row.affiliate_id];
+        affiliateStats[row.affiliate_id] = { 
+          clicks: 0, 
+          signups: 0, 
+          conversions: 0, 
+          earnings: 0, 
+          email: lookup?.email || row.affiliate_email || 'Unknown',
+          name: lookup?.name || 'Unknown',
+          role: lookup?.role || ''
+        };
       }
       if (row.event_type === 'click') affiliateStats[row.affiliate_id].clicks++;
       if (row.event_type === 'signup') affiliateStats[row.affiliate_id].signups++;
@@ -8451,7 +8478,10 @@ async function refreshAffiliateStats() {
       .sort((a, b) => b[1].earnings - a[1].earnings)
       .map(([affId, stats]) => `
         <tr style="border-bottom: 1px solid var(--border);">
-          <td style="padding: 12px 8px;">${escapeHtml(stats.email)}</td>
+          <td style="padding: 12px 8px;">
+            <div style="font-weight: 500;">${escapeHtml(stats.name)}</div>
+            ${stats.role ? `<div style="font-size: 10px; color: var(--gold); text-transform: uppercase;">${escapeHtml(stats.role)}</div>` : ''}
+          </td>
           <td style="padding: 12px 8px; font-family: var(--mono); font-size: 11px;">${affId}</td>
           <td style="padding: 12px 8px;">${stats.clicks}</td>
           <td style="padding: 12px 8px;">${stats.signups}</td>
