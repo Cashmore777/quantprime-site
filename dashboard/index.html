@@ -4629,7 +4629,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
       
       <div class="room-grid">
-        <div class="room-category-label">Official Channels</div>
+        <!-- COMMUNITY CHATS -->
+        <div class="room-category-label">Community Chats</div>
         <div class="room-cards">
           <div class="room-card" data-room="general" data-tier="free">
             <div class="room-card-icon">
@@ -4656,7 +4657,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
-          
+        </div>
+        
+        <!-- PAID CHAT ROOMS -->
+        <div class="room-category-label">Paid Chat Rooms</div>
+        <div class="room-cards">
           <div class="room-card" data-room="research-discussion" data-tier="research">
             <div class="room-card-icon tier-research">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
@@ -4713,41 +4718,42 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </div>
         </div>
         
-        <div class="room-category-label">Session Desks</div>
+        <!-- SESSION CHAT ROOMS -->
+        <div class="room-category-label">Session Chat Rooms</div>
         <div class="room-cards">
-          <div class="room-card session-desk" data-room="london-session-desk" data-tier="free">
-            <div class="room-card-icon">
+          <div class="room-card session-desk" data-room="london-desk" data-tier="free">
+            <div class="room-card-icon" style="color: #00abff;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
               <h4>London Desk</h4>
-              <p>07:00 - 16:00 GMT</p>
+              <p>07:00 - 11:00 UTC</p>
             </div>
             <div class="room-card-arrow">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
-          <div class="room-card session-desk" data-room="NY-session-desk" data-tier="free">
-            <div class="room-card-icon">
+          <div class="room-card session-desk" data-room="newyork-desk" data-tier="free">
+            <div class="room-card-icon" style="color: #26a269;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
               <h4>New York Desk</h4>
-              <p>12:00 - 21:00 GMT</p>
+              <p>11:00 - 21:00 UTC</p>
             </div>
             <div class="room-card-arrow">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
-          <div class="room-card session-desk" data-room="asia-session-desk" data-tier="free">
-            <div class="room-card-icon">
+          <div class="room-card session-desk" data-room="asia-desk" data-tier="free">
+            <div class="room-card-icon" style="color: #f59e0b;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
               <h4>Asia Desk</h4>
-              <p>00:00 - 09:00 GMT</p>
+              <p>21:00 - 07:00 UTC</p>
             </div>
             <div class="room-card-arrow">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
@@ -4755,28 +4761,42 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </div>
         </div>
         
-        <div class="room-category-label">Instrument Groups</div>
+        <!-- SYMBOL CHATS -->
+        <div class="room-category-label">Symbol Chats</div>
         <div class="room-cards">
-          <div class="room-card" data-room="gold-only-gang" data-tier="free">
+          <div class="room-card" data-room="xauusd-chat" data-tier="free">
             <div class="room-card-icon" style="color: #c9a84c;">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6M9 13h6"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>Gold Gang</h4>
-              <p>XAUUSD traders only</p>
+              <h4>XAUUSD Chat</h4>
+              <p>Gold traders discussion</p>
             </div>
             <div class="room-card-arrow">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
-          <div class="room-card" data-room="fx-only-gang" data-tier="free">
+          <div class="room-card" data-room="eurusd-chat" data-tier="free">
             <div class="room-card-icon" style="color: #00abff;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>FX Gang</h4>
-              <p>Forex majors & minors</p>
+              <h4>EURUSD Chat</h4>
+              <p>Euro traders discussion</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="room-card" data-room="btcusd-chat" data-tier="free">
+            <div class="room-card-icon" style="color: #f7931a;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 8h6v8H9z"/><path d="M12 6v2M12 16v2M9 10h6M9 14h6"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>BTCUSD Chat</h4>
+              <p>Bitcoin traders discussion</p>
             </div>
             <div class="room-card-arrow">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
@@ -6955,18 +6975,23 @@ function setupRoomListeners() {
 
 // Room tier requirements mapping
 const ROOM_TIER_MAP = {
+  // Community Chats (free)
   'general': 'free',
+  'market-chat': 'free',
+  // Paid Chat Rooms
   'research-discussion': 'research',
   'recoil': 'recoil',
   'meridian': 'meridian',
-  'market-chat': 'free',
   'academy-chat': 'ascension',
   'automation': 'ascension',
-  'london-session-desk': 'free',
-  'NY-session-desk': 'free',
-  'asia-session-desk': 'free',
-  'gold-only-gang': 'free',
-  'fx-only-gang': 'free'
+  // Session Chat Rooms (free)
+  'london-desk': 'free',
+  'newyork-desk': 'free',
+  'asia-desk': 'free',
+  // Symbol Chats (free)
+  'xauusd-chat': 'free',
+  'eurusd-chat': 'free',
+  'btcusd-chat': 'free'
 };
 
 // Tier hierarchy for access checks
