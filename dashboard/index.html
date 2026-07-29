@@ -6969,6 +6969,35 @@ const ROOM_TIER_MAP = {
   'fx-only-gang': 'free'
 };
 
+// Tier hierarchy for access checks
+const TIER_HIERARCHY = ['free', 'research', 'recoil', 'meridian', 'cockpit', 'ascension', 'admin'];
+
+// Check if user has access to a tier
+let accessCheckLogged = false;
+function hasAccessToTier(requiredTier) {
+  const currentTier = (window.userTier || 'free').toLowerCase();
+  
+  // Debug first call only
+  if (!accessCheckLogged) {
+    console.log('[Access] First check - currentTier:', currentTier, '| requiredTier:', requiredTier, '| isAdmin:', currentTier === 'admin');
+    accessCheckLogged = true;
+  }
+  
+  // Admin gets everything
+  if (currentTier === 'admin') {
+    return true;
+  }
+  
+  const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
+  
+  // Map terminal -> meridian, suite -> cockpit for access checks
+  const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
+  const mappedTier = tierMap[currentTier] || currentTier;
+  const mappedIndex = TIER_HIERARCHY.indexOf(mappedTier);
+  
+  return mappedIndex >= requiredIndex;
+}
+
 // Check if user can access a room
 function canAccessRoom(roomId) {
   const requiredTier = ROOM_TIER_MAP[roomId] || 'free';
@@ -7266,33 +7295,7 @@ if (chatEnabled && currentUser) {
 // ==========================================
 let marketplaceProducts = [];
 let marketplaceTiers = {};
-const TIER_HIERARCHY = ['free', 'research', 'recoil', 'meridian', 'cockpit', 'ascension', 'admin'];
-
-// Check if user has access to a tier
-let accessCheckLogged = false;
-function hasAccessToTier(requiredTier) {
-  const currentTier = (window.userTier || 'free').toLowerCase();
-  
-  // Debug first call only
-  if (!accessCheckLogged) {
-    console.log('[Access] First check - currentTier:', currentTier, '| requiredTier:', requiredTier, '| isAdmin:', currentTier === 'admin');
-    accessCheckLogged = true;
-  }
-  
-  // Admin gets everything
-  if (currentTier === 'admin') {
-    return true;
-  }
-  
-  const requiredIndex = TIER_HIERARCHY.indexOf(requiredTier);
-  
-  // Map terminal -> meridian, suite -> cockpit for access checks
-  const tierMap = { 'terminal': 'meridian', 'suite': 'cockpit' };
-  const mappedTier = tierMap[currentTier] || currentTier;
-  const mappedIndex = TIER_HIERARCHY.indexOf(mappedTier);
-  
-  return mappedIndex >= requiredIndex;
-}
+// TIER_HIERARCHY and hasAccessToTier defined above in COMMUNITY CHAT section
 
 // Get upgrade tier name for display
 function getUpgradeTierName(tier) {
