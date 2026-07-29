@@ -560,16 +560,16 @@ function renderTrades(indicator, trades) {
   trades.forEach(trade => {
     const scaledPnl = trade.pnl * currentMult;
     const scaledCum = trade.cumulative * currentMult;
+    const pnlSign = scaledPnl >= 0 ? '+' : '';
+    const pnlClass = scaledPnl >= 0 ? 'positive' : 'negative';
     
     const row = document.createElement('tr');
-    row.innerHTML = \`
-      <td>\${trade.num}</td>
-      <td>\${trade.date}</td>
-      <td class="\${trade.type}">\${trade.type.toUpperCase()}</td>
-      <td>\${trade.exit.toFixed(5)}</td>
-      <td class="\${scaledPnl >= 0 ? 'positive' : 'negative'}">\${scaledPnl >= 0 ? '+' : ''}\$\${scaledPnl.toFixed(2)}</td>
-      <td>\$\${scaledCum.toFixed(2)}</td>
-    \`;
+    row.innerHTML = '<td>' + trade.num + '</td>' +
+      '<td>' + trade.date + '</td>' +
+      '<td class="' + trade.type + '">' + trade.type.toUpperCase() + '</td>' +
+      '<td>' + trade.exit.toFixed(5) + '</td>' +
+      '<td class="' + pnlClass + '">' + pnlSign + '$' + scaledPnl.toFixed(2) + '</td>' +
+      '<td>$' + scaledCum.toFixed(2) + '</td>';
     tbody.appendChild(row);
   });
 }
