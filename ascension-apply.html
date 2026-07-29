@@ -764,6 +764,37 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+// Affiliate tracking for Ascension page
+(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref') || localStorage.getItem('qp_affiliate_ref');
+  
+  if (ref) {
+    localStorage.setItem('qp_affiliate_ref', ref.toUpperCase());
+    
+    // Track visit
+    fetch('https://dashboard.themoneyprinter.uk/api/affiliate/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId: ref,
+        eventType: 'click',
+        product: 'ascension_apply'
+      })
+    }).catch(e => console.log('Affiliate tracking:', e.message));
+    
+    // Add hidden field to form with affiliate ref
+    const form = document.getElementById('applyForm');
+    if (form) {
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = 'affiliateRef';
+      hiddenInput.value = ref.toUpperCase();
+      form.appendChild(hiddenInput);
+    }
+  }
+})();
 </script>
 </body>
 </html>

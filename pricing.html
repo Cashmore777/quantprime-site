@@ -771,5 +771,41 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
+
+<!-- Affiliate Tracking -->
+<script>
+(function() {
+  // Check for affiliate ref in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  
+  if (ref) {
+    // Store in localStorage for later use
+    localStorage.setItem('qp_affiliate_ref', ref.toUpperCase());
+    localStorage.setItem('qp_affiliate_timestamp', Date.now());
+    
+    // Track the click
+    fetch('https://dashboard.themoneyprinter.uk/api/affiliate/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId: ref,
+        eventType: 'click',
+        product: 'pricing_page'
+      })
+    }).catch(e => console.log('Affiliate tracking:', e.message));
+  }
+  
+  // Add ref to all checkout links
+  document.querySelectorAll('a[href*="/checkout"]').forEach(link => {
+    const storedRef = localStorage.getItem('qp_affiliate_ref');
+    if (storedRef) {
+      const url = new URL(link.href, window.location.origin);
+      url.searchParams.set('ref', storedRef);
+      link.href = url.toString();
+    }
+  });
+})();
+</script>
 </body>
 </html>
