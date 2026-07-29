@@ -1261,31 +1261,9 @@ async function checkLoggedInUser() {
 // Run after page loads
 setTimeout(checkLoggedInUser, 500);
 
-// Affiliate tracking - capture ref and pass to Stripe
-(function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const ref = urlParams.get('ref') || localStorage.getItem('qp_affiliate_ref');
-  
-  if (ref) {
-    // Store for this session
-    localStorage.setItem('qp_affiliate_ref', ref.toUpperCase());
-    
-    // Add ref to any Stripe checkout form data
-    window.affiliateRef = ref.toUpperCase();
-    
-    // Track checkout page view
-    fetch('https://dashboard.themoneyprinter.uk/api/affiliate/track', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        affiliateId: ref,
-        eventType: 'click',
-        product: 'checkout_page'
-      })
-    }).catch(e => console.log('Affiliate tracking:', e.message));
-  }
-})();
+// Affiliate tracking handled by site-auth.js
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/site-auth.js"></script>
 </body>
 </html>
