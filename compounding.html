@@ -154,8 +154,7 @@
   height: 2px;
 }
 
-.legend-line.meridian { background: #0088cc; }
-.legend-line.recoil { background: var(--gold); }
+.legend-line.combined { background: var(--gold); }
 
 .chart-container {
   position: relative;
@@ -339,12 +338,8 @@
         <div class="chart-title">Actual Equity Curve: $1,000 Starting Balance</div>
         <div class="chart-legend">
           <div class="legend-item">
-            <div class="legend-line meridian"></div>
-            <span>Meridian</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-line recoil"></div>
-            <span>Recoil (2026)</span>
+            <div class="legend-line combined"></div>
+            <span>Combined Equity</span>
           </div>
         </div>
       </div>
@@ -443,54 +438,62 @@ async function renderEquityCurve() {
     return;
   }
 
-  // Filter Recoil to 2026 only and adjust cumulative
+  // Filter Recoil to 2026 only and adjust cumulative to start from 0
   const recoil2025End = recoilTrades.find(t => t.date === '2025-12-31')?.cumulative || 30.18;
   const recoil2026 = recoilTrades
     .filter(t => t.date >= '2026-01-01')
     .map(t => ({
       ...t,
-      cumulative: t.cumulative - recoil2025End // Normalize to start from 0
+      cumulative: t.cumulative - recoil2025End
     }));
 
-  // Create daily equity points for both
-  const dailyEquity = {};
+  // Combine all trades into one timeline with running totals
+  const allTrades = [];
   
-  // Process Meridian (starts at 0, add to $1000 base)
+  // Add Meridian trades
   meridianTrades.forEach(t => {
-    dailyEquity[t.date] = dailyEquity[t.date] || { meridian: 0, recoil: 0 };
-    dailyEquity[t.date].meridian = t.cumulative;
+    allTrades.push({
+      date: t.date,
+      pnl: t.pnl,
+      source: 'meridian',
+      num: t.num
+    });
   });
   
-  // Process Recoil 2026
+  // Add Recoil 2026 trades
   recoil2026.forEach(t => {
-    dailyEquity[t.date] = dailyEquity[t.date] || { meridian: 0, recoil: 0 };
-    dailyEquity[t.date].recoil = t.cumulative;
+    allTrades.push({
+      date: t.date,
+      pnl: t.pnl,
+      source: 'recoil',
+      num: t.num
+    });
   });
-
-  // Sort dates and build equity arrays
-  const dates = Object.keys(dailyEquity).sort();
   
-  // Forward-fill missing values
-  let lastMeridian = 0, lastRecoil = 0;
-  const equityData = dates.map(date => {
-    if (dailyEquity[date].meridian !== 0) lastMeridian = dailyEquity[date].meridian;
-    else dailyEquity[date].meridian = lastMeridian;
-    
-    if (dailyEquity[date].recoil !== 0) lastRecoil = dailyEquity[date].recoil;
-    else dailyEquity[date].recoil = lastRecoil;
-    
+  // Sort all trades by date, then by trade number within same date
+  allTrades.sort((a, b) => {
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    return a.num - b.num;
+  });
+  
+  // Build combined equity curve
+  let cumulativePnl = 0;
+  const equityData = allTrades.map((t, i) => {
+    cumulativePnl += t.pnl;
     return {
-      date,
-      meridian: 1000 + dailyEquity[date].meridian,
-      recoil: 1000 + dailyEquity[date].recoil,
-      combined: 1000 + dailyEquity[date].meridian + dailyEquity[date].recoil
+      date: t.date,
+      equity: 1000 + cumulativePnl,
+      pnl: cumulativePnl,
+      tradeNum: i + 1
     };
   });
 
   // Calculate min/max for Y axis
-  const allValues = equityData.flatMap(d => [d.meridian, d.recoil]);
-  const minVal = Math.min(...allValues) - 20;
-  const maxVal = Math.max(...allValues) + 20;
+  const allEquities = equityData.map(d => d.equity);
+  const minEquity = Math.min(...allEquities);
+  const maxEquity = Math.max(...allEquities);
+  const minVal = Math.floor((minEquity - 20) / 10) * 10;
+  const maxVal = Math.ceil((maxEquity + 20) / 10) * 10;
   
   // Scale functions
   const xScale = (i) => padding.left + (i / (equityData.length - 1)) * chartWidth;
@@ -536,42 +539,46 @@ async function renderEquityCurve() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  // Draw Recoil line (gold)
-  ctx.strokeStyle = '#b8962e';
-  ctx.lineWidth = 2;
+  // Draw area fill under curve
   ctx.beginPath();
+  ctx.moveTo(xScale(0), yScale(1000));
   equityData.forEach((d, i) => {
-    const x = xScale(i);
-    const y = yScale(d.recoil);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+    ctx.lineTo(xScale(i), yScale(d.equity));
   });
-  ctx.stroke();
-
-  // Draw Meridian line (cyan)
-  ctx.strokeStyle = '#0088cc';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  equityData.forEach((d, i) => {
-    const x = xScale(i);
-    const y = yScale(d.meridian);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-
-  // Update stats
-  const finalMeridian = equityData[equityData.length - 1]?.meridian || 1000;
-  const finalRecoil = equityData[equityData.length - 1]?.recoil || 1000;
-  const combinedPnl = (finalMeridian - 1000) + (finalRecoil - 1000);
-  const peakEquity = 1000 + Math.max(...equityData.map(d => (d.meridian - 1000) + (d.recoil - 1000)));
+  ctx.lineTo(xScale(equityData.length - 1), yScale(1000));
+  ctx.closePath();
   
-  // Find max drawdown from Meridian (it has the deeper DD)
+  const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
+  gradient.addColorStop(0, 'rgba(184, 150, 46, 0.25)');
+  gradient.addColorStop(1, 'rgba(184, 150, 46, 0)');
+  ctx.fillStyle = gradient;
+  ctx.fill();
+
+  // Draw combined equity line
+  ctx.strokeStyle = '#b8962e';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  equityData.forEach((d, i) => {
+    const x = xScale(i);
+    const y = yScale(d.equity);
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+
+  // Calculate stats
+  const finalEquity = equityData[equityData.length - 1]?.equity || 1000;
+  const combinedPnl = finalEquity - 1000;
+  const peakEquity = Math.max(...allEquities);
+  
+  // Calculate max drawdown from combined equity
   let maxDD = 0;
-  let peak = 0;
-  meridianTrades.forEach(t => {
-    if (t.cumulative > peak) peak = t.cumulative;
-    const dd = peak - t.cumulative;
+  let peak = 1000;
+  equityData.forEach(d => {
+    if (d.equity > peak) peak = d.equity;
+    const dd = peak - d.equity;
     if (dd > maxDD) maxDD = dd;
   });
 
@@ -579,7 +586,7 @@ async function renderEquityCurve() {
   document.getElementById('statMaxDD').textContent = '-$' + maxDD.toFixed(2);
   document.getElementById('statMaxDD').classList.add('negative');
   document.getElementById('statPeakEquity').textContent = '$' + Math.round(peakEquity).toLocaleString();
-  document.getElementById('statTrades').textContent = (meridianTrades.length + recoil2026.length).toString();
+  document.getElementById('statTrades').textContent = equityData.length.toString();
 }
 
 // Render on load and resize
