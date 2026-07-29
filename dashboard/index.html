@@ -1078,6 +1078,27 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .room.active .hash { color: var(--gold); }
 
+/* Locked room styling */
+.room.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.room.locked:hover {
+  background: transparent;
+}
+
+.room .lock-icon {
+  display: none;
+  font-size: 10px;
+  margin-left: auto;
+  opacity: 0.7;
+}
+
+.room.locked .lock-icon {
+  display: inline;
+}
+
 .room .unread {
   margin-left: auto;
   font-family: var(--mono);
@@ -3081,6 +3102,16 @@ button, .nav-item, .room, .video-item, .filter-chip {
   50% { opacity: 1; transform: scale(1); }
 }
 
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateX(-50%) translateY(0); }
+  to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+}
+
 /* Action cards */
 .action-card {
   background: var(--surface);
@@ -4256,19 +4287,19 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
       <div class="rooms-list" id="mobileRoomsList">
         <div class="room-category">Official</div>
-        <div class="room active" data-room="general"><span class="hash">#</span>general</div>
-        <div class="room" data-room="research-discussion"><span class="hash">#</span>research-discussion</div>
-        <div class="room" data-room="recoil"><span class="hash">#</span>recoil</div>
-        <div class="room" data-room="meridian"><span class="hash">#</span>meridian</div>
-        <div class="room" data-room="market-chat"><span class="hash">#</span>market-chat</div>
-        <div class="room" data-room="academy-chat"><span class="hash">#</span>academy-chat</div>
-        <div class="room" data-room="automation"><span class="hash">#</span>automation</div>
+        <div class="room active" data-room="general" data-tier="free"><span class="hash">#</span>general</div>
+        <div class="room" data-room="research-discussion" data-tier="research"><span class="hash">#</span>research-discussion<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="recoil" data-tier="recoil"><span class="hash">#</span>recoil<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="meridian" data-tier="meridian"><span class="hash">#</span>meridian<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="market-chat" data-tier="free"><span class="hash">#</span>market-chat</div>
+        <div class="room" data-room="academy-chat" data-tier="cockpit"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="automation" data-tier="cockpit"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
         <div class="room-category">Member Rooms</div>
-        <div class="room" data-room="london-session-desk"><span class="hash">◦</span>london-session-desk</div>
-        <div class="room" data-room="NY-session-desk"><span class="hash">◦</span>NY-session-desk</div>
-        <div class="room" data-room="asia-session-desk"><span class="hash">◦</span>asia-session-desk</div>
-        <div class="room" data-room="gold-only-gang"><span class="hash">◦</span>gold-only-gang</div>
-        <div class="room" data-room="fx-only-gang"><span class="hash">◦</span>fx-only-gang</div>
+        <div class="room" data-room="london-session-desk" data-tier="free"><span class="hash">◦</span>london-session-desk</div>
+        <div class="room" data-room="NY-session-desk" data-tier="free"><span class="hash">◦</span>NY-session-desk</div>
+        <div class="room" data-room="asia-session-desk" data-tier="free"><span class="hash">◦</span>asia-session-desk</div>
+        <div class="room" data-room="gold-only-gang" data-tier="free"><span class="hash">◦</span>gold-only-gang</div>
+        <div class="room" data-room="fx-only-gang" data-tier="free"><span class="hash">◦</span>fx-only-gang</div>
       </div>
     </div>
     
@@ -4276,19 +4307,19 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <!-- Desktop Rooms List (hidden on mobile) -->
       <div class="rooms-list desktop-only" id="desktopRoomsList">
         <div class="room-category">Official</div>
-        <div class="room active" data-room="general"><span class="hash">#</span>general</div>
-        <div class="room" data-room="research-discussion"><span class="hash">#</span>research-discussion</div>
-        <div class="room" data-room="recoil"><span class="hash">#</span>recoil</div>
-        <div class="room" data-room="meridian"><span class="hash">#</span>meridian</div>
-        <div class="room" data-room="market-chat"><span class="hash">#</span>market-chat</div>
-        <div class="room" data-room="academy-chat"><span class="hash">#</span>academy-chat</div>
-        <div class="room" data-room="automation"><span class="hash">#</span>automation</div>
+        <div class="room active" data-room="general" data-tier="free"><span class="hash">#</span>general</div>
+        <div class="room" data-room="research-discussion" data-tier="research"><span class="hash">#</span>research-discussion<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="recoil" data-tier="recoil"><span class="hash">#</span>recoil<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="meridian" data-tier="meridian"><span class="hash">#</span>meridian<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="market-chat" data-tier="free"><span class="hash">#</span>market-chat</div>
+        <div class="room" data-room="academy-chat" data-tier="cockpit"><span class="hash">#</span>academy-chat<span class="lock-icon">🔒</span></div>
+        <div class="room" data-room="automation" data-tier="cockpit"><span class="hash">#</span>automation<span class="lock-icon">🔒</span></div>
         <div class="room-category">Member Rooms</div>
-        <div class="room" data-room="london-session-desk"><span class="hash">◦</span>london-session-desk</div>
-        <div class="room" data-room="NY-session-desk"><span class="hash">◦</span>NY-session-desk</div>
-        <div class="room" data-room="asia-session-desk"><span class="hash">◦</span>asia-session-desk</div>
-        <div class="room" data-room="gold-only-gang"><span class="hash">◦</span>gold-only-gang</div>
-        <div class="room" data-room="fx-only-gang"><span class="hash">◦</span>fx-only-gang</div>
+        <div class="room" data-room="london-session-desk" data-tier="free"><span class="hash">◦</span>london-session-desk</div>
+        <div class="room" data-room="NY-session-desk" data-tier="free"><span class="hash">◦</span>NY-session-desk</div>
+        <div class="room" data-room="asia-session-desk" data-tier="free"><span class="hash">◦</span>asia-session-desk</div>
+        <div class="room" data-room="gold-only-gang" data-tier="free"><span class="hash">◦</span>gold-only-gang</div>
+        <div class="room" data-room="fx-only-gang" data-tier="free"><span class="hash">◦</span>fx-only-gang</div>
       </div>
       
       <div class="chat-panel">
@@ -4926,6 +4957,53 @@ const TIER_ACCESS = {
   'admin': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit', 'academy', 'notebook', 'mentorship', 'automation', 'intelligence', 'admin']
 };
 
+// Toast notification helper
+function showToast(message, type = 'info') {
+  // Remove existing toast
+  const existing = document.querySelector('.toast-notification');
+  if (existing) existing.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = `toast-notification toast-${type}`;
+  toast.innerHTML = message;
+  
+  // Style the toast
+  Object.assign(toast.style, {
+    position: 'fixed',
+    bottom: '100px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    padding: '12px 20px',
+    borderRadius: '8px',
+    fontSize: '13px',
+    fontWeight: '500',
+    zIndex: '9999',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+    animation: 'toastIn 0.3s ease-out'
+  });
+  
+  // Type-specific colors
+  const colors = {
+    success: { bg: '#dcfce7', color: '#166534', border: '#86efac' },
+    warning: { bg: '#fef3c7', color: '#92400e', border: '#fcd34d' },
+    error: { bg: '#fee2e2', color: '#991b1b', border: '#fca5a5' },
+    info: { bg: '#e0f2fe', color: '#075985', border: '#7dd3fc' }
+  };
+  
+  const c = colors[type] || colors.info;
+  toast.style.background = c.bg;
+  toast.style.color = c.color;
+  toast.style.border = `1px solid ${c.border}`;
+  
+  document.body.appendChild(toast);
+  
+  // Auto-remove after 3s
+  setTimeout(() => {
+    toast.style.animation = 'toastOut 0.3s ease-in forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
 // User profile data (populated from Supabase)
 let userProfile = null;
 
@@ -5085,6 +5163,11 @@ async function checkAuth() {
   updateDashboardData();
   updateMobileTier();
   loadAvatar();
+  
+  // Update room locks based on tier
+  if (typeof updateRoomLocks === 'function') {
+    updateRoomLocks();
+  }
   
   // Load marketplace AFTER tier is set
   console.log('[Auth] Loading marketplace with tier:', userTier);
@@ -6250,11 +6333,67 @@ const rooms = document.querySelectorAll('.room');
 let currentRoomRef = null;
 let messagesListener = null;
 
+// Room tier requirements mapping
+const ROOM_TIER_MAP = {
+  'general': 'free',
+  'research-discussion': 'research',
+  'recoil': 'recoil',
+  'meridian': 'meridian',
+  'market-chat': 'free',
+  'academy-chat': 'cockpit',
+  'automation': 'cockpit',
+  'london-session-desk': 'free',
+  'NY-session-desk': 'free',
+  'asia-session-desk': 'free',
+  'gold-only-gang': 'free',
+  'fx-only-gang': 'free'
+};
+
+// Check if user can access a room
+function canAccessRoom(roomId) {
+  const requiredTier = ROOM_TIER_MAP[roomId] || 'free';
+  if (requiredTier === 'free') return true;
+  return hasAccessToTier(requiredTier);
+}
+
+// Apply locked styling to rooms based on user tier
+function updateRoomLocks() {
+  rooms.forEach(room => {
+    const roomId = room.dataset.room;
+    if (!canAccessRoom(roomId)) {
+      room.classList.add('locked');
+    } else {
+      room.classList.remove('locked');
+    }
+  });
+}
+
+// Get tier display name for upgrade prompts
+function getRoomTierName(roomId) {
+  const tierMap = {
+    'research': 'Research',
+    'recoil': 'Recoil',
+    'meridian': 'Terminal',
+    'cockpit': 'Full Suite'
+  };
+  const tier = ROOM_TIER_MAP[roomId];
+  return tierMap[tier] || tier;
+}
+
 rooms.forEach(room => {
   room.addEventListener('click', () => {
+    const roomId = room.dataset.room;
+    
+    // Check tier access
+    if (!canAccessRoom(roomId)) {
+      const tierName = getRoomTierName(roomId);
+      showToast(`🔒 #${roomId} requires ${tierName} tier`, 'warning');
+      return;
+    }
+    
     rooms.forEach(r => r.classList.remove('active'));
     room.classList.add('active');
-    currentRoom = room.dataset.room;
+    currentRoom = roomId;
     document.getElementById('current-room-name').textContent = currentRoom;
     document.getElementById('chat-input').placeholder = `Message #${currentRoom}`;
     
@@ -6267,6 +6406,8 @@ rooms.forEach(room => {
     }
   });
 });
+
+// Room locks are updated by auth flow via updateRoomLocks()
 
 function subscribeToRoom(roomId) {
   if (!db) {
