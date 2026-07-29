@@ -85,18 +85,28 @@ nav .nav-dropdown a:hover {
   padding: 8rem 2rem 6rem;
   position: relative;
   overflow: hidden;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(201,168,76,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(201,168,76,0.08) 0%, transparent 40%),
+    linear-gradient(180deg, #0a0a0f 0%, #080810 100%);
 }
 
 .hero::before {
   content: '';
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 1200px;
-  height: 800px;
-  background: radial-gradient(ellipse at center top, rgba(201,168,76,0.12) 0%, transparent 60%);
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
   pointer-events: none;
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
 }
 
 .hero::after {
@@ -105,46 +115,88 @@ nav .nav-dropdown a:hover {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 200px;
+  height: 300px;
   background: linear-gradient(to top, var(--bg) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Luxury grid lines */
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 70%);
   pointer-events: none;
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 800px;
+  max-width: 850px;
 }
 
 .brand-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
 }
 
-.brand-label .white {
-  color: #fff !important;
+.brand-label .qp-white {
+  color: #ffffff !important;
+  font-weight: 600;
 }
 
-.brand-label .gold {
-  color: var(--gold);
+.brand-label .qp-gold {
+  background: linear-gradient(135deg, #c9a84c, #e6c34d, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
 }
 
 .program-label {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.3em;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
-  color: var(--gold);
-  padding: 0.5rem 1.5rem;
-  border: 1px solid rgba(201,168,76,0.4);
-  border-radius: 4px;
-  background: rgba(201,168,76,0.08);
-  margin-top: 2rem;
+  background: linear-gradient(135deg, #c9a84c, #d4b85a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0.75rem 2rem;
+  border: 2px solid;
+  border-image: linear-gradient(135deg, rgba(201,168,76,0.6), rgba(201,168,76,0.2)) 1;
+  margin-top: 2.5rem;
+  position: relative;
+}
+
+.program-label::before {
+  content: '★';
+  -webkit-text-fill-color: #c9a84c;
+  font-size: 0.9rem;
+}
+
+.program-label::after {
+  content: '★';
+  -webkit-text-fill-color: #c9a84c;
+  font-size: 0.9rem;
 }
 
 .hero h1 {
@@ -175,37 +227,80 @@ nav .nav-dropdown a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--gold);
+  background: linear-gradient(135deg, #c9a84c 0%, #d4b85a 50%, #c9a84c 100%);
+  background-size: 200% 100%;
   color: #000;
-  padding: 1rem 2.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.3s;
+  padding: 1.25rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: all 0.4s;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 20px rgba(201,168,76,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s;
+}
+
+.hero-cta:hover::before {
+  left: 100%;
 }
 
 .hero-cta:hover {
-  background: var(--gold-light);
+  background-position: 100% 0;
   transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+  box-shadow: 
+    0 8px 30px rgba(201,168,76,0.5),
+    0 0 60px rgba(201,168,76,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .hero-cta svg {
   width: 20px;
   height: 20px;
+  transition: transform 0.3s;
+}
+
+.hero-cta:hover svg {
+  transform: translateX(4px);
 }
 
 .hero-price {
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   font-family: 'JetBrains Mono', monospace;
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.hero-price::before,
+.hero-price::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
 }
 
 .hero-price strong {
-  color: var(--text-primary);
-  font-size: 1.1rem;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-shadow: 0 0 20px rgba(201,168,76,0.3);
 }
 
 /* Section Base */
@@ -326,50 +421,80 @@ section {
 /* What's Included */
 .included-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
 .included-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 2rem;
-  transition: all 0.3s;
+  background: linear-gradient(145deg, rgba(22,22,31,0.9), rgba(16,16,24,0.9));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 2.5rem;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.included-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.included-card:hover::before {
+  opacity: 1;
 }
 
 .included-card:hover {
-  border-color: rgba(201,168,76,0.3);
-  transform: translateY(-4px);
+  border-color: rgba(201,168,76,0.2);
+  transform: translateY(-6px);
+  box-shadow: 
+    0 20px 40px rgba(0,0,0,0.3),
+    0 0 40px rgba(201,168,76,0.08);
 }
 
 .included-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--gold-glow);
-  border-radius: 10px;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s;
+}
+
+.included-card:hover .included-icon {
+  background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.1));
+  border-color: rgba(201,168,76,0.4);
+  box-shadow: 0 0 20px rgba(201,168,76,0.2);
 }
 
 .included-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   stroke: var(--gold);
 }
 
 .included-card h3 {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
+  color: #fff;
 }
 
 .included-card p {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 /* Guarantee */
@@ -497,79 +622,138 @@ section {
 
 /* Final CTA */
 .final-cta {
-  padding: 8rem 0;
+  padding: 10rem 0;
   text-align: center;
   position: relative;
+  background: 
+    radial-gradient(ellipse 80% 50% at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 50%),
+    var(--bg);
 }
 
 .final-cta::before {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1000px;
-  height: 600px;
-  background: radial-gradient(ellipse at center bottom, rgba(201,168,76,0.1) 0%, transparent 60%);
-  pointer-events: none;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
 }
 
 .final-cta h2 {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
 }
 
 .final-cta p {
   color: var(--text-secondary);
-  font-size: 1.1rem;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
+  font-size: 1.15rem;
+  margin-bottom: 3rem;
+  max-width: 550px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.7;
 }
 
 .final-price {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  position: relative;
 }
 
 .final-price .amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 3.5rem;
+  font-size: clamp(3rem, 8vw, 5rem);
   font-weight: 700;
-  color: var(--gold);
+  background: linear-gradient(135deg, #c9a84c 0%, #e6c34d 40%, #c9a84c 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 60px rgba(201,168,76,0.4);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
 }
 
 .final-price .note {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: var(--text-muted);
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
+  letter-spacing: 0.05em;
 }
 
 .cta-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--gold);
+  background: linear-gradient(135deg, #c9a84c 0%, #d4b85a 50%, #c9a84c 100%);
+  background-size: 200% 100%;
   color: #000;
-  padding: 1.25rem 3rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.3s;
+  padding: 1.5rem 4rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: all 0.4s;
   text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 4px 20px rgba(201,168,76,0.4),
+    0 0 80px rgba(201,168,76,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s;
+}
+
+.cta-btn:hover::before {
+  left: 100%;
 }
 
 .cta-btn:hover {
-  background: var(--gold-light);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(201,168,76,0.4);
+  background-position: 100% 0;
+  transform: translateY(-4px);
+  box-shadow: 
+    0 12px 40px rgba(201,168,76,0.5),
+    0 0 100px rgba(201,168,76,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.cta-btn svg {
+  transition: transform 0.3s;
+}
+
+.cta-btn:hover svg {
+  transform: translateX(4px);
 }
 
 .cta-note {
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.cta-note::before {
+  content: '◆';
+  color: rgba(201,168,76,0.4);
+  font-size: 0.5rem;
+}
+
+.cta-note::after {
+  content: '◆';
+  color: rgba(201,168,76,0.4);
+  font-size: 0.5rem;
 }
 
 /* Footer */
@@ -652,8 +836,9 @@ footer p a { color: var(--gold); }
 
 <!-- Hero -->
 <section class="hero">
+  <div class="hero-bg-grid"></div>
   <div class="hero-content">
-    <div class="brand-label"><span style="color:#fff !important;">QUANT</span> <span class="gold">PRIME</span></div>
+    <div class="brand-label"><span class="qp-white">QUANT</span><span class="qp-gold">PRIME</span></div>
     <h1>Transform your trading<br>in <em>90 days.</em></h1>
     <p>Weekly 1-on-1 calls. Complete education. Every indicator. And a guarantee that you'll get results — or we build your automation for free.</p>
     <div class="program-label">ASCENSION</div>
