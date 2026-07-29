@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/site-auth.js"></script>
 <style>
 :root {
   --gold: #c9a84c;
@@ -628,7 +630,35 @@ function init() {
   } else {
     initTierSuccess();
   }
+  
+  // Track affiliate conversion (if referred)
+  trackConversion();
 }
+
+// Track affiliate conversion
+async function trackConversion() {
+  // Wait a moment for site-auth.js to initialize
+  await new Promise(r => setTimeout(r, 500));
+  
+  // Only track if we have valid purchase info
+  if (!email || !name) return;
+  
+  // Determine product and commission
+  const COMMISSION_RATES = {
+    'research': { price: 47, commission: 23.5 },   // 50% of £47
+    'recoil': { price: 97, commission: 48.5 },     // 50% of £97
+    'terminal': { price: 197, commission: 98.5 },  // 50% of £197
+    'suite': { price: 297, commission: 148.5 },    // 50% of £297
+    'ascension': { price: 3497, commission: 699.4 } // 20% of £3,497
+  };
+  
+  const tierKey = (name || '').toLowerCase();
+  const rateInfo = COMMISSION_RATES[tierKey];
+  
+  if (rateInfo && typeof trackAffiliateConversion === 'function') {
+    trackAffiliateConversion(email, name, rateInfo.price, rateInfo.commission);
+    console.log('[Success] Conversion tracked:', name, '£' + rateInfo.commission);
+  }
 
 function initSnippetSuccess() {
   document.getElementById('title').textContent = 'Your code is ready!';
