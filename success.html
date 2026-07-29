@@ -643,12 +643,12 @@ async function trackConversion() {
   // Only track if we have valid purchase info
   if (!email || !name) return;
   
-  // Determine product and commission
+  // Determine product and commission (50% MRR for tiers, 20% for Ascension)
   const COMMISSION_RATES = {
-    'research': { price: 47, commission: 23.5 },   // 50% of £47
-    'recoil': { price: 97, commission: 48.5 },     // 50% of £97
-    'terminal': { price: 197, commission: 98.5 },  // 50% of £197
-    'suite': { price: 297, commission: 148.5 },    // 50% of £297
+    'research': { price: 8, commission: 4 },       // 50% of £8/mo
+    'recoil': { price: 28, commission: 14 },       // 50% of £28/mo
+    'terminal': { price: 58, commission: 29 },     // 50% of £58/mo
+    'suite': { price: 88, commission: 44 },        // 50% of £88/mo
     'ascension': { price: 3497, commission: 699.4 } // 20% of £3,497
   };
   
