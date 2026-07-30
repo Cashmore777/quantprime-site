@@ -1,27 +1,27 @@
 {
   "name": "Quant Prime",
   "short_name": "QuantPrime",
-  "description": "Professional trading indicators and education platform",
+  "description": "Professional trading indicators and education platform for systematic traders",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#c9a84c",
   "icons": [
     {
-      "src": "/assets/android-chrome-192x192.png",
+      "src": "/assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/assets/android-chrome-512x512.png",
+      "src": "/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/assets/logo-badge.png",
+      "src": "/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "categories": ["finance", "education", "business"],
