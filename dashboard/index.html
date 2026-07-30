@@ -5831,12 +5831,25 @@ let userProfile = null;
 
 const isAdmin = () => userTier === 'admin';
 
-// Admin emails list
-const ADMIN_EMAILS = [
-  'cash@themoneyprinter.uk',
-  'cashmoretrades@pm.me',
-  'seandavies41@gmail.com'
+// Admin verification (hashed for security)
+const ADMIN_HASHES = [
+  '365259dffb5be88b58eccf0cff1a3101733a9d82399c522b2863f7d4e9b64135',
+  '3dd00a0e0d09f4fb9f624e2c17d69a5fc3cc8c1f240b2bc9d18f12d89bd2f7c7',
+  'ce9bb9a3bea6ba2a1f48d5b1d8d030eccadaf1e89df7758ad2f44b6c25e6e11b'
 ];
+
+async function hashEmail(email) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(email.toLowerCase().trim());
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function isAdminEmail(email) {
+  const hash = await hashEmail(email);
+  return ADMIN_HASHES.includes(hash);
+}
 
 // Check authentication on page load
 async function checkAuth() {
@@ -5849,11 +5862,12 @@ async function checkAuth() {
   
   authUser = session.user;
   
-  // Simple admin check by email
+  // Admin check by hashed email (secure)
   const userEmail = authUser.email.toLowerCase();
-  console.log('[Auth] User email:', userEmail, '| Is admin:', ADMIN_EMAILS.includes(userEmail));
+  const isAdmin = await isAdminEmail(userEmail);
+  console.log('[Auth] User email:', userEmail, '| Is admin:', isAdmin);
   
-  if (ADMIN_EMAILS.includes(userEmail)) {
+  if (isAdmin) {
     userTier = 'admin';
     console.log('[Auth] Set tier to admin');
   } else {
