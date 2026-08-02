@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quant Prime Manifesto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            margin: 0.75in;
+            size: A4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 11pt;
+            line-height: 1.7;
+            color: #1a1a1a;
+            background: #fff;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in;
+        }
+
+        /* Cover page */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
+            color: #fff;
+            margin: -0.75in;
+            padding: 2in;
+            page-break-after: always;
+        }
+
+        .cover-logo {
+            font-size: 14pt;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            margin-bottom: 3in;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .cover-logo span {
+            color: #c9a84c;
+        }
+
+        .cover h1 {
+            font-size: 36pt;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5in;
+            line-height: 1.1;
+        }
+
+        .cover h1 .gold {
+            color: #c9a84c;
+        }
+
+        .cover-subtitle {
+            font-size: 14pt;
+            color: rgba(255,255,255,0.6);
+            max-width: 4in;
+        }
+
+        .cover-footer {
+            position: absolute;
+            bottom: 1in;
+            font-size: 10pt;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Content pages */
+        .content {
+            padding-top: 0.5in;
+        }
+
+        h2 {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0a0a0f;
+            margin: 0.4in 0 0.2in 0;
+            padding-top: 0.3in;
+            border-top: 2px solid #c9a84c;
+            page-break-after: avoid;
+        }
+
+        h2:first-of-type {
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 14pt;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0.25in 0 0.15in 0;
+            page-break-after: avoid;
+        }
+
+        p {
+            margin-bottom: 0.15in;
+            text-align: justify;
+        }
+
+        strong {
+            font-weight: 600;
+            color: #0a0a0f;
+        }
+
+        .highlight {
+            background: rgba(201, 168, 76, 0.15);
+            padding: 0.15in 0.2in;
+            border-left: 3px solid #c9a84c;
+            margin: 0.2in 0;
+            font-style: italic;
+        }
+
+        .stat-box {
+            background: #0a0a0f;
+            color: #fff;
+            padding: 0.3in;
+            text-align: center;
+            margin: 0.25in 0;
+            border-radius: 8px;
+        }
+
+        .stat-box .number {
+            font-size: 36pt;
+            font-weight: 800;
+            color: #c9a84c;
+            display: block;
+        }
+
+        .stat-box .label {
+            font-size: 11pt;
+            color: rgba(255,255,255,0.6);
+        }
+
+        ul {
+            margin: 0.15in 0 0.15in 0.3in;
+        }
+
+        li {
+            margin-bottom: 0.08in;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3in;
+            margin: 0.2in 0;
+        }
+
+        .col-box {
+            background: #f8f8f8;
+            padding: 0.2in;
+            border-radius: 6px;
+        }
+
+        .col-box h4 {
+            font-size: 11pt;
+            font-weight: 700;
+            margin-bottom: 0.1in;
+            color: #c9a84c;
+        }
+
+        .col-box ul {
+            margin: 0;
+            padding-left: 0.2in;
+        }
+
+        .pillar {
+            background: #f8f8f8;
+            padding: 0.2in;
+            margin: 0.15in 0;
+            border-radius: 6px;
+            border-left: 3px solid #c9a84c;
+        }
+
+        .pillar h4 {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #c9a84c;
+            margin-bottom: 0.05in;
+        }
+
+        .pillar p {
+            margin: 0;
+            font-size: 10pt;
+        }
+
+        .cta-section {
+            background: linear-gradient(180deg, #0a0a0f 0%, #12121a 100%);
+            color: #fff;
+            padding: 0.4in;
+            margin: 0.3in -0.75in -0.75in -0.75in;
+            text-align: center;
+        }
+
+        .cta-section h3 {
+            color: #c9a84c;
+            font-size: 18pt;
+            margin-bottom: 0.15in;
+        }
+
+        .cta-section p {
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            max-width: 5in;
+            margin: 0 auto 0.1in;
+        }
+
+        .cta-section .url {
+            color: #c9a84c;
+            font-weight: 600;
+            font-size: 14pt;
+            margin-top: 0.2in;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0.5in;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 9pt;
+            color: #999;
+        }
+
+        @media print {
+            body {
+                padding: 0;
+            }
+            .cover {
+                margin: 0;
+                padding: 1in;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+    <div class="cover-logo">QUANT<span>PRIME</span></div>
+    <h1>THE QUANT PRIME<br><span class="gold">MANIFESTO</span></h1>
+    <p class="cover-subtitle">The Truth About Trading They Don't Want You to Know</p>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<h2>You've Been Lied To</h2>
+
+<p>Every YouTube ad. Every "trading guru." Every broker promising you financial freedom.</p>
+
+<p>They all tell you the same story: learn some patterns, follow some signals, manage your risk, and eventually you'll be profitable.</p>
+
+<p><strong>It's a lie.</strong></p>
+
+<p>Not because trading can't work. It can. But because the version of trading they're selling you — retail trading — is designed to extract money from you, not make money for you.</p>
+
+<p>Here's the truth the industry doesn't want you to understand:</p>
+
+<div class="stat-box">
+    <span class="number">70-90%</span>
+    <span class="label">of retail traders lose money</span>
+</div>
+
+<p>This isn't a scare statistic. It's a legal requirement. FCA-regulated brokers are forced to publish these numbers. Go check. They're on every broker's website, buried in the fine print.</p>
+
+<p>The question isn't whether retail traders lose. It's <em>why</em>.</p>
+
+<h2>The Retail Trap</h2>
+
+<p>Retail trading is built on a foundation of randomness dressed up as strategy.</p>
+
+<p>Think about what you've been taught:</p>
+<ul>
+    <li>Draw trendlines</li>
+    <li>Watch for candlestick patterns</li>
+    <li>Use RSI and MACD</li>
+    <li>"Cut your losses and let your winners run"</li>
+</ul>
+
+<p>These concepts aren't wrong. They're just incomplete. <em>Dangerously</em> incomplete.</p>
+
+<p>They're the equivalent of teaching someone to play chess by showing them how the pieces move — then sending them to compete against grandmasters.</p>
+
+<div class="highlight">
+You know the rules. You don't understand the game.
+</div>
+
+<p><strong>The game is rigged. But not in the way you think.</strong></p>
+
+<p>It's not that "big money" is hunting your stop losses (though sometimes they are). It's that you're playing a different game than the professionals — and you don't even know it.</p>
+
+<h2>What The Professionals Know</h2>
+
+<p>Here's what separates the 5% who win from the 95% who don't:</p>
+
+<p><strong>They understand the algorithm.</strong></p>
+
+<p>Not "an" algorithm. <em>The</em> algorithm.</p>
+
+<p>Every price movement in every market follows a mathematical structure. It's fractal — meaning the same patterns repeat on every timeframe, from the 1-minute chart to the monthly.</p>
+
+<p>This isn't mysticism. It's mathematics. The same mathematics that governs everything from seashells to galaxies.</p>
+
+<div class="highlight">
+The market isn't random. It's <em>complex</em>. There's a difference.
+</div>
+
+<p>Random means unpredictable. Complex means difficult to predict without the right framework. Once you have that framework, patterns emerge that are invisible to everyone else.</p>
+
+<p><strong>This is quant trading.</strong></p>
+
+<p>Quantitative trading means using mathematical and statistical models to identify opportunities. It means removing emotion, removing guesswork, and removing the "art" that loses people money.</p>
+
+<h2 class="page-break">The Two Types of Traders</h2>
+
+<p>There are only two types of traders in the world:</p>
+
+<div class="two-col">
+    <div class="col-box">
+        <h4>Type 1: Algorithm Readers</h4>
+        <ul>
+            <li>See structure where others see chaos</li>
+            <li>Know <em>why</em> price moves</li>
+            <li>Position before the move</li>
+            <li>Consistently profitable</li>
+        </ul>
+    </div>
+    <div class="col-box">
+        <h4>Type 2: Liquidity Providers</h4>
+        <ul>
+            <li>Chase moves after they happen</li>
+            <li>Buy when it "feels" bullish</li>
+            <li>Sell when it "feels" bearish</li>
+            <li>Fuel Type 1's profits</li>
+        </ul>
+    </div>
+</div>
+
+<p>Right now, if you're being honest with yourself, you're probably Type 2.</p>
+
+<p>That's not an insult. It's a diagnosis. And diagnoses can be treated.</p>
+
+<h2>What Is Quant Trading, Really?</h2>
+
+<div class="two-col">
+    <div class="col-box">
+        <h4>Quant Trading IS NOT:</h4>
+        <ul>
+            <li>Reserved for hedge funds</li>
+            <li>Impossibly complex mathematics</li>
+            <li>"Robots" trading for you</li>
+            <li>A get-rich-quick scheme</li>
+        </ul>
+    </div>
+    <div class="col-box">
+        <h4>Quant Trading IS:</h4>
+        <ul>
+            <li>Systematic market understanding</li>
+            <li>Data and probability over feelings</li>
+            <li>Recognizing repeating patterns</li>
+            <li>Rules that remove human error</li>
+        </ul>
+    </div>
+</div>
+
+<p>You don't need a PhD. You don't need to write code (though it helps). You don't need millions in capital.</p>
+
+<p>You need to understand how the market <em>actually</em> works — not the version sold to retail traders, but the version the professionals operate from.</p>
+
+<h2>The Quant Prime Approach</h2>
+
+<p>At Quant Prime, we've spent years decoding market structure and building tools that make institutional-level analysis accessible to individual traders.</p>
+
+<p>Our approach is built on three pillars:</p>
+
+<div class="pillar">
+    <h4>1. Volatility State — Recoil</h4>
+    <p>Markets breathe. They expand and contract in predictable cycles. Understanding where you are in this cycle changes everything about how you trade.</p>
+</div>
+
+<div class="pillar">
+    <h4>2. Liquidity Structure — Meridian</h4>
+    <p>Money doesn't move randomly. It flows toward liquidity — the pools of orders that smart money uses to enter and exit positions. See the liquidity, see the future.</p>
+</div>
+
+<div class="pillar">
+    <h4>3. Trend Regime — Cockpit</h4>
+    <p>Not all market conditions are created equal. Some favor trending strategies, some favor mean reversion. Knowing which regime you're in prevents you from fighting the market.</p>
+</div>
+
+<h2 class="page-break">The Path Forward</h2>
+
+<p>If you've read this far, something resonated.</p>
+
+<p>Maybe you're tired of the cycle: hope, loss, frustration, repeat.</p>
+
+<p>Maybe you've sensed that there's something more to this — something the gurus aren't telling you.</p>
+
+<p>Maybe you're ready to stop being liquidity and start being the one who profits from it.</p>
+
+<div class="highlight">
+You've taken the first step. You now know more about how markets actually work than most traders ever will.
+</div>
+
+<p>But knowledge without action is just entertainment.</p>
+
+<p>Quant Prime exists to take serious traders from confusion to clarity. From retail victim to quantitative operator.</p>
+
+<p>This isn't a promise of easy money. It's a promise of real education. Real tools. Real results.</p>
+
+<p><strong>The path is there. The question is whether you'll walk it.</strong></p>
+
+</div>
+
+<div class="cta-section">
+    <h3>Welcome to Quant Prime</h3>
+    <p>Watch your inbox for deeper insights into market structure, real examples, and opportunities to accelerate your journey.</p>
+    <p class="url">quantprime.uk</p>
+</div>
+
+</body>
+</html>
