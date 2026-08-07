@@ -5665,9 +5665,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="modal-box">
     <div class="lock-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
     <h3 id="modal-title">Feature Locked</h3>
-    <p id="modal-text">This feature requires a higher tier. Upgrade to unlock access.</p>
-    <a href="/pricing" class="btn">View Plans</a>
-    <button class="later-btn" onclick="closeModal()">Not now</button>
+    <div id="modal-text">This feature requires a higher tier. Upgrade to unlock access.</div>
+    <a href="/pricing" class="btn" style="margin-top: 8px;">Unlock Now →</a>
+    <button class="later-btn" onclick="closeModal()">Maybe later</button>
   </div>
 </div>
 
@@ -6711,20 +6711,41 @@ function updateDashboardData() {
     if (memberDaysEl) memberDaysEl.textContent = `${daysActive} days active`;
   }
   
-  // Update next billing (use subscription data if available, otherwise estimate)
+  // Update next billing (use subscription data if available, otherwise estimate from signup)
   const nextBillingEl = document.getElementById('next-billing');
   const daysUntilEl = document.getElementById('days-until-billing');
+  const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   
   if (userProfile.subscription_ends_at) {
+    // Use actual subscription end date
     const endDate = new Date(userProfile.subscription_ends_at);
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
     if (nextBillingEl) nextBillingEl.textContent = `${endDate.getDate().toString().padStart(2, '0')} ${months[endDate.getMonth()]}`;
     
     const daysUntil = Math.ceil((endDate - new Date()) / (1000 * 60 * 60 * 24));
     if (daysUntilEl) daysUntilEl.textContent = `${daysUntil} days remaining`;
-  } else if (userTier === 'free' || userTier === 'admin') {
-    if (nextBillingEl) nextBillingEl.textContent = userTier === 'admin' ? 'NEVER' : 'N/A';
-    if (daysUntilEl) daysUntilEl.textContent = userTier === 'admin' ? 'Admin account' : 'No subscription';
+  } else if (userTier === 'free') {
+    if (nextBillingEl) nextBillingEl.textContent = 'N/A';
+    if (daysUntilEl) daysUntilEl.textContent = 'No subscription';
+  } else if (userTier === 'admin') {
+    if (nextBillingEl) nextBillingEl.textContent = 'NEVER';
+    if (daysUntilEl) daysUntilEl.textContent = 'Admin account';
+  } else {
+    // Paid tier but no subscription_ends_at - estimate based on tier_updated_at or created_at
+    const subscriptionStart = new Date(userProfile.tier_updated_at || userProfile.created_at || authUser.created_at);
+    
+    // Calculate next billing: same day of month as signup, next occurrence
+    const now = new Date();
+    let nextBilling = new Date(now.getFullYear(), now.getMonth(), subscriptionStart.getDate());
+    
+    // If that date has passed this month, move to next month
+    if (nextBilling <= now) {
+      nextBilling.setMonth(nextBilling.getMonth() + 1);
+    }
+    
+    if (nextBillingEl) nextBillingEl.textContent = `${nextBilling.getDate().toString().padStart(2, '0')} ${months[nextBilling.getMonth()]}`;
+    
+    const daysUntil = Math.ceil((nextBilling - now) / (1000 * 60 * 60 * 24));
+    if (daysUntilEl) daysUntilEl.textContent = `${daysUntil} days remaining`;
   }
   
   // Update settings page
@@ -6740,10 +6761,29 @@ function updateDashboardData() {
     settingsTier.textContent = `${tierUpper} · ${tierPrices[userTier] || '£0'}/mo`;
   }
   
-  // Hide upgrade link for admin
+  // Update upgrade link to show NEXT tier (not always Ascension)
   const upgradeLink = document.getElementById('upgrade-link');
-  if (upgradeLink && userTier === 'admin') {
-    upgradeLink.style.display = 'none';
+  if (upgradeLink) {
+    const tierOrder = ['free', 'research', 'recoil', 'terminal', 'suite', 'ascension'];
+    const tierNames = {
+      'research': 'Research',
+      'recoil': 'Recoil', 
+      'terminal': 'Terminal',
+      'suite': 'Full Suite',
+      'ascension': 'Ascension'
+    };
+    const currentIndex = tierOrder.indexOf(userTier.toLowerCase());
+    
+    // Hide if admin or already at top tier
+    if (userTier === 'admin' || userTier === 'ascension' || currentIndex >= tierOrder.length - 1) {
+      upgradeLink.style.display = 'none';
+    } else {
+      const nextTier = tierOrder[currentIndex + 1];
+      const nextTierName = tierNames[nextTier] || nextTier.toUpperCase();
+      const nextTierPrice = tierPrices[nextTier] || '';
+      upgradeLink.textContent = `Upgrade to ${nextTierName} ${nextTierPrice ? '(' + nextTierPrice + '/mo)' : ''} →`;
+      upgradeLink.style.display = 'block';
+    }
   }
   
   // Update TradingView username fields if available
@@ -6898,20 +6938,76 @@ function switchView(viewId) {
   }
 }
 
-function showLockedModal(view) {
-  const titles = {
-    'academy': 'Academy Access',
-    'cockpit': 'Cockpit — Visual Analysis',
-    'intelligence': 'Intelligence Access'
-  };
-  const texts = {
-    'academy': 'The full curriculum — Levels 1–9, the notebook system, and the completion guarantee — is part of the Ascension plan.',
-    'cockpit': 'The Cockpit is the multi-timeframe visual analysis overlay — EMAs, liquidity pools, FVGs, AMD phases, and fractal dashboards. Available with higher tiers.',
-    'intelligence': 'QP Intelligence is your AI-powered analysis assistant. Currently in development — stay tuned.'
+function showLockedModal(view, requiredTier) {
+  // Feature info with required tiers and value propositions
+  const features = {
+    'academy': {
+      title: 'Academy Access',
+      tier: 'ascension',
+      price: '£258',
+      description: 'The complete 9-level curriculum with the notebook system, weekly 1-on-1 calls, and the results guarantee.',
+      value: 'Everything you need to become consistently profitable.'
+    },
+    'cockpit': {
+      title: 'Cockpit — Visual Analysis',
+      tier: 'cockpit',
+      price: '£88',
+      description: 'Multi-timeframe visual analysis overlay — EMAs, liquidity pools, FVGs, AMD phases, and fractal dashboards.',
+      value: 'See what the institutions see.'
+    },
+    'recoil': {
+      title: 'Recoil Indicator',
+      tier: 'recoil',
+      price: '£28',
+      description: 'Precision entries at optimal retracement zones with trend-aligned triggers.',
+      value: 'Your edge in trending markets.'
+    },
+    'meridian': {
+      title: 'Meridian Indicator',
+      tier: 'terminal',
+      price: '£58',
+      description: 'Advanced market structure detection with dynamic S/R and momentum analysis.',
+      value: 'See reversals before they happen.'
+    },
+    'intelligence': {
+      title: 'QP Intelligence',
+      tier: 'ascension',
+      price: '£258',
+      description: 'AI-powered market analysis assistant.',
+      value: 'Coming soon — exclusive to Ascension.'
+    }
   };
   
-  document.getElementById('modal-title').textContent = titles[view] || 'Feature Locked';
-  document.getElementById('modal-text').textContent = texts[view] || 'This feature requires a higher tier.';
+  const feature = features[view] || {
+    title: 'Feature Locked',
+    tier: requiredTier || 'recoil',
+    price: '£28',
+    description: 'This feature requires an upgrade to access.',
+    value: 'Unlock your full trading potential.'
+  };
+  
+  const tierNames = {
+    'research': 'Research',
+    'recoil': 'Recoil',
+    'terminal': 'Terminal',
+    'suite': 'Full Suite',
+    'ascension': 'Ascension'
+  };
+  
+  const tierName = tierNames[feature.tier] || feature.tier.toUpperCase();
+  
+  document.getElementById('modal-title').textContent = feature.title;
+  document.getElementById('modal-text').innerHTML = `
+    <div style="text-align: center;">
+      <p style="margin-bottom: 16px; color: var(--text-2);">${feature.description}</p>
+      <div style="background: var(--gold-glow); border: 1px solid rgba(201,168,76,0.3); border-radius: 10px; padding: 16px; margin: 16px 0;">
+        <div style="font-size: 11px; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 4px;">UNLOCK WITH</div>
+        <div style="font-size: 20px; font-weight: 700; color: var(--gold);">${tierName}</div>
+        <div style="font-size: 14px; color: var(--text-2);">${feature.price}/month</div>
+      </div>
+      <p style="font-size: 13px; color: var(--gold); font-weight: 500;">${feature.value}</p>
+    </div>
+  `;
   document.getElementById('modal').classList.add('open');
 }
 
@@ -11017,8 +11113,8 @@ document.addEventListener('DOMContentLoaded', function() {
     animateCounters();
   }, 300);
   
-  updateBillingInfo();
-  updateMemberInfo();
+  // Note: Billing/member info is now set by updateDashboardData() after auth
+  // Demo functions removed to prevent overwriting real subscription data
 });
 
 // Re-run when switching to home view
