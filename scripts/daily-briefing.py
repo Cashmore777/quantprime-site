@@ -723,19 +723,35 @@ def save_to_archive(html, date_str):
 
 
 def get_recipients():
-    """Get recipients from local JSON file (manually managed for now)"""
-    recipients_file = Path(__file__).parent / 'recipients.json'
+    """Get Research+ tier member emails from Supabase"""
+    import urllib.request
     
-    if recipients_file.exists():
+    SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co'
+    SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NDkyNjg0MiwiZXhwIjoyMTAwNTAyODQyfQ.r5_bRHQtec8iP1M5WtTkGwHwLVvm8F-zFu-2mqqcjVk'
+    
+    # Tiers that get daily briefing
+    tiers = ['research', 'recoil', 'terminal', 'suite', 'ascension', 'admin']
+    recipients = set()
+    
+    for tier in tiers:
+        url = f"{SUPABASE_URL}/rest/v1/profiles?tier=eq.{tier}&select=email"
+        req = urllib.request.Request(url)
+        req.add_header('apikey', SUPABASE_SERVICE_KEY)
+        req.add_header('Authorization', f'Bearer {SUPABASE_SERVICE_KEY}')
+        
         try:
-            with open(recipients_file) as f:
-                data = json.load(f)
-                return data.get('emails', [])
-        except:
-            pass
+            with urllib.request.urlopen(req, timeout=10) as response:
+                data = json.loads(response.read().decode())
+                for profile in data:
+                    if profile.get('email'):
+                        recipients.add(profile['email'])
+        except Exception as e:
+            print(f"Warning: Could not fetch {tier} tier: {e}")
     
-    # Fallback to test email
-    return ['clandestineascendancy.tmp@gmail.com']
+    # Always include test email as backup
+    recipients.add('clandestineascendancy.tmp@gmail.com')
+    
+    return list(recipients)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # MAIN
