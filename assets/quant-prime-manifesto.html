@@ -2,19 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>The Quant Prime Manifesto</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        @page {
-            size: A4;
-            margin: 0;
-        }
-
         :root {
             --gold: #c9a84c;
             --gold-dim: rgba(201, 168, 76, 0.15);
-            --gold-glow: rgba(201, 168, 76, 0.25);
+            --gold-glow: rgba(201, 168, 76, 0.4);
             --bg: #0a0a0f;
             --bg-card: #0f0f16;
             --surface: #13131c;
@@ -23,11 +18,12 @@
             --text: #ffffff;
             --text-dim: rgba(255, 255, 255, 0.75);
             --text-muted: rgba(255, 255, 255, 0.45);
-            --cyan: #00abff;
+            --cyan: #00d4ff;
             --green: #22c55e;
             --blue: #3b82f6;
             --amber: #f59e0b;
             --red: #ef4444;
+            --purple: #a855f7;
         }
 
         * {
@@ -36,99 +32,240 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 11pt;
+            font-size: 15px;
+            overflow-x: hidden;
         }
 
-        /* Cover page */
+        /* ═══════════════════════════════════════════════════════════
+           ANIMATIONS
+        ═══════════════════════════════════════════════════════════ */
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes scroll-hint {
+            0%, 100% { opacity: 0.3; transform: translateY(0); }
+            50% { opacity: 1; transform: translateY(8px); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes code-scroll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           COVER PAGE
+        ═══════════════════════════════════════════════════════════ */
+        
         .cover {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: linear-gradient(180deg, var(--bg) 0%, #0c0c14 50%, var(--bg) 100%);
+            padding: 40px 30px;
             position: relative;
             overflow: hidden;
-            page-break-after: always;
+            background: linear-gradient(180deg, #0a0a12 0%, var(--bg) 50%, #0a0a12 100%);
         }
 
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: particle-float linear infinite;
+            opacity: 0;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; animation-duration: 18s; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 30%; animation-duration: 12s; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 40%; animation-duration: 20s; animation-delay: 1s; }
+        .particle:nth-child(5) { left: 50%; animation-duration: 14s; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 60%; animation-duration: 17s; animation-delay: 5s; }
+        .particle:nth-child(7) { left: 70%; animation-duration: 13s; animation-delay: 2s; }
+        .particle:nth-child(8) { left: 80%; animation-duration: 16s; animation-delay: 4s; }
+        .particle:nth-child(9) { left: 90%; animation-duration: 19s; animation-delay: 1s; }
+
+        /* Glow orb behind title */
         .cover::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 60%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+            animation: pulse-glow 4s ease-in-out infinite;
             pointer-events: none;
         }
 
         .cover-content {
             position: relative;
             z-index: 1;
+            animation: slide-up 1s ease-out;
         }
 
         .cover-logo {
-            font-size: 14pt;
+            font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.4em;
             color: var(--gold);
-            margin-bottom: 60px;
-            text-shadow: 0 0 40px rgba(201, 168, 76, 0.3);
+            margin-bottom: 40px;
+            text-shadow: 0 0 30px var(--gold-glow);
         }
 
         .cover h1 {
-            font-size: 48pt;
+            font-size: clamp(32px, 10vw, 48px);
             font-weight: 800;
             letter-spacing: -0.02em;
             margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--text) 0%, var(--gold) 100%);
+            background: linear-gradient(135deg, var(--text) 0%, var(--gold) 50%, var(--text) 100%);
+            background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradient-shift 5s ease infinite;
         }
 
         .cover-subtitle {
-            font-size: 16pt;
+            font-size: 16px;
             color: var(--text-dim);
             font-weight: 300;
-            margin-bottom: 80px;
+            margin-bottom: 50px;
         }
 
         .cover-tagline {
-            font-size: 10pt;
+            font-size: 10px;
             color: var(--text-muted);
-            letter-spacing: 0.25em;
+            letter-spacing: 0.3em;
             text-transform: uppercase;
+            margin-bottom: 60px;
         }
 
-        /* Main content */
+        /* Formula preview on cover */
+        .formula-preview {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            animation: scroll-hint 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--gold);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           MAIN CONTENT
+        ═══════════════════════════════════════════════════════════ */
+        
         .page {
-            padding: 50px 60px;
-            min-height: 100vh;
-            background: var(--bg);
-            page-break-after: always;
+            padding: 60px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
         }
 
         h1.section-title {
-            font-size: 26pt;
+            font-size: 24px;
             font-weight: 800;
             color: var(--gold);
-            margin-bottom: 30px;
-            letter-spacing: -0.02em;
-            padding-bottom: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
             border-bottom: 1px solid var(--gold-dim);
+            position: relative;
+        }
+
+        h1.section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: var(--gold);
         }
 
         h2 {
-            font-size: 18pt;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text);
             margin-top: 35px;
@@ -136,7 +273,7 @@
         }
 
         h3 {
-            font-size: 14pt;
+            font-size: 14px;
             font-weight: 600;
             color: var(--gold);
             margin-top: 25px;
@@ -144,12 +281,12 @@
         }
 
         p {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             color: var(--text-dim);
         }
 
         p.lead {
-            font-size: 13pt;
+            font-size: 17px;
             line-height: 1.8;
             color: var(--text);
         }
@@ -159,168 +296,263 @@
             font-weight: 600;
         }
 
+        /* Highlight boxes */
         .highlight {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--surface-light) 100%);
+            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
             border-left: 3px solid var(--gold);
-            padding: 20px 25px;
+            padding: 20px;
             margin: 25px 0;
             border-radius: 0 12px 12px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dim) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .highlight p {
             margin: 0;
             color: var(--text);
-            font-size: 12pt;
+            font-size: 14px;
+            position: relative;
         }
 
+        /* Big stat box */
         .stat-box {
             background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
             border: 1px solid var(--gold-dim);
-            border-radius: 16px;
-            padding: 30px;
-            margin: 25px 0;
+            border-radius: 20px;
+            padding: 35px 25px;
+            margin: 30px 0;
             text-align: center;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--gold-dim) 0%, transparent 50%);
+            animation: pulse-glow 4s ease-in-out infinite;
         }
 
         .stat-box .number {
-            font-size: 42pt;
+            font-size: 56px;
             font-weight: 800;
             color: var(--gold);
             display: block;
             margin-bottom: 8px;
-            text-shadow: 0 0 40px rgba(201, 168, 76, 0.3);
+            text-shadow: 0 0 40px var(--gold-glow);
+            position: relative;
         }
 
         .stat-box .label {
-            font-size: 10pt;
+            font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.1em;
+            position: relative;
         }
 
         ul, ol {
-            margin: 15px 0 15px 25px;
+            margin: 15px 0 15px 20px;
             color: var(--text-dim);
         }
 
         li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            padding-left: 5px;
         }
 
         li strong {
             color: var(--gold);
         }
 
-        /* Approach boxes - SINGLE COLUMN lists */
-        .approach-box {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        /* ═══════════════════════════════════════════════════════════
+           FORMULA SNIPPETS
+        ═══════════════════════════════════════════════════════════ */
+        
+        .formula-box {
+            background: #08080d;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .approach-box.bad {
-            border-color: rgba(239, 68, 68, 0.25);
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.03) 0%, var(--bg-card) 100%);
+        .formula-box::before {
+            content: 'QUANT PRIME ALGORITHM';
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            font-size: 8px;
+            color: var(--cyan);
+            opacity: 0.5;
+            letter-spacing: 0.1em;
         }
 
-        .approach-box.good {
-            border-color: rgba(34, 197, 94, 0.25);
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, var(--bg-card) 100%);
+        .formula-box code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            display: block;
+            line-height: 1.8;
         }
 
-        .approach-box h4 {
-            font-size: 16pt;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .formula-box .comment {
+            color: var(--text-muted);
         }
 
-        .approach-box.bad h4 {
-            color: var(--red);
+        .formula-box .keyword {
+            color: var(--purple);
         }
 
-        .approach-box.good h4 {
+        .formula-box .number {
+            color: var(--amber);
+        }
+
+        .formula-box .string {
             color: var(--green);
         }
 
-        .approach-box ol {
-            margin: 0;
-            padding-left: 24px;
-            font-size: 11pt;
+        /* Blurred/redacted formula parts */
+        .formula-box .redacted {
+            filter: blur(4px);
+            user-select: none;
+            cursor: not-allowed;
+            transition: filter 0.3s;
         }
 
-        .approach-box ol li {
-            margin-bottom: 12px;
-            padding-left: 8px;
+        .formula-box:hover .redacted {
+            filter: blur(3px);
+        }
+
+        .formula-box .unlock-hint {
+            display: block;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(0, 212, 255, 0.2);
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .formula-box .unlock-hint span {
+            color: var(--gold);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           APPROACH BOXES
+        ═══════════════════════════════════════════════════════════ */
+        
+        .approach-box {
+            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .approach-box.bad {
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .approach-box.bad::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red), transparent);
+        }
+
+        .approach-box.good {
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+
+        .approach-box.good::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), transparent);
+        }
+
+        .approach-box h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .approach-box.bad h4 { color: var(--red); }
+        .approach-box.good h4 { color: var(--green); }
+
+        .approach-box ol {
+            margin: 0;
+            padding-left: 22px;
+            font-size: 13px;
         }
 
         .approach-box p.choice-text {
             color: var(--text-dim);
-            font-size: 11pt;
+            font-size: 13px;
             margin: 0;
             line-height: 1.7;
         }
 
+        /* ═══════════════════════════════════════════════════════════
+           FIRM CARDS
+        ═══════════════════════════════════════════════════════════ */
+        
         .firm-card {
             background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 24px;
-            margin: 18px 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+            padding: 22px;
+            margin: 16px 0;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .firm-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold-dim);
         }
 
         .firm-card h4 {
-            font-size: 14pt;
+            font-size: 14px;
             font-weight: 700;
             color: var(--gold);
             margin-bottom: 10px;
         }
 
         .firm-card p {
-            font-size: 10pt;
+            font-size: 12px;
             margin-bottom: 8px;
         }
 
-        .code-block {
-            background: #08080c;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 20px;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-size: 10pt;
-            color: var(--cyan);
-            margin: 20px 0;
-            white-space: pre-wrap;
-        }
-
-        .quote {
-            font-size: 14pt;
-            font-style: italic;
-            color: var(--text);
-            text-align: center;
-            padding: 35px 30px;
-            border-top: 1px solid var(--gold-dim);
-            border-bottom: 1px solid var(--gold-dim);
-            margin: 35px 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.02) 50%, transparent 100%);
-        }
-
-        .quote-author {
-            display: block;
-            font-size: 10pt;
-            color: var(--text-muted);
-            font-style: normal;
-            margin-top: 15px;
-        }
-
-        /* 2x2 regime grid - EQUAL WIDTH */
+        /* ═══════════════════════════════════════════════════════════
+           REGIME GRID
+        ═══════════════════════════════════════════════════════════ */
+        
         .regime-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -331,10 +563,14 @@
         .regime-card {
             background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
             border-radius: 12px;
-            padding: 20px;
+            padding: 18px;
             text-align: center;
             border: 1px solid var(--border);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .regime-card:hover {
+            transform: scale(1.02);
         }
 
         .regime-card.prime { border-top: 3px solid var(--green); }
@@ -343,9 +579,9 @@
         .regime-card.degraded { border-top: 3px solid var(--red); }
 
         .regime-card h5 {
-            font-size: 11pt;
+            font-size: 11px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: 0.05em;
         }
 
@@ -355,73 +591,150 @@
         .regime-card.degraded h5 { color: var(--red); }
 
         .regime-card p {
-            font-size: 9pt;
+            font-size: 10px;
             margin: 0;
             color: var(--text-muted);
         }
 
-        /* CTA Section - WIDER, BETTER LAYOUT */
+        /* ═══════════════════════════════════════════════════════════
+           MEGA CTA - IMPOSSIBLE TO REFUSE
+        ═══════════════════════════════════════════════════════════ */
+        
         .cta-section {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border: 1px solid var(--gold);
-            border-radius: 20px;
-            padding: 35px 30px;
+            background: linear-gradient(135deg, #15151f 0%, #0f0f18 100%);
+            border: 2px solid var(--gold);
+            border-radius: 24px;
+            padding: 35px 25px;
+            margin: 30px 0;
             text-align: center;
-            margin: 25px 0;
-            box-shadow: 0 8px 40px rgba(201, 168, 76, 0.1), 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(201, 168, 76, 0.15);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--gold-dim) 0%, transparent 40%);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        .cta-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            position: relative;
         }
 
         .cta-section h3 {
-            font-size: 20pt;
+            font-size: 22px;
             color: var(--text);
-            margin-bottom: 15px;
-            font-weight: 700;
+            margin-bottom: 8px;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .cta-section .price-container {
+            margin-bottom: 5px;
+            position: relative;
+        }
+
+        .cta-section .price-strike {
+            font-size: 18px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            margin-right: 10px;
         }
 
         .cta-section .price {
-            font-size: 36pt;
+            font-size: 48px;
             font-weight: 800;
             color: var(--gold);
-            margin-bottom: 5px;
-            text-shadow: 0 0 30px rgba(201, 168, 76, 0.3);
+            text-shadow: 0 0 40px var(--gold-glow);
         }
 
         .cta-section .price span {
-            font-size: 14pt;
+            font-size: 16px;
             font-weight: 400;
             color: var(--text-dim);
         }
 
         .cta-section .price-sub {
-            font-size: 11pt;
+            font-size: 12px;
             color: var(--text-muted);
             margin-bottom: 25px;
+            position: relative;
         }
 
-        /* Feature list - cleaner single column */
-        .cta-features {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 0 auto 25px;
-            max-width: 280px;
+        .cta-section .price-sub strong {
+            color: var(--green);
         }
 
-        .cta-features .feature {
+        /* Value stack */
+        .value-stack {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .value-stack h4 {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            margin-bottom: 15px;
+        }
+
+        .value-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            font-size: 11pt;
-            color: var(--text-dim);
-            text-align: left;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 12px;
         }
 
-        .cta-features .feature::before {
-            content: "✓";
-            color: var(--gold);
+        .value-item:last-child {
+            border-bottom: none;
+        }
+
+        .value-item .name {
+            color: var(--text-dim);
+        }
+
+        .value-item .worth {
+            color: var(--text-muted);
+            text-decoration: line-through;
+        }
+
+        .value-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 1px solid var(--gold-dim);
             font-weight: 700;
-            font-size: 12pt;
-            flex-shrink: 0;
+        }
+
+        .value-total .name {
+            color: var(--text);
+        }
+
+        .value-total .worth {
+            color: var(--gold);
+            font-size: 16px;
         }
 
         .cta-buttons {
@@ -429,43 +742,70 @@
             flex-direction: column;
             gap: 12px;
             align-items: center;
+            position: relative;
         }
 
         .cta-button {
-            display: inline-block;
+            display: block;
             background: linear-gradient(135deg, var(--gold) 0%, #b8973f 100%);
             color: #000;
-            padding: 16px 50px;
-            border-radius: 12px;
+            padding: 18px 40px;
+            border-radius: 14px;
             font-weight: 700;
-            font-size: 13pt;
+            font-size: 15px;
             text-decoration: none;
-            box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
             width: 100%;
-            max-width: 280px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(201, 168, 76, 0.5);
+        }
+
+        .guarantee {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .guarantee svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--green);
         }
 
         .or-divider {
             color: var(--text-muted);
-            font-size: 10pt;
-            margin: 3px 0;
+            font-size: 11px;
+            margin: 5px 0;
+            position: relative;
         }
 
         .discord-button {
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             background: #5865F2;
             color: #fff;
-            padding: 14px 40px;
+            padding: 14px 30px;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 11pt;
+            font-size: 13px;
             text-decoration: none;
             width: 100%;
-            max-width: 280px;
-            box-shadow: 0 4px 20px rgba(88, 101, 242, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .discord-button:hover {
+            transform: translateY(-2px);
         }
 
         .discord-button svg {
@@ -474,17 +814,40 @@
             fill: currentColor;
         }
 
+        /* ═══════════════════════════════════════════════════════════
+           QUOTE & FOOTER
+        ═══════════════════════════════════════════════════════════ */
+        
+        .quote {
+            font-size: 15px;
+            font-style: italic;
+            color: var(--text);
+            text-align: center;
+            padding: 35px 20px;
+            border-top: 1px solid var(--gold-dim);
+            border-bottom: 1px solid var(--gold-dim);
+            margin: 35px 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(201,168,76,0.03) 50%, transparent 100%);
+        }
+
+        .quote-author {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-style: normal;
+            margin-top: 12px;
+        }
+
         .footer {
             text-align: center;
-            padding: 25px;
+            padding: 30px 20px;
             color: var(--text-muted);
-            font-size: 9pt;
+            font-size: 10px;
             border-top: 1px solid var(--border);
-            margin-top: 25px;
         }
 
         .footer .logo {
-            font-size: 11pt;
+            font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.2em;
             color: var(--gold);
@@ -493,63 +856,99 @@
 
         /* Print styles */
         @media print {
-            body {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            .page {
-                page-break-after: always;
-            }
+            body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .particles, .scroll-indicator { display: none; }
         }
     </style>
 </head>
 <body>
 
-<!-- COVER PAGE -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     COVER PAGE
+═══════════════════════════════════════════════════════════════════ -->
 <div class="cover">
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
     <div class="cover-content">
         <div class="cover-logo">QUANT PRIME</div>
         <h1>THE MANIFESTO</h1>
         <p class="cover-subtitle">An Introduction to Quantitative Trading</p>
+        
+        <div class="formula-preview">
+            α = Σ(w<sub>i</sub> × r<sub>i</sub>) − β × R<sub>m</sub>
+        </div>
+        
         <p class="cover-tagline">Where Mathematics Meets Markets</p>
+    </div>
+    
+    <div class="scroll-indicator">
+        <span>SCROLL</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+            <path d="M12 5v14M5 12l7 7 7-7"/>
+        </svg>
     </div>
 </div>
 
-<!-- PAGE 1: THE GREAT DIVIDE -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 1: THE GREAT DIVIDE
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h1 class="section-title">THE GREAT DIVIDE</h1>
     
     <p class="lead">There are two types of traders in this world.</p>
     
-    <p>The first type watches YouTube videos, buys courses from gurus who've never managed real capital, draws lines on charts, and hopes their "intuition" will somehow beat markets designed by the most sophisticated mathematical minds on the planet.</p>
+    <p>The first type watches YouTube videos, buys courses from gurus who've never managed real capital, and hopes their "intuition" will somehow beat algorithms designed by the most sophisticated mathematical minds on the planet.</p>
     
-    <p>The second type operates in silence. They don't post P&L screenshots. They don't sell courses. They manage billions through algorithms so precise that human emotion never enters the equation.</p>
+    <p>The second type operates in silence. They manage billions through systems so precise that human emotion never enters the equation.</p>
     
-    <p><strong>The first group loses. Consistently. Predictably. Inevitably.</strong></p>
-    
+    <p><strong>The first group loses. Consistently. Predictably.</strong></p>
     <p><strong>The second group runs the world.</strong></p>
     
     <div class="stat-box">
         <span class="number">66%</span>
-        <span class="label">Average Annual Returns — Renaissance Medallion Fund (1988-Present)</span>
+        <span class="label">Average Annual Returns — Renaissance Medallion Fund</span>
     </div>
     
-    <p>This isn't luck. This isn't chart patterns or support and resistance. This is <strong>quantitative trading</strong> — the systematic application of mathematics, statistics, and computational power to extract consistent returns from financial markets.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// Edge calculation - simplified</span>
+<span class="keyword">edge</span> = (winRate × avgWin) − (lossRate × avgLoss)
+<span class="keyword">if</span> edge > <span class="number">0</span> <span class="keyword">then</span> <span class="string">"TRADEABLE"</span>
+
+<span class="comment">// The REAL formula we use...</span>
+<span class="redacted">Σ = ∫(μ × σ⁻¹) × Φ(z) × regime_weight</span>
+        </code>
+        <span class="unlock-hint">Full formula available in <span>Research Tier</span></span>
+    </div>
+    
+    <p>This isn't luck. This isn't chart patterns. This is <strong>quantitative trading</strong> — mathematics, statistics, and computational power extracting consistent returns from markets.</p>
     
     <div class="highlight">
         <p>This guide exists because you deserve to know how the game is actually played.</p>
     </div>
 </div>
 
-<!-- PAGE 2: WHAT IS QUANTITATIVE TRADING -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 2: WHAT IS QUANTITATIVE TRADING
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
-    <h1 class="section-title">WHAT IS QUANTITATIVE TRADING?</h1>
+    <h1 class="section-title">WHAT IS QUANT TRADING?</h1>
     
     <p class="lead">Let's be precise.</p>
     
-    <p><strong>Quantitative trading</strong> is the use of mathematical models and statistical analysis to identify trading opportunities, execute trades, and manage risk — all with minimal human intervention.</p>
+    <p><strong>Quantitative trading</strong> uses mathematical models to identify opportunities, execute trades, and manage risk — with minimal human intervention.</p>
     
-    <p>Where retail traders see "candles" and "patterns," quants see:</p>
+    <p>Where retail sees "candles," quants see:</p>
     
     <ul>
         <li><strong>Probability distributions</strong></li>
@@ -559,270 +958,334 @@
         <li><strong>Alpha decay curves</strong></li>
     </ul>
     
-    <p>The difference isn't intelligence. Many retail traders are brilliant people. The difference is <strong>methodology</strong>.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// Signal generation logic</span>
+<span class="keyword">momentum</span> = close − close[<span class="number">20</span>]
+<span class="keyword">volatility</span> = stdev(close, <span class="number">20</span>)
+<span class="keyword">z_score</span> = momentum / volatility
+
+<span class="keyword">if</span> z_score > <span class="number">1.5</span> <span class="keyword">AND</span> regime == <span class="string">"PRIME"</span>
+    <span class="keyword">signal</span> = <span class="string">"BUY"</span>
+        </code>
+    </div>
     
-    <!-- STACKED boxes with SINGLE COLUMN lists -->
+    <p>The difference isn't intelligence. It's <strong>methodology</strong>.</p>
+    
     <div class="approach-box bad">
         <h4>❌ The Retail Approach</h4>
         <ol>
-            <li>Find a "setup" that looks good on historical charts</li>
-            <li>Trust your gut on when to enter</li>
-            <li>Move your stop loss when price gets close</li>
+            <li>Find a "setup" that looks good</li>
+            <li>Trust your gut on entries</li>
+            <li>Move stop loss when price gets close</li>
             <li>Exit based on fear or greed</li>
-            <li>Blame the market when it doesn't work</li>
-            <li>Repeat until account is depleted</li>
+            <li>Blame the market</li>
+            <li>Repeat until broke</li>
         </ol>
     </div>
     
     <div class="approach-box good">
         <h4>✓ The Quantitative Approach</h4>
         <ol>
-            <li>Formulate a testable hypothesis about market behavior</li>
-            <li>Build a mathematical model to test that hypothesis</li>
-            <li>Backtest rigorously against historical data</li>
-            <li>Measure statistical significance of results</li>
-            <li>Optimize position sizing using risk mathematics</li>
-            <li>Monitor edge and adapt before profitability erodes</li>
+            <li>Formulate testable hypothesis</li>
+            <li>Build mathematical model</li>
+            <li>Backtest rigorously</li>
+            <li>Measure statistical significance</li>
+            <li>Optimize position sizing</li>
+            <li>Monitor and adapt</li>
         </ol>
     </div>
     
-    <p style="text-align: center; margin-top: 20px;"><strong>One approach is gambling. The other is engineering.</strong></p>
+    <p style="text-align: center;"><strong>One is gambling. The other is engineering.</strong></p>
 </div>
 
-<!-- PAGE 3: THE GIANTS OF QUANT -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 3: THE GIANTS
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h1 class="section-title">THE GIANTS OF QUANT</h1>
     
-    <p class="lead">To understand what's possible with quantitative methods, you need to understand who's already doing it.</p>
+    <p class="lead">Who's already doing this?</p>
     
     <div class="firm-card">
         <h4>Renaissance Technologies</h4>
-        <p>Founded by <strong>Jim Simons</strong>, former codebreaker and mathematics professor. Their Medallion Fund has averaged 66% annual returns before fees since 1988.</p>
-        <p><em>Simons didn't hire traders. He hired mathematicians, physicists, and computer scientists who could find patterns invisible to the human eye.</em></p>
+        <p>Founded by Jim Simons. <strong>66% average returns since 1988.</strong> They hire mathematicians and physicists, not traders.</p>
     </div>
     
     <div class="firm-card">
         <h4>Two Sigma</h4>
-        <p>Manages over <strong>$60 billion</strong> using machine learning, distributed computing, and massive data analysis. Their approach: every market movement contains information. Their job is to extract it.</p>
+        <p><strong>$60 billion</strong> under management. Every market movement contains information. Their job is to extract it.</p>
     </div>
     
     <div class="firm-card">
         <h4>Citadel</h4>
-        <p>Ken Griffin's Citadel manages over <strong>$50 billion</strong>. Their market-making arm processes approximately 25% of all U.S. equity volume. When you click "buy," Citadel is often on the other side.</p>
+        <p><strong>25% of all US equity volume.</strong> When you click "buy," Citadel is often on the other side.</p>
     </div>
     
-    <div class="firm-card">
-        <h4>D.E. Shaw</h4>
-        <p>Pioneered computational finance. Treats trading as a scientific problem — form hypotheses, run experiments, draw conclusions. Alumni have gone on to found Two Sigma and lead Amazon.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// What they all calculate...</span>
+<span class="keyword">sharpe</span> = (returns − risk_free) / volatility
+<span class="keyword">kelly</span> = (p × b − q) / b
+<span class="keyword">var_95</span> = μ − (<span class="number">1.645</span> × σ)
+
+<span class="comment">// Position sizing (proprietary)</span>
+<span class="redacted">size = f(kelly, var, corr_matrix, regime)</span>
+        </code>
+        <span class="unlock-hint">Our sizing algorithm in <span>Recoil Tier</span></span>
     </div>
     
     <h3>What They All Have in Common</h3>
     <ol>
-        <li>Remove human emotion from trading decisions</li>
-        <li>Test every idea against historical data before risking capital</li>
+        <li>Remove emotion from decisions</li>
+        <li>Test everything before risking capital</li>
         <li>Quantify edge mathematically</li>
-        <li>Monitor and adapt to regime changes</li>
-        <li>Manage risk with scientific precision</li>
+        <li>Adapt to regime changes</li>
+        <li>Manage risk with precision</li>
     </ol>
 </div>
 
-<!-- PAGE 4: THE QUANT FRAMEWORK PART 1 -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 4: THE FRAMEWORK
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h1 class="section-title">THE QUANT FRAMEWORK</h1>
     
-    <p class="lead">How quantitative trading actually works.</p>
-    
     <h2>1. Alpha Research</h2>
-    <p><strong>Alpha</strong> is excess return — the portion of your returns that comes from skill, not luck or market movement.</p>
-    <p>Quants spend most of their time researching potential alpha sources:</p>
+    <p><strong>Alpha</strong> = excess return from skill, not luck.</p>
     <ul>
-        <li><strong>Momentum</strong>: Assets that have performed well tend to continue</li>
-        <li><strong>Mean Reversion</strong>: Assets that deviate tend to return to their average</li>
-        <li><strong>Statistical Arbitrage</strong>: Price discrepancies between related assets</li>
-        <li><strong>Market Microstructure</strong>: Patterns in order flow and execution</li>
+        <li><strong>Momentum</strong>: Winners keep winning</li>
+        <li><strong>Mean Reversion</strong>: Extremes return to average</li>
+        <li><strong>Statistical Arbitrage</strong>: Price discrepancies</li>
     </ul>
     
     <h2>2. Signal Generation</h2>
-    <p>Once an alpha source is identified, it gets converted into a <strong>trading signal</strong> — a mathematical formula that outputs a clear instruction.</p>
     
-    <div class="code-block">If 20-period momentum > 0 
-AND volatility-adjusted return rank > 70th percentile
-THEN signal = BUY</div>
-    
-    <p>Signals aren't opinions. They're mathematical outputs based on clearly defined inputs.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// Regime-aware signal</span>
+<span class="keyword">atr_ratio</span> = atr(<span class="number">14</span>) / sma(atr(<span class="number">14</span>), <span class="number">100</span>)
+<span class="keyword">adx_val</span> = adx(<span class="number">14</span>)
+
+<span class="keyword">regime_score</span> = (atr_ratio × <span class="number">40</span>) + (adx_val × <span class="number">0.6</span>)
+
+<span class="keyword">if</span> regime_score > <span class="number">70</span>: <span class="string">"PRIME"</span>
+<span class="keyword">elif</span> regime_score > <span class="number">55</span>: <span class="string">"FAVOURABLE"</span>
+<span class="keyword">elif</span> regime_score > <span class="number">40</span>: <span class="string">"MARGINAL"</span>
+<span class="keyword">else</span>: <span class="string">"DEGRADED"</span>
+        </code>
+    </div>
     
     <h2>3. Backtesting</h2>
-    <p>Before risking real capital, every signal is tested against historical data. But most retail traders backtest <strong>incorrectly</strong>.</p>
-    
-    <h3>Common Backtesting Errors</h3>
+    <p>Common errors that destroy retail traders:</p>
     <ul>
-        <li><strong>Look-ahead bias</strong>: Using information you wouldn't have had</li>
-        <li><strong>Survivorship bias</strong>: Only testing assets that still exist</li>
-        <li><strong>Overfitting</strong>: Creating models that fail on new data</li>
-        <li><strong>Unrealistic assumptions</strong>: Ignoring slippage and spreads</li>
+        <li><strong>Look-ahead bias</strong>: Using future information</li>
+        <li><strong>Overfitting</strong>: Curve-fitting to noise</li>
+        <li><strong>Ignoring costs</strong>: Spreads eat your edge</li>
     </ul>
 </div>
 
-<!-- PAGE 5: THE QUANT FRAMEWORK PART 2 -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 5: REGIME & RISK
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h2>4. Regime Detection</h2>
-    <p>Markets don't behave the same way all the time. Sophisticated quants <strong>detect regime changes in real-time</strong> and adjust their strategies accordingly.</p>
+    <p>Markets shift. Quants detect it in real-time.</p>
     
-    <!-- 2x2 GRID - EQUAL WIDTH -->
     <div class="regime-grid">
         <div class="regime-card prime">
             <h5>PRIME</h5>
-            <p>Optimal conditions.<br>Full deployment.</p>
+            <p>Full deployment</p>
         </div>
         <div class="regime-card favourable">
             <h5>FAVOURABLE</h5>
-            <p>Good conditions.<br>Standard sizing.</p>
+            <p>Standard sizing</p>
         </div>
         <div class="regime-card marginal">
             <h5>MARGINAL</h5>
-            <p>Elevated caution.<br>Reduced exposure.</p>
+            <p>Reduced exposure</p>
         </div>
         <div class="regime-card degraded">
             <h5>DEGRADED</h5>
-            <p>Poor conditions.<br>Minimal trading.</p>
+            <p>Minimal trading</p>
         </div>
     </div>
     
-    <p>This is why a strategy that "worked in the backtest" suddenly fails in live trading — the regime changed, and the trader didn't adapt.</p>
-    
     <h2>5. Risk Management</h2>
-    <p>This is where quants truly separate from retail.</p>
-    <p>Retail traders think about risk as "where do I put my stop loss?"</p>
-    <p>Quants think about:</p>
-    <ul>
-        <li><strong>Value at Risk (VaR)</strong>: Maximum expected loss at 95% confidence</li>
-        <li><strong>Sharpe Ratio</strong>: Return relative to risk taken</li>
-        <li><strong>Maximum Drawdown</strong>: Worst expected peak-to-trough decline</li>
-        <li><strong>Correlation</strong>: How positions interact with each other</li>
-        <li><strong>Kelly Criterion</strong>: Mathematically optimal position size</li>
-    </ul>
+    <p>Retail: "Where's my stop loss?"</p>
+    <p>Quants:</p>
     
-    <div class="highlight">
-        <p>Risk isn't an afterthought. It's the foundation everything else is built on.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// Risk calculations we run</span>
+<span class="keyword">VaR_95</span> = portfolio_value × z_score × σ
+<span class="keyword">max_position</span> = (risk_per_trade / stop_distance)
+<span class="keyword">kelly_fraction</span> = (win% × payoff − loss%) / payoff
+
+<span class="comment">// Correlation adjustment</span>
+<span class="redacted">adj_size = base_size × (1 − avg_correlation)</span>
+        </code>
+        <span class="unlock-hint">Full risk system in <span>Terminal Tier</span></span>
     </div>
     
-    <h2>6. Execution</h2>
-    <p>Every millisecond of delay, every pip of slippage — it all erodes your edge. A strategy with a 60% win rate can become unprofitable with poor execution.</p>
+    <div class="highlight">
+        <p>Risk isn't an afterthought. It's the foundation.</p>
+    </div>
 </div>
 
-<!-- PAGE 6: WHY RETAIL FAILS -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 6: WHY RETAIL FAILS
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h1 class="section-title">WHY RETAIL FAILS</h1>
     
-    <p class="lead">Let's be honest about why 90% of retail traders lose money.</p>
+    <p class="lead">90% lose. Here's why.</p>
     
-    <h2>1. They Trade Emotions, Not Edges</h2>
-    <p>Fear and greed are the two most expensive emotions in trading. They cause:</p>
+    <h2>1. Trading Emotions</h2>
+    <p>Fear and greed cause:</p>
     <ul>
-        <li>Cutting winners too early</li>
+        <li>Cutting winners early</li>
         <li>Holding losers too long</li>
-        <li>Increasing size after wins (overconfidence)</li>
         <li>Revenge trading after losses</li>
-        <li>Abandoning systems at the worst possible time</li>
+        <li>Abandoning systems at the worst time</li>
     </ul>
     <p><strong>Algorithms don't feel. They execute.</strong></p>
     
-    <h2>2. They Don't Quantify Their Edge</h2>
-    <p>Ask a retail trader: "What's the expected value of your strategy per trade?"</p>
+    <h2>2. No Quantified Edge</h2>
+    <p>Ask a retail trader: "What's your expected value per trade?"</p>
     <p>Most can't answer. They "feel" like it works.</p>
     
     <div class="highlight">
-        <p>A quant knows: "This strategy has a 54% win rate with a 1.3 reward/risk ratio, giving it an expected value of +0.22R per trade, statistically significant at p < 0.01 across 3,000 historical samples."</p>
+        <p>A quant knows: "54% win rate, 1.3 R:R, +0.22R expected value per trade, p < 0.01 across 3,000 samples."</p>
     </div>
     
-    <p><strong>If you can't quantify your edge, you don't have one.</strong></p>
-    
-    <h2>3. They Don't Adapt to Regime Changes</h2>
-    <p>The market that existed in 2020 is not the market of 2024. Retail traders find one "setup" and trade it forever, wondering why it stopped working.</p>
-    
-    <h2>4. They're Trading Against Giants</h2>
-    <p>When you place a trade, you're competing against:</p>
+    <h2>3. Fighting Giants</h2>
+    <p>You're competing against:</p>
     <ul>
-        <li>Algorithms processing data in microseconds</li>
-        <li>Firms with PhDs in mathematics and physics</li>
-        <li>Systems trained on decades of data you'll never access</li>
-        <li>Execution infrastructure you can't afford</li>
+        <li>Algorithms processing microsecond data</li>
+        <li>PhDs in mathematics</li>
+        <li>Decades of training data</li>
+        <li>Infrastructure you can't afford</li>
     </ul>
-    <p><strong>Retail isn't a fair fight. Unless you change your approach.</strong></p>
+    <p><strong>Unless you change your approach.</strong></p>
 </div>
 
-<!-- PAGE 7: THE QUANT PRIME APPROACH -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 7: THE QP APPROACH
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
-    <h1 class="section-title">THE QUANT PRIME APPROACH</h1>
+    <h1 class="section-title">THE QUANT PRIME WAY</h1>
     
-    <p class="lead">This is why Quant Prime exists.</p>
-    
-    <p>We're not another trading education company. We're not selling dreams.</p>
+    <p class="lead">We're not another course.</p>
     
     <div class="highlight">
-        <p><strong>We're a quantitative trading firm that trades private capital using systematic algorithms — and we've opened our methodology to serious traders who want to learn how the game is really played.</strong></p>
+        <p><strong>We're a quantitative trading firm that trades real capital — and we've opened our methodology to serious traders.</strong></p>
     </div>
     
-    <h2>What Makes Us Different</h2>
-    
     <h3>We Trade Our Own Capital</h3>
-    <p>Our algorithms run on real money. Every day. We don't teach theory — we share what's actually working in live markets.</p>
+    <p>Our algorithms run on real money. Daily. We share what actually works.</p>
     
     <h3>Systematic Methodology</h3>
-    <p>Every strategy follows the quant framework: Hypothesis → Model → Backtest → Validate → Deploy → Monitor. No guesswork. No intuition. Just mathematics.</p>
+    <p>Hypothesis → Model → Backtest → Validate → Deploy → Monitor</p>
     
     <h3>Regime Awareness</h3>
-    <p>Our systems actively monitor market regimes and adjust exposure accordingly. We don't fight the market. We adapt to it.</p>
+    <p>Our systems detect market shifts and adapt exposure automatically.</p>
     
     <h3>Edge Maintenance</h3>
-    <p>Edges decay. Strategies stop working. This is normal. We continuously monitor performance and adapt <em>before</em> profitability erodes — not after.</p>
+    <p>Edges decay. We monitor and adapt <em>before</em> profitability erodes.</p>
     
-    <h3>Risk-First Philosophy</h3>
-    <p>We calculate maximum drawdown, position sizing, and correlation before we ever enter a trade. Capital preservation isn't negotiable.</p>
+    <div class="formula-box">
+        <code>
+<span class="comment">// What our members build</span>
+<span class="keyword">indicator</span> QuantPrime_Cockpit
+    <span class="keyword">input</span> regime_threshold = <span class="number">70</span>
+    <span class="keyword">input</span> signal_sensitivity = <span class="number">1.5</span>
+    
+    <span class="redacted">// Core calculation engine
+    signal = calculate_alpha(price, volume, regime)
+    display_dashboard(signal, regime, metrics)</span>
+        </code>
+        <span class="unlock-hint">Build your own in <span>Research Tier</span></span>
+    </div>
 </div>
 
-<!-- PAGE 8: YOUR PATH FORWARD -->
+<!-- ═══════════════════════════════════════════════════════════════════
+     PAGE 8: YOUR PATH FORWARD
+═══════════════════════════════════════════════════════════════════ -->
 <div class="page">
     <h1 class="section-title">YOUR PATH FORWARD</h1>
     
-    <p class="lead">You have two choices.</p>
+    <p class="lead">Two choices.</p>
     
-    <!-- STACKED choice boxes -->
     <div class="approach-box bad">
         <h4>Choice 1: Stay Retail</h4>
-        <p class="choice-text">Continue drawing lines on charts. Trust your gut. Hope the market cooperates. Watch your account slowly bleed out while you wonder what you're doing wrong. Join the 90% who never make it.</p>
+        <p class="choice-text">Keep drawing lines. Trust your gut. Watch your account bleed while wondering what's wrong. Join the 90%.</p>
     </div>
     
     <div class="approach-box good">
         <h4>Choice 2: Go Quant</h4>
-        <p class="choice-text">Learn how the professionals actually operate. Adopt systematic methodology. Quantify your edge mathematically. Manage risk like a fund manager. Join the minority who extract consistent returns from markets.</p>
+        <p class="choice-text">Learn professional methodology. Quantify your edge. Manage risk mathematically. Join the minority who actually extract consistent returns.</p>
     </div>
     
-    <p style="text-align: center;"><strong>Quant Prime exists for people who choose the second path.</strong></p>
-    
-    <!-- RESEARCH TIER CTA - WIDER -->
+    <!-- MEGA CTA -->
     <div class="cta-section">
+        <div class="cta-badge">🔥 MOST POPULAR</div>
         <h3>Start Your Quant Journey</h3>
-        <div class="price">£8<span>/month</span></div>
-        <p class="price-sub">Research Tier — Everything you need to begin</p>
         
-        <div class="cta-features">
-            <div class="feature">10 Research Papers</div>
-            <div class="feature">Indicator Builder Access</div>
-            <div class="feature">Weekly Market Summaries</div>
-            <div class="feature">Daily Briefing Emails</div>
-            <div class="feature">Private Community</div>
-            <div class="feature">Regime Analysis Tools</div>
+        <div class="price-container">
+            <span class="price-strike">£27</span>
+            <span class="price">£8<span>/mo</span></span>
+        </div>
+        <p class="price-sub">Research Tier · <strong>Cancel anytime</strong></p>
+        
+        <div class="value-stack">
+            <h4>WHAT YOU GET</h4>
+            <div class="value-item">
+                <span class="name">10 Research Papers</span>
+                <span class="worth">£97 value</span>
+            </div>
+            <div class="value-item">
+                <span class="name">Indicator Builder Access</span>
+                <span class="worth">£47 value</span>
+            </div>
+            <div class="value-item">
+                <span class="name">Daily Market Briefings</span>
+                <span class="worth">£27 value</span>
+            </div>
+            <div class="value-item">
+                <span class="name">Weekly Analysis Summaries</span>
+                <span class="worth">£17 value</span>
+            </div>
+            <div class="value-item">
+                <span class="name">Private Community Access</span>
+                <span class="worth">£27 value</span>
+            </div>
+            <div class="value-item">
+                <span class="name">Regime Analysis Tools</span>
+                <span class="worth">£37 value</span>
+            </div>
+            <div class="value-total">
+                <span class="name">Total Value</span>
+                <span class="worth">£252</span>
+            </div>
         </div>
         
         <div class="cta-buttons">
-            <a href="https://quantprime.uk/dashboard/register" class="cta-button">Start Research Tier →</a>
-            <span class="or-divider">— or join free —</span>
-            <a href="https://discord.gg/EAHKwd7HvX" class="discord-button">
-                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                Join Free Community
+            <a href="https://quantprime.uk/dashboard/register" class="cta-button">
+                Start For £8 →
             </a>
+            <div class="guarantee">
+                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span>7-day money-back guarantee</span>
+            </div>
         </div>
+        
+        <span class="or-divider">— or join free —</span>
+        
+        <a href="https://discord.gg/EAHKwd7HvX" class="discord-button">
+            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            Join Free Community
+        </a>
     </div>
     
     <div class="quote">
@@ -834,7 +1297,7 @@ THEN signal = BUY</div>
         <div class="logo">QUANT PRIME</div>
         <p>quantprime.uk</p>
         <p style="margin-top: 12px;">© 2026 Quant Prime. All rights reserved.<br>
-        This document is for educational purposes only and does not constitute financial advice.</p>
+        Educational purposes only. Not financial advice.</p>
     </div>
 </div>
 
