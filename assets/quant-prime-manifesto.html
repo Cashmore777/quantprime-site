@@ -756,55 +756,23 @@
 
         .value-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 7px 0;
+            padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
-            font-size: 11px;
+            font-size: 12px;
+            color: var(--text-dim);
         }
 
         .value-item:last-child {
             border-bottom: none;
         }
 
-        .value-item .name {
-            color: var(--text-dim);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .value-item .name::before {
+        .value-item::before {
             content: '✓';
             color: var(--green);
-            font-size: 10px;
-        }
-
-        .value-item .worth {
-            color: var(--text-muted);
-            text-decoration: line-through;
-            font-size: 10px;
-        }
-
-        .value-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 14px;
-            margin-top: 8px;
-            border-top: 1px solid var(--gold-dim);
-            font-weight: 700;
-        }
-
-        .value-total .name {
-            color: var(--text);
-            font-size: 12px;
-        }
-
-        .value-total .worth {
-            color: var(--gold);
-            font-size: 15px;
-            text-decoration: none;
+            font-size: 11px;
+            margin-right: 10px;
+            flex-shrink: 0;
         }
 
         .cta-buttons {
@@ -1155,19 +1123,21 @@
     </ul>
     
     <h2>2. Signal Generation</h2>
+    <p>Translating edge into executable signals:</p>
     
     <div class="formula-section">
-        <div class="formula-intro">Regime Detection Algorithm</div>
+        <div class="formula-intro">Entry Signal Logic</div>
         <div class="formula-box">
-            <span class="tag">QP.REGIME.004</span>
-            <pre><span class="keyword">atr_ratio</span> <span class="operator">=</span> <span class="function">atr</span>(<span class="number">14</span>) <span class="operator">/</span> <span class="function">sma</span>(<span class="function">atr</span>(<span class="number">14</span>), <span class="number">100</span>)
-<span class="keyword">adx</span> <span class="operator">=</span> <span class="function">adx</span>(<span class="number">14</span>)
-<span class="keyword">score</span> <span class="operator">=</span> (atr_ratio <span class="operator">×</span> <span class="number">40</span>) <span class="operator">+</span> (adx <span class="operator">×</span> <span class="number">0.6</span>)
+            <span class="tag">QP.SIGNAL.002</span>
+            <pre><span class="comment">// Momentum + volatility filter</span>
+<span class="keyword">mom</span> <span class="operator">=</span> <span class="function">close</span> <span class="operator">−</span> <span class="function">close</span>[<span class="number">20</span>]
+<span class="keyword">vol</span> <span class="operator">=</span> <span class="function">stdev</span>(close, <span class="number">20</span>)
+<span class="keyword">z_score</span> <span class="operator">=</span> mom <span class="operator">/</span> vol
 
-<span class="keyword">if</span> score <span class="operator">></span> <span class="number">70</span>: <span class="string">"PRIME"</span>
-<span class="keyword">elif</span> score <span class="operator">></span> <span class="number">55</span>: <span class="string">"FAVOURABLE"</span>
-<span class="keyword">elif</span> score <span class="operator">></span> <span class="number">40</span>: <span class="string">"MARGINAL"</span>
-<span class="keyword">else</span>: <span class="string">"DEGRADED"</span></pre>
+<span class="keyword">if</span> z_score <span class="operator">></span> <span class="number">1.5</span> <span class="keyword">AND</span> regime <span class="operator">==</span> <span class="string">"PRIME"</span>:
+    <span class="keyword">signal</span> <span class="operator">=</span> <span class="string">"BUY"</span>
+<span class="keyword">elif</span> z_score <span class="operator"><</span> <span class="number">-1.5</span> <span class="keyword">AND</span> regime <span class="operator">==</span> <span class="string">"PRIME"</span>:
+    <span class="keyword">signal</span> <span class="operator">=</span> <span class="string">"SELL"</span></pre>
         </div>
     </div>
     
@@ -1288,19 +1258,15 @@
     <h3>Regime Awareness</h3>
     <p>Systems detect shifts and adjust automatically.</p>
     
-    <div class="formula-section">
-        <div class="formula-intro">What Members Build</div>
-        <div class="formula-box">
-            <span class="tag">QP.BUILD.006</span>
-            <pre><span class="keyword">indicator</span> QP_Cockpit
-    <span class="keyword">input</span> threshold <span class="operator">=</span> <span class="number">70</span>
-    <span class="keyword">input</span> sensitivity <span class="operator">=</span> <span class="number">1.5</span>
-    
-    <span class="comment">// Your custom logic here</span>
-    <span class="keyword">signal</span> <span class="operator">=</span> <span class="function">calculate</span>(price, vol, regime)
-    <span class="function">display</span>(signal, metrics)</pre>
-        </div>
-    </div>
+    <h3>What Members Build</h3>
+    <p>Custom indicators derived from our core algorithms:</p>
+    <ul>
+        <li><strong>Regime Scanner</strong> — Know when to deploy vs. sit out</li>
+        <li><strong>Momentum Cockpit</strong> — Multi-timeframe trend strength</li>
+        <li><strong>Volatility Dashboard</strong> — ATR-based position sizing</li>
+        <li><strong>Entry Signals</strong> — Based on Recoil/Meridian logic</li>
+        <li><strong>Risk Calculator</strong> — Kelly + correlation-adjusted sizing</li>
+    </ul>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -1326,41 +1292,18 @@
         <h3>Start Your Quant Journey</h3>
         
         <div class="price-container">
-            <span class="price-strike">£27</span>
             <span class="price">£8<span>/mo</span></span>
         </div>
         <p class="price-sub">Research Tier · <strong>Cancel anytime</strong></p>
         
         <div class="value-stack">
-            <h4>WHAT YOU GET</h4>
-            <div class="value-item">
-                <span class="name">10 Research Papers</span>
-                <span class="worth">£97</span>
-            </div>
-            <div class="value-item">
-                <span class="name">Indicator Builder</span>
-                <span class="worth">£47</span>
-            </div>
-            <div class="value-item">
-                <span class="name">Daily Briefings</span>
-                <span class="worth">£27</span>
-            </div>
-            <div class="value-item">
-                <span class="name">Weekly Analysis</span>
-                <span class="worth">£17</span>
-            </div>
-            <div class="value-item">
-                <span class="name">Private Community</span>
-                <span class="worth">£27</span>
-            </div>
-            <div class="value-item">
-                <span class="name">Regime Tools</span>
-                <span class="worth">£37</span>
-            </div>
-            <div class="value-total">
-                <span class="name">Total Value</span>
-                <span class="worth">£252</span>
-            </div>
+            <h4>EVERYTHING INCLUDED</h4>
+            <div class="value-item">10 Research Papers</div>
+            <div class="value-item">Indicator Builder Access</div>
+            <div class="value-item">Daily Market Briefings</div>
+            <div class="value-item">Weekly Analysis Reports</div>
+            <div class="value-item">Private Community</div>
+            <div class="value-item">Regime Analysis Tools</div>
         </div>
         
         <div class="cta-buttons">
