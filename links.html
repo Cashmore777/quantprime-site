@@ -279,6 +279,16 @@
             text-align: center;
         }
 
+        .disclaimer {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: var(--surface-dim);
+            border-radius: 8px;
+        }
+
         .footer-links {
             display: flex;
             justify-content: center;
@@ -320,18 +330,18 @@
         <!-- Header -->
         <div class="header">
             <h1 class="logo-title">QUANT<span>PRIME</span></h1>
-            <p class="subtitle">Algorithmic precision. Verified results.</p>
+            <p class="subtitle">Algorithmic precision. Systematic edge.</p>
         </div>
 
         <!-- Stats -->
         <div class="stats">
             <div class="stat">
-                <div class="stat-value">1.8k+</div>
-                <div class="stat-label">Verified Trades</div>
+                <div class="stat-value">250+</div>
+                <div class="stat-label">Traders</div>
             </div>
             <div class="stat">
-                <div class="stat-value gold">64%</div>
-                <div class="stat-label">Win Rate</div>
+                <div class="stat-value gold">1.8k+</div>
+                <div class="stat-label">Backtested Trades</div>
             </div>
             <div class="stat">
                 <div class="stat-value">£8</div>
@@ -396,8 +406,8 @@
                 </svg>
             </a>
 
-            <!-- 5. BUY: Pricing -->
-            <a href="/pricing.html" class="link cta-secondary">
+            <!-- 5. BUY: Pricing (de-emphasized for cold traffic) -->
+            <a href="/pricing.html" class="link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
@@ -450,6 +460,7 @@
 
         <!-- Footer -->
         <div class="footer">
+            <p class="disclaimer">Trading carries risk. Past and backtested performance is not indicative of future results. Not financial advice.</p>
             <div class="footer-links">
                 <a href="/terms.html">Terms</a>
                 <a href="mailto:cash@themoneyprinter.uk">Contact</a>
