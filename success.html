@@ -635,9 +635,9 @@ function init() {
   trackConversion();
 }
 
-// Track affiliate conversion
+// Track affiliate conversion AND funnel purchase
 async function trackConversion() {
-  // Wait a moment for site-auth.js to initialize
+  // Wait a moment for scripts to initialize
   await new Promise(r => setTimeout(r, 500));
   
   // Only track if we have valid purchase info
@@ -655,9 +655,19 @@ async function trackConversion() {
   const tierKey = (name || '').toLowerCase();
   const rateInfo = COMMISSION_RATES[tierKey];
   
+  // Track in affiliate system
   if (rateInfo && typeof trackAffiliateConversion === 'function') {
     trackAffiliateConversion(email, name, rateInfo.price, rateInfo.commission);
-    console.log('[Success] Conversion tracked:', name, '£' + rateInfo.commission);
+    console.log('[Success] Affiliate conversion tracked:', name, '£' + rateInfo.commission);
+  }
+  
+  // Track in funnel tracking spine (suppresses prospect emails, marks as customer)
+  if (window.QP_TRACK && rateInfo) {
+    // First ensure user exists in tracking
+    await QP_TRACK.trackOptIn(email, name.split(' ')[0] || name);
+    // Then track purchase
+    await QP_TRACK.trackPurchase(tierKey, rateInfo.price);
+    console.log('[Success] Funnel purchase tracked:', tierKey, '£' + rateInfo.price);
   }
 
 function initSnippetSuccess() {
