@@ -5,116 +5,242 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO -->
-<title>Compounding Returns — Quant Prime Trading Instruments</title>
-<meta name="description" content="See how systematic trading compounds over time. Real performance data from Quant Prime's Recoil and Meridian indicators projected across timeframes.">
-<meta name="keywords" content="trading compounding calculator, compound interest trading, systematic trading returns, quant prime results">
+<title>Compounding Calculator — Quant Prime</title>
+<meta name="description" content="Calculate your compounding returns. See how systematic trading grows your account over time with our interactive calculator.">
 <link rel="canonical" href="https://quantprime.uk/compounding">
-<meta property="og:title" content="Compounding Returns — Quant Prime">
-<meta property="og:description" content="See how systematic trading compounds over time with Quant Prime instruments.">
-<meta property="og:url" content="https://quantprime.uk/compounding">
-<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
-<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-.stats-source {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-}
-
-.source-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+/* Calculator Section */
+.calculator-section {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.8rem;
-}
-
-.source-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.source-dot.gold { background: var(--gold); }
-.source-dot.cyan { background: #0088cc; }
-
-.baseline-note {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  padding: 0.75rem 1.5rem;
-  background: var(--gold-bg);
-  border: 1px solid rgba(184,150,46,0.2);
-  border-radius: 8px;
-  display: inline-block;
-}
-
-.baseline-note-wrapper {
-  text-align: center;
-}
-
-.baseline-note span {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.baseline-note strong {
-  color: var(--gold);
-}
-
-.compound-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 1rem;
+  border-radius: 16px;
+  padding: 2rem;
   margin-bottom: 3rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 
-.compound-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
+.calc-header {
   text-align: center;
+  margin-bottom: 2rem;
 }
 
-.compound-card.highlight {
-  border-color: var(--gold);
-  background: var(--gold-bg);
-}
-
-.compound-period {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
+.calc-header h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
 }
 
-.compound-value {
+.calc-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.calc-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.calc-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.calc-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.calc-input {
+  padding: 0.875rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--text);
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.calc-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 150, 46, 0.1);
+}
+
+.calc-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.calc-select {
+  appearance: none;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;
+  background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") right 1rem center no-repeat;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.calc-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 150, 46, 0.1);
+}
+
+/* Preset buttons */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  justify-content: center;
+}
+
+.preset-btn {
+  padding: 0.5rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.preset-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.preset-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+/* Results Table */
+.results-table-wrapper {
+  overflow-x: auto;
+  margin: 0 -0.5rem;
+  padding: 0 0.5rem;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.results-table th {
+  padding: 0.875rem 1rem;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+}
+
+.results-table th:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.results-table th:last-child {
+  border-radius: 0 8px 0 0;
+  text-align: right;
+}
+
+.results-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text);
+}
+
+.results-table td:last-child {
+  text-align: right;
+}
+
+.results-table tr:hover td {
+  background: rgba(184, 150, 46, 0.04);
+}
+
+.results-table tr.highlight td {
+  background: var(--gold-bg);
+  font-weight: 600;
+}
+
+.results-table .profit {
+  color: #16a34a;
+}
+
+.results-table .balance {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.summary-card {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: 10px;
+}
+
+.summary-card.highlight {
+  background: var(--gold-bg);
+  border: 1px solid rgba(184, 150, 46, 0.2);
+}
+
+.summary-value {
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--gold);
+  margin-bottom: 0.25rem;
 }
 
-.compound-note {
+.summary-value.green { color: #16a34a; }
+
+.summary-label {
   font-size: 0.7rem;
   color: var(--text-tertiary);
-  margin-top: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-/* Chart Section */
-.chart-section {
+/* QP Performance Section */
+.qp-performance {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
@@ -122,84 +248,76 @@
   margin-bottom: 3rem;
 }
 
-.chart-header {
+.qp-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.chart-title {
-  font-size: 1rem;
-  font-weight: 500;
+.qp-title {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.chart-legend {
+.qp-badges {
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  gap: 0.75rem;
 }
 
-.legend-item {
+.qp-badge {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.75rem;
 }
 
-.legend-line {
-  width: 20px;
-  height: 2px;
+.qp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
-.legend-line.combined { background: var(--gold); }
+.qp-dot.gold { background: var(--gold); }
+.qp-dot.cyan { background: #0088cc; }
 
-.chart-container {
-  position: relative;
-  height: 320px;
-  width: 100%;
-}
-
-#equityChart {
-  width: 100%;
-  height: 100%;
-}
-
-.chart-stats {
+.qp-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 1rem;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-light);
 }
 
-.chart-stat {
+.qp-stat {
   text-align: center;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: 10px;
 }
 
-.chart-stat-value {
+.qp-stat-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: var(--text);
 }
 
-.chart-stat-value.positive { color: #22c55e; }
-.chart-stat-value.negative { color: #ef4444; }
+.qp-stat-value.gold { color: var(--gold); }
 
-.chart-stat-label {
-  font-size: 0.7rem;
+.qp-stat-label {
+  font-size: 0.65rem;
   color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-top: 0.25rem;
 }
 
-@media (max-width: 600px) {
-  .chart-stats { grid-template-columns: repeat(2, 1fr); }
-}
-
+/* Methodology */
 .methodology-box {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -242,6 +360,12 @@
   color: var(--text-secondary);
   line-height: 1.6;
 }
+
+@media (max-width: 600px) {
+  .calculator-section { padding: 1.25rem; }
+  .calc-inputs { gap: 1rem; }
+  .summary-cards { grid-template-columns: repeat(2, 1fr); }
+}
 </style>
 </head>
 <body>
@@ -270,115 +394,120 @@
 
 <section class="page-header">
   <div class="container">
-    <div class="label">COMPOUNDING RETURNS</div>
+    <div class="label">COMPOUNDING CALCULATOR</div>
     <h1>The edge isn't one trade.<br><em>It's a thousand.</em></h1>
-    <p>Combined performance from Meridian + Recoil, projected across timeframes. Small, consistent returns compound into something extraordinary.</p>
+    <p>Enter your numbers and see how systematic returns compound over time.</p>
   </div>
 </section>
 
-<section class="compound-section">
+<section style="padding: 0 0 4rem;">
   <div class="container">
     
-    <!-- Source Badges -->
-    <div class="stats-source reveal">
-      <div class="source-badge">
-        <div class="source-dot cyan"></div>
-        <span><strong>Meridian</strong> — 206 trades, 64.4% WR, +11.6%</span>
+    <!-- Interactive Calculator -->
+    <div class="calculator-section reveal">
+      <div class="calc-header">
+        <h2>Calculate Your Growth</h2>
+        <p>Adjust the inputs to see how compounding works with your numbers</p>
       </div>
-      <div class="source-badge">
-        <div class="source-dot gold"></div>
-        <span><strong>Recoil</strong> — 114 trades, 71.1% WR, +10.5%</span>
+
+      <div class="calc-inputs">
+        <div class="calc-group">
+          <label class="calc-label">Starting Balance</label>
+          <input type="text" class="calc-input" id="startBalance" placeholder="1000" value="1000">
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Return per Period (%)</label>
+          <input type="text" class="calc-input" id="returnRate" placeholder="0.15" value="0.15">
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Compounding Frequency</label>
+          <select class="calc-select" id="frequency">
+            <option value="daily">Per Day</option>
+            <option value="weekly">Per Week</option>
+            <option value="monthly">Per Month</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="presets">
+        <span style="font-size: 0.75rem; color: var(--text-tertiary); margin-right: 0.5rem;">Presets:</span>
+        <button class="preset-btn active" onclick="applyPreset('conservative')">Conservative (0.1%/day)</button>
+        <button class="preset-btn" onclick="applyPreset('moderate')">Moderate (0.15%/day)</button>
+        <button class="preset-btn" onclick="applyPreset('aggressive')">Aggressive (0.25%/day)</button>
+        <button class="preset-btn" onclick="applyPreset('weekly')">Weekly (1%/week)</button>
+      </div>
+
+      <div class="results-table-wrapper">
+        <table class="results-table" id="resultsTable">
+          <thead>
+            <tr>
+              <th>Period</th>
+              <th>Balance</th>
+              <th>Profit</th>
+              <th>Total Return</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="summary-cards" id="summaryCards">
+        <!-- Populated by JS -->
       </div>
     </div>
 
-    <!-- Baseline Note -->
-    <div class="baseline-note-wrapper reveal">
-      <div class="baseline-note">
-        <span>All % figures calculated from a <strong>$1,000 account baseline</strong> using standard lot sizes</span>
-      </div>
-    </div>
-
-    <!-- Compound Cards -->
-    <div class="compound-grid reveal">
-      <div class="compound-card">
-        <div class="compound-period">DAILY AVG</div>
-        <div class="compound-value">+0.15%</div>
-        <div class="compound-note">per trading day</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">1 WEEK</div>
-        <div class="compound-value">+0.77%</div>
-        <div class="compound-note">5 trading days</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">1 MONTH</div>
-        <div class="compound-value">+3.4%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">3 MONTHS</div>
-        <div class="compound-value">+10.5%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card highlight">
-        <div class="compound-period">6 MONTHS</div>
-        <div class="compound-value">+22%</div>
-        <div class="compound-note">compounded</div>
-      </div>
-      <div class="compound-card">
-        <div class="compound-period">1 YEAR</div>
-        <div class="compound-value">+48%</div>
-        <div class="compound-note">projected</div>
-      </div>
-    </div>
-
-    <!-- Actual Equity Curve Chart -->
-    <div class="chart-section reveal">
-      <div class="chart-header">
-        <div class="chart-title">Actual Equity Curve: $1,000 Starting Balance</div>
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-line combined"></div>
-            <span>Combined Equity</span>
+    <!-- QP Performance Reference -->
+    <div class="qp-performance reveal">
+      <div class="qp-header">
+        <div class="qp-title">Quant Prime Historical Performance</div>
+        <div class="qp-badges">
+          <div class="qp-badge">
+            <div class="qp-dot cyan"></div>
+            <span>Meridian</span>
+          </div>
+          <div class="qp-badge">
+            <div class="qp-dot gold"></div>
+            <span>Recoil</span>
           </div>
         </div>
       </div>
-      <div class="chart-container">
-        <canvas id="equityChart"></canvas>
-      </div>
-      <div class="chart-stats">
-        <div class="chart-stat">
-          <div class="chart-stat-value positive" id="statFinalPnl">+$221</div>
-          <div class="chart-stat-label">Combined P&L</div>
+      <div class="qp-stats">
+        <div class="qp-stat">
+          <div class="qp-stat-value">320</div>
+          <div class="qp-stat-label">Total Trades</div>
         </div>
-        <div class="chart-stat">
-          <div class="chart-stat-value" id="statMaxDD">-$30.70</div>
-          <div class="chart-stat-label">Max Drawdown</div>
+        <div class="qp-stat">
+          <div class="qp-stat-value">64%</div>
+          <div class="qp-stat-label">Win Rate</div>
         </div>
-        <div class="chart-stat">
-          <div class="chart-stat-value" id="statPeakEquity">$1,221</div>
-          <div class="chart-stat-label">Peak Equity</div>
+        <div class="qp-stat">
+          <div class="qp-stat-value gold">+22%</div>
+          <div class="qp-stat-label">6 Month Return</div>
         </div>
-        <div class="chart-stat">
-          <div class="chart-stat-value" id="statTrades">320</div>
-          <div class="chart-stat-label">Total Trades</div>
+        <div class="qp-stat">
+          <div class="qp-stat-value">~0.15%</div>
+          <div class="qp-stat-label">Avg Daily</div>
         </div>
       </div>
+      <p style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+        Based on combined Meridian + Recoil performance Jan–Jul 2026 on $1,000 baseline. <a href="/results" style="color: var(--gold);">View full results →</a>
+      </p>
     </div>
 
     <!-- Methodology -->
     <div class="methodology-box reveal">
-      <h3>Methodology</h3>
+      <h3>How Compounding Works</h3>
       <ul>
-        <li>All returns calculated on a <strong>$1,000 account baseline</strong></li>
-        <li>Meridian: $115.91 profit = 11.6% return (Jan–Jul 2026, 0.01 lot)</li>
-        <li>Recoil: $105.18 profit = 10.5% return (Jan–Jul 2026, 0.02 lot)</li>
-        <li>Combined: ~22% over 144 trading days = <strong>0.15%/day average</strong></li>
-        <li>Chart shows actual trade-by-trade equity, not projections</li>
-        <li>Returns scale linearly with position size and account balance</li>
+        <li>Each period's return is calculated on the <strong>new balance</strong>, not the original</li>
+        <li>Small, consistent returns grow exponentially over time</li>
+        <li>0.15%/day compounded = ~48% annual return (not 0.15 × 252 = 38%)</li>
+        <li>The calculator uses accurate compound interest: Balance × (1 + rate)^periods</li>
+        <li>Trading days assumed: 5/week (252/year), 21/month</li>
       </ul>
       <div class="disclaimer-text">
-        <strong>Risk Disclaimer:</strong> Past performance does not guarantee future results. These projections are based on historical backtesting data and assume consistent execution. Actual results will vary due to market conditions, slippage, and execution timing. Trade only with capital you can afford to lose.
+        <strong>Risk Disclaimer:</strong> This calculator is for educational purposes only. Past performance does not guarantee future results. Actual trading results will vary due to market conditions, slippage, losses, and execution. Trade only with capital you can afford to lose.
       </div>
     </div>
 
@@ -387,211 +516,175 @@
 
 <section class="next-section">
   <div class="container">
-    <p>Ready to see the numbers for yourself?</p>
-    <a href="/pricing" class="btn-primary">Get Access</a>
+    <p>Ready to access the systems?</p>
+    <a href="/pricing" class="btn-primary">View Pricing</a>
   </div>
 </section>
 
 <footer>
   <div class="container">
     <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
-    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results. Trading leveraged products involves substantial risk of loss. Nothing on this site constitutes financial advice.</p>
-    <p style="margin-top:1rem">© 2026 Quant Prime. All rights reserved. | <a href="/terms" style="color: var(--gold);">Terms & Conditions</a></p>
+    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results.</p>
+    <p style="margin-top:1rem">© 2026 Quant Prime. | <a href="/terms" style="color: var(--gold);">Terms</a></p>
   </div>
 </footer>
 
 <script src="/js/main.js?v=3"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/site-auth.js"></script>
 <script>
-// Load trade data and render equity curve
-async function renderEquityCurve() {
-  const canvas = document.getElementById('equityChart');
-  if (!canvas) return;
+// Calculator Logic
+const presets = {
+  conservative: { rate: 0.1, freq: 'daily' },
+  moderate: { rate: 0.15, freq: 'daily' },
+  aggressive: { rate: 0.25, freq: 'daily' },
+  weekly: { rate: 1, freq: 'weekly' }
+};
+
+function applyPreset(name) {
+  const preset = presets[name];
+  document.getElementById('returnRate').value = preset.rate;
+  document.getElementById('frequency').value = preset.freq;
   
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  ctx.scale(dpr, dpr);
+  // Update active button
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
   
-  const width = rect.width;
-  const height = rect.height;
-  const padding = { top: 20, right: 20, bottom: 40, left: 60 };
-  const chartWidth = width - padding.left - padding.right;
-  const chartHeight = height - padding.top - padding.bottom;
-
-  // Fetch trade data
-  let meridianTrades = [];
-  let recoilTrades = [];
-  
-  try {
-    const [mRes, rRes] = await Promise.all([
-      fetch('/data/meridian-trades.json'),
-      fetch('/data/recoil-trades.json')
-    ]);
-    meridianTrades = await mRes.json();
-    recoilTrades = await rRes.json();
-  } catch (e) {
-    console.error('Failed to load trade data:', e);
-    return;
-  }
-
-  // Filter Recoil to 2026 only and adjust cumulative to start from 0
-  const recoil2025End = recoilTrades.find(t => t.date === '2025-12-31')?.cumulative || 30.18;
-  const recoil2026 = recoilTrades
-    .filter(t => t.date >= '2026-01-01')
-    .map(t => ({
-      ...t,
-      cumulative: t.cumulative - recoil2025End
-    }));
-
-  // Combine all trades into one timeline with running totals
-  const allTrades = [];
-  
-  // Add Meridian trades
-  meridianTrades.forEach(t => {
-    allTrades.push({
-      date: t.date,
-      pnl: t.pnl,
-      source: 'meridian',
-      num: t.num
-    });
-  });
-  
-  // Add Recoil 2026 trades
-  recoil2026.forEach(t => {
-    allTrades.push({
-      date: t.date,
-      pnl: t.pnl,
-      source: 'recoil',
-      num: t.num
-    });
-  });
-  
-  // Sort all trades by date, then by trade number within same date
-  allTrades.sort((a, b) => {
-    if (a.date !== b.date) return a.date.localeCompare(b.date);
-    return a.num - b.num;
-  });
-  
-  // Build combined equity curve
-  let cumulativePnl = 0;
-  const equityData = allTrades.map((t, i) => {
-    cumulativePnl += t.pnl;
-    return {
-      date: t.date,
-      equity: 1000 + cumulativePnl,
-      pnl: cumulativePnl,
-      tradeNum: i + 1
-    };
-  });
-
-  // Calculate min/max for Y axis
-  const allEquities = equityData.map(d => d.equity);
-  const minEquity = Math.min(...allEquities);
-  const maxEquity = Math.max(...allEquities);
-  const minVal = Math.floor((minEquity - 20) / 10) * 10;
-  const maxVal = Math.ceil((maxEquity + 20) / 10) * 10;
-  
-  // Scale functions
-  const xScale = (i) => padding.left + (i / (equityData.length - 1)) * chartWidth;
-  const yScale = (v) => padding.top + chartHeight - ((v - minVal) / (maxVal - minVal)) * chartHeight;
-
-  // Clear and draw background
-  ctx.fillStyle = '#fafaf8';
-  ctx.fillRect(0, 0, width, height);
-
-  // Draw grid lines
-  ctx.strokeStyle = '#e8e6e0';
-  ctx.lineWidth = 1;
-  const yTicks = 5;
-  for (let i = 0; i <= yTicks; i++) {
-    const y = padding.top + (i / yTicks) * chartHeight;
-    ctx.beginPath();
-    ctx.moveTo(padding.left, y);
-    ctx.lineTo(width - padding.right, y);
-    ctx.stroke();
-    
-    // Y-axis labels
-    const val = maxVal - (i / yTicks) * (maxVal - minVal);
-    ctx.fillStyle = '#9a9a9a';
-    ctx.font = '10px JetBrains Mono, monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('$' + Math.round(val).toLocaleString(), padding.left - 8, y + 3);
-  }
-
-  // X-axis labels (months)
-  ctx.textAlign = 'center';
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-  months.forEach((month, i) => {
-    const x = padding.left + (i / 6) * chartWidth;
-    ctx.fillText(month, x, height - 10);
-  });
-
-  // Draw $1000 baseline
-  ctx.strokeStyle = '#ccc';
-  ctx.setLineDash([4, 4]);
-  ctx.beginPath();
-  ctx.moveTo(padding.left, yScale(1000));
-  ctx.lineTo(width - padding.right, yScale(1000));
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Draw area fill under curve
-  ctx.beginPath();
-  ctx.moveTo(xScale(0), yScale(1000));
-  equityData.forEach((d, i) => {
-    ctx.lineTo(xScale(i), yScale(d.equity));
-  });
-  ctx.lineTo(xScale(equityData.length - 1), yScale(1000));
-  ctx.closePath();
-  
-  const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
-  gradient.addColorStop(0, 'rgba(184, 150, 46, 0.25)');
-  gradient.addColorStop(1, 'rgba(184, 150, 46, 0)');
-  ctx.fillStyle = gradient;
-  ctx.fill();
-
-  // Draw combined equity line
-  ctx.strokeStyle = '#b8962e';
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.beginPath();
-  equityData.forEach((d, i) => {
-    const x = xScale(i);
-    const y = yScale(d.equity);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-  });
-  ctx.stroke();
-
-  // Calculate stats
-  const finalEquity = equityData[equityData.length - 1]?.equity || 1000;
-  const combinedPnl = finalEquity - 1000;
-  const peakEquity = Math.max(...allEquities);
-  
-  // Calculate max drawdown from combined equity
-  let maxDD = 0;
-  let peak = 1000;
-  equityData.forEach(d => {
-    if (d.equity > peak) peak = d.equity;
-    const dd = peak - d.equity;
-    if (dd > maxDD) maxDD = dd;
-  });
-
-  document.getElementById('statFinalPnl').textContent = '+$' + Math.round(combinedPnl);
-  document.getElementById('statMaxDD').textContent = '-$' + maxDD.toFixed(2);
-  document.getElementById('statMaxDD').classList.add('negative');
-  document.getElementById('statPeakEquity').textContent = '$' + Math.round(peakEquity).toLocaleString();
-  document.getElementById('statTrades').textContent = equityData.length.toString();
+  calculateCompounding();
 }
 
-// Render on load and resize
-window.addEventListener('load', renderEquityCurve);
-window.addEventListener('resize', renderEquityCurve);
+function parseNumber(str) {
+  return parseFloat(str.replace(/[£$,]/g, '')) || 0;
+}
+
+function formatCurrency(num) {
+  if (num >= 1000000) return '$' + (num / 1000000).toFixed(2) + 'M';
+  if (num >= 10000) return '$' + (num / 1000).toFixed(1) + 'k';
+  return '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function formatPercent(num) {
+  if (num >= 1000) return num.toFixed(0) + '%';
+  if (num >= 100) return num.toFixed(1) + '%';
+  return num.toFixed(2) + '%';
+}
+
+function calculateCompounding() {
+  const startBalance = parseNumber(document.getElementById('startBalance').value) || 1000;
+  const returnRate = parseFloat(document.getElementById('returnRate').value) || 0.15;
+  const frequency = document.getElementById('frequency').value;
+  
+  // Define periods based on frequency
+  let periods = [];
+  let periodsPerYear;
+  
+  if (frequency === 'daily') {
+    periodsPerYear = 252; // Trading days
+    periods = [
+      { label: '1 Week', count: 5 },
+      { label: '2 Weeks', count: 10 },
+      { label: '1 Month', count: 21 },
+      { label: '2 Months', count: 42 },
+      { label: '3 Months', count: 63, highlight: false },
+      { label: '6 Months', count: 126, highlight: true },
+      { label: '1 Year', count: 252 },
+      { label: '2 Years', count: 504 },
+      { label: '3 Years', count: 756 }
+    ];
+  } else if (frequency === 'weekly') {
+    periodsPerYear = 52;
+    periods = [
+      { label: '1 Month', count: 4 },
+      { label: '2 Months', count: 8 },
+      { label: '3 Months', count: 13 },
+      { label: '6 Months', count: 26, highlight: true },
+      { label: '1 Year', count: 52 },
+      { label: '2 Years', count: 104 },
+      { label: '3 Years', count: 156 }
+    ];
+  } else { // monthly
+    periodsPerYear = 12;
+    periods = [
+      { label: '3 Months', count: 3 },
+      { label: '6 Months', count: 6, highlight: true },
+      { label: '1 Year', count: 12 },
+      { label: '2 Years', count: 24 },
+      { label: '3 Years', count: 36 },
+      { label: '5 Years', count: 60 },
+      { label: '10 Years', count: 120 }
+    ];
+  }
+  
+  // Calculate and render table
+  const tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = '';
+  
+  const rate = returnRate / 100;
+  
+  periods.forEach(period => {
+    const finalBalance = startBalance * Math.pow(1 + rate, period.count);
+    const profit = finalBalance - startBalance;
+    const totalReturn = ((finalBalance - startBalance) / startBalance) * 100;
+    
+    const row = document.createElement('tr');
+    if (period.highlight) row.classList.add('highlight');
+    
+    row.innerHTML = `
+      <td>${period.label}</td>
+      <td class="balance">${formatCurrency(finalBalance)}</td>
+      <td class="profit">+${formatCurrency(profit)}</td>
+      <td class="profit">+${formatPercent(totalReturn)}</td>
+    `;
+    
+    tbody.appendChild(row);
+  });
+  
+  // Calculate summary stats
+  const oneYearBalance = startBalance * Math.pow(1 + rate, periodsPerYear);
+  const oneYearProfit = oneYearBalance - startBalance;
+  const oneYearReturn = ((oneYearBalance - startBalance) / startBalance) * 100;
+  
+  const sixMonthBalance = startBalance * Math.pow(1 + rate, Math.floor(periodsPerYear / 2));
+  const sixMonthReturn = ((sixMonthBalance - startBalance) / startBalance) * 100;
+  
+  // Simple (non-compounded) return for comparison
+  const simpleAnnual = rate * periodsPerYear * 100;
+  const compoundBonus = oneYearReturn - simpleAnnual;
+  
+  document.getElementById('summaryCards').innerHTML = `
+    <div class="summary-card">
+      <div class="summary-value">${formatPercent(oneYearReturn)}</div>
+      <div class="summary-label">1 Year Return</div>
+    </div>
+    <div class="summary-card highlight">
+      <div class="summary-value green">+${formatCurrency(oneYearProfit)}</div>
+      <div class="summary-label">1 Year Profit</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-value">${formatCurrency(oneYearBalance)}</div>
+      <div class="summary-label">Final Balance</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-value green">+${formatPercent(compoundBonus)}</div>
+      <div class="summary-label">Compound Bonus*</div>
+    </div>
+  `;
+}
+
+// Add input listeners
+document.getElementById('startBalance').addEventListener('input', () => {
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  calculateCompounding();
+});
+document.getElementById('returnRate').addEventListener('input', () => {
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  calculateCompounding();
+});
+document.getElementById('frequency').addEventListener('change', () => {
+  document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+  calculateCompounding();
+});
+
+// Initial calculation
+document.addEventListener('DOMContentLoaded', calculateCompounding);
 </script>
 </body>
 </html>
