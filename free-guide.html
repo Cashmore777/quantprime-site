@@ -432,6 +432,10 @@
         </main>
     </div>
 
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tracking Spine -->
+    <script src="/js/tracking.js"></script>
     <script>
         const form = document.getElementById('leadForm');
         const formState = document.getElementById('formState');
@@ -441,24 +445,37 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
 
             submitBtn.classList.add('loading');
             submitBtn.textContent = 'Processing...';
 
             try {
-                const response = await fetch('/api/free-guide-signup', {
+                // 1. Track opt-in in tracking spine (creates user record)
+                if (window.QP_TRACK) {
+                    await QP_TRACK.trackOptIn(email, name);
+                }
+
+                // 2. Also send to backend API for email delivery
+                await fetch('/api/free-guide-signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, source: 'free-guide' })
+                    body: JSON.stringify({ 
+                        name, 
+                        email, 
+                        source: 'free-guide',
+                        entry_source: localStorage.getItem('qp_entry_source') || 'direct'
+                    })
                 });
 
+                // 3. Show success
                 formState.classList.add('hide');
                 successState.classList.add('show');
 
             } catch (error) {
                 console.error('Signup error:', error);
+                // Still show success - tracking might have worked
                 formState.classList.add('hide');
                 successState.classList.add('show');
             }
