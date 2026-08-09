@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Guide - Quant Prime</title>
+    <link rel="icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c9a84c;
-            --gold-dim: rgba(201, 168, 76, 0.2);
-            --bg: #0a0a0f;
-            --surface: #12121a;
-            --surface-light: #1a1a24;
-            --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.6);
-            --text-muted: rgba(255, 255, 255, 0.4);
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --surface-dim: #f2f1ed;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --text-muted: #9a9a9a;
+            --gold: #b8962e;
+            --gold-soft: #d4b94e;
+            --gold-bg: #faf6eb;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --border: #e8e6e0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.03);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --radius: 16px;
         }
 
         * {
@@ -25,42 +34,16 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
-            line-height: 1.6;
+            line-height: 1.65;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Background effects */
-        .bg-grid {
-            position: fixed;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .bg-glow {
-            position: fixed;
-            top: -50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(201,168,76,0.08) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Main container */
         .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 40px 24px;
             min-height: 100vh;
@@ -71,13 +54,14 @@
         /* Header */
         .header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .logo {
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: 0.15em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.2em;
             color: var(--text);
         }
 
@@ -91,34 +75,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 80px;
-            padding: 40px 0;
+            gap: 60px;
+            padding: 20px 0 40px;
         }
 
         .hero-content {
             flex: 1;
-            max-width: 560px;
+            max-width: 500px;
         }
 
         .badge {
             display: inline-block;
-            background: var(--gold-dim);
+            background: var(--gold-bg);
             color: var(--gold);
             padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
+            border-radius: 100px;
+            font-size: 11px;
             font-weight: 600;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
+            font-size: 42px;
+            font-weight: 300;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+            color: var(--text);
         }
 
         .hero h1 .gold {
@@ -126,84 +111,86 @@
         }
 
         .hero-subtitle {
-            font-size: 20px;
-            color: var(--text-dim);
-            margin-bottom: 32px;
+            font-size: 17px;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
             line-height: 1.7;
         }
 
         .benefits {
             list-style: none;
-            margin-bottom: 32px;
         }
 
         .benefits li {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-bottom: 16px;
-            font-size: 16px;
-            color: var(--text-dim);
+            margin-bottom: 14px;
+            font-size: 15px;
+            color: var(--text-secondary);
         }
 
         .benefits li::before {
             content: "✓";
             color: var(--gold);
-            font-weight: 700;
+            font-weight: 600;
             flex-shrink: 0;
         }
 
         /* Form card */
         .form-card {
             background: var(--surface);
-            border: 1px solid var(--gold-dim);
-            border-radius: 24px;
-            padding: 48px 40px;
-            width: 420px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px 36px;
+            width: 400px;
             flex-shrink: 0;
+            box-shadow: var(--shadow-lg);
         }
 
         .form-card h2 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 6px;
             text-align: center;
+            color: var(--text);
         }
 
         .form-card .subtext {
-            font-size: 14px;
-            color: var(--text-dim);
+            font-size: 13px;
+            color: var(--text-muted);
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .form-group label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text-dim);
+            margin-bottom: 6px;
+            color: var(--text-secondary);
         }
 
         .form-group input {
             width: 100%;
-            padding: 16px 20px;
+            padding: 14px 16px;
             background: var(--bg);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             color: var(--text);
-            font-size: 16px;
+            font-size: 15px;
             font-family: inherit;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-bg);
         }
 
         .form-group input::placeholder {
@@ -212,61 +199,64 @@
 
         .submit-btn {
             width: 100%;
-            padding: 18px 32px;
-            background: linear-gradient(135deg, var(--gold) 0%, #b8973f 100%);
+            padding: 16px 28px;
+            background: var(--gold);
             border: none;
-            border-radius: 12px;
-            color: #000;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 100px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
             font-family: inherit;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 8px;
+            transition: all 0.2s;
+            margin-top: 6px;
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.3);
+            background: #a6851f;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .privacy-note {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             text-align: center;
-            margin-top: 20px;
+            margin-top: 18px;
+            line-height: 1.5;
         }
 
         /* PDF Preview */
         .pdf-preview {
-            background: var(--surface-light);
+            background: var(--surface-dim);
             border-radius: 12px;
-            padding: 20px;
+            padding: 16px;
             margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .pdf-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--gold-dim);
+            width: 44px;
+            height: 44px;
+            background: var(--gold-bg);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .pdf-info h4 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
+            color: var(--text);
         }
 
         .pdf-info p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
@@ -274,7 +264,7 @@
         .success-state {
             display: none;
             text-align: center;
-            padding: 20px 0;
+            padding: 16px 0;
         }
 
         .success-state.show {
@@ -282,26 +272,29 @@
         }
 
         .success-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(34, 197, 94, 0.2);
+            width: 72px;
+            height: 72px;
+            background: var(--green-bg);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 24px;
-            font-size: 40px;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--green);
         }
 
         .success-state h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
         }
 
         .success-state p {
-            color: var(--text-dim);
+            color: var(--text-secondary);
             margin-bottom: 24px;
+            font-size: 14px;
         }
 
         .download-btn {
@@ -309,21 +302,22 @@
             align-items: center;
             gap: 10px;
             padding: 16px 32px;
-            background: linear-gradient(135deg, var(--gold) 0%, #b8973f 100%);
+            background: var(--gold);
             border: none;
-            border-radius: 12px;
-            color: #000;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 100px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
             font-family: inherit;
             cursor: pointer;
             text-decoration: none;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.2s;
         }
 
         .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.3);
+            background: #a6851f;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .form-state {
@@ -339,6 +333,7 @@
             .hero {
                 flex-direction: column;
                 text-align: center;
+                gap: 40px;
             }
 
             .hero-content {
@@ -346,22 +341,21 @@
             }
 
             .hero h1 {
-                font-size: 36px;
+                font-size: 32px;
             }
 
             .benefits {
                 text-align: left;
-                max-width: 400px;
-                margin: 0 auto 32px;
+                max-width: 360px;
+                margin: 0 auto;
             }
 
             .form-card {
                 width: 100%;
-                max-width: 420px;
+                max-width: 400px;
             }
         }
 
-        /* Loading state */
         .submit-btn.loading {
             opacity: 0.7;
             pointer-events: none;
@@ -369,9 +363,6 @@
     </style>
 </head>
 <body>
-    <div class="bg-grid"></div>
-    <div class="bg-glow"></div>
-
     <div class="container">
         <header class="header">
             <div class="logo">QUANT<span>PRIME</span></div>
@@ -383,15 +374,14 @@
                 <h1>The Truth About <span class="gold">Quant Trading</span></h1>
                 <p class="hero-subtitle">
                     Discover why 90% of retail traders fail — and how quantitative algorithms 
-                    offer a completely different path. No fluff. No hype. Just the mechanics 
-                    the industry doesn't want you to understand.
+                    offer a completely different path. No fluff. Just mechanics.
                 </p>
                 <ul class="benefits">
-                    <li>Why traditional "retail" strategies are designed to fail</li>
+                    <li>Why "retail" strategies are designed to fail</li>
                     <li>What quant trading actually is (and isn't)</li>
-                    <li>The algorithm that moves every market</li>
-                    <li>How professionals approach trading differently</li>
-                    <li>Your roadmap to escaping the retail trap</li>
+                    <li>How algorithms measure, not predict</li>
+                    <li>The professional approach to markets</li>
+                    <li>Your roadmap to systematic trading</li>
                 </ul>
             </div>
 
@@ -404,7 +394,7 @@
                         <div class="pdf-icon">📄</div>
                         <div class="pdf-info">
                             <h4>The Quant Prime Manifesto</h4>
-                            <p>PDF • 12 pages • 5 min read</p>
+                            <p>8 pages • 5 min read</p>
                         </div>
                     </div>
 
@@ -430,12 +420,12 @@
                 <div class="success-state" id="successState">
                     <div class="success-icon">✓</div>
                     <h3>You're In!</h3>
-                    <p>Your guide is ready. Click below to download.</p>
-                    <a href="/assets/quant-prime-manifesto.pdf" download class="download-btn">
-                        <span>📥</span> Download PDF
+                    <p>Your guide is ready. Click below to read.</p>
+                    <a href="/assets/quant-prime-manifesto.html" class="download-btn" target="_blank">
+                        <span>📖</span> Read The Manifesto
                     </a>
                     <p class="privacy-note" style="margin-top: 24px;">
-                        Also check your inbox — we've sent you a welcome email.
+                        We've also sent a copy to your inbox.
                     </p>
                 </div>
             </div>
@@ -458,19 +448,16 @@
             submitBtn.textContent = 'Processing...';
 
             try {
-                // Send to backend
                 const response = await fetch('/api/free-guide-signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, source: 'free-guide' })
                 });
 
-                // Show success regardless (for now)
                 formState.classList.add('hide');
                 successState.classList.add('show');
 
             } catch (error) {
-                // Still show success for UX, log error
                 console.error('Signup error:', error);
                 formState.classList.add('hide');
                 successState.classList.add('show');

@@ -2,406 +2,208 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Quant Prime Manifesto</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #c9a84c;
-            --gold-dim: rgba(201, 168, 76, 0.15);
-            --gold-glow: rgba(201, 168, 76, 0.4);
-            --bg: #0a0a0f;
-            --bg-card: #0f0f16;
-            --surface: #13131c;
-            --surface-light: #1a1a26;
-            --border: rgba(255, 255, 255, 0.06);
-            --text: #ffffff;
-            --text-dim: rgba(255, 255, 255, 0.75);
-            --text-muted: rgba(255, 255, 255, 0.45);
-            --cyan: #00d4ff;
-            --green: #22c55e;
-            --blue: #3b82f6;
-            --amber: #f59e0b;
-            --red: #ef4444;
-            --purple: #a855f7;
-            --pink: #ec4899;
+            --bg: #fafaf8;
+            --surface: #ffffff;
+            --surface-dim: #f2f1ed;
+            --text: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --text-muted: #9a9a9a;
+            --gold: #b8962e;
+            --gold-soft: #d4b94e;
+            --gold-bg: #faf6eb;
+            --cyan: #0088cc;
+            --cyan-bg: #e8f4fa;
+            --green: #16a34a;
+            --green-bg: #f0fdf4;
+            --red: #dc2626;
+            --red-bg: #fef2f2;
+            --border: #e8e6e0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+            --radius: 16px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', -apple-system, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 15px;
-            overflow-x: hidden;
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           ANIMATIONS - MORE DOPAMINE
-        ═══════════════════════════════════════════════════════════ */
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.02); }
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { border-color: rgba(0, 212, 255, 0.2); box-shadow: 0 0 20px rgba(0, 212, 255, 0.1); }
-            50% { border-color: rgba(0, 212, 255, 0.5); box-shadow: 0 0 30px rgba(0, 212, 255, 0.25); }
-        }
-
-        @keyframes slide-up {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes typing-cursor {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        @keyframes scroll-bounce {
-            0%, 100% { transform: translateY(0); opacity: 0.5; }
-            50% { transform: translateY(10px); opacity: 1; }
-        }
-
-        @keyframes gradient-shift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes particle-rise {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 0.8; transform: scale(1); }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-20vh) scale(0.5); opacity: 0; }
-        }
-
-        @keyframes code-glow {
-            0%, 100% { text-shadow: 0 0 5px currentColor; }
-            50% { text-shadow: 0 0 15px currentColor, 0 0 25px currentColor; }
-        }
-
-        @keyframes number-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes line-scan {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* ═══════════════════════════════════════════════════════════
            COVER PAGE
         ═══════════════════════════════════════════════════════════ */
-        
         .cover {
             min-height: 100vh;
-            min-height: 100dvh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 40px 24px 80px;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(180deg, #0a0a12 0%, var(--bg) 50%, #0a0a12 100%);
-        }
-
-        .particles {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: particle-rise 12s linear infinite;
-            opacity: 0;
-        }
-
-        .particle:nth-child(1) { left: 5%; animation-duration: 14s; animation-delay: 0s; }
-        .particle:nth-child(2) { left: 15%; animation-duration: 11s; animation-delay: 1s; }
-        .particle:nth-child(3) { left: 25%; animation-duration: 16s; animation-delay: 3s; }
-        .particle:nth-child(4) { left: 35%; animation-duration: 13s; animation-delay: 2s; }
-        .particle:nth-child(5) { left: 45%; animation-duration: 15s; animation-delay: 4s; }
-        .particle:nth-child(6) { left: 55%; animation-duration: 12s; animation-delay: 1s; }
-        .particle:nth-child(7) { left: 65%; animation-duration: 14s; animation-delay: 3s; }
-        .particle:nth-child(8) { left: 75%; animation-duration: 11s; animation-delay: 2s; }
-        .particle:nth-child(9) { left: 85%; animation-duration: 13s; animation-delay: 0s; }
-        .particle:nth-child(10) { left: 95%; animation-duration: 15s; animation-delay: 4s; }
-
-        .cover::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
-            animation: pulse-glow 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .cover-content {
-            position: relative;
-            z-index: 1;
-            animation: slide-up 1s ease-out;
-            width: 100%;
-            max-width: 500px;
+            padding: 60px 24px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
         }
 
         .cover-logo {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5em;
-            color: var(--gold);
-            margin-bottom: 35px;
-            text-shadow: 0 0 30px var(--gold-glow);
+            font-weight: 500;
+            letter-spacing: 0.3em;
+            color: var(--text-muted);
+            margin-bottom: 40px;
         }
 
+        .cover-logo span { color: var(--gold); }
+
         .cover h1 {
-            font-size: clamp(28px, 9vw, 42px);
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            font-size: clamp(36px, 8vw, 56px);
+            font-weight: 300;
+            letter-spacing: -0.03em;
             margin-bottom: 16px;
-            background: linear-gradient(135deg, var(--text) 0%, var(--gold) 50%, var(--text) 100%);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradient-shift 5s ease infinite;
+            color: var(--text);
         }
 
         .cover-subtitle {
-            font-size: 15px;
-            color: var(--text-dim);
-            font-weight: 300;
-            margin-bottom: 35px;
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 40px;
         }
 
-        .formula-preview {
+        .cover-formula {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--cyan);
-            background: rgba(0, 212, 255, 0.08);
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            padding: 14px 24px;
-            border-radius: 12px;
-            margin-bottom: 35px;
-            animation: float 3s ease-in-out infinite, pulse-border 3s ease-in-out infinite;
-            display: inline-block;
+            background: var(--cyan-bg);
+            padding: 14px 28px;
+            border-radius: 100px;
+            margin-bottom: 50px;
         }
 
         .cover-tagline {
-            font-size: 9px;
+            font-size: 11px;
             color: var(--text-muted);
-            letter-spacing: 0.35em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
         }
 
-        /* FIXED: Scroll indicator centered */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 25px;
-            left: 0;
-            right: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-muted);
-            font-size: 9px;
-            letter-spacing: 0.15em;
-            animation: scroll-bounce 2s ease-in-out infinite;
-        }
-
-        .scroll-indicator svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--gold);
-            stroke-width: 2;
-        }
-
         /* ═══════════════════════════════════════════════════════════
-           MAIN CONTENT
+           CONTENT PAGES
         ═══════════════════════════════════════════════════════════ */
-        
         .page {
-            padding: 50px 20px;
-            max-width: 540px;
+            max-width: 680px;
             margin: 0 auto;
-            position: relative;
+            padding: 80px 24px;
         }
 
-        h1.section-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--gold);
-            margin-bottom: 22px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--gold-dim);
-            position: relative;
+        .section-title {
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--text);
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            letter-spacing: -0.02em;
         }
 
-        h1.section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: var(--gold);
-        }
+        .section-title .gold { color: var(--gold); }
 
         h2 {
-            font-size: 17px;
-            font-weight: 700;
+            font-size: 20px;
+            font-weight: 600;
             color: var(--text);
-            margin-top: 30px;
-            margin-bottom: 12px;
+            margin-top: 40px;
+            margin-bottom: 16px;
         }
 
         h3 {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--gold);
-            margin-top: 22px;
-            margin-bottom: 10px;
+            margin-top: 28px;
+            margin-bottom: 12px;
         }
 
         p {
-            margin-bottom: 14px;
-            color: var(--text-dim);
-            font-size: 14px;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
         }
 
         p.lead {
-            font-size: 16px;
-            line-height: 1.8;
+            font-size: 19px;
             color: var(--text);
+            font-weight: 400;
         }
 
-        strong {
-            color: var(--text);
-            font-weight: 600;
+        strong { color: var(--text); font-weight: 600; }
+
+        ul, ol {
+            margin: 16px 0 16px 24px;
+            color: var(--text-secondary);
         }
 
+        li { margin-bottom: 10px; }
+        li strong { color: var(--gold); }
+
+        /* Highlight box */
         .highlight {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
+            background: var(--gold-bg);
             border-left: 3px solid var(--gold);
-            padding: 18px;
-            margin: 22px 0;
-            border-radius: 0 12px 12px 0;
-            position: relative;
-            overflow: hidden;
+            padding: 20px 24px;
+            margin: 28px 0;
+            border-radius: 0 var(--radius) var(--radius) 0;
         }
 
-        .highlight p {
-            margin: 0;
-            color: var(--text);
-            font-size: 13px;
-        }
+        .highlight p { margin: 0; color: var(--text); font-size: 15px; }
 
-        /* Big stat with animation */
+        /* Stat box */
         .stat-box {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border: 1px solid var(--gold-dim);
-            border-radius: 20px;
-            padding: 30px 20px;
-            margin: 25px 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px;
+            margin: 32px 0;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-box::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--gold-dim) 0%, transparent 50%);
-            animation: pulse-glow 4s ease-in-out infinite;
+            box-shadow: var(--shadow-md);
         }
 
         .stat-box .number {
-            font-size: 52px;
-            font-weight: 800;
+            font-size: 64px;
+            font-weight: 300;
             color: var(--gold);
             display: block;
-            margin-bottom: 6px;
-            text-shadow: 0 0 40px var(--gold-glow);
-            position: relative;
-            animation: number-pulse 2s ease-in-out infinite;
+            margin-bottom: 8px;
+            letter-spacing: -0.03em;
         }
 
         .stat-box .label {
-            font-size: 10px;
+            font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            position: relative;
+            letter-spacing: 0.1em;
         }
 
-        ul, ol {
-            margin: 12px 0 12px 18px;
-            color: var(--text-dim);
-            font-size: 14px;
-        }
-
-        li {
-            margin-bottom: 10px;
-            padding-left: 4px;
-        }
-
-        li strong {
-            color: var(--gold);
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           FORMULA BOXES - MUCH BETTER
-        ═══════════════════════════════════════════════════════════ */
-        
-        .formula-section {
-            margin: 25px 0;
-            position: relative;
-        }
+        /* Formula boxes */
+        .formula-section { margin: 32px 0; }
 
         .formula-intro {
-            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
             color: var(--cyan);
-            letter-spacing: 0.1em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             margin-bottom: 10px;
             display: flex;
@@ -415,588 +217,357 @@
             height: 8px;
             background: var(--cyan);
             border-radius: 50%;
-            animation: code-glow 2s ease-in-out infinite;
         }
 
         .formula-box {
-            background: linear-gradient(135deg, #08080d 0%, #0c0c14 100%);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 14px;
-            padding: 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
             position: relative;
-            overflow: hidden;
-            animation: pulse-border 4s ease-in-out infinite;
-        }
-
-        /* Scanning line effect */
-        .formula-box::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.05), transparent);
-            animation: line-scan 4s linear infinite;
+            box-shadow: var(--shadow-sm);
         }
 
         .formula-box .tag {
             position: absolute;
-            top: 10px;
-            right: 12px;
-            font-size: 7px;
-            color: var(--cyan);
-            opacity: 0.6;
-            letter-spacing: 0.15em;
+            top: 12px;
+            right: 16px;
             font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
         }
 
         .formula-box pre {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
+            font-size: 12px;
             line-height: 1.9;
             margin: 0;
             white-space: pre-wrap;
-            position: relative;
+            color: var(--text-secondary);
         }
 
-        .formula-box .comment { color: #6b7280; }
-        .formula-box .keyword { color: var(--purple); font-weight: 500; }
-        .formula-box .number { color: var(--amber); }
+        .formula-box .keyword { color: #7c3aed; font-weight: 500; }
+        .formula-box .number { color: #d97706; }
         .formula-box .string { color: var(--green); }
         .formula-box .function { color: var(--cyan); }
-        .formula-box .operator { color: var(--pink); }
-
-        /* REDACTED - actual blocked characters, can't copy real text */
-        .formula-box .locked {
-            color: var(--cyan);
-            opacity: 0.4;
-            letter-spacing: 0.5px;
-        }
-
-        .formula-box .locked-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(0, 212, 255, 0.1);
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 9px;
-            color: var(--cyan);
-            margin-left: 8px;
-        }
-
-        .formula-box .locked-label svg {
-            width: 10px;
-            height: 10px;
-            fill: currentColor;
-        }
+        .formula-box .comment { color: var(--text-muted); }
+        .formula-box .locked { color: var(--text-muted); }
 
         .formula-unlock {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px dashed rgba(0, 212, 255, 0.15);
-            font-size: 10px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border);
+            font-size: 11px;
             color: var(--text-muted);
         }
 
-        .formula-unlock span {
-            color: var(--gold);
-            font-weight: 600;
-        }
+        .formula-unlock span { color: var(--gold); font-weight: 600; }
 
-        .formula-unlock svg {
-            width: 12px;
-            height: 12px;
-            fill: var(--gold);
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           APPROACH BOXES
-        ═══════════════════════════════════════════════════════════ */
-        
+        /* Approach boxes */
         .approach-box {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 16px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            position: relative;
-            overflow: hidden;
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
         }
 
-        .approach-box.bad {
-            border-color: rgba(239, 68, 68, 0.15);
-        }
-
-        .approach-box.bad::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--red), transparent);
-        }
-
-        .approach-box.good {
-            border-color: rgba(34, 197, 94, 0.15);
-        }
-
-        .approach-box.good::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--green), transparent);
-        }
+        .approach-box.bad { border-left: 3px solid var(--red); background: var(--red-bg); }
+        .approach-box.good { border-left: 3px solid var(--green); background: var(--green-bg); }
 
         .approach-box h4 {
-            font-size: 15px;
-            font-weight: 700;
+            font-size: 16px;
+            font-weight: 600;
             margin-bottom: 14px;
         }
 
         .approach-box.bad h4 { color: var(--red); }
         .approach-box.good h4 { color: var(--green); }
 
-        /* Operator build box */
-        .operator-box {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border: 1px solid var(--gold-dim);
-            border-radius: 14px;
-            padding: 22px;
-            margin-top: 25px;
-            position: relative;
-        }
+        .approach-box ol { margin: 0; padding-left: 20px; font-size: 14px; }
+        .approach-box p.choice-text { color: var(--text-secondary); font-size: 14px; margin: 0; }
 
-        .operator-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--gold), var(--gold-dim));
-            border-radius: 14px 14px 0 0;
+        /* Operator box */
+        .operator-box {
+            background: var(--gold-bg);
+            border: 1px solid rgba(184, 150, 46, 0.2);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-top: 28px;
         }
 
         .operator-box h4 {
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             color: var(--gold);
-            margin-bottom: 10px;
-        }
-
-        .operator-box p {
-            font-size: 12px;
             margin-bottom: 12px;
         }
 
-        .operator-box ul {
-            margin: 0;
-            padding-left: 18px;
-            font-size: 12px;
-        }
+        .operator-box p { font-size: 13px; margin-bottom: 14px; }
+        .operator-box ul { margin: 0; padding-left: 20px; font-size: 13px; }
+        .operator-box li { margin-bottom: 8px; }
 
-        .operator-box li {
-            margin-bottom: 8px;
-        }
-
-        .approach-box ol {
-            margin: 0;
-            padding-left: 20px;
-            font-size: 13px;
-        }
-
-        .approach-box p.choice-text {
-            color: var(--text-dim);
-            font-size: 13px;
-            margin: 0;
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           FIRM CARDS
-        ═══════════════════════════════════════════════════════════ */
-        
+        /* Firm cards */
         .firm-card {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-            margin: 14px 0;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-
-        .firm-card:active {
-            transform: scale(0.98);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: var(--shadow-sm);
         }
 
         .firm-card h4 {
-            font-size: 13px;
-            font-weight: 700;
+            font-size: 15px;
+            font-weight: 600;
             color: var(--gold);
             margin-bottom: 8px;
         }
 
-        .firm-card p {
-            font-size: 12px;
-            margin-bottom: 6px;
-        }
+        .firm-card p { font-size: 13px; margin-bottom: 6px; }
 
-        /* ═══════════════════════════════════════════════════════════
-           REGIME GRID
-        ═══════════════════════════════════════════════════════════ */
-        
+        /* Regime grid */
         .regime-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 24px 0;
         }
 
         .regime-card {
-            background: linear-gradient(135deg, var(--surface) 0%, var(--bg-card) 100%);
-            border-radius: 10px;
-            padding: 14px;
-            text-align: center;
+            background: var(--surface);
             border: 1px solid var(--border);
-            transition: transform 0.2s;
-        }
-
-        .regime-card:active {
-            transform: scale(0.97);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
         }
 
         .regime-card.prime { border-top: 3px solid var(--green); }
-        .regime-card.favourable { border-top: 3px solid var(--blue); }
-        .regime-card.marginal { border-top: 3px solid var(--amber); }
+        .regime-card.favourable { border-top: 3px solid #3b82f6; }
+        .regime-card.marginal { border-top: 3px solid #f59e0b; }
         .regime-card.degraded { border-top: 3px solid var(--red); }
 
         .regime-card h5 {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
+            letter-spacing: 0.05em;
             margin-bottom: 4px;
-            letter-spacing: 0.08em;
         }
 
         .regime-card.prime h5 { color: var(--green); }
-        .regime-card.favourable h5 { color: var(--blue); }
-        .regime-card.marginal h5 { color: var(--amber); }
+        .regime-card.favourable h5 { color: #3b82f6; }
+        .regime-card.marginal h5 { color: #f59e0b; }
         .regime-card.degraded h5 { color: var(--red); }
 
-        .regime-card p {
-            font-size: 9px;
-            margin: 0;
-            color: var(--text-muted);
-        }
+        .regime-card p { font-size: 11px; margin: 0; color: var(--text-muted); }
 
-        /* ═══════════════════════════════════════════════════════════
-           MEGA CTA
-        ═══════════════════════════════════════════════════════════ */
-        
+        /* CTA Section */
         .cta-section {
-            background: linear-gradient(135deg, #15151f 0%, #0f0f18 100%);
+            background: var(--surface);
             border: 2px solid var(--gold);
-            border-radius: 22px;
-            padding: 30px 22px;
-            margin: 25px 0;
+            border-radius: 24px;
+            padding: 40px 28px;
+            margin: 40px 0;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 60px rgba(201, 168, 76, 0.12);
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--gold-dim) 0%, transparent 40%);
-            animation: pulse-glow 3s ease-in-out infinite;
+            box-shadow: var(--shadow-lg);
         }
 
         .cta-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--gold), #e0bc5a);
-            color: #000;
-            font-size: 9px;
+            background: var(--gold);
+            color: #fff;
+            font-size: 10px;
             font-weight: 700;
             padding: 6px 14px;
-            border-radius: 20px;
-            margin-bottom: 18px;
+            border-radius: 100px;
+            margin-bottom: 20px;
             letter-spacing: 0.05em;
-            position: relative;
         }
 
         .cta-section h3 {
-            font-size: 20px;
+            font-size: 24px;
+            font-weight: 600;
             color: var(--text);
-            margin-bottom: 8px;
-            font-weight: 800;
-            position: relative;
-        }
-
-        .cta-section .price-container {
-            margin-bottom: 4px;
-            position: relative;
-        }
-
-        .cta-section .price-strike {
-            font-size: 16px;
-            color: var(--text-muted);
-            text-decoration: line-through;
-            margin-right: 8px;
+            margin-bottom: 12px;
         }
 
         .cta-section .price {
-            font-size: 44px;
-            font-weight: 800;
+            font-size: 48px;
+            font-weight: 300;
             color: var(--gold);
-            text-shadow: 0 0 40px var(--gold-glow);
-            animation: number-pulse 2s ease-in-out infinite;
+            margin-bottom: 4px;
         }
 
         .cta-section .price span {
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--text-dim);
+            font-size: 16px;
+            color: var(--text-muted);
         }
 
         .cta-section .price-sub {
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-muted);
-            margin-bottom: 22px;
-            position: relative;
+            margin-bottom: 28px;
         }
 
-        .cta-section .price-sub strong {
-            color: var(--green);
-        }
+        .cta-section .price-sub strong { color: var(--green); }
 
         .value-stack {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 22px;
-            position: relative;
+            background: var(--surface-dim);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 28px;
+            text-align: left;
         }
 
         .value-stack h4 {
-            font-size: 9px;
+            font-size: 10px;
             color: var(--text-muted);
             letter-spacing: 0.15em;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
+            text-align: center;
         }
 
         .value-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-            font-size: 12px;
-            color: var(--text-dim);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
-        .value-item:last-child {
-            border-bottom: none;
-        }
+        .value-item:last-child { border-bottom: none; }
 
         .value-item::before {
             content: '✓';
             color: var(--green);
-            font-size: 11px;
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-
-        .cta-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-            position: relative;
+            font-size: 12px;
+            margin-right: 12px;
         }
 
         .cta-button {
             display: block;
-            background: linear-gradient(135deg, var(--gold) 0%, #b8973f 100%);
-            color: #000;
-            padding: 16px 36px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
+            width: 100%;
+            padding: 18px;
+            background: var(--gold);
+            border: none;
+            border-radius: 100px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
             text-decoration: none;
-            width: 100%;
             text-align: center;
-            box-shadow: 0 8px 30px rgba(201, 168, 76, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s;
         }
 
-        /* Shimmer effect on button */
-        .cta-button::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        .cta-button:active {
-            transform: scale(0.98);
+        .cta-button:hover {
+            background: #a6851f;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
         .guarantee {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            margin-top: 12px;
-            font-size: 10px;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 12px;
             color: var(--text-muted);
-        }
-
-        .guarantee svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--green);
         }
 
         .or-divider {
             color: var(--text-muted);
-            font-size: 10px;
-            margin: 4px 0;
-            position: relative;
+            font-size: 12px;
+            margin: 16px 0;
         }
 
         .discord-button {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            background: #5865F2;
-            color: #fff;
-            padding: 13px 28px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 12px;
-            text-decoration: none;
+            gap: 10px;
             width: 100%;
-            transition: transform 0.2s;
-        }
-
-        .discord-button:active {
-            transform: scale(0.98);
-        }
-
-        .discord-button svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           QUOTE & FOOTER
-        ═══════════════════════════════════════════════════════════ */
-        
-        .quote {
+            padding: 14px;
+            background: #5865F2;
+            border-radius: 100px;
+            color: #fff;
             font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .discord-button:hover { background: #4752c4; }
+        .discord-button svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Quote */
+        .quote {
+            font-size: 18px;
             font-style: italic;
             color: var(--text);
             text-align: center;
-            padding: 28px 16px;
-            border-top: 1px solid var(--gold-dim);
-            border-bottom: 1px solid var(--gold-dim);
-            margin: 30px 0;
+            padding: 40px 24px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 40px 0;
+            font-weight: 300;
         }
 
         .quote-author {
             display: block;
-            font-size: 10px;
+            font-size: 12px;
             color: var(--text-muted);
             font-style: normal;
-            margin-top: 10px;
+            margin-top: 16px;
+            font-weight: 500;
         }
 
+        /* Footer */
         .footer {
             text-align: center;
-            padding: 25px 16px;
+            padding: 32px 24px;
             color: var(--text-muted);
-            font-size: 9px;
+            font-size: 11px;
             border-top: 1px solid var(--border);
         }
 
         .footer .logo {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.25em;
-            color: var(--gold);
-            margin-bottom: 10px;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
         }
 
+        .footer .logo span { color: var(--gold); }
+
         @media print {
-            body { -webkit-print-color-adjust: exact !important; }
-            .particles, .scroll-indicator { display: none; }
+            .page { padding: 40px 20px; }
         }
     </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     COVER PAGE
-═══════════════════════════════════════════════════════════════════ -->
+<!-- COVER -->
 <div class="cover">
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
-    
-    <div class="cover-content">
-        <div class="cover-logo">QUANT PRIME</div>
-        <h1>THE MANIFESTO</h1>
-        <p class="cover-subtitle">An Introduction to Quantitative Trading</p>
-        
-        <div class="formula-preview">
-            α = Σ(w<sub>i</sub> × r<sub>i</sub>) − β × R<sub>m</sub>
-        </div>
-        
-        <p class="cover-tagline">Where Mathematics Meets Markets</p>
-    </div>
-    
-    <div class="scroll-indicator">
-        <span>SCROLL</span>
-        <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor"/>
-        </svg>
-    </div>
+    <div class="cover-logo">QUANT<span>PRIME</span></div>
+    <h1>The Manifesto</h1>
+    <p class="cover-subtitle">An Introduction to Quantitative Trading</p>
+    <div class="cover-formula">α = Σ(w<sub>i</sub> × r<sub>i</sub>) − β × R<sub>m</sub></div>
+    <p class="cover-tagline">Where Mathematics Meets Markets</p>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 1: THE GREAT DIVIDE
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 1: THE GREAT DIVIDE -->
 <div class="page">
-    <h1 class="section-title">THE GREAT DIVIDE</h1>
+    <h1 class="section-title">The Great <span class="gold">Divide</span></h1>
     
     <p class="lead">There are two types of traders.</p>
     
@@ -1009,24 +580,20 @@
     
     <div class="stat-box">
         <span class="number">66%</span>
-        <span class="label">Avg. Annual Return — Renaissance Medallion Fund</span>
+        <span class="label">Average Annual Return — Renaissance Medallion Fund</span>
     </div>
     
     <div class="formula-section">
         <div class="formula-intro">How We Calculate Edge</div>
         <div class="formula-box">
             <span class="tag">QP.CORE.001</span>
-            <pre><span class="comment">// Basic edge formula (public)</span>
-<span class="keyword">edge</span> <span class="operator">=</span> (<span class="function">winRate</span> <span class="operator">×</span> avgWin) <span class="operator">−</span> (<span class="function">lossRate</span> <span class="operator">×</span> avgLoss)
-<span class="keyword">if</span> edge <span class="operator">></span> <span class="number">0</span> <span class="keyword">then</span> <span class="string">"DEPLOY"</span>
+            <pre><span class="comment">// Basic edge formula</span>
+<span class="keyword">edge</span> = (<span class="function">winRate</span> × avgWin) − (<span class="function">lossRate</span> × avgLoss)
+<span class="keyword">if</span> edge > <span class="number">0</span> <span class="keyword">then</span> <span class="string">"DEPLOY"</span>
 
 <span class="comment">// Our proprietary edge calculation</span>
-<span class="keyword">qp_edge</span> <span class="operator">=</span> <span class="locked">████████████████████████</span>
-         <span class="locked">████████████████</span><span class="locked-label"><svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6zm0 2c2.276 0 4 1.724 4 4v1H8V7c0-2.276 1.724-4 4-4z"/></svg>LOCKED</span></pre>
-            <div class="formula-unlock">
-                <svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6z"/></svg>
-                Full formula in <span>Research Tier</span>
-            </div>
+<span class="keyword">qp_edge</span> = <span class="locked">████████████████████████</span></pre>
+            <div class="formula-unlock">🔒 Full formula in <span>Research Tier</span></div>
         </div>
     </div>
     
@@ -1037,11 +604,9 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 2: WHAT IS QUANT TRADING
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 2: WHAT IS QUANT TRADING -->
 <div class="page">
-    <h1 class="section-title">WHAT IS QUANT TRADING?</h1>
+    <h1 class="section-title">What Is <span class="gold">Quant Trading</span>?</h1>
     
     <p class="lead">Precision over prediction.</p>
     
@@ -1057,16 +622,16 @@
     </ul>
     
     <div class="formula-section">
-        <div class="formula-intro">Signal Generation Example</div>
+        <div class="formula-intro">Signal Generation</div>
         <div class="formula-box">
             <span class="tag">QP.SIGNAL.002</span>
             <pre><span class="comment">// Momentum signal logic</span>
-<span class="keyword">momentum</span> <span class="operator">=</span> <span class="function">close</span> <span class="operator">−</span> <span class="function">close</span>[<span class="number">20</span>]
-<span class="keyword">vol</span> <span class="operator">=</span> <span class="function">stdev</span>(close, <span class="number">20</span>)
-<span class="keyword">z</span> <span class="operator">=</span> momentum <span class="operator">/</span> vol
+<span class="keyword">mom</span> = <span class="function">close</span> − <span class="function">close</span>[<span class="number">20</span>]
+<span class="keyword">vol</span> = <span class="function">stdev</span>(close, <span class="number">20</span>)
+<span class="keyword">z_score</span> = mom / vol
 
-<span class="keyword">if</span> z <span class="operator">></span> <span class="number">1.5</span> <span class="keyword">AND</span> regime <span class="operator">==</span> <span class="string">"PRIME"</span>
-    <span class="keyword">signal</span> <span class="operator">=</span> <span class="string">"BUY"</span></pre>
+<span class="keyword">if</span> z_score > <span class="number">1.5</span> <span class="keyword">AND</span> regime == <span class="string">"PRIME"</span>:
+    <span class="keyword">signal</span> = <span class="string">"BUY"</span></pre>
         </div>
     </div>
     
@@ -1099,11 +664,9 @@
     <p style="text-align: center;"><strong>One is gambling. The other is engineering.</strong></p>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 3: THE GIANTS
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 3: THE GIANTS -->
 <div class="page">
-    <h1 class="section-title">THE GIANTS</h1>
+    <h1 class="section-title">The <span class="gold">Giants</span></h1>
     
     <p class="lead">Who's already doing this?</p>
     
@@ -1122,25 +685,6 @@
         <p><strong>25% of all US equity volume.</strong> When you click "buy," they're often on the other side.</p>
     </div>
     
-    <div class="formula-section">
-        <div class="formula-intro">Position Sizing (What They Calculate)</div>
-        <div class="formula-box">
-            <span class="tag">QP.RISK.003</span>
-            <pre><span class="comment">// Standard metrics</span>
-<span class="keyword">sharpe</span> <span class="operator">=</span> (returns <span class="operator">−</span> rf) <span class="operator">/</span> volatility
-<span class="keyword">kelly</span> <span class="operator">=</span> (p <span class="operator">×</span> b <span class="operator">−</span> q) <span class="operator">/</span> b
-<span class="keyword">var95</span> <span class="operator">=</span> μ <span class="operator">−</span> (<span class="number">1.645</span> <span class="operator">×</span> σ)
-
-<span class="comment">// QP position algorithm</span>
-<span class="keyword">size</span> <span class="operator">=</span> <span class="locked">████████████████████████</span>
-      <span class="locked">████████████████████</span><span class="locked-label"><svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6z"/></svg>LOCKED</span></pre>
-            <div class="formula-unlock">
-                <svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6z"/></svg>
-                Full sizing in <span>Recoil Tier</span>
-            </div>
-        </div>
-    </div>
-    
     <h3>What They All Share</h3>
     <ol>
         <li>Zero emotion in decisions</li>
@@ -1151,53 +695,10 @@
     </ol>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 4: THE FRAMEWORK
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 4: REGIME & RISK -->
 <div class="page">
-    <h1 class="section-title">THE FRAMEWORK</h1>
+    <h1 class="section-title">Regime <span class="gold">Detection</span></h1>
     
-    <h2>1. Alpha Research</h2>
-    <p><strong>Alpha</strong> = return from skill, not luck.</p>
-    <ul>
-        <li><strong>Momentum</strong>: Winners keep winning</li>
-        <li><strong>Mean Reversion</strong>: Extremes return to average</li>
-        <li><strong>Stat Arb</strong>: Price discrepancies</li>
-    </ul>
-    
-    <h2>2. Signal Generation</h2>
-    <p>Translating edge into executable signals:</p>
-    
-    <div class="formula-section">
-        <div class="formula-intro">Entry Signal Logic</div>
-        <div class="formula-box">
-            <span class="tag">QP.SIGNAL.002</span>
-            <pre><span class="comment">// Momentum + volatility filter</span>
-<span class="keyword">mom</span> <span class="operator">=</span> <span class="function">close</span> <span class="operator">−</span> <span class="function">close</span>[<span class="number">20</span>]
-<span class="keyword">vol</span> <span class="operator">=</span> <span class="function">stdev</span>(close, <span class="number">20</span>)
-<span class="keyword">z_score</span> <span class="operator">=</span> mom <span class="operator">/</span> vol
-
-<span class="keyword">if</span> z_score <span class="operator">></span> <span class="number">1.5</span> <span class="keyword">AND</span> regime <span class="operator">==</span> <span class="string">"PRIME"</span>:
-    <span class="keyword">signal</span> <span class="operator">=</span> <span class="string">"BUY"</span>
-<span class="keyword">elif</span> z_score <span class="operator"><</span> <span class="number">-1.5</span> <span class="keyword">AND</span> regime <span class="operator">==</span> <span class="string">"PRIME"</span>:
-    <span class="keyword">signal</span> <span class="operator">=</span> <span class="string">"SELL"</span></pre>
-        </div>
-    </div>
-    
-    <h2>3. Backtesting</h2>
-    <p>Errors that destroy retail:</p>
-    <ul>
-        <li><strong>Look-ahead bias</strong>: Using future data</li>
-        <li><strong>Overfitting</strong>: Curve-fitting to noise</li>
-        <li><strong>Ignoring costs</strong>: Spreads eat edge</li>
-    </ul>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 5: REGIME & RISK
-═══════════════════════════════════════════════════════════════════ -->
-<div class="page">
-    <h2>4. Regime Detection</h2>
     <p>Markets shift. Quants detect it live.</p>
     
     <div class="regime-grid">
@@ -1219,24 +720,21 @@
         </div>
     </div>
     
-    <h2>5. Risk Management</h2>
+    <h2>Risk Management</h2>
     <p>Retail: "Where's my stop?"</p>
     <p>Quants calculate:</p>
     
     <div class="formula-section">
-        <div class="formula-intro">Risk Calculation Engine</div>
+        <div class="formula-intro">Risk Calculation</div>
         <div class="formula-box">
-            <span class="tag">QP.RISK.005</span>
-            <pre><span class="keyword">VaR95</span> <span class="operator">=</span> value <span class="operator">×</span> z <span class="operator">×</span> σ
-<span class="keyword">max_pos</span> <span class="operator">=</span> risk_per_trade <span class="operator">/</span> stop_dist
-<span class="keyword">kelly_f</span> <span class="operator">=</span> (win% <span class="operator">×</span> payoff <span class="operator">−</span> loss%) <span class="operator">/</span> payoff
+            <span class="tag">QP.RISK.003</span>
+            <pre><span class="keyword">VaR95</span> = value × z × σ
+<span class="keyword">max_pos</span> = risk_per_trade / stop_dist
+<span class="keyword">kelly_f</span> = (win% × payoff − loss%) / payoff
 
 <span class="comment">// Correlation-adjusted sizing</span>
-<span class="keyword">adj</span> <span class="operator">=</span> <span class="locked">████████████████████</span><span class="locked-label"><svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6z"/></svg>LOCKED</span></pre>
-            <div class="formula-unlock">
-                <svg viewBox="0 0 24 24"><path d="M12 1C8.676 1 6 3.676 6 7v1H5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-1V7c0-3.324-2.676-6-6-6z"/></svg>
-                Risk system in <span>Terminal Tier</span>
-            </div>
+<span class="keyword">adj</span> = <span class="locked">████████████████████</span></pre>
+            <div class="formula-unlock">🔒 Risk system in <span>Terminal Tier</span></div>
         </div>
     </div>
     
@@ -1245,46 +743,9 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 6: WHY RETAIL FAILS
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 5: THE QP WAY -->
 <div class="page">
-    <h1 class="section-title">WHY RETAIL FAILS</h1>
-    
-    <p class="lead">90% lose. Here's why.</p>
-    
-    <h2>1. Trading Emotions</h2>
-    <ul>
-        <li>Cutting winners early</li>
-        <li>Holding losers too long</li>
-        <li>Revenge trading</li>
-        <li>Abandoning systems at the worst time</li>
-    </ul>
-    <p><strong>Algorithms don't feel. They execute.</strong></p>
-    
-    <h2>2. No Quantified Edge</h2>
-    <p>Ask a retail trader: "What's your expected value per trade?"</p>
-    <p>They can't answer.</p>
-    
-    <div class="highlight">
-        <p>A quant knows: "54% win rate, 1.3 R:R, +0.22R EV per trade, p&lt;0.01"</p>
-    </div>
-    
-    <h2>3. Fighting Giants</h2>
-    <ul>
-        <li>Microsecond algorithms</li>
-        <li>PhD mathematicians</li>
-        <li>Decades of training data</li>
-        <li>Infrastructure you can't match</li>
-    </ul>
-    <p><strong>Unless you change your approach.</strong></p>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 7: QP APPROACH
-═══════════════════════════════════════════════════════════════════ -->
-<div class="page">
-    <h1 class="section-title">THE QP WAY</h1>
+    <h1 class="section-title">The <span class="gold">QP</span> Way</h1>
     
     <p class="lead">We're not another course.</p>
     
@@ -1314,11 +775,9 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════════
-     PAGE 8: PATH FORWARD + CTA
-═══════════════════════════════════════════════════════════════════ -->
+<!-- PAGE 6: YOUR PATH + CTA -->
 <div class="page">
-    <h1 class="section-title">YOUR PATH</h1>
+    <h1 class="section-title">Your <span class="gold">Path</span></h1>
     
     <p class="lead">Two choices.</p>
     
@@ -1333,12 +792,10 @@
     </div>
     
     <div class="cta-section">
-        <div class="cta-badge">🔥 MOST POPULAR</div>
-        <h3>Start Your Quant Journey</h3>
+        <div class="cta-badge">🎯 START HERE</div>
+        <h3>Begin Your Quant Journey</h3>
         
-        <div class="price-container">
-            <span class="price">£8<span>/mo</span></span>
-        </div>
+        <div class="price">£8<span>/mo</span></div>
         <p class="price-sub">Research Tier · <strong>Cancel anytime</strong></p>
         
         <div class="value-stack">
@@ -1351,19 +808,14 @@
             <div class="value-item">Regime Analysis Instruments</div>
         </div>
         
-        <div class="cta-buttons">
-            <a href="https://quantprime.uk/dashboard/register" class="cta-button">
-                Start For £8 →
-            </a>
-            <div class="guarantee">
-                <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <span>7-day money-back guarantee</span>
-            </div>
-        </div>
+        <a href="https://quantprime.uk/dashboard/register" class="cta-button">
+            Start For £8 →
+        </a>
+        <div class="guarantee">🛡️ 7-day money-back guarantee</div>
         
-        <span class="or-divider">— or join free —</span>
+        <p class="or-divider">— or join free —</p>
         
-        <a href="https://discord.gg/EAHKwd7HvX" class="discord-button">
+        <a href="https://discord.gg/EAHKwd7HvX" class="discord-button" target="_blank">
             <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.125-.094.25-.192.373-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
             Join Free Community
         </a>
@@ -1375,8 +827,8 @@
     </div>
     
     <div class="footer">
-        <div class="logo">QUANT PRIME</div>
-        <p style="margin-top: 8px;">© 2026 Quant Prime. Educational only. Not financial advice.</p>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        <p>© 2026 Quant Prime. Educational only. Not financial advice.</p>
     </div>
 </div>
 
