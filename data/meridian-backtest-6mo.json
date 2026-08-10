@@ -1,7 +1,7 @@
 {
   "indicator": "Meridian",
-  "pair": "XAUUSD",
-  "symbol": "GOLD",
+  "pair": "EURUSD",
+  "symbol": "EURUSD",
   "timeframe": "3M",
   "period": {
     "start": "2026-02-10",
@@ -9,27 +9,26 @@
     "months": 6
   },
   "stats": {
-    "totalTrades": 278,
-    "winRate": 68.71,
-    "profitFactor": 1.99,
-    "totalPnlUsd": 486.11,
-    "returnPercent": 48.61,
-    "maxDrawdownUsd": 145.23,
-    "maxDrawdownPercent": 13.26,
+    "totalTrades": 279,
+    "winRate": 68.46,
+    "profitFactor": 1.995,
+    "totalPnlUsd": 486.56,
+    "returnPercent": 48.66,
+    "maxDrawdownUsd": 115.86,
+    "maxDrawdownPercent": 11.59,
     "profitableTrades": 191,
     "losingTrades": 87,
-    "breakevenTrades": 0,
-    "sharpeRatio": 1.263,
-    "expectedPayoff": 1.74,
-    "largestProfit": 24.62,
-    "largestLoss": 25.50
+    "breakevenTrades": 1,
+    "grossProfit": 975.65,
+    "grossLoss": 489.09
   },
   "costs": {
     "commissionIncluded": true,
-    "note": "Commission included in all figures"
+    "totalCommission": 27.91,
+    "note": "Commission $0.07-0.14 per trade included in all figures"
   },
   "sampleType": "in-sample",
-  "notes": "TradingView strategy tester export. XAUUSD 3M timeframe. 6-month backtest.",
+  "notes": "TradingView strategy tester export. EURUSD 3M timeframe. 6-month backtest. Signal names show 'GOLD' but that's the strategy name, not the pair.",
   "exportedAt": "2026-08-10",
-  "source": "TradingView backtest CSV + screenshot"
+  "source": "TradingView backtest CSV"
 }
