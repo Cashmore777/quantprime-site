@@ -86,7 +86,7 @@ if env_path.exists():
 
 # Brevo API
 BREVO_API_KEY = os.environ.get('BREVO_API_KEY', '')
-FROM_EMAIL = 'cash@themoneyprinter.uk'
+FROM_EMAIL = 'noreply@quantprime.uk'
 FROM_NAME = 'Quant Prime'
 
 # Colors matching QP theme
