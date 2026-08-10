@@ -1,0 +1,35 @@
+{
+  "indicator": "Meridian",
+  "pair": "XAUUSD",
+  "symbol": "GOLD",
+  "timeframe": "3M",
+  "period": {
+    "start": "2026-02-10",
+    "end": "2026-08-10",
+    "months": 6
+  },
+  "stats": {
+    "totalTrades": 278,
+    "winRate": 68.71,
+    "profitFactor": 1.99,
+    "totalPnlUsd": 486.11,
+    "returnPercent": 48.61,
+    "maxDrawdownUsd": 145.23,
+    "maxDrawdownPercent": 13.26,
+    "profitableTrades": 191,
+    "losingTrades": 87,
+    "breakevenTrades": 0,
+    "sharpeRatio": 1.263,
+    "expectedPayoff": 1.74,
+    "largestProfit": 24.62,
+    "largestLoss": 25.50
+  },
+  "costs": {
+    "commissionIncluded": true,
+    "note": "Commission included in all figures"
+  },
+  "sampleType": "in-sample",
+  "notes": "TradingView strategy tester export. XAUUSD 3M timeframe. 6-month backtest.",
+  "exportedAt": "2026-08-10",
+  "source": "TradingView backtest CSV + screenshot"
+}

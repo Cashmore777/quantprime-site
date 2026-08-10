@@ -1,0 +1,35 @@
+{
+  "indicator": "Recoil",
+  "pair": "EURUSD",
+  "symbol": "EURUSD",
+  "timeframe": "3M",
+  "period": {
+    "start": "2026-02-10",
+    "end": "2026-08-10",
+    "months": 6
+  },
+  "stats": {
+    "totalTrades": 121,
+    "winRate": 69.42,
+    "profitFactor": 1.657,
+    "totalPnlUsd": 32.82,
+    "returnPercent": 6.56,
+    "maxDrawdownUsd": 8.38,
+    "maxDrawdownPercent": 1.57,
+    "profitableTrades": 84,
+    "losingTrades": 37,
+    "breakevenTrades": 0,
+    "sharpeRatio": 0.543,
+    "expectedPayoff": 0.27,
+    "largestProfit": 13.65,
+    "largestLoss": 5.75
+  },
+  "costs": {
+    "commissionIncluded": true,
+    "note": "Commission included in all figures"
+  },
+  "sampleType": "in-sample",
+  "notes": "TradingView strategy tester export. EURUSD 3M timeframe. 6-month backtest.",
+  "exportedAt": "2026-08-10",
+  "source": "TradingView backtest CSV + screenshot"
+}
