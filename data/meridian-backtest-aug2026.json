@@ -1,7 +1,7 @@
 {
   "indicator": "Meridian",
-  "pair": "XAUUSD",
-  "symbol": "GOLD",
+  "pair": "EURUSD",
+  "symbol": "EURUSD",
   "timeframe": "3M",
   "period": {
     "start": "2026-06-07",
@@ -29,7 +29,7 @@
     "note": "Commission included in all figures"
   },
   "sampleType": "in-sample",
-  "notes": "TradingView strategy tester export. XAUUSD 3M timeframe.",
+  "notes": "TradingView strategy tester export. EURUSD 3M timeframe.",
   "exportedAt": "2026-08-10",
   "source": "TradingView backtest CSV + screenshot"
 }
