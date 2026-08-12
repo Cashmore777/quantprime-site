@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1a1a1a; line-height: 1.6; background-color: #ffffff;">
+    
+    <p style="margin: 0 0 20px 0;">Earlier this year I hand-tested a volatility fade setup on the 1-minute chart. Seventeen hours of clicking. 1,398 trades. 81.5% win rate.</p>
+    
+    <p style="margin: 0 0 20px 0;">It was unprofitable.</p>
+    
+    <p style="margin: 0 0 20px 0;">The average winner came in under 5 pips. At $0.07 commission per order — $0.14 the round trip — friction was eating roughly 3 pips of every single trade. An 81.5% win rate on a 4-pip edge against 3 pips of cost isn't an edge. It's a rounding error you're paying a broker to generate on your behalf.</p>
+    
+    <p style="margin: 0 0 20px 0;">The lesson isn't "don't scalp." It's that <strong>win rate is the least useful number in a backtest</strong>, and it happens to be the one every course on the internet sells you on, because it's the one that looks best in a screenshot.</p>
+    
+    <p style="margin: 0 0 15px 0;">The ten-minute check that catches this:</p>
+    
+    <ol style="margin: 0 0 20px 0; padding-left: 20px;">
+        <li>Take your win rate and average winner.</li>
+        <li>Take your loss rate and average loser.</li>
+        <li>Calculate expectancy: (Win% × AvgWin) − (Loss% × AvgLoss)</li>
+        <li>Subtract round-trip commission from every trade.</li>
+        <li>If what's left is under 1R per 10 trades, the system doesn't survive execution costs at scale.</li>
+    </ol>
+    
+    <p style="margin: 0 0 20px 0;">That's it. One formula, ten minutes, and you'll never be fooled by a 90% win rate again.</p>
+    
+    <p style="margin: 0 0 20px 0;">Every engine in the Quant Prime library publishes this number. Most vendors don't, because they know the answer.</p>
+    
+    <p style="text-align: center; margin: 30px 0;">
+        <a href="https://quantprime.uk/compounding.html" style="background: #c9a84c; color: #0a0a0a; padding: 14px 28px; text-decoration: none; font-weight: bold; display: inline-block;">Run Your Own Numbers →</a>
+    </p>
+    
+    <p style="font-size: 11px; color: #888; margin: 0 0 30px 0; font-style: italic;">Educational content only, not financial advice. Trading carries risk of loss.</p>
+
+    <!-- Footer -->
+    <table style="width: 100%; margin-top: 40px; border-top: 1px solid #e0e0e0; padding-top: 20px;">
+        <tr>
+            <td style="width: 60px; vertical-align: top; padding-right: 15px;">
+                <img src="https://quantprime.uk/assets/qp-logo-gold.png" width="50" height="50" alt="Quant Prime" style="border-radius: 6px;">
+            </td>
+            <td style="vertical-align: top; font-family: Georgia, serif; color: #1a1a1a;">
+                <p style="margin: 0 0 2px 0; font-weight: bold; font-size: 15px;">Sean Davies</p>
+                <p style="margin: 0; font-size: 13px; color: #666;">Founder & Lead Analyst at Quant Prime</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

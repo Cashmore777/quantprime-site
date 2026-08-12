@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1a1a1a; line-height: 1.6; background-color: #ffffff;">
+    
+    <p style="margin: 0 0 20px 0;">Meridian is a reversal engine. A prior swing level gets swept, which sets directional bias. Price then taps a vortex level, which confirms the entry. Two conditions. No discretion, no interpretation, no "it looked good."</p>
+    
+    <p style="margin: 0 0 15px 0;">Backtested on EURUSD, 3-minute chart, February to August 2026:</p>
+    
+    <ul style="margin: 0 0 20px 0; padding-left: 20px;">
+        <li>279 trades</li>
+        <li>68.46% win rate</li>
+        <li>Profit factor 1.995</li>
+        <li>Max drawdown 11.59%</li>
+        <li>Commission included in every figure</li>
+    </ul>
+    
+    <p style="margin: 0 0 20px 0;">Now the part that doesn't usually make it into the email.</p>
+    
+    <p style="margin: 0 0 20px 0;"><strong>On the 15-minute chart and above, it goes unprofitable.</strong> Not slightly worse. Unprofitable.</p>
+    
+    <p style="margin: 0 0 20px 0;">The reason is structural rather than a bug. The engine needs a certain number of bars of price structure inside each phase before a signal resolves. On higher timeframes those bars don't exist, so it's being asked a question it has no mechanism to answer.</p>
+    
+    <p style="margin: 0 0 20px 0;">I could hide that by only ever showing you the 3M chart. Most people would.</p>
+    
+    <p style="margin: 0 0 15px 0;">Three more things you should know before you take that 1.995 seriously:</p>
+    
+    <ul style="margin: 0 0 20px 0; padding-left: 20px;">
+        <li><strong>It's in-sample</strong> — the system was developed on this data. Out-of-sample results will be worse. They always are.</li>
+        <li><strong>It's one pair.</strong> EURUSD only. I haven't published multi-pair results because I don't have multi-pair results.</li>
+        <li><strong>That 11.59% drawdown is the real number.</strong> At some point in those six months the account was down 11.59% from its high and the correct action was to keep taking signals. Most people don't. That's not a system problem, it's the part the system can't do for you.</li>
+    </ul>
+    
+    <p style="margin: 0 0 20px 0;">A strategy with no documented failure mode hasn't been tested. It's been marketed.</p>
+    
+    <p style="margin: 0 0 20px 0;">If someone shows you something that works on every pair, every timeframe, every session, you're looking at a curve fit and a sales page, usually at the same time.</p>
+    
+    <p style="margin: 0 0 20px 0;">Everything in the Quant Prime library ships with its boundaries stated first. That's the whole product, really.</p>
+    
+    <p style="font-size: 13px; color: #666; margin: 0 0 20px 0;">P.S. Tomorrow's is the one I'd actually read — a backtest of mine with an 81.5% win rate that still lost money, and the two-minute check that catches it.</p>
+    
+    <p style="font-size: 11px; color: #888; margin: 0 0 30px 0; font-style: italic;">Backtested results, EURUSD 3M, Feb–Aug 2026, in-sample, commission included. Hypothetical performance — no live capital produced these figures. Past performance does not indicate future results. Educational content only, not financial advice. Trading carries risk of loss.</p>
+
+    <!-- Footer -->
+    <table style="width: 100%; margin-top: 40px; border-top: 1px solid #e0e0e0; padding-top: 20px;">
+        <tr>
+            <td style="width: 60px; vertical-align: top; padding-right: 15px;">
+                <img src="https://quantprime.uk/assets/qp-logo-gold.png" width="50" height="50" alt="Quant Prime" style="border-radius: 6px;">
+            </td>
+            <td style="vertical-align: top; font-family: Georgia, serif; color: #1a1a1a;">
+                <p style="margin: 0 0 2px 0; font-weight: bold; font-size: 15px;">Sean Davies</p>
+                <p style="margin: 0; font-size: 13px; color: #666;">Founder & Lead Analyst at Quant Prime</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

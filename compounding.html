@@ -401,15 +401,53 @@
 
 <section class="page-header">
   <div class="container">
-    <div class="label">COMPOUNDING CALCULATOR</div>
+    <div class="label">CALCULATORS</div>
     <h1>The edge isn't one trade.<br><em>It's a thousand.</em></h1>
-    <p>Enter your numbers and see how systematic returns compound over time.</p>
+    <p>Check your expectancy. Then see how it compounds.</p>
   </div>
 </section>
 
 <section style="padding: 0 0 4rem;">
   <div class="container">
     
+    <!-- Expectancy Calculator -->
+    <div class="calculator-section reveal" id="expectancy-calc">
+      <div class="calc-header">
+        <h2>Calculate Your Expectancy</h2>
+        <p>The number that actually matters — does your system make money after costs?</p>
+      </div>
+
+      <div class="calc-inputs">
+        <div class="calc-group">
+          <label class="calc-label">Win Rate (%)</label>
+          <input type="text" class="calc-input" id="winRate" placeholder="68" value="68">
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Average Win (pips)</label>
+          <input type="text" class="calc-input" id="avgWin" placeholder="8" value="8">
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Average Loss (pips)</label>
+          <input type="text" class="calc-input" id="avgLoss" placeholder="6" value="6">
+        </div>
+        <div class="calc-group">
+          <label class="calc-label">Commission (pips/trade)</label>
+          <input type="text" class="calc-input" id="commission" placeholder="0.7" value="0.7">
+        </div>
+      </div>
+
+      <div class="summary-cards" id="expectancyResults">
+        <!-- Populated by JS -->
+      </div>
+      
+      <div id="expectancyVerdict" style="text-align: center; margin-top: 1.5rem; padding: 1rem; border-radius: 10px; font-weight: 500;"></div>
+      
+      <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg); border-radius: 10px; font-size: 0.85rem; color: var(--text-secondary);">
+        <strong>The Formula:</strong> Expectancy = (Win% × Avg Win) − (Loss% × Avg Loss) − Commission<br>
+        <span style="color: var(--text-tertiary);">If expectancy is positive, the system makes money over time. If negative, it loses — no matter the win rate.</span>
+      </div>
+    </div>
+
     <!-- Interactive Calculator -->
     <div class="calculator-section reveal">
       <div class="calc-header">
@@ -691,6 +729,75 @@ document.getElementById('frequency').addEventListener('change', () => {
 
 // Initial calculation
 document.addEventListener('DOMContentLoaded', calculateCompounding);
+
+// Expectancy Calculator
+function calculateExpectancy() {
+  const winRate = parseFloat(document.getElementById('winRate').value) || 0;
+  const avgWin = parseFloat(document.getElementById('avgWin').value) || 0;
+  const avgLoss = parseFloat(document.getElementById('avgLoss').value) || 0;
+  const commission = parseFloat(document.getElementById('commission').value) || 0;
+  
+  const winDecimal = winRate / 100;
+  const lossDecimal = 1 - winDecimal;
+  
+  // Raw expectancy (before commission)
+  const rawExpectancy = (winDecimal * avgWin) - (lossDecimal * avgLoss);
+  
+  // Net expectancy (after commission per trade)
+  const netExpectancy = rawExpectancy - commission;
+  
+  // Per 10 trades
+  const per10Trades = netExpectancy * 10;
+  
+  // Profit Factor
+  const grossWin = winDecimal * avgWin;
+  const grossLoss = (lossDecimal * avgLoss) + commission;
+  const profitFactor = grossLoss > 0 ? (grossWin / grossLoss) : 0;
+  
+  // Render results
+  document.getElementById('expectancyResults').innerHTML = `
+    <div class="summary-card">
+      <div class="summary-value" style="color: ${rawExpectancy >= 0 ? '#16a34a' : '#dc2626'}">${rawExpectancy >= 0 ? '+' : ''}${rawExpectancy.toFixed(2)}</div>
+      <div class="summary-label">Raw Expectancy (pips)</div>
+    </div>
+    <div class="summary-card highlight">
+      <div class="summary-value" style="color: ${netExpectancy >= 0 ? '#16a34a' : '#dc2626'}">${netExpectancy >= 0 ? '+' : ''}${netExpectancy.toFixed(2)}</div>
+      <div class="summary-label">Net Expectancy (pips)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-value" style="color: ${per10Trades >= 0 ? '#16a34a' : '#dc2626'}">${per10Trades >= 0 ? '+' : ''}${per10Trades.toFixed(1)}</div>
+      <div class="summary-label">Per 10 Trades (pips)</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-value" style="color: ${profitFactor >= 1 ? 'var(--gold)' : '#dc2626'}">${profitFactor.toFixed(2)}</div>
+      <div class="summary-label">Profit Factor</div>
+    </div>
+  `;
+  
+  // Verdict
+  const verdictEl = document.getElementById('expectancyVerdict');
+  if (netExpectancy > 1) {
+    verdictEl.innerHTML = '✓ Strong edge — this system survives execution costs at scale';
+    verdictEl.style.background = 'rgba(22, 163, 74, 0.1)';
+    verdictEl.style.color = '#16a34a';
+  } else if (netExpectancy > 0) {
+    verdictEl.innerHTML = '⚠ Marginal edge — profitable but sensitive to spread/slippage';
+    verdictEl.style.background = 'rgba(201, 168, 76, 0.1)';
+    verdictEl.style.color = 'var(--gold)';
+  } else {
+    verdictEl.innerHTML = '✗ Negative expectancy — this system loses money over time';
+    verdictEl.style.background = 'rgba(220, 38, 38, 0.1)';
+    verdictEl.style.color = '#dc2626';
+  }
+}
+
+// Expectancy input listeners
+['winRate', 'avgWin', 'avgLoss', 'commission'].forEach(id => {
+  document.getElementById(id).addEventListener('input', calculateExpectancy);
+});
+
+// Initial expectancy calculation
+document.addEventListener('DOMContentLoaded', calculateExpectancy);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/tracking.js"></script>
