@@ -457,8 +457,8 @@
                     await QP_TRACK.trackOptIn(email, name);
                 }
 
-                // 2. Also send to backend API for email delivery
-                await fetch('/api/free-guide-signup', {
+                // 2. Also send to backend API for email delivery + Brevo
+                await fetch('https://dashboard.themoneyprinter.uk/api/free-guide-signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
