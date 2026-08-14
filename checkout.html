@@ -31,8 +31,6 @@ body {
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, system-ui, sans-serif;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Header */
@@ -69,72 +67,133 @@ body {
   stroke: var(--success);
 }
 
-/* Main Layout */
-.checkout-layout {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  flex: 1;
+/* Main Container */
+.checkout-container {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
 }
 
-@media (max-width: 900px) {
-  .checkout-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Left Side - Form */
-.checkout-form-section {
-  padding: 3rem 4rem;
-  max-width: 600px;
-  background: var(--surface);
-}
-
-@media (max-width: 900px) {
-  .checkout-form-section {
-    padding: 2rem 1.5rem;
-    max-width: none;
-  }
-}
-
-.checkout-form-section h1 {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
-}
-
-.checkout-form-section > p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-bottom: 2.5rem;
-}
-
-/* Form Sections */
-.form-section {
-  margin-bottom: 2.5rem;
-}
-
-.form-section-title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+/* Back Link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: var(--text-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Order Summary - At Top */
+.order-summary {
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.1);
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 1rem;
+}
+
+.summary-tier {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.summary-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--success);
+  padding: 0.35rem 0.75rem;
+  border-radius: 100px;
+}
+
+.summary-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.summary-feature {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }
 
-.form-section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--border);
+.summary-feature svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--gold);
+  flex-shrink: 0;
+}
+
+.summary-pricing {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-price-main {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.summary-price-main .amount {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.summary-price-main .period {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.summary-price-after {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+/* Form */
+.checkout-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.form-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
 }
 
 .form-row {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .form-row label {
@@ -145,13 +204,18 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.form-row label .optional {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 .form-row input,
 .form-row select {
   width: 100%;
-  padding: 0.9rem 1rem;
+  padding: 0.875rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--text-primary);
   font-size: 0.95rem;
   font-family: inherit;
@@ -169,177 +233,20 @@ body {
   color: var(--text-muted);
 }
 
-.form-row-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-@media (max-width: 500px) {
-  .form-row-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Card Input Styling */
-.card-input-wrapper {
-  position: relative;
-}
-
-/* Promo Code */
-.promo-input-wrapper {
+/* Phone Input with Country Code */
+.phone-input-wrapper {
   display: flex;
   gap: 0.75rem;
 }
 
-.promo-input-wrapper input {
-  flex: 1;
-  padding: 0.875rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 0.05em;
-}
-
-.promo-input-wrapper input:focus {
-  outline: none;
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
-}
-
-.promo-apply-btn {
-  padding: 0 1.5rem;
-  background: var(--text-primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.promo-apply-btn:hover {
-  background: #333;
-}
-
-.promo-success {
-  color: #22c55e;
-  font-weight: 500;
-}
-
-.promo-error {
-  color: #ef4444;
-}
-
-.promo-applied {
-  background: rgba(34,197,94,0.1);
-  border-color: #22c55e !important;
-}
-
-/* Trust Badges */
-.trust-badges {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-  padding: 0.75rem 1rem;
-  background: rgba(0,0,0,0.02);
-  border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.trust-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.trust-badge.ssl-badge {
-  margin-left: auto;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #22c55e;
-}
-
-.trust-badge.stripe-badge {
-  padding-left: 0.75rem;
-  border-left: 1px solid var(--border);
-}
-
-/* Stripe Notice */
-.stripe-notice {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6rem;
-  margin-top: 1rem;
-  padding: 0.85rem 1rem;
-  background: rgba(99, 91, 255, 0.04);
-  border: 1px solid rgba(99, 91, 255, 0.15);
-  border-radius: 8px;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.stripe-notice svg {
+.phone-input-wrapper select {
+  width: 110px;
   flex-shrink: 0;
-  stroke: #635bff;
-  margin-top: 1px;
+  padding-right: 0.5rem;
 }
 
-/* Billing Toggle in Form */
-.billing-selector {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.billing-option {
-  background: var(--surface);
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  padding: 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-
-.billing-option:hover {
-  border-color: rgba(0,0,0,0.15);
-}
-
-.billing-option.selected {
-  border-color: var(--gold);
-  background: var(--gold-glow);
-}
-
-.billing-option .billing-label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.billing-option .billing-price {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.billing-option .billing-detail {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-}
-
-.billing-option .billing-save {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--gold);
-  margin-top: 0.5rem;
+.phone-input-wrapper input {
+  flex: 1;
 }
 
 /* Submit Button */
@@ -358,6 +265,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  margin-top: 1.5rem;
 }
 
 .submit-btn:hover {
@@ -377,9 +285,33 @@ body {
   height: 18px;
 }
 
+/* Guarantees */
+.guarantees {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.guarantee-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.guarantee-item svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--success);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
 /* Terms */
 .terms-text {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   text-align: center;
   margin-top: 1.25rem;
@@ -395,171 +327,74 @@ body {
   text-decoration: underline;
 }
 
-/* Right Side - Order Summary */
-.order-summary {
-  background: var(--surface-alt);
-  border-left: 1px solid var(--border);
-  padding: 3rem 2.5rem;
+/* Promo Section */
+.promo-section {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
 }
 
-@media (max-width: 900px) {
-  .order-summary {
-    border-left: none;
-    border-top: 1px solid var(--border);
-    padding: 2rem 1.5rem;
-  }
-}
-
-.summary-title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-}
-
-/* Selected Tier Display */
-.selected-tier {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.selected-tier-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-}
-
-.selected-tier-name {
-  font-size: 1.25rem;
-  font-weight: 700;
-}
-
-.selected-tier-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 600;
+.promo-toggle {
+  font-size: 0.8rem;
   color: var(--gold);
-  background: var(--gold-glow);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.selected-tier-features {
+.promo-toggle:hover {
+  text-decoration: underline;
+}
+
+.promo-input-wrapper {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.tier-feature {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.tier-feature svg {
-  width: 14px;
-  height: 14px;
-  stroke: var(--gold);
-  flex-shrink: 0;
-}
-
-/* Price Breakdown */
-.price-breakdown {
-  border-top: 1px solid var(--border);
-  padding-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.price-line {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.9rem;
-  margin-bottom: 0.75rem;
-}
-
-.price-line .label {
-  color: var(--text-secondary);
-}
-
-.price-line .value {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 500;
-}
-
-.price-line.discount .value {
-  color: var(--success);
-}
-
-.price-total {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-  font-weight: 600;
-}
-
-.price-total .label {
-  font-size: 0.95rem;
-}
-
-.price-total .value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.25rem;
-  color: var(--text-primary);
-}
-
-/* Guarantees */
-.guarantees {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border);
-}
-
-.guarantee-item {
-  display: flex;
-  align-items: flex-start;
   gap: 0.75rem;
-  margin-bottom: 1rem;
+  margin-top: 0.75rem;
+}
+
+.promo-input-wrapper input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.promo-input-wrapper input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.promo-apply-btn {
+  padding: 0 1.25rem;
+  background: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
   font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.guarantee-item svg {
-  width: 16px;
-  height: 16px;
-  stroke: var(--success);
-  flex-shrink: 0;
-  margin-top: 2px;
+.promo-apply-btn:hover {
+  background: #333;
 }
 
-/* Back Link */
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  text-decoration: none;
-  margin-bottom: 2rem;
-  transition: color 0.2s;
+#promo-result {
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
 }
 
-.back-link:hover {
-  color: var(--text-primary);
-}
+.promo-success { color: var(--success); font-weight: 500; }
+.promo-error { color: var(--danger); }
 
-.back-link svg {
-  width: 16px;
-  height: 16px;
-}
+.hidden { display: none; }
 </style>
 </head>
 <body>
@@ -575,188 +410,182 @@ body {
   </div>
 </header>
 
-<div class="checkout-layout">
-  <section class="checkout-form-section">
-    <a href="/pricing" class="back-link">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Back to pricing
-    </a>
-    
-    <h1 id="checkoutTitle">Complete your order</h1>
-    <p id="checkoutSubtitle">You're one step away from accessing Quant Prime instruments.</p>
-    
-    <form id="checkoutForm">
-      <!-- Billing Cycle -->
-      <div class="form-section">
-        <div class="form-section-title">Billing Cycle</div>
-        <div class="billing-selector">
-          <div class="billing-option" data-billing="monthly" onclick="selectBilling('monthly')">
-            <div class="billing-label">Monthly</div>
-            <div class="billing-price" id="monthlyPrice">£88</div>
-            <div class="billing-detail">per month</div>
-          </div>
-          <div class="billing-option selected" data-billing="annual" onclick="selectBilling('annual')">
-            <div class="billing-label">Annual</div>
-            <div class="billing-price" id="annualPrice">£73.33</div>
-            <div class="billing-detail">per month, billed yearly</div>
-            <div class="billing-save" id="annualSave">Save £176/year</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Account -->
-      <div class="form-section">
-        <div class="form-section-title">Account</div>
-        <div class="form-row">
-          <label>Email address</label>
-          <input type="email" id="email" placeholder="you@example.com" required>
-        </div>
-        <div class="form-row">
-          <label>TradingView username</label>
-          <input type="text" id="tvUsername" placeholder="Your exact TradingView username" required>
-        </div>
-      </div>
-      
-      <!-- Promo Code -->
-      <div class="form-section" id="promo-section">
-        <div class="form-section-title">Discount Code</div>
-        <div class="form-row">
-          <div class="promo-input-wrapper">
-            <input type="text" id="promoCode" placeholder="Enter promo code" style="text-transform: uppercase;">
-            <button type="button" class="promo-apply-btn" onclick="applyPromoCode()">Apply</button>
-          </div>
-          <div id="promo-result" style="font-size: 0.8rem; margin-top: 0.5rem;"></div>
-        </div>
-      </div>
-      
-      <!-- Payment -->
-      <div class="form-section">
-        <div class="form-section-title">Payment</div>
-        
-        <div class="trust-badges">
-          <div class="trust-badge">
-            <svg viewBox="0 0 50 16" width="40"><rect fill="#1A1F71" width="50" height="16" rx="2"/><text x="25" y="11.5" fill="#fff" font-size="8" text-anchor="middle" font-weight="bold">VISA</text></svg>
-          </div>
-          <div class="trust-badge">
-            <svg viewBox="0 0 50 16" width="40"><rect fill="#000" width="50" height="16" rx="2"/><circle cx="20" cy="8" r="6" fill="#EB001B"/><circle cx="30" cy="8" r="6" fill="#F79E1B"/><path d="M25 3a6 6 0 000 10 6 6 0 000-10" fill="#FF5F00"/></svg>
-          </div>
-          <div class="trust-badge">
-            <svg viewBox="0 0 50 16" width="40"><rect fill="#006FCF" width="50" height="16" rx="2"/><text x="25" y="11" fill="#fff" font-size="6" text-anchor="middle" font-weight="bold">AMEX</text></svg>
-          </div>
-          <div class="trust-badge stripe-badge">
-            <svg viewBox="0 0 60 24" width="60" height="24">
-              <text x="0" y="16" fill="#635bff" font-size="11" font-weight="600">stripe</text>
-            </svg>
-          </div>
-          <div class="trust-badge ssl-badge">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2">
-              <rect x="3" y="11" width="18" height="11" rx="2"/>
-              <path d="M7 11V7a5 5 0 0110 0v4"/>
-            </svg>
-            <span>SSL Secured</span>
-          </div>
-        </div>
-        
-        <div class="form-row">
-          <label>Name on card</label>
-          <input type="text" id="cardName" placeholder="Full name as shown on card" required>
-        </div>
-        <div class="form-row">
-          <label>Card number</label>
-          <div class="card-input-wrapper">
-            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
-          </div>
-        </div>
-        <div class="form-row-grid">
-          <div class="form-row">
-            <label>Expiry date</label>
-            <input type="text" id="expiry" placeholder="MM / YY" required>
-          </div>
-          <div class="form-row">
-            <label>CVC</label>
-            <input type="text" id="cvc" placeholder="123" required>
-          </div>
-        </div>
-        
-        <div class="stripe-notice">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
-          <span>Your payment is processed securely by Stripe. We never see or store your card details.</span>
-        </div>
-      </div>
-      
-    </form>
-  </section>
+<div class="checkout-container">
+  <a href="/pricing" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to pricing
+  </a>
   
-  <aside class="order-summary">
-    <div class="summary-title">Order Summary</div>
+  <!-- Order Summary - TOP -->
+  <div class="order-summary">
+    <div class="summary-header">
+      <div class="summary-tier" id="tierName">Research</div>
+      <div class="summary-badge" id="tierBadge">30 Days Free</div>
+    </div>
     
-    <div class="selected-tier">
-      <div class="selected-tier-header">
-        <div class="selected-tier-name" id="tierName">Full Suite</div>
-        <div class="selected-tier-badge" id="tierBadge">ANNUAL</div>
+    <div class="summary-features" id="tierFeatures">
+      <div class="summary-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Daily quantitative market intelligence
       </div>
-      <div class="selected-tier-features" id="tierFeatures">
-        <div class="tier-feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-          All 3 indicators (Recoil, Meridian, Cockpit)
-        </div>
-        <div class="tier-feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-          Automated execution
-        </div>
-        <div class="tier-feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-          Dedicated support
-        </div>
-        <div class="tier-feature">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-          Weekly research reports
-        </div>
+      <div class="summary-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Weekly market & strategy research
+      </div>
+      <div class="summary-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Private research community
+      </div>
+      <div class="summary-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Quantitative code library
+      </div>
+      <div class="summary-feature">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        Core Quant Prime dashboard
       </div>
     </div>
     
-    <div class="price-breakdown">
-      <div class="price-line">
-        <span class="label" id="subtotalLabel">Full Suite (Annual)</span>
-        <span class="value" id="subtotalValue">£880.00</span>
+    <div class="summary-pricing">
+      <div class="summary-price-main">
+        <span class="amount" id="priceAmount">£0</span>
+        <span class="period" id="pricePeriod">for 30 days</span>
       </div>
-      <div class="price-line discount" id="discountLine" style="display: none;">
-        <span class="label">Annual discount</span>
-        <span class="value" id="discountValue">-£176.00</span>
+      <div class="summary-price-after" id="priceAfter">
+        Then £8/mo<br>Cancel anytime
       </div>
-      <div class="price-total">
-        <span class="label">Total due today</span>
-        <span class="value" id="totalValue">£880.00</span>
+    </div>
+  </div>
+  
+  <!-- Form - BELOW -->
+  <form class="checkout-form" id="checkoutForm">
+    <div class="form-title">Your details</div>
+    
+    <div class="form-row">
+      <label>Full name</label>
+      <input type="text" id="fullName" placeholder="John Smith" required>
+    </div>
+    
+    <div class="form-row">
+      <label>Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
+    </div>
+    
+    <div class="form-row">
+      <label>Phone number</label>
+      <div class="phone-input-wrapper">
+        <select id="countryCode" required>
+          <option value="+44">🇬🇧 +44</option>
+          <option value="+1">🇺🇸 +1</option>
+          <option value="+1">🇨🇦 +1</option>
+          <option value="+61">🇦🇺 +61</option>
+          <option value="+64">🇳🇿 +64</option>
+          <option value="+353">🇮🇪 +353</option>
+          <option value="+49">🇩🇪 +49</option>
+          <option value="+33">🇫🇷 +33</option>
+          <option value="+34">🇪🇸 +34</option>
+          <option value="+39">🇮🇹 +39</option>
+          <option value="+31">🇳🇱 +31</option>
+          <option value="+32">🇧🇪 +32</option>
+          <option value="+41">🇨🇭 +41</option>
+          <option value="+43">🇦🇹 +43</option>
+          <option value="+46">🇸🇪 +46</option>
+          <option value="+47">🇳🇴 +47</option>
+          <option value="+45">🇩🇰 +45</option>
+          <option value="+358">🇫🇮 +358</option>
+          <option value="+48">🇵🇱 +48</option>
+          <option value="+351">🇵🇹 +351</option>
+          <option value="+30">🇬🇷 +30</option>
+          <option value="+36">🇭🇺 +36</option>
+          <option value="+420">🇨🇿 +420</option>
+          <option value="+421">🇸🇰 +421</option>
+          <option value="+40">🇷🇴 +40</option>
+          <option value="+359">🇧🇬 +359</option>
+          <option value="+385">🇭🇷 +385</option>
+          <option value="+386">🇸🇮 +386</option>
+          <option value="+372">🇪🇪 +372</option>
+          <option value="+371">🇱🇻 +371</option>
+          <option value="+370">🇱🇹 +370</option>
+          <option value="+352">🇱🇺 +352</option>
+          <option value="+356">🇲🇹 +356</option>
+          <option value="+357">🇨🇾 +357</option>
+          <option value="+91">🇮🇳 +91</option>
+          <option value="+92">🇵🇰 +92</option>
+          <option value="+971">🇦🇪 +971</option>
+          <option value="+966">🇸🇦 +966</option>
+          <option value="+972">🇮🇱 +972</option>
+          <option value="+90">🇹🇷 +90</option>
+          <option value="+27">🇿🇦 +27</option>
+          <option value="+234">🇳🇬 +234</option>
+          <option value="+254">🇰🇪 +254</option>
+          <option value="+20">🇪🇬 +20</option>
+          <option value="+55">🇧🇷 +55</option>
+          <option value="+52">🇲🇽 +52</option>
+          <option value="+54">🇦🇷 +54</option>
+          <option value="+56">🇨🇱 +56</option>
+          <option value="+57">🇨🇴 +57</option>
+          <option value="+81">🇯🇵 +81</option>
+          <option value="+82">🇰🇷 +82</option>
+          <option value="+86">🇨🇳 +86</option>
+          <option value="+852">🇭🇰 +852</option>
+          <option value="+65">🇸🇬 +65</option>
+          <option value="+60">🇲🇾 +60</option>
+          <option value="+66">🇹🇭 +66</option>
+          <option value="+84">🇻🇳 +84</option>
+          <option value="+62">🇮🇩 +62</option>
+          <option value="+63">🇵🇭 +63</option>
+        </select>
+        <input type="tel" id="phone" placeholder="7911 123456" required>
       </div>
     </div>
     
-    <div class="guarantees" id="guaranteesSection">
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>256-bit SSL encryption. Your payment info is never stored on our servers.</span>
+    <div class="form-row">
+      <label>Discord username <span class="optional">(optional)</span></label>
+      <input type="text" id="discordUsername" placeholder="username#1234 or just username">
+    </div>
+    
+    <div class="form-row">
+      <label>TradingView username <span class="optional">(optional)</span></label>
+      <input type="text" id="tvUsername" placeholder="Your TradingView username">
+    </div>
+    
+    <!-- Promo Code -->
+    <div class="promo-section">
+      <button type="button" class="promo-toggle" onclick="togglePromo()">Have a promo code?</button>
+      <div id="promoWrapper" class="hidden">
+        <div class="promo-input-wrapper">
+          <input type="text" id="promoCode" placeholder="Enter code">
+          <button type="button" class="promo-apply-btn" onclick="applyPromoCode()">Apply</button>
+        </div>
+        <div id="promo-result"></div>
       </div>
+    </div>
+    
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      <span id="submitText">Start Free Trial</span>
+    </button>
+    
+    <div class="guarantees">
       <div class="guarantee-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        <span>14-day refund policy on annual plans (before accessing premium content).</span>
+        <span>30 days completely free. Full access, no restrictions.</span>
       </div>
       <div class="guarantee-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-        <span>TradingView access granted within 24 hours of purchase.</span>
+        <span>Cancel anytime before day 30 and pay nothing.</span>
+      </div>
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Plus 14-day money-back guarantee after trial.</span>
       </div>
     </div>
     
-    <button type="submit" form="checkoutForm" class="submit-btn" id="submitBtn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-      <span id="submitText">Pay £880.00</span>
-    </button>
-    
     <p class="terms-text">
-      By completing this purchase, you agree to our <a href="/terms">Terms & Conditions</a>. 
-      Subscriptions auto-renew until cancelled. You can cancel anytime from your dashboard.
+      By continuing, you agree to our <a href="/terms">Terms & Conditions</a>. 
+      After 30 days, you'll be charged £8/mo. Cancel anytime from your dashboard.
     </p>
-  </aside>
+  </form>
 </div>
 
 <script>
@@ -766,319 +595,91 @@ const tiers = {
     name: 'Research',
     monthly: 8,
     annual: 80,
-    annualMonthly: 6.67,
-    save: 16,
     freeTrial: 30,
     features: [
-      'Full dashboard access',
-      'Weekly market analysis',
-      'Pair-by-pair metrics',
-      'Trading community'
+      'Daily quantitative market intelligence',
+      'Weekly market & strategy research',
+      'Private research community',
+      'Quantitative code library',
+      'Core Quant Prime dashboard'
     ]
   },
   recoil: {
     name: 'Recoil',
     monthly: 28,
     annual: 280,
-    annualMonthly: 23.33,
-    save: 56,
     features: [
-      'Recoil indicator',
-      'Real-time alerts',
-      "Operator's Guide",
-      '3 trading style presets'
+      'Everything in Research',
+      'Recoil indicator (TradingView)',
+      'Real-time trading alerts',
+      'Recoil Operator\'s Guide',
+      '+12 Quant modules'
     ]
   },
   terminal: {
     name: 'Terminal',
     monthly: 58,
     annual: 580,
-    annualMonthly: 48.33,
-    save: 116,
     features: [
-      'Recoil + Meridian indicators',
-      'Prime Signal alerts',
-      'Multi-timeframe sync',
-      'Priority support'
+      'Everything in Recoil',
+      'Meridian indicator (TradingView)',
+      'Multi-timeframe sync signals',
+      'Meridian Operator\'s Guide',
+      '+12 Quant modules'
     ]
   },
   suite: {
     name: 'Full Suite',
     monthly: 88,
     annual: 880,
-    annualMonthly: 73.33,
-    save: 176,
     features: [
-      'All 3 indicators (Recoil, Meridian, Cockpit)',
-      'Automated execution',
-      'Dedicated support',
-      'Weekly research reports'
-    ]
-  },
-  ascension: {
-    name: 'Ascension',
-    monthly: 258,
-    annual: 2580,
-    annualMonthly: 215,
-    save: 516,
-    lifetime: 4995,
-    features: [
-      'Everything in Full Suite',
-      '9-level education series',
-      '1-on-1 deployment call',
-      'Completion guarantee'
+      'Everything in Terminal',
+      'The Cockpit analyzer',
+      'All 48 Quant modules',
+      '1-on-1 setup call',
+      'Monthly progression calls'
     ]
   }
 };
 
 // Get URL params
 const params = new URLSearchParams(window.location.search);
-let currentTier = params.get('tier') || 'suite';
-let currentBilling = params.get('billing') || 'annual';
-let productType = params.get('type') || 'tier';
-let snippetData = null;
-
-// Check if this is a marketplace snippet
-if (productType === 'snippet') {
-  snippetData = {
-    id: params.get('id'),
-    name: params.get('name') || 'Code Snippet',
-    price: parseFloat(params.get('price')) || 0
-  };
-}
+let currentTier = params.get('tier') || 'research';
 
 // Initialize
 function init() {
-  if (productType === 'snippet' && snippetData) {
-    initSnippetCheckout();
-  } else {
-    const tier = tiers[currentTier];
-    if (!tier) {
-      currentTier = 'suite';
-    }
-    updateDisplay();
-  }
-}
-
-// Initialize snippet checkout (marketplace products)
-function initSnippetCheckout() {
-  const isFree = snippetData.price === 0;
+  const tier = tiers[currentTier] || tiers.research;
   
-  // Update page title
-  document.querySelector('.checkout-form-section h1').textContent = isFree ? 'Get Your Code' : 'Purchase Snippet';
-  document.querySelector('.checkout-form-section > p').textContent = isFree 
-    ? 'Enter your email to receive the code snippet.' 
-    : 'Complete your purchase to get instant access.';
-  
-  // Hide billing cycle section for snippets (it's the first .form-section)
-  const formSections = document.querySelectorAll('.form-section');
-  formSections.forEach(section => {
-    const title = section.querySelector('.form-section-title');
-    if (title && title.textContent.includes('Billing Cycle')) {
-      section.style.display = 'none';
-    }
-  });
-  
-  // Hide TradingView username field for snippets (not needed) and remove required
-  const tvField = document.getElementById('tvUsername');
-  if (tvField) {
-    tvField.closest('.form-row').style.display = 'none';
-    tvField.removeAttribute('required');
-  }
-  
-  // Hide card section for free products
-  if (isFree) {
-    formSections.forEach(section => {
-      const title = section.querySelector('.form-section-title');
-      if (title && title.textContent.includes('Payment')) {
-        section.style.display = 'none';
-      }
-    });
-  }
-  
-  // Update order summary
-  document.getElementById('tierName').textContent = snippetData.name;
-  document.getElementById('tierBadge').textContent = isFree ? 'FREE' : 'ONE-TIME';
-  
-  // Update features with single item
-  document.getElementById('tierFeatures').innerHTML = `
-    <div class="tier-feature">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-      Pine Script v6 source code
-    </div>
-    <div class="tier-feature">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-      Copy, paste, customize
-    </div>
-    <div class="tier-feature">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-      Use in your own indicators
-    </div>
-  `;
-  
-  // Update pricing
-  document.getElementById('subtotalLabel').textContent = snippetData.name;
-  const priceStr = isFree ? 'FREE' : `£${snippetData.price.toFixed(2)}`;
-  document.getElementById('subtotalValue').textContent = priceStr;
-  document.getElementById('discountLine').style.display = 'none';
-  document.getElementById('totalValue').textContent = priceStr;
-  document.getElementById('submitText').textContent = isFree ? 'Get Free Snippet' : `Pay £${snippetData.price.toFixed(2)}`;
-  
-  // Update guarantees
-  document.querySelector('.guarantees').innerHTML = `
-    <div class="guarantee-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <span>Instant delivery to your email after purchase.</span>
-    </div>
-    <div class="guarantee-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-      <span>Use the code in any Pine Script project.</span>
-    </div>
-  `;
-  
-  // Update terms text for snippets (no subscription language)
-  const termsText = document.querySelector('.terms-text');
-  if (termsText) {
-    termsText.innerHTML = 'By completing this purchase, you agree to our <a href="/terms">Terms & Conditions</a>. One-time purchase, no recurring charges.';
-  }
-}
-
-function selectBilling(billing) {
-  currentBilling = billing;
-  document.querySelectorAll('.billing-option').forEach(opt => {
-    opt.classList.toggle('selected', opt.dataset.billing === billing);
-  });
-  updateDisplay();
-}
-
-function updateDisplay() {
-  const tier = tiers[currentTier];
-  
-  // Hide billing selector for Research (trial only)
-  const billingSection = document.querySelector('.billing-selector')?.closest('.form-section');
-  if (billingSection) {
-    if (currentTier === 'research') {
-      billingSection.style.display = 'none';
-      currentBilling = 'monthly'; // Force monthly for trial
-    } else {
-      billingSection.style.display = 'block';
-    }
-  }
-  
-  // Update tier name
   document.getElementById('tierName').textContent = tier.name;
-  document.getElementById('tierBadge').textContent = currentBilling.toUpperCase();
-  
-  // Update billing options
-  document.getElementById('monthlyPrice').textContent = `£${tier.monthly}`;
-  document.getElementById('annualPrice').textContent = `£${tier.annualMonthly}`;
-  document.getElementById('annualSave').textContent = `Save £${tier.save}/year`;
   
   // Update features
   const featuresEl = document.getElementById('tierFeatures');
   featuresEl.innerHTML = tier.features.map(f => `
-    <div class="tier-feature">
+    <div class="summary-feature">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
       ${f}
     </div>
   `).join('');
   
-  // Update pricing
-  let total, subtotalText;
-  const isResearchTrial = currentTier === 'research' && tier.freeTrial;
-  
-  if (isResearchTrial) {
-    // Research with 30-day free trial
-    total = 0;
-    subtotalText = `${tier.name} (30-Day Free Trial)`;
-    document.getElementById('discountLine').style.display = 'flex';
-    document.getElementById('discountLine').querySelector('.label').textContent = 'Free trial';
-    document.getElementById('discountValue').textContent = `30 days free`;
-    document.getElementById('discountValue').style.color = '#22c55e';
-  } else if (currentBilling === 'annual') {
-    total = tier.annual;
-    subtotalText = `${tier.name} (Annual)`;
-    document.getElementById('discountLine').style.display = 'flex';
-    document.getElementById('discountLine').querySelector('.label').textContent = 'Annual discount';
-    document.getElementById('discountValue').textContent = `-£${tier.save}.00`;
-    document.getElementById('discountValue').style.color = '#22c55e';
-  } else if (currentBilling === 'lifetime' && tier.lifetime) {
-    total = tier.lifetime;
-    subtotalText = `${tier.name} (Lifetime)`;
-    document.getElementById('discountLine').style.display = 'none';
+  // Update pricing based on tier
+  if (tier.freeTrial) {
+    document.getElementById('tierBadge').textContent = '30 Days Free';
+    document.getElementById('priceAmount').textContent = '£0';
+    document.getElementById('pricePeriod').textContent = 'for 30 days';
+    document.getElementById('priceAfter').innerHTML = `Then £${tier.monthly}/mo<br>Cancel anytime`;
+    document.getElementById('submitText').textContent = 'Start Free Trial';
   } else {
-    total = tier.monthly;
-    subtotalText = `${tier.name} (Monthly)`;
-    document.getElementById('discountLine').style.display = 'none';
+    document.getElementById('tierBadge').textContent = 'Monthly';
+    document.getElementById('priceAmount').textContent = `£${tier.monthly}`;
+    document.getElementById('pricePeriod').textContent = '/month';
+    document.getElementById('priceAfter').innerHTML = `Billed monthly<br>Cancel anytime`;
+    document.getElementById('submitText').textContent = `Pay £${tier.monthly}`;
   }
-  
-  document.getElementById('subtotalLabel').textContent = subtotalText;
-  
-  if (isResearchTrial) {
-    document.getElementById('subtotalValue').textContent = `£${tier.monthly}/mo after trial`;
-    document.getElementById('totalValue').textContent = `£0.00`;
-    document.getElementById('submitText').textContent = `Start Free Trial`;
-    
-    // Update page header for trial
-    document.getElementById('checkoutTitle').textContent = 'Start your free trial';
-    document.getElementById('checkoutSubtitle').textContent = '30 days free. Cancel anytime. No risk.';
-    
-    // Update guarantees for trial
-    document.getElementById('guaranteesSection').innerHTML = `
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        <span><strong>30 days completely free.</strong> Full dashboard access, no restrictions.</span>
-      </div>
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-        <span>Cancel anytime before day 30 and pay nothing. No questions asked.</span>
-      </div>
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>Plus 14-day money-back guarantee after trial. 44 days risk-free total.</span>
-      </div>
-    `;
-  } else {
-    document.getElementById('subtotalValue').textContent = `£${total.toFixed(2)}`;
-    document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
-    document.getElementById('submitText').textContent = `Continue to Payment`;
-    
-    // Reset page header
-    document.getElementById('checkoutTitle').textContent = 'Complete your order';
-    document.getElementById('checkoutSubtitle').textContent = "You're one step away from accessing Quant Prime instruments.";
-    
-    // Reset guarantees for non-trial tiers
-    document.getElementById('guaranteesSection').innerHTML = `
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span>256-bit SSL encryption. Your payment info is never stored on our servers.</span>
-      </div>
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-        <span>14-day refund policy on annual plans (before accessing premium content).</span>
-      </div>
-      <div class="guarantee-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-        <span>TradingView access granted within 24 hours of purchase.</span>
-      </div>
-    `;
-  }
-  
-  // Hide payment section for tier checkouts (Stripe Checkout handles card collection)
-  const formSections = document.querySelectorAll('.form-section');
-  formSections.forEach(section => {
-    const title = section.querySelector('.form-section-title');
-    if (title && title.textContent.includes('Payment')) {
-      section.style.display = 'none';
-      // Remove required from card inputs
-      section.querySelectorAll('input').forEach(inp => inp.removeAttribute('required'));
-    }
-  });
-  
-  // Update billing selector state
-  document.querySelectorAll('.billing-option').forEach(opt => {
-    opt.classList.toggle('selected', opt.dataset.billing === currentBilling);
-  });
+}
+
+// Promo code toggle
+function togglePromo() {
+  document.getElementById('promoWrapper').classList.toggle('hidden');
 }
 
 // Promo code state
@@ -1097,243 +698,106 @@ function applyPromoCode() {
     return;
   }
   
-  // Valid promo codes - each unlocks specific tier
   const validCodes = {
-    'QP2026': { discount: 100, tier: 'suite' },
-    'QPRESEARCH26': { discount: 100, tier: 'research' },
-    'QPRECOIL26': { discount: 100, tier: 'recoil' },
-    'QPTERMINAL26': { discount: 100, tier: 'terminal' },
-    'QPSUITE26': { discount: 100, tier: 'suite' },
-    'QPASCEND26': { discount: 100, tier: 'ascension' }
+    'QP2026': { tier: 'suite' },
+    'QPRESEARCH26': { tier: 'research' },
+    'QPRECOIL26': { tier: 'recoil' },
+    'QPTERMINAL26': { tier: 'terminal' },
+    'QPSUITE26': { tier: 'suite' }
   };
   
   if (validCodes[code]) {
     promoApplied = true;
     promoCode = code;
-    promoTier = validCodes[code].tier;  // Store the tier for this promo
-    input.classList.add('promo-applied');
+    promoTier = validCodes[code].tier;
     input.setAttribute('readonly', true);
     
-    // Different message based on tier unlocked
-    const tierNames = {
-      'research': 'Research',
-      'recoil': 'Recoil', 
-      'terminal': 'Terminal',
-      'suite': 'Full Suite',
-      'ascension': 'Ascension'
-    };
-    const tierDisplay = tierNames[validCodes[code].tier] || validCodes[code].tier;
-    const promoMessage = (productType === 'snippet') 
-      ? '🎉 Script unlocked!' 
-      : `🎉 ${tierDisplay} access unlocked!`;
-    result.innerHTML = `<span class="promo-success">${promoMessage}</span>`;
+    const tierNames = { research: 'Research', recoil: 'Recoil', terminal: 'Terminal', suite: 'Full Suite' };
+    result.innerHTML = `<span class="promo-success">🎉 ${tierNames[promoTier]} access unlocked!</span>`;
     
-    // Update pricing display
-    document.getElementById('totalValue').textContent = '£0.00';
+    document.getElementById('priceAmount').textContent = '£0';
+    document.getElementById('pricePeriod').textContent = '';
+    document.getElementById('priceAfter').innerHTML = 'Promo applied';
     document.getElementById('submitText').textContent = 'Complete Registration';
-    
-    // Hide payment section and remove required from card fields
-    const formSections = document.querySelectorAll('.form-section');
-    formSections.forEach(section => {
-      const title = section.querySelector('.form-section-title');
-      if (title && title.textContent.includes('Payment')) {
-        section.style.display = 'none';
-        // Remove required from all inputs in this section
-        section.querySelectorAll('input').forEach(inp => {
-          inp.removeAttribute('required');
-        });
-      }
-    });
-    
-    // Update order summary
-    const discountLine = document.getElementById('discountLine');
-    if (discountLine) {
-      discountLine.style.display = 'flex';
-      discountLine.querySelector('.label').textContent = 'Promo: ' + code;
-      discountLine.querySelector('.value').textContent = '-100%';
-      discountLine.querySelector('.value').style.color = '#22c55e';
-    }
   } else {
     result.innerHTML = '<span class="promo-error">Invalid promo code</span>';
   }
 }
 
-// Form handling
+// Form submission
 document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   
   const btn = document.getElementById('submitBtn');
   const originalText = document.getElementById('submitText').textContent;
-  const email = document.getElementById('email').value;
-  const tvUsername = document.getElementById('tvUsername')?.value || '';
+  
+  const formData = {
+    fullName: document.getElementById('fullName').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('countryCode').value + document.getElementById('phone').value,
+    discordUsername: document.getElementById('discordUsername').value || null,
+    tvUsername: document.getElementById('tvUsername').value || null,
+    tier: currentTier
+  };
   
   btn.disabled = true;
   document.getElementById('submitText').textContent = 'Processing...';
   
-  // Check if promo code was applied
+  // If promo applied
   if (promoApplied && promoTier) {
-    // Grant tier access without payment
     try {
-      // Call backend to register user with the promo tier
-      const response = await fetch('https://dashboard.themoneyprinter.uk/api/promo-register', {
+      await fetch('https://dashboard.themoneyprinter.uk/api/promo-register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: email,
-          tvUsername: tvUsername,
-          promoCode: promoCode,
-          tier: promoTier,
-          timestamp: Date.now()
-        })
+        body: JSON.stringify({ ...formData, promoCode, tier: promoTier })
       });
-      
-      // Redirect to success with the granted tier
-      const grantedTier = promoTier;
-      const tierParam = productType === 'snippet' ? snippetData?.name : grantedTier;
-      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}&tier=${grantedTier}`;
     } catch (err) {
-      console.error('Promo registration error:', err);
-      // Still redirect - backend can be set up later
-      const grantedTier = promoTier;
-      const tierParam = productType === 'snippet' ? snippetData?.name : grantedTier;
-      window.location.href = `/success.html?type=${productType}&name=${encodeURIComponent(tierParam)}&email=${encodeURIComponent(email)}&promo=${promoCode}&tier=${grantedTier}`;
+      console.log('Promo registration:', err.message);
     }
+    window.location.href = `/success.html?tier=${promoTier}&email=${encodeURIComponent(formData.email)}&promo=${promoCode}`;
     return;
   }
   
-  // Handle snippet vs tier differently
-  if (productType === 'snippet' && snippetData) {
-    const isFree = snippetData.price === 0;
+  // Normal checkout - create Stripe session
+  try {
+    const affiliateRef = localStorage.getItem('qp_affiliate_ref') || null;
     
-    if (isFree || promoApplied) {
-      // Free snippet or promo applied
-      window.location.href = `/success.html?type=snippet&name=${encodeURIComponent(snippetData.name)}&email=${encodeURIComponent(email)}&id=${snippetData.id}`;
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/stripe/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tier: currentTier,
+        email: formData.email,
+        fullName: formData.fullName,
+        phone: formData.phone,
+        discordUsername: formData.discordUsername,
+        tvUsername: formData.tvUsername,
+        affiliateRef: affiliateRef
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.url) {
+      window.location.href = data.url;
     } else {
-      // Paid snippet - redirect to Stripe
-      alert('Marketplace payments coming soon!');
-      btn.disabled = false;
-      document.getElementById('submitText').textContent = originalText;
+      throw new Error(data.error || 'No checkout URL');
     }
-  } else {
-    // Tier subscription checkout - create Stripe Checkout Session
-    try {
-      // Get the price ID for this tier
-      const priceIds = {
-        research: 'price_1Txkaq15x1S5u1oiJwZrI1Hd',
-        recoil: 'price_1Txkc115x1S5u1oiwzO6XDl3',
-        terminal: 'price_1Txkcl15x1S5u1oiOzoawxOp',
-        suite: 'price_1TxkdT15x1S5u1oiqElyXsjn',
-        ascension: 'price_1TxkeV15x1S5u1oiMI5HK9SF'
-      };
-      
-      const priceId = priceIds[currentTier];
-      if (!priceId) {
-        throw new Error('Invalid tier selected');
-      }
-      
-      // Get affiliate ref if present
-      const affiliateRef = localStorage.getItem('qp_affiliate_ref') || null;
-      
-      const response = await fetch('https://dashboard.themoneyprinter.uk/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          priceId: priceId,
-          email: email,
-          tvUsername: tvUsername,
-          tier: currentTier,
-          billing: currentBilling,
-          affiliateRef: affiliateRef
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error('No checkout URL returned');
-      }
-    } catch (err) {
-      console.error('Checkout error:', err);
-      alert('Error creating checkout session: ' + err.message);
-      btn.disabled = false;
-      document.getElementById('submitText').textContent = originalText;
-    }
+  } catch (err) {
+    console.error('Checkout error:', err);
+    alert('Error: ' + err.message);
+    btn.disabled = false;
+    document.getElementById('submitText').textContent = originalText;
   }
 });
 
-// Card number formatting
-document.getElementById('cardNumber').addEventListener('input', function(e) {
-  let value = e.target.value.replace(/\s/g, '').replace(/\D/g, '');
-  let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
-  e.target.value = formatted.substring(0, 19);
-});
-
-// Expiry formatting
-document.getElementById('expiry').addEventListener('input', function(e) {
+// Phone number formatting
+document.getElementById('phone').addEventListener('input', function(e) {
   let value = e.target.value.replace(/\D/g, '');
-  if (value.length >= 2) {
-    value = value.substring(0, 2) + ' / ' + value.substring(2, 4);
-  }
   e.target.value = value;
 });
 
-// CVC limit
-document.getElementById('cvc').addEventListener('input', function(e) {
-  e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
-});
-
 init();
-
-// Check if user is logged in and pre-fill email
-async function checkLoggedInUser() {
-  if (typeof window.supabase === 'undefined') return;
-  
-  const supabaseClient = window.supabase.createClient(
-    'https://pjqwnqhnuxwinwxdritp.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ'
-  );
-  
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session && session.user) {
-      const emailInput = document.getElementById('email');
-      if (emailInput && !emailInput.value) {
-        emailInput.value = session.user.email;
-        emailInput.classList.add('prefilled');
-      }
-      
-      // Also get their TradingView username from profile
-      const { data: profile } = await supabaseClient
-        .from('profiles')
-        .select('tradingview_username, display_name')
-        .eq('id', session.user.id)
-        .single();
-      
-      if (profile && profile.tradingview_username) {
-        const tvInput = document.getElementById('tvUsername');
-        if (tvInput && !tvInput.value) {
-          tvInput.value = profile.tradingview_username;
-        }
-      }
-    }
-  } catch (e) {
-    console.log('[Checkout] Auth check:', e.message);
-  }
-}
-
-// Run after page loads
-setTimeout(checkLoggedInUser, 500);
-
-// Affiliate tracking handled by site-auth.js
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="/js/site-auth.js"></script>
 </body>
 </html>
