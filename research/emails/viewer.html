@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daily Briefing | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Header */
+.bar{
+  padding:16px 24px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-shrink:0;
+}
+.bar-left{
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+.mark{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.bar a{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  text-decoration:none;
+}
+.bar a:hover{text-decoration:underline}
+.date-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  color:var(--dim);
+}
+
+/* Email container */
+.email-container{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  padding:24px;
+  overflow:auto;
+  background:var(--ink);
+}
+.email-frame{
+  width:100%;
+  max-width:500px;
+  border:none;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  transition:filter 0.3s;
+}
+
+/* Dark mode invert for email iframe */
+[data-theme="dark"] .email-frame{
+  filter:invert(0.92) hue-rotate(180deg);
+}
+
+/* Nav buttons */
+.nav-buttons{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.nav-btn{
+  background:var(--panel);
+  border:1px solid var(--line);
+  color:var(--dim);
+  padding:8px 14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.nav-btn:hover{
+  border-color:var(--gold);
+  color:var(--white);
+}
+.nav-btn:disabled{
+  opacity:0.4;
+  cursor:not-allowed;
+}
+
+/* Theme toggle */
+.theme-toggle{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:var(--panel);
+  border:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:100;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  transition:all 0.2s;
+}
+.theme-toggle:hover{
+  border-color:var(--gold);
+  transform:scale(1.05);
+}
+.theme-toggle svg{
+  width:20px;
+  height:20px;
+  color:var(--dim);
+}
+.theme-toggle .sun{display:block}
+.theme-toggle .moon{display:none}
+
+/* Light mode */
+[data-theme="light"]{
+  --ink:#fafafa;
+  --panel:#ffffff;
+  --line:#e5e5e5;
+  --body:#444;
+  --dim:#888;
+  --white:#1a1a1a;
+}
+[data-theme="light"] .email-frame{
+  filter:none;
+  box-shadow:0 8px 32px rgba(0,0,0,0.1);
+}
+[data-theme="light"] .theme-toggle{
+  background:#fff;
+  border-color:#ddd;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+[data-theme="light"] .theme-toggle .sun{display:none}
+[data-theme="light"] .theme-toggle .moon{display:block}
+
+/* Loading state */
+.loading{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--dim);
+  font-size:14px;
+}
+
+@media(max-width:600px){
+  .bar{
+    flex-direction:column;
+    gap:12px;
+    text-align:center;
+  }
+  .bar-left{
+    flex-direction:column;
+    gap:8px;
+  }
+  .email-container{padding:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-left">
+    <span class="mark">Quant Prime</span>
+    <span class="date-label" id="date-label">Daily Briefing</span>
+  </div>
+  <div class="nav-buttons">
+    <button class="nav-btn" id="prev-btn" disabled>← Prev</button>
+    <button class="nav-btn" id="next-btn" disabled>Next →</button>
+    <a href="/research/">Back to Archive</a>
+  </div>
+</div>
+
+<div class="email-container">
+  <iframe class="email-frame" id="email-frame"></iframe>
+</div>
+
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+  </svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<script>
+// Theme handling
+const savedTheme = localStorage.getItem('qp-theme') || 'dark';
+if (savedTheme === 'light') {
+  document.documentElement.setAttribute('data-theme', 'light');
+} else {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+
+document.getElementById('theme-toggle').onclick = function() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const newTheme = current === 'light' ? 'dark' : 'light';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('qp-theme', newTheme);
+};
+
+// Email loading
+let emails = [];
+let currentIndex = 0;
+
+async function init() {
+  // Get email file from URL param
+  const params = new URLSearchParams(window.location.search);
+  const file = params.get('file');
+  const type = params.get('type') || 'daily';
+  
+  // Load email index
+  try {
+    const response = await fetch(`/research/emails/${type}/index.json`);
+    emails = await response.json();
+  } catch (e) {
+    console.error('Failed to load email index');
+  }
+  
+  if (file) {
+    // Find current email index
+    currentIndex = emails.findIndex(e => e.filename === file);
+    if (currentIndex === -1) currentIndex = 0;
+    loadEmail(file, type);
+  } else if (emails.length > 0) {
+    loadEmail(emails[0].filename, type);
+  }
+  
+  updateNavButtons(type);
+}
+
+function loadEmail(filename, type) {
+  const frame = document.getElementById('email-frame');
+  frame.src = `/research/emails/${type}/${filename}`;
+  
+  // Update date label
+  const email = emails.find(e => e.filename === filename);
+  if (email) {
+    document.getElementById('date-label').textContent = `Daily Briefing — ${email.date}`;
+    document.title = `${email.date} Briefing | Quant Prime Research`;
+  }
+  
+  // Update URL without reload
+  const url = new URL(window.location);
+  url.searchParams.set('file', filename);
+  url.searchParams.set('type', type);
+  window.history.replaceState({}, '', url);
+}
+
+function updateNavButtons(type) {
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  
+  prevBtn.disabled = currentIndex >= emails.length - 1;
+  nextBtn.disabled = currentIndex <= 0;
+  
+  prevBtn.onclick = () => {
+    if (currentIndex < emails.length - 1) {
+      currentIndex++;
+      loadEmail(emails[currentIndex].filename, type);
+      updateNavButtons(type);
+    }
+  };
+  
+  nextBtn.onclick = () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      loadEmail(emails[currentIndex].filename, type);
+      updateNavButtons(type);
+    }
+  };
+}
+
+init();
+</script>
+
+</body>
+</html>
