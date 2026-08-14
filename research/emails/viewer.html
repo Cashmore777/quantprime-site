@@ -18,114 +18,271 @@
   --white:#f2f4f7;
   --gold:#c9a84c;
   --cyan:#00abff;
+  --prime:#1a9956;
+  --good:#2d8abf;
+  --meh:#d4940a;
+  --skip:#c43030;
+  --bullish:#16864a;
+  --bearish:#b82828;
+}
+[data-theme="light"]{
+  --ink:#fafafa;
+  --panel:#ffffff;
+  --line:#e5e5e5;
+  --body:#444;
+  --dim:#888;
+  --white:#1a1a1a;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
 body{
   background:var(--ink);
   color:var(--body);
   font-family:'Inter',system-ui,sans-serif;
-  display:flex;
-  flex-direction:column;
+  font-size:15px;
+  line-height:1.6;
+  min-height:100vh;
 }
 
 /* Header */
-.bar{
-  padding:16px 24px;
+.header{
+  padding:16px 20px;
   border-bottom:1px solid var(--line);
   display:flex;
   justify-content:space-between;
   align-items:center;
-  flex-shrink:0;
-}
-.bar-left{
-  display:flex;
-  align-items:center;
-  gap:24px;
+  flex-wrap:wrap;
+  gap:12px;
 }
 .mark{
   font-family:'JetBrains Mono',monospace;
   font-size:11px;
   font-weight:700;
   letter-spacing:.16em;
-  text-transform:uppercase;
   color:var(--gold);
 }
-.bar a{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:var(--cyan);
-  text-decoration:none;
-}
-.bar a:hover{text-decoration:underline}
-.date-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;
-  letter-spacing:.1em;
-  color:var(--dim);
-}
-
-/* Email container - scrollable wrapper */
-.email-container{
-  flex:1;
-  overflow:auto;
-  background:var(--ink);
-  -webkit-overflow-scrolling:touch;
-  padding:20px;
-}
-.email-frame{
-  display:block;
-  margin:0 auto;
-  width:430px;
-  min-height:calc(100vh - 100px);
-  border:none;
-  background:#fff;
-  border-radius:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.4);
-  transition:filter 0.3s;
-}
-@media(max-width:460px){
-  .email-container{padding:0}
-  .email-frame{
-    width:100vw;
-    min-width:430px;
-    border-radius:0;
-    box-shadow:none;
-  }
-}
-
-/* Dark mode invert for email iframe */
-[data-theme="dark"] .email-frame{
-  filter:invert(0.92) hue-rotate(180deg);
-}
-
-/* Nav buttons */
-.nav-buttons{
+.nav-links{
   display:flex;
   align-items:center;
   gap:12px;
+  flex-wrap:wrap;
 }
-.nav-btn{
-  background:var(--panel);
-  border:1px solid var(--line);
-  color:var(--dim);
-  padding:8px 14px;
+.nav-links a, .nav-links button{
   font-family:'JetBrains Mono',monospace;
   font-size:11px;
   letter-spacing:.08em;
+  color:var(--dim);
+  text-decoration:none;
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:8px 12px;
   cursor:pointer;
   transition:all 0.15s;
 }
-.nav-btn:hover{
+.nav-links a:hover, .nav-links button:hover{
   border-color:var(--gold);
   color:var(--white);
 }
-.nav-btn:disabled{
-  opacity:0.4;
-  cursor:not-allowed;
+.nav-links button:disabled{opacity:0.4;cursor:not-allowed}
+
+/* Content */
+.content{
+  max-width:500px;
+  margin:0 auto;
+  padding:24px 16px 60px;
 }
+
+/* Briefing Header */
+.briefing-header{
+  text-align:center;
+  margin-bottom:24px;
+  padding:20px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+}
+.briefing-header h1{
+  font-size:22px;
+  font-weight:700;
+  color:var(--white);
+  margin-bottom:6px;
+}
+.briefing-header .date{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;
+  color:var(--dim);
+}
+
+/* Summary Card */
+.summary-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:16px;
+}
+.summary-card .label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:var(--gold);
+  margin-bottom:12px;
+}
+.bias-row{
+  font-size:15px;
+  margin-bottom:14px;
+}
+.bias-row .bullish{color:var(--bullish)}
+.bias-row .bearish{color:var(--bearish)}
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-bottom:14px;
+}
+.stat-box{
+  background:var(--ink);
+  border-radius:8px;
+  padding:10px 6px;
+  text-align:center;
+}
+.stat-box .num{font-size:20px;font-weight:700}
+.stat-box .lbl{font-size:9px;color:var(--dim)}
+.stat-box.prime .num{color:var(--prime)}
+.stat-box.good .num{color:var(--good)}
+.stat-box.meh .num{color:var(--meh)}
+.stat-box.skip .num{color:var(--skip)}
+
+.mover-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--ink);
+  padding:10px 12px;
+  border-radius:8px;
+  margin-bottom:12px;
+}
+.mover-row .mover-name{font-size:14px;font-weight:600;color:var(--white)}
+.mover-row .mover-label{font-size:10px;color:var(--dim)}
+.mover-row .mover-pct{font-size:18px;font-weight:700}
+.mover-row .mover-pct.up{color:var(--bullish)}
+.mover-row .mover-pct.down{color:var(--bearish)}
+
+.avg-range{font-size:13px;color:var(--dim)}
+.avg-range strong{color:var(--white)}
+
+/* Headlines */
+.headlines{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:16px;
+}
+.headlines .label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:var(--dim);
+  margin-bottom:10px;
+}
+.headline-item{
+  font-size:13px;
+  padding-left:12px;
+  border-left:2px solid var(--gold);
+  margin-bottom:8px;
+}
+
+/* Instrument Cards */
+.section-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:var(--dim);
+  margin:20px 0 12px;
+}
+.instrument-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:12px;
+  position:relative;
+  overflow:hidden;
+}
+.instrument-card .accent{
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+}
+.instrument-card .accent.prime{background:var(--prime)}
+.instrument-card .accent.good{background:var(--good)}
+.instrument-card .accent.meh{background:var(--meh)}
+.instrument-card .accent.skip{background:var(--skip)}
+
+.instrument-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  padding-top:4px;
+}
+.instrument-header .name{font-size:18px;font-weight:700;color:var(--white)}
+.regime-badge{
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:10px;
+  font-weight:700;
+}
+.regime-badge.prime{background:rgba(26,153,86,0.15);color:var(--prime)}
+.regime-badge.good{background:rgba(45,138,191,0.15);color:var(--good)}
+.regime-badge.meh{background:rgba(212,148,10,0.15);color:var(--meh)}
+.regime-badge.skip{background:rgba(196,48,48,0.15);color:var(--skip)}
+
+.bias-label{
+  padding:8px 12px;
+  border-radius:8px;
+  margin-bottom:12px;
+  font-size:12px;
+}
+.bias-label.bullish{background:rgba(22,134,74,0.1);border:1px solid rgba(22,134,74,0.2)}
+.bias-label.bearish{background:rgba(184,40,40,0.1);border:1px solid rgba(184,40,40,0.2)}
+.bias-label span:first-child{color:var(--dim);font-weight:600;letter-spacing:.05em;font-size:10px}
+.bias-label .direction{font-weight:700;margin-left:8px}
+.bias-label .direction.bullish{color:var(--bullish)}
+.bias-label .direction.bearish{color:var(--bearish)}
+
+.price-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:12px;
+}
+.price-row .current .lbl{font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:4px}
+.price-row .current .val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--white)}
+.price-row .change .lbl{font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:4px;text-align:right}
+.price-row .change .val{font-size:17px;font-weight:700}
+.price-row .change .val.up{color:var(--bullish)}
+.price-row .change .val.down{color:var(--bearish)}
+
+.hilo-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  background:var(--ink);
+  border-radius:8px;
+  overflow:hidden;
+}
+.hilo-row .cell{
+  padding:10px 8px;
+  text-align:center;
+  border-right:1px solid var(--line);
+}
+.hilo-row .cell:last-child{border-right:none}
+.hilo-row .cell .lbl{font-size:8px;color:var(--dim);letter-spacing:.1em;margin-bottom:4px}
+.hilo-row .cell .val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--white)}
+.hilo-row .cell .val.gold{color:var(--gold)}
 
 /* Theme toggle */
 .theme-toggle{
@@ -143,208 +300,84 @@ body{
   cursor:pointer;
   z-index:100;
   box-shadow:0 4px 12px rgba(0,0,0,0.3);
-  transition:all 0.2s;
 }
-.theme-toggle:hover{
-  border-color:var(--gold);
-  transform:scale(1.05);
-}
-.theme-toggle svg{
-  width:20px;
-  height:20px;
-  color:var(--dim);
-}
+.theme-toggle:hover{border-color:var(--gold)}
+.theme-toggle svg{width:20px;height:20px;color:var(--dim)}
 .theme-toggle .sun{display:block}
 .theme-toggle .moon{display:none}
-
-/* Light mode */
-[data-theme="light"]{
-  --ink:#fafafa;
-  --panel:#ffffff;
-  --line:#e5e5e5;
-  --body:#444;
-  --dim:#888;
-  --white:#1a1a1a;
-}
-[data-theme="light"] .email-frame{
-  filter:none;
-  box-shadow:0 8px 32px rgba(0,0,0,0.1);
-}
-[data-theme="light"] .theme-toggle{
-  background:#fff;
-  border-color:#ddd;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
 [data-theme="light"] .theme-toggle .sun{display:none}
 [data-theme="light"] .theme-toggle .moon{display:block}
+[data-theme="light"] .theme-toggle{box-shadow:0 4px 12px rgba(0,0,0,0.1)}
 
-/* Loading state */
-.loading{
+/* Auth gate */
+#auth-gate{
   display:flex;
   align-items:center;
   justify-content:center;
+  min-height:100vh;
+  text-align:center;
   color:var(--dim);
-  font-size:14px;
 }
+#auth-gate a{color:var(--cyan)}
 
-@media(max-width:600px){
-  .bar{
-    flex-direction:column;
-    gap:12px;
-    text-align:center;
-  }
-  .bar-left{
-    flex-direction:column;
-    gap:8px;
-  }
-  .email-container{padding:16px}
+/* Loading */
+.loading{text-align:center;padding:60px 20px;color:var(--dim)}
+
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .header{padding:12px 16px}
+  .content{padding:16px 12px 60px}
 }
 </style>
 </head>
 <body>
-<div id="auth-gate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--ink);">
-  <div style="text-align:center;color:var(--dim);">
+<div id="auth-gate">
+  <div>
     <div style="font-size:24px;margin-bottom:12px;">🔒</div>
     <div id="auth-msg">Verifying access...</div>
   </div>
 </div>
 
 <div id="main-content" style="display:none;">
-<div class="bar">
-  <div class="bar-left">
-    <span class="mark">Quant Prime</span>
-    <span class="date-label" id="date-label">Daily Briefing</span>
+  <div class="header">
+    <span class="mark">QUANT PRIME</span>
+    <div class="nav-links">
+      <button id="prev-btn" disabled>← Prev</button>
+      <button id="next-btn" disabled>Next →</button>
+      <a href="/research/">Back to Archive</a>
+    </div>
   </div>
-  <div class="nav-buttons">
-    <button class="nav-btn" id="prev-btn" disabled>← Prev</button>
-    <button class="nav-btn" id="next-btn" disabled>Next →</button>
-    <a href="/research/">Back to Archive</a>
+  
+  <div class="content" id="briefing-content">
+    <div class="loading">Loading briefing...</div>
   </div>
 </div>
 
-<div class="email-container">
-  <iframe class="email-frame" id="email-frame"></iframe>
-</div>
-
-</div><!-- end main-content -->
-
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
-  </svg>
-  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="12" cy="12" r="5"/>
-    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-  </svg>
+<button class="theme-toggle" id="theme-toggle">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
 </button>
 
 <script>
-// Theme handling
+// Theme
 const savedTheme = localStorage.getItem('qp-theme') || 'dark';
-if (savedTheme === 'light') {
-  document.documentElement.setAttribute('data-theme', 'light');
-} else {
-  document.documentElement.setAttribute('data-theme', 'dark');
-}
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 document.getElementById('theme-toggle').onclick = function() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const newTheme = current === 'light' ? 'dark' : 'light';
-  html.setAttribute('data-theme', newTheme);
-  localStorage.setItem('qp-theme', newTheme);
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('qp-theme', next);
 };
 
-// Email loading
-let emails = [];
-let currentIndex = 0;
-
-async function init() {
-  // Get email file from URL param
-  const params = new URLSearchParams(window.location.search);
-  const file = params.get('file');
-  const type = params.get('type') || 'daily';
-  
-  // Load email index
-  try {
-    const response = await fetch(`/research/emails/${type}/index.json`);
-    emails = await response.json();
-  } catch (e) {
-    console.error('Failed to load email index');
-  }
-  
-  if (file) {
-    // Find current email index
-    currentIndex = emails.findIndex(e => e.filename === file);
-    if (currentIndex === -1) currentIndex = 0;
-    loadEmail(file, type);
-  } else if (emails.length > 0) {
-    loadEmail(emails[0].filename, type);
-  }
-  
-  updateNavButtons(type);
-}
-
-function loadEmail(filename, type) {
-  const frame = document.getElementById('email-frame');
-  frame.src = `/research/emails/${type}/${filename}`;
-  
-  // Inject CSS fix for scrollbar after load
-  frame.onload = function() {
-    try {
-      const doc = frame.contentDocument || frame.contentWindow.document;
-      const style = doc.createElement('style');
-      style.textContent = '* { overflow-x: hidden !important; } div[style*="flex"] { overflow: hidden !important; }';
-      doc.head.appendChild(style);
-    } catch(e) { /* cross-origin, ignore */ }
-  };
-  
-  // Update date label
-  const email = emails.find(e => e.filename === filename);
-  if (email) {
-    document.getElementById('date-label').textContent = `Daily Briefing — ${email.date}`;
-    document.title = `${email.date} Briefing | Quant Prime Research`;
-  }
-  
-  // Update URL without reload
-  const url = new URL(window.location);
-  url.searchParams.set('file', filename);
-  url.searchParams.set('type', type);
-  window.history.replaceState({}, '', url);
-}
-
-function updateNavButtons(type) {
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  
-  prevBtn.disabled = currentIndex >= emails.length - 1;
-  nextBtn.disabled = currentIndex <= 0;
-  
-  prevBtn.onclick = () => {
-    if (currentIndex < emails.length - 1) {
-      currentIndex++;
-      loadEmail(emails[currentIndex].filename, type);
-      updateNavButtons(type);
-    }
-  };
-  
-  nextBtn.onclick = () => {
-    if (currentIndex > 0) {
-      currentIndex--;
-      loadEmail(emails[currentIndex].filename, type);
-      updateNavButtons(type);
-    }
-  };
-}
-
-// ====== AUTH GATE ======
+// Auth
 const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
 
-async function checkResearchAccess() {
+let emails = [];
+let currentIndex = 0;
+
+async function checkAuth() {
   const gate = document.getElementById('auth-gate');
   const content = document.getElementById('main-content');
   const msg = document.getElementById('auth-msg');
@@ -354,35 +387,223 @@ async function checkResearchAccess() {
     const { data: { session } } = await sb.auth.getSession();
     
     if (!session) {
-      msg.innerHTML = 'Research is for members only.<br><a href="/dashboard/login.html" style="color:#00abff;">Login</a> or <a href="/dashboard/register.html" style="color:#00abff;">Sign up</a>';
+      msg.innerHTML = 'Research is for members only.<br><br><a href="/dashboard/login.html">Login</a> · <a href="/dashboard/register.html">Sign up</a>';
       return;
     }
     
-    // Check tier
     const { data: profile } = await sb.from('profiles').select('tier').eq('id', session.user.id).single();
     const tier = profile?.tier || 'free';
+    const allowed = ['research', 'recoil', 'full', 'admin'];
     
-    const allowedTiers = ['research', 'recoil', 'full', 'admin'];
-    if (!allowedTiers.includes(tier.toLowerCase())) {
-      msg.innerHTML = 'Research Archive requires Research tier or higher.<br><a href="/#pricing" style="color:#c9a84c;">Upgrade your plan</a>';
+    if (!allowed.includes(tier.toLowerCase())) {
+      msg.innerHTML = 'Research requires Research tier or higher.<br><br><a href="/#pricing">Upgrade your plan</a>';
       return;
     }
     
-    // Access granted
     gate.style.display = 'none';
-    content.style.display = 'flex';
-    content.style.flexDirection = 'column';
-    content.style.height = '100%';
-    init();
-    
+    content.style.display = 'block';
+    loadEmails();
   } catch (e) {
-    console.error('Auth error:', e);
-    msg.textContent = 'Error checking access. Please refresh.';
+    msg.textContent = 'Error: ' + e.message;
   }
 }
 
-checkResearchAccess();
-</script>
+async function loadEmails() {
+  const params = new URLSearchParams(window.location.search);
+  const file = params.get('file');
+  
+  try {
+    const res = await fetch('/research/emails/daily/index.json');
+    emails = await res.json();
+  } catch (e) {
+    document.getElementById('briefing-content').innerHTML = '<div class="loading">No briefings found</div>';
+    return;
+  }
+  
+  if (file) {
+    currentIndex = emails.findIndex(e => e.filename === file);
+    if (currentIndex === -1) currentIndex = 0;
+  }
+  
+  if (emails.length > 0) {
+    loadBriefing(emails[currentIndex]);
+  }
+  updateNav();
+}
 
+async function loadBriefing(email) {
+  const container = document.getElementById('briefing-content');
+  container.innerHTML = '<div class="loading">Loading...</div>';
+  
+  try {
+    const res = await fetch('/research/emails/daily/' + email.filename);
+    const html = await res.text();
+    
+    // Parse the email HTML and extract data
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    
+    // Build native page
+    container.innerHTML = buildBriefingPage(email, doc);
+    
+    // Update URL
+    const url = new URL(window.location);
+    url.searchParams.set('file', email.filename);
+    window.history.replaceState({}, '', url);
+    
+  } catch (e) {
+    container.innerHTML = '<div class="loading">Failed to load briefing</div>';
+  }
+}
+
+function buildBriefingPage(email, doc) {
+  // Extract data from parsed email
+  const dateStr = email.date;
+  
+  // Get summary stats - try to extract from email
+  let primeCount = '0', goodCount = '0', mehCount = '0', skipCount = '0';
+  let bullishCount = '0', bearishCount = '0';
+  let topMover = '', topMoverPct = '';
+  let avgRange = '';
+  let headlines = [];
+  let instruments = [];
+  
+  // Try to extract from the email content
+  const statDivs = doc.querySelectorAll('div[style*="font-size: 20px"]');
+  if (statDivs.length >= 4) {
+    primeCount = statDivs[0]?.textContent || '0';
+    goodCount = statDivs[1]?.textContent || '0';
+    mehCount = statDivs[2]?.textContent || '0';
+    skipCount = statDivs[3]?.textContent || '0';
+  }
+  
+  // Get headlines
+  doc.querySelectorAll('div[style*="border-left: 2px solid #c9a84c"]').forEach(el => {
+    headlines.push(el.textContent.trim());
+  });
+  
+  // Get instruments
+  doc.querySelectorAll('div[style*="border-radius: 14px"][style*="margin-bottom: 14px"]').forEach(card => {
+    const nameEl = card.querySelector('div[style*="font-size: 18px"]');
+    const regimeEl = card.querySelector('span[style*="border-radius: 6px"]');
+    const biasEl = card.querySelector('span[style*="font-weight: 700"][style*="margin-left"]');
+    const priceEl = card.querySelector('span[style*="font-size: 22px"]');
+    const changeEl = card.querySelector('span[style*="font-size: 18px"]');
+    
+    if (nameEl) {
+      const tds = card.querySelectorAll('td');
+      let high = '', low = '', range = '';
+      if (tds.length >= 3) {
+        high = tds[0]?.querySelector('div[style*="font-size: 11px"]')?.textContent || '';
+        low = tds[1]?.querySelector('div[style*="font-size: 11px"]')?.textContent || '';
+        range = tds[2]?.querySelector('div[style*="font-size: 11px"]')?.textContent || '';
+      }
+      
+      const regimeText = regimeEl?.textContent?.trim() || 'Marginal';
+      const biasText = biasEl?.textContent?.trim() || '';
+      const isBullish = biasText.includes('Long') || biasText.includes('▲');
+      
+      instruments.push({
+        name: nameEl.textContent.trim(),
+        regime: regimeText.toLowerCase().replace('favourable', 'good').replace('degraded', 'skip'),
+        bias: isBullish ? 'bullish' : 'bearish',
+        biasText: isBullish ? '▲ Long' : '▼ Short',
+        price: priceEl?.textContent?.trim() || '',
+        change: changeEl?.textContent?.trim() || '',
+        changeUp: changeEl?.textContent?.includes('+'),
+        high, low, range
+      });
+    }
+  });
+  
+  let html = `
+    <div class="briefing-header">
+      <h1>Daily Briefing</h1>
+      <div class="date">${dateStr}</div>
+    </div>
+    
+    <div class="summary-card">
+      <div class="label">TODAY'S SNAPSHOT</div>
+      <div class="stats-grid">
+        <div class="stat-box prime"><div class="num">${primeCount}</div><div class="lbl">Prime</div></div>
+        <div class="stat-box good"><div class="num">${goodCount}</div><div class="lbl">Favourable</div></div>
+        <div class="stat-box meh"><div class="num">${mehCount}</div><div class="lbl">Marginal</div></div>
+        <div class="stat-box skip"><div class="num">${skipCount}</div><div class="lbl">Degraded</div></div>
+      </div>
+    </div>
+  `;
+  
+  if (headlines.length > 0) {
+    html += `
+      <div class="headlines">
+        <div class="label">MARKET PULSE</div>
+        ${headlines.map(h => `<div class="headline-item">${h}</div>`).join('')}
+      </div>
+    `;
+  }
+  
+  if (instruments.length > 0) {
+    html += `<div class="section-label">INSTRUMENT BREAKDOWN</div>`;
+    instruments.forEach(inst => {
+      html += `
+        <div class="instrument-card">
+          <div class="accent ${inst.regime}"></div>
+          <div class="instrument-header">
+            <span class="name">${inst.name}</span>
+            <span class="regime-badge ${inst.regime}">${inst.regime.charAt(0).toUpperCase() + inst.regime.slice(1)}</span>
+          </div>
+          <div class="bias-label ${inst.bias}">
+            <span>DAILY BIAS</span>
+            <span class="direction ${inst.bias}">${inst.biasText}</span>
+          </div>
+          <div class="price-row">
+            <div class="current">
+              <div class="lbl">CURRENT</div>
+              <div class="val">${inst.price}</div>
+            </div>
+            <div class="change">
+              <div class="lbl">TODAY</div>
+              <div class="val ${inst.changeUp ? 'up' : 'down'}">${inst.change}</div>
+            </div>
+          </div>
+          <div class="hilo-row">
+            <div class="cell"><div class="lbl">HIGH</div><div class="val">${inst.high}</div></div>
+            <div class="cell"><div class="lbl">LOW</div><div class="val">${inst.low}</div></div>
+            <div class="cell"><div class="lbl">RANGE</div><div class="val gold">${inst.range}</div></div>
+          </div>
+        </div>
+      `;
+    });
+  }
+  
+  return html;
+}
+
+function updateNav() {
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  
+  prevBtn.disabled = currentIndex >= emails.length - 1;
+  nextBtn.disabled = currentIndex <= 0;
+  
+  prevBtn.onclick = () => {
+    if (currentIndex < emails.length - 1) {
+      currentIndex++;
+      loadBriefing(emails[currentIndex]);
+      updateNav();
+    }
+  };
+  
+  nextBtn.onclick = () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      loadBriefing(emails[currentIndex]);
+      updateNav();
+    }
+  };
+}
+
+checkAuth();
+</script>
 </body>
 </html>
