@@ -1,0 +1,970 @@
+[
+  {
+    "num": 1,
+    "date": "2026-02-10",
+    "type": "long",
+    "exit": 1.1891,
+    "pnl": -0.05,
+    "cumulative": -0.05
+  },
+  {
+    "num": 2,
+    "date": "2026-02-11",
+    "type": "long",
+    "exit": 1.18721,
+    "pnl": 13.65,
+    "cumulative": 13.6
+  },
+  {
+    "num": 3,
+    "date": "2026-02-12",
+    "type": "short",
+    "exit": 1.18843,
+    "pnl": -1.06,
+    "cumulative": 12.54
+  },
+  {
+    "num": 4,
+    "date": "2026-02-16",
+    "type": "short",
+    "exit": 1.18664,
+    "pnl": 2.24,
+    "cumulative": 14.78
+  },
+  {
+    "num": 5,
+    "date": "2026-02-17",
+    "type": "long",
+    "exit": 1.18417,
+    "pnl": 0.48,
+    "cumulative": 15.26
+  },
+  {
+    "num": 6,
+    "date": "2026-02-17",
+    "type": "short",
+    "exit": 1.18223,
+    "pnl": 1.08,
+    "cumulative": 16.34
+  },
+  {
+    "num": 7,
+    "date": "2026-02-18",
+    "type": "short",
+    "exit": 1.18455,
+    "pnl": -0.08,
+    "cumulative": 16.26
+  },
+  {
+    "num": 8,
+    "date": "2026-02-19",
+    "type": "long",
+    "exit": 1.17597,
+    "pnl": -0.57,
+    "cumulative": 15.69
+  },
+  {
+    "num": 9,
+    "date": "2026-02-24",
+    "type": "long",
+    "exit": 1.1776,
+    "pnl": 0.92,
+    "cumulative": 16.61
+  },
+  {
+    "num": 10,
+    "date": "2026-02-26",
+    "type": "long",
+    "exit": 1.18099,
+    "pnl": 0.88,
+    "cumulative": 17.49
+  },
+  {
+    "num": 11,
+    "date": "2026-02-27",
+    "type": "short",
+    "exit": 1.18149,
+    "pnl": 0.08,
+    "cumulative": 17.57
+  },
+  {
+    "num": 12,
+    "date": "2026-03-04",
+    "type": "short",
+    "exit": 1.1643,
+    "pnl": -0.82,
+    "cumulative": 16.75
+  },
+  {
+    "num": 13,
+    "date": "2026-03-09",
+    "type": "short",
+    "exit": 1.15731,
+    "pnl": -1,
+    "cumulative": 15.75
+  },
+  {
+    "num": 14,
+    "date": "2026-03-09",
+    "type": "short",
+    "exit": 1.16168,
+    "pnl": -5.75,
+    "cumulative": 10
+  },
+  {
+    "num": 15,
+    "date": "2026-03-10",
+    "type": "short",
+    "exit": 1.16332,
+    "pnl": 0.27,
+    "cumulative": 10.27
+  },
+  {
+    "num": 16,
+    "date": "2026-03-10",
+    "type": "long",
+    "exit": 1.16401,
+    "pnl": 0.64,
+    "cumulative": 10.91
+  },
+  {
+    "num": 17,
+    "date": "2026-03-11",
+    "type": "short",
+    "exit": 1.16318,
+    "pnl": 1.35,
+    "cumulative": 12.26
+  },
+  {
+    "num": 18,
+    "date": "2026-03-11",
+    "type": "short",
+    "exit": 1.16099,
+    "pnl": 1,
+    "cumulative": 13.26
+  },
+  {
+    "num": 19,
+    "date": "2026-03-13",
+    "type": "long",
+    "exit": 1.14539,
+    "pnl": -0.6,
+    "cumulative": 12.66
+  },
+  {
+    "num": 20,
+    "date": "2026-03-16",
+    "type": "long",
+    "exit": 1.14213,
+    "pnl": 0.86,
+    "cumulative": 13.52
+  },
+  {
+    "num": 21,
+    "date": "2026-03-16",
+    "type": "short",
+    "exit": 1.14376,
+    "pnl": 1.6,
+    "cumulative": 15.12
+  },
+  {
+    "num": 22,
+    "date": "2026-03-17",
+    "type": "short",
+    "exit": 1.15296,
+    "pnl": 0.44,
+    "cumulative": 15.56
+  },
+  {
+    "num": 23,
+    "date": "2026-03-19",
+    "type": "long",
+    "exit": 1.14605,
+    "pnl": 2,
+    "cumulative": 17.56
+  },
+  {
+    "num": 24,
+    "date": "2026-03-19",
+    "type": "short",
+    "exit": 1.14644,
+    "pnl": 5.12,
+    "cumulative": 22.68
+  },
+  {
+    "num": 25,
+    "date": "2026-03-19",
+    "type": "short",
+    "exit": 1.14921,
+    "pnl": 0.79,
+    "cumulative": 23.47
+  },
+  {
+    "num": 26,
+    "date": "2026-03-19",
+    "type": "short",
+    "exit": 1.16031,
+    "pnl": 0.61,
+    "cumulative": 24.08
+  },
+  {
+    "num": 27,
+    "date": "2026-03-20",
+    "type": "short",
+    "exit": 1.15671,
+    "pnl": 0.34,
+    "cumulative": 24.42
+  },
+  {
+    "num": 28,
+    "date": "2026-03-24",
+    "type": "short",
+    "exit": 1.16167,
+    "pnl": -1.96,
+    "cumulative": 22.46
+  },
+  {
+    "num": 29,
+    "date": "2026-03-24",
+    "type": "long",
+    "exit": 1.15812,
+    "pnl": 0.59,
+    "cumulative": 23.05
+  },
+  {
+    "num": 30,
+    "date": "2026-03-25",
+    "type": "long",
+    "exit": 1.15937,
+    "pnl": 0.34,
+    "cumulative": 23.39
+  },
+  {
+    "num": 31,
+    "date": "2026-04-01",
+    "type": "long",
+    "exit": 1.15874,
+    "pnl": 3,
+    "cumulative": 26.39
+  },
+  {
+    "num": 32,
+    "date": "2026-04-02",
+    "type": "short",
+    "exit": 1.15406,
+    "pnl": 0.28,
+    "cumulative": 26.67
+  },
+  {
+    "num": 33,
+    "date": "2026-04-06",
+    "type": "short",
+    "exit": 1.15573,
+    "pnl": -0.6,
+    "cumulative": 26.07
+  },
+  {
+    "num": 34,
+    "date": "2026-04-07",
+    "type": "short",
+    "exit": 1.15494,
+    "pnl": 3.05,
+    "cumulative": 29.12
+  },
+  {
+    "num": 35,
+    "date": "2026-04-07",
+    "type": "short",
+    "exit": 1.15834,
+    "pnl": 0.8,
+    "cumulative": 29.92
+  },
+  {
+    "num": 36,
+    "date": "2026-04-07",
+    "type": "short",
+    "exit": 1.15927,
+    "pnl": 3.05,
+    "cumulative": 32.97
+  },
+  {
+    "num": 37,
+    "date": "2026-04-13",
+    "type": "short",
+    "exit": 1.17051,
+    "pnl": 2.85,
+    "cumulative": 35.82
+  },
+  {
+    "num": 38,
+    "date": "2026-04-14",
+    "type": "short",
+    "exit": 1.17958,
+    "pnl": -4.85,
+    "cumulative": 30.97
+  },
+  {
+    "num": 39,
+    "date": "2026-04-16",
+    "type": "long",
+    "exit": 1.17749,
+    "pnl": 0.17,
+    "cumulative": 31.14
+  },
+  {
+    "num": 40,
+    "date": "2026-04-17",
+    "type": "short",
+    "exit": 1.17905,
+    "pnl": -0.39,
+    "cumulative": 30.75
+  },
+  {
+    "num": 41,
+    "date": "2026-04-20",
+    "type": "short",
+    "exit": 1.17649,
+    "pnl": 0.8,
+    "cumulative": 31.55
+  },
+  {
+    "num": 42,
+    "date": "2026-04-21",
+    "type": "long",
+    "exit": 1.17299,
+    "pnl": -0.62,
+    "cumulative": 30.93
+  },
+  {
+    "num": 43,
+    "date": "2026-04-22",
+    "type": "short",
+    "exit": 1.17308,
+    "pnl": 3.28,
+    "cumulative": 34.21
+  },
+  {
+    "num": 44,
+    "date": "2026-04-23",
+    "type": "short",
+    "exit": 1.17058,
+    "pnl": 0.48,
+    "cumulative": 34.69
+  },
+  {
+    "num": 45,
+    "date": "2026-04-27",
+    "type": "long",
+    "exit": 1.17233,
+    "pnl": 0.02,
+    "cumulative": 34.71
+  },
+  {
+    "num": 46,
+    "date": "2026-04-28",
+    "type": "short",
+    "exit": 1.16962,
+    "pnl": 0.88,
+    "cumulative": 35.59
+  },
+  {
+    "num": 47,
+    "date": "2026-04-29",
+    "type": "long",
+    "exit": 1.16967,
+    "pnl": -0.37,
+    "cumulative": 35.22
+  },
+  {
+    "num": 48,
+    "date": "2026-04-30",
+    "type": "short",
+    "exit": 1.1697,
+    "pnl": -1,
+    "cumulative": 34.22
+  },
+  {
+    "num": 49,
+    "date": "2026-04-30",
+    "type": "long",
+    "exit": 1.17361,
+    "pnl": 0.96,
+    "cumulative": 35.18
+  },
+  {
+    "num": 50,
+    "date": "2026-05-01",
+    "type": "long",
+    "exit": 1.17502,
+    "pnl": 1,
+    "cumulative": 36.18
+  },
+  {
+    "num": 51,
+    "date": "2026-05-01",
+    "type": "short",
+    "exit": 1.17689,
+    "pnl": -0.94,
+    "cumulative": 35.24
+  },
+  {
+    "num": 52,
+    "date": "2026-05-06",
+    "type": "short",
+    "exit": 1.17643,
+    "pnl": -1.12,
+    "cumulative": 34.12
+  },
+  {
+    "num": 53,
+    "date": "2026-05-06",
+    "type": "short",
+    "exit": 1.17642,
+    "pnl": 0.39,
+    "cumulative": 34.51
+  },
+  {
+    "num": 54,
+    "date": "2026-05-08",
+    "type": "short",
+    "exit": 1.17721,
+    "pnl": 0.32,
+    "cumulative": 34.83
+  },
+  {
+    "num": 55,
+    "date": "2026-05-08",
+    "type": "long",
+    "exit": 1.17793,
+    "pnl": 1.36,
+    "cumulative": 36.19
+  },
+  {
+    "num": 56,
+    "date": "2026-05-14",
+    "type": "long",
+    "exit": 1.17098,
+    "pnl": 0.23,
+    "cumulative": 36.42
+  },
+  {
+    "num": 57,
+    "date": "2026-05-14",
+    "type": "short",
+    "exit": 1.16904,
+    "pnl": 0.96,
+    "cumulative": 37.38
+  },
+  {
+    "num": 58,
+    "date": "2026-05-18",
+    "type": "short",
+    "exit": 1.16353,
+    "pnl": 0.18,
+    "cumulative": 37.56
+  },
+  {
+    "num": 59,
+    "date": "2026-05-18",
+    "type": "short",
+    "exit": 1.16505,
+    "pnl": 0.3,
+    "cumulative": 37.86
+  },
+  {
+    "num": 60,
+    "date": "2026-05-21",
+    "type": "long",
+    "exit": 1.16012,
+    "pnl": -2.4,
+    "cumulative": 35.46
+  },
+  {
+    "num": 61,
+    "date": "2026-05-21",
+    "type": "short",
+    "exit": 1.16275,
+    "pnl": -1.96,
+    "cumulative": 33.5
+  },
+  {
+    "num": 62,
+    "date": "2026-05-21",
+    "type": "short",
+    "exit": 1.15991,
+    "pnl": -2.52,
+    "cumulative": 30.98
+  },
+  {
+    "num": 63,
+    "date": "2026-05-21",
+    "type": "short",
+    "exit": 1.16205,
+    "pnl": 0.26,
+    "cumulative": 31.24
+  },
+  {
+    "num": 64,
+    "date": "2026-05-22",
+    "type": "short",
+    "exit": 1.1613,
+    "pnl": 1.56,
+    "cumulative": 32.8
+  },
+  {
+    "num": 65,
+    "date": "2026-05-22",
+    "type": "long",
+    "exit": 1.16104,
+    "pnl": 0.08,
+    "cumulative": 32.88
+  },
+  {
+    "num": 66,
+    "date": "2026-05-26",
+    "type": "long",
+    "exit": 1.16298,
+    "pnl": 1.85,
+    "cumulative": 34.73
+  },
+  {
+    "num": 67,
+    "date": "2026-05-26",
+    "type": "short",
+    "exit": 1.16346,
+    "pnl": 0.16,
+    "cumulative": 34.89
+  },
+  {
+    "num": 68,
+    "date": "2026-05-26",
+    "type": "long",
+    "exit": 1.16292,
+    "pnl": 0.13,
+    "cumulative": 35.02
+  },
+  {
+    "num": 69,
+    "date": "2026-05-26",
+    "type": "long",
+    "exit": 1.16228,
+    "pnl": 0.31,
+    "cumulative": 35.33
+  },
+  {
+    "num": 70,
+    "date": "2026-05-29",
+    "type": "long",
+    "exit": 1.1631,
+    "pnl": 0.25,
+    "cumulative": 35.58
+  },
+  {
+    "num": 71,
+    "date": "2026-06-01",
+    "type": "long",
+    "exit": 1.16304,
+    "pnl": -1,
+    "cumulative": 34.58
+  },
+  {
+    "num": 72,
+    "date": "2026-06-01",
+    "type": "short",
+    "exit": 1.1632,
+    "pnl": 0.08,
+    "cumulative": 34.66
+  },
+  {
+    "num": 73,
+    "date": "2026-06-01",
+    "type": "long",
+    "exit": 1.16299,
+    "pnl": 0.36,
+    "cumulative": 35.02
+  },
+  {
+    "num": 74,
+    "date": "2026-06-03",
+    "type": "short",
+    "exit": 1.16182,
+    "pnl": 1.92,
+    "cumulative": 36.94
+  },
+  {
+    "num": 75,
+    "date": "2026-06-05",
+    "type": "short",
+    "exit": 1.15886,
+    "pnl": 0.38,
+    "cumulative": 37.32
+  },
+  {
+    "num": 76,
+    "date": "2026-06-08",
+    "type": "short",
+    "exit": 1.15506,
+    "pnl": 0.3,
+    "cumulative": 37.62
+  },
+  {
+    "num": 77,
+    "date": "2026-06-09",
+    "type": "short",
+    "exit": 1.15455,
+    "pnl": -1.36,
+    "cumulative": 36.26
+  },
+  {
+    "num": 78,
+    "date": "2026-06-09",
+    "type": "short",
+    "exit": 1.1574,
+    "pnl": -0.42,
+    "cumulative": 35.84
+  },
+  {
+    "num": 79,
+    "date": "2026-06-09",
+    "type": "long",
+    "exit": 1.15695,
+    "pnl": 0.12,
+    "cumulative": 35.96
+  },
+  {
+    "num": 80,
+    "date": "2026-06-09",
+    "type": "short",
+    "exit": 1.15416,
+    "pnl": 0.12,
+    "cumulative": 36.08
+  },
+  {
+    "num": 81,
+    "date": "2026-06-12",
+    "type": "short",
+    "exit": 1.15824,
+    "pnl": -1.04,
+    "cumulative": 35.04
+  },
+  {
+    "num": 82,
+    "date": "2026-06-12",
+    "type": "long",
+    "exit": 1.15714,
+    "pnl": 1.56,
+    "cumulative": 36.6
+  },
+  {
+    "num": 83,
+    "date": "2026-06-12",
+    "type": "short",
+    "exit": 1.15758,
+    "pnl": 0.05,
+    "cumulative": 36.65
+  },
+  {
+    "num": 84,
+    "date": "2026-06-15",
+    "type": "long",
+    "exit": 1.15862,
+    "pnl": -0.31,
+    "cumulative": 36.34
+  },
+  {
+    "num": 85,
+    "date": "2026-06-18",
+    "type": "short",
+    "exit": 1.14563,
+    "pnl": 0.48,
+    "cumulative": 36.82
+  },
+  {
+    "num": 86,
+    "date": "2026-06-22",
+    "type": "short",
+    "exit": 1.14484,
+    "pnl": 0.44,
+    "cumulative": 37.26
+  },
+  {
+    "num": 87,
+    "date": "2026-06-22",
+    "type": "short",
+    "exit": 1.14268,
+    "pnl": -1.08,
+    "cumulative": 36.18
+  },
+  {
+    "num": 88,
+    "date": "2026-06-23",
+    "type": "long",
+    "exit": 1.14211,
+    "pnl": -2.2,
+    "cumulative": 33.98
+  },
+  {
+    "num": 89,
+    "date": "2026-06-24",
+    "type": "long",
+    "exit": 1.1346,
+    "pnl": 2.65,
+    "cumulative": 36.63
+  },
+  {
+    "num": 90,
+    "date": "2026-06-25",
+    "type": "short",
+    "exit": 1.13488,
+    "pnl": 0.56,
+    "cumulative": 37.19
+  },
+  {
+    "num": 91,
+    "date": "2026-06-25",
+    "type": "long",
+    "exit": 1.137,
+    "pnl": -2.88,
+    "cumulative": 34.31
+  },
+  {
+    "num": 92,
+    "date": "2026-06-26",
+    "type": "short",
+    "exit": 1.13969,
+    "pnl": -0.43,
+    "cumulative": 33.88
+  },
+  {
+    "num": 93,
+    "date": "2026-06-30",
+    "type": "long",
+    "exit": 1.13957,
+    "pnl": 0.46,
+    "cumulative": 34.34
+  },
+  {
+    "num": 94,
+    "date": "2026-06-30",
+    "type": "short",
+    "exit": 1.14238,
+    "pnl": 0.2,
+    "cumulative": 34.54
+  },
+  {
+    "num": 95,
+    "date": "2026-07-01",
+    "type": "long",
+    "exit": 1.14015,
+    "pnl": 0.09,
+    "cumulative": 34.63
+  },
+  {
+    "num": 96,
+    "date": "2026-07-01",
+    "type": "long",
+    "exit": 1.13692,
+    "pnl": 0.14,
+    "cumulative": 34.77
+  },
+  {
+    "num": 97,
+    "date": "2026-07-03",
+    "type": "long",
+    "exit": 1.14371,
+    "pnl": -0.02,
+    "cumulative": 34.75
+  },
+  {
+    "num": 98,
+    "date": "2026-07-06",
+    "type": "long",
+    "exit": 1.14211,
+    "pnl": 0.12,
+    "cumulative": 34.87
+  },
+  {
+    "num": 99,
+    "date": "2026-07-06",
+    "type": "long",
+    "exit": 1.14199,
+    "pnl": 0.26,
+    "cumulative": 35.13
+  },
+  {
+    "num": 100,
+    "date": "2026-07-08",
+    "type": "long",
+    "exit": 1.14256,
+    "pnl": 0.56,
+    "cumulative": 35.69
+  },
+  {
+    "num": 101,
+    "date": "2026-07-09",
+    "type": "short",
+    "exit": 1.14302,
+    "pnl": -0.74,
+    "cumulative": 34.95
+  },
+  {
+    "num": 102,
+    "date": "2026-07-10",
+    "type": "short",
+    "exit": 1.14386,
+    "pnl": 0.12,
+    "cumulative": 35.07
+  },
+  {
+    "num": 103,
+    "date": "2026-07-13",
+    "type": "short",
+    "exit": 1.14199,
+    "pnl": -1.88,
+    "cumulative": 33.19
+  },
+  {
+    "num": 104,
+    "date": "2026-07-13",
+    "type": "short",
+    "exit": 1.14383,
+    "pnl": 0.37,
+    "cumulative": 33.56
+  },
+  {
+    "num": 105,
+    "date": "2026-07-13",
+    "type": "long",
+    "exit": 1.13842,
+    "pnl": 0.09,
+    "cumulative": 33.65
+  },
+  {
+    "num": 106,
+    "date": "2026-07-17",
+    "type": "long",
+    "exit": 1.14358,
+    "pnl": -0.04,
+    "cumulative": 33.61
+  },
+  {
+    "num": 107,
+    "date": "2026-07-20",
+    "type": "short",
+    "exit": 1.14161,
+    "pnl": 0.06,
+    "cumulative": 33.67
+  },
+  {
+    "num": 108,
+    "date": "2026-07-21",
+    "type": "short",
+    "exit": 1.14248,
+    "pnl": 0.17,
+    "cumulative": 33.84
+  },
+  {
+    "num": 109,
+    "date": "2026-07-24",
+    "type": "short",
+    "exit": 1.13707,
+    "pnl": 0.32,
+    "cumulative": 34.16
+  },
+  {
+    "num": 110,
+    "date": "2026-07-30",
+    "type": "short",
+    "exit": 1.14883,
+    "pnl": 0.41,
+    "cumulative": 34.57
+  },
+  {
+    "num": 111,
+    "date": "2026-07-30",
+    "type": "short",
+    "exit": 1.15097,
+    "pnl": -0.92,
+    "cumulative": 33.65
+  },
+  {
+    "num": 112,
+    "date": "2026-07-31",
+    "type": "short",
+    "exit": 1.15186,
+    "pnl": 2.48,
+    "cumulative": 36.13
+  },
+  {
+    "num": 113,
+    "date": "2026-07-31",
+    "type": "short",
+    "exit": 1.14966,
+    "pnl": -2.04,
+    "cumulative": 34.09
+  },
+  {
+    "num": 114,
+    "date": "2026-07-31",
+    "type": "short",
+    "exit": 1.14957,
+    "pnl": 0.96,
+    "cumulative": 35.05
+  },
+  {
+    "num": 115,
+    "date": "2026-07-31",
+    "type": "long",
+    "exit": 1.14561,
+    "pnl": -4.55,
+    "cumulative": 30.5
+  },
+  {
+    "num": 116,
+    "date": "2026-08-03",
+    "type": "long",
+    "exit": 1.15258,
+    "pnl": 0.56,
+    "cumulative": 31.06
+  },
+  {
+    "num": 117,
+    "date": "2026-08-04",
+    "type": "short",
+    "exit": 1.15184,
+    "pnl": -0.4,
+    "cumulative": 30.66
+  },
+  {
+    "num": 118,
+    "date": "2026-08-05",
+    "type": "long",
+    "exit": 1.15368,
+    "pnl": 1.04,
+    "cumulative": 31.7
+  },
+  {
+    "num": 119,
+    "date": "2026-08-06",
+    "type": "long",
+    "exit": 1.15432,
+    "pnl": 0.04,
+    "cumulative": 31.74
+  },
+  {
+    "num": 120,
+    "date": "2026-08-06",
+    "type": "long",
+    "exit": 1.1521,
+    "pnl": 0.6,
+    "cumulative": 32.34
+  },
+  {
+    "num": 121,
+    "date": "2026-08-06",
+    "type": "short",
+    "exit": 1.15231,
+    "pnl": 0.48,
+    "cumulative": 32.82
+  }
+]
