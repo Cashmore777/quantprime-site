@@ -83,7 +83,11 @@ body{
   border-radius:12px;
   box-shadow:0 8px 32px rgba(0,0,0,0.4);
   transition:filter 0.3s;
+  overflow:hidden;
 }
+/* Hide scrollbars in iframe content */
+.email-frame::-webkit-scrollbar{display:none}
+.email-frame{-ms-overflow-style:none;scrollbar-width:none}
 
 /* Dark mode invert for email iframe */
 [data-theme="dark"] .email-frame{
@@ -271,6 +275,16 @@ async function init() {
 function loadEmail(filename, type) {
   const frame = document.getElementById('email-frame');
   frame.src = `/research/emails/${type}/${filename}`;
+  
+  // Inject CSS fix for scrollbar after load
+  frame.onload = function() {
+    try {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const style = doc.createElement('style');
+      style.textContent = '* { overflow-x: hidden !important; } div[style*="flex"] { overflow: hidden !important; }';
+      doc.head.appendChild(style);
+    } catch(e) { /* cross-origin, ignore */ }
+  };
   
   // Update date label
   const email = emails.find(e => e.filename === filename);
