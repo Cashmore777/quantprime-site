@@ -5,32 +5,34 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO -->
-<title>Pricing & Access Tiers — Quant Prime Trading Indicators</title>
-<meta name="description" content="Quant Prime pricing from £8/month. Access quantitative trading indicators including Recoil, Meridian, and The Cockpit. Research, signals, and full automation tiers.">
+<title>Pricing — Quant Prime Trading Systems</title>
+<meta name="description" content="Quant Prime pricing. Start free for 30 days. Access quantitative trading indicators, research papers, daily briefings, and the full operator dashboard.">
 <meta name="keywords" content="quant prime pricing, trading indicator subscription, recoil indicator price, meridian indicator cost, quantitative trading tools">
 <link rel="canonical" href="https://quantprime.uk/pricing">
 <meta property="og:title" content="Pricing — Quant Prime">
-<meta property="og:description" content="Access tiers from £8/month. Research, indicators, and full automation for systematic traders.">
+<meta property="og:description" content="Start free for 30 days. Research, indicators, and full automation for systematic traders.">
 <meta property="og:url" content="https://quantprime.uk/pricing">
 <meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
 :root {
   --gold: #c9a84c;
   --gold-light: #d4b85a;
   --gold-glow: rgba(201,168,76,0.12);
-  --bg: #fafafa;
+  --bg: #f8f8f6;
   --surface: #ffffff;
   --surface-elevated: #ffffff;
   --border: rgba(0,0,0,0.08);
   --text-primary: #1a1a1a;
   --text-secondary: rgba(0,0,0,0.6);
   --text-muted: rgba(0,0,0,0.4);
+  --green: #16a34a;
+  --red: #dc2626;
 }
 
 body {
@@ -40,12 +42,11 @@ body {
 
 /* Page Header */
 .page-header {
-  padding: 8rem 0 5rem;
+  padding: 8rem 0 4rem;
   text-align: center;
   background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
 }
 
 .page-header::before {
@@ -68,9 +69,9 @@ body {
 }
 
 .page-header h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   margin-bottom: 1.5rem;
   letter-spacing: -0.03em;
 }
@@ -86,382 +87,306 @@ body {
 .page-header p {
   font-size: 1.1rem;
   color: var(--text-secondary);
-  max-width: 500px;
-  margin: 0 auto 2.5rem;
+  max-width: 540px;
+  margin: 0 auto 1.5rem;
   line-height: 1.7;
 }
 
-/* Billing Toggle */
-.billing-toggle {
+.header-guarantee {
   display: inline-flex;
   align-items: center;
-  gap: 0;
-  background: var(--surface);
-  padding: 5px;
-  border-radius: 50px;
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.billing-option {
-  padding: 0.75rem 1.5rem;
+  gap: 8px;
+  background: rgba(22, 163, 74, 0.1);
+  color: var(--green);
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted);
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none;
-  background: transparent;
-}
-
-.billing-option.active {
-  background: var(--gold);
-  color: #000;
-  box-shadow: 0 2px 8px rgba(201,168,76,0.3);
-}
-
-.billing-option:hover:not(.active) {
-  color: var(--text-primary);
-}
-
-.save-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
   font-weight: 600;
-  color: var(--gold);
-  background: var(--gold-glow);
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  margin-left: 0.5rem;
+  padding: 10px 20px;
+  border-radius: 100px;
+  border: 1px solid rgba(22, 163, 74, 0.2);
 }
 
 /* Pricing Section */
 .pricing-section {
-  padding: 4rem 0 8rem;
+  padding: 3rem 0 6rem;
   position: relative;
 }
 
 /* Tier Cards Container */
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-  border: 1px solid var(--border);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Individual Tier Card */
+/* Individual Tier Card - PANEL STYLE */
 .tier-card {
   background: var(--surface);
-  padding: 2.5rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
 }
 
 .tier-card:hover {
-  background: #fefefe;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
 }
 
 .tier-card.featured {
-  background: linear-gradient(180deg, #fffdf8 0%, var(--surface) 100%);
-  border-top: 2px solid var(--gold);
-  margin-top: -2px;
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 32px rgba(201,168,76,0.15);
 }
 
-.tier-card.featured::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
-  pointer-events: none;
+.tier-card.featured:hover {
+  box-shadow: 0 16px 48px rgba(201,168,76,0.2);
 }
 
 /* Badge */
 .tier-badge {
   position: absolute;
-  top: -1px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -12px;
+  left: 24px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.4rem 1rem;
-  border-radius: 0 0 8px 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
   white-space: nowrap;
+}
+
+.tier-badge.trial {
+  background: linear-gradient(135deg, #e65100, #ff6d00);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.35);
 }
 
 .tier-badge.popular {
   background: var(--gold);
   color: #000;
-}
-
-.tier-badge.trial {
-  background: #e65100;
-  color: #fff;
-}
-
-.tier-badge.premium {
-  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
-  color: var(--gold);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.35);
 }
 
 .tier-badge.premium {
   background: #1a1a1a;
   color: var(--gold);
-  border: 1px solid var(--gold);
-  border-top: none;
 }
 
 /* Tier Header */
 .tier-header {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding-top: 0.5rem;
+  margin-bottom: 24px;
+  padding-top: 8px;
 }
 
 .tier-name {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.75rem;
-  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.tier-tagline {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.5;
 }
 
 .tier-price {
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
 }
 
 .tier-price .currency {
   font-size: 1.25rem;
   font-weight: 500;
   color: var(--text-secondary);
-  vertical-align: top;
 }
 
 .tier-price .amount {
-  font-size: 2.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1;
 }
 
 .tier-price .period {
-  font-size: 0.85rem;
+  font-size: 1rem;
   font-weight: 400;
   color: var(--text-muted);
 }
 
+/* Strikethrough price */
+.tier-price .old-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 2px;
+  margin-right: 12px;
+}
+
+.tier-price .amount.free {
+  color: var(--green);
+}
+
 .tier-billing {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 
-.tier-save {
-  font-size: 0.72rem;
-  color: var(--gold);
-  font-weight: 500;
-  margin-top: 0.4rem;
-  opacity: 0;
-  height: 0;
-  transition: all 0.3s;
-}
-
-.tier-save.visible {
-  opacity: 1;
-  height: auto;
+.tier-billing strong {
+  color: var(--green);
 }
 
 /* CTA Button */
 .tier-cta {
   display: block;
   width: 100%;
-  padding: 0.9rem 1.25rem;
-  margin-top: 1.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 16px 24px;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
   text-align: center;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: all 0.3s;
   cursor: pointer;
   border: none;
 }
 
 .tier-cta.primary {
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: #000;
+  box-shadow: 0 4px 16px rgba(201,168,76,0.3);
 }
 
 .tier-cta.primary:hover {
-  background: var(--gold-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.4);
 }
 
 .tier-cta.secondary {
-  background: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border);
+  background: var(--text-primary);
+  color: #fff;
 }
 
 .tier-cta.secondary:hover {
-  border-color: rgba(0,0,0,0.2);
-  background: rgba(0,0,0,0.02);
+  background: #333;
+  transform: translateY(-2px);
 }
 
-.tier-alt {
-  font-size: 0.7rem;
+.tier-guarantee {
+  font-size: 0.75rem;
   color: var(--text-muted);
   text-align: center;
-  margin-top: 0.75rem;
+  margin-top: 12px;
 }
 
-.tier-alt a {
-  color: var(--gold);
-  text-decoration: none;
-}
-
-.tier-alt a:hover {
-  text-decoration: underline;
+.tier-guarantee strong {
+  color: var(--green);
 }
 
 /* Features List */
 .tier-features {
   flex: 1;
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
+  margin-top: 24px;
+  padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
-.feature-group {
-  margin-bottom: 1.25rem;
+.feature-section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.feature-group-label {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
+.feature-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 .feature {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
-  padding: 0.4rem 0;
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.feature.included {
+  gap: 12px;
+  padding: 10px 0;
+  font-size: 0.9rem;
   color: var(--text-primary);
+  line-height: 1.5;
 }
 
 .feature-icon {
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1px;
+  background: rgba(22, 163, 74, 0.1);
+  border-radius: 50%;
+  margin-top: 2px;
 }
 
 .feature-icon svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  stroke: var(--green);
+  stroke-width: 2.5;
 }
 
-.feature.included .feature-icon svg {
-  stroke: var(--gold);
+.feature-text strong {
+  color: var(--gold);
 }
 
-.feature:not(.included) .feature-icon svg {
-  stroke: var(--text-muted);
-  opacity: 0.4;
+.feature-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
 }
 
 /* Responsive */
-@media (max-width: 1200px) {
-  .pricing-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 @media (max-width: 800px) {
   .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .tier-card {
-    padding: 2rem 1.25rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .pricing-grid {
     grid-template-columns: 1fr;
-    gap: 0;
+    max-width: 440px;
+    margin: 0 auto;
   }
   
   .tier-card {
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .tier-card:last-child {
-    border-bottom: none;
+    padding: 28px 24px;
   }
   
   .page-header {
     padding: 6rem 0 3rem;
   }
-  
-  .page-header h1 {
-    font-size: 2rem;
-  }
-}
-
-/* Comparison Section */
-.comparison-section {
-  padding: 6rem 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
-
-.comparison-section h2 {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.comparison-section h2 em {
-  font-style: normal;
-  color: var(--gold);
-}
-
-.comparison-section > .container > p {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-bottom: 3rem;
 }
 
 /* FAQ Section */
 .faq-section {
-  padding: 6rem 0;
+  padding: 5rem 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
 }
 
 .faq-section h2 {
@@ -483,10 +408,10 @@ body {
 }
 
 .faq-item {
-  background: var(--surface);
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 16px;
+  padding: 24px;
 }
 
 .faq-item h4 {
@@ -525,27 +450,22 @@ footer p { color: var(--text-secondary); }
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home</a>
         <a href="/framework">The Framework</a>
-        
         <a href="/results">Results</a>
         <a href="/compounding">Compounding</a>
         <a href="/pricing">Get Access</a>
         <a href="/dashboard/login.html">Login</a>
       </div>
     </div>
-    <a href="/pricing" class="nav-cta">Get Access</a>
+    <a href="/checkout?tier=research" class="nav-cta">Start Free</a>
   </div>
 </nav>
 
 <section class="page-header">
   <div class="container">
     <div class="label">ACCESS TIERS</div>
-    <h1>Choose your level.<br><em>Scale when ready.</em></h1>
-    <p>Start with Research to learn the framework. Unlock instruments as your edge develops.</p>
-    
-    <div class="billing-toggle">
-      <button class="billing-option" id="monthlyBtn">Monthly</button>
-      <button class="billing-option active" id="annualBtn">Annual<span class="save-tag">-17%</span></button>
-    </div>
+    <h1>Zero risk. <em>Maximum edge.</em></h1>
+    <p>Start with a 30-day free trial. No credit card tricks, no hidden fees. If you don't learn something valuable, you pay nothing.</p>
+    <div class="header-guarantee">🛡️ 44 days risk-free — 30-day trial + 14-day money-back</div>
   </div>
 </section>
 
@@ -553,126 +473,322 @@ footer p { color: var(--text-secondary); }
   <div class="container">
     <div class="pricing-grid">
       
-      <!-- Research -->
-      <div class="tier-card" data-tier="research" data-monthly="8" data-annual="6.67" data-save="16">
-        <div class="tier-badge trial">30-Day Free Trial</div>
+      <!-- RESEARCH - THE FREE ENTRY POINT -->
+      <div class="tier-card featured" data-tier="research">
+        <div class="tier-badge trial">🎯 Start Here Free</div>
         <div class="tier-header">
           <div class="tier-name">Research</div>
+          <p class="tier-tagline">Learn the framework. Understand how quants think. Get daily intel delivered to your inbox.</p>
+          
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">0</span><span class="period">for 30 days</span>
+            <span class="old-price">£8/mo</span>
+            <span class="amount free">£0</span>
+            <span class="period">for 30 days</span>
           </div>
-          <div class="tier-billing billing-text">then £8/mo</div>
-          <div class="tier-save visible">Start free today</div>
+          <div class="tier-billing">Then £8/mo · <strong>Cancel anytime</strong></div>
         </div>
-        <a href="/checkout?tier=research" class="tier-cta secondary">Start Free Trial</a>
-        <div class="tier-alt">Cancel anytime during trial</div>
+        
+        <a href="/checkout?tier=research" class="tier-cta primary">Start Your Free Trial →</a>
+        <p class="tier-guarantee">🛡️ <strong>44 days risk-free</strong> — No card charged during trial</p>
+        
         <div class="tier-features">
-          <div class="feature-group">
-            <div class="feature-group-label">Full Dashboard Access</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Daily market movement recaps</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Weekly market summaries</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Private research community</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>12 quant code snippets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>10 research papers</div>
+          <div class="feature-section-label">Everything Included</div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Daily market briefings</strong>
+              <div class="feature-desc">What moved, why it moved, and what to watch tomorrow — in your inbox by 10pm</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Weekly analysis summaries</strong>
+              <div class="feature-desc">Big picture context for the week ahead — key levels, catalysts, regime shifts</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>10 research papers</strong>
+              <div class="feature-desc">Deep dives into edge detection, regime analysis, risk management — the quant playbook</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>12 quant code snippets</strong>
+              <div class="feature-desc">Copy-paste Pine Script components — momentum filters, volatility gates, regime detection</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Private research community</strong>
+              <div class="feature-desc">Discord channel with other serious traders — no noise, no hype, just signal</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Full dashboard access</strong>
+              <div class="feature-desc">Research portal, code library, paper archive — everything in one place</div>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Recoil -->
-      <div class="tier-card" data-tier="recoil" data-monthly="28" data-annual="23.33" data-save="56">
+      <!-- RECOIL -->
+      <div class="tier-card" data-tier="recoil">
         <div class="tier-header">
           <div class="tier-name">Recoil</div>
+          <p class="tier-tagline">Your first trading instrument. Volatility-calibrated entries with real-time TradingView alerts.</p>
+          
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">23.33</span><span class="period">/mo</span>
+            <span class="currency">£</span>
+            <span class="amount">28</span>
+            <span class="period">/month</span>
           </div>
-          <div class="tier-billing billing-text">billed annually</div>
-          <div class="tier-save visible">Save £56/year</div>
+          <div class="tier-billing">or £280/year (save £56)</div>
         </div>
-        <a href="/checkout?tier=recoil&billing=annual" class="tier-cta secondary">Get Started</a>
-        <div class="tier-alt">or <a href="#" class="alt-billing">pay monthly</a></div>
+        
+        <a href="/checkout?tier=recoil" class="tier-cta secondary">Get Recoil Access</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
+        
         <div class="tier-features">
-          <div class="feature-group">
-            <div class="feature-group-label">Everything in Research, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Recoil indicator</strong></div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Real-time TradingView alerts</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Recoil Operator's Guide</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>+12 quant code snippets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Recoil community chat</div>
+          <div class="feature-section-label">Everything in Research, Plus</div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Recoil indicator (TradingView)</strong>
+              <div class="feature-desc">ATR-calibrated entries that adapt to volatility — no more static pip targets</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Real-time TradingView alerts</strong>
+              <div class="feature-desc">Phone notifications when signals fire — never miss an entry</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Recoil Operator's Guide</strong>
+              <div class="feature-desc">Complete setup + optimization walkthrough — from install to first trade</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>+12 quant code snippets</strong>
+              <div class="feature-desc">Recoil-specific components — volatility filters, ATR gates, timing modules</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Recoil operators chat</strong>
+              <div class="feature-desc">Trade ideas, parameter sharing, live discussion with other Recoil users</div>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Terminal -->
-      <div class="tier-card" data-tier="terminal" data-monthly="58" data-annual="48.33" data-save="116">
+      <!-- TERMINAL -->
+      <div class="tier-card" data-tier="terminal">
         <div class="tier-header">
           <div class="tier-name">Terminal</div>
+          <p class="tier-tagline">Multi-timeframe structure alignment. Know the trend before you enter.</p>
+          
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">48.33</span><span class="period">/mo</span>
+            <span class="currency">£</span>
+            <span class="amount">58</span>
+            <span class="period">/month</span>
           </div>
-          <div class="tier-billing billing-text">billed annually</div>
-          <div class="tier-save visible">Save £116/year</div>
+          <div class="tier-billing">or £580/year (save £116)</div>
         </div>
-        <a href="/checkout?tier=terminal&billing=annual" class="tier-cta secondary">Get Started</a>
-        <div class="tier-alt">or <a href="#" class="alt-billing">pay monthly</a></div>
+        
+        <a href="/checkout?tier=terminal" class="tier-cta secondary">Get Terminal Access</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
+        
         <div class="tier-features">
-          <div class="feature-group">
-            <div class="feature-group-label">Everything in Recoil, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Meridian indicator</strong></div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Multi-timeframe sync signals</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Meridian Operator's Guide</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>+12 quant code snippets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Terminal community chat</div>
+          <div class="feature-section-label">Everything in Recoil, Plus</div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Meridian indicator (TradingView)</strong>
+              <div class="feature-desc">Multi-timeframe structure scanner — see when daily, 4H, and 1H align</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>MTF sync signals</strong>
+              <div class="feature-desc">Only trade when the structure agrees — filter out counter-trend noise</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Meridian Operator's Guide</strong>
+              <div class="feature-desc">Complete MTF analysis framework — understand why alignment matters</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>+12 quant code snippets</strong>
+              <div class="feature-desc">Structure detection, swing analysis, trend strength modules</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Terminal operators chat</strong>
+              <div class="feature-desc">Advanced discussions on MTF analysis, structure trading, regime detection</div>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Suite (Popular) -->
-      <div class="tier-card featured" data-tier="suite" data-monthly="88" data-annual="73.33" data-save="176">
+      <!-- FULL SUITE -->
+      <div class="tier-card" data-tier="suite">
         <div class="tier-badge popular">Most Popular</div>
         <div class="tier-header">
           <div class="tier-name">Full Suite</div>
+          <p class="tier-tagline">Everything we build. All indicators, all code, all updates — plus 1-on-1 calls.</p>
+          
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">73.33</span><span class="period">/mo</span>
+            <span class="currency">£</span>
+            <span class="amount">88</span>
+            <span class="period">/month</span>
           </div>
-          <div class="tier-billing billing-text">billed annually</div>
-          <div class="tier-save visible">Save £176/year</div>
+          <div class="tier-billing">or £880/year (save £176)</div>
         </div>
-        <a href="/checkout?tier=suite&billing=annual" class="tier-cta primary">Get Started</a>
-        <div class="tier-alt">or <a href="#" class="alt-billing">pay monthly</a></div>
+        
+        <a href="/checkout?tier=suite" class="tier-cta secondary">Get Full Suite</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
+        
         <div class="tier-features">
-          <div class="feature-group">
-            <div class="feature-group-label">Everything in Terminal, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Cockpit multi-TF analyzer</strong></div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>All 48 quant code snippets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>1-on-1 indicator setup call</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Monthly progression call</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Suite community chat</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Priority support</div>
+          <div class="feature-section-label">Everything in Terminal, Plus</div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>The Cockpit (TradingView)</strong>
+              <div class="feature-desc">Multi-timeframe command center — all regimes, all timeframes, one glance</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>All 48 quant code snippets</strong>
+              <div class="feature-desc">Complete library — build any indicator, any filter, any signal</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>1-on-1 indicator setup call</strong>
+              <div class="feature-desc">30-minute call to configure everything for your trading style</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Monthly progression call</strong>
+              <div class="feature-desc">Ongoing 1-on-1s to review your progress, optimize your system</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Priority support + Suite chat</strong>
+              <div class="feature-desc">DM access for questions, exclusive Suite operators discussion</div>
+            </div>
           </div>
         </div>
       </div>
       
-      <!-- Ascension (High-Ticket) -->
-      <div class="tier-card featured ascension-card" data-tier="ascension">
+      <!-- ASCENSION -->
+      <div class="tier-card" data-tier="ascension">
         <div class="tier-badge premium">90-Day Program</div>
         <div class="tier-header">
           <div class="tier-name">Ascension</div>
+          <p class="tier-tagline">The complete transformation. From wherever you are to consistently profitable — with me guiding every step.</p>
+          
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">3,497</span>
+            <span class="currency">£</span>
+            <span class="amount">3,497</span>
           </div>
-          <div class="tier-billing billing-text">one-time investment</div>
-          <div class="tier-save visible" style="color: var(--gold);">Payment plans available</div>
+          <div class="tier-billing">One-time investment · Payment plans available</div>
         </div>
-        <a href="/ascension-apply" class="tier-cta primary">Apply Now</a>
-        <div class="tier-alt"><a href="/ascension">Learn more about the program →</a></div>
+        
+        <a href="/ascension-apply" class="tier-cta secondary">Apply Now</a>
+        <p class="tier-guarantee">Completion guarantee — see terms</p>
+        
         <div class="tier-features">
-          <div class="feature-group">
-            <div class="feature-group-label">The Complete Transformation</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>12 weekly 1-on-1 calls (30 min)</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Complete 9-level education</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>All indicators (lifetime access)</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Free marketplace access</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Automation setup guarantee</div>
+          <div class="feature-section-label">The Full Package</div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>12 weekly 1-on-1 calls (30 min)</strong>
+              <div class="feature-desc">Private calls with me every week — strategy, psychology, execution</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Complete 9-level education</strong>
+              <div class="feature-desc">From foundation to advanced quant systems — structured curriculum</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>All indicators (lifetime access)</strong>
+              <div class="feature-desc">Recoil, Meridian, Cockpit — yours forever, including future updates</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>Automation setup guarantee</strong>
+              <div class="feature-desc">We'll configure your MT5/TV automation together — or I do it for you</div>
+            </div>
+          </div>
+          
+          <div class="feature">
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <div class="feature-text">
+              <strong>90-day completion guarantee</strong>
+              <div class="feature-desc">Complete the curriculum, document your trading — results or refund</div>
+            </div>
           </div>
         </div>
       </div>
@@ -683,23 +799,23 @@ footer p { color: var(--text-secondary); }
 
 <section class="faq-section">
   <div class="container">
-    <h2>Common questions</h2>
+    <h2>Common Questions</h2>
     <div class="faq-grid">
       <div class="faq-item">
+        <h4>What happens after the 30-day trial?</h4>
+        <p>Your card gets charged £8/month. You can cancel anytime before — no questions, no hassle. If you forget to cancel and haven't used the content, email us within 14 days for a full refund.</p>
+      </div>
+      <div class="faq-item">
         <h4>Can I upgrade or downgrade?</h4>
-        <p>Yes. You can change your plan at any time. When upgrading, you'll be charged the prorated difference. When downgrading, the change takes effect at the next billing cycle.</p>
+        <p>Yes, anytime. Upgrades are prorated (you only pay the difference). Downgrades take effect at the next billing cycle.</p>
       </div>
       <div class="faq-item">
         <h4>How do I access the indicators?</h4>
-        <p>After purchase, you'll provide your TradingView username. We grant access within 24 hours. The indicators appear in your TradingView Invite-only scripts.</p>
-      </div>
-      <div class="faq-item">
-        <h4>Is there a refund policy?</h4>
-        <p>Annual plans have a 14-day refund window if you haven't accessed premium content. Monthly plans can be cancelled anytime but aren't refunded mid-cycle.</p>
+        <p>After purchase, you provide your TradingView username. We grant access within 24 hours. They appear in your "Invite-only scripts" section.</p>
       </div>
       <div class="faq-item">
         <h4>What's the Completion Guarantee?</h4>
-        <p>Ascension members who complete the full curriculum and don't see improvement after 90 days of documented trading can request a full refund.</p>
+        <p>For Ascension members: Complete the full curriculum with documented trading over 90 days. If you don't see improvement, you get a full refund. We want results, not revenue.</p>
       </div>
     </div>
   </div>
@@ -709,93 +825,24 @@ footer p { color: var(--text-secondary); }
   <div class="container">
     <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
     <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results. Trading leveraged products involves substantial risk of loss. Nothing on this site constitutes financial advice.</p>
-    <p style="margin-top:1rem">© 2026 Quant Prime. All rights reserved. | <a href="/terms" style="color: var(--gold);">Terms & Conditions</a></p>
+    <p style="margin-top:1rem">© 2026 Quant Prime. All rights reserved. | <a href="/terms" style="color: var(--gold);">Terms & Conditions</a> | <a href="/privacy" style="color: var(--gold);">Privacy</a></p>
   </div>
 </footer>
 
 <script src="/js/main.js?v=3"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const monthlyBtn = document.getElementById('monthlyBtn');
-  const annualBtn = document.getElementById('annualBtn');
-  // Only select subscription cards (not Ascension)
-  const cards = document.querySelectorAll('.tier-card:not(.ascension-card)');
-  
-  let isAnnual = true;
-  
-  function updatePricing() {
-    cards.forEach(card => {
-      const amountEl = card.querySelector('.amount');
-      const billingEl = card.querySelector('.billing-text');
-      const saveEl = card.querySelector('.tier-save');
-      const ctaEl = card.querySelector('.tier-cta');
-      const altLink = card.querySelector('.alt-billing');
-      const tier = card.dataset.tier;
-      
-      if (isAnnual) {
-        amountEl.textContent = card.dataset.annual;
-        billingEl.textContent = 'billed annually';
-        saveEl.classList.add('visible');
-        saveEl.textContent = `Save £${card.dataset.save}/year`;
-        if (altLink) altLink.textContent = 'pay monthly';
-        
-        // Update CTA link
-        const baseUrl = ctaEl.href.split('?')[0];
-        ctaEl.href = `${baseUrl}?tier=${tier}&billing=annual`;
-      } else {
-        amountEl.textContent = card.dataset.monthly;
-        billingEl.textContent = 'billed monthly';
-        saveEl.classList.remove('visible');
-        if (altLink) altLink.textContent = 'pay annually';
-        
-        // Update CTA link
-        const baseUrl = ctaEl.href.split('?')[0];
-        ctaEl.href = `${baseUrl}?tier=${tier}&billing=monthly`;
-      }
-    });
-    
-    monthlyBtn.classList.toggle('active', !isAnnual);
-    annualBtn.classList.toggle('active', isAnnual);
-  }
-  
-  monthlyBtn.addEventListener('click', () => {
-    isAnnual = false;
-    updatePricing();
-  });
-  
-  annualBtn.addEventListener('click', () => {
-    isAnnual = true;
-    updatePricing();
-  });
-  
-  // Alt billing link clicks
-  document.querySelectorAll('.alt-billing').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      isAnnual = !isAnnual;
-      updatePricing();
-    });
-  });
-  
-  updatePricing();
-});
-</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
 
 <!-- Affiliate Tracking -->
 <script>
 (function() {
-  // Check for affiliate ref in URL
   const urlParams = new URLSearchParams(window.location.search);
   const ref = urlParams.get('ref');
   
   if (ref) {
-    // Store in localStorage for later use
     localStorage.setItem('qp_affiliate_ref', ref.toUpperCase());
     localStorage.setItem('qp_affiliate_timestamp', Date.now());
     
-    // Track the click
     fetch('https://dashboard.themoneyprinter.uk/api/affiliate/track', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -807,8 +854,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }).catch(e => console.log('Affiliate tracking:', e.message));
   }
   
-  // Add ref to all checkout links
-  document.querySelectorAll('a[href*="/checkout"]').forEach(link => {
+  document.querySelectorAll('a[href*="/checkout"], a[href*="/ascension"]').forEach(link => {
     const storedRef = localStorage.getItem('qp_affiliate_ref');
     if (storedRef) {
       const url = new URL(link.href, window.location.origin);

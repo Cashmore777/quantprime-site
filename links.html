@@ -75,42 +75,6 @@
             color: var(--text-secondary);
         }
 
-        /* Stats */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            padding: 20px 0;
-            margin-bottom: 28px;
-            width: 100%;
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text);
-            line-height: 1.2;
-        }
-
-        .stat-value.gold { color: var(--gold); }
-
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            margin-top: 2px;
-        }
-
         /* Links */
         .links {
             width: 100%;
@@ -161,43 +125,26 @@
             border: none;
             color: #fff;
             font-weight: 600;
-            padding: 18px 24px;
+            padding: 20px 24px;
             flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 6px 24px rgba(184, 150, 46, 0.3);
+            gap: 6px;
+            box-shadow: 0 6px 24px rgba(184, 150, 46, 0.35);
         }
 
         .link.cta-gold:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 32px rgba(184, 150, 46, 0.4);
-        }
-
-        /* Primary CTA - Research Trial (Cyan) */
-        .link.cta-cyan {
-            background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-light) 100%);
-            border: none;
-            color: #fff;
-            font-weight: 600;
-            padding: 18px 24px;
-            flex-direction: column;
-            gap: 4px;
-            box-shadow: 0 6px 24px rgba(0, 136, 204, 0.3);
-        }
-
-        .link.cta-cyan:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 32px rgba(0, 136, 204, 0.4);
+            box-shadow: 0 10px 32px rgba(184, 150, 46, 0.45);
         }
 
         .cta-main {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 15px;
+            font-size: 16px;
         }
 
         .cta-sub {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 400;
             opacity: 0.9;
         }
@@ -217,10 +164,6 @@
             box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
         }
 
-        .cta-badge.trial {
-            background: #e65100;
-        }
-
         /* Discord button */
         .link.discord {
             background: #5865F2;
@@ -238,18 +181,150 @@
             fill: currentColor;
         }
 
-        /* Secondary links */
-        .link.secondary {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text);
-            font-size: 13px;
-            padding: 12px 18px;
+        /* Divider */
+        .divider {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
         }
 
-        .link.secondary:hover {
-            border-color: var(--gold);
-            background: #fefefe;
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* Research Trial Card - The Money Shot */
+        .research-card {
+            width: 100%;
+            background: var(--surface);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-md), 0 0 0 4px rgba(184, 150, 46, 0.08);
+        }
+
+        .research-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #e65100, #ff6d00);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 12px rgba(230, 81, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        .research-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        .research-price {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .price-old {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            color: var(--text-muted);
+            text-decoration: line-through;
+            text-decoration-color: #dc2626;
+            text-decoration-thickness: 2px;
+        }
+
+        .price-new {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        .research-after {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .research-features {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+            padding: 0 8px;
+        }
+
+        .research-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .research-feature::before {
+            content: '✓';
+            color: var(--green);
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .research-cta {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--gold), #c9a84c);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .research-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(184, 150, 46, 0.4);
+        }
+
+        .research-guarantee {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .research-guarantee strong {
+            color: var(--green);
         }
 
         /* Section Label */
@@ -272,6 +347,20 @@
             flex: 1;
             height: 1px;
             background: var(--border);
+        }
+
+        /* Secondary links */
+        .link.secondary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 13px;
+            padding: 12px 18px;
+        }
+
+        .link.secondary:hover {
+            border-color: var(--gold);
+            background: #fefefe;
         }
 
         /* Arrow icon */
@@ -473,9 +562,8 @@
         /* Mobile adjustments */
         @media (max-width: 400px) {
             body { padding: 40px 16px 60px; }
-            .stats { gap: 24px; padding: 16px; }
-            .stat-value { font-size: 18px; }
             .modal { padding: 24px; }
+            .research-card { padding: 24px 20px; }
         }
     </style>
 </head>
@@ -485,22 +573,6 @@
         <div class="header">
             <h1 class="logo-title">QUANT<span>PRIME</span></h1>
             <p class="subtitle">Algorithmic precision. Systematic edge.</p>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-value">250+</div>
-                <div class="stat-label">Traders</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value gold">1.8k+</div>
-                <div class="stat-label">Backtested Trades</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">30</div>
-                <div class="stat-label">Day Trial</div>
-            </div>
         </div>
 
         <!-- Primary CTAs -->
@@ -516,25 +588,12 @@
                         <path d="M12 18v-6"/>
                         <path d="M9 15l3 3 3-3"/>
                     </svg>
-                    The Quant Prime Manifesto
+                    Get the Free Guide
                 </span>
                 <span class="cta-sub">How institutional traders extract consistent returns</span>
             </a>
 
-            <!-- 2. Research Trial (Cyan) - Entry Tier -->
-            <a href="/checkout?tier=research" class="link cta-cyan" data-source="research_trial">
-                <span class="cta-badge trial">30 Days Free</span>
-                <span class="cta-main">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                    </svg>
-                    Start Your Free Trial
-                </span>
-                <span class="cta-sub">Full dashboard access • Daily briefings • Research papers</span>
-            </a>
-
-            <!-- 3. Discord Community -->
+            <!-- 2. Discord Community -->
             <button class="link discord" id="discordBtn" data-source="discord">
                 <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.125-.094.25-.192.373-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Join Free Community
@@ -543,6 +602,38 @@
                     <path d="M7 7h10v10"/>
                 </svg>
             </button>
+
+            <!-- Divider -->
+            <div class="divider">Unlock Everything</div>
+
+            <!-- 3. Research Trial Card - THE MONEY SHOT -->
+            <div class="research-card">
+                <div class="research-badge">🎯 30 Days Free</div>
+                <h3 class="research-title">Quant Prime Research</h3>
+                
+                <div class="research-price">
+                    <span class="price-old">£8/mo</span>
+                    <span class="price-new">£0</span>
+                </div>
+                <p class="research-after">for 30 days, then £8/mo</p>
+                
+                <div class="research-features">
+                    <div class="research-feature">Daily market movement recaps</div>
+                    <div class="research-feature">Weekly analysis summaries</div>
+                    <div class="research-feature">Private research community</div>
+                    <div class="research-feature">12 quant code snippets</div>
+                    <div class="research-feature">10 in-depth research papers</div>
+                    <div class="research-feature">Full dashboard access</div>
+                </div>
+                
+                <a href="/checkout?tier=research" class="research-cta" data-source="research_trial">
+                    Start Free Trial →
+                </a>
+                
+                <div class="research-guarantee">
+                    🛡️ <strong>44 days risk-free</strong> — 30-day trial + 14-day money-back guarantee
+                </div>
+            </div>
 
             <div class="section">Explore</div>
 
@@ -661,8 +752,8 @@
         const DISCORD_INVITE = 'https://discord.gg/EAHKwd7HvX';
         
         // Track button clicks with entry source
-        document.querySelectorAll('.link[data-source]').forEach(link => {
-            link.addEventListener('click', function(e) {
+        document.querySelectorAll('[data-source]').forEach(el => {
+            el.addEventListener('click', function(e) {
                 const source = this.dataset.source;
                 if (window.QP_TRACK && source) {
                     QP_TRACK.trackButtonClick(source);
