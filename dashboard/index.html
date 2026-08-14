@@ -96,6 +96,80 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE
+   ═══════════════════════════════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --bg: #0a0a0f;
+  --surface: #111117;
+  --surface-raised: #1a1a22;
+  --surface-glass: rgba(17,17,23,0.9);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.15);
+  --text-1: #f2f4f7;
+  --text-2: #a0a4ab;
+  --text-3: #6b7078;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: var(--shadow-md);
+  transition: all 0.2s;
+}
+.theme-toggle:hover {
+  border-color: var(--gold);
+  transform: scale(1.05);
+}
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-2);
+}
+.theme-toggle .sun { display: none; }
+.theme-toggle .moon { display: block; }
+[data-theme="dark"] .theme-toggle .sun { display: block; }
+[data-theme="dark"] .theme-toggle .moon { display: none; }
+
+@media (max-width: 820px) {
+  .theme-toggle {
+    bottom: calc(var(--nav-height) + 12px);
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   JOURNAL MOBILE FIX
+   ═══════════════════════════════════════════════════════════════════════ */
+.journal-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .journal-form-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { 
   scroll-behavior: smooth;
@@ -4185,103 +4259,93 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-research">
     <div class="view-header">
       <div class="eyebrow">Quant Prime Research</div>
-      <h2>2026 market <em>analysis</em>.</h2>
-      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Weekly reports, catalyst analysis, and monthly reviews for Gold & EURUSD.</p>
+      <h2>Research <em>archive</em>.</h2>
+      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Ten research papers and the complete email archive. Methods, figures, and the caveats left in.</p>
     </div>
     
-    <div style="display: flex; flex-direction: column; gap: 18px;">
-      <!-- July 2026 -->
-      <div class="research-card" onclick="openResearchModal(0)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">25 JUL 2026 · WEEKLY REPORT</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>Gold breaks $2,450: Fed pivot confirmed</h4>
-        <p>Gold surged past $2,450 following the July FOMC meeting. The dovish pivot we've tracked since Q1 finally materialized.</p>
-      </div>
-      <div class="research-card" onclick="openResearchModal(1)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">18 JUL 2026 · WEEKLY REPORT</div>
-          <span class="tag">EURUSD</span>
-        </div>
-        <h4>EURUSD: ECB holds, divergence narrows</h4>
-        <p>ECB holds at 3.25% with hawkish undertones. EURUSD reclaims 1.1400 on the divergence narrowing thesis.</p>
-      </div>
-      <div class="research-card" onclick="openResearchModal(2)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">11 JUL 2026 · CATALYST</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>June CPI shock: Gold's 80-point reversal</h4>
-        <p>CPI at 2.1% sparked a $40 spike, then an $80 reversal. How Recoil's Band-8 caught the fade.</p>
-      </div>
-      <div class="research-card" onclick="openResearchModal(3)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">01 JUL 2026 · QUARTERLY</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>Q2 2026 Review: Gold's quiet accumulation</h4>
-        <p>Gold's $150 range masked classic Wyckoff accumulation. The setup that preceded July's breakout.</p>
-      </div>
-      
-      <!-- June 2026 -->
-      <div class="research-card" onclick="openResearchModal(4)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">07 JUN 2026 · CATALYST</div>
-          <span class="tag">EURUSD</span>
-        </div>
-        <h4>May NFP: EURUSD 150-pip swing</h4>
-        <p>NFP beat expectations but wage growth missed. The two-phase reaction that Recoil captured.</p>
-      </div>
-      
-      <!-- April 2026 -->
-      <div class="research-card" onclick="openResearchModal(5)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">15 APR 2026 · WEEKLY REPORT</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>April gold breakout: The all-time high retest</h4>
-        <p>Gold briefly broke $2,431 before pulling back. Why Meridian flagged it as a false breakout.</p>
-      </div>
-      
-      <!-- March 2026 -->
-      <div class="research-card" onclick="openResearchModal(6)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">22 MAR 2026 · CATALYST</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>Fed March meeting: The first hint of pivot</h4>
-        <p>The FOMC acknowledged inflation progress. Gold's "spike and hold" signaled the shift.</p>
-      </div>
-      <div class="research-card" onclick="openResearchModal(7)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">08 MAR 2026 · CATALYST</div>
-          <span class="tag">EURUSD</span>
-        </div>
-        <h4>March ECB: EURUSD structure shift</h4>
-        <p>Lagarde pauses at 3.25% with hawkish tone. The 200-pip rally that followed.</p>
-      </div>
-      
-      <!-- February 2026 -->
-      <div class="research-card" onclick="openResearchModal(8)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">28 FEB 2026 · MONTHLY</div>
-          <span class="tag">XAUUSD</span>
-        </div>
-        <h4>February gold: The $2,200 defense</h4>
-        <p>Three tests of $2,200 support, each producing a higher low. The triple tap reversal pattern.</p>
-      </div>
-      
-      <!-- January 2026 -->
-      <div class="research-card" onclick="openResearchModal(9)">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;">
-          <div class="date">31 JAN 2026 · MONTHLY</div>
-          <span class="tag">EURUSD</span>
-        </div>
-        <h4>January review: Year opens with dollar strength</h4>
-        <p>EURUSD fell 200 pips to start the year. The selloff that created the H1 base structure.</p>
+    <!-- Research Papers Section -->
+    <div style="margin-bottom: 40px;">
+      <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+        <span>📄</span> Research Papers
+      </h3>
+      <div style="display: grid; gap: 12px;">
+        <a href="/research/papers/paper-01-friction-threshold.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 01 · EXECUTION COST</div>
+          <h4>The Friction Threshold</h4>
+          <p>Why an 81.5% win rate still lost money. The toll that eats your edge.</p>
+        </a>
+        <a href="/research/papers/paper-02-subsidised-signal.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 02 · PORTFOLIO CONSTRUCTION</div>
+          <h4>The Subsidised Signal</h4>
+          <p>Why an unprofitable component made the book better.</p>
+        </a>
+        <a href="/research/papers/paper-03-timeframe-ceiling.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 03 · STRUCTURAL EDGE</div>
+          <h4>The Timeframe Ceiling</h4>
+          <p>Profit factor 2.185 at 3M, unprofitable at 15M — same code.</p>
+        </a>
+        <a href="/research/papers/paper-04-midnight-modulus.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 04 · IMPLEMENTATION</div>
+          <h4>Midnight Is Not a Modulus</h4>
+          <p>The bug that produces plausible output and wrong trades.</p>
+        </a>
+        <a href="/research/papers/paper-05-stop-placement.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 05 · RISK PLACEMENT</div>
+          <h4>The Stop Is Not a Number</h4>
+          <p>Anchor first, then buffer — why k = 3.0 on the scalping preset.</p>
+        </a>
+        <a href="/research/papers/paper-06-comfort-trade.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 06 · TRADE MANAGEMENT</div>
+          <h4>The Comfort Trade</h4>
+          <p>Partials and breakeven — when they help, when they hurt.</p>
+        </a>
+        <a href="/research/papers/paper-07-filter-removed.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 07 · FILTERS</div>
+          <h4>What the Filter Removed</h4>
+          <p>Why raising win rate often lowers profit.</p>
+        </a>
+        <a href="/research/papers/paper-08-statistical-confidence.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 08 · STATISTICAL CONFIDENCE</div>
+          <h4>What 1.99 Actually Means</h4>
+          <p>The interval around our own headline figure.</p>
+        </a>
+        <a href="/research/papers/paper-09-three-windows.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 09 · SESSION STRUCTURE</div>
+          <h4>Three Windows</h4>
+          <p>Testing time-of-day filters honestly.</p>
+        </a>
+        <a href="/research/papers/paper-10-return-per-pain.html" class="research-card" style="text-decoration: none;">
+          <div class="date">PAPER 10 · RISK-ADJUSTED RETURN</div>
+          <h4>Return Per Unit of Pain</h4>
+          <p>Why headline return tells you almost nothing.</p>
+        </a>
       </div>
     </div>
+    
+    <!-- Email Archive Section -->
+    <div class="research-email-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+      <div class="panel">
+        <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+          <span>📩</span> Daily Market Recaps
+        </h3>
+        <div id="daily-email-list" style="display: grid; gap: 8px; max-height: 300px; overflow-y: auto;">
+          <p style="color: var(--text-3); font-size: 14px; font-style: italic;">Coming soon — daily briefings will appear here.</p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+          <span>📊</span> Weekly Economy Research
+        </h3>
+        <div id="weekly-email-list" style="display: grid; gap: 8px; max-height: 300px; overflow-y: auto;">
+          <p style="color: var(--text-3); font-size: 14px; font-style: italic;">Coming soon — weekly research will appear here.</p>
+        </div>
+      </div>
+    </div>
+    <style>
+      @media (max-width: 700px) {
+        .research-email-grid { grid-template-columns: 1fr !important; }
+      }
+    </style>
   </div>
 
   <!-- RECOIL -->
@@ -5058,7 +5122,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           New Journal Entry
         </h4>
         <div style="display: grid; gap: 16px;">
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+          <div class="journal-form-row">
             <div>
               <label style="font-size: 11px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: block;">Date</label>
               <input type="date" id="journal-date" style="width: 100%; padding: 10px 12px; background: var(--surface-raised); border: 1px solid var(--border); border-radius: 6px; color: var(--text-1); font-size: 14px;">
@@ -11144,6 +11208,41 @@ switchView = function(viewId) {
     </div>
   </div>
 </div>
+
+<!-- Dark Mode Toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+  </svg>
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+</button>
+
+<script>
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('qp-theme', newTheme);
+}
+
+// Initialize theme on load
+(function() {
+  const savedTheme = localStorage.getItem('qp-theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
 
 </body>
 </html>
