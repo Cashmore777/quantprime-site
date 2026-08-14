@@ -67,30 +67,33 @@ body{
   color:var(--dim);
 }
 
-/* Email container */
+/* Email container - scrollable wrapper */
 .email-container{
   flex:1;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:16px;
   overflow:auto;
   background:var(--ink);
   -webkit-overflow-scrolling:touch;
+  padding:20px;
 }
 .email-frame{
-  width:100%;
-  max-width:450px;
-  min-height:80vh;
+  display:block;
+  margin:0 auto;
+  width:430px;
+  min-height:calc(100vh - 100px);
   border:none;
   background:#fff;
   border-radius:12px;
   box-shadow:0 8px 32px rgba(0,0,0,0.4);
   transition:filter 0.3s;
 }
-@media(max-width:500px){
-  .email-container{padding:8px}
-  .email-frame{border-radius:8px;max-width:100%}
+@media(max-width:460px){
+  .email-container{padding:0}
+  .email-frame{
+    width:100vw;
+    min-width:430px;
+    border-radius:0;
+    box-shadow:none;
+  }
 }
 
 /* Dark mode invert for email iframe */
