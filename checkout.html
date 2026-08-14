@@ -589,13 +589,14 @@ body {
 </div>
 
 <script>
-// Tier data
+// Tier data with Stripe price IDs
 const tiers = {
   research: {
     name: 'Research',
     monthly: 8,
     annual: 80,
     freeTrial: 30,
+    priceId: 'price_1Txkaq15x1S5u1oiJwZrI1Hd',
     features: [
       'Daily quantitative market intelligence',
       'Weekly market & strategy research',
@@ -608,6 +609,7 @@ const tiers = {
     name: 'Recoil',
     monthly: 28,
     annual: 280,
+    priceId: 'price_1Txkc115x1S5u1oiwzO6XDl3',
     features: [
       'Everything in Research',
       'Recoil indicator (TradingView)',
@@ -620,6 +622,7 @@ const tiers = {
     name: 'Terminal',
     monthly: 58,
     annual: 580,
+    priceId: 'price_1Txkcl15x1S5u1oiOzoawxOp',
     features: [
       'Everything in Recoil',
       'Meridian indicator (TradingView)',
@@ -632,6 +635,7 @@ const tiers = {
     name: 'Full Suite',
     monthly: 88,
     annual: 880,
+    priceId: 'price_1TxkdT15x1S5u1oiqElyXsjn',
     features: [
       'Everything in Terminal',
       'The Cockpit analyzer',
@@ -761,11 +765,13 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
   // Normal checkout - create Stripe session
   try {
     const affiliateRef = localStorage.getItem('qp_affiliate_ref') || null;
+    const tier = tiers[currentTier] || tiers.research;
     
     const response = await fetch('https://dashboard.themoneyprinter.uk/api/stripe/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
+        priceId: tier.priceId,
         tier: currentTier,
         email: formData.email,
         fullName: formData.fullName,
