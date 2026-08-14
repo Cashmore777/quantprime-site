@@ -114,6 +114,66 @@
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
 }
 
+/* Dark mode - mobile nav bar */
+[data-theme="dark"] #mobile-nav {
+  background: rgba(17,17,23,0.95) !important;
+  border-top-color: rgba(255,255,255,0.08);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+
+/* Dark mode - mobile header */
+[data-theme="dark"] #mobile-header {
+  background: var(--surface);
+  border-bottom-color: var(--border);
+}
+
+/* Dark mode - sidebar */
+[data-theme="dark"] #sidebar {
+  background: var(--surface);
+  border-right-color: var(--border);
+}
+
+/* Dark mode - panels and cards */
+[data-theme="dark"] .panel,
+[data-theme="dark"] .research-card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Dark mode - inputs */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: var(--surface-raised) !important;
+  border-color: var(--border) !important;
+  color: var(--text-1) !important;
+}
+
+/* Dark mode - callouts */
+[data-theme="dark"] .callout {
+  background: var(--surface-raised);
+  border-color: var(--border);
+}
+
+/* Dark mode - instrument hero */
+[data-theme="dark"] .instrument-hero {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Dark mode - ledger */
+[data-theme="dark"] .ledger {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+/* Dark mode - modals */
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] #research-modal .modal-content {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
 /* Dark mode toggle button */
 .theme-toggle {
   position: fixed;
@@ -4264,86 +4324,115 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
     
     <!-- Research Papers Section -->
-    <div style="margin-bottom: 40px;">
-      <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-        <span>📄</span> Research Papers
-      </h3>
-      <div style="display: grid; gap: 12px;">
+    <div class="panel" style="margin-bottom: 32px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <h3 style="font-size: 14px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin: 0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Research Papers
+        </h3>
+        <span style="font-size: 12px; color: var(--text-3);">10 papers • Full methodology</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
         <a href="/research/papers/paper-01-friction-threshold.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 01 · EXECUTION COST</div>
+          <div class="date">01 · EXECUTION COST</div>
           <h4>The Friction Threshold</h4>
-          <p>Why an 81.5% win rate still lost money. The toll that eats your edge.</p>
+          <p>Why an 81.5% win rate still lost money.</p>
         </a>
         <a href="/research/papers/paper-02-subsidised-signal.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 02 · PORTFOLIO CONSTRUCTION</div>
+          <div class="date">02 · PORTFOLIO</div>
           <h4>The Subsidised Signal</h4>
           <p>Why an unprofitable component made the book better.</p>
         </a>
         <a href="/research/papers/paper-03-timeframe-ceiling.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 03 · STRUCTURAL EDGE</div>
+          <div class="date">03 · STRUCTURAL EDGE</div>
           <h4>The Timeframe Ceiling</h4>
-          <p>Profit factor 2.185 at 3M, unprofitable at 15M — same code.</p>
+          <p>PF 2.185 at 3M, unprofitable at 15M — same code.</p>
         </a>
         <a href="/research/papers/paper-04-midnight-modulus.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 04 · IMPLEMENTATION</div>
+          <div class="date">04 · IMPLEMENTATION</div>
           <h4>Midnight Is Not a Modulus</h4>
-          <p>The bug that produces plausible output and wrong trades.</p>
+          <p>The bug that produces plausible output.</p>
         </a>
         <a href="/research/papers/paper-05-stop-placement.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 05 · RISK PLACEMENT</div>
+          <div class="date">05 · RISK PLACEMENT</div>
           <h4>The Stop Is Not a Number</h4>
-          <p>Anchor first, then buffer — why k = 3.0 on the scalping preset.</p>
+          <p>Anchor first, then buffer.</p>
         </a>
         <a href="/research/papers/paper-06-comfort-trade.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 06 · TRADE MANAGEMENT</div>
+          <div class="date">06 · MANAGEMENT</div>
           <h4>The Comfort Trade</h4>
-          <p>Partials and breakeven — when they help, when they hurt.</p>
+          <p>Partials and breakeven — when they help.</p>
         </a>
         <a href="/research/papers/paper-07-filter-removed.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 07 · FILTERS</div>
+          <div class="date">07 · FILTERS</div>
           <h4>What the Filter Removed</h4>
           <p>Why raising win rate often lowers profit.</p>
         </a>
         <a href="/research/papers/paper-08-statistical-confidence.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 08 · STATISTICAL CONFIDENCE</div>
+          <div class="date">08 · CONFIDENCE</div>
           <h4>What 1.99 Actually Means</h4>
-          <p>The interval around our own headline figure.</p>
+          <p>The interval around our headline figure.</p>
         </a>
         <a href="/research/papers/paper-09-three-windows.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 09 · SESSION STRUCTURE</div>
+          <div class="date">09 · SESSION</div>
           <h4>Three Windows</h4>
           <p>Testing time-of-day filters honestly.</p>
         </a>
         <a href="/research/papers/paper-10-return-per-pain.html" class="research-card" style="text-decoration: none;">
-          <div class="date">PAPER 10 · RISK-ADJUSTED RETURN</div>
+          <div class="date">10 · RISK-ADJUSTED</div>
           <h4>Return Per Unit of Pain</h4>
-          <p>Why headline return tells you almost nothing.</p>
+          <p>Why headline return tells you nothing.</p>
         </a>
       </div>
     </div>
     
     <!-- Email Archive Section -->
-    <div class="research-email-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+    <div class="research-email-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
       <div class="panel">
-        <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-          <span>📩</span> Daily Market Recaps
-        </h3>
-        <div id="daily-email-list" style="display: grid; gap: 8px; max-height: 300px; overflow-y: auto;">
-          <p style="color: var(--text-3); font-size: 14px; font-style: italic;">Coming soon — daily briefings will appear here.</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3 style="font-size: 14px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin: 0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Daily Recaps
+          </h3>
+        </div>
+        <div id="daily-email-list" style="display: grid; gap: 6px; max-height: 280px; overflow-y: auto;">
+          <a href="/research/emails/daily/2026-08-11-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
+            <span>Market Briefing</span>
+            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">11 Aug</span>
+          </a>
+          <a href="/research/emails/daily/2026-08-10-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
+            <span>Market Briefing</span>
+            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">10 Aug</span>
+          </a>
+          <a href="/research/emails/daily/2026-08-07-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
+            <span>Market Briefing</span>
+            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">07 Aug</span>
+          </a>
         </div>
       </div>
       <div class="panel">
-        <h3 style="font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-          <span>📊</span> Weekly Economy Research
-        </h3>
-        <div id="weekly-email-list" style="display: grid; gap: 8px; max-height: 300px; overflow-y: auto;">
-          <p style="color: var(--text-3); font-size: 14px; font-style: italic;">Coming soon — weekly research will appear here.</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+          <h3 style="font-size: 14px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin: 0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            Weekly Research
+          </h3>
+        </div>
+        <div id="weekly-email-list" style="display: grid; gap: 6px; max-height: 280px; overflow-y: auto;">
+          <div style="text-align: center; padding: 32px 16px; color: var(--text-3);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 8px; opacity: 0.5;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <p style="font-size: 13px; margin: 0;">First issue drops Sunday</p>
+          </div>
         </div>
       </div>
     </div>
     <style>
       @media (max-width: 700px) {
         .research-email-grid { grid-template-columns: 1fr !important; }
+      }
+      #daily-email-list a:hover,
+      #weekly-email-list a:hover {
+        background: var(--gold-glow) !important;
+        color: var(--gold) !important;
       }
     </style>
   </div>
@@ -4423,9 +4512,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
         <p>Colors candles by ATR ratio (8 bands). Bands 6-8 mark extreme volatility—statistically likely to snap back. Fade the overextension with scaled position sizes (1×/2×/5×).</p>
         <div class="hero-stats">
-          <div><span class="stat-val gold">73.4%</span><span class="stat-lbl">Win Rate</span></div>
-          <div><span class="stat-val">114</span><span class="stat-lbl">Trades</span></div>
-          <div><span class="stat-val">1.98</span><span class="stat-lbl">Profit Factor</span></div>
+          <div><span class="stat-val gold">69.4%</span><span class="stat-lbl">Win Rate</span></div>
+          <div><span class="stat-val">121</span><span class="stat-lbl">Trades</span></div>
+          <div><span class="stat-val">1.66</span><span class="stat-lbl">Profit Factor</span></div>
         </div>
         <div class="actions">
           <button class="btn sm">Open on TradingView</button>
@@ -4535,9 +4624,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
         <p>AMD time cycles (12H/6H) mark market phases. A-line sweeps set directional bias. Vortex points (369) confirm entry. Gold signal fires when both align.</p>
         <div class="hero-stats">
-          <div><span class="stat-val cyan">64.4%</span><span class="stat-lbl">Win Rate</span></div>
-          <div><span class="stat-val">206</span><span class="stat-lbl">Trades</span></div>
-          <div><span class="stat-val">1.39</span><span class="stat-lbl">Profit Factor</span></div>
+          <div><span class="stat-val cyan">68.5%</span><span class="stat-lbl">Win Rate</span></div>
+          <div><span class="stat-val">279</span><span class="stat-lbl">Trades</span></div>
+          <div><span class="stat-val">1.99</span><span class="stat-lbl">Profit Factor</span></div>
         </div>
         <div class="actions">
           <button class="btn sm">Open on TradingView</button>
