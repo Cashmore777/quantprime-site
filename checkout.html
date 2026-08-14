@@ -582,8 +582,8 @@ body {
       Back to pricing
     </a>
     
-    <h1>Complete your order</h1>
-    <p>You're one step away from accessing Quant Prime instruments.</p>
+    <h1 id="checkoutTitle">Complete your order</h1>
+    <p id="checkoutSubtitle">You're one step away from accessing Quant Prime instruments.</p>
     
     <form id="checkoutForm">
       <!-- Billing Cycle -->
@@ -732,7 +732,7 @@ body {
       </div>
     </div>
     
-    <div class="guarantees">
+    <div class="guarantees" id="guaranteesSection">
       <div class="guarantee-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         <span>256-bit SSL encryption. Your payment info is never stored on our servers.</span>
@@ -768,11 +768,12 @@ const tiers = {
     annual: 80,
     annualMonthly: 6.67,
     save: 16,
+    freeTrial: 30,
     features: [
+      'Full dashboard access',
       'Weekly market analysis',
       'Pair-by-pair metrics',
-      'Volatility reports',
-      'Event breakdowns'
+      'Trading community'
     ]
   },
   recoil: {
@@ -953,6 +954,17 @@ function selectBilling(billing) {
 function updateDisplay() {
   const tier = tiers[currentTier];
   
+  // Hide billing selector for Research (trial only)
+  const billingSection = document.querySelector('.billing-selector')?.closest('.form-section');
+  if (billingSection) {
+    if (currentTier === 'research') {
+      billingSection.style.display = 'none';
+      currentBilling = 'monthly'; // Force monthly for trial
+    } else {
+      billingSection.style.display = 'block';
+    }
+  }
+  
   // Update tier name
   document.getElementById('tierName').textContent = tier.name;
   document.getElementById('tierBadge').textContent = currentBilling.toUpperCase();
@@ -973,12 +985,23 @@ function updateDisplay() {
   
   // Update pricing
   let total, subtotalText;
+  const isResearchTrial = currentTier === 'research' && tier.freeTrial;
   
-  if (currentBilling === 'annual') {
+  if (isResearchTrial) {
+    // Research with 30-day free trial
+    total = 0;
+    subtotalText = `${tier.name} (30-Day Free Trial)`;
+    document.getElementById('discountLine').style.display = 'flex';
+    document.getElementById('discountLine').querySelector('.label').textContent = 'Free trial';
+    document.getElementById('discountValue').textContent = `30 days free`;
+    document.getElementById('discountValue').style.color = '#22c55e';
+  } else if (currentBilling === 'annual') {
     total = tier.annual;
     subtotalText = `${tier.name} (Annual)`;
     document.getElementById('discountLine').style.display = 'flex';
+    document.getElementById('discountLine').querySelector('.label').textContent = 'Annual discount';
     document.getElementById('discountValue').textContent = `-£${tier.save}.00`;
+    document.getElementById('discountValue').style.color = '#22c55e';
   } else if (currentBilling === 'lifetime' && tier.lifetime) {
     total = tier.lifetime;
     subtotalText = `${tier.name} (Lifetime)`;
@@ -990,9 +1013,56 @@ function updateDisplay() {
   }
   
   document.getElementById('subtotalLabel').textContent = subtotalText;
-  document.getElementById('subtotalValue').textContent = `£${total.toFixed(2)}`;
-  document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
-  document.getElementById('submitText').textContent = `Continue to Payment`;
+  
+  if (isResearchTrial) {
+    document.getElementById('subtotalValue').textContent = `£${tier.monthly}/mo after trial`;
+    document.getElementById('totalValue').textContent = `£0.00`;
+    document.getElementById('submitText').textContent = `Start Free Trial`;
+    
+    // Update page header for trial
+    document.getElementById('checkoutTitle').textContent = 'Start your free trial';
+    document.getElementById('checkoutSubtitle').textContent = '30 days free. Cancel anytime. No risk.';
+    
+    // Update guarantees for trial
+    document.getElementById('guaranteesSection').innerHTML = `
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        <span><strong>30 days completely free.</strong> Full dashboard access, no restrictions.</span>
+      </div>
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+        <span>Cancel anytime before day 30 and pay nothing. No questions asked.</span>
+      </div>
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Plus 14-day money-back guarantee after trial. 44 days risk-free total.</span>
+      </div>
+    `;
+  } else {
+    document.getElementById('subtotalValue').textContent = `£${total.toFixed(2)}`;
+    document.getElementById('totalValue').textContent = `£${total.toFixed(2)}`;
+    document.getElementById('submitText').textContent = `Continue to Payment`;
+    
+    // Reset page header
+    document.getElementById('checkoutTitle').textContent = 'Complete your order';
+    document.getElementById('checkoutSubtitle').textContent = "You're one step away from accessing Quant Prime instruments.";
+    
+    // Reset guarantees for non-trial tiers
+    document.getElementById('guaranteesSection').innerHTML = `
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>256-bit SSL encryption. Your payment info is never stored on our servers.</span>
+      </div>
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        <span>14-day refund policy on annual plans (before accessing premium content).</span>
+      </div>
+      <div class="guarantee-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+        <span>TradingView access granted within 24 hours of purchase.</span>
+      </div>
+    `;
+  }
   
   // Hide payment section for tier checkouts (Stripe Checkout handles card collection)
   const formSections = document.querySelectorAll('.form-section');
