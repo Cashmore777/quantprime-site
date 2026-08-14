@@ -87,8 +87,8 @@ CREATE INDEX IF NOT EXISTS idx_sequence_history_active ON sequence_history(user_
 
 CREATE TABLE IF NOT EXISTS tier_changes (
   id SERIAL PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES profiles(id),
-  email TEXT,
+  user_id UUID REFERENCES profiles(id), -- nullable for cases where profile doesn't exist yet
+  email TEXT NOT NULL, -- always capture email
   old_tier TEXT,
   new_tier TEXT NOT NULL,
   trigger_source TEXT NOT NULL, -- stripe_webhook, admin, system
@@ -125,11 +125,11 @@ CREATE POLICY "Users can read own history" ON sequence_history
 CREATE POLICY "Service role full access" ON sequence_history
   FOR ALL USING (auth.role() = 'service_role');
 
--- Tier changes: users can read their own, admins can read all
+-- Tier changes: users can read their own, service role full access
 ALTER TABLE tier_changes ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can read own changes" ON tier_changes
-  FOR SELECT USING (auth.uid() = user_id);
+  FOR SELECT USING (user_id IS NOT NULL AND auth.uid() = user_id);
 
 CREATE POLICY "Service role full access" ON tier_changes
   FOR ALL USING (auth.role() = 'service_role');
