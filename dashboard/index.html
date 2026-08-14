@@ -4396,18 +4396,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </h3>
         </div>
         <div id="daily-email-list" style="display: grid; gap: 6px; max-height: 280px; overflow-y: auto;">
-          <a href="/research/emails/daily/2026-08-11-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
-            <span>Market Briefing</span>
-            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">11 Aug</span>
-          </a>
-          <a href="/research/emails/daily/2026-08-10-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
-            <span>Market Briefing</span>
-            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">10 Aug</span>
-          </a>
-          <a href="/research/emails/daily/2026-08-07-briefing.html" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
-            <span>Market Briefing</span>
-            <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">07 Aug</span>
-          </a>
+          <div style="text-align: center; padding: 20px; color: var(--text-3); font-size: 13px;">Loading...</div>
         </div>
       </div>
       <div class="panel">
@@ -11259,12 +11248,37 @@ function updateMemberInfo() {
   daysEl.textContent = `${daysActive} days active`;
 }
 
+// Load research emails dynamically
+async function loadResearchEmails() {
+  try {
+    const response = await fetch('/research/emails/daily/index.json');
+    if (!response.ok) return;
+    const emails = await response.json();
+    
+    const container = document.getElementById('daily-email-list');
+    if (!container || emails.length === 0) return;
+    
+    container.innerHTML = emails.slice(0, 10).map(email => `
+      <a href="/research/emails/viewer.html?type=daily&file=${encodeURIComponent(email.filename)}" 
+         style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: var(--surface-raised); border-radius: 6px; text-decoration: none; color: var(--text-1); font-size: 14px; transition: all 0.15s;">
+        <span>Market Briefing</span>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);">${email.date.replace(' 2026', '')}</span>
+      </a>
+    `).join('');
+  } catch (e) {
+    console.log('No daily emails yet');
+  }
+}
+
 // Initialize home page on load
 document.addEventListener('DOMContentLoaded', function() {
   // Small delay for visual effect
   setTimeout(() => {
     animateCounters();
   }, 300);
+  
+  // Load research emails
+  loadResearchEmails();
   
   // Note: Billing/member info is now set by updateDashboardData() after auth
   // Demo functions removed to prevent overwriting real subscription data
