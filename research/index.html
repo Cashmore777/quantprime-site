@@ -339,7 +339,7 @@ async function checkResearchAccess() {
     }
     
     // Check tier - Research tier required
-    const { data: profile } = await sb.from('user_profiles').select('tier').eq('user_id', session.user.id).single();
+    const { data: profile } = await sb.from('profiles').select('tier').eq('id', session.user.id).single();
     const tier = profile?.tier || 'free';
     
     // Research tier or higher gets access

@@ -36,7 +36,7 @@ async function checkResearchAccess(onSuccess) {
     }
     
     // Check tier
-    const { data: profile } = await sb.from('user_profiles').select('tier').eq('user_id', session.user.id).single();
+    const { data: profile } = await sb.from('profiles').select('tier').eq('id', session.user.id).single();
     const tier = profile?.tier || 'free';
     
     const allowedTiers = ['research', 'recoil', 'full', 'admin'];
