@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Daily Briefing | Quant Prime Research</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -195,7 +196,14 @@ body{
 </style>
 </head>
 <body>
+<div id="auth-gate" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--ink);">
+  <div style="text-align:center;color:var(--dim);">
+    <div style="font-size:24px;margin-bottom:12px;">🔒</div>
+    <div id="auth-msg">Verifying access...</div>
+  </div>
+</div>
 
+<div id="main-content" style="display:none;">
 <div class="bar">
   <div class="bar-left">
     <span class="mark">Quant Prime</span>
@@ -211,6 +219,8 @@ body{
 <div class="email-container">
   <iframe class="email-frame" id="email-frame"></iframe>
 </div>
+
+</div><!-- end main-content -->
 
 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
   <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -324,7 +334,48 @@ function updateNavButtons(type) {
   };
 }
 
-init();
+// ====== AUTH GATE ======
+const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
+
+async function checkResearchAccess() {
+  const gate = document.getElementById('auth-gate');
+  const content = document.getElementById('main-content');
+  const msg = document.getElementById('auth-msg');
+  
+  try {
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: { session } } = await sb.auth.getSession();
+    
+    if (!session) {
+      msg.innerHTML = 'Research is for members only.<br><a href="/dashboard/login.html" style="color:#00abff;">Login</a> or <a href="/dashboard/register.html" style="color:#00abff;">Sign up</a>';
+      return;
+    }
+    
+    // Check tier
+    const { data: profile } = await sb.from('user_profiles').select('tier').eq('user_id', session.user.id).single();
+    const tier = profile?.tier || 'free';
+    
+    const allowedTiers = ['research', 'recoil', 'full', 'admin'];
+    if (!allowedTiers.includes(tier.toLowerCase())) {
+      msg.innerHTML = 'Research Archive requires Research tier or higher.<br><a href="/#pricing" style="color:#c9a84c;">Upgrade your plan</a>';
+      return;
+    }
+    
+    // Access granted
+    gate.style.display = 'none';
+    content.style.display = 'flex';
+    content.style.flexDirection = 'column';
+    content.style.height = '100%';
+    init();
+    
+  } catch (e) {
+    console.error('Auth error:', e);
+    msg.textContent = 'Error checking access. Please refresh.';
+  }
+}
+
+checkResearchAccess();
 </script>
 
 </body>
