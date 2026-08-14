@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 04 — Midnight Is Not a Modulus | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 04</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 04 / Implementation</div>
+  <h1>Midnight Is Not a Modulus</h1>
+  <p class="standfirst">Two implementations of the same session logic, written from the same specification, will disagree about when the session starts. One of them is wrong, most published code uses the wrong one, and the difference is large enough to flip a strategy from profitable to not. This paper is about the least glamorous line in a trading system.</p>
+  <div class="meta">
+    <span>Cycle detection</span><span>Session anchoring</span><span>Pine Script v6</span><span>Implementation study</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">Two ways to answer "which phase are we in?"</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Minutes-modulo — counts from an arbitrary origin</span><span class="val" style="color:var(--red)">Drifts</span>
+        <span class="bar-track"><span class="bar-fill neg" style="width:70%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Timestamp-anchored — resolves against real midnight</span><span class="val">Stable</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Difference in the specification</span>
+        <span class="val">None</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The bug that isn't a bug</h2>
+
+  <p>Write a strategy that operates on cycles — a 24-hour cycle divided into phases, or a session-based system that treats London and New York differently. Somewhere in that code, one line answers the question <em>which phase are we in right now?</em></p>
+
+  <p>The obvious implementation is a modulus. Take the number of minutes elapsed, divide by the phase length, and the remainder tells you where you are in the cycle. It is one line, it is fast, it reads cleanly, and it is what most published code does.</p>
+
+  <p>It is also wrong, and it will not throw an error, fail a compile, or produce an obviously broken chart. It will produce a chart that looks correct, drifts silently against real time, and quietly hands you a different set of trades than the specification described.</p>
+
+  <div class="pull">The most expensive bugs in trading systems are the ones that produce plausible output.</div>
+
+  <h2>Why modulo drifts</h2>
+
+  <p>A modulus needs an origin — a moment it counts from. When you write <span class="mono">minutes % 360</span>, you are implicitly anchoring to whatever the platform's minute counter happens to be counting from. That might be the Unix epoch. It might be the first bar loaded on the chart. It might be the start of the data series, which changes when the user scrolls, changes the symbol, or reloads the chart.</p>
+
+  <p>Three failure modes follow, and they compound:</p>
+
+  <ul>
+    <li><strong>Weekend gaps.</strong> Forex closes Friday evening and reopens Sunday. A modulus counting bars or elapsed session minutes does not know the market was shut. Come Monday, the phase boundary has slipped by however much the counter did or did not advance across the gap, and it slips again every week.</li>
+    <li><strong>Daylight saving.</strong> Twice a year, the relationship between the exchange clock and the wall clock shifts by an hour. A modulus anchored to an arbitrary origin does not shift with it. Your 6-hour phase boundary now falls an hour away from where the specification says it should, for six months.</li>
+    <li><strong>Broker server time.</strong> Two members running identical code through different brokers — one on UTC+2, one on UTC+3 — get different phase boundaries, and therefore different trades, from the same indicator on the same pair. Neither of them has changed a setting.</li>
+  </ul>
+
+  <p>Individually these look like edge cases. Together they mean the strategy that gets executed is not the strategy that was tested, and the discrepancy is not constant — it varies by week, by season, and by broker.</p>
+
+  <h2>The correct construction</h2>
+
+  <p>Anchor to a real timestamp. Rather than counting elapsed intervals, resolve the current bar's actual time into a date, take the true midnight of that date in the chosen reference timezone, and measure the phase offset from there.</p>
+
+  <p class="mono" style="font-size:14.5px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">origin = timestamp(tz, year, month, day, 0, 0)<br>elapsed = (time − origin) / 3600000<br>phase = floor(elapsed / phase_hours)</p>
+
+  <p>Every bar recomputes the origin from its own date. Nothing accumulates, so nothing drifts. A weekend gap is irrelevant — Monday's bars resolve against Monday's midnight, and whether the market was open on Saturday never enters the calculation. Daylight saving is handled by the timezone argument rather than by the arithmetic. Two brokers on different server offsets produce identical phase boundaries, because both resolve to the same reference midnight rather than to their own clock.</p>
+
+  <p>This is four lines instead of one and it costs a fraction of a millisecond per bar. That is the entire price of correctness here.</p>
+
+  <h2>How much does it actually change?</h2>
+
+  <p>Enough to invalidate a comparison. Consider what an hour of boundary offset does to a system reading a six-hour phase:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Effect of a one-hour boundary offset on a six-hour phase</caption>
+      <thead>
+        <tr><th>Quantity</th><th>Effect</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Phase misclassified</td><td class="neg">~17% of session time</td></tr>
+        <tr><td>Levels set in wrong phase</td><td class="neg">Persist for the full cycle</td></tr>
+        <tr><td>Entries taken on wrong bias</td><td class="neg">Compounding</td></tr>
+        <tr><td>Backtest reproducibility</td><td class="neg">Broken across brokers</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Structural analysis of the offset, not a backtest of a broken build. A misclassified phase does not merely mislabel one bar — the levels a phase establishes persist into subsequent phases, so a single boundary error propagates through the rest of the cycle.</p>
+
+  <p>That last row is the one that matters most for anyone selling or buying a system. If your phase boundaries depend on the platform's counting origin, your backtest is not reproducible by your users. They will run your code, get different trades, and reasonably conclude that your published results were fabricated. They were not fabricated. They were unreproducible, which for practical purposes is the same thing.</p>
+
+  <h2>The broader point about implementation</h2>
+
+  <p>Retail trading education spends almost all of its attention on strategy — entries, exits, filters, confluence — and almost none on implementation. The implicit assumption is that once you have the rules, the code is a clerical task.</p>
+
+  <p>It is not. The rules underdetermine the code. A specification that says "the accumulation phase runs from midnight to six" does not say which midnight, in which timezone, resolved how, or what happens when the market was closed for part of it. Every one of those gaps gets filled by whoever writes the implementation, and different reasonable choices produce measurably different systems.</p>
+
+  <p>A short list of the gaps that most often go unspecified, all of which we have had to resolve explicitly:</p>
+
+  <ul>
+    <li><strong>Reference timezone.</strong> Exchange time, UTC, broker server time, or a fixed offset the user selects. These are not interchangeable and the choice must be exposed, not buried.</li>
+    <li><strong>Bar timestamp convention.</strong> Whether a bar is stamped at its open or its close changes which side of a boundary it falls on.</li>
+    <li><strong>Repainting on the boundary bar.</strong> A phase change detected intrabar and acted on before the bar closes is a different strategy from one that waits for confirmation.</li>
+    <li><strong>State persistence.</strong> Whether a level established in one phase survives into the next, and what clears it. We store cycle levels as objects that persist until swept, specifically so a boundary crossing does not silently delete unresolved structure.</li>
+    <li><strong>Historical versus real-time evaluation.</strong> Code that behaves differently on historical bars than live bars will backtest beautifully and trade badly.</li>
+  </ul>
+
+  <p>None of these appear on a strategy sales page. All of them determine whether the thing works.</p>
+
+  <h2>What to check before you trust a system</h2>
+
+  <p>You usually cannot read the source of a commercial indicator. You can still test the anchoring in about five minutes:</p>
+
+  <ul>
+    <li>Load it, note where a phase or session boundary falls, then change your chart timezone and reload. If the boundary moves relative to real time rather than staying put, it is counting rather than anchoring.</li>
+    <li>Scroll far back, then reload from a different point in history. Boundaries that shift depending on how much data was loaded are anchored to the data series, not to the clock.</li>
+    <li>Compare a boundary across the daylight saving change. A correctly anchored system moves with the timezone rule. A counter does not.</li>
+  </ul>
+
+  <p>If any of those tests fail, the published backtest for that tool is describing a system you will not be running.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — minutes-modulo phase detection</div>
+    <div class="verdict">DEGRADED</div>
+    <p>Produces plausible output while drifting against real time across weekend gaps, daylight saving transitions, and broker server offsets. Breaks reproducibility between the developer's backtest and the user's chart. Not deployed in any Quant Prime instrument. All cycle and session logic resolves against a timestamp-anchored origin in a user-selectable reference timezone.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

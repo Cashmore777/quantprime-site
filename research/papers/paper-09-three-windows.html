@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 09 — Three Windows | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 09</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 09 / Session Structure</div>
+  <h1>Three Windows</h1>
+  <p class="standfirst">Our instruments favour three time windows: 00–02, 04–06 and 19–20 UTC. Every one of them could be a curve fit. This paper sets out the tests that separate a real liquidity effect from a lucky bucket, applies them to our own windows, and reports the result including the part that fails.</p>
+  <div class="meta">
+    <span>EURUSD</span><span>UTC session windows</span><span>Multiple comparisons</span><span>In-sample</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">The three windows and their proposed mechanism</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">00–02 UTC — Tokyo open, thin book</span><span class="val">Range-forming</span>
+        <span class="bar-track"><span class="bar-fill" style="width:74%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">04–06 UTC — Asia late, pre-London lull</span><span class="val">Lowest liquidity</span>
+        <span class="bar-track"><span class="bar-fill" style="width:88%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">19–20 UTC — post-NY, book thinning</span><span class="val">Reversion-prone</span>
+        <span class="bar-track"><span class="bar-fill" style="width:66%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Evidence status</span>
+        <span class="val" style="color:var(--cyan)">In-sample only</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The problem with time-of-day filters</h2>
+
+  <p>There are 24 hourly buckets in a trading day. Test a strategy across all of them and some will look better than others — that is guaranteed, regardless of whether time of day matters at all. With enough buckets and one dataset, the top three will always look compelling.</p>
+
+  <p>This makes session filters one of the easiest ways to overfit a system while feeling rigorous, and one of the hardest to detect afterwards. A trader who finds that their strategy works best between 04:00 and 06:00 has a plausible-sounding story available immediately — thin liquidity, Asian range, whatever the narrative requires — and human beings are extremely good at generating mechanisms for patterns that are not there.</p>
+
+  <div class="pull">The story arrives after the number. That is the exact order in which spurious findings are manufactured.</div>
+
+  <p>So a session filter needs to clear a higher bar than a typical parameter, and the bar has to be set before looking at the result.</p>
+
+  <h2>Four tests</h2>
+
+  <p><strong>1. Prior mechanism.</strong> Was there a reason to expect an effect at this time before the data was examined? Time of day is unusual among parameters in that a genuine prior exists: the FX market has a real, documented liquidity structure driven by participant working hours, session opens and closes, and scheduled institutional activity. This is not like discovering that a strategy works best on Tuesdays. Volatility and spread genuinely do vary by hour, and they vary for reasons that have nothing to do with any backtest.</p>
+
+  <p><strong>2. Contiguity and gradient.</strong> A real liquidity effect is continuous. Liquidity does not switch on at 04:00 and off at 06:00 — it thins gradually and thickens gradually. So a genuine effect should show a gradient: performance rising toward the centre of the window and decaying at its edges, with adjacent hours partially sharing the effect. A curve fit shows a spike — one hour outstanding, its neighbours ordinary or negative.</p>
+
+  <p><strong>3. Cross-instrument consistency.</strong> If the effect comes from session liquidity, it should appear in other instruments that share the same session structure, with the timing shifted appropriately. An effect that exists only in EURUSD at exactly these hours, and nowhere else, is more likely a property of the sample than of the market.</p>
+
+  <p><strong>4. Out-of-sample survival.</strong> The decisive test, and the one that cannot be substituted. Fix the windows on one period, test on a period not used to select them, and see whether the effect persists at anything like its measured strength.</p>
+
+  <h2>Applying them to our windows</h2>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Quant Prime session windows against the four tests</caption>
+      <thead>
+        <tr><th>Test</th><th>00–02</th><th>04–06</th><th>19–20</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Prior mechanism</td><td class="pos">Strong</td><td class="pos">Strong</td><td>Moderate</td></tr>
+        <tr><td>Contiguity / gradient</td><td class="pos">Yes</td><td class="pos">Yes</td><td>Narrow</td></tr>
+        <tr><td>Cross-instrument</td><td>Untested</td><td>Untested</td><td>Untested</td></tr>
+        <tr><td>Out-of-sample</td><td class="neg">Not yet</td><td class="neg">Not yet</td><td class="neg">Not yet</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Honest status as of publication. Two of four tests are passed on mechanism and shape; the two tests that actually discriminate between a real effect and a fitted one have not been completed. This table will be updated rather than quietly removed.</p>
+
+  <p>The mechanism case is genuinely strong for the two Asian-session windows and it is worth stating properly. Our instruments are volatility fades — they profit when extension reverts. Reversion is a property of range-bound conditions, and range-bound conditions are what thin books produce. Between the Asian afternoon and the London open, EURUSD has its lowest participation of the 24-hour cycle: moves are smaller, less well supported by flow, and revert more readily because there is not enough directional interest behind them to sustain an extension.</p>
+
+  <p>That is a mechanism that predicts the result rather than explaining it after the fact, and it predicts something further that can be checked: the effect should be <em>strongest</em> for the fade instruments and weakest or reversed for any trend-continuation configuration. If a session window helps every strategy type equally, it is not measuring liquidity structure. It is measuring the sample.</p>
+
+  <p>The 19–20 window is weaker on every count. The mechanism is more speculative, the window is narrower, and a one-hour window is exactly the shape a spurious result takes. We flag it as the least supported of the three.</p>
+
+  <h2>The friction interaction nobody mentions</h2>
+
+  <p>There is a complication specific to low-liquidity windows that cuts directly against them, and it is the reason a session filter can be simultaneously right about behaviour and wrong about profit.</p>
+
+  <p>Thin books mean wider spreads. The same hours that produce the cleanest reversion also produce the highest execution cost, and Paper 01 established how unforgiving that trade-off is on tight targets. A window that improves gross expectancy by 15% while raising average spread by a pip may be net negative.</p>
+
+  <p>This means session analysis must be run on <em>net</em> figures with realistic per-hour spread assumptions, not on gross pips with a flat cost model. Most session studies use a flat spread, which systematically flatters the illiquid hours — the exact hours a fade strategy will select. It is a bias that points in one direction and it is almost universal.</p>
+
+  <h2>What we recommend</h2>
+
+  <ul>
+    <li><strong>Treat session windows as the most fragile parameter in your system.</strong> They have more degrees of freedom than almost anything else you can tune, and a ready supply of plausible narratives.</li>
+    <li><strong>Prefer wide windows to narrow ones.</strong> A two-hour window is harder to fit than a one-hour window and degrades more gracefully if the underlying effect shifts — which it does, as market structure and participant behaviour change over years.</li>
+    <li><strong>Require a gradient.</strong> If your best hour's neighbours are ordinary, you have found noise. Check the shape before you check the size.</li>
+    <li><strong>Model spread by hour.</strong> Flat-cost session studies are biased toward illiquid windows.</li>
+    <li><strong>Never let a session filter be the thing that makes a strategy profitable.</strong> If the system only works inside its window, the window is doing the work, and windows are the part most likely to be fitted.</li>
+  </ul>
+
+  <p>That last point is the operating rule we apply internally. Our fade instruments are profitable without the session filter; the windows improve the result rather than creating it. A strategy that needs its session filter to clear breakeven has not been filtered — it has been fitted, and the filter is where the fitting happened.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — session windows 00–02, 04–06, 19–20 UTC</div>
+    <div class="verdict">MARGINAL</div>
+    <p>Mechanism is well founded for the two Asian-session windows and consistent with the reversion thesis the instruments trade. Gradient behaviour supports a real effect rather than an isolated spike. Cross-instrument and out-of-sample validation are outstanding, which is the reason for the grade — the two tests that would confirm the finding have not been run. Windows ship as an optional enhancement, not as a requirement for profitability.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

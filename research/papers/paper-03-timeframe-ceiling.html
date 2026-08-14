@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 03 — The Timeframe Ceiling | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 03</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 03 / Structural Edge</div>
+  <h1>The Timeframe Ceiling</h1>
+  <p class="standfirst">A profit factor of 2.185 on the 3-minute chart. Unprofitable on the 15-minute. Same code, same rules, same instrument. This paper explains why structural edges have a ceiling, how to calculate yours before you find it the expensive way, and why "it works on all timeframes" is a claim you should never believe.</p>
+  <div class="meta">
+    <span>EURUSD</span><span>AMD cycle engine</span><span>Feb – Aug 2026</span><span>Backtested, in-sample</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">Profit factor by timeframe — same logic throughout</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">3-minute</span><span class="val">2.185</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">6-minute</span><span class="val">1.998</span>
+        <span class="bar-track"><span class="bar-fill" style="width:88%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">9-minute</span><span class="val">1.440</span>
+        <span class="bar-track"><span class="bar-fill" style="width:56%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">15-minute and above</span>
+        <span class="val" style="color:var(--red)">Unprofitable</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The claim nobody should make</h2>
+
+  <p>"Works on any timeframe" appears on the sales page of almost every indicator sold to retail traders. It is close to a guarantee that the thing has never been tested properly, because a strategy that performs identically across timeframes is a strategy whose edge is not attached to anything structural. It is measuring noise, and noise is scale-invariant.</p>
+
+  <p>Real edges are attached to something — a session, a cycle, a liquidity event, a behavioural pattern with a duration. And anything with a duration has a resolution below which you cannot see it and above which you cannot fit it. That is a ceiling, and every honest system has one.</p>
+
+  <p>Here is ours, and here is how to find your own.</p>
+
+  <h2>What the data shows</h2>
+
+  <p>The AMD cycle engine reads accumulation, manipulation and distribution phases against timestamp-anchored cycle boundaries, then takes entries where a swept level aligns with a confirmation tap. It was tested across timeframes on EURUSD over the same period with no parameter changes.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>AMD engine, backtested by timeframe — EURUSD, in-sample</caption>
+      <thead>
+        <tr><th>Timeframe</th><th>Profit factor</th><th>Win rate</th><th>Grade</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3M</td><td class="pos">2.185</td><td>71%</td><td>Prime</td></tr>
+        <tr><td>5M</td><td class="pos">1.902</td><td>69%</td><td>Prime</td></tr>
+        <tr><td>6M</td><td class="pos">1.998</td><td>72%</td><td>Prime</td></tr>
+        <tr><td>9M</td><td class="pos">1.440</td><td>67%</td><td>Marginal</td></tr>
+        <tr><td>15M+</td><td class="neg">&lt; 1.0</td><td>—</td><td>Degraded</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">In-sample backtested results, commission included. See Paper 08 for the discount that should be applied to any in-sample figure, including these.</p>
+
+  <p>Note what the win rate does, because it is the diagnostic. It barely moves — 71% down to 67% — while the profit factor collapses by a third. The signals are still broadly correct at 9M. They have simply stopped being worth taking. Something is degrading the quality of each individual trade without degrading the direction call.</p>
+
+  <h2>The mechanism: bars per phase</h2>
+
+  <p>The AMD engine resolves phases inside nested cycles, with the shortest resolved phase running six hours. Everything the engine does — identifying accumulation, detecting the sweep that marks manipulation, locating the level that persists into distribution — requires enough price structure <em>inside that phase</em> to detect. Not enough bars, no structure. No structure, no signal worth acting on.</p>
+
+  <p>So count the bars available inside a six-hour phase at each timeframe:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Bars available inside a six-hour phase</caption>
+      <thead>
+        <tr><th>Timeframe</th><th>Bars per phase</th><th>Observed profit factor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>3M</td><td>120</td><td class="pos">2.185</td></tr>
+        <tr><td>5M</td><td>72</td><td class="pos">1.902</td></tr>
+        <tr><td>6M</td><td>60</td><td class="pos">1.998</td></tr>
+        <tr><td>9M</td><td>40</td><td>1.440</td></tr>
+        <tr><td>15M</td><td>24</td><td class="neg">&lt; 1.0</td></tr>
+        <tr><td>30M</td><td>12</td><td class="neg">&lt; 1.0</td></tr>
+        <tr><td>1H</td><td>6</td><td class="neg">&lt; 1.0</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The relationship is immediate. Above roughly sixty bars per phase, the engine grades prime. Between forty and sixty it degrades but survives. Below forty it stops working, and by twenty-four bars there is not enough intra-phase structure for the concept of a phase to mean anything at all.</p>
+
+  <div class="pull">At 15 minutes, an entire six-hour accumulation phase is twenty-four candles. You are not analysing a phase. You are looking at a shape.</div>
+
+  <p>This also explains the win-rate behaviour. Directional bias is a coarse read — it survives on few bars, which is why 67% of 9-minute signals still resolve correctly. But the <em>precision</em> of the entry level, which determines how much of the move you capture and how far your stop sits from price, depends on fine structure. Coarse bars give you a correct direction and a bad price. A correct direction at a bad price is a profit factor of 1.44 on its way to 0.9.</p>
+
+  <h2>The general rule</h2>
+
+  <p>Strip out the specifics and you get something you can apply to any system you build or buy:</p>
+
+  <p class="mono" style="font-size:15px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">Bars per event = event duration ÷ timeframe</p>
+
+  <p>Identify the shortest thing your strategy needs to resolve — a session, a cycle phase, a consolidation, a distribution range. Divide its duration by your bar interval. That number is your resolution budget, and it predicts where your system will fail before you run a single test.</p>
+
+  <ul>
+    <li><strong>Above ~60 bars per event:</strong> the structure is well resolved. This is where a structural strategy should live.</li>
+    <li><strong>30 to 60 bars:</strong> degradation zone. Direction survives, precision does not. Expect falling profit factor with a stable win rate — the exact signature above.</li>
+    <li><strong>Below ~30 bars:</strong> the event is no longer measurable at that resolution. Any apparent edge here is curve fit.</li>
+  </ul>
+
+  <p>The thresholds will shift with the strategy — a system reading a single liquidity sweep needs fewer bars than one reading a three-phase cycle. But the shape of the relationship holds, and the direction of the error is always the same: traders move <em>up</em> the timeframes looking for reliability and quietly destroy the thing that made the system work.</p>
+
+  <h2>Why traders do this to themselves</h2>
+
+  <p>The migration up the timeframes is almost always driven by something other than evidence. Lower timeframes demand attention, generate more trades, and feel stressful. Higher timeframes feel calmer and more professional, and there is a widely repeated folk belief that higher timeframes are inherently "cleaner" or carry more weight.</p>
+
+  <p>For strategies whose edge comes from long-horizon behaviour — trend persistence, macro positioning, carry — that belief is roughly correct. For strategies whose edge comes from intraday structure, it is exactly backwards. You are not moving to a cleaner chart. You are throwing away the data your system reads.</p>
+
+  <p>There is an honest version of the trade-off, and it is worth stating: a 3-minute system requires more screen time or full automation, and it pays a much higher friction bill per unit of return, for the reasons in Paper 01. Those are real costs and they are why a strategy with a low ceiling is a genuinely harder product to run. But they are costs to be managed, not solved by moving to a chart where the edge no longer exists.</p>
+
+  <h2>What we do with the ceiling</h2>
+
+  <p>We publish it. The AMD engine ships with its documented failure mode written into the operator's guide: it degrades at 9M and goes unprofitable at 15M and above, and the 3M results do not translate upward.</p>
+
+  <p>That is a strange thing to advertise. It is also the single most useful line in the documentation, because the alternative is a member deploying it on a 1-hour chart, losing money for two months, and concluding that the system does not work. It does work. It works inside a range, and the range is a property of the market structure it reads, not a limitation we could engineer away with better code.</p>
+
+  <p>Any system you are offered should come with the equivalent statement. If it does not, the correct assumption is not that the system has no ceiling. It is that nobody looked.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — AMD cycle engine by timeframe</div>
+    <div class="verdict">PRIME → DEGRADED</div>
+    <p>Prime at 3M through 6M, where intra-phase structure is well resolved. Marginal at 9M — direction holds, entry precision does not. Degraded at 15M and above, where a six-hour phase contains too few bars to resolve. Deployed on 3M only. Higher-timeframe use is documented as a failure mode, not a configuration option.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

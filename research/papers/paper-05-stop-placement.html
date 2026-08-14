@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 05 — The Stop Is Not a Number | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 05</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 05 / Risk Placement</div>
+  <h1>The Stop Is Not a Number</h1>
+  <p class="standfirst">A twenty-pip stop is a different instrument on a quiet Tuesday than it is during a news release, even though the number on the screen is identical. This paper is about placing risk against structure rather than against a fixed distance, and about the multiplier that decides how much of your edge survives contact with noise.</p>
+  <div class="meta">
+    <span>EURUSD</span><span>Wick-anchored stops</span><span>ATR buffer</span><span>Backtested</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">Three ways to place a stop</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Fixed distance — same pips in every regime</span><span class="val" style="color:var(--red)">Regime-blind</span>
+        <span class="bar-track"><span class="bar-fill neg" style="width:32%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Pure ATR — volatility-aware, structurally arbitrary</span><span class="val">Partial</span>
+        <span class="bar-track"><span class="bar-fill" style="width:62%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Wick + k × ATR — structure, then buffer</span><span class="val">Deployed</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Scalping preset multiplier</span>
+        <span class="val">k = 3.0</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>What a stop is actually for</h2>
+
+  <p>A stop loss has one job: to end the trade when the reason for taking it has been disproved. Everything else — capping loss, sizing risk, sleeping at night — follows from that, and none of it works if the stop sits somewhere the thesis was never tested.</p>
+
+  <p>This is why fixed-distance stops fail as a category. Twenty pips is not a statement about the market. It is a statement about the trader's tolerance, applied identically to a session with 8-pip hourly ranges and a session with 40-pip hourly ranges. In the first, twenty pips is so far away that price will never reach it without the idea being long dead. In the second, it is inside the ordinary breathing of the market and will be taken out by noise before the setup has had a chance to resolve.</p>
+
+  <div class="pull">The same number is simultaneously too wide and too tight, depending on a variable the number does not contain.</div>
+
+  <p>The standard fix is to scale by volatility — set the stop at some multiple of average true range. That solves half of the problem. An ATR-scaled stop is correctly sized for the regime, but it is placed at an arbitrary price: a distance from entry, landing wherever it lands. There is no reason to believe that price has any particular significance, which means being stopped there tells you nothing.</p>
+
+  <h2>Anchor first, then buffer</h2>
+
+  <p>The construction we deploy separates the two jobs. First anchor to structure, then add a volatility buffer.</p>
+
+  <p class="mono" style="font-size:14.5px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">stop = extreme_wick ± (k × ATR)</p>
+
+  <p>The wick is the anchor. For a long entry, the stop sits below the low of the wick that produced the signal — the point at which sellers were last in control and the reversion thesis fails. That price is meaningful. If price trades through it, the setup did not just fail to work, it was wrong about who was in control.</p>
+
+  <p>The ATR term is the buffer, and it exists for a specific and unglamorous reason: liquidity sits at obvious wicks. Placing a stop exactly at the low of a visible wick puts it in the same place as everyone else's, which is precisely where price is most likely to be pushed before reversing. The buffer moves your stop out of the pool.</p>
+
+  <p>Both parts are load-bearing. Anchor without buffer and you get swept out of correct trades by a single tick. Buffer without anchor and you get an arbitrary distance that happens to scale with volatility.</p>
+
+  <h2>What the multiplier actually trades</h2>
+
+  <p>The multiplier <span class="mono">k</span> is the only free parameter here, and it moves three things at once — which is why it cannot be optimised by looking at any one of them.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Directional effect of increasing the ATR multiplier</caption>
+      <thead>
+        <tr><th>Quantity</th><th>As k increases</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Win rate</td><td class="pos">Rises</td><td>Fewer noise stop-outs</td></tr>
+        <tr><td>Average loss</td><td class="neg">Rises</td><td>Each loss is larger</td></tr>
+        <tr><td>Risk-reward</td><td class="neg">Falls</td><td>Same target, wider risk</td></tr>
+        <tr><td>Hold time</td><td>Rises</td><td>Trades survive longer to resolve</td></tr>
+        <tr><td>Position size</td><td class="neg">Falls</td><td>Fixed risk, wider stop</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Directional relationships, not measured magnitudes. The magnitudes are instrument- and timeframe-specific and must be tested per configuration.</p>
+
+  <p>Notice that the win rate and the risk-reward move in opposite directions. This is the reason so many traders spend years adjusting stops without improving results: whichever metric they are watching improves, so every adjustment feels like progress. Tighten the stop and the R:R on the screen looks better. Widen it and the win rate looks better. Neither tells you what happened to expectancy, which is the only quantity that pays.</p>
+
+  <p>There is a fourth effect that almost never gets discussed. A wider stop means smaller position size at constant risk, which means fewer pips of profit per winning trade in cash terms — while commission stays fixed per round turn. Widening a stop therefore quietly raises your friction as a percentage of return. Paper 01 covers the arithmetic; the point here is that stop width and execution cost are coupled, and a stop study that ignores commission will find a different optimum from the one that pays you.</p>
+
+  <h2>Why k = 3.0 on the scalping preset</h2>
+
+  <p>Three is a wide multiplier and it looks wrong on first inspection. It is there because of what the strategy is.</p>
+
+  <p>A volatility fade takes a position <em>against</em> an active move, at a moment when that move is still going. The immediate environment after entry is, by construction, the most hostile part of the trade. Price has just demonstrated the ability to travel, and there is no reason for it to stop within a tick of your entry. A tight stop in that environment is not risk control, it is a near-guarantee of being removed before the thesis has been tested at all.</p>
+
+  <p>So the fade accepts a low risk-reward ratio and pays for it with a high hit rate — which is exactly the profile the 1,398-trade manual test produced. The wide multiplier is what makes the high hit rate possible. Reduce it and the win rate falls faster than the R:R improves, because the trades being removed are the ones that were right but early.</p>
+
+  <p>A trend-continuation entry has the opposite profile and should use a much tighter multiplier: it enters with the move rather than against it, so adverse excursion immediately after entry is genuinely informative. The multiplier is not a global setting. It is a property of the relationship between the entry and the prevailing move.</p>
+
+  <h2>Testing your own placement</h2>
+
+  <p>Three checks, in order of how much they will tell you:</p>
+
+  <ul>
+    <li><strong>Maximum adverse excursion on winners.</strong> Log how far each <em>winning</em> trade went against you before it worked. If a large share of winners drew down more than 70% of your stop distance, your stop is close to the edge and small changes in volatility will start removing profitable trades. If almost no winner ever exceeded 30%, you are risking more than the strategy needs and can tighten to buy back position size.</li>
+    <li><strong>Stop-out clustering.</strong> Plot where price went in the ten bars after each stop-out. If it reversed and reached your original target more than about half the time, you are being swept, not disproved — the anchor or the buffer is wrong.</li>
+    <li><strong>Expectancy across a multiplier sweep.</strong> Run k from 0.5 to 4.0 in steps, with commission included, and plot net expectancy rather than win rate or R:R. Expect a broad, flat peak. A sharp spike at one value is not an optimum, it is a fit.</li>
+  </ul>
+
+  <p>That last warning matters more than the technique. If your expectancy curve across k has a single narrow peak, the correct response is to distrust it and pick a value in the middle of the nearest broad region instead. Parameters that only work at one exact setting do not survive contact with a market that has never seen your backtest.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — stop placement methods</div>
+    <div class="verdict">DEGRADED → PRIME</div>
+    <p>Fixed-distance stops: degraded. Regime-blind, structurally arbitrary, and silently variable in real risk. Pure ATR stops: partial. Correctly sized, wrongly placed. Wick-anchored with an ATR buffer: prime, and deployed across all Quant Prime instruments. The multiplier is exposed as a user parameter rather than fixed, because the correct value depends on whether the entry is with the prevailing move or against it.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

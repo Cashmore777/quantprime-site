@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 07 — What the Filter Removed | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 07</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 07 / Filters</div>
+  <h1>What the Filter Removed</h1>
+  <p class="standfirst">Almost any filter you add will raise your win rate. That is nearly automatic and it is close to meaningless. The question that decides whether a filter helps is one that standard backtest output never answers: what was the expectancy of the trades it deleted?</p>
+  <div class="meta">
+    <span>Trend filters</span><span>EMA flip exit</span><span>Ships disabled</span><span>Method paper</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">The two sets a filter creates</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Retained set — what every backtest reports</span><span class="val">Visible</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Removed set — what almost nobody measures</span><span class="val" style="color:var(--red)">Invisible</span>
+        <span class="bar-track"><span class="bar-fill neg" style="width:16%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Which one determines whether the filter helps</span>
+        <span class="val">Removed</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The illusion of improvement</h2>
+
+  <p>Add a filter to a strategy — trade only above the 200 EMA, only in London hours, only when RSI agrees — and run the backtest again. The win rate goes up. It almost always goes up, because a filter reduces the trade count, and reducing the trade count with any criterion correlated with outcome will improve the ratio of the survivors.</p>
+
+  <p>What frequently does not go up is total profit. And traders reliably choose the filter anyway, because win rate is the number displayed most prominently, is easiest to reason about, and feels like skill.</p>
+
+  <div class="pull">A filter that raises win rate and lowers net profit has not made you more selective. It has made you more expensive.</div>
+
+  <p>The mechanism is simple once stated. Filters do not remove losers. They remove <em>trades</em>, and the removed set contains both losers and winners. Whether the filter helps depends entirely on the ratio between them — on the expectancy of what was deleted, not on the statistics of what remains.</p>
+
+  <h2>The diagnostic</h2>
+
+  <p>Standard backtest output describes the retained set only. To evaluate a filter you have to construct the removed set explicitly and measure it as if it were a strategy in its own right.</p>
+
+  <p class="mono" style="font-size:14.5px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">removed = all_signals − filtered_signals<br>E(removed) = expectancy of that set, net of cost</p>
+
+  <p>Then read the result:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Interpreting the removed set</caption>
+      <thead>
+        <tr><th>E(removed)</th><th>Meaning</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Clearly negative</td><td>Filter removes real losses</td><td class="pos">Keep</td></tr>
+        <tr><td>Near zero</td><td>Filter removes noise and cost</td><td>Keep if it cuts drawdown</td></tr>
+        <tr><td>Clearly positive</td><td>Filter deletes profitable trades</td><td class="neg">Remove filter</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Interpretation table for the method. Note the middle row: a filter that removes a set with roughly zero expectancy is still often worth keeping, because it removes commission and exposure without removing profit.</p>
+
+  <p>A filter that raises win rate while the removed set carries positive expectancy is the specific, common failure this paper exists to name. The trader sees a better-looking report and has quietly deleted part of their edge.</p>
+
+  <h2>The case in our own code</h2>
+
+  <p>The EMA flip exit is a standard construction: close the position when a fast moving average crosses back against the direction of the trade. It reads as prudent risk management — you are out when momentum turns. It ships <strong>disabled by default</strong> in our fade instruments, and the removed-set analysis is why.</p>
+
+  <p>A volatility fade enters against an active move, at a moment of over-extension, expecting reversion. Consider the sequence of a textbook winning fade:</p>
+
+  <ul>
+    <li>Price extends sharply. The fade signal fires and the position is opened against the move.</li>
+    <li>Price continues briefly — the wide ATR-buffered stop from Paper 05 is what allows the trade to survive this.</li>
+    <li>Reversion begins. Price starts travelling toward the target.</li>
+    <li>Only <em>after</em> a meaningful portion of that reversion has completed does the fast EMA finally cross back.</li>
+  </ul>
+
+  <p>A moving average is a lagging construction; that is not a defect, it is what an average is. So the flip arrives mid-reversion — after the trade has become profitable, before it has reached target. The exit fires and closes the position in the middle of the move it was designed to capture.</p>
+
+  <p>The filter is not removing losing trades. It is removing the back half of winning ones. The removed set has strongly positive expectancy, and the effect on the report is precisely the deceptive pattern described above: fewer full losses, a slightly better-looking hit rate, materially less money.</p>
+
+  <p>There is a deeper structural point underneath the specifics. A trend filter applied to a counter-trend strategy is a contradiction in terms. The strategy's entire thesis is that the prevailing move is over-extended and will revert. A trend filter's thesis is that the prevailing move should be respected. Running both means holding two incompatible views and letting whichever fires last determine the trade.</p>
+
+  <h2>Filters that do work</h2>
+
+  <p>This is not an argument against filtering. It is an argument for filtering on the right axis. The filters that survive removed-set analysis in our testing share a property: they are about <em>conditions</em> rather than about direction.</p>
+
+  <ul>
+    <li><strong>Volatility floors.</strong> Below a minimum ATR, the target sits inside the friction band from Paper 01 and the trade cannot pay for itself regardless of direction. The removed set here has reliably negative expectancy, because it consists of trades that were structurally unprofitable at entry.</li>
+    <li><strong>Event exclusions.</strong> Removing scheduled high-impact releases removes trades whose outcome is driven by something the model does not observe. Removed-set expectancy is usually near zero with very high variance — the ideal profile for exclusion.</li>
+    <li><strong>Structural invalidation.</strong> Not "momentum turned" but "the level this trade was based on has been broken". This is a thesis test rather than a directional overlay, and it removes trades that are genuinely wrong rather than trades that are merely slow.</li>
+  </ul>
+
+  <p>The distinction between the last of those and the EMA flip is the whole lesson. Both close a trade early. One closes it because the reason for the trade no longer holds. The other closes it because a lagging indicator produced a reading. Only the first is information.</p>
+
+  <h2>Applying this</h2>
+
+  <p>Before adding any filter to any system, run three checks:</p>
+
+  <ul>
+    <li><strong>Measure the removed set.</strong> If your backtester cannot output the trades a filter deleted, that is a tooling gap worth fixing before adding filters. It is the only way to see what a filter costs.</li>
+    <li><strong>Check the filter against the thesis.</strong> Does it test whether your reason for entering still holds, or does it impose a separate and possibly opposing view? The second is not risk management, it is a second strategy running inside the first.</li>
+    <li><strong>Watch for win rate rising while profit falls.</strong> Treat that pattern as a red flag rather than a mixed result. It is the signature of a filter deleting winners, and it appears constantly in retail strategy development because win rate is the metric everyone optimises by feel.</li>
+  </ul>
+
+  <p>We keep the EMA flip exit in the codebase and expose it as a toggle rather than deleting it, because on trend-continuation configurations — where entry and filter share a thesis — it grades differently. A filter is never good or bad on its own. It is good or bad relative to the strategy it is filtering.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — EMA flip exit on fade configurations</div>
+    <div class="verdict">DEGRADED</div>
+    <p>Removes the back half of winning reversion trades rather than removing losses. Raises apparent win rate while reducing net profit — the characteristic signature of a filter with a positive-expectancy removed set. Ships disabled by default on all fade presets. Retained as a user toggle for trend-continuation use, where entry and filter share a directional thesis.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 08 — What 1.99 Actually Means | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 08</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 08 / Statistical Confidence</div>
+  <h1>What 1.99 Actually Means</h1>
+  <p class="standfirst">Our profit factor is 1.995 over 279 trades. That number is real, it is in-sample, and it is far less precise than three decimal places suggest. This paper puts an honest interval around our own headline figure — and hands you the arithmetic to do the same to anyone else's.</p>
+  <div class="meta">
+    <span>279 trades</span><span>In-sample</span><span>72% win rate</span><span>Confidence analysis</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">The headline figure, unpacked</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Reported profit factor</span><span class="val">1.995</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Sample size</span><span class="val">279 trades</span>
+        <span class="bar-track"><span class="bar-fill" style="width:34%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Honest 95% interval from win-rate uncertainty alone</span>
+        <span class="val" style="font-size:16px">1.55 — 2.64</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Three decimal places is a lie</h2>
+
+  <p>Every backtest report in this industry prints its statistics to three decimal places. It looks like precision. It is formatting.</p>
+
+  <p>A profit factor is an estimate drawn from a sample. Like any estimate, it has an uncertainty attached, and the uncertainty is a function of how many trades produced it. Publishing 1.995 without publishing 279 alongside it is close to meaningless, and publishing it without an interval invites a reader to believe something the data cannot support.</p>
+
+  <p>So here is our own number, treated the way we would treat someone else's.</p>
+
+  <h2>The interval on the win rate</h2>
+
+  <p>Start with the component we can bound cleanly. A win rate is a proportion, and the standard error of a proportion is:</p>
+
+  <p class="mono" style="font-size:15px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">SE = √( p(1−p) / n )</p>
+
+  <p>With <span class="mono">p = 0.72</span> and <span class="mono">n = 279</span>, that gives a standard error of about <strong>2.7 percentage points</strong>. The 95% interval is roughly ±5.3 points:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Win rate, 279 trades — 95% confidence interval</caption>
+      <thead>
+        <tr><th>Quantity</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Observed win rate</td><td>72.0%</td></tr>
+        <tr><td>Standard error</td><td>2.69 pp</td></tr>
+        <tr><td>95% lower bound</td><td class="neg">66.7%</td></tr>
+        <tr><td>95% upper bound</td><td class="pos">77.3%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Now push that through to profit factor. Holding the win-to-loss size ratio fixed at whatever produces 1.995 at a 72% hit rate, the same interval on the win rate maps to:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Implied profit factor across the win-rate interval</caption>
+      <thead>
+        <tr><th>Win rate</th><th>Implied PF</th><th>Reading</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>66.7%</td><td>1.55</td><td>Solid</td></tr>
+        <tr><td>72.0%</td><td class="pos">1.995</td><td>Reported</td></tr>
+        <tr><td>77.3%</td><td>2.64</td><td>Excellent</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Derived by holding the average win-to-loss ratio constant and varying only the hit rate across its confidence interval. The true interval is <em>wider</em> than this, because the win-to-loss ratio is itself estimated from the same 279 trades and carries its own uncertainty. Treat 1.55–2.64 as a floor on the imprecision, not a bound on it.</p>
+
+  <div class="pull">The honest statement is not "profit factor 1.995". It is "somewhere around 1.6 to 2.6, probably, on this data."</div>
+
+  <h2>The in-sample discount</h2>
+
+  <p>Everything above assumes the parameters were fixed before the data was seen. They were not. Ours were selected by testing on this data — timeframe, ATR multiplier, band thresholds, session windows. That is normal and unavoidable in strategy development, and it means the reported figure is biased upward by a second mechanism entirely separate from sampling error.</p>
+
+  <p>The mechanism is multiple comparisons. If you evaluate twenty parameter combinations and report the best one, you have not found the best strategy. You have found the combination that best fits the noise in your sample, and its measured performance includes that fit. The more configurations tested, the larger the inflation — and almost nobody counts how many they tried.</p>
+
+  <p>The formal treatment of this is well established in the quantitative literature, under names like the deflated Sharpe ratio, which explicitly adjusts a reported performance statistic for the number of trials that produced it. The intuition is worth carrying even without the machinery: <strong>a backtest statistic is the maximum of a set of noisy estimates, and the maximum of a noisy set is biased high.</strong></p>
+
+  <p>Practical consequence for reading any published result, ours included:</p>
+
+  <ul>
+    <li><strong>In-sample results are an upper bound.</strong> Not an estimate — a ceiling. Live performance below the backtest is the expected outcome, not evidence of failure.</li>
+    <li><strong>Expect meaningful degradation.</strong> A 30–50% haircut on the edge, in the absence of walk-forward validation, is a reasonable working assumption. A 1.995 in-sample profit factor that lands near 1.4 live has behaved normally.</li>
+    <li><strong>Ask how many configurations were tested.</strong> If the answer is not disclosed, the number is unknowable and the discount should be larger, not smaller.</li>
+  </ul>
+
+  <h2>How many trades do you actually need?</h2>
+
+  <p>Sample size requirements scale with what you are trying to establish, and the difference between the tiers is larger than most traders assume:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Approximate sample requirements by claim</caption>
+      <thead>
+        <tr><th>Claim</th><th>Trades</th><th>What you get</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Direction of edge</td><td>~100</td><td>Is it plausibly positive</td></tr>
+        <tr><td>Useful confidence</td><td>300–500</td><td>Interval narrow enough to act on</td></tr>
+        <tr><td>Tail behaviour</td><td>1,000+</td><td>Worst-case and drawdown character</td></tr>
+        <tr><td>Regime robustness</td><td>Multi-year</td><td>Survives conditions not in sample</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Approximate guidance. Requirements rise as win rate moves toward the extremes and as the payoff distribution becomes more tail-dependent — a strategy whose profits come from rare large winners needs far more trades to characterise than one with a dense outcome distribution.</p>
+
+  <p>At 279 trades, our figure sits in the first tier and just short of the second. It supports the claim that the edge is real and positive. It does not support a precise estimate of its magnitude, and it says almost nothing about tail behaviour — which is precisely why the drawdown figures in Paper 10 deserve more scepticism than the return figures beside them.</p>
+
+  <h2>Why publish this about our own number</h2>
+
+  <p>Because the alternative is worse for everyone involved. A member who deploys on the strength of 1.995 and sees 1.4 concludes they were misled. A member who deployed knowing the honest interval was 1.55–2.64 before in-sample discounting sees 1.4 and recognises it as within expectations.</p>
+
+  <p>The second member stays. The first one doesn't, and they're right not to.</p>
+
+  <p>There is also a straightforward filter available to anyone reading marketing material in this industry. Ask for three numbers: the trade count, the test window, and whether the results are in-sample. Any one of them missing tells you something. All three missing tells you everything.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — reported performance statistics</div>
+    <div class="verdict">FAVORABLE, QUALIFIED</div>
+    <p>The edge is statistically supported at 279 trades — the interval does not approach 1.0 from sampling error alone. The precision implied by three decimal places is not supported. All Quant Prime performance figures are published with trade count and test window attached, and are labelled in-sample where they are in-sample. Live performance below backtest is documented as the expected outcome.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

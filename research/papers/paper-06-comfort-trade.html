@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 06 — The Comfort Trade | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 06</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 06 / Trade Management</div>
+  <h1>The Comfort Trade</h1>
+  <p class="standfirst">Taking partial profit and moving the stop to breakeven is the most widely taught trade management technique in retail trading. It makes equity curves smoother, it makes traders calmer, and in most systems it makes less money. This paper is about telling those three effects apart.</p>
+  <div class="meta">
+    <span>Partial exits</span><span>Breakeven stops</span><span>Expectancy analysis</span><span>Ships enabled</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">The standard management sequence</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">At TP1 — close a quarter of the position</span><span class="val">25%</span>
+        <span class="bar-track"><span class="bar-fill" style="width:25%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">At TP2 — close half of the position</span><span class="val">50%</span>
+        <span class="bar-track"><span class="bar-fill" style="width:50%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Stop moves to entry once TP1 is filled</span><span class="val">Breakeven</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Effect on expectancy</span>
+        <span class="val" style="color:var(--cyan)">Usually negative</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Three different claims</h2>
+
+  <p>When someone says partial exits "improve your trading", they are usually blending three claims that need separating, because two are true and one mostly is not.</p>
+
+  <ul>
+    <li><strong>Variance.</strong> Partials reduce the spread of outcomes. True, and easy to demonstrate — you are converting part of an uncertain outcome into a certain one.</li>
+    <li><strong>Behaviour.</strong> Partials make a system easier to follow. True, and not trivial. A system you actually execute at 90% fidelity beats a better system you abandon in month three.</li>
+    <li><strong>Expectancy.</strong> Partials make more money. Usually false, and the reason is structural rather than empirical.</li>
+  </ul>
+
+  <p>Conflating these is how a psychological tool gets sold as an edge.</p>
+
+  <h2>Why the expectancy claim fails</h2>
+
+  <p>Consider what a partial exit does to the distribution of outcomes. It takes the right tail — the trades that run well past your first target — and truncates part of it. It leaves the left tail exactly where it was, because a trade that goes straight to your stop never reaches TP1 and is unaffected by any of this.</p>
+
+  <p>You have removed upside and kept downside. For that to be profitable, the removed upside must be worth less than what you gain elsewhere, and the only place you gain is the breakeven stop.</p>
+
+  <div class="pull">Partials trade a certain slice of your best trades for an uncertain rescue of your mediocre ones.</div>
+
+  <p>So the whole question reduces to the breakeven stop, and the breakeven stop has a problem that Paper 05 sets up directly. Your original stop was placed at structure plus a volatility buffer — at a price where the trade's thesis is disproved. Your entry price is not that. Your entry price has no structural significance whatsoever; it is simply where you happened to get filled.</p>
+
+  <p>Moving your stop to breakeven therefore takes a carefully placed structural stop and replaces it with an arbitrary one, sitting in the middle of the noise band, at a level price is statistically likely to revisit. That is the exact error the previous paper argues against, performed deliberately, mid-trade.</p>
+
+  <p>The result is a category of outcome that did not exist before: the trade that goes to TP1, pulls back to entry, scratches you out, and then runs to full target without you. Under the original stop, that trade was a winner. Under breakeven management, it is a fractional win — and it is common, because a pullback to entry after an initial push is one of the most ordinary things price does.</p>
+
+  <h2>When partials genuinely pay</h2>
+
+  <p>There are real conditions under which the arithmetic flips, and they are specific:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Where partial exits add versus subtract</caption>
+      <thead>
+        <tr><th>Condition</th><th>Partials</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Expectancy carried by a fat tail</td><td class="neg">Subtract</td></tr>
+        <tr><td>Expectancy carried by a dense middle</td><td class="pos">Add</td></tr>
+        <tr><td>TP1 hit rate very high, TP2 hit rate low</td><td class="pos">Add</td></tr>
+        <tr><td>Target beyond typical excursion</td><td class="pos">Add</td></tr>
+        <tr><td>Trend-following, few large winners</td><td class="neg">Subtract</td></tr>
+        <tr><td>Mean reversion, many small winners</td><td class="pos">Add</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Structural analysis of the payoff shape. The test for any specific system is a direct comparison of net expectancy per trade with management on and off, over the same signal set.</p>
+
+  <p>The pattern is consistent: partials help systems whose profits come from many similar-sized winners and hurt systems whose profits come from a few large ones. A trend-following system that makes its year on three trades is destroyed by partial exits, because partial exits are a machine for capping exactly those three trades. A high-frequency reversion system with a tight distribution loses almost nothing, because there is little tail to cut.</p>
+
+  <p>Our fade instruments sit in the second category, which is why the management sequence ships enabled — the cost is small. But small is not zero, and it is not an edge. It is a fee we pay for smoother equity, knowingly.</p>
+
+  <h2>The behavioural argument, taken seriously</h2>
+
+  <p>Having spent most of this paper arguing that partials cost money, the honest counterweight: for many traders they are still correct, and dismissing that as weakness is bad analysis.</p>
+
+  <p>A system's realised expectancy is not its theoretical expectancy. It is the theoretical expectancy multiplied by the fidelity with which the operator executes it. A manually traded system with a 5% expectancy penalty from partials, executed faithfully for a year, beats an unmanaged system with better theoretical numbers that gets abandoned after a bad week — and the unmanaged version is far more likely to produce that bad week, because it holds full size through every drawdown.</p>
+
+  <p>The correct framing is therefore a cost-benefit rather than a right-answer:</p>
+
+  <ul>
+    <li><strong>Fully automated execution:</strong> the behavioural benefit is zero, because there is no operator to reassure. Run the configuration with the higher measured expectancy, which will usually mean management off.</li>
+    <li><strong>Manual or discretionary execution:</strong> the behavioural benefit is real. Measure the expectancy cost, and if it is small, pay it deliberately.</li>
+    <li><strong>Either way:</strong> know the number. The failure mode is not using partials. It is using them while believing they improve returns, which prevents you from ever making the trade-off consciously.</li>
+  </ul>
+
+  <h2>How to measure it in your own system</h2>
+
+  <p>The comparison must be run on the same signals, not on two separate backtests, or you will be comparing different trade sets and learning nothing:</p>
+
+  <ul>
+    <li>Take one signal set. Simulate each trade twice — once managed, once held to full target with the original structural stop.</li>
+    <li>Compare net expectancy per trade with commission included. Partials add round turns, and each one pays the toll from Paper 01.</li>
+    <li>Compare maximum drawdown as well. If management costs 4% of expectancy and removes 30% of drawdown, that is a trade many operators should take.</li>
+    <li>Count the scratches specifically: trades that hit TP1, returned to breakeven, and subsequently reached full target. That single number is the entire cost of the breakeven stop, and most traders have never counted it.</li>
+  </ul>
+
+  <p>If that scratch count is large, the fix is usually not to abandon breakeven management but to move the stop to a structural level below entry rather than to entry itself — keeping the trade anchored to something meaningful while still reducing exposure. That is a genuinely better construction than either extreme, and it is what we recommend for manual operators.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — partial exits with breakeven stop</div>
+    <div class="verdict">MARGINAL</div>
+    <p>Ships enabled on manually operated presets and is documented as a variance and behaviour tool rather than an expectancy tool. Costs a small amount of expectancy on reversion instruments with a dense outcome distribution; would cost considerably more on a tail-driven system. Automated operators should test with management disabled before deploying. The breakeven stop is the expensive component, not the partial close.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

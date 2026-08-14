@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Archive | Quant Prime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:900px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:16px;
+  line-height:1.6;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:40px 24px 80px}
+
+header{
+  border-bottom:1px solid var(--line);
+  padding-bottom:40px;
+  margin-bottom:48px;
+}
+.bar{
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+  margin-bottom:32px;
+}
+.bar .mark{color:var(--gold);font-weight:700}
+.bar a{color:var(--cyan);text-decoration:none}
+h1{
+  font-size:clamp(2rem,5vw,2.8rem);
+  font-weight:700;color:var(--white);
+  letter-spacing:-0.03em;margin-bottom:16px;
+}
+.intro{font-size:18px;color:var(--body);max-width:640px;line-height:1.7}
+
+/* Section headers */
+.section-head{
+  display:flex;align-items:center;gap:16px;
+  margin:56px 0 24px;
+}
+.section-head h2{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);
+}
+.section-head::after{
+  content:'';flex:1;height:1px;background:var(--line);
+}
+
+/* Paper cards */
+.papers{display:grid;gap:16px}
+.paper{
+  display:grid;grid-template-columns:auto 1fr auto;gap:20px;
+  align-items:center;
+  padding:20px 24px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  transition:border-color .15s;
+  text-decoration:none;
+}
+.paper:hover{border-color:var(--gold)}
+.paper-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;font-weight:600;
+  color:var(--gold);
+  letter-spacing:.08em;
+  min-width:70px;
+}
+.paper-info h3{
+  font-size:17px;font-weight:600;color:var(--white);
+  margin-bottom:4px;
+}
+.paper-info p{
+  font-size:14px;color:var(--dim);line-height:1.5;
+}
+.paper-arrow{
+  font-size:20px;color:var(--dim);
+  transition:color .15s,transform .15s;
+}
+.paper:hover .paper-arrow{color:var(--gold);transform:translateX(4px)}
+
+/* Email archive */
+.email-sections{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media(max-width:640px){.email-sections{grid-template-columns:1fr}}
+
+.email-box{
+  background:var(--panel);
+  border:1px solid var(--line);
+  padding:24px;
+}
+.email-box h3{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:16px;
+}
+.email-list{list-style:none}
+.email-list li{
+  padding:10px 0;
+  border-bottom:1px solid var(--line);
+}
+.email-list li:last-child{border-bottom:none}
+.email-list a{
+  color:var(--body);text-decoration:none;
+  font-size:14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.email-list a:hover{color:var(--white)}
+.email-date{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--dim);
+}
+.email-empty{
+  color:var(--dim);font-size:14px;font-style:italic;
+}
+
+footer{
+  margin-top:64px;padding-top:24px;
+  border-top:1px solid var(--line);
+  font-size:13px;color:var(--dim);
+  text-align:center;
+}
+footer a{color:var(--cyan)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="bar">
+      <span class="mark">Quant Prime</span>
+      <a href="/">← Back to site</a>
+    </div>
+    <h1>Research Archive</h1>
+    <p class="intro">Ten research papers and the complete email archive. Everything we've published, documented the way a fund documents internal research — methods, figures, and the caveats left in.</p>
+  </header>
+
+  <div class="section-head">
+    <h2>📄 Research Papers</h2>
+  </div>
+
+  <div class="papers">
+    <a href="papers/paper-01-friction-threshold.html" class="paper">
+      <span class="paper-num">Paper 01</span>
+      <div class="paper-info">
+        <h3>The Friction Threshold</h3>
+        <p>Execution cost • Why an 81.5% win rate still lost money • The toll that eats your edge</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-02-subsidised-signal.html" class="paper">
+      <span class="paper-num">Paper 02</span>
+      <div class="paper-info">
+        <h3>The Subsidised Signal</h3>
+        <p>Portfolio construction • Why an unprofitable component made the book better</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-03-timeframe-ceiling.html" class="paper">
+      <span class="paper-num">Paper 03</span>
+      <div class="paper-info">
+        <h3>The Timeframe Ceiling</h3>
+        <p>Structural edge • Profit factor 2.185 at 3M, unprofitable at 15M — same code</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-04-midnight-modulus.html" class="paper">
+      <span class="paper-num">Paper 04</span>
+      <div class="paper-info">
+        <h3>Midnight Is Not a Modulus</h3>
+        <p>Implementation • The bug that produces plausible output and wrong trades</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-05-stop-placement.html" class="paper">
+      <span class="paper-num">Paper 05</span>
+      <div class="paper-info">
+        <h3>The Stop Is Not a Number</h3>
+        <p>Risk placement • Anchor first, then buffer — why k = 3.0 on the scalping preset</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-06-comfort-trade.html" class="paper">
+      <span class="paper-num">Paper 06</span>
+      <div class="paper-info">
+        <h3>The Comfort Trade</h3>
+        <p>Trade management • Partials and breakeven — when they help, when they hurt</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-07-filter-removed.html" class="paper">
+      <span class="paper-num">Paper 07</span>
+      <div class="paper-info">
+        <h3>What the Filter Removed</h3>
+        <p>Filters • Why raising win rate often lowers profit</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-08-statistical-confidence.html" class="paper">
+      <span class="paper-num">Paper 08</span>
+      <div class="paper-info">
+        <h3>What 1.99 Actually Means</h3>
+        <p>Statistical confidence • The interval around our own headline figure</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-09-three-windows.html" class="paper">
+      <span class="paper-num">Paper 09</span>
+      <div class="paper-info">
+        <h3>Three Windows</h3>
+        <p>Session structure • Testing time-of-day filters honestly</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+    <a href="papers/paper-10-return-per-pain.html" class="paper">
+      <span class="paper-num">Paper 10</span>
+      <div class="paper-info">
+        <h3>Return Per Unit of Pain</h3>
+        <p>Risk-adjusted return • Why headline return tells you almost nothing</p>
+      </div>
+      <span class="paper-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="section-head">
+    <h2>📬 Email Archive</h2>
+  </div>
+
+  <div class="email-sections">
+    <div class="email-box">
+      <h3>Daily Market Recaps</h3>
+      <ul class="email-list" id="daily-emails">
+        <li><p class="email-empty">Coming soon — daily briefings will appear here</p></li>
+      </ul>
+    </div>
+    <div class="email-box">
+      <h3>Weekly Economy Research</h3>
+      <ul class="email-list" id="weekly-emails">
+        <li><p class="email-empty">Coming soon — weekly research will appear here</p></li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>Quant Prime is not authorised or regulated by the FCA. Nothing here is financial advice.<br>
+    <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="/">quantprime.uk</a></p>
+  </footer>
+</div>
+
+</body>
+</html>

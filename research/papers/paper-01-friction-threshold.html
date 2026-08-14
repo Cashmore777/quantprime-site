@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 01 — The Friction Threshold | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 01</span>
+  </div>
+</header>
+<div class="hero">
+  <div class="paperno">Paper 01 / Execution Cost</div>
+  <h1>The Friction Threshold</h1>
+  <p class="standfirst">We hand-tested 1,398 trades on the 1-minute chart and won 81.5% of them. The strategy still would not have made money. This paper is about the gap between those two facts — and how to calculate, before you risk anything, the point at which cost eats an edge alive.</p>
+  <div class="meta">
+    <span>EURUSD</span><span>1M</span><span>1 Jan – 17 Jul 2026</span><span>1,398 trades</span><span>Manual review</span>
+  </div>
+</div>
+<div class="wrap">
+  <div class="ledger">
+    <div class="ledger-head">Friction ledger — 0.02 lots, per round turn</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Commission, entry</span><span class="val">$0.07</span>
+        <span class="bar-track"><span class="bar-fill" style="width:26%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Commission, exit</span><span class="val">$0.07</span>
+        <span class="bar-track"><span class="bar-fill" style="width:26%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Spread, typical</span><span class="val">≈ $0.20</span>
+        <span class="bar-track"><span class="bar-fill" style="width:48%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Total cost to open and close one position</span>
+        <span class="val">≈ 1.7 pips</span>
+      </div>
+    </div>
+  </div>
+  <h2>The problem in one number</h2>
+  <p>A win rate is a measure of how often you are right. It is not a measure of whether you make money. Every trader knows this in the abstract and almost nobody prices it correctly, because the cost of trading is quoted in dollars while the edge is measured in pips, and the two only meet when you do the conversion yourself.</p>
+  <p>So do the conversion. At 0.02 lots — 2,000 units of EURUSD — one pip is worth <span class="mono">$0.20</span>. Commission is <span class="mono">$0.07</span> per order, which is <span class="mono">$0.14</span> for a round turn, or <strong>0.7 pips</strong>. Add a typical one-pip spread and the true cost of opening and closing a single position sits near <strong>1.7 pips</strong>.</p>
+  <p>That number does not sound like much. It is catastrophic. It is a fixed toll charged on every trade regardless of outcome, and it is subtracted from an edge that, on a 1-minute chart, is often measured in three or four pips gross.</p>
+  <div class="pull">A 4-pip target with a 1.7-pip toll is not a 4-pip trade. It is a 2.3-pip trade wearing a 4-pip label.</div>
+  <h2>What the 1,398-trade test actually showed</h2>
+  <p>The test was manual. Seventeen hours, bar by bar, across six and a half months of 1-minute EURUSD data, logging every signal the volatility-fade logic produced and marking the outcome by hand. That is a deliberately unglamorous way to gather data and it is the reason the result is trustworthy: no vectorised shortcut, no look-ahead, no accidental use of a bar's close to decide an entry that would have been triggered mid-bar.</p>
+  <p>The gross result was excellent. 81.5% of those 1,398 trades resolved in favour of the signal. The logic identified over-extension and the subsequent snap-back with a hit rate most systematic strategies never approach.</p>
+  <p>The net result was not excellent, and the reason is arithmetic rather than opinion. A fade strategy of this type wins small and often. Its structure is inverted: the target is close, the stop is wide, and profitability depends entirely on the win rate staying high enough to cover the occasional wide loss. Insert a fixed 1.7-pip toll into that structure and you are not shaving the edge, you are removing a meaningful share of every single winner while leaving the losers untouched at full size.</p>
+  <p>Put it in expectancy terms. If <span class="mono">W</span> is the average win in pips, <span class="mono">L</span> the average loss, and <span class="mono">p</span> the win rate, then net expectancy per trade is:</p>
+  <p class="mono" style="font-size:15px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">E = (p × W) − ((1 − p) × L) − 1.7</p>
+  <p>The friction term sits outside the brackets. It does not scale with your win rate, it does not care about your stop placement, and it cannot be optimised away by better entries. It is the one term in that equation you cannot improve by being a better trader. You can only avoid it by trading less often, or by demanding more pips when you do.</p>
+  <h2>Where the threshold sits</h2>
+  <p>The table below holds win rate at 81.5% and a stop at three times the target, then varies the target distance. It shows gross expectancy per trade, the fixed toll, and what survives.</p>
+  <div class="tablewrap">
+    <table>
+      <caption>Expectancy per trade, pips — 81.5% win rate, stop at 3× target</caption>
+      <thead>
+        <tr><th>Target</th><th>Stop</th><th>Gross E</th><th>Friction</th><th>Net E</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2.0</td><td>6.0</td><td>0.52</td><td>1.70</td><td class="neg">−1.18</td></tr>
+        <tr><td>3.0</td><td>9.0</td><td>0.78</td><td>1.70</td><td class="neg">−0.92</td></tr>
+        <tr><td>4.0</td><td>12.0</td><td>1.04</td><td>1.70</td><td class="neg">−0.66</td></tr>
+        <tr><td>6.0</td><td>18.0</td><td>1.56</td><td>1.70</td><td class="neg">−0.14</td></tr>
+        <tr><td>7.0</td><td>21.0</td><td>1.82</td><td>1.70</td><td class="pos">+0.12</td></tr>
+        <tr><td>10.0</td><td>30.0</td><td>2.60</td><td>1.70</td><td class="pos">+0.90</td></tr>
+        <tr><td>15.0</td><td>45.0</td><td>3.90</td><td>1.70</td><td class="pos">+2.20</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Illustrative model, not a backtest. Holds the observed 81.5% win rate constant across all target distances — an assumption that flatters the wider targets, since hit rate typically falls as the target moves further from entry. Read it as an upper bound on what wider targets can deliver, not a promise.</p>
+  <p>The crossover sits between six and seven pips. Below it, a strategy that is right four times out of five loses money. Above it, the same logic clears the toll and compounds. Nothing about the entry changed across those rows. Only the distance did.</p>
+  <p>And note the caveat in that footnote, because it is the real lesson. The win rate will <em>not</em> hold at 81.5% when you push the target from three pips to ten. It will fall — fades are fades because price reverts a little, not a lot. Which means the honest version of this table has a peak somewhere in the middle and declines at both ends: too tight and friction eats you, too wide and the edge stops existing. The job is finding that peak, and it is a different peak for every instrument, every session, and every commission structure.</p>
+  <h2>Why this is not an argument against scalping</h2>
+  <p>It would be easy to read this and conclude that low-timeframe trading is a mug's game. That is the wrong conclusion, and it is worth saying plainly because the opposite conclusion sells more courses.</p>
+  <p>The 1,398-trade test proved something valuable: <strong>the edge exists.</strong> An 81.5% hit rate across a sample that large, gathered by hand with no automation to hide errors inside, is not noise. The volatility-fade logic genuinely identifies a repeatable condition in EURUSD price behaviour on the 1-minute chart. That finding survived the test. What did not survive was the assumption that a real edge automatically becomes a real return.</p>
+  <p>Three things follow from that, and all three are structural rather than clever:</p>
+  <ul>
+    <li><strong>Move the target, not the entry.</strong> The signal was never the problem. Taking the same logic to the 3-minute chart and widening the target moved the whole distribution above the toll line without touching the entry criteria.</li>
+    <li><strong>Price your broker before you price your strategy.</strong> The threshold moves with commission and spread. A trader paying double the commission has a threshold near 3.4 pips of cost, which pushes their minimum viable target past twelve. The same strategy is profitable for one trader and unprofitable for another, on identical data.</li>
+    <li><strong>Size does not rescue you.</strong> Raising position size scales the pip value and the commission together. The toll stays roughly constant in pip terms. There is no lot size at which a sub-threshold strategy becomes profitable — a point worth internalising before the next drawdown tempts you to increase risk.</li>
+  </ul>
+  <p>This is also why the whole finding pushed us to build a strategy backtester rather than continue with manual review. Seventeen hours of hand-logging proved the edge and identified the friction problem, but it could not answer the follow-up question — where exactly is the peak — at the resolution required. Manual work is how you establish that something is real. Automated testing is how you find out what it is worth.</p>
+  <h2>How to use this</h2>
+  <p>Before you evaluate any strategy, published or your own, calculate its friction threshold first. It takes two minutes:</p>
+  <ul>
+    <li>Find your pip value at your intended size.</li>
+    <li>Add round-turn commission and typical spread, and convert to pips.</li>
+    <li>Compare that number against the strategy's average winning trade — not its target, its <em>average realised win</em>, which is smaller.</li>
+  </ul>
+  <p>If friction is more than roughly a quarter of the average win, the strategy is fragile before you have made a single decision about it. If it is more than half, the published win rate is telling you nothing useful. This single check disqualifies a large share of the strategies sold to retail traders, and it does so without needing access to their code.</p>
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — 1M volatility fade, sub-5-pip target</div>
+    <div class="verdict">DEGRADED</div>
+    <p>Signal quality is strong and the underlying behaviour is repeatable across a 1,398-trade sample. Net performance is destroyed by execution cost at this target distance. The logic is retained and redeployed at wider targets on higher timeframes, where it grades favourably. The configuration tested here is not deployed.</p>
+  </div>
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 10 — Return Per Unit of Pain | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 10</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 10 / Risk-Adjusted Return</div>
+  <h1>Return Per Unit of Pain</h1>
+  <p class="standfirst">One instrument returned 48.66%. The other returned 6.56%. They are the same quality. This paper shows why the headline return of a strategy tells you almost nothing about how good it is, and why the number that matters is one most traders have never calculated.</p>
+  <div class="meta">
+    <span>Two instruments</span><span>Same test window</span><span>Backtested</span><span>Return / drawdown</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">Two instruments, one ratio</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Instrument A — return 48.66%, max drawdown 11.59%</span><span class="val">4.20</span>
+        <span class="bar-track"><span class="bar-fill" style="width:100%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Instrument B — return 6.56%, max drawdown 1.57%</span><span class="val">4.18</span>
+        <span class="bar-track"><span class="bar-fill" style="width:99.5%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Difference in quality</span>
+        <span class="val">≈ None</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>A seven-fold difference that isn't one</h2>
+
+  <p>Put those two return figures side by side and the conclusion looks obvious. One instrument made seven and a half times more money than the other over the same window. Anyone choosing between them on the basis of the headline number chooses the first, and the second looks barely worth running.</p>
+
+  <p>Now divide each return by the deepest drawdown it inflicted along the way.</p>
+
+  <p class="mono" style="font-size:15px;color:var(--white);padding:16px;border:1px solid var(--line);background:var(--panel)">A: 48.66 ÷ 11.59 = 4.20<br>B: &nbsp;6.56 ÷ &nbsp;1.57 = 4.18</p>
+
+  <p>Two decimal places apart. Over the same period, on the same instrument class, two systems with wildly different headline figures delivered essentially <strong>identical return per unit of risk taken</strong>.</p>
+
+  <div class="pull">The difference between them was never quality. It was volume — how hard each was being run.</div>
+
+  <h2>Why headline return is a choice, not a result</h2>
+
+  <p>Return is a function of two things: the quality of the edge and the intensity with which it is exploited. Position size, trade frequency, target width, leverage — all of these scale return, and all of them scale drawdown at the same time and in roughly the same proportion.</p>
+
+  <p>Which means headline return is largely a dial, not a discovery. Take instrument B and run it at roughly seven times the risk and you would expect to arrive somewhere near instrument A's return, and near instrument A's drawdown. Nothing about the underlying edge changed. Only the volume knob moved.</p>
+
+  <p>This is why return-only comparisons are close to worthless, and why the marketing of trading products relies on them so heavily. Any strategy can be made to display an impressive return by turning up the risk. The number is trivially manufacturable, and it is the first thing every sales page shows.</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>What each metric actually tells you</caption>
+      <thead>
+        <tr><th>Metric</th><th>Manufacturable?</th><th>Tells you</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Total return</td><td class="neg">Trivially</td><td>Risk setting</td></tr>
+        <tr><td>Win rate</td><td class="neg">Trivially</td><td>Target/stop ratio</td></tr>
+        <tr><td>Profit factor</td><td>Partially</td><td>Edge quality</td></tr>
+        <tr><td>Return / max drawdown</td><td class="pos">Hard</td><td>Edge quality per unit risk</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Win rate is trivially manufacturable in the opposite direction: widen the stop and narrow the target and a 90% win rate is available to anyone, at the price of an expectancy that may well be negative. Paper 01 covers what happens next.</p>
+
+  <h2>The asymmetry that makes drawdown the real constraint</h2>
+
+  <p>If return per unit of drawdown is equal, choosing between the two instruments comes down to which drawdown you can actually survive — and drawdown has a mathematical property that makes this less symmetric than it looks.</p>
+
+  <p>Recovering from a loss requires a larger gain than the loss itself, and the gap widens non-linearly:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Gain required to recover a given drawdown</caption>
+      <thead>
+        <tr><th>Drawdown</th><th>Gain to recover</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1.57%</td><td>1.60%</td></tr>
+        <tr><td>11.59%</td><td>13.11%</td></tr>
+        <tr><td>25%</td><td class="neg">33.3%</td></tr>
+        <tr><td>50%</td><td class="neg">100%</td></tr>
+        <tr><td>75%</td><td class="neg">300%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>At the top of that table the penalty is negligible. Instrument B's 1.57% drawdown needs 1.60% to recover — three basis points of friction. Instrument A's 11.59% needs 13.11%, a real but manageable gap. Push the same edge to a 50% drawdown by turning the risk dial further and recovery requires doubling the account, which is a fundamentally different proposition on identical underlying quality.</p>
+
+  <p>So the risk dial is not linear in consequence even when it is linear in ratio. Return per unit of drawdown stays constant as you scale up. Survivability does not.</p>
+
+  <h2>The constraint nobody measures</h2>
+
+  <p>There is a second constraint, and it is the one that ends most trading careers rather than the arithmetic.</p>
+
+  <p>A backtest experiences an 11.59% drawdown as a dip in a chart, visible in full context, with the recovery already drawn to the right of it. An operator experiences it as several weeks or months of losing money with no information about whether it ends. Those are not the same event, and the second one is where systems get abandoned — typically near the bottom, which converts a temporary drawdown into a permanent loss.</p>
+
+  <p>This is why the honest comparison between two equal-ratio instruments is not "which returns more" but a question about the operator:</p>
+
+  <ul>
+    <li><strong>What drawdown have you actually sat through before</strong> without intervening, changing settings, or turning the system off? Not what you believe you could tolerate — what you have demonstrably tolerated. Most people discover their real number is roughly half their estimated one.</li>
+    <li><strong>Is the capital genuinely long-term?</strong> Money that might be needed in six months cannot ride out a drawdown that takes nine to recover, regardless of the ratio.</li>
+    <li><strong>Are you automated or manual?</strong> An automated system does not lose faith. The behavioural constraint applies to the operator, and if the operator cannot intervene, the constraint is weaker.</li>
+  </ul>
+
+  <p>Answer those first, then pick the instrument whose drawdown profile fits the answer. Choosing the higher-return instrument and hoping to tolerate its drawdown is the standard sequence and it is backwards.</p>
+
+  <h2>The caveat on our own numbers</h2>
+
+  <p>Both figures in this paper come from backtests, and drawdown is the statistic that degrades most severely out of sample. Paper 08 sets out why: characterising tail behaviour needs far more trades than establishing that an edge exists, and neither instrument has been tested at that depth.</p>
+
+  <p>The practical implication is uncomfortable and worth stating plainly. Your realised maximum drawdown will very likely exceed the backtested figure, because the backtest sampled a finite set of conditions and the future will supply conditions it did not contain. A reasonable working assumption is to plan for something meaningfully worse than the published number — and to select your instrument on that inflated figure rather than the one in the report.</p>
+
+  <p>Which sharpens the conclusion rather than softening it. If two instruments deliver identical return per unit of pain, and the pain figure is the least reliable number in the report, the correct default is the one that runs cooler. You can always add leverage to a system you understand. You cannot retroactively survive a drawdown that removed you from the market.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — instrument selection by risk-adjusted return</div>
+    <div class="verdict">EQUIVALENT</div>
+    <p>Both instruments deliver approximately 4.2 units of return per unit of maximum drawdown over the tested window. Neither is superior on edge quality; they differ in operating intensity. Selection should be driven by the operator's demonstrated drawdown tolerance, capital horizon, and whether execution is automated, not by headline return. Drawdown figures are backtested and should be treated as optimistic.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>

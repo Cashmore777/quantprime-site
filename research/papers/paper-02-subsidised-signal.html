@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 02 — The Subsidised Signal | Quant Prime Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a0b0d;
+  --panel:#111317;
+  --line:#22262d;
+  --body:#c3c8d1;
+  --dim:#7c848f;
+  --white:#f2f4f7;
+  --gold:#c9a84c;
+  --cyan:#00abff;
+  --red:#f23645;
+  --max:720px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--body);
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:17px;
+  line-height:1.68;
+  letter-spacing:-0.003em;
+}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px 90px}
+
+/* ---------- masthead ---------- */
+header{border-bottom:1px solid var(--line);margin-bottom:44px}
+.bar{
+  max-width:var(--max);margin:0 auto;padding:18px 22px;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.bar .mark{color:var(--gold);font-weight:700}
+
+.hero{max-width:var(--max);margin:0 auto;padding:52px 22px 40px}
+.paperno{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--gold);text-transform:uppercase;margin-bottom:20px;
+}
+h1{
+  font-family:'Inter',sans-serif;font-weight:700;
+  font-size:clamp(2.1rem,7.4vw,3.35rem);line-height:1.04;
+  letter-spacing:-0.035em;color:var(--white);margin:0 0 20px;
+}
+.standfirst{font-size:19px;line-height:1.55;color:var(--body);margin:0 0 34px;max-width:36em}
+.meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);
+  letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:6px 20px;
+}
+
+/* ---------- signature: the friction ledger ---------- */
+.ledger{
+  border:1px solid var(--line);background:var(--panel);
+  margin:0 0 44px;overflow:hidden;
+}
+.ledger-head{
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--dim);
+}
+.rows{padding:6px 0}
+.row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;
+  gap:14px;padding:11px 18px;
+}
+.row .lab{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);letter-spacing:.04em}
+.row .val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;color:var(--white)}
+.row.sum{border-top:1px solid var(--line);margin-top:6px;padding-top:16px}
+.row.sum .lab{color:var(--body)}
+.row.sum .val{color:var(--gold);font-weight:700;font-size:19px}
+.bar-track{grid-column:1/-1;height:3px;background:#1a1d23;margin-top:4px}
+.bar-fill{height:3px;background:var(--gold)}
+.bar-fill.neg{background:var(--red)}
+
+/* ---------- prose ---------- */
+h2{
+  font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  margin:52px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+}
+h3{font-size:19px;font-weight:600;color:var(--white);letter-spacing:-0.01em;margin:32px 0 10px}
+p{margin:0 0 19px}
+strong{color:var(--white);font-weight:600}
+em{color:var(--white);font-style:italic}
+ul{margin:0 0 19px;padding-left:20px}
+li{margin-bottom:9px}
+li::marker{color:var(--gold)}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.92em;color:var(--cyan)}
+
+.pull{
+  border-left:2px solid var(--gold);padding:2px 0 2px 20px;margin:32px 0;
+  font-size:21px;line-height:1.42;color:var(--white);font-weight:500;letter-spacing:-0.015em;
+}
+
+/* ---------- data table ---------- */
+.tablewrap{overflow-x:auto;margin:0 0 12px;border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:460px;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+caption{
+  caption-side:top;text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);
+  font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:var(--panel);
+}
+th{
+  text-align:right;padding:11px 16px;color:var(--dim);font-weight:500;
+  border-bottom:1px solid var(--line);white-space:nowrap;background:var(--panel);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+}
+th:first-child,td:first-child{text-align:left}
+td{padding:11px 16px;text-align:right;border-bottom:1px solid #191c21;color:var(--body)}
+tr:last-child td{border-bottom:none}
+td.pos{color:var(--gold)}
+td.neg{color:var(--red)}
+.note{font-size:13px;color:var(--dim);line-height:1.5;margin:0 0 26px}
+
+/* ---------- grade ---------- */
+.grade{border:1px solid var(--gold);background:rgba(201,168,76,.05);padding:24px;margin:44px 0}
+.grade .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);margin-bottom:12px;
+}
+.grade .verdict{
+  font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:.02em;margin-bottom:14px;
+}
+.grade p{margin:0;font-size:16px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:56px;padding-top:26px}
+.disclaimer{font-size:12.5px;line-height:1.62;color:var(--dim)}
+.disclaimer strong{color:var(--body)}
+.sig{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--gold);margin-top:22px;
+}
+a{color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,171,255,.35)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .standfirst{font-size:17.5px}
+  .pull{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <span class="mark">Quant Prime</span>
+    <span>Research — Paper 02</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="paperno">Paper 02 / Portfolio Construction</div>
+  <h1>The Subsidised Signal</h1>
+  <p class="standfirst">One of our volatility bands loses money on its own. We kept it, and the book earns more with it than without it. This paper is about why the profitability of a single signal is the wrong question, and what happens to traders who spend their lives answering it.</p>
+  <div class="meta">
+    <span>EURUSD</span><span>Volatility band system</span><span>Bands 6, 7, 8</span><span>Backtested</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="ledger">
+    <div class="ledger-head">Band 8, in isolation vs in the book</div>
+    <div class="rows">
+      <div class="row">
+        <span class="lab">Traded alone</span><span class="val" style="color:var(--red)">Unprofitable</span>
+        <span class="bar-track"><span class="bar-fill neg" style="width:34%"></span></span>
+      </div>
+      <div class="row">
+        <span class="lab">Traded alongside bands 6 and 7</span><span class="val">Accretive</span>
+        <span class="bar-track"><span class="bar-fill" style="width:78%"></span></span>
+      </div>
+      <div class="row sum">
+        <span class="lab">Decision</span>
+        <span class="val">Retained</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>The instinct that costs money</h2>
+
+  <p>Open any strategy optimiser, sort the components by profit factor, and delete the one at the bottom. It feels like housekeeping. Every retail education product teaches some version of it: cut what doesn't work, keep what does, and your equity curve improves.</p>
+
+  <p>It is one of the most reliable ways to make a working system stop working.</p>
+
+  <p>The volatility band framework grades price extension into eight bands. Bands 1 through 5 cover ordinary conditions. Bands 6, 7 and 8 mark progressively rarer extension — band 8 being the outer edge, the reading that appears when something genuinely unusual is happening to price. Tested in isolation, band 8 does not make money. Its win rate is the lowest of the three, it fires infrequently enough that any given month can be a blank, and on a standalone equity curve it looks exactly like the component you are supposed to delete.</p>
+
+  <div class="pull">Removed it, and the book got worse. Not slightly worse — worse in a way that took a while to explain.</div>
+
+  <h2>Why the passenger pays its fare</h2>
+
+  <p>The explanation is in the shape of the payoff, not the frequency of the wins.</p>
+
+  <p>Bands 6 and 7 produce the bulk of the trade count. Their wins are ordinary in size and arrive at a steady rate, and the book's day-to-day equity curve is essentially their curve. They are the engine. Band 8 is not an engine. Band 8 fires when extension has gone far enough that the reversion, when it comes, travels several times the distance a band 6 reversion travels. Its winners are roughly <strong>five times</strong> the size of a standard band win.</p>
+
+  <p>That changes the arithmetic completely. A component with a poor hit rate and an occasional five-multiple winner has an expectancy that is dominated by its tail. Judged over a short sample, or judged by win rate, it looks broken. Judged over the full distribution, its rare wins are large enough to pay for its own losses <em>and</em> to absorb a meaningful portion of the losses generated by bands 6 and 7 during the same conditions.</p>
+
+  <p>And that last clause is the important one. Band 8 does not fire at random times. It fires precisely when the market is in the state that hurts bands 6 and 7 the most — deep, sustained extension, the environment where an ordinary fade gets run over. The losing periods of the engine and the winning periods of the passenger overlap. That is not a coincidence, it is the same market condition being read at two different thresholds.</p>
+
+  <p>Which means band 8 is not really a strategy at all. It is a hedge that happens to be expressed as a signal.</p>
+
+  <h2>Correlation is the hidden variable</h2>
+
+  <p>The reason this is invisible to component-level testing is that a standalone backtest strips out the only property that matters: <em>when</em> the component wins relative to everything else you are running.</p>
+
+  <p>Two components can have identical standalone statistics and radically different portfolio value. Consider two hypothetical additions to a book, both with slightly negative standalone expectancy:</p>
+
+  <div class="tablewrap">
+    <table>
+      <caption>Illustrative — identical standalone stats, opposite portfolio effect</caption>
+      <thead>
+        <tr><th>Component</th><th>Standalone E</th><th>Wins when book wins</th><th>Effect on book</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Signal A</td><td class="neg">−0.05</td><td>Usually</td><td class="neg">Drag</td></tr>
+        <tr><td>Signal B</td><td class="neg">−0.05</td><td>Rarely</td><td class="pos">Accretive</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note">Schematic, for illustration of the mechanism. Signal A stacks risk on top of existing exposure and adds cost without adding diversification. Signal B fires in the conditions the rest of the book struggles with, and pays for its own negative expectancy in reduced drawdown.</p>
+
+  <p>Signal A should be deleted. Signal B should be kept and possibly weighted up. A component-level report cannot tell them apart, because the number that separates them does not exist at the component level. It only exists in relation to the rest of the book.</p>
+
+  <p>This is not a novel idea in institutional portfolio construction — it is roughly the entire point of it. What is striking is how completely it is absent from retail systematic trading, where the standard workflow is to test each setup separately, rank by profit factor, and trade the top of the list. That workflow systematically selects for components that all win at the same time, which is the same thing as saying it systematically selects for concentrated drawdowns.</p>
+
+  <h2>The optimiser trap</h2>
+
+  <p>There is a second-order version of this problem that is worth naming, because it eats more accounts than the first.</p>
+
+  <p>When you prune the worst-performing component from a system and the remaining curve looks better, you have not necessarily improved the system. You have often just <strong>fitted it harder to the sample</strong>. The component you removed was the one whose contribution depended on conditions that were rare in your test window. Remove it and your backtest improves, because your backtest is mostly made of the conditions that were common.</p>
+
+  <p>Then the rare conditions arrive in live trading — they always do — and the component that would have paid for them is gone.</p>
+
+  <p>The tell is straightforward: if removing a component improves your backtest but increases your maximum drawdown in the periods where the component used to fire, you have not pruned a loser. You have sold your insurance to improve your reported returns.</p>
+
+  <h2>How to test a component properly</h2>
+
+  <p>The unit of analysis is the book, not the signal. Practically, this means three changes to how you evaluate anything you are thinking of adding or removing:</p>
+
+  <ul>
+    <li><strong>Test in place, not in isolation.</strong> Run the full system with the component and without it, on the same data, and compare the two <em>portfolio</em> curves. The component's own P&L is a diagnostic, not a verdict.</li>
+    <li><strong>Compare drawdown, not just return.</strong> A component that reduces maximum drawdown by more than it costs in return has earned its place, even with negative standalone expectancy. Return per unit of drawdown is the comparison that matters, and it is the subject of Paper 10.</li>
+    <li><strong>Look at when it wins.</strong> Overlay the component's winning trades on the book's equity curve. If its wins cluster in the book's flat and losing stretches, you are holding something valuable. If they cluster on the good days, you are paying commission for redundancy.</li>
+  </ul>
+
+  <p>Band 8 fails the first test on its own and passes all three in place. That is the whole story, and it is why it ships enabled.</p>
+
+  <p>It is also why we publish band-level statistics rather than hiding them. A member who checks band 8 in isolation will find a component that loses money, and we would rather they find that here, with the explanation attached, than discover it themselves and conclude the system is broken. The uncomfortable number is usually where the actual understanding lives.</p>
+
+  <div class="grade">
+    <div class="tag">Quant Prime assessment — volatility band 8</div>
+    <div class="verdict">DEGRADED / FAVORABLE</div>
+    <p>Standalone: degraded. Negative expectancy, low hit rate, long dry periods. Not deployable alone and not offered as a standalone configuration. In portfolio with bands 6 and 7: favorable. Its outsized winners are correlated with the conditions that damage the rest of the book, and the combined configuration outperforms bands 6 and 7 alone on both return and drawdown. Retained on that basis, not on its own merits.</p>
+  </div>
+
+  <footer>
+    <p class="disclaimer"><strong>Risk disclaimer.</strong> All figures in this paper are drawn from backtested and manually reviewed historical data. Backtested results do not represent actual trading and carry inherent limitations, including the benefit of hindsight. Past performance is not a reliable indicator of future results. Trading leveraged instruments carries a high risk of loss and may not be suitable for all investors. Nothing in this paper is financial advice or a recommendation to trade. Quant Prime is not authorised or regulated by the Financial Conduct Authority. You are responsible for your own decisions.</p>
+    <div class="sig">Quant Prime Research — quantprime.uk</div>
+  </footer>
+
+</div>
+</body>
+</html>
