@@ -266,5 +266,56 @@ footer a{color:var(--cyan)}
   </footer>
 </div>
 
+<script>
+// Load daily email archive
+async function loadDailyEmails() {
+  try {
+    const response = await fetch('/research/emails/daily/index.json');
+    if (!response.ok) return;
+    const emails = await response.json();
+    
+    const container = document.getElementById('daily-emails');
+    if (emails.length === 0) return;
+    
+    container.innerHTML = emails.slice(0, 30).map(email => `
+      <li>
+        <a href="emails/daily/${email.filename}">
+          <span>${email.date}</span>
+          <span class="email-date">${email.iso_date || ''}</span>
+        </a>
+      </li>
+    `).join('');
+  } catch (e) {
+    console.log('No daily emails yet');
+  }
+}
+
+// Load weekly email archive
+async function loadWeeklyEmails() {
+  try {
+    const response = await fetch('/research/emails/weekly/index.json');
+    if (!response.ok) return;
+    const emails = await response.json();
+    
+    const container = document.getElementById('weekly-emails');
+    if (emails.length === 0) return;
+    
+    container.innerHTML = emails.slice(0, 30).map(email => `
+      <li>
+        <a href="emails/weekly/${email.filename}">
+          <span>${email.title || email.date}</span>
+          <span class="email-date">${email.iso_date || ''}</span>
+        </a>
+      </li>
+    `).join('');
+  } catch (e) {
+    console.log('No weekly emails yet');
+  }
+}
+
+loadDailyEmails();
+loadWeeklyEmails();
+</script>
+
 </body>
 </html>

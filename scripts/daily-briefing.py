@@ -676,7 +676,8 @@ def send_via_brevo(html, subject, recipients):
         return False
 
 def save_to_archive(html, date_str):
-    """Save email to dashboard archive + update index"""
+    """Save email to dashboard archive + public research archive + update index"""
+    # === Dashboard archive (internal) ===
     archive_dir = Path(__file__).parent.parent / 'dashboard' / 'data' / 'briefings'
     archive_dir.mkdir(parents=True, exist_ok=True)
     
@@ -718,7 +719,41 @@ def save_to_archive(html, date_str):
     with open(latest_path, 'w') as f:
         f.write(html)
     
+    # === Public research archive ===
+    public_archive_dir = Path(__file__).parent.parent / 'research' / 'emails' / 'daily'
+    public_archive_dir.mkdir(parents=True, exist_ok=True)
+    
+    public_filename = f"{datetime.now().strftime('%Y-%m-%d')}-briefing.html"
+    public_filepath = public_archive_dir / public_filename
+    
+    with open(public_filepath, 'w') as f:
+        f.write(html)
+    
+    # Update public index.json
+    public_index_path = public_archive_dir / 'index.json'
+    public_index = []
+    if public_index_path.exists():
+        try:
+            with open(public_index_path) as f:
+                public_index = json.load(f)
+        except:
+            public_index = []
+    
+    public_entry = {
+        'date': date_str,
+        'filename': public_filename,
+        'iso_date': datetime.now().strftime('%Y-%m-%d')
+    }
+    
+    public_index = [i for i in public_index if i.get('filename') != public_filename]
+    public_index.insert(0, public_entry)
+    public_index = public_index[:90]
+    
+    with open(public_index_path, 'w') as f:
+        json.dump(public_index, f, indent=2)
+    
     print(f"✓ Saved to archive: {filepath}")
+    print(f"✓ Saved to public archive: {public_filepath}")
     return filepath
 
 
