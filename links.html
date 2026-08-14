@@ -73,42 +73,42 @@
             color: var(--text-secondary);
         }
 
-        /* Platform Story */
+        /* Platform Story - Compact single line */
         .platform-story {
             width: 100%;
             text-align: center;
-            margin-bottom: 24px;
-            padding: 20px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: 10px;
             box-shadow: var(--shadow-sm);
         }
 
         .platform-label {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.12em;
             color: var(--gold);
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .platform-tiers {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
+            gap: 4px;
+            white-space: nowrap;
         }
 
         .platform-tiers .tier {
-            padding: 4px 10px;
+            padding: 3px 8px;
             background: var(--surface-dim);
-            border-radius: 6px;
+            border-radius: 4px;
             font-weight: 500;
         }
 
@@ -118,14 +118,13 @@
         }
 
         .platform-tiers .arrow {
-            color: var(--text-muted);
-            font-size: 10px;
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .platform-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 10px;
+            display: none;
         }
 
         /* Links */
@@ -218,6 +217,7 @@
             text-align: center;
             position: relative;
             box-shadow: var(--shadow-md), 0 0 0 4px var(--gold-bg);
+            margin-bottom: 16px;
         }
 
         .research-badge {
@@ -459,18 +459,18 @@
             transform: translateX(2px);
         }
 
-        /* Discord button - Dark/Gold */
+        /* Discord button - Charcoal/Gold */
         .link.discord {
-            background: var(--obsidian);
-            border: 1px solid #333;
+            background: #2a2a2a;
+            border: 1px solid #444;
             color: #fff;
             padding: 16px 20px;
         }
 
         .link.discord:hover {
-            background: #1a1a1a;
+            background: #333;
             border-color: var(--gold);
-            box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 24px rgba(201,168,76,0.15);
         }
 
         .link.discord svg {
@@ -478,8 +478,8 @@
         }
 
         .link.discord .link-badge {
-            background: rgba(201,168,76,0.2);
-            color: var(--gold);
+            background: var(--gold);
+            color: #fff;
         }
 
         /* Footer */
@@ -696,21 +696,7 @@
         <!-- Primary CTAs -->
         <div class="links">
             
-            <!-- 1. Free Guide -->
-            <a href="/free-guide" class="link primary-guide" data-source="free_guide">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <path d="M14 2v6h6"/>
-                    <path d="M12 18v-6"/>
-                    <path d="M9 15l3 3 3-3"/>
-                </svg>
-                <div class="link-content">
-                    <span class="link-text">Get The Free Guide</span>
-                    <span class="link-badge green">Free Download</span>
-                </div>
-            </a>
-
-            <!-- 2. Research Entry Point -->
+            <!-- 1. Research Entry Point (Primary) -->
             <div class="research-card">
                 <div class="research-badge">🎯 Start Here</div>
                 <h3 class="research-title">Research</h3>
@@ -740,6 +726,20 @@
                     30-day free trial · 14-day money-back guarantee
                 </div>
             </div>
+
+            <!-- 2. Free Guide -->
+            <a href="/free-guide" class="link primary-guide" data-source="free_guide">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <path d="M14 2v6h6"/>
+                    <path d="M12 18v-6"/>
+                    <path d="M9 15l3 3 3-3"/>
+                </svg>
+                <div class="link-content">
+                    <span class="link-text">Get The Free Guide</span>
+                    <span class="link-badge green">Free Download</span>
+                </div>
+            </a>
 
             <!-- 3. Tier Progression -->
             <div class="tier-progression">
