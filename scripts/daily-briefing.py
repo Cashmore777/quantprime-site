@@ -415,29 +415,29 @@ def generate_html(data, date_str, headlines=None):
         change_color = COLORS['bullish'] if d['change_pct'] >= 0 else COLORS['bearish']
         
         cards_html += f'''
-        <div style="background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%); border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); position: relative; overflow: hidden;">
+        <div style="background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%); border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); position: relative; overflow: hidden; overflow-x: hidden;">
             <!-- Premium accent line -->
             <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, {regime_color}, {regime_color}88);"></div>
             
             <!-- Header: Pair + Regime Badge -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-top: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-top: 4px; overflow: hidden;">
                 <div style="font-size: 18px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.01em;">{d['name']}</div>
-                <span style="padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; background: linear-gradient(135deg, {regime_color}25, {regime_color}15); color: {regime_color}; border: 1px solid {regime_color}30;">{d['regime']}</span>
+                <span style="padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.03em; background: linear-gradient(135deg, {regime_color}25, {regime_color}15); color: {regime_color}; border: 1px solid {regime_color}30; flex-shrink: 0;">{d['regime']}</span>
             </div>
             
             <!-- Daily Bias Label -->
-            <div style="margin-bottom: 14px; padding: 8px 12px; background: linear-gradient(135deg, {bias_color}10, {bias_color}05); border-radius: 8px; border: 1px solid {bias_color}20;">
+            <div style="margin-bottom: 14px; padding: 8px 12px; background: linear-gradient(135deg, {bias_color}10, {bias_color}05); border-radius: 8px; border: 1px solid {bias_color}20; overflow: hidden;">
                 <span style="font-size: 10px; color: #888; font-weight: 600; letter-spacing: 0.05em;">DAILY BIAS</span>
                 <span style="font-size: 13px; font-weight: 700; color: {bias_color}; margin-left: 8px;">{bias_arrow} {bias_text}</span>
             </div>
             
             <!-- Current Price Row -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px;">
-                <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 14px; overflow: hidden;">
+                <div style="min-width: 0;">
                     <div style="font-size: 9px; color: #999; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 4px;">CURRENT</div>
                     <span style="font-family: 'SF Mono', Monaco, monospace; font-size: 22px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.02em;">{price_fmt}</span>
                 </div>
-                <div style="text-align: right;">
+                <div style="text-align: right; flex-shrink: 0;">
                     <div style="font-size: 9px; color: #999; letter-spacing: 0.08em; font-weight: 600; margin-bottom: 4px;">TODAY</div>
                     <span style="font-size: 18px; font-weight: 700; color: {change_color};">{change_sign}{d['change_pct']:.2f}%</span>
                 </div>
@@ -470,13 +470,17 @@ def generate_html(data, date_str, headlines=None):
         mover_color = COLORS['bullish'] if top_mover['change_pct'] >= 0 else COLORS['bearish']
         mover_name = top_mover['name']
         mover_pct = f"{mover_sign}{top_mover['change_pct']:.2f}%"
-        mover_html = f'''<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #fafafa; border-radius: 8px; margin-bottom: 14px;">
-                <div>
-                    <div style="font-size: 10px; color: #999;">BIGGEST MOVER</div>
-                    <div style="font-size: 14px; font-weight: 600; color: #1a1a1a;">{mover_name}</div>
-                </div>
-                <div style="font-size: 18px; font-weight: 700; color: {mover_color};">{mover_pct}</div>
-            </div>'''
+        mover_html = f'''<table style="width: 100%; background: #fafafa; border-radius: 8px; margin-bottom: 14px; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 10px;">
+                        <div style="font-size: 10px; color: #999;">BIGGEST MOVER</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #1a1a1a;">{mover_name}</div>
+                    </td>
+                    <td style="padding: 10px; text-align: right;">
+                        <div style="font-size: 18px; font-weight: 700; color: {mover_color};">{mover_pct}</div>
+                    </td>
+                </tr>
+            </table>'''
     
     # Headlines HTML
     headlines_items = ""
@@ -529,34 +533,34 @@ def generate_html(data, date_str, headlines=None):
             <div style="font-size: 9px; font-weight: 800; letter-spacing: 0.15em; color: #c9a84c; margin-bottom: 14px; text-transform: uppercase;">Today's Snapshot</div>
             
             <!-- Bias Summary -->
-            <div style="display: flex; justify-content: space-between; margin-bottom: 14px;">
-                <div style="flex: 1;">
-                    <div style="font-size: 11px; color: {COLORS['text3']};">Market Bias</div>
-                    <div style="font-size: 16px; font-weight: 600; color: {COLORS['text1']};">
-                        <span style="color: {COLORS['bullish']};">{bullish_count} Bullish</span> · <span style="color: {COLORS['bearish']};">{bearish_count} Bearish</span>
-                    </div>
+            <div style="margin-bottom: 14px;">
+                <div style="font-size: 11px; color: {COLORS['text3']};">Market Bias</div>
+                <div style="font-size: 16px; font-weight: 600; color: {COLORS['text1']};">
+                    <span style="color: {COLORS['bullish']};">{bullish_count} Bullish</span> · <span style="color: {COLORS['bearish']};">{bearish_count} Bearish</span>
                 </div>
             </div>
             
-            <!-- Key Stats Grid - Dark Mode Safe -->
-            <div style="display: flex; gap: 8px; margin-bottom: 14px;">
-                <div style="flex: 1; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px; font-weight: 700; color: {COLORS['prime']} !important;">{regime_counts.get('Prime', 0)}</div>
-                    <div style="font-size: 9px; color: #666666 !important;">Prime</div>
-                </div>
-                <div style="flex: 1; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px; font-weight: 700; color: {COLORS['good']} !important;">{regime_counts.get('Favourable', 0)}</div>
-                    <div style="font-size: 9px; color: #666666 !important;">Favourable</div>
-                </div>
-                <div style="flex: 1; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px; font-weight: 700; color: {COLORS['meh']} !important;">{regime_counts.get('Marginal', 0)}</div>
-                    <div style="font-size: 9px; color: #666666 !important;">Marginal</div>
-                </div>
-                <div style="flex: 1; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
-                    <div style="font-size: 20px; font-weight: 700; color: {COLORS['skip']} !important;">{regime_counts.get('Degraded', 0)}</div>
-                    <div style="font-size: 9px; color: #666666 !important;">Degraded</div>
-                </div>
-            </div>
+            <!-- Key Stats Grid - Table for email compatibility -->
+            <table style="width: 100%; border-collapse: separate; border-spacing: 6px; margin-bottom: 14px;">
+                <tr>
+                    <td style="width: 25%; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: {COLORS['prime']} !important;">{regime_counts.get('Prime', 0)}</div>
+                        <div style="font-size: 9px; color: #666666 !important;">Prime</div>
+                    </td>
+                    <td style="width: 25%; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: {COLORS['good']} !important;">{regime_counts.get('Favourable', 0)}</div>
+                        <div style="font-size: 9px; color: #666666 !important;">Favourable</div>
+                    </td>
+                    <td style="width: 25%; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: {COLORS['meh']} !important;">{regime_counts.get('Marginal', 0)}</div>
+                        <div style="font-size: 9px; color: #666666 !important;">Marginal</div>
+                    </td>
+                    <td style="width: 25%; background-color: #f5f5f5 !important; border-radius: 8px; padding: 10px; text-align: center;">
+                        <div style="font-size: 20px; font-weight: 700; color: {COLORS['skip']} !important;">{regime_counts.get('Degraded', 0)}</div>
+                        <div style="font-size: 9px; color: #666666 !important;">Degraded</div>
+                    </td>
+                </tr>
+            </table>
             
             <!-- Top Mover -->
             {mover_html}
