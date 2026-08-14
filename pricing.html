@@ -206,6 +206,16 @@ body {
   color: #000;
 }
 
+.tier-badge.trial {
+  background: #e65100;
+  color: #fff;
+}
+
+.tier-badge.premium {
+  background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+  color: var(--gold);
+}
+
 .tier-badge.premium {
   background: #1a1a1a;
   color: var(--gold);
@@ -545,24 +555,25 @@ footer p { color: var(--text-secondary); }
       
       <!-- Research -->
       <div class="tier-card" data-tier="research" data-monthly="8" data-annual="6.67" data-save="16">
+        <div class="tier-badge trial">30-Day Free Trial</div>
         <div class="tier-header">
           <div class="tier-name">Research</div>
           <div class="tier-price">
-            <span class="currency">£</span><span class="amount">6.67</span><span class="period">/mo</span>
+            <span class="currency">£</span><span class="amount">0</span><span class="period">for 30 days</span>
           </div>
-          <div class="tier-billing billing-text">billed annually</div>
-          <div class="tier-save visible">Save £16/year</div>
+          <div class="tier-billing billing-text">then £8/mo</div>
+          <div class="tier-save visible">Start free today</div>
         </div>
-        <a href="/checkout?tier=research&billing=annual" class="tier-cta secondary">Get Started</a>
-        <div class="tier-alt">or <a href="#" class="alt-billing">pay monthly</a></div>
+        <a href="/checkout?tier=research" class="tier-cta secondary">Start Free Trial</a>
+        <div class="tier-alt">Cancel anytime during trial</div>
         <div class="tier-features">
           <div class="feature-group">
-            <div class="feature-group-label">Included</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Weekly market analysis</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Pair-by-pair metrics</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Volatility reports</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Event breakdowns</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>4+ marketplace snippets</div>
+            <div class="feature-group-label">Full Dashboard Access</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Daily market movement recaps</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Weekly market summaries</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Private research community</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>12 quant code snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>10 research papers</div>
           </div>
         </div>
       </div>
@@ -582,11 +593,11 @@ footer p { color: var(--text-secondary); }
         <div class="tier-features">
           <div class="feature-group">
             <div class="feature-group-label">Everything in Research, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Recoil indicator</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Real-time alerts</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Operator's Guide</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>3 trading style presets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>8+ marketplace snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Recoil indicator</strong></div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Real-time TradingView alerts</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Recoil Operator's Guide</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>+12 quant code snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Recoil community chat</div>
           </div>
         </div>
       </div>
@@ -606,11 +617,11 @@ footer p { color: var(--text-secondary); }
         <div class="tier-features">
           <div class="feature-group">
             <div class="feature-group-label">Everything in Recoil, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Meridian indicator</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Prime Signal alerts</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Multi-timeframe sync</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Priority support</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>12+ marketplace snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Meridian indicator</strong></div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Multi-timeframe sync signals</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Meridian Operator's Guide</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>+12 quant code snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Terminal community chat</div>
           </div>
         </div>
       </div>
@@ -631,12 +642,12 @@ footer p { color: var(--text-secondary); }
         <div class="tier-features">
           <div class="feature-group">
             <div class="feature-group-label">Everything in Terminal, plus</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>The Cockpit analyzer</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>All marketplace snippets</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>1-1 indicator setup call</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Monthly 1-1 progression call</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Early access to new features</div>
-            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Priority support channel</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span><strong>Cockpit multi-TF analyzer</strong></div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>All 48 quant code snippets</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>1-on-1 indicator setup call</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Monthly progression call</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Suite community chat</div>
+            <div class="feature included"><span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>Priority support</div>
           </div>
         </div>
       </div>
