@@ -4544,77 +4544,74 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">30 instruments analyzed. Regime scoring, AI-powered outlook, updated daily at 10pm UK.</p>
     </div>
 
-    <!-- Quick Stats -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;" id="intel-stats">
-      <div class="panel" style="text-align: center; padding: 20px;">
-        <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;">Bullish</div>
-        <div style="font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--bullish, #16864a);" id="intel-bullish">—</div>
-      </div>
-      <div class="panel" style="text-align: center; padding: 20px;">
-        <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;">Bearish</div>
-        <div style="font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--bearish, #b82828);" id="intel-bearish">—</div>
-      </div>
-      <div class="panel" style="text-align: center; padding: 20px;">
-        <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;">Prime Regime</div>
-        <div style="font-family: var(--mono); font-size: 32px; font-weight: 700; color: #1a9956;" id="intel-prime">—</div>
-      </div>
-      <div class="panel" style="text-align: center; padding: 20px;">
-        <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px;">Avg Range</div>
-        <div style="font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--gold);" id="intel-range">—</div>
+    <!-- Quick Stats - Compact inline row -->
+    <div class="panel" style="margin-bottom: 20px; padding: 14px 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;" id="intel-stats">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);">Bullish</span>
+          <span style="font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--bullish, #16864a);" id="intel-bullish">—</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);">Bearish</span>
+          <span style="font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--bearish, #b82828);" id="intel-bearish">—</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);">Prime</span>
+          <span style="font-family: var(--mono); font-size: 20px; font-weight: 700; color: #1a9956;" id="intel-prime">—</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3);">Avg Range</span>
+          <span style="font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--gold);" id="intel-range">—</span>
+        </div>
       </div>
     </div>
-    <style>
-      @media (max-width: 600px) {
-        #intel-stats { grid-template-columns: repeat(2, 1fr) !important; }
-      }
-    </style>
 
     <!-- Tomorrow's Outlook -->
-    <div class="panel" style="margin-bottom: 24px; position: relative; overflow: hidden;">
-      <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), transparent);"></div>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-        <h3 style="font-size: 14px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin: 0;">Tomorrow's Outlook</h3>
-        <span style="font-family: var(--mono); font-size: 12px; color: var(--text-3);" id="intel-outlook-date"></span>
+    <div class="panel" style="margin-bottom: 20px; position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent);"></div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+        <h3 style="font-size: 12px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin: 0;">Tomorrow's Outlook</h3>
+        <span style="font-family: var(--mono); font-size: 11px; color: var(--text-3);" id="intel-outlook-date"></span>
       </div>
-      <div id="intel-outlook-content" style="font-size: 15px; color: var(--text-2); line-height: 1.8;">
+      <div id="intel-outlook-content" style="font-size: 14px; color: var(--text-2); line-height: 1.7;">
         <p style="color: var(--text-3); font-style: italic;">Loading outlook...</p>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="panel" style="margin-bottom: 24px;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
-        <div>
-          <label style="display: block; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px;">Type</label>
-          <select id="intel-filter-type" style="width: 100%; padding: 12px 14px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-1);">
-            <option value="all">All Types</option>
+    <!-- Filters - Compact inline -->
+    <div class="panel" style="margin-bottom: 20px; padding: 14px 20px;">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;">
+        <div style="min-width: 120px; flex: 1;">
+          <label style="display: block; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px;">Type</label>
+          <select id="intel-filter-type" style="width: 100%; padding: 10px 12px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-1); cursor: pointer;">
+            <option value="all">All</option>
             <option value="forex">Forex</option>
             <option value="index">Indices</option>
             <option value="commodity">Commodities</option>
             <option value="crypto">Crypto</option>
           </select>
         </div>
-        <div>
-          <label style="display: block; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px;">Regime</label>
-          <select id="intel-filter-regime" style="width: 100%; padding: 12px 14px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-1);">
-            <option value="all">All Regimes</option>
-            <option value="prime">Prime Only</option>
+        <div style="min-width: 120px; flex: 1;">
+          <label style="display: block; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px;">Regime</label>
+          <select id="intel-filter-regime" style="width: 100%; padding: 10px 12px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-1); cursor: pointer;">
+            <option value="all">All</option>
+            <option value="prime">Prime</option>
             <option value="favourable">Favourable</option>
             <option value="marginal">Marginal</option>
             <option value="degraded">Degraded</option>
           </select>
         </div>
-        <div>
-          <label style="display: block; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px;">Bias</label>
-          <select id="intel-filter-bias" style="width: 100%; padding: 12px 14px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-1);">
-            <option value="all">All Bias</option>
-            <option value="bullish">Bullish Only</option>
-            <option value="bearish">Bearish Only</option>
+        <div style="min-width: 120px; flex: 1;">
+          <label style="display: block; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px;">Bias</label>
+          <select id="intel-filter-bias" style="width: 100%; padding: 10px 12px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-1); cursor: pointer;">
+            <option value="all">All</option>
+            <option value="bullish">Bullish</option>
+            <option value="bearish">Bearish</option>
           </select>
         </div>
-        <div>
-          <label style="display: block; font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 6px;">Search</label>
-          <input type="text" id="intel-filter-search" placeholder="EUR, Gold, NAS100..." style="width: 100%; padding: 12px 14px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; color: var(--text-1);">
+        <div style="min-width: 160px; flex: 2;">
+          <label style="display: block; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 4px;">Search</label>
+          <input type="text" id="intel-filter-search" placeholder="EUR, Gold, NAS100..." style="width: 100%; padding: 10px 12px; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); border-radius: 6px; font-size: 13px; color: var(--text-1);">
         </div>
       </div>
     </div>
@@ -11957,92 +11954,74 @@ function renderIntelInstruments(instruments) {
   
   list.innerHTML = instruments.map(inst => {
     const regimeClass = inst.regime.toLowerCase();
-    const biasClass = inst.bias.toLowerCase();
-    const changeClass = inst.change_pct >= 0 ? 'positive' : 'negative';
     const changeSign = inst.change_pct >= 0 ? '+' : '';
     const biasArrow = inst.bias === 'BULLISH' ? '▲' : '▼';
-    const biasColor = inst.bias === 'BULLISH' ? 'var(--bullish, #16864a)' : 'var(--bearish, #b82828)';
+    const biasColor = inst.bias === 'BULLISH' ? '#16864a' : '#b82828';
+    const changeColor = inst.change_pct >= 0 ? '#16864a' : '#b82828';
     
-    const regimeColors = {
-      prime: '#1a9956',
-      favourable: '#2d8abf',
-      marginal: '#d4940a',
-      degraded: '#c43030'
-    };
+    const regimeColors = { prime: '#1a9956', favourable: '#2d8abf', marginal: '#d4940a', degraded: '#c43030' };
     const regimeColor = regimeColors[regimeClass] || '#888';
     const regimePercent = Math.min(100, Math.max(0, inst.regime_score));
     
     return `
-    <div class="panel intel-card" style="cursor: pointer; transition: border-color 0.15s;" onclick="this.classList.toggle('expanded')">
-      <div style="display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 16px;">
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <span style="font-size: 18px; font-weight: 700; color: var(--text-1);">${inst.name}</span>
-          <span style="font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); background: var(--surface-2, #f5f5f5); padding: 5px 10px; border-radius: 5px;">${inst.type}</span>
+    <div class="panel intel-card" style="cursor: pointer; padding: 14px 18px;" onclick="this.classList.toggle('expanded')">
+      <!-- Header Row - Mobile friendly -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+          <span style="font-size: 16px; font-weight: 700; color: var(--text-1); white-space: nowrap;">${inst.name}</span>
+          <span style="font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); background: var(--surface-2, #f5f5f5); padding: 4px 8px; border-radius: 4px;">${inst.type}</span>
         </div>
-        <span style="font-family: var(--mono); font-size: 16px; font-weight: 600; color: var(--text-1);">${formatIntelPrice(inst.close, inst.type, inst.name)}</span>
-        <span style="font-family: var(--mono); font-size: 14px; font-weight: 700; color: ${inst.change_pct >= 0 ? 'var(--bullish, #16864a)' : 'var(--bearish, #b82828)'};">${changeSign}${inst.change_pct.toFixed(2)}%</span>
-        <span style="padding: 6px 14px; border-radius: 6px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; background: ${regimeColor}20; color: ${regimeColor}; border: 1px solid ${regimeColor}40;">${inst.regime}</span>
+        <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+          <span style="font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--text-1);">${formatIntelPrice(inst.close, inst.type, inst.name)}</span>
+          <span style="font-family: var(--mono); font-size: 12px; font-weight: 700; color: ${changeColor};">${changeSign}${inst.change_pct.toFixed(2)}%</span>
+          <span style="padding: 4px 10px; border-radius: 4px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; background: ${regimeColor}18; color: ${regimeColor}; border: 1px solid ${regimeColor}35;">${inst.regime}</span>
+        </div>
       </div>
       
-      <div class="intel-card-body" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- Price Action -->
-          <div style="background: var(--surface-2, #f5f5f5); border-radius: 10px; padding: 16px;">
-            <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;">Price Action</div>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-              <div style="text-align: center;">
-                <div style="font-size: 10px; color: var(--text-3); margin-bottom: 4px;">HIGH</div>
-                <div style="font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--bullish, #16864a);">${formatIntelPrice(inst.high, inst.type, inst.name)}</div>
-              </div>
-              <div style="text-align: center;">
-                <div style="font-size: 10px; color: var(--text-3); margin-bottom: 4px;">LOW</div>
-                <div style="font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--bearish, #b82828);">${formatIntelPrice(inst.low, inst.type, inst.name)}</div>
-              </div>
-              <div style="text-align: center;">
-                <div style="font-size: 10px; color: var(--text-3); margin-bottom: 4px;">RANGE</div>
-                <div style="font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--gold);">${Math.round(inst.range_pips)} pips</div>
-              </div>
-            </div>
+      <!-- Expanded Body -->
+      <div class="intel-card-body" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+        <!-- Stats Row - All inline -->
+        <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+          <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
+            <div style="font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">HIGH</div>
+            <div style="font-family: var(--mono); font-size: 13px; font-weight: 600; color: #16864a;">${formatIntelPrice(inst.high, inst.type, inst.name)}</div>
           </div>
-          
-          <!-- Trading Conditions -->
-          <div style="background: var(--surface-2, #f5f5f5); border-radius: 10px; padding: 16px;">
-            <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;">Trading Conditions</div>
-            <div style="display: flex; gap: 10px; margin-bottom: 14px;">
-              <span style="padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; background: ${biasColor}15; border: 1px solid ${biasColor}30; color: ${biasColor};">
-                ${biasArrow} Daily ${inst.bias === 'BULLISH' ? 'Long' : 'Short'}
-              </span>
-              <span style="padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; background: var(--surface-1, #fff); border: 1px solid var(--border); color: var(--text-2);">${inst.market_type || 'Trend'}</span>
-            </div>
-            <div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                <span style="font-size: 12px; color: var(--text-2);">Regime Score</span>
-                <span style="font-family: var(--mono); font-size: 13px; font-weight: 700; color: ${regimeColor};">${inst.regime_score.toFixed(0)}/100</span>
-              </div>
-              <div style="height: 8px; background: var(--surface-1, #fff); border-radius: 4px; overflow: hidden;">
-                <div style="height: 100%; width: ${regimePercent}%; background: ${regimeColor}; border-radius: 4px;"></div>
-              </div>
-            </div>
+          <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
+            <div style="font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">LOW</div>
+            <div style="font-family: var(--mono); font-size: 13px; font-weight: 600; color: #b82828;">${formatIntelPrice(inst.low, inst.type, inst.name)}</div>
+          </div>
+          <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
+            <div style="font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">RANGE</div>
+            <div style="font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--gold);">${Math.round(inst.range_pips)} pips</div>
+          </div>
+          <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
+            <div style="font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">ATR</div>
+            <div style="font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-1);">${inst.atr ? inst.atr.toFixed(inst.type === 'forex' && !inst.name.includes('JPY') ? 5 : 2) : 'N/A'}</div>
+          </div>
+          <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
+            <div style="font-size: 9px; font-weight: 600; color: var(--text-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">ADX</div>
+            <div style="font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-1);">${inst.adx ? inst.adx.toFixed(1) : 'N/A'}</div>
           </div>
         </div>
         
-        <!-- Indicators -->
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 16px;">
-          <div style="background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 14px;">
-            <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--text-3); margin-bottom: 4px;">ATR (14)</div>
-            <div style="font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text-1);">${inst.atr ? inst.atr.toFixed(inst.type === 'forex' && !inst.name.includes('JPY') ? 5 : 2) : 'N/A'}</div>
-          </div>
-          <div style="background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 14px;">
-            <div style="font-family: var(--mono); font-size: 10px; font-weight: 600; color: var(--text-3); margin-bottom: 4px;">ADX (14)</div>
-            <div style="font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--text-1);">${inst.adx ? inst.adx.toFixed(1) : 'N/A'}</div>
-            <div style="font-size: 11px; color: var(--text-3);">${inst.adx > 25 ? 'Strong Trend' : inst.adx > 20 ? 'Trending' : 'Weak/Ranging'}</div>
+        <!-- Bias & Regime -->
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+          <span style="padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; background: ${biasColor}12; border: 1px solid ${biasColor}25; color: ${biasColor};">
+            ${biasArrow} Daily ${inst.bias === 'BULLISH' ? 'Long' : 'Short'}
+          </span>
+          <span style="padding: 8px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; background: var(--surface-2, #f5f5f5); border: 1px solid var(--border); color: var(--text-2);">${inst.market_type || 'Trend'}</span>
+          <div style="flex: 1; min-width: 150px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 11px; color: var(--text-3);">Score</span>
+            <div style="flex: 1; height: 6px; background: var(--surface-2, #eee); border-radius: 3px; overflow: hidden;">
+              <div style="height: 100%; width: ${regimePercent}%; background: ${regimeColor}; border-radius: 3px;"></div>
+            </div>
+            <span style="font-family: var(--mono); font-size: 12px; font-weight: 700; color: ${regimeColor};">${inst.regime_score.toFixed(0)}</span>
           </div>
         </div>
         
         ${inst.analysis ? `
-        <div style="margin-top: 16px; background: var(--surface-2, #f5f5f5); border-radius: 10px; padding: 16px;">
-          <div style="font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 10px;">AI Analysis</div>
-          <div style="font-size: 14px; color: var(--text-2); line-height: 1.7;">${inst.analysis}</div>
+        <div style="margin-top: 14px; padding: 12px; background: var(--surface-2, #f5f5f5); border-radius: 8px; border-left: 3px solid var(--gold);">
+          <div style="font-size: 13px; color: var(--text-2); line-height: 1.6;">${inst.analysis}</div>
         </div>
         ` : ''}
       </div>
