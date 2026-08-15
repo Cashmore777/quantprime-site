@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Funnel Analytics — Quant Prime</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface-elevated: #1a1a24;
+  --border: rgba(255,255,255,0.08);
+  --text: #f5f5f2;
+  --text-secondary: rgba(255,255,255,0.6);
+  --text-muted: rgba(255,255,255,0.4);
+  --gold: #c9a84c;
+  --green: #22c55e;
+  --red: #ef4444;
+  --blue: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Login Screen */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-logo span { color: var(--gold); }
+
+.login-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--gold);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.login-btn:hover {
+  background: #d4b85a;
+}
+
+.login-error {
+  color: var(--red);
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 1rem;
+  display: none;
+}
+
+/* Dashboard Layout */
+.dashboard {
+  display: none;
+}
+
+.dashboard.visible {
+  display: block;
+}
+
+/* Header */
+.dash-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.dash-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+}
+
+.dash-logo span { color: var(--gold); }
+
+.dash-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dash-nav-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dash-nav-btn.active,
+.dash-nav-btn:hover {
+  background: var(--gold);
+  color: #000;
+  border-color: var(--gold);
+}
+
+.logout-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* Main Content */
+.dash-content {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.stat-value.gold { color: var(--gold); }
+.stat-value.green { color: var(--green); }
+
+.stat-change {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.stat-change.up { color: var(--green); }
+.stat-change.down { color: var(--red); }
+
+/* Section */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.section-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.section-body {
+  padding: 1.25rem;
+}
+
+/* Source Breakdown */
+.source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.source-item:hover {
+  background: var(--surface-elevated);
+}
+
+.source-item.expanded {
+  background: var(--surface-elevated);
+  border: 1px solid var(--gold);
+}
+
+.source-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--surface-elevated);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.source-info {
+  flex: 1;
+}
+
+.source-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.source-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.source-stats {
+  text-align: right;
+}
+
+.source-clicks {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.source-ctr {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.source-expand {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  transition: transform 0.2s;
+}
+
+.source-item.expanded .source-expand {
+  transform: rotate(180deg);
+}
+
+/* Drill-down */
+.drilldown {
+  margin-top: 0.75rem;
+  margin-left: 52px;
+  padding-left: 1rem;
+  border-left: 2px solid var(--border);
+  display: none;
+}
+
+.drilldown.visible {
+  display: block;
+}
+
+.drilldown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--bg);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.drilldown-item:hover {
+  background: var(--surface-elevated);
+}
+
+.drilldown-name {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drilldown-name .icon {
+  color: var(--gold);
+}
+
+.drilldown-stats {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.drilldown-clicks {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+}
+
+.drilldown-pct {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  min-width: 45px;
+  text-align: right;
+}
+
+/* Funnel Tree */
+.funnel-tree {
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.tree-level {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.tree-level::after {
+  content: '';
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  width: 2px;
+  height: 1rem;
+  background: var(--border);
+}
+
+.tree-level:last-child::after {
+  display: none;
+}
+
+.tree-node {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  min-width: 120px;
+  text-align: center;
+  position: relative;
+}
+
+.tree-node.entry {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+}
+
+.tree-node.conversion {
+  border-color: var(--green);
+  background: rgba(34,197,94,0.1);
+}
+
+.tree-node-name {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.tree-node-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.tree-node-pct {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Emails Table */
+.emails-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.emails-table th,
+.emails-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.emails-table th {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.emails-table td {
+  font-size: 0.85rem;
+}
+
+.emails-table tr:hover {
+  background: var(--surface-elevated);
+}
+
+.email-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.email-badge.trial { background: rgba(201,168,76,0.2); color: var(--gold); }
+.email-badge.paid { background: rgba(34,197,94,0.2); color: var(--green); }
+.email-badge.free { background: rgba(255,255,255,0.1); color: var(--text-muted); }
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+/* Date Range */
+.date-range {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.date-btn {
+  padding: 0.4rem 0.75rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.date-btn.active {
+  background: var(--gold);
+  color: #000;
+  border-color: var(--gold);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dash-header {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .dash-content {
+    padding: 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">QUANT<span>PRIME</span></div>
+    <h1 class="login-title">Funnel Analytics</h1>
+    <p class="login-subtitle">Enter your dashboard password</p>
+    <form id="loginForm">
+      <input type="password" class="login-input" id="passwordInput" placeholder="Password" autofocus>
+      <button type="submit" class="login-btn">Access Dashboard</button>
+    </form>
+    <p class="login-error" id="loginError">Invalid password</p>
+  </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard" id="dashboard">
+  <header class="dash-header">
+    <div class="dash-logo">QUANT<span>PRIME</span> Analytics</div>
+    <nav class="dash-nav">
+      <button class="dash-nav-btn active" data-view="overview">Overview</button>
+      <button class="dash-nav-btn" data-view="funnel">Funnel Tree</button>
+      <button class="dash-nav-btn" data-view="emails">Emails</button>
+    </nav>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+  
+  <main class="dash-content">
+    <!-- Overview View -->
+    <div id="overviewView">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Sessions</div>
+          <div class="stat-value" id="totalSessions">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique Visitors</div>
+          <div class="stat-value" id="uniqueVisitors">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Return Visitors</div>
+          <div class="stat-value" id="returnVisitors">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Conversions</div>
+          <div class="stat-value green" id="totalConversions">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Conversion Rate</div>
+          <div class="stat-value gold" id="conversionRate">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Emails Collected</div>
+          <div class="stat-value" id="emailsCollected">-</div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">Traffic Sources</h2>
+          <div class="date-range">
+            <button class="date-btn active" data-range="7">7 days</button>
+            <button class="date-btn" data-range="30">30 days</button>
+            <button class="date-btn" data-range="all">All time</button>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="source-list" id="sourceList">
+            <div class="loading">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Funnel Tree View -->
+    <div id="funnelView" style="display: none;">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">Funnel Visualization</h2>
+        </div>
+        <div class="section-body">
+          <div class="funnel-tree" id="funnelTree">
+            <div class="loading">Loading funnel data...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Emails View -->
+    <div id="emailsView" style="display: none;">
+      <div class="section">
+        <div class="section-header">
+          <h2 class="section-title">Collected Emails</h2>
+        </div>
+        <div class="section-body">
+          <table class="emails-table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Source</th>
+                <th>Page</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="emailsTableBody">
+              <tr><td colspan="6" class="loading">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
+const DASHBOARD_PASSWORD = '2026iWillBRich!';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentRange = 7;
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const pwd = document.getElementById('passwordInput').value;
+  
+  if (pwd === DASHBOARD_PASSWORD) {
+    localStorage.setItem('qp_analytics_auth', Date.now());
+    showDashboard();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+});
+
+// Check auth
+function checkAuth() {
+  const auth = localStorage.getItem('qp_analytics_auth');
+  if (auth && (Date.now() - parseInt(auth)) < 24 * 60 * 60 * 1000) {
+    showDashboard();
+  }
+}
+
+function showDashboard() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').classList.add('visible');
+  loadData();
+}
+
+function logout() {
+  localStorage.removeItem('qp_analytics_auth');
+  location.reload();
+}
+
+// View switching
+document.querySelectorAll('.dash-nav-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    
+    const view = this.dataset.view;
+    document.getElementById('overviewView').style.display = view === 'overview' ? 'block' : 'none';
+    document.getElementById('funnelView').style.display = view === 'funnel' ? 'block' : 'none';
+    document.getElementById('emailsView').style.display = view === 'emails' ? 'block' : 'none';
+    
+    if (view === 'funnel') loadFunnelTree();
+    if (view === 'emails') loadEmails();
+  });
+});
+
+// Date range
+document.querySelectorAll('.date-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    currentRange = this.dataset.range === 'all' ? 9999 : parseInt(this.dataset.range);
+    loadData();
+  });
+});
+
+// Load data
+async function loadData() {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - currentRange);
+  
+  try {
+    // Get sessions
+    const { data: sessions, error: sessionsErr } = await supabase
+      .from('funnel_sessions')
+      .select('*')
+      .gte('created_at', startDate.toISOString());
+    
+    if (sessionsErr) throw sessionsErr;
+    
+    // Get events
+    const { data: events, error: eventsErr } = await supabase
+      .from('funnel_events')
+      .select('*')
+      .gte('created_at', startDate.toISOString());
+    
+    // Get emails
+    const { data: emails, error: emailsErr } = await supabase
+      .from('funnel_emails')
+      .select('*')
+      .gte('created_at', startDate.toISOString());
+    
+    // Calculate stats
+    const totalSessions = sessions?.length || 0;
+    const uniqueVisitors = new Set(sessions?.map(s => s.visitor_id) || []).size;
+    const returnVisitors = totalSessions - uniqueVisitors;
+    const conversions = sessions?.filter(s => s.converted) || [];
+    const conversionRate = totalSessions > 0 ? ((conversions.length / totalSessions) * 100).toFixed(1) : 0;
+    
+    // Update stats
+    document.getElementById('totalSessions').textContent = totalSessions;
+    document.getElementById('uniqueVisitors').textContent = uniqueVisitors;
+    document.getElementById('returnVisitors').textContent = returnVisitors;
+    document.getElementById('totalConversions').textContent = conversions.length;
+    document.getElementById('conversionRate').textContent = conversionRate + '%';
+    document.getElementById('emailsCollected').textContent = emails?.length || 0;
+    
+    // Build source breakdown
+    buildSourceBreakdown(sessions, events);
+    
+  } catch (err) {
+    console.error('Load error:', err);
+  }
+}
+
+// Build source breakdown
+function buildSourceBreakdown(sessions, events) {
+  const sourceList = document.getElementById('sourceList');
+  
+  // Group by source
+  const sources = {};
+  sessions?.forEach(s => {
+    const key = `${s.entry_source || 'direct'}_${s.entry_location || 'unknown'}`;
+    if (!sources[key]) {
+      sources[key] = {
+        source: s.entry_source || 'direct',
+        location: s.entry_location || 'unknown',
+        account: s.entry_account,
+        sessions: [],
+        conversions: 0
+      };
+    }
+    sources[key].sessions.push(s);
+    if (s.converted) sources[key].conversions++;
+  });
+  
+  // Get button clicks for each source
+  const sourceData = Object.values(sources).map(src => {
+    const sessionIds = src.sessions.map(s => s.id);
+    const sourceEvents = events?.filter(e => sessionIds.includes(e.session_id) && e.event_type === 'button_click') || [];
+    
+    // Group by button
+    const buttons = {};
+    sourceEvents.forEach(e => {
+      const btn = e.button_id || 'unknown';
+      if (!buttons[btn]) {
+        buttons[btn] = { name: e.button_name || btn, page: e.page_name, clicks: 0 };
+      }
+      buttons[btn].clicks++;
+    });
+    
+    return {
+      ...src,
+      clicks: src.sessions.length,
+      buttons: Object.entries(buttons).map(([id, data]) => ({ id, ...data })).sort((a, b) => b.clicks - a.clicks)
+    };
+  }).sort((a, b) => b.clicks - a.clicks);
+  
+  // Render
+  const icons = {
+    instagram: '📸',
+    tiktok: '🎵',
+    twitter: '🐦',
+    direct: '🔗',
+    referral: '↗️'
+  };
+  
+  sourceList.innerHTML = sourceData.map((src, i) => `
+    <div class="source-item" onclick="toggleDrilldown(${i})">
+      <div class="source-icon">${icons[src.source] || '📊'}</div>
+      <div class="source-info">
+        <div class="source-name">${capitalize(src.source)} — ${capitalize(src.location)}</div>
+        <div class="source-detail">${src.account || 'Unknown account'} • ${src.conversions} conversions</div>
+      </div>
+      <div class="source-stats">
+        <div class="source-clicks">${src.clicks}</div>
+        <div class="source-ctr">${((src.conversions / src.clicks) * 100).toFixed(1)}% CVR</div>
+      </div>
+      <div class="source-expand">▼</div>
+    </div>
+    <div class="drilldown" id="drilldown-${i}">
+      ${src.buttons.length > 0 ? src.buttons.map(btn => `
+        <div class="drilldown-item">
+          <div class="drilldown-name"><span class="icon">→</span> ${btn.name}</div>
+          <div class="drilldown-stats">
+            <div class="drilldown-clicks">${btn.clicks}</div>
+            <div class="drilldown-pct">${((btn.clicks / src.clicks) * 100).toFixed(1)}%</div>
+          </div>
+        </div>
+      `).join('') : '<div class="drilldown-item"><div class="drilldown-name">No button clicks recorded</div></div>'}
+    </div>
+  `).join('');
+}
+
+function toggleDrilldown(index) {
+  const item = document.querySelectorAll('.source-item')[index];
+  const drilldown = document.getElementById(`drilldown-${index}`);
+  
+  item.classList.toggle('expanded');
+  drilldown.classList.toggle('visible');
+}
+
+function capitalize(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ') : '';
+}
+
+// Load funnel tree
+async function loadFunnelTree() {
+  const treeContainer = document.getElementById('funnelTree');
+  
+  try {
+    const { data: events } = await supabase
+      .from('funnel_events')
+      .select('*')
+      .eq('event_type', 'button_click')
+      .order('created_at', { ascending: true });
+    
+    const { data: sessions } = await supabase
+      .from('funnel_sessions')
+      .select('*');
+    
+    // Build tree structure
+    const entryPoints = {};
+    sessions?.forEach(s => {
+      const key = `${s.entry_source}_${s.entry_location}`;
+      if (!entryPoints[key]) {
+        entryPoints[key] = { name: `${s.entry_source} ${s.entry_location}`, count: 0, next: {} };
+      }
+      entryPoints[key].count++;
+    });
+    
+    // Count clicks per page/button
+    const pageCounts = {};
+    events?.forEach(e => {
+      const key = e.button_id || e.page_path;
+      if (!pageCounts[key]) {
+        pageCounts[key] = { name: e.button_name || e.page_name || key, count: 0 };
+      }
+      pageCounts[key].count++;
+    });
+    
+    // Simple tree visualization
+    const totalSessions = sessions?.length || 1;
+    const entries = Object.values(entryPoints).sort((a, b) => b.count - a.count).slice(0, 5);
+    const buttons = Object.entries(pageCounts).sort((a, b) => b[1].count - a[1].count).slice(0, 8);
+    
+    treeContainer.innerHTML = `
+      <div class="tree-level">
+        <div class="tree-node entry">
+          <div class="tree-node-name">All Traffic</div>
+          <div class="tree-node-count">${totalSessions}</div>
+        </div>
+      </div>
+      <div class="tree-level">
+        ${entries.map(e => `
+          <div class="tree-node">
+            <div class="tree-node-name">${capitalize(e.name)}</div>
+            <div class="tree-node-count">${e.count}</div>
+            <div class="tree-node-pct">${((e.count / totalSessions) * 100).toFixed(1)}%</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="tree-level">
+        ${buttons.map(([id, data]) => `
+          <div class="tree-node ${id.includes('checkout') || id.includes('trial') ? 'conversion' : ''}">
+            <div class="tree-node-name">${data.name}</div>
+            <div class="tree-node-count">${data.count}</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    
+  } catch (err) {
+    treeContainer.innerHTML = '<div class="loading">Error loading funnel data</div>';
+  }
+}
+
+// Load emails
+async function loadEmails() {
+  const tbody = document.getElementById('emailsTableBody');
+  
+  try {
+    const { data: emails } = await supabase
+      .from('funnel_emails')
+      .select('*, funnel_sessions(entry_source, entry_location)')
+      .order('created_at', { ascending: false })
+      .limit(100);
+    
+    if (!emails || emails.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6">No emails collected yet</td></tr>';
+      return;
+    }
+    
+    tbody.innerHTML = emails.map(e => {
+      const source = e.funnel_sessions?.entry_source || 'unknown';
+      const location = e.funnel_sessions?.entry_location || '';
+      const status = e.converted_to_paid ? 'paid' : (e.converted_to_trial ? 'trial' : 'free');
+      const date = new Date(e.created_at).toLocaleDateString();
+      
+      return `
+        <tr>
+          <td>${e.email}</td>
+          <td>${capitalize(source)} ${location}</td>
+          <td>${e.collected_on_page}</td>
+          <td>${e.collection_type}</td>
+          <td><span class="email-badge ${status}">${status}</span></td>
+          <td>${date}</td>
+        </tr>
+      `;
+    }).join('');
+    
+  } catch (err) {
+    tbody.innerHTML = '<tr><td colspan="6">Error loading emails</td></tr>';
+  }
+}
+
+// Init
+checkAuth();
+</script>
+</body>
+</html>
