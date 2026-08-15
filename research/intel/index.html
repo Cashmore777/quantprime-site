@@ -649,7 +649,7 @@ footer a { color: var(--cyan); }
 <body>
 <div id="auth-gate">
   <div style="text-align:center;color:var(--text-3);">
-    <div style="font-size:28px;margin-bottom:16px;">🔒</div>
+    <div style="font-size:28px;margin-bottom:16px;"></div>
     <div id="auth-msg">Verifying access...</div>
   </div>
 </div>
@@ -658,7 +658,7 @@ footer a { color: var(--cyan); }
   <header class="header">
     <div class="header-bar">
       <span class="brand">Quant Prime</span>
-      <a href="/research/" class="back-link">← Research Archive</a>
+      <a href="/dashboard/" class="back-link">← Dashboard</a>
     </div>
     <h1 class="header-title">Market Intelligence</h1>
     <p class="header-subtitle">Real-time analysis across 30 instruments. AI-powered insights, regime scoring, and tomorrow's outlook — updated daily at 10pm UK.</p>
@@ -703,7 +703,7 @@ footer a { color: var(--cyan); }
       <div class="outlook-panel">
         <div class="outlook-header">
           <div class="outlook-title">
-            <span>🔮</span>
+            <span></span>
             Tomorrow's Outlook
           </div>
           <span class="outlook-date" id="outlook-date"></span>
@@ -761,7 +761,7 @@ footer a { color: var(--cyan); }
   <!-- Weekly Tab -->
   <div id="tab-weekly" class="tab-content" style="display:none;">
     <div class="empty-state">
-      <div class="icon">📊</div>
+      <div class="icon"></div>
       <h3>Weekly Report</h3>
       <p>Weekly reports are published every Sunday at 8pm UK with detailed analysis of the week's market action, lessons learned, and next week's outlook.</p>
     </div>
@@ -770,7 +770,7 @@ footer a { color: var(--cyan); }
   <!-- Archive Tab -->
   <div id="tab-archive" class="tab-content" style="display:none;">
     <div id="archive-list" class="empty-state">
-      <div class="icon">📚</div>
+      <div class="icon"></div>
       <h3>Briefing Archive</h3>
       <p>Historical briefings will appear here after the first daily run.</p>
     </div>
@@ -892,7 +892,7 @@ async function loadTodayBriefing() {
 function showEmptyState() {
   document.getElementById('loading-today').innerHTML = `
     <div class="empty-state">
-      <div class="icon">📊</div>
+      <div class="icon"></div>
       <h3>No Briefing Yet</h3>
       <p>Today's market briefing will be generated at 10pm UK time.</p>
     </div>
@@ -951,7 +951,7 @@ function renderInstruments(instruments) {
         <div class="body-grid">
           <!-- Price Details -->
           <div class="body-section">
-            <div class="section-title">📈 Price Action</div>
+            <div class="section-title"> Price Action</div>
             <div class="price-detail-grid">
               <div class="price-item">
                 <div class="label">Open</div>
@@ -982,7 +982,7 @@ function renderInstruments(instruments) {
           
           <!-- Bias & Regime -->
           <div class="body-section">
-            <div class="section-title">🎯 Trading Conditions</div>
+            <div class="section-title"> Trading Conditions</div>
             <div class="bias-display">
               <div class="bias-badge ${biasClass}">
                 <span style="font-size:16px;">${biasArrow}</span>
@@ -1009,7 +1009,7 @@ function renderInstruments(instruments) {
           
           <!-- Technical Indicators -->
           <div class="body-section">
-            <div class="section-title">📊 Technical Indicators</div>
+            <div class="section-title"> Technical Indicators</div>
             <div class="indicator-grid">
               <div class="indicator-item">
                 <div class="name">ATR (14)</div>
@@ -1027,12 +1027,12 @@ function renderInstruments(instruments) {
           <!-- AI Analysis -->
           ${inst.analysis ? `
           <div class="body-section ai-analysis">
-            <div class="section-title">🤖 AI Analysis</div>
+            <div class="section-title"> AI Analysis</div>
             <div class="ai-content">${inst.analysis}</div>
           </div>
           ` : `
           <div class="body-section ai-analysis">
-            <div class="section-title">🤖 AI Analysis</div>
+            <div class="section-title"> AI Analysis</div>
             <div class="ai-content"><p style="color:var(--text-3);font-style:italic;">AI analysis will be generated in the next briefing run at 10pm UK.</p></div>
           </div>
           `}
