@@ -1,0 +1,118 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-2331
+//  Weekly Open + Daily Range + Hourly Profile + Weekly Summary
+//  Weekly open line, Daily range used, Time-of-day range profile, Weekly analysis template
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-2331 · Weekly Open + Daily Range + Hourly Profile + Weekly Summary", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st2_on  = input.bool(true,     "Show weekly open",  group = "Starter · Weekly open")
+st2_col = input.color(#c9a84c, "Weekly open colour", group = "Starter · Weekly open")
+st2_wid = input.int(1, "Weekly open width", minval = 1, maxval = 4, group = "Starter · Weekly open")
+
+st2_o = request.security(syminfo.tickerid, "W", open, lookahead = barmerge.lookahead_on)
+
+plot(st2_on ? st2_o : na, "Weekly open", color = st2_col, style = plot.style_stepline, linewidth = st2_wid)
+
+// ---------- MAIN ----------
+mn3_on   = input.bool(true, "Show daily range", group = "Main · Daily range", tooltip = "Compares how far price has travelled today against a typical day. Under 100% means today has moved less than average, so there may still be room left in the session. Over 100% means today has already moved further than a normal day.")
+mn3_days = input.int(20,    "Compare against last (days)", minval = 2, group = "Main · Daily range", tooltip = "How many previous days are averaged to define a normal day's range.")
+mn3_quiet = input.int(60,   "Quiet below %",    minval = 1, group = "Main · Daily range")
+mn3_ext   = input.int(110,  "Extended above %", minval = 1, group = "Main · Daily range")
+mn3_sz   = input.string("Tiny", "Range table text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Main · Daily range")
+mn3_pos  = input.string("Top right", "Range table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Main · Daily range")
+
+mn3_avg  = request.security(syminfo.tickerid, "D", ta.sma(high - low, mn3_days)[1], lookahead = barmerge.lookahead_on)
+[mn3_dh, mn3_dl] = request.security(syminfo.tickerid, "D", [high, low], lookahead = barmerge.lookahead_on)
+
+mn3_today = mn3_dh - mn3_dl
+mn3_pct   = mn3_avg > 0 ? 100.0 * mn3_today / mn3_avg : 0.0
+mn3_word  = mn3_pct < mn3_quiet ? "QUIET" : mn3_pct > mn3_ext ? "EXTENDED" : "NORMAL"
+mn3_col   = mn3_pct < mn3_quiet ? #9aa0a6 : mn3_pct > mn3_ext ? #d27050 : #00abff
+
+mn3_size = mn3_sz == "Tiny" ? size.tiny : mn3_sz == "Small" ? size.small : mn3_sz == "Normal" ? size.normal : size.large
+mn3_where = mn3_pos == "Top right" ? position.top_right : mn3_pos == "Top left" ? position.top_left : mn3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table mn3_t = table.new(mn3_where, 2, 4, border_width = 0)
+mn3_row(r, k, v, c) =>
+    table.cell(mn3_t, 0, r, k, text_color = #6b7280, text_size = mn3_size, bgcolor = #0a0b0d)
+    table.cell(mn3_t, 1, r, v, text_color = c,       text_size = mn3_size, bgcolor = #0a0b0d)
+
+if mn3_on and barstate.islast
+    table.cell(mn3_t, 0, 0, "DAILY RANGE", text_color = #c9a84c, text_size = mn3_size, bgcolor = #0a0b0d)
+    table.cell(mn3_t, 1, 0, "", bgcolor = #0a0b0d)
+    mn3_row(1, "Today so far",  str.tostring(mn3_today, format.mintick), #f2f0ea)
+    mn3_row(2, "Normal day",    str.tostring(mn3_avg,   format.mintick), #9aa0a6)
+    mn3_row(3, mn3_word,        str.tostring(mn3_pct, "#") + "% of normal", mn3_col)
+
+// ---------- SIDE ----------
+sd3_on   = input.bool(true, "Show time-of-day profile",     group = "Side · Time-of-day profile")
+sd3_days = input.int(30,    "Days of history", minval = 5,  group = "Side · Time-of-day profile")
+sd3_sz   = input.string("Tiny", "Profile text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Side · Time-of-day profile")
+sd3_pos  = input.string("Bottom right", "Profile table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Side · Time-of-day profile")
+
+var array<float> sd3_sum = array.new_float(24, 0.0)
+var array<int>   sd3_cnt = array.new_int(24, 0)
+
+sd3_cut = timestamp(year, month, dayofmonth, 0, 0) - sd3_days * 86400000
+if time >= sd3_cut
+    sd3_h = hour(time, syminfo.timezone)
+    array.set(sd3_sum, sd3_h, array.get(sd3_sum, sd3_h) + (high - low))
+    array.set(sd3_cnt, sd3_h, array.get(sd3_cnt, sd3_h) + 1)
+
+sd3_size = sd3_sz == "Tiny" ? size.tiny : sd3_sz == "Small" ? size.small : sd3_sz == "Normal" ? size.normal : size.large
+
+sd3_where = sd3_pos == "Top right" ? position.top_right : sd3_pos == "Top left" ? position.top_left : sd3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table sd3_tbl = table.new(sd3_where, 2, 25, border_width = 0)
+if sd3_on and barstate.islast
+    table.cell(sd3_tbl, 0, 0, "HOUR", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    table.cell(sd3_tbl, 1, 0, "AVG RANGE", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    sd3_max = 0.0
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_max := math.max(sd3_max, sd3_v)
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_col = sd3_max > 0 and sd3_v >= sd3_max * 0.75 ? #c9a84c : #9aa0a6
+        table.cell(sd3_tbl, 0, sd3_i + 1, str.tostring(sd3_i) + ":00", text_color = #9aa0a6, text_size = sd3_size, bgcolor = #0a0b0d)
+        table.cell(sd3_tbl, 1, sd3_i + 1, str.tostring(sd3_v, format.mintick), text_color = sd3_col, text_size = sd3_size, bgcolor = #0a0b0d)
+
+// ---------- DESSERT ----------
+ds1_on  = input.bool(true, "Show weekly summary", group = "Dessert · Weekly summary", tooltip = "A plain summary of the current trading week: where it opened, how far price has moved since, how wide the week's range is, and whereabouts in that range price is sitting now.")
+ds1_sz  = input.string("Tiny", "Weekly table text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Dessert · Weekly summary")
+ds1_pos = input.string("Bottom left", "Weekly table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Dessert · Weekly summary")
+
+[ds1_o, ds1_h, ds1_l, ds1_c, ds1_po, ds1_pc] = request.security(syminfo.tickerid, "W", [open, high, low, close, open[1], close[1]], lookahead = barmerge.lookahead_on)
+
+ds1_chg   = ds1_o > 0 ? 100.0 * (ds1_c - ds1_o) / ds1_o : 0.0
+ds1_rng   = ds1_h - ds1_l
+ds1_inr   = ds1_rng > 0 ? 100.0 * (ds1_c - ds1_l) / ds1_rng : 0.0
+ds1_pchg  = ds1_po > 0 ? 100.0 * (ds1_pc - ds1_po) / ds1_po : 0.0
+ds1_where_in = ds1_inr >= 70 ? "near the high" : ds1_inr <= 30 ? "near the low" : "mid range"
+ds1_sign(v) =>
+    (v >= 0 ? "+" : "") + str.tostring(v, "#.##") + "%"
+
+ds1_size = ds1_sz == "Tiny" ? size.tiny : ds1_sz == "Small" ? size.small : ds1_sz == "Normal" ? size.normal : size.large
+ds1_where = ds1_pos == "Top right" ? position.top_right : ds1_pos == "Top left" ? position.top_left : ds1_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table ds1_t = table.new(ds1_where, 2, 6, border_width = 0)
+ds1_row(r, k, v, c) =>
+    table.cell(ds1_t, 0, r, k, text_color = #6b7280, text_size = ds1_size, bgcolor = #0a0b0d)
+    table.cell(ds1_t, 1, r, v, text_color = c,       text_size = ds1_size, bgcolor = #0a0b0d)
+
+if ds1_on and barstate.islast
+    table.cell(ds1_t, 0, 0, "THIS WEEK", text_color = #c9a84c, text_size = ds1_size, bgcolor = #0a0b0d)
+    table.cell(ds1_t, 1, 0, "", bgcolor = #0a0b0d)
+    ds1_row(1, "Opened at",        str.tostring(ds1_o, format.mintick), #f2f0ea)
+    ds1_row(2, "Moved since open", ds1_sign(ds1_chg), ds1_chg >= 0 ? #c9a84c : #d27050)
+    ds1_row(3, "Week's range",     str.tostring(ds1_rng, format.mintick), #f2f0ea)
+    ds1_row(4, "Price sitting",    str.tostring(ds1_inr, "#") + "% up, " + ds1_where_in, #f2f0ea)
+    ds1_row(5, "Last week ended",  ds1_sign(ds1_pchg), ds1_pchg >= 0 ? #c9a84c : #d27050)

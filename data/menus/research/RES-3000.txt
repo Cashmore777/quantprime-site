@@ -1,0 +1,32 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-3000
+//  Prior Week
+//  Prior week H/L/C
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-3000 · Prior Week", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st3_on   = input.bool(true,      "Show prior week H/L/C",        group = "Starter · Prior week")
+st3_cHi  = input.color(#c9a84c,  "High",  inline = "st3", group = "Starter · Prior week")
+st3_cLo  = input.color(#00abff,  "Low",   inline = "st3", group = "Starter · Prior week")
+st3_cCl  = input.color(#9aa0a6,  "Close", inline = "st3", group = "Starter · Prior week")
+
+[st3_h, st3_l, st3_c] = request.security(syminfo.tickerid, "W", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st3_on ? st3_h : na, "PW High",  color = st3_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st3_on ? st3_l : na, "PW Low",   color = st3_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st3_on ? st3_c : na, "PW Close", color = st3_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+// (none selected)
+
+// ---------- DESSERT ----------
+// (none selected)

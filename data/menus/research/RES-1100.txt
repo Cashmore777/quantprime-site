@@ -1,0 +1,50 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-1100
+//  Prev Day + EMA Ribbon
+//  Previous day H/L/C, EMA ribbon (4 layer)
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-1100 · Prev Day + EMA Ribbon", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st1_on  = input.bool(true,     "Show previous day H/L/C",       group = "Starter · Previous day")
+st1_cHi = input.color(#ffd700, "PD High",  inline = "st1", group = "Starter · Previous day")
+st1_cLo = input.color(#ffd700, "PD Low",   inline = "st1", group = "Starter · Previous day")
+st1_cCl = input.color(#ffffff, "PD Close", inline = "st1", group = "Starter · Previous day")
+
+[st1_h, st1_l, st1_c] = request.security(syminfo.tickerid, "D", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st1_on ? st1_h : na, "PD High",  color = st1_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_l : na, "PD Low",   color = st1_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_c : na, "PD Close", color = st1_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+mn1_on  = input.bool(true, "Show EMA ribbon",              group = "Main · EMA ribbon")
+mn1_l1  = input.int(8,   "EMA 1", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l2  = input.int(26,  "EMA 2", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l3  = input.int(80,  "EMA 3", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_l4  = input.int(233, "EMA 4", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_c1  = input.color(#ffffff, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c2  = input.color(#fff9c4, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c3  = input.color(#ffeb3b, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c4  = input.color(#ff9800, "", inline = "mn1c", group = "Main · EMA ribbon")
+
+mn1_e1 = ta.ema(close, mn1_l1)
+mn1_e2 = ta.ema(close, mn1_l2)
+mn1_e3 = ta.ema(close, mn1_l3)
+mn1_e4 = ta.ema(close, mn1_l4)
+
+plot(mn1_on ? mn1_e1 : na, "EMA 1", color = mn1_c1, linewidth = 1)
+plot(mn1_on ? mn1_e2 : na, "EMA 2", color = mn1_c2, linewidth = 1)
+plot(mn1_on ? mn1_e3 : na, "EMA 3", color = mn1_c3, linewidth = 1)
+plot(mn1_on ? mn1_e4 : na, "EMA 4", color = mn1_c4, linewidth = 2)
+
+// ---------- SIDE ----------
+// (none selected)
+
+// ---------- DESSERT ----------
+// (none selected)

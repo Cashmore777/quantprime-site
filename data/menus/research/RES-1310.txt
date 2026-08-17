@@ -1,0 +1,78 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-1310
+//  Prev Day + Daily Range + Countdown
+//  Previous day H/L/C, Daily range used, Candle countdown timer
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-1310 · Prev Day + Daily Range + Countdown", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st1_on  = input.bool(true,     "Show previous day H/L/C",       group = "Starter · Previous day")
+st1_cHi = input.color(#ffd700, "PD High",  inline = "st1", group = "Starter · Previous day")
+st1_cLo = input.color(#ffd700, "PD Low",   inline = "st1", group = "Starter · Previous day")
+st1_cCl = input.color(#ffffff, "PD Close", inline = "st1", group = "Starter · Previous day")
+
+[st1_h, st1_l, st1_c] = request.security(syminfo.tickerid, "D", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st1_on ? st1_h : na, "PD High",  color = st1_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_l : na, "PD Low",   color = st1_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_c : na, "PD Close", color = st1_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+mn3_on   = input.bool(true, "Show daily range", group = "Main · Daily range", tooltip = "Compares how far price has travelled today against a typical day. Under 100% means today has moved less than average, so there may still be room left in the session. Over 100% means today has already moved further than a normal day.")
+mn3_days = input.int(20,    "Compare against last (days)", minval = 2, group = "Main · Daily range", tooltip = "How many previous days are averaged to define a normal day's range.")
+mn3_quiet = input.int(60,   "Quiet below %",    minval = 1, group = "Main · Daily range")
+mn3_ext   = input.int(110,  "Extended above %", minval = 1, group = "Main · Daily range")
+mn3_sz   = input.string("Tiny", "Range table text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Main · Daily range")
+mn3_pos  = input.string("Top right", "Range table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Main · Daily range")
+
+mn3_avg  = request.security(syminfo.tickerid, "D", ta.sma(high - low, mn3_days)[1], lookahead = barmerge.lookahead_on)
+[mn3_dh, mn3_dl] = request.security(syminfo.tickerid, "D", [high, low], lookahead = barmerge.lookahead_on)
+
+mn3_today = mn3_dh - mn3_dl
+mn3_pct   = mn3_avg > 0 ? 100.0 * mn3_today / mn3_avg : 0.0
+mn3_word  = mn3_pct < mn3_quiet ? "QUIET" : mn3_pct > mn3_ext ? "EXTENDED" : "NORMAL"
+mn3_col   = mn3_pct < mn3_quiet ? #9aa0a6 : mn3_pct > mn3_ext ? #d27050 : #00abff
+
+mn3_size = mn3_sz == "Tiny" ? size.tiny : mn3_sz == "Small" ? size.small : mn3_sz == "Normal" ? size.normal : size.large
+mn3_where = mn3_pos == "Top right" ? position.top_right : mn3_pos == "Top left" ? position.top_left : mn3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table mn3_t = table.new(mn3_where, 2, 4, border_width = 0)
+mn3_row(r, k, v, c) =>
+    table.cell(mn3_t, 0, r, k, text_color = #6b7280, text_size = mn3_size, bgcolor = #0a0b0d)
+    table.cell(mn3_t, 1, r, v, text_color = c,       text_size = mn3_size, bgcolor = #0a0b0d)
+
+if mn3_on and barstate.islast
+    table.cell(mn3_t, 0, 0, "DAILY RANGE", text_color = #c9a84c, text_size = mn3_size, bgcolor = #0a0b0d)
+    table.cell(mn3_t, 1, 0, "", bgcolor = #0a0b0d)
+    mn3_row(1, "Today so far",  str.tostring(mn3_today, format.mintick), #f2f0ea)
+    mn3_row(2, "Normal day",    str.tostring(mn3_avg,   format.mintick), #9aa0a6)
+    mn3_row(3, mn3_word,        str.tostring(mn3_pct, "#") + "% of normal", mn3_col)
+
+// ---------- SIDE ----------
+sd1_on  = input.bool(true,     "Show candle countdown", group = "Side · Countdown")
+sd1_col = input.color(#c9a84c, "Countdown colour",      group = "Side · Countdown")
+sd1_sz  = input.string("Small", "Countdown size", options = ["Tiny", "Small", "Normal", "Large", "Huge"], group = "Side · Countdown")
+
+sd1_size = sd1_sz == "Tiny" ? size.tiny : sd1_sz == "Small" ? size.small : sd1_sz == "Normal" ? size.normal : sd1_sz == "Large" ? size.large : size.huge
+
+sd1_left = time_close - timenow
+sd1_secs = math.max(0, math.floor(sd1_left / 1000))
+sd1_h    = math.floor(sd1_secs / 3600)
+sd1_m    = math.floor((sd1_secs % 3600) / 60)
+sd1_s    = sd1_secs % 60
+sd1_pad(v) =>
+    v < 10 ? "0" + str.tostring(v) : str.tostring(v)
+sd1_txt = (sd1_h > 0 ? sd1_pad(sd1_h) + ":" : "") + sd1_pad(sd1_m) + ":" + sd1_pad(sd1_s)
+
+var label sd1_lbl = na
+if sd1_on and barstate.islast
+    label.delete(sd1_lbl)
+    sd1_lbl := label.new(bar_index + 2, close, sd1_txt, style = label.style_label_left, color = #00000000, textcolor = sd1_col, size = sd1_size)
+
+// ---------- DESSERT ----------
+// (none selected)

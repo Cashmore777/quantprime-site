@@ -1,0 +1,88 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-2032
+//  Weekly Open + Hourly Profile + Vol Report
+//  Weekly open line, Time-of-day range profile, Volatility report generator
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-2032 · Weekly Open + Hourly Profile + Vol Report", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st2_on  = input.bool(true,     "Show weekly open",  group = "Starter · Weekly open")
+st2_col = input.color(#c9a84c, "Weekly open colour", group = "Starter · Weekly open")
+st2_wid = input.int(1, "Weekly open width", minval = 1, maxval = 4, group = "Starter · Weekly open")
+
+st2_o = request.security(syminfo.tickerid, "W", open, lookahead = barmerge.lookahead_on)
+
+plot(st2_on ? st2_o : na, "Weekly open", color = st2_col, style = plot.style_stepline, linewidth = st2_wid)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+sd3_on   = input.bool(true, "Show time-of-day profile",     group = "Side · Time-of-day profile")
+sd3_days = input.int(30,    "Days of history", minval = 5,  group = "Side · Time-of-day profile")
+sd3_sz   = input.string("Tiny", "Profile text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Side · Time-of-day profile")
+sd3_pos  = input.string("Top right", "Profile table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Side · Time-of-day profile")
+
+var array<float> sd3_sum = array.new_float(24, 0.0)
+var array<int>   sd3_cnt = array.new_int(24, 0)
+
+sd3_cut = timestamp(year, month, dayofmonth, 0, 0) - sd3_days * 86400000
+if time >= sd3_cut
+    sd3_h = hour(time, syminfo.timezone)
+    array.set(sd3_sum, sd3_h, array.get(sd3_sum, sd3_h) + (high - low))
+    array.set(sd3_cnt, sd3_h, array.get(sd3_cnt, sd3_h) + 1)
+
+sd3_size = sd3_sz == "Tiny" ? size.tiny : sd3_sz == "Small" ? size.small : sd3_sz == "Normal" ? size.normal : size.large
+
+sd3_where = sd3_pos == "Top right" ? position.top_right : sd3_pos == "Top left" ? position.top_left : sd3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table sd3_tbl = table.new(sd3_where, 2, 25, border_width = 0)
+if sd3_on and barstate.islast
+    table.cell(sd3_tbl, 0, 0, "HOUR", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    table.cell(sd3_tbl, 1, 0, "AVG RANGE", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    sd3_max = 0.0
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_max := math.max(sd3_max, sd3_v)
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_col = sd3_max > 0 and sd3_v >= sd3_max * 0.75 ? #c9a84c : #9aa0a6
+        table.cell(sd3_tbl, 0, sd3_i + 1, str.tostring(sd3_i) + ":00", text_color = #9aa0a6, text_size = sd3_size, bgcolor = #0a0b0d)
+        table.cell(sd3_tbl, 1, sd3_i + 1, str.tostring(sd3_v, format.mintick), text_color = sd3_col, text_size = sd3_size, bgcolor = #0a0b0d)
+
+// ---------- DESSERT ----------
+ds2_on  = input.bool(true, "Show volatility report", group = "Dessert · Volatility report")
+ds2_len = input.int(14, "Report ATR length", minval = 1,    group = "Dessert · Volatility report")
+ds2_sz  = input.string("Tiny", "Report text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Dessert · Volatility report")
+ds2_pos = input.string("Bottom right", "Volatility report position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Dessert · Volatility report")
+
+ds2_atr   = ta.atr(ds2_len)
+ds2_atr20 = ta.sma(ds2_atr, 20)
+ds2_datr  = request.security(syminfo.tickerid, "D", ta.atr(ds2_len), lookahead = barmerge.lookahead_on)
+ds2_watr  = request.security(syminfo.tickerid, "W", ta.atr(ds2_len), lookahead = barmerge.lookahead_on)
+ds2_rel   = ds2_atr20 > 0 ? 100.0 * ds2_atr / ds2_atr20 : 0.0
+ds2_col   = ds2_rel > 120 ? #c9a84c : ds2_rel < 80 ? #9aa0a6 : #00abff
+
+ds2_size = ds2_sz == "Tiny" ? size.tiny : ds2_sz == "Small" ? size.small : ds2_sz == "Normal" ? size.normal : size.large
+
+ds2_where = ds2_pos == "Top right" ? position.top_right : ds2_pos == "Top left" ? position.top_left : ds2_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table ds2_t = table.new(ds2_where, 2, 5, border_width = 0)
+ds2_row(r, k, v, c) =>
+    table.cell(ds2_t, 0, r, k, text_color = #6b7280, text_size = ds2_size, bgcolor = #0a0b0d)
+    table.cell(ds2_t, 1, r, v, text_color = c,       text_size = ds2_size, bgcolor = #0a0b0d)
+
+if ds2_on and barstate.islast
+    table.cell(ds2_t, 0, 0, "VOLATILITY", text_color = #c9a84c, text_size = ds2_size, bgcolor = #0a0b0d)
+    table.cell(ds2_t, 1, 0, "", bgcolor = #0a0b0d)
+    ds2_row(1, "ATR (chart)", str.tostring(ds2_atr,  format.mintick), #f2f0ea)
+    ds2_row(2, "ATR daily",   str.tostring(ds2_datr, format.mintick), #f2f0ea)
+    ds2_row(3, "ATR weekly",  str.tostring(ds2_watr, format.mintick), #f2f0ea)
+    ds2_row(4, "vs 20 avg",   str.tostring(ds2_rel, "#") + "%", ds2_col)

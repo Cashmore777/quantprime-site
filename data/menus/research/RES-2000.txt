@@ -1,0 +1,29 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-2000
+//  Weekly Open
+//  Weekly open line
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-2000 · Weekly Open", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st2_on  = input.bool(true,     "Show weekly open",  group = "Starter · Weekly open")
+st2_col = input.color(#c9a84c, "Weekly open colour", group = "Starter · Weekly open")
+st2_wid = input.int(1, "Weekly open width", minval = 1, maxval = 4, group = "Starter · Weekly open")
+
+st2_o = request.security(syminfo.tickerid, "W", open, lookahead = barmerge.lookahead_on)
+
+plot(st2_on ? st2_o : na, "Weekly open", color = st2_col, style = plot.style_stepline, linewidth = st2_wid)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+// (none selected)
+
+// ---------- DESSERT ----------
+// (none selected)

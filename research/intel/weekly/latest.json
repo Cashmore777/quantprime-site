@@ -1,0 +1,333 @@
+{
+  "week_ending": "2026-08-16",
+  "week_label": "Week ending 16 Aug 2026",
+  "generated_at": "2026-08-16T20:00:13.641711",
+  "instruments": [
+    {
+      "symbol": "GC=F",
+      "name": "XAU/USD",
+      "open": 4336.10009765625,
+      "close": 4437.2998046875,
+      "high": 4454.60009765625,
+      "low": 4336.10009765625,
+      "change_pct": 2.3338877044363087,
+      "daily_changes": [
+        {
+          "date": "Mon",
+          "change_pct": 0.592691738023788
+        },
+        {
+          "date": "Tue",
+          "change_pct": 0.48604237383193893
+        },
+        {
+          "date": "Wed",
+          "change_pct": 0.5909172334873375
+        },
+        {
+          "date": "Thu",
+          "change_pct": -1.0274627614797704
+        },
+        {
+          "date": "Fri",
+          "change_pct": 1.6889656563816455
+        }
+      ],
+      "volatility": 1.4190925678809623,
+      "label": "Gold"
+    },
+    {
+      "symbol": "EURUSD=X",
+      "name": "EUR/USD",
+      "open": 1.155575156211853,
+      "close": 1.157273530960083,
+      "high": 1.1588828563690186,
+      "low": 1.1512778997421265,
+      "change_pct": 0.1469722448687375,
+      "daily_changes": [
+        {
+          "date": "Thu",
+          "change_pct": 0.013864722194397643
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.28236172192068687
+        },
+        {
+          "date": "Mon",
+          "change_pct": 0.2750413855052052
+        },
+        {
+          "date": "Tue",
+          "change_pct": -0.08658762442715902
+        },
+        {
+          "date": "Wed",
+          "change_pct": -0.023095589516729177
+        },
+        {
+          "date": "Thu",
+          "change_pct": -0.11875754820394699
+        },
+        {
+          "date": "Fri",
+          "change_pct": 0.37033341794099417
+        }
+      ],
+      "volatility": 0.3307234794125655,
+      "label": "Euro"
+    },
+    {
+      "symbol": "GBPUSD=X",
+      "name": "GBP/USD",
+      "open": 1.3468012809753418,
+      "close": 1.3532898426055908,
+      "high": 1.356042504310608,
+      "low": 1.3435261249542236,
+      "change_pct": 0.4817757245931682,
+      "daily_changes": [
+        {
+          "date": "Thu",
+          "change_pct": 0.012126267549010479
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.10629995615602508
+        },
+        {
+          "date": "Mon",
+          "change_pct": 0.2629362406638276
+        },
+        {
+          "date": "Tue",
+          "change_pct": 0.15281671316822518
+        },
+        {
+          "date": "Wed",
+          "change_pct": -0.010808074275556839
+        },
+        {
+          "date": "Thu",
+          "change_pct": -0.089085806326257
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.0526106709666639
+        },
+        {
+          "date": "Sun",
+          "change_pct": 0.3126049044958748
+        }
+      ],
+      "volatility": 0.29333510447480704,
+      "label": "Cable"
+    },
+    {
+      "symbol": "^IXIC",
+      "name": "NAS100",
+      "open": 26268.83984375,
+      "close": 26729.16015625,
+      "high": 26875.51953125,
+      "low": 26208.4296875,
+      "change_pct": 1.7523435189297918,
+      "daily_changes": [
+        {
+          "date": "Thu",
+          "change_pct": 0.302677111352968
+        },
+        {
+          "date": "Fri",
+          "change_pct": 1.2990169643423022
+        },
+        {
+          "date": "Mon",
+          "change_pct": -0.31943719692597405
+        },
+        {
+          "date": "Tue",
+          "change_pct": -0.6010449022547737
+        },
+        {
+          "date": "Wed",
+          "change_pct": 0.5408908521152402
+        },
+        {
+          "date": "Thu",
+          "change_pct": 0.8068869672886978
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.2755999697154101
+        }
+      ],
+      "volatility": 0.878814384689673,
+      "label": "Nasdaq"
+    },
+    {
+      "symbol": "^GSPC",
+      "name": "SPX500",
+      "open": 7713.7900390625,
+      "close": 7785.759765625,
+      "high": 7816.7001953125,
+      "low": 7698.14990234375,
+      "change_pct": 0.9330008491033142,
+      "daily_changes": [
+        {
+          "date": "Thu",
+          "change_pct": -0.04965235125151903
+        },
+        {
+          "date": "Fri",
+          "change_pct": 0.6184231308959001
+        },
+        {
+          "date": "Mon",
+          "change_pct": -0.05839757139619227
+        },
+        {
+          "date": "Tue",
+          "change_pct": -0.32128614721071164
+        },
+        {
+          "date": "Wed",
+          "change_pct": 0.2626718275208857
+        },
+        {
+          "date": "Thu",
+          "change_pct": 0.6516130138091244
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.1696433557729704
+        }
+      ],
+      "volatility": 0.5259629981296594,
+      "label": "S&P"
+    },
+    {
+      "symbol": "USDJPY=X",
+      "name": "USD/JPY",
+      "open": 157.66400146484375,
+      "close": 159.30499267578125,
+      "high": 159.4949951171875,
+      "low": 156.83099365234375,
+      "change_pct": 1.0408154021787983,
+      "daily_changes": [
+        {
+          "date": "Thu",
+          "change_pct": -0.04058971022779402
+        },
+        {
+          "date": "Fri",
+          "change_pct": 0.5133188116656923
+        },
+        {
+          "date": "Mon",
+          "change_pct": -0.3269953875608631
+        },
+        {
+          "date": "Tue",
+          "change_pct": 0.8011852086654371
+        },
+        {
+          "date": "Wed",
+          "change_pct": 0.06848219750484351
+        },
+        {
+          "date": "Thu",
+          "change_pct": 0.039558936540050285
+        },
+        {
+          "date": "Fri",
+          "change_pct": 0.06150327723784971
+        },
+        {
+          "date": "Sun",
+          "change_pct": -0.075898662173619
+        }
+      ],
+      "volatility": 0.4932930031309796,
+      "label": "Yen"
+    },
+    {
+      "symbol": "BTC-USD",
+      "name": "BTC/USD",
+      "open": 64845.3828125,
+      "close": 63074.2890625,
+      "high": 65321.83984375,
+      "low": 62487.69921875,
+      "change_pct": -2.7312565261910877,
+      "daily_changes": [
+        {
+          "date": "Mon",
+          "change_pct": -1.441578157851206
+        },
+        {
+          "date": "Tue",
+          "change_pct": -0.5612699871830212
+        },
+        {
+          "date": "Wed",
+          "change_pct": -0.23514869742238131
+        },
+        {
+          "date": "Thu",
+          "change_pct": -0.0004127897545336483
+        },
+        {
+          "date": "Fri",
+          "change_pct": -0.6728131109467612
+        },
+        {
+          "date": "Sat",
+          "change_pct": 0.07737372464233416
+        },
+        {
+          "date": "Sun",
+          "change_pct": 0.07928486932066033
+        }
+      ],
+      "volatility": 1.5379388104912444,
+      "label": "Bitcoin"
+    },
+    {
+      "symbol": "CL=F",
+      "name": "WTI Oil",
+      "open": 78.41999816894531,
+      "close": 82.4000015258789,
+      "high": 84.61000061035156,
+      "low": 77.79000091552734,
+      "change_pct": 5.075240308421345,
+      "daily_changes": [
+        {
+          "date": "Mon",
+          "change_pct": 4.730934928715458
+        },
+        {
+          "date": "Tue",
+          "change_pct": 1.3028122861402982
+        },
+        {
+          "date": "Wed",
+          "change_pct": 0.08413425167282734
+        },
+        {
+          "date": "Thu",
+          "change_pct": -2.4258397075780405
+        },
+        {
+          "date": "Fri",
+          "change_pct": 1.4153864933894231
+        }
+      ],
+      "volatility": 3.8419374364523664,
+      "label": "Crude"
+    }
+  ],
+  "analysis": {
+    "summary": "<p>Weekly analysis requires AI configuration.</p>",
+    "instrument_analyses": {},
+    "lessons": "<p>Key lessons will appear here.</p>",
+    "outlook": "<p>Next week outlook will appear here.</p>"
+  }
+}

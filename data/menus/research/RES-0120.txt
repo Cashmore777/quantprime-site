@@ -1,0 +1,55 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-0120
+//  EMA Ribbon + Sessions
+//  EMA ribbon (4 layer), Session highlighter
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-0120 · EMA Ribbon + Sessions", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+// (none selected)
+
+// ---------- MAIN ----------
+mn1_on  = input.bool(true, "Show EMA ribbon",              group = "Main · EMA ribbon")
+mn1_l1  = input.int(8,   "EMA 1", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l2  = input.int(26,  "EMA 2", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l3  = input.int(80,  "EMA 3", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_l4  = input.int(233, "EMA 4", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_c1  = input.color(#ffffff, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c2  = input.color(#fff9c4, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c3  = input.color(#ffeb3b, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c4  = input.color(#ff9800, "", inline = "mn1c", group = "Main · EMA ribbon")
+
+mn1_e1 = ta.ema(close, mn1_l1)
+mn1_e2 = ta.ema(close, mn1_l2)
+mn1_e3 = ta.ema(close, mn1_l3)
+mn1_e4 = ta.ema(close, mn1_l4)
+
+plot(mn1_on ? mn1_e1 : na, "EMA 1", color = mn1_c1, linewidth = 1)
+plot(mn1_on ? mn1_e2 : na, "EMA 2", color = mn1_c2, linewidth = 1)
+plot(mn1_on ? mn1_e3 : na, "EMA 3", color = mn1_c3, linewidth = 1)
+plot(mn1_on ? mn1_e4 : na, "EMA 4", color = mn1_c4, linewidth = 2)
+
+// ---------- SIDE ----------
+sd2_on   = input.bool(true, "Show sessions", group = "Side · Sessions")
+sd2_s1   = input.session("0700-0900", "Session 1", inline = "sd2a", group = "Side · Sessions")
+sd2_c1   = input.color(color.new(#c9a84c, 88), "", inline = "sd2a", group = "Side · Sessions")
+sd2_s2   = input.session("1300-1400", "Session 2", inline = "sd2b", group = "Side · Sessions")
+sd2_c2   = input.color(color.new(#00abff, 88), "", inline = "sd2b", group = "Side · Sessions")
+sd2_s3   = input.session("1900-2000", "Session 3", inline = "sd2c", group = "Side · Sessions")
+sd2_c3   = input.color(color.new(#9aa0a6, 90), "", inline = "sd2c", group = "Side · Sessions")
+sd2_tz   = input.string("UTC", "Session timezone", group = "Side · Sessions")
+
+sd2_in(sess) =>
+    not na(time(timeframe.period, sess, sd2_tz))
+
+bgcolor(sd2_on and sd2_in(sd2_s1) ? sd2_c1 : na, title = "Session 1")
+bgcolor(sd2_on and sd2_in(sd2_s2) ? sd2_c2 : na, title = "Session 2")
+bgcolor(sd2_on and sd2_in(sd2_s3) ? sd2_c3 : na, title = "Session 3")
+
+// ---------- DESSERT ----------
+// (none selected)

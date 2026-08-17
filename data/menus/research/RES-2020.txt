@@ -1,0 +1,43 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-2020
+//  Weekly Open + Sessions
+//  Weekly open line, Session highlighter
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-2020 · Weekly Open + Sessions", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st2_on  = input.bool(true,     "Show weekly open",  group = "Starter · Weekly open")
+st2_col = input.color(#c9a84c, "Weekly open colour", group = "Starter · Weekly open")
+st2_wid = input.int(1, "Weekly open width", minval = 1, maxval = 4, group = "Starter · Weekly open")
+
+st2_o = request.security(syminfo.tickerid, "W", open, lookahead = barmerge.lookahead_on)
+
+plot(st2_on ? st2_o : na, "Weekly open", color = st2_col, style = plot.style_stepline, linewidth = st2_wid)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+sd2_on   = input.bool(true, "Show sessions", group = "Side · Sessions")
+sd2_s1   = input.session("0700-0900", "Session 1", inline = "sd2a", group = "Side · Sessions")
+sd2_c1   = input.color(color.new(#c9a84c, 88), "", inline = "sd2a", group = "Side · Sessions")
+sd2_s2   = input.session("1300-1400", "Session 2", inline = "sd2b", group = "Side · Sessions")
+sd2_c2   = input.color(color.new(#00abff, 88), "", inline = "sd2b", group = "Side · Sessions")
+sd2_s3   = input.session("1900-2000", "Session 3", inline = "sd2c", group = "Side · Sessions")
+sd2_c3   = input.color(color.new(#9aa0a6, 90), "", inline = "sd2c", group = "Side · Sessions")
+sd2_tz   = input.string("UTC", "Session timezone", group = "Side · Sessions")
+
+sd2_in(sess) =>
+    not na(time(timeframe.period, sess, sd2_tz))
+
+bgcolor(sd2_on and sd2_in(sd2_s1) ? sd2_c1 : na, title = "Session 1")
+bgcolor(sd2_on and sd2_in(sd2_s2) ? sd2_c2 : na, title = "Session 2")
+bgcolor(sd2_on and sd2_in(sd2_s3) ? sd2_c3 : na, title = "Session 3")
+
+// ---------- DESSERT ----------
+// (none selected)

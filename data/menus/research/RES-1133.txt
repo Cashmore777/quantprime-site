@@ -1,0 +1,144 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-1133
+//  Prev Day + EMA Ribbon + Hourly Profile + Pair Metrics
+//  Previous day H/L/C, EMA ribbon (4 layer), Time-of-day range profile, Pair-by-pair metrics
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-1133 · Prev Day + EMA Ribbon + Hourly Profile + Pair Metrics", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st1_on  = input.bool(true,     "Show previous day H/L/C",       group = "Starter · Previous day")
+st1_cHi = input.color(#ffd700, "PD High",  inline = "st1", group = "Starter · Previous day")
+st1_cLo = input.color(#ffd700, "PD Low",   inline = "st1", group = "Starter · Previous day")
+st1_cCl = input.color(#ffffff, "PD Close", inline = "st1", group = "Starter · Previous day")
+
+[st1_h, st1_l, st1_c] = request.security(syminfo.tickerid, "D", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st1_on ? st1_h : na, "PD High",  color = st1_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_l : na, "PD Low",   color = st1_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_c : na, "PD Close", color = st1_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+mn1_on  = input.bool(true, "Show EMA ribbon",              group = "Main · EMA ribbon")
+mn1_l1  = input.int(8,   "EMA 1", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l2  = input.int(26,  "EMA 2", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l3  = input.int(80,  "EMA 3", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_l4  = input.int(233, "EMA 4", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_c1  = input.color(#ffffff, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c2  = input.color(#fff9c4, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c3  = input.color(#ffeb3b, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c4  = input.color(#ff9800, "", inline = "mn1c", group = "Main · EMA ribbon")
+
+mn1_e1 = ta.ema(close, mn1_l1)
+mn1_e2 = ta.ema(close, mn1_l2)
+mn1_e3 = ta.ema(close, mn1_l3)
+mn1_e4 = ta.ema(close, mn1_l4)
+
+plot(mn1_on ? mn1_e1 : na, "EMA 1", color = mn1_c1, linewidth = 1)
+plot(mn1_on ? mn1_e2 : na, "EMA 2", color = mn1_c2, linewidth = 1)
+plot(mn1_on ? mn1_e3 : na, "EMA 3", color = mn1_c3, linewidth = 1)
+plot(mn1_on ? mn1_e4 : na, "EMA 4", color = mn1_c4, linewidth = 2)
+
+// ---------- SIDE ----------
+sd3_on   = input.bool(true, "Show time-of-day profile",     group = "Side · Time-of-day profile")
+sd3_days = input.int(30,    "Days of history", minval = 5,  group = "Side · Time-of-day profile")
+sd3_sz   = input.string("Tiny", "Profile text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Side · Time-of-day profile")
+sd3_pos  = input.string("Top right", "Profile table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Side · Time-of-day profile")
+
+var array<float> sd3_sum = array.new_float(24, 0.0)
+var array<int>   sd3_cnt = array.new_int(24, 0)
+
+sd3_cut = timestamp(year, month, dayofmonth, 0, 0) - sd3_days * 86400000
+if time >= sd3_cut
+    sd3_h = hour(time, syminfo.timezone)
+    array.set(sd3_sum, sd3_h, array.get(sd3_sum, sd3_h) + (high - low))
+    array.set(sd3_cnt, sd3_h, array.get(sd3_cnt, sd3_h) + 1)
+
+sd3_size = sd3_sz == "Tiny" ? size.tiny : sd3_sz == "Small" ? size.small : sd3_sz == "Normal" ? size.normal : size.large
+
+sd3_where = sd3_pos == "Top right" ? position.top_right : sd3_pos == "Top left" ? position.top_left : sd3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table sd3_tbl = table.new(sd3_where, 2, 25, border_width = 0)
+if sd3_on and barstate.islast
+    table.cell(sd3_tbl, 0, 0, "HOUR", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    table.cell(sd3_tbl, 1, 0, "AVG RANGE", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    sd3_max = 0.0
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_max := math.max(sd3_max, sd3_v)
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_col = sd3_max > 0 and sd3_v >= sd3_max * 0.75 ? #c9a84c : #9aa0a6
+        table.cell(sd3_tbl, 0, sd3_i + 1, str.tostring(sd3_i) + ":00", text_color = #9aa0a6, text_size = sd3_size, bgcolor = #0a0b0d)
+        table.cell(sd3_tbl, 1, sd3_i + 1, str.tostring(sd3_v, format.mintick), text_color = sd3_col, text_size = sd3_size, bgcolor = #0a0b0d)
+
+// ---------- DESSERT ----------
+ds3_on  = input.bool(true, "Show pair metrics", group = "Dessert · Pair metrics", tooltip = "Compares several markets side by side on the same day. Day and week show how far each has moved. ATR is a typical bar's range. Day size compares how wide today's high-to-low range is against a normal day for that market - over 100% means a bigger day than usual. Price at shows where price currently sits inside that range, 0% being today's low and 100% today's high. They are separate measures: a market can have a large day and sit anywhere within it.")
+ds3_p1  = input.symbol("OANDA:EURUSD", "Pair 1", group = "Dessert · Pair metrics")
+ds3_p2  = input.symbol("OANDA:GBPUSD", "Pair 2", group = "Dessert · Pair metrics")
+ds3_p3  = input.symbol("OANDA:USDJPY", "Pair 3", group = "Dessert · Pair metrics")
+ds3_p4  = input.symbol("OANDA:AUDUSD", "Pair 4", group = "Dessert · Pair metrics")
+ds3_p5  = input.symbol("OANDA:XAUUSD", "Pair 5", group = "Dessert · Pair metrics")
+ds3_len = input.int(14, "Pair ATR length", minval = 1, group = "Dessert · Pair metrics")
+ds3_avg = input.int(20, "Normal day averaged over", minval = 2, group = "Dessert · Pair metrics")
+ds3_sz  = input.string("Tiny", "Pair table text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Dessert · Pair metrics")
+ds3_pos = input.string("Bottom right", "Pair table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Dessert · Pair metrics")
+
+ds3_day(sym) =>
+    request.security(sym, "D", [100.0 * (close - open) / open, ta.atr(ds3_len), (high - low), ta.sma(high - low, ds3_avg)[1], high, low, close], lookahead = barmerge.lookahead_on)
+ds3_wk(sym) =>
+    request.security(sym, "W", 100.0 * (close - open) / open, lookahead = barmerge.lookahead_on)
+
+[ds3_c1, ds3_a1, ds3_r1, ds3_n1, ds3_h1, ds3_l1, ds3_x1] = ds3_day(ds3_p1)
+[ds3_c2, ds3_a2, ds3_r2, ds3_n2, ds3_h2, ds3_l2, ds3_x2] = ds3_day(ds3_p2)
+[ds3_c3, ds3_a3, ds3_r3, ds3_n3, ds3_h3, ds3_l3, ds3_x3] = ds3_day(ds3_p3)
+[ds3_c4, ds3_a4, ds3_r4, ds3_n4, ds3_h4, ds3_l4, ds3_x4] = ds3_day(ds3_p4)
+[ds3_c5, ds3_a5, ds3_r5, ds3_n5, ds3_h5, ds3_l5, ds3_x5] = ds3_day(ds3_p5)
+ds3_w1 = ds3_wk(ds3_p1)
+ds3_w2 = ds3_wk(ds3_p2)
+ds3_w3 = ds3_wk(ds3_p3)
+ds3_w4 = ds3_wk(ds3_p4)
+ds3_w5 = ds3_wk(ds3_p5)
+
+ds3_size  = ds3_sz == "Tiny" ? size.tiny : ds3_sz == "Small" ? size.small : ds3_sz == "Normal" ? size.normal : size.large
+ds3_where = ds3_pos == "Top right" ? position.top_right : ds3_pos == "Top left" ? position.top_left : ds3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+ds3_clean(sym) =>
+    ds3_i = str.pos(sym, ":")
+    na(ds3_i) ? sym : str.substring(sym, ds3_i + 1)
+ds3_sign(v) =>
+    (v >= 0 ? "+" : "") + str.tostring(v, "#.##") + "%"
+ds3_pcol(v) =>
+    v >= 0 ? #c9a84c : #d27050
+
+var table ds3_t = table.new(ds3_where, 6, 6, border_width = 0)
+ds3_head(c, txt) =>
+    table.cell(ds3_t, c, 0, txt, text_color = #6b7280, text_size = ds3_size, bgcolor = #0a0b0d)
+ds3_row(r, sym, chg, wk, atr, rng, nrm, hi, lo, cl) =>
+    ds3_used = nrm > 0 ? 100.0 * rng / nrm : 0.0
+    ds3_inr  = (hi - lo) > 0 ? 100.0 * (cl - lo) / (hi - lo) : 0.0
+    table.cell(ds3_t, 0, r, ds3_clean(sym),                       text_color = #f2f0ea, text_size = ds3_size, bgcolor = #0a0b0d)
+    table.cell(ds3_t, 1, r, ds3_sign(chg),                        text_color = ds3_pcol(chg), text_size = ds3_size, bgcolor = #0a0b0d)
+    table.cell(ds3_t, 2, r, ds3_sign(wk),                         text_color = ds3_pcol(wk),  text_size = ds3_size, bgcolor = #0a0b0d)
+    table.cell(ds3_t, 3, r, str.tostring(atr, format.mintick),    text_color = #9aa0a6, text_size = ds3_size, bgcolor = #0a0b0d)
+    table.cell(ds3_t, 4, r, str.tostring(ds3_used, "#") + "%",    text_color = ds3_used > 110 ? #d27050 : ds3_used < 60 ? #9aa0a6 : #00abff, text_size = ds3_size, bgcolor = #0a0b0d)
+    table.cell(ds3_t, 5, r, str.tostring(ds3_inr, "#") + "%",     text_color = #f2f0ea, text_size = ds3_size, bgcolor = #0a0b0d)
+
+if ds3_on and barstate.islast
+    ds3_head(0, "PAIR")
+    ds3_head(1, "DAY")
+    ds3_head(2, "WEEK")
+    ds3_head(3, "ATR")
+    ds3_head(4, "DAY SIZE")
+    ds3_head(5, "PRICE AT")
+    ds3_row(1, ds3_p1, ds3_c1, ds3_w1, ds3_a1, ds3_r1, ds3_n1, ds3_h1, ds3_l1, ds3_x1)
+    ds3_row(2, ds3_p2, ds3_c2, ds3_w2, ds3_a2, ds3_r2, ds3_n2, ds3_h2, ds3_l2, ds3_x2)
+    ds3_row(3, ds3_p3, ds3_c3, ds3_w3, ds3_a3, ds3_r3, ds3_n3, ds3_h3, ds3_l3, ds3_x3)
+    ds3_row(4, ds3_p4, ds3_c4, ds3_w4, ds3_a4, ds3_r4, ds3_n4, ds3_h4, ds3_l4, ds3_x4)
+    ds3_row(5, ds3_p5, ds3_c5, ds3_w5, ds3_a5, ds3_r5, ds3_n5, ds3_h5, ds3_l5, ds3_x5)

@@ -1,0 +1,75 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-3021
+//  Prior Week + Sessions + Weekly Summary
+//  Prior week H/L/C, Session highlighter, Weekly analysis template
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-3021 · Prior Week + Sessions + Weekly Summary", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st3_on   = input.bool(true,      "Show prior week H/L/C",        group = "Starter · Prior week")
+st3_cHi  = input.color(#c9a84c,  "High",  inline = "st3", group = "Starter · Prior week")
+st3_cLo  = input.color(#00abff,  "Low",   inline = "st3", group = "Starter · Prior week")
+st3_cCl  = input.color(#9aa0a6,  "Close", inline = "st3", group = "Starter · Prior week")
+
+[st3_h, st3_l, st3_c] = request.security(syminfo.tickerid, "W", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st3_on ? st3_h : na, "PW High",  color = st3_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st3_on ? st3_l : na, "PW Low",   color = st3_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st3_on ? st3_c : na, "PW Close", color = st3_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+sd2_on   = input.bool(true, "Show sessions", group = "Side · Sessions")
+sd2_s1   = input.session("0700-0900", "Session 1", inline = "sd2a", group = "Side · Sessions")
+sd2_c1   = input.color(color.new(#c9a84c, 88), "", inline = "sd2a", group = "Side · Sessions")
+sd2_s2   = input.session("1300-1400", "Session 2", inline = "sd2b", group = "Side · Sessions")
+sd2_c2   = input.color(color.new(#00abff, 88), "", inline = "sd2b", group = "Side · Sessions")
+sd2_s3   = input.session("1900-2000", "Session 3", inline = "sd2c", group = "Side · Sessions")
+sd2_c3   = input.color(color.new(#9aa0a6, 90), "", inline = "sd2c", group = "Side · Sessions")
+sd2_tz   = input.string("UTC", "Session timezone", group = "Side · Sessions")
+
+sd2_in(sess) =>
+    not na(time(timeframe.period, sess, sd2_tz))
+
+bgcolor(sd2_on and sd2_in(sd2_s1) ? sd2_c1 : na, title = "Session 1")
+bgcolor(sd2_on and sd2_in(sd2_s2) ? sd2_c2 : na, title = "Session 2")
+bgcolor(sd2_on and sd2_in(sd2_s3) ? sd2_c3 : na, title = "Session 3")
+
+// ---------- DESSERT ----------
+ds1_on  = input.bool(true, "Show weekly summary", group = "Dessert · Weekly summary", tooltip = "A plain summary of the current trading week: where it opened, how far price has moved since, how wide the week's range is, and whereabouts in that range price is sitting now.")
+ds1_sz  = input.string("Tiny", "Weekly table text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Dessert · Weekly summary")
+ds1_pos = input.string("Top right", "Weekly table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Dessert · Weekly summary")
+
+[ds1_o, ds1_h, ds1_l, ds1_c, ds1_po, ds1_pc] = request.security(syminfo.tickerid, "W", [open, high, low, close, open[1], close[1]], lookahead = barmerge.lookahead_on)
+
+ds1_chg   = ds1_o > 0 ? 100.0 * (ds1_c - ds1_o) / ds1_o : 0.0
+ds1_rng   = ds1_h - ds1_l
+ds1_inr   = ds1_rng > 0 ? 100.0 * (ds1_c - ds1_l) / ds1_rng : 0.0
+ds1_pchg  = ds1_po > 0 ? 100.0 * (ds1_pc - ds1_po) / ds1_po : 0.0
+ds1_where_in = ds1_inr >= 70 ? "near the high" : ds1_inr <= 30 ? "near the low" : "mid range"
+ds1_sign(v) =>
+    (v >= 0 ? "+" : "") + str.tostring(v, "#.##") + "%"
+
+ds1_size = ds1_sz == "Tiny" ? size.tiny : ds1_sz == "Small" ? size.small : ds1_sz == "Normal" ? size.normal : size.large
+ds1_where = ds1_pos == "Top right" ? position.top_right : ds1_pos == "Top left" ? position.top_left : ds1_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table ds1_t = table.new(ds1_where, 2, 6, border_width = 0)
+ds1_row(r, k, v, c) =>
+    table.cell(ds1_t, 0, r, k, text_color = #6b7280, text_size = ds1_size, bgcolor = #0a0b0d)
+    table.cell(ds1_t, 1, r, v, text_color = c,       text_size = ds1_size, bgcolor = #0a0b0d)
+
+if ds1_on and barstate.islast
+    table.cell(ds1_t, 0, 0, "THIS WEEK", text_color = #c9a84c, text_size = ds1_size, bgcolor = #0a0b0d)
+    table.cell(ds1_t, 1, 0, "", bgcolor = #0a0b0d)
+    ds1_row(1, "Opened at",        str.tostring(ds1_o, format.mintick), #f2f0ea)
+    ds1_row(2, "Moved since open", ds1_sign(ds1_chg), ds1_chg >= 0 ? #c9a84c : #d27050)
+    ds1_row(3, "Week's range",     str.tostring(ds1_rng, format.mintick), #f2f0ea)
+    ds1_row(4, "Price sitting",    str.tostring(ds1_inr, "#") + "% up, " + ds1_where_in, #f2f0ea)
+    ds1_row(5, "Last week ended",  ds1_sign(ds1_pchg), ds1_pchg >= 0 ? #c9a84c : #d27050)

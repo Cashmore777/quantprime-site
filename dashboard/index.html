@@ -2203,6 +2203,545 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   box-shadow: 0 4px 12px rgba(201,168,76,0.35);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   MENU SYSTEM - Instrument Builder
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.marketplace-mode-toggle {
+  display: flex;
+  background: var(--surface-raised);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.marketplace-mode-toggle button {
+  flex: 1;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.marketplace-mode-toggle button.active {
+  background: var(--surface);
+  color: var(--gold);
+  box-shadow: var(--shadow-sm);
+}
+
+.marketplace-mode-toggle button:hover:not(.active) {
+  color: var(--text-1);
+}
+
+/* Menu container */
+.menu-system {
+  display: none;
+}
+
+.menu-system.active {
+  display: block;
+}
+
+/* Marketplace mode visibility */
+.marketplace-mode {
+  display: none;
+}
+
+.marketplace-mode.active {
+  display: block;
+}
+
+/* Menu tier tabs */
+.menu-tier-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.menu-tier-tab {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-tier-tab.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.menu-tier-tab.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.menu-tier-tab .lock-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* Menu layout */
+.menu-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+}
+
+@media (max-width: 1000px) {
+  .menu-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Course sections */
+.menu-courses {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.menu-course {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+  transition: all 0.2s;
+}
+
+.menu-course:hover {
+  border-color: var(--border-hover);
+}
+
+.menu-course.has-selection {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px var(--gold-glow);
+}
+
+.course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.course-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.course-header h3 .course-number {
+  width: 28px;
+  height: 28px;
+  background: var(--gold);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.course-header .course-question {
+  font-size: 13px;
+  color: var(--text-3);
+  font-style: italic;
+}
+
+.course-dishes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 700px) {
+  .course-dishes {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dish card */
+.dish-card {
+  background: var(--surface-raised);
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.dish-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.dish-card.selected {
+  border-color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.dish-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dish-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.dish-card p {
+  font-size: 12px;
+  color: var(--text-2);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Order summary sidebar */
+.order-summary {
+  position: sticky;
+  top: 24px;
+}
+
+.order-summary-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: var(--card-padding);
+}
+
+.order-summary-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-summary-card h3 svg {
+  stroke: var(--gold);
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--surface-raised);
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.order-item .course-label {
+  color: var(--text-3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.order-item .dish-name {
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.order-item.empty {
+  opacity: 0.4;
+  font-style: italic;
+}
+
+.order-item.empty .dish-name {
+  color: var(--text-3);
+}
+
+.order-build-id {
+  font-family: var(--mono);
+  font-size: 14px;
+  text-align: center;
+  padding: 12px;
+  background: var(--surface-raised);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.generate-btn {
+  width: 100%;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: #000;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+  transition: all 0.2s;
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.generate-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Generation animation */
+.generation-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.generation-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.generation-animation {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.gen-dish {
+  width: 60px;
+  height: 60px;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  animation: dishAppear 0.4s forwards;
+}
+
+.gen-dish:nth-child(1) { animation-delay: 0.1s; }
+.gen-dish:nth-child(2) { animation-delay: 0.3s; }
+.gen-dish:nth-child(3) { animation-delay: 0.5s; }
+.gen-dish:nth-child(4) { animation-delay: 0.7s; }
+
+@keyframes dishAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.gen-merge {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+  animation: mergePulse 1s 1.2s forwards;
+}
+
+@keyframes mergePulse {
+  0% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(2); }
+}
+
+.generation-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Result modal */
+.result-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.result-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.result-modal-content {
+  background: var(--surface);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.result-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.result-header .build-id {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.result-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.result-close:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.result-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.result-dishes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.result-dish-tag {
+  padding: 6px 12px;
+  background: var(--gold-glow);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.result-code {
+  background: #1a1a22;
+  border-radius: 10px;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: #e0e0e0;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.result-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 12px;
+}
+
+.result-footer .btn {
+  flex: 1;
+}
+
+.result-instructions {
+  background: var(--surface-raised);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+.result-instructions strong {
+  color: var(--text-1);
+}
+
 /* Locked overlay */
 .locked-overlay {
   position: relative;
@@ -5386,30 +5925,237 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <div class="view-header">
       <div class="eyebrow">Quant Prime Labs</div>
       <h2>The <em>code library</em>.</h2>
-      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Pine Script modules unlocked by tier. Upgrade to access more.</p>
+      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Build custom instruments or browse individual modules.</p>
     </div>
     
-    <div class="marketplace-bar" id="marketplace-filters">
-      <button class="search-toggle" id="search-toggle" onclick="toggleMarketplaceSearch()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        <span class="search-toggle-text">Search</span>
+    <!-- Mode Toggle -->
+    <div class="marketplace-mode-toggle">
+      <button class="active" data-mode="marketplace" onclick="switchMarketplaceMode('marketplace')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 6px;"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/></svg>
+        Marketplace
       </button>
-      <input placeholder="Search snippets…" id="marketplace-search" class="search-hidden">
-      <div class="tier-filters">
-        <button class="filter-chip active" data-tier="all">All</button>
-        <button class="filter-chip tier-free" data-tier="free">Free</button>
-        <button class="filter-chip tier-research" data-tier="research">Research</button>
-        <button class="filter-chip tier-recoil" data-tier="recoil">Recoil</button>
-        <button class="filter-chip tier-meridian" data-tier="meridian">Meridian</button>
-        <button class="filter-chip tier-cockpit" data-tier="cockpit">Cockpit</button>
-        <button class="filter-chip tier-ascension" data-tier="ascension">Ascension</button>
+      <button data-mode="menus" onclick="switchMarketplaceMode('menus')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
+        Build Instrument
+      </button>
+    </div>
+    
+    <!-- MARKETPLACE MODE -->
+    <div id="marketplace-mode" class="marketplace-mode active">
+      <div class="marketplace-bar" id="marketplace-filters">
+        <button class="search-toggle" id="search-toggle" onclick="toggleMarketplaceSearch()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <span class="search-toggle-text">Search</span>
+        </button>
+        <input placeholder="Search snippets…" id="marketplace-search" class="search-hidden">
+        <div class="tier-filters">
+          <button class="filter-chip active" data-tier="all">All</button>
+          <button class="filter-chip tier-free" data-tier="free">Free</button>
+          <button class="filter-chip tier-research" data-tier="research">Research</button>
+          <button class="filter-chip tier-recoil" data-tier="recoil">Recoil</button>
+          <button class="filter-chip tier-meridian" data-tier="meridian">Meridian</button>
+          <button class="filter-chip tier-cockpit" data-tier="cockpit">Cockpit</button>
+          <button class="filter-chip tier-ascension" data-tier="ascension">Ascension</button>
+        </div>
+      </div>
+      
+      <div class="marketplace-grid" id="marketplace-grid">
+        <div style="text-align: center; color: var(--text-3); padding: 40px; grid-column: 1/-1;">
+          Loading products...
+        </div>
       </div>
     </div>
     
-    <div class="marketplace-grid" id="marketplace-grid">
-      <!-- Products loaded dynamically -->
-      <div style="text-align: center; color: var(--text-3); padding: 40px; grid-column: 1/-1;">
-        Loading products...
+    <!-- MENU MODE (Build Instrument) -->
+    <div id="menu-mode" class="marketplace-mode">
+      <!-- Tier tabs -->
+      <div class="menu-tier-tabs" id="menu-tier-tabs">
+        <button class="menu-tier-tab active" data-tier="research" onclick="switchMenuTier('research')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+          Research
+        </button>
+        <button class="menu-tier-tab locked" data-tier="recoil" onclick="switchMenuTier('recoil')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          Recoil
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </button>
+        <button class="menu-tier-tab locked" data-tier="terminal" onclick="switchMenuTier('terminal')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3-3 3"/></svg>
+          Terminal
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </button>
+        <button class="menu-tier-tab locked" data-tier="suite" onclick="switchMenuTier('suite')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Suite
+          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </button>
+      </div>
+      
+      <!-- Menu Layout -->
+      <div class="menu-layout">
+        <!-- Courses -->
+        <div class="menu-courses" id="menu-courses">
+          <!-- Starter -->
+          <div class="menu-course" data-course="starter">
+            <div class="course-header">
+              <h3><span class="course-number">1</span> Starter</h3>
+              <span class="course-question">Where are we?</span>
+            </div>
+            <div class="course-dishes" id="dishes-starter">
+              <div class="dish-card" data-course="starter" data-dish="1" onclick="toggleDish(this)">
+                <h4>Prev Day</h4>
+                <p>Yesterday's key levels</p>
+              </div>
+              <div class="dish-card" data-course="starter" data-dish="2" onclick="toggleDish(this)">
+                <h4>Weekly Open</h4>
+                <p>Week's starting point</p>
+              </div>
+              <div class="dish-card" data-course="starter" data-dish="3" onclick="toggleDish(this)">
+                <h4>Prior Week</h4>
+                <p>Last week's range</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Main -->
+          <div class="menu-course" data-course="main">
+            <div class="course-header">
+              <h3><span class="course-number">2</span> Main</h3>
+              <span class="course-question">What state is it in?</span>
+            </div>
+            <div class="course-dishes" id="dishes-main">
+              <div class="dish-card" data-course="main" data-dish="1" onclick="toggleDish(this)">
+                <h4>EMA Ribbon</h4>
+                <p>Trend direction</p>
+              </div>
+              <div class="dish-card" data-course="main" data-dish="2" onclick="toggleDish(this)">
+                <h4>Volatility</h4>
+                <p>Market energy</p>
+              </div>
+              <div class="dish-card" data-course="main" data-dish="3" onclick="toggleDish(this)">
+                <h4>Daily Range</h4>
+                <p>Range context</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Side -->
+          <div class="menu-course" data-course="side">
+            <div class="course-header">
+              <h3><span class="course-number">3</span> Side</h3>
+              <span class="course-question">When does it matter?</span>
+            </div>
+            <div class="course-dishes" id="dishes-side">
+              <div class="dish-card" data-course="side" data-dish="1" onclick="toggleDish(this)">
+                <h4>Countdown</h4>
+                <p>Time remaining</p>
+              </div>
+              <div class="dish-card" data-course="side" data-dish="2" onclick="toggleDish(this)">
+                <h4>Sessions</h4>
+                <p>Session zones</p>
+              </div>
+              <div class="dish-card" data-course="side" data-dish="3" onclick="toggleDish(this)">
+                <h4>Hourly Profile</h4>
+                <p>Hour analysis</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Dessert -->
+          <div class="menu-course" data-course="dessert">
+            <div class="course-header">
+              <h3><span class="course-number">4</span> Dessert</h3>
+              <span class="course-question">What does the record say?</span>
+            </div>
+            <div class="course-dishes" id="dishes-dessert">
+              <div class="dish-card" data-course="dessert" data-dish="1" onclick="toggleDish(this)">
+                <h4>Weekly Summary</h4>
+                <p>Week stats</p>
+              </div>
+              <div class="dish-card" data-course="dessert" data-dish="2" onclick="toggleDish(this)">
+                <h4>Vol Report</h4>
+                <p>Vol metrics</p>
+              </div>
+              <div class="dish-card" data-course="dessert" data-dish="3" onclick="toggleDish(this)">
+                <h4>Pair Metrics</h4>
+                <p>Pair stats</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <div class="order-summary-card">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Your Order
+            </h3>
+            
+            <div class="order-items" id="order-items">
+              <div class="order-item empty" data-course="starter">
+                <span class="course-label">Starter</span>
+                <span class="dish-name">—</span>
+              </div>
+              <div class="order-item empty" data-course="main">
+                <span class="course-label">Main</span>
+                <span class="dish-name">—</span>
+              </div>
+              <div class="order-item empty" data-course="side">
+                <span class="course-label">Side</span>
+                <span class="dish-name">—</span>
+              </div>
+              <div class="order-item empty" data-course="dessert">
+                <span class="course-label">Dessert</span>
+                <span class="dish-name">—</span>
+              </div>
+            </div>
+            
+            <div class="order-build-id" id="order-build-id">RES-0000</div>
+            
+            <button class="generate-btn" id="generate-btn" disabled onclick="generateInstrument()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Generate Instrument
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Generation Overlay -->
+  <div class="generation-overlay" id="generation-overlay">
+    <div class="generation-animation" id="generation-animation"></div>
+    <div class="gen-merge"></div>
+    <div class="generation-text">Building your instrument...</div>
+  </div>
+  
+  <!-- Result Modal -->
+  <div class="result-modal" id="result-modal">
+    <div class="result-modal-content">
+      <div class="result-header">
+        <div>
+          <h3 id="result-title">Your Instrument</h3>
+          <span class="build-id" id="result-build-id">RES-0000</span>
+        </div>
+        <button class="result-close" onclick="closeResultModal()">×</button>
+      </div>
+      <div class="result-body">
+        <div class="result-instructions">
+          <strong>How to use:</strong> Open TradingView → Pine Editor → Paste the code below → Click "Add to chart"
+        </div>
+        <div class="result-dishes" id="result-dishes"></div>
+        <div class="result-code" id="result-code"></div>
+      </div>
+      <div class="result-footer">
+        <button class="btn gold" onclick="copyInstrumentCode()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Code
+        </button>
+        <button class="btn outline" onclick="downloadInstrumentCode()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download .txt
+        </button>
       </div>
     </div>
   </div>
@@ -10395,6 +11141,331 @@ document.getElementById('marketplace-search')?.addEventListener('input', e => {
 
 // Marketplace loaded after auth in checkAuth() - don't load here
 // loadMarketplaceProducts();
+
+// ==========================================
+// MENU SYSTEM (Instrument Builder)
+// ==========================================
+
+// Menu state
+const menuState = {
+  currentTier: 'research',
+  selections: {
+    starter: 0,
+    main: 0,
+    side: 0,
+    dessert: 0
+  },
+  manifest: null
+};
+
+// Dish name mappings
+const dishNames = {
+  research: {
+    starter: { 1: 'Prev Day', 2: 'Weekly Open', 3: 'Prior Week' },
+    main: { 1: 'EMA Ribbon', 2: 'Volatility', 3: 'Daily Range' },
+    side: { 1: 'Countdown', 2: 'Sessions', 3: 'Hourly Profile' },
+    dessert: { 1: 'Weekly Summary', 2: 'Vol Report', 3: 'Pair Metrics' }
+  }
+};
+
+// Course icons for animation
+const courseIcons = {
+  starter: '📍',
+  main: '📊',
+  side: '⏱️',
+  dessert: '📋'
+};
+
+// Switch between marketplace and menu modes
+function switchMarketplaceMode(mode) {
+  const toggleBtns = document.querySelectorAll('.marketplace-mode-toggle button');
+  toggleBtns.forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  
+  document.getElementById('marketplace-mode').classList.toggle('active', mode === 'marketplace');
+  document.getElementById('menu-mode').classList.toggle('active', mode === 'menus');
+  
+  // Track menu open
+  if (mode === 'menus') {
+    trackMenuEvent('menu_opened', { tier: menuState.currentTier });
+  }
+}
+
+// Switch menu tier
+function switchMenuTier(tier) {
+  // Check access
+  const tierRank = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4 };
+  const userRank = tierRank[window.userTier] || 0;
+  const requiredRank = tierRank[tier] || 0;
+  
+  if (userRank < requiredRank && window.userTier !== 'admin') {
+    promptUpgrade(tier);
+    return;
+  }
+  
+  menuState.currentTier = tier;
+  
+  // Update tab UI
+  document.querySelectorAll('.menu-tier-tab').forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.dataset.tier === tier) tab.classList.add('active');
+  });
+  
+  // Reset selections
+  resetMenuSelections();
+  
+  // TODO: Load tier-specific dishes when other tiers are ready
+  // loadMenuTier(tier);
+}
+
+// Toggle dish selection
+function toggleDish(el) {
+  const course = el.dataset.course;
+  const dish = parseInt(el.dataset.dish);
+  
+  // If already selected, deselect
+  if (el.classList.contains('selected')) {
+    el.classList.remove('selected');
+    menuState.selections[course] = 0;
+  } else {
+    // Deselect other dishes in same course
+    document.querySelectorAll(`.dish-card[data-course="${course}"]`).forEach(d => {
+      d.classList.remove('selected');
+    });
+    // Select this one
+    el.classList.add('selected');
+    menuState.selections[course] = dish;
+  }
+  
+  // Update course highlight
+  updateCourseHighlights();
+  // Update order summary
+  updateOrderSummary();
+  // Update generate button
+  updateGenerateButton();
+}
+
+// Update course card highlights
+function updateCourseHighlights() {
+  document.querySelectorAll('.menu-course').forEach(course => {
+    const courseName = course.dataset.course;
+    const hasSelection = menuState.selections[courseName] > 0;
+    course.classList.toggle('has-selection', hasSelection);
+  });
+}
+
+// Update order summary
+function updateOrderSummary() {
+  const courses = ['starter', 'main', 'side', 'dessert'];
+  const tierDishes = dishNames[menuState.currentTier] || dishNames.research;
+  
+  courses.forEach(course => {
+    const orderItem = document.querySelector(`.order-item[data-course="${course}"]`);
+    const dishNum = menuState.selections[course];
+    const dishNameEl = orderItem.querySelector('.dish-name');
+    
+    if (dishNum > 0) {
+      orderItem.classList.remove('empty');
+      dishNameEl.textContent = tierDishes[course][dishNum] || `Dish ${dishNum}`;
+    } else {
+      orderItem.classList.add('empty');
+      dishNameEl.textContent = '—';
+    }
+  });
+  
+  // Update build ID
+  updateBuildId();
+}
+
+// Update build ID display
+function updateBuildId() {
+  const prefix = menuState.currentTier === 'research' ? 'RES' : 
+                 menuState.currentTier === 'recoil' ? 'REC' :
+                 menuState.currentTier === 'terminal' ? 'TRM' : 'SUI';
+  
+  const buildId = `${prefix}-${menuState.selections.starter}${menuState.selections.main}${menuState.selections.side}${menuState.selections.dessert}`;
+  document.getElementById('order-build-id').textContent = buildId;
+  return buildId;
+}
+
+// Update generate button state
+function updateGenerateButton() {
+  const hasAnySelection = Object.values(menuState.selections).some(v => v > 0);
+  document.getElementById('generate-btn').disabled = !hasAnySelection;
+}
+
+// Reset menu selections
+function resetMenuSelections() {
+  menuState.selections = { starter: 0, main: 0, side: 0, dessert: 0 };
+  document.querySelectorAll('.dish-card').forEach(d => d.classList.remove('selected'));
+  updateCourseHighlights();
+  updateOrderSummary();
+  updateGenerateButton();
+}
+
+// Generate instrument
+async function generateInstrument() {
+  const buildId = updateBuildId();
+  
+  // Validate
+  if (buildId.endsWith('-0000')) {
+    return;
+  }
+  
+  // Track generation start
+  trackMenuEvent('generate_started', { buildId, tier: menuState.currentTier });
+  
+  // Show animation overlay
+  const overlay = document.getElementById('generation-overlay');
+  const animContainer = document.getElementById('generation-animation');
+  
+  // Build animation dishes
+  let animHtml = '';
+  ['starter', 'main', 'side', 'dessert'].forEach(course => {
+    if (menuState.selections[course] > 0) {
+      animHtml += `<div class="gen-dish">${courseIcons[course]}</div>`;
+    }
+  });
+  animContainer.innerHTML = animHtml;
+  
+  overlay.classList.add('active');
+  
+  // Fetch the code
+  try {
+    const response = await fetch(`/data/menus/research/${buildId}.txt`);
+    if (!response.ok) throw new Error('Build not found');
+    
+    const code = await response.text();
+    
+    // Wait for animation (2.5s)
+    await new Promise(r => setTimeout(r, 2500));
+    
+    // Hide overlay
+    overlay.classList.remove('active');
+    
+    // Show result modal
+    showResultModal(buildId, code);
+    
+    // Track generation complete
+    trackMenuEvent('generate_completed', { buildId, tier: menuState.currentTier });
+    
+  } catch (error) {
+    console.error('Failed to load build:', error);
+    overlay.classList.remove('active');
+    alert('Failed to load instrument. Please try again.');
+  }
+}
+
+// Show result modal
+function showResultModal(buildId, code) {
+  const modal = document.getElementById('result-modal');
+  const tierDishes = dishNames[menuState.currentTier] || dishNames.research;
+  
+  // Set build ID
+  document.getElementById('result-build-id').textContent = buildId;
+  
+  // Build dish tags
+  let dishTagsHtml = '';
+  ['starter', 'main', 'side', 'dessert'].forEach(course => {
+    if (menuState.selections[course] > 0) {
+      const dishName = tierDishes[course][menuState.selections[course]];
+      dishTagsHtml += `<span class="result-dish-tag">${dishName}</span>`;
+    }
+  });
+  document.getElementById('result-dishes').innerHTML = dishTagsHtml;
+  
+  // Set code
+  document.getElementById('result-code').textContent = code;
+  
+  // Store for copy/download
+  modal.dataset.buildId = buildId;
+  modal.dataset.code = code;
+  
+  modal.classList.add('active');
+}
+
+// Close result modal
+function closeResultModal() {
+  document.getElementById('result-modal').classList.remove('active');
+}
+
+// Copy instrument code
+function copyInstrumentCode() {
+  const code = document.getElementById('result-modal').dataset.code;
+  const buildId = document.getElementById('result-modal').dataset.buildId;
+  
+  navigator.clipboard.writeText(code).then(() => {
+    // Show toast
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Copied!';
+    setTimeout(() => btn.innerHTML = originalText, 2000);
+    
+    // Track
+    trackMenuEvent('code_copied', { buildId, tier: menuState.currentTier });
+  });
+}
+
+// Download instrument code
+function downloadInstrumentCode() {
+  const code = document.getElementById('result-modal').dataset.code;
+  const buildId = document.getElementById('result-modal').dataset.buildId;
+  
+  const blob = new Blob([code], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${buildId}.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  // Track
+  trackMenuEvent('code_downloaded', { buildId, tier: menuState.currentTier });
+}
+
+// Track menu events to Supabase
+async function trackMenuEvent(eventType, data) {
+  if (!window.supabase || !window.currentUser) return;
+  
+  try {
+    await window.supabase.from('menu_events').insert({
+      user_id: window.currentUser.id,
+      event_type: eventType,
+      tier: data.tier || menuState.currentTier,
+      build_id: data.buildId || null,
+      selections: menuState.selections,
+      created_at: new Date().toISOString()
+    });
+  } catch (e) {
+    console.warn('Menu tracking failed:', e);
+  }
+}
+
+// Update menu tier tabs based on user access
+function updateMenuTierAccess() {
+  const tierRank = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4, 'admin': 99 };
+  const userRank = tierRank[window.userTier] || 0;
+  
+  document.querySelectorAll('.menu-tier-tab').forEach(tab => {
+    const tabTier = tab.dataset.tier;
+    const requiredRank = tierRank[tabTier] || 0;
+    
+    if (userRank >= requiredRank) {
+      tab.classList.remove('locked');
+      const lockIcon = tab.querySelector('.lock-icon');
+      if (lockIcon) lockIcon.style.display = 'none';
+    }
+  });
+}
+
+// Initialize menu on tier access update
+const originalApplyTierAccess2 = applyTierAccess;
+applyTierAccess = function() {
+  originalApplyTierAccess2();
+  updateMenuTierAccess();
+};
 
 // ==========================================
 // ADMIN FUNCTIONS

@@ -1,0 +1,32 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-1000
+//  Prev Day
+//  Previous day H/L/C
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-1000 · Prev Day", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st1_on  = input.bool(true,     "Show previous day H/L/C",       group = "Starter · Previous day")
+st1_cHi = input.color(#ffd700, "PD High",  inline = "st1", group = "Starter · Previous day")
+st1_cLo = input.color(#ffd700, "PD Low",   inline = "st1", group = "Starter · Previous day")
+st1_cCl = input.color(#ffffff, "PD Close", inline = "st1", group = "Starter · Previous day")
+
+[st1_h, st1_l, st1_c] = request.security(syminfo.tickerid, "D", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st1_on ? st1_h : na, "PD High",  color = st1_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_l : na, "PD Low",   color = st1_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_c : na, "PD Close", color = st1_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+// (none selected)
+
+// ---------- DESSERT ----------
+// (none selected)

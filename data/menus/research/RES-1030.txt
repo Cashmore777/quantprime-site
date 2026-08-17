@@ -1,0 +1,64 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-1030
+//  Prev Day + Hourly Profile
+//  Previous day H/L/C, Time-of-day range profile
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-1030 · Prev Day + Hourly Profile", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st1_on  = input.bool(true,     "Show previous day H/L/C",       group = "Starter · Previous day")
+st1_cHi = input.color(#ffd700, "PD High",  inline = "st1", group = "Starter · Previous day")
+st1_cLo = input.color(#ffd700, "PD Low",   inline = "st1", group = "Starter · Previous day")
+st1_cCl = input.color(#ffffff, "PD Close", inline = "st1", group = "Starter · Previous day")
+
+[st1_h, st1_l, st1_c] = request.security(syminfo.tickerid, "D", [high[1], low[1], close[1]], lookahead = barmerge.lookahead_on)
+
+plot(st1_on ? st1_h : na, "PD High",  color = st1_cHi, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_l : na, "PD Low",   color = st1_cLo, style = plot.style_stepline, linewidth = 1)
+plot(st1_on ? st1_c : na, "PD Close", color = st1_cCl, style = plot.style_stepline, linewidth = 1)
+
+// ---------- MAIN ----------
+// (none selected)
+
+// ---------- SIDE ----------
+sd3_on   = input.bool(true, "Show time-of-day profile",     group = "Side · Time-of-day profile")
+sd3_days = input.int(30,    "Days of history", minval = 5,  group = "Side · Time-of-day profile")
+sd3_sz   = input.string("Tiny", "Profile text size", options = ["Tiny", "Small", "Normal", "Large"], group = "Side · Time-of-day profile")
+sd3_pos  = input.string("Top right", "Profile table position", options = ["Top right", "Top left", "Bottom right", "Bottom left"], group = "Side · Time-of-day profile")
+
+var array<float> sd3_sum = array.new_float(24, 0.0)
+var array<int>   sd3_cnt = array.new_int(24, 0)
+
+sd3_cut = timestamp(year, month, dayofmonth, 0, 0) - sd3_days * 86400000
+if time >= sd3_cut
+    sd3_h = hour(time, syminfo.timezone)
+    array.set(sd3_sum, sd3_h, array.get(sd3_sum, sd3_h) + (high - low))
+    array.set(sd3_cnt, sd3_h, array.get(sd3_cnt, sd3_h) + 1)
+
+sd3_size = sd3_sz == "Tiny" ? size.tiny : sd3_sz == "Small" ? size.small : sd3_sz == "Normal" ? size.normal : size.large
+
+sd3_where = sd3_pos == "Top right" ? position.top_right : sd3_pos == "Top left" ? position.top_left : sd3_pos == "Bottom right" ? position.bottom_right : position.bottom_left
+
+var table sd3_tbl = table.new(sd3_where, 2, 25, border_width = 0)
+if sd3_on and barstate.islast
+    table.cell(sd3_tbl, 0, 0, "HOUR", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    table.cell(sd3_tbl, 1, 0, "AVG RANGE", text_color = #6b7280, text_size = sd3_size, bgcolor = #0a0b0d)
+    sd3_max = 0.0
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_max := math.max(sd3_max, sd3_v)
+    for sd3_i = 0 to 23
+        sd3_c = array.get(sd3_cnt, sd3_i)
+        sd3_v = sd3_c > 0 ? array.get(sd3_sum, sd3_i) / sd3_c : 0.0
+        sd3_col = sd3_max > 0 and sd3_v >= sd3_max * 0.75 ? #c9a84c : #9aa0a6
+        table.cell(sd3_tbl, 0, sd3_i + 1, str.tostring(sd3_i) + ":00", text_color = #9aa0a6, text_size = sd3_size, bgcolor = #0a0b0d)
+        table.cell(sd3_tbl, 1, sd3_i + 1, str.tostring(sd3_v, format.mintick), text_color = sd3_col, text_size = sd3_size, bgcolor = #0a0b0d)
+
+// ---------- DESSERT ----------
+// (none selected)

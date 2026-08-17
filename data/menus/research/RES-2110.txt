@@ -1,0 +1,65 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-2110
+//  Weekly Open + EMA Ribbon + Countdown
+//  Weekly open line, EMA ribbon (4 layer), Candle countdown timer
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-2110 · Weekly Open + EMA Ribbon + Countdown", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+st2_on  = input.bool(true,     "Show weekly open",  group = "Starter · Weekly open")
+st2_col = input.color(#c9a84c, "Weekly open colour", group = "Starter · Weekly open")
+st2_wid = input.int(1, "Weekly open width", minval = 1, maxval = 4, group = "Starter · Weekly open")
+
+st2_o = request.security(syminfo.tickerid, "W", open, lookahead = barmerge.lookahead_on)
+
+plot(st2_on ? st2_o : na, "Weekly open", color = st2_col, style = plot.style_stepline, linewidth = st2_wid)
+
+// ---------- MAIN ----------
+mn1_on  = input.bool(true, "Show EMA ribbon",              group = "Main · EMA ribbon")
+mn1_l1  = input.int(8,   "EMA 1", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l2  = input.int(26,  "EMA 2", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l3  = input.int(80,  "EMA 3", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_l4  = input.int(233, "EMA 4", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_c1  = input.color(#ffffff, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c2  = input.color(#fff9c4, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c3  = input.color(#ffeb3b, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c4  = input.color(#ff9800, "", inline = "mn1c", group = "Main · EMA ribbon")
+
+mn1_e1 = ta.ema(close, mn1_l1)
+mn1_e2 = ta.ema(close, mn1_l2)
+mn1_e3 = ta.ema(close, mn1_l3)
+mn1_e4 = ta.ema(close, mn1_l4)
+
+plot(mn1_on ? mn1_e1 : na, "EMA 1", color = mn1_c1, linewidth = 1)
+plot(mn1_on ? mn1_e2 : na, "EMA 2", color = mn1_c2, linewidth = 1)
+plot(mn1_on ? mn1_e3 : na, "EMA 3", color = mn1_c3, linewidth = 1)
+plot(mn1_on ? mn1_e4 : na, "EMA 4", color = mn1_c4, linewidth = 2)
+
+// ---------- SIDE ----------
+sd1_on  = input.bool(true,     "Show candle countdown", group = "Side · Countdown")
+sd1_col = input.color(#c9a84c, "Countdown colour",      group = "Side · Countdown")
+sd1_sz  = input.string("Small", "Countdown size", options = ["Tiny", "Small", "Normal", "Large", "Huge"], group = "Side · Countdown")
+
+sd1_size = sd1_sz == "Tiny" ? size.tiny : sd1_sz == "Small" ? size.small : sd1_sz == "Normal" ? size.normal : sd1_sz == "Large" ? size.large : size.huge
+
+sd1_left = time_close - timenow
+sd1_secs = math.max(0, math.floor(sd1_left / 1000))
+sd1_h    = math.floor(sd1_secs / 3600)
+sd1_m    = math.floor((sd1_secs % 3600) / 60)
+sd1_s    = sd1_secs % 60
+sd1_pad(v) =>
+    v < 10 ? "0" + str.tostring(v) : str.tostring(v)
+sd1_txt = (sd1_h > 0 ? sd1_pad(sd1_h) + ":" : "") + sd1_pad(sd1_m) + ":" + sd1_pad(sd1_s)
+
+var label sd1_lbl = na
+if sd1_on and barstate.islast
+    label.delete(sd1_lbl)
+    sd1_lbl := label.new(bar_index + 2, close, sd1_txt, style = label.style_label_left, color = #00000000, textcolor = sd1_col, size = sd1_size)
+
+// ---------- DESSERT ----------
+// (none selected)

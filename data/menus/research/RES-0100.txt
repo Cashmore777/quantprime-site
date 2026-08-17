@@ -1,0 +1,41 @@
+//@version=6
+// ============================================================
+//  QUANT PRIME · RESEARCH BUILD RES-0100
+//  EMA Ribbon
+//  EMA ribbon (4 layer)
+//
+//  Generated file. Do not edit.
+//  Edit the source piece and regenerate.
+//  quantprime.uk
+// ============================================================
+indicator("QP RES-0100 · EMA Ribbon", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500, max_bars_back = 500)
+
+// ---------- STARTER ----------
+// (none selected)
+
+// ---------- MAIN ----------
+mn1_on  = input.bool(true, "Show EMA ribbon",              group = "Main · EMA ribbon")
+mn1_l1  = input.int(8,   "EMA 1", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l2  = input.int(26,  "EMA 2", minval = 1, inline = "mn1a", group = "Main · EMA ribbon")
+mn1_l3  = input.int(80,  "EMA 3", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_l4  = input.int(233, "EMA 4", minval = 1, inline = "mn1b", group = "Main · EMA ribbon")
+mn1_c1  = input.color(#ffffff, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c2  = input.color(#fff9c4, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c3  = input.color(#ffeb3b, "", inline = "mn1c", group = "Main · EMA ribbon")
+mn1_c4  = input.color(#ff9800, "", inline = "mn1c", group = "Main · EMA ribbon")
+
+mn1_e1 = ta.ema(close, mn1_l1)
+mn1_e2 = ta.ema(close, mn1_l2)
+mn1_e3 = ta.ema(close, mn1_l3)
+mn1_e4 = ta.ema(close, mn1_l4)
+
+plot(mn1_on ? mn1_e1 : na, "EMA 1", color = mn1_c1, linewidth = 1)
+plot(mn1_on ? mn1_e2 : na, "EMA 2", color = mn1_c2, linewidth = 1)
+plot(mn1_on ? mn1_e3 : na, "EMA 3", color = mn1_c3, linewidth = 1)
+plot(mn1_on ? mn1_e4 : na, "EMA 4", color = mn1_c4, linewidth = 2)
+
+// ---------- SIDE ----------
+// (none selected)
+
+// ---------- DESSERT ----------
+// (none selected)
