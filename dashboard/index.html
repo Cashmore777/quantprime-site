@@ -3368,6 +3368,176 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   line-height: 1.6;
 }
 
+/* Promo/Upgrade Pages */
+.promo-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.promo-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.promo-hero.suite { background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent); border-radius: 16px; padding: 40px; margin: -20px -20px 48px; }
+
+.promo-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.promo-badge.gold { color: var(--gold); }
+
+.promo-hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, var(--text-1), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.promo-tagline {
+  font-size: 18px;
+  color: var(--text-2);
+  margin-bottom: 24px;
+}
+
+.promo-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.promo-price .price {
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--text-1);
+}
+
+.promo-price .period {
+  font-size: 18px;
+  color: var(--text-3);
+}
+
+.promo-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.promo-feature {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.promo-feature:hover { border-color: var(--gold); transform: translateY(-2px); }
+
+.promo-feature.highlight {
+  border-color: rgba(201,168,76,0.3);
+  background: linear-gradient(135deg, rgba(201,168,76,0.03), transparent);
+}
+
+.promo-feature .feature-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.promo-feature h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.promo-feature p {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.promo-cta {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.promo-cta .btn.large {
+  padding: 18px 40px;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.promo-cta .btn.outline { margin-left: 12px; }
+
+.promo-note {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 16px;
+}
+
+.promo-compare {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.promo-compare h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.compare-table th, .compare-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-table th {
+  font-weight: 600;
+  color: var(--text-3);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.compare-table th:not(:first-child), .compare-table td:not(:first-child) {
+  text-align: center;
+}
+
+.compare-table tr.highlight td {
+  background: rgba(201,168,76,0.05);
+  font-weight: 600;
+}
+
+.compare-table tr.highlight td:last-child { color: var(--gold); }
+
+@media (max-width: 640px) {
+  .promo-hero h1 { font-size: 36px; }
+  .promo-price .price { font-size: 42px; }
+  .promo-features { grid-template-columns: 1fr; }
+  .promo-cta .btn { display: block; width: 100%; margin: 0 0 12px 0; }
+  .promo-cta .btn.outline { margin-left: 0; }
+}
+
 /* Mobile bottom nav */
 #mobile-nav {
   display: none;
@@ -7536,6 +7706,178 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
   </div>
 
+  <!-- RECOIL PROMO PAGE -->
+  <div class="view" id="view-recoil-promo">
+    <div class="promo-page">
+      <div class="promo-hero">
+        <div class="promo-badge">UPGRADE TO</div>
+        <h1>Recoil</h1>
+        <p class="promo-tagline">The instrument that trades the bounce.</p>
+        <div class="promo-price">
+          <span class="price">£28</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      
+      <div class="promo-features">
+        <div class="promo-feature">
+          <div class="feature-icon">📊</div>
+          <h3>Everything in Research</h3>
+          <p>Full access to the Research menu with 255+ indicator combinations, research papers, and market intelligence.</p>
+        </div>
+        <div class="promo-feature highlight">
+          <div class="feature-icon">🎯</div>
+          <h3>Recoil Indicator Suite</h3>
+          <p>The complete Recoil system — identify high-probability reversal zones with precision entry and exit signals.</p>
+        </div>
+        <div class="promo-feature">
+          <div class="feature-icon">💬</div>
+          <h3>Recoil Chat Room</h3>
+          <p>Dedicated community space for Recoil traders to share setups, discuss entries, and learn together.</p>
+        </div>
+        <div class="promo-feature">
+          <div class="feature-icon">📚</div>
+          <h3>Recoil Education</h3>
+          <p>Step-by-step video guides on using Recoil effectively — from setup to execution to review.</p>
+        </div>
+      </div>
+      
+      <div class="promo-cta">
+        <a href="/checkout.html?tier=recoil&billing=monthly" class="btn gold large">Upgrade to Recoil — £28/mo</a>
+        <a href="/checkout.html?tier=recoil&billing=annual" class="btn outline">Pay annually (save 17%)</a>
+        <p class="promo-note">Cancel anytime. Instant access. 30-day money-back guarantee.</p>
+      </div>
+      
+      <div class="promo-compare">
+        <h3>What you're unlocking</h3>
+        <table class="compare-table">
+          <tr><th>Feature</th><th>Research</th><th>Recoil</th></tr>
+          <tr><td>Research Menu (255 combos)</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Research Papers</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Market Intelligence</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Community Chat</td><td>✓</td><td>✓</td></tr>
+          <tr class="highlight"><td>Recoil Indicator</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Recoil Chat Room</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Recoil Education</td><td>—</td><td>✓</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMINAL PROMO PAGE -->
+  <div class="view" id="view-terminal-promo">
+    <div class="promo-page">
+      <div class="promo-hero">
+        <div class="promo-badge">UPGRADE TO</div>
+        <h1>Terminal</h1>
+        <p class="promo-tagline">Add Meridian to your arsenal.</p>
+        <div class="promo-price">
+          <span class="price">£58</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      
+      <div class="promo-features">
+        <div class="promo-feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Everything in Recoil</h3>
+          <p>Full Recoil indicator suite, education, and community access included.</p>
+        </div>
+        <div class="promo-feature highlight">
+          <div class="feature-icon">🧭</div>
+          <h3>Meridian Indicator Suite</h3>
+          <p>The trend-following companion to Recoil — ride momentum with confidence using clear directional signals.</p>
+        </div>
+        <div class="promo-feature">
+          <div class="feature-icon">💬</div>
+          <h3>Meridian Chat Room</h3>
+          <p>Connect with Meridian traders, share swing setups, and discuss multi-day positions.</p>
+        </div>
+        <div class="promo-feature">
+          <div class="feature-icon">📚</div>
+          <h3>Meridian Education</h3>
+          <p>Master trend identification, position sizing for swings, and combining Recoil + Meridian.</p>
+        </div>
+      </div>
+      
+      <div class="promo-cta">
+        <a href="/checkout.html?tier=terminal&billing=monthly" class="btn gold large">Upgrade to Terminal — £58/mo</a>
+        <a href="/checkout.html?tier=terminal&billing=annual" class="btn outline">Pay annually (save 17%)</a>
+        <p class="promo-note">Cancel anytime. Instant access. 30-day money-back guarantee.</p>
+      </div>
+      
+      <div class="promo-compare">
+        <h3>What you're unlocking</h3>
+        <table class="compare-table">
+          <tr><th>Feature</th><th>Recoil</th><th>Terminal</th></tr>
+          <tr><td>Research Menu + Papers</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Recoil Indicator + Chat</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Recoil Education</td><td>✓</td><td>✓</td></tr>
+          <tr class="highlight"><td>Meridian Indicator</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Meridian Chat Room</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Meridian Education</td><td>—</td><td>✓</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FULL SUITE PROMO PAGE -->
+  <div class="view" id="view-suite-promo">
+    <div class="promo-page">
+      <div class="promo-hero suite">
+        <div class="promo-badge gold">UPGRADE TO</div>
+        <h1>Full Suite</h1>
+        <p class="promo-tagline">The complete Quant Prime trading system.</p>
+        <div class="promo-price">
+          <span class="price">£88</span>
+          <span class="period">/month</span>
+        </div>
+      </div>
+      
+      <div class="promo-features">
+        <div class="promo-feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Recoil + Meridian</h3>
+          <p>Both indicator suites with full education and dedicated chat rooms.</p>
+        </div>
+        <div class="promo-feature highlight">
+          <div class="feature-icon">🎛️</div>
+          <h3>Cockpit Dashboard</h3>
+          <p>Your command center — multi-instrument monitoring, alert management, and portfolio tracking in one view.</p>
+        </div>
+        <div class="promo-feature highlight">
+          <div class="feature-icon">⚡</div>
+          <h3>Priority Support</h3>
+          <p>Direct access to the team for setup help, strategy questions, and technical support.</p>
+        </div>
+        <div class="promo-feature">
+          <div class="feature-icon">🔮</div>
+          <h3>Early Access</h3>
+          <p>First to test new indicators, features, and tools before public release.</p>
+        </div>
+      </div>
+      
+      <div class="promo-cta">
+        <a href="/checkout.html?tier=suite&billing=monthly" class="btn gold large">Upgrade to Full Suite — £88/mo</a>
+        <a href="/checkout.html?tier=suite&billing=annual" class="btn outline">Pay annually (save 17%)</a>
+        <p class="promo-note">Cancel anytime. Instant access. 30-day money-back guarantee.</p>
+      </div>
+      
+      <div class="promo-compare">
+        <h3>The complete package</h3>
+        <table class="compare-table">
+          <tr><th>Feature</th><th>Terminal</th><th>Full Suite</th></tr>
+          <tr><td>Research + Intelligence</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Recoil System</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Meridian System</td><td>✓</td><td>✓</td></tr>
+          <tr class="highlight"><td>Cockpit Dashboard</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Priority Support</td><td>—</td><td>✓</td></tr>
+          <tr class="highlight"><td>Early Access</td><td>—</td><td>✓</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <nav id="mobile-nav">
@@ -7676,7 +8018,11 @@ const _viewMap = {
   'recoil': 'recoil', 'meridian': 'meridian', 'cockpit': 'cockpit',
   'intelligence': 'intel', 'settings': 'settings', 'academy': 'academy',
   'notebook': 'notebook', 'journal': 'notebook', 'mentorship': 'mentorship',
-  'automation': 'automation', 'admin': 'admin', 'affiliates': 'affiliates'
+  'automation': 'automation', 'admin': 'admin', 'affiliates': 'affiliates',
+  // Promo/upgrade pages
+  'recoil-promo': 'recoil-promo', 'terminal-promo': 'terminal-promo', 
+  'suite-promo': 'suite-promo', 'fullsuite': 'suite-promo',
+  'terminal': 'terminal-promo'
 };
 const _resolvedView = _targetView ? (_viewMap[_targetView.toLowerCase()] || null) : null;
 
@@ -8738,7 +9084,7 @@ function updateDashboardData() {
     settingsTier.textContent = `${tierUpper} · ${tierPrices[userTier] || '£0'}/mo`;
   }
   
-  // Update upgrade link to show NEXT tier (not always Ascension)
+  // Update upgrade link to show NEXT tier and link to promo page
   const upgradeLink = document.getElementById('upgrade-link');
   if (upgradeLink) {
     const tierOrder = ['free', 'research', 'recoil', 'terminal', 'suite', 'ascension'];
@@ -8748,6 +9094,14 @@ function updateDashboardData() {
       'terminal': 'Terminal',
       'suite': 'Full Suite',
       'ascension': 'Ascension'
+    };
+    // Map tier to its promo view (or external page for Ascension)
+    const tierPromoViews = {
+      'research': 'research', // Free users go to research instrument view
+      'recoil': 'recoil-promo',
+      'terminal': 'terminal-promo',
+      'suite': 'suite-promo',
+      'ascension': null // External page
     };
     const currentIndex = tierOrder.indexOf(userTier.toLowerCase());
     
@@ -8760,6 +9114,16 @@ function updateDashboardData() {
       const nextTierPrice = tierPrices[nextTier] || '';
       upgradeLink.textContent = `Upgrade to ${nextTierName} ${nextTierPrice ? '(' + nextTierPrice + '/mo)' : ''} →`;
       upgradeLink.style.display = 'block';
+      
+      // Set link to promo view or external page
+      const promoView = tierPromoViews[nextTier];
+      if (promoView) {
+        upgradeLink.href = '#';
+        upgradeLink.onclick = (e) => { e.preventDefault(); switchView(promoView); };
+      } else {
+        upgradeLink.href = '/ascension';
+        upgradeLink.onclick = null;
+      }
     }
   }
   
