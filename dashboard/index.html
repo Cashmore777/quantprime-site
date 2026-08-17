@@ -2290,6 +2290,43 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   opacity: 0.7;
 }
 
+/* Menu Coming Soon state */
+.menu-coming-soon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+}
+
+.coming-soon-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.coming-soon-icon {
+  margin-bottom: 24px;
+  opacity: 0.3;
+}
+
+.coming-soon-icon svg {
+  stroke: var(--text-3);
+}
+
+.menu-coming-soon h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: var(--text-1);
+}
+
+.menu-coming-soon p {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
 /* Restaurant-style menu layout */
 .menu-layout {
   display: grid;
@@ -6487,8 +6524,23 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </button>
       </div>
       
-      <!-- Menu Layout -->
-      <div class="menu-layout">
+      <!-- Menu Coming Soon (for locked tiers) -->
+      <div class="menu-coming-soon" id="menu-coming-soon" style="display: none;">
+        <div class="coming-soon-content">
+          <div class="coming-soon-icon">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+          </div>
+          <h3>Menu Coming Soon</h3>
+          <p>This tier's menu is currently being crafted. Check back soon for new instruments to build.</p>
+          <button class="btn outline" onclick="switchMenuTier('research')">Back to Research Menu</button>
+        </div>
+      </div>
+      
+      <!-- Menu Layout (Research) -->
+      <div class="menu-layout" id="menu-layout">
         <!-- Courses -->
         <div class="menu-courses" id="menu-courses">
           <!-- Starter: Reference Levels -->
@@ -11876,7 +11928,7 @@ function switchMarketplaceMode(mode) {
 
 // Switch menu tier
 function switchMenuTier(tier) {
-  // Check access
+  // Check access (admins can see all)
   const tierRank = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4 };
   const userRank = tierRank[window.userTier] || 0;
   const requiredRank = tierRank[tier] || 0;
@@ -11894,11 +11946,19 @@ function switchMenuTier(tier) {
     if (tab.dataset.tier === tier) tab.classList.add('active');
   });
   
-  // Reset selections
-  resetMenuSelections();
+  // Show menu layout only for Research, coming soon for others
+  const menuLayout = document.getElementById('menu-layout');
+  const comingSoon = document.getElementById('menu-coming-soon');
   
-  // TODO: Load tier-specific dishes when other tiers are ready
-  // loadMenuTier(tier);
+  if (tier === 'research') {
+    menuLayout.style.display = 'grid';
+    comingSoon.style.display = 'none';
+    // Reset selections when switching back to research
+    resetMenuSelections();
+  } else {
+    menuLayout.style.display = 'none';
+    comingSoon.style.display = 'flex';
+  }
 }
 
 // Toggle dish selection
