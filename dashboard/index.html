@@ -2721,18 +2721,22 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .generation-stage {
   position: relative;
   width: 100%;
-  max-width: 600px;
-  height: 300px;
+  max-width: 500px;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .generation-animation {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 2;
   align-items: center;
 }
@@ -2760,23 +2764,27 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .gen-code-card.phase-1 {
   opacity: 0;
   position: absolute;
+  left: 50%;
+  top: 50%;
 }
 
-.gen-code-card:nth-child(1).phase-1 { transform: translate(-200px, -120px) rotate(-15deg); }
-.gen-code-card:nth-child(2).phase-1 { transform: translate(200px, -100px) rotate(12deg); }
-.gen-code-card:nth-child(3).phase-1 { transform: translate(-180px, 120px) rotate(-8deg); }
-.gen-code-card:nth-child(4).phase-1 { transform: translate(180px, 100px) rotate(10deg); }
+.gen-code-card:nth-child(1).phase-1 { transform: translate(calc(-50% - 120px), calc(-50% - 80px)) rotate(-15deg); }
+.gen-code-card:nth-child(2).phase-1 { transform: translate(calc(-50% + 120px), calc(-50% - 60px)) rotate(12deg); }
+.gen-code-card:nth-child(3).phase-1 { transform: translate(calc(-50% - 100px), calc(-50% + 80px)) rotate(-8deg); }
+.gen-code-card:nth-child(4).phase-1 { transform: translate(calc(-50% + 100px), calc(-50% + 60px)) rotate(10deg); }
 
 /* Fly in animation */
 .gen-code-card.phase-2 {
   animation: codeFlyIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   position: relative;
+  left: auto;
+  top: auto;
 }
 
 @keyframes codeFlyIn {
   0% { opacity: 0; }
   40% { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+  100% { opacity: 1; transform: none; }
 }
 
 /* Suspense shake - code is "processing" */
@@ -2798,25 +2806,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 /* Merge collision - cards compress and disappear */
 .gen-code-card.phase-4 {
-  animation: codeMerge 0.35s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
+  animation: codeMerge 0.4s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
 }
-
-.gen-code-card:nth-child(1).phase-4 { --merge-x: 60px; --merge-y: 30px; }
-.gen-code-card:nth-child(2).phase-4 { --merge-x: -60px; --merge-y: 30px; }
-.gen-code-card:nth-child(3).phase-4 { --merge-x: 60px; --merge-y: -30px; }
-.gen-code-card:nth-child(4).phase-4 { --merge-x: -60px; --merge-y: -30px; }
 
 @keyframes codeMerge {
   0% { 
-    transform: translate(0, 0) scale(1); 
+    transform: scale(1); 
     opacity: 1;
   }
-  70% { 
-    transform: translate(var(--merge-x, 0), var(--merge-y, 0)) scale(0.5); 
+  50% { 
+    transform: scale(1.1); 
     opacity: 1;
   }
   100% { 
-    transform: translate(0, 0) scale(0); 
+    transform: scale(0); 
     opacity: 0;
   }
 }
@@ -2903,18 +2906,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 /* Result reveal - LEGENDARY card with rainbow shimmer */
 .gen-result-card {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
   background: var(--surface);
   border-radius: 20px;
-  padding: 28px 36px;
+  padding: 28px 32px;
   text-align: center;
   opacity: 0;
-  transform: scale(0.8);
   z-index: 30;
-  min-width: 320px;
+  width: 90%;
+  max-width: 340px;
   /* Rainbow border effect */
   border: 3px solid transparent;
   background-clip: padding-box;
-  position: relative;
 }
 
 /* Rainbow gradient border */
@@ -2968,20 +2973,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 @keyframes resultRevealLegendary {
   0% { 
     opacity: 0; 
-    transform: scale(0.3) rotate(-10deg); 
+    transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); 
     filter: blur(10px);
   }
   50% { 
     opacity: 1; 
-    transform: scale(1.1) rotate(2deg); 
+    transform: translate(-50%, -50%) scale(1.08) rotate(2deg); 
     filter: blur(0);
   }
   70% { 
-    transform: scale(0.95) rotate(-1deg); 
+    transform: translate(-50%, -50%) scale(0.96) rotate(-1deg); 
   }
   100% { 
     opacity: 1; 
-    transform: scale(1) rotate(0deg); 
+    transform: translate(-50%, -50%) scale(1) rotate(0deg); 
     filter: blur(0);
   }
 }
@@ -3001,11 +3006,12 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .gen-result-card .result-label {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--text-3);
-  margin-bottom: 8px;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 6px;
+  font-weight: 600;
 }
 
 .gen-result-card h4 {
@@ -3031,10 +3037,13 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .gen-result-card .build-code {
   font-family: var(--mono);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--text-3);
-  margin-bottom: 20px;
-  opacity: 0.7;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 18px;
+  background: var(--surface-raised);
+  padding: 4px 10px;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .gen-result-card .result-actions {
