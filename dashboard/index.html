@@ -2246,29 +2246,31 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: block;
 }
 
-/* Menu tier tabs - compact */
+/* Menu tier tabs - wrap properly */
 .menu-tier-tabs {
   display: flex;
   gap: 6px;
   margin-bottom: 16px;
+  flex-wrap: wrap;
 }
 
 .menu-tier-tab {
-  padding: 8px 14px;
+  padding: 6px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-2);
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  white-space: nowrap;
 }
 
 .menu-tier-tab svg:first-child {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .menu-tier-tab.active {
@@ -2278,14 +2280,14 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .menu-tier-tab.locked {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
 .menu-tier-tab .lock-icon {
-  width: 12px;
-  height: 12px;
-  opacity: 0.6;
+  width: 10px;
+  height: 10px;
+  opacity: 0.7;
 }
 
 /* Restaurant-style menu layout */
@@ -2373,7 +2375,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .course-dishes {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .dish-card {
@@ -2387,6 +2389,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 
 .dish-card:hover {
@@ -2400,26 +2403,31 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .dish-card.selected::before {
   content: '✓';
   position: absolute;
-  left: -4px;
+  left: -2px;
   top: 50%;
   transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   background: var(--gold);
   color: #000;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
 }
 
+.dish-main {
+  flex: 1;
+  padding-left: 14px;
+}
+
 .dish-card h4 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  margin: 0;
-  padding-left: 16px;
+  margin: 0 0 2px 0;
+  color: var(--text-1);
 }
 
 .dish-card.selected h4 {
@@ -2427,11 +2435,125 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--gold);
 }
 
-.dish-card p {
-  font-size: 11px;
+.dish-card .ingredients {
+  font-size: 10px;
   color: var(--text-3);
   margin: 0;
   font-style: italic;
+  letter-spacing: 0.02em;
+}
+
+.dish-card.selected .ingredients {
+  color: var(--gold);
+  opacity: 0.7;
+}
+
+/* Info button */
+.dish-info {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: 10px;
+  font-weight: 600;
+  font-style: italic;
+  font-family: Georgia, serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.dish-info:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #000;
+}
+
+/* Dish info modal */
+.dish-info-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.dish-info-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dish-info-content {
+  background: var(--surface);
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  padding: 24px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.dish-info-content h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--gold);
+}
+
+.dish-info-content .dish-ingredients {
+  font-size: 12px;
+  color: var(--text-3);
+  font-style: italic;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.dish-info-content .dish-description {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.dish-info-content .dish-outputs {
+  background: var(--surface-raised);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-1);
+}
+
+.dish-info-content .dish-outputs h4 {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin: 0 0 8px 0;
+  font-family: var(--sans);
+}
+
+.dish-info-content .close-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  background: var(--gold);
+  color: #000;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
 }
 
 /* Order summary - compact sidebar */
@@ -2598,8 +2720,9 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .generation-stage {
   position: relative;
-  width: 400px;
-  height: 200px;
+  width: 100%;
+  max-width: 600px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2607,78 +2730,95 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .generation-animation {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 8px;
   position: relative;
   z-index: 2;
-}
-
-/* Dish cards that fly in */
-.gen-dish {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--surface) 0%, #1a1a22 100%);
-  border: 2px solid var(--gold);
-  border-radius: 14px;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 28px;
+}
+
+/* Code cards that fly in and merge */
+.gen-code-card {
+  background: rgba(26, 26, 34, 0.95);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+  padding: 12px 16px;
   position: relative;
-  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  box-shadow: 0 0 30px rgba(201,168,76,0.2);
+  max-width: 280px;
 }
 
-/* Initial state - scattered */
-.gen-dish.phase-1 {
+.gen-code-card code {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  white-space: nowrap;
+  display: block;
+}
+
+/* Initial state - scattered off screen */
+.gen-code-card.phase-1 {
   opacity: 0;
-  transform: scale(0.3);
+  position: absolute;
 }
 
-.gen-dish:nth-child(1).phase-1 { transform: translate(-150px, -100px) scale(0.3) rotate(-20deg); }
-.gen-dish:nth-child(2).phase-1 { transform: translate(150px, -80px) scale(0.3) rotate(15deg); }
-.gen-dish:nth-child(3).phase-1 { transform: translate(-120px, 100px) scale(0.3) rotate(-10deg); }
-.gen-dish:nth-child(4).phase-1 { transform: translate(140px, 90px) scale(0.3) rotate(25deg); }
+.gen-code-card:nth-child(1).phase-1 { transform: translate(-200px, -120px) rotate(-15deg); }
+.gen-code-card:nth-child(2).phase-1 { transform: translate(200px, -100px) rotate(12deg); }
+.gen-code-card:nth-child(3).phase-1 { transform: translate(-180px, 120px) rotate(-8deg); }
+.gen-code-card:nth-child(4).phase-1 { transform: translate(180px, 100px) rotate(10deg); }
 
 /* Fly in animation */
-.gen-dish.phase-2 {
-  animation: flyIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+.gen-code-card.phase-2 {
+  animation: codeFlyIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
 }
 
-.gen-dish:nth-child(1).phase-2 { animation-delay: 0.1s; }
-.gen-dish:nth-child(2).phase-2 { animation-delay: 0.2s; }
-.gen-dish:nth-child(3).phase-2 { animation-delay: 0.3s; }
-.gen-dish:nth-child(4).phase-2 { animation-delay: 0.4s; }
-
-@keyframes flyIn {
+@keyframes codeFlyIn {
   0% { opacity: 0; }
-  30% { opacity: 1; }
-  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+  40% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
 }
 
-/* Suspense wobble */
-.gen-dish.phase-3 {
-  animation: suspenseWobble 0.15s ease-in-out infinite;
+/* Suspense shake - code is "processing" */
+.gen-code-card.phase-3 {
+  animation: codeShake 0.08s ease-in-out infinite;
 }
 
-.gen-dish:nth-child(1).phase-3 { animation-delay: 0s; }
-.gen-dish:nth-child(2).phase-3 { animation-delay: 0.05s; }
-.gen-dish:nth-child(3).phase-3 { animation-delay: 0.1s; }
-.gen-dish:nth-child(4).phase-3 { animation-delay: 0.15s; }
+.gen-code-card:nth-child(1).phase-3 { animation-delay: 0s; }
+.gen-code-card:nth-child(2).phase-3 { animation-delay: 0.02s; }
+.gen-code-card:nth-child(3).phase-3 { animation-delay: 0.04s; }
+.gen-code-card:nth-child(4).phase-3 { animation-delay: 0.06s; }
 
-@keyframes suspenseWobble {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(-2px, -1px) scale(1.02); }
-  50% { transform: translate(2px, 1px) scale(0.98); }
-  75% { transform: translate(-1px, 2px) scale(1.01); }
+@keyframes codeShake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-3px, -2px); }
+  50% { transform: translate(3px, 2px); }
+  75% { transform: translate(-2px, 3px); }
 }
 
-/* Merge collision */
-.gen-dish.phase-4 {
-  animation: mergeCollide 0.4s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
+/* Merge collision - cards compress and disappear */
+.gen-code-card.phase-4 {
+  animation: codeMerge 0.35s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
 }
 
-@keyframes mergeCollide {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(0, 0) scale(0); opacity: 0; }
+.gen-code-card:nth-child(1).phase-4 { --merge-x: 60px; --merge-y: 30px; }
+.gen-code-card:nth-child(2).phase-4 { --merge-x: -60px; --merge-y: 30px; }
+.gen-code-card:nth-child(3).phase-4 { --merge-x: 60px; --merge-y: -30px; }
+.gen-code-card:nth-child(4).phase-4 { --merge-x: -60px; --merge-y: -30px; }
+
+@keyframes codeMerge {
+  0% { 
+    transform: translate(0, 0) scale(1); 
+    opacity: 1;
+  }
+  70% { 
+    transform: translate(var(--merge-x, 0), var(--merge-y, 0)) scale(0.5); 
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(0, 0) scale(0); 
+    opacity: 0;
+  }
 }
 
 /* Center merge explosion */
@@ -6228,90 +6368,126 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <div class="menu-layout">
         <!-- Courses -->
         <div class="menu-courses" id="menu-courses">
-          <!-- Starter -->
+          <!-- Starter: Reference Levels -->
           <div class="menu-course" data-course="starter">
             <div class="course-header">
-              <h3><span class="course-number">1</span> Starter</h3>
-              <span class="course-question">Where are we?</span>
+              <h3><span class="course-number">I</span> Référence</h3>
+              <span class="course-question">Where are we positioned?</span>
             </div>
             <div class="course-dishes" id="dishes-starter">
               <div class="dish-card" data-course="starter" data-dish="1" onclick="toggleDish(this)">
-                <h4>Prev Day</h4>
-                <p>Yesterday's key levels</p>
+                <div class="dish-main">
+                  <h4>Previous Day Levels</h4>
+                  <p class="ingredients">high · low · close</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('starter', 1)">i</button>
               </div>
               <div class="dish-card" data-course="starter" data-dish="2" onclick="toggleDish(this)">
-                <h4>Weekly Open</h4>
-                <p>Week's starting point</p>
+                <div class="dish-main">
+                  <h4>Weekly Open</h4>
+                  <p class="ingredients">opening price · weekly bias</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('starter', 2)">i</button>
               </div>
               <div class="dish-card" data-course="starter" data-dish="3" onclick="toggleDish(this)">
-                <h4>Prior Week</h4>
-                <p>Last week's range</p>
+                <div class="dish-main">
+                  <h4>Prior Week Range</h4>
+                  <p class="ingredients">weekly high · weekly low · close</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('starter', 3)">i</button>
               </div>
             </div>
           </div>
           
-          <!-- Main -->
+          <!-- Main: Market State -->
           <div class="menu-course" data-course="main">
             <div class="course-header">
-              <h3><span class="course-number">2</span> Main</h3>
-              <span class="course-question">What state is it in?</span>
+              <h3><span class="course-number">II</span> État</h3>
+              <span class="course-question">What condition is the market in?</span>
             </div>
             <div class="course-dishes" id="dishes-main">
               <div class="dish-card" data-course="main" data-dish="1" onclick="toggleDish(this)">
-                <h4>EMA Ribbon</h4>
-                <p>Trend direction</p>
+                <div class="dish-main">
+                  <h4>EMA Ribbon</h4>
+                  <p class="ingredients">8 · 26 · 80 · 233 alignment</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('main', 1)">i</button>
               </div>
               <div class="dish-card" data-course="main" data-dish="2" onclick="toggleDish(this)">
-                <h4>Volatility</h4>
-                <p>Market energy</p>
+                <div class="dish-main">
+                  <h4>Volatility State</h4>
+                  <p class="ingredients">ATR ratio · expansion · contraction</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('main', 2)">i</button>
               </div>
               <div class="dish-card" data-course="main" data-dish="3" onclick="toggleDish(this)">
-                <h4>Daily Range</h4>
-                <p>Range context</p>
+                <div class="dish-main">
+                  <h4>Range Analysis</h4>
+                  <p class="ingredients">daily range · average · percentile</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('main', 3)">i</button>
               </div>
             </div>
           </div>
           
-          <!-- Side -->
+          <!-- Side: Timing -->
           <div class="menu-course" data-course="side">
             <div class="course-header">
-              <h3><span class="course-number">3</span> Side</h3>
-              <span class="course-question">When does it matter?</span>
+              <h3><span class="course-number">III</span> Timing</h3>
+              <span class="course-question">When does the edge appear?</span>
             </div>
             <div class="course-dishes" id="dishes-side">
               <div class="dish-card" data-course="side" data-dish="1" onclick="toggleDish(this)">
-                <h4>Countdown</h4>
-                <p>Time remaining</p>
+                <div class="dish-main">
+                  <h4>Candle Countdown</h4>
+                  <p class="ingredients">time remaining · close alert</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('side', 1)">i</button>
               </div>
               <div class="dish-card" data-course="side" data-dish="2" onclick="toggleDish(this)">
-                <h4>Sessions</h4>
-                <p>Session zones</p>
+                <div class="dish-main">
+                  <h4>Session Zones</h4>
+                  <p class="ingredients">london · new york · tokyo · sydney</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('side', 2)">i</button>
               </div>
               <div class="dish-card" data-course="side" data-dish="3" onclick="toggleDish(this)">
-                <h4>Hourly Profile</h4>
-                <p>Hour analysis</p>
+                <div class="dish-main">
+                  <h4>Hourly Profile</h4>
+                  <p class="ingredients">hour activity · optimal windows</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('side', 3)">i</button>
               </div>
             </div>
           </div>
           
-          <!-- Dessert -->
+          <!-- Dessert: Measurement -->
           <div class="menu-course" data-course="dessert">
             <div class="course-header">
-              <h3><span class="course-number">4</span> Dessert</h3>
-              <span class="course-question">What does the record say?</span>
+              <h3><span class="course-number">IV</span> Mesure</h3>
+              <span class="course-question">What does the data reveal?</span>
             </div>
             <div class="course-dishes" id="dishes-dessert">
               <div class="dish-card" data-course="dessert" data-dish="1" onclick="toggleDish(this)">
-                <h4>Weekly Summary</h4>
-                <p>Week stats</p>
+                <div class="dish-main">
+                  <h4>Weekly Summary Table</h4>
+                  <p class="ingredients">performance · win rate · P&L</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('dessert', 1)">i</button>
               </div>
               <div class="dish-card" data-course="dessert" data-dish="2" onclick="toggleDish(this)">
-                <h4>Vol Report</h4>
-                <p>Vol metrics</p>
+                <div class="dish-main">
+                  <h4>Volatility Report</h4>
+                  <p class="ingredients">ATR analysis · compression · expansion</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('dessert', 2)">i</button>
               </div>
               <div class="dish-card" data-course="dessert" data-dish="3" onclick="toggleDish(this)">
-                <h4>Pair Metrics</h4>
-                <p>Pair stats</p>
+                <div class="dish-main">
+                  <h4>Pair Statistics</h4>
+                  <p class="ingredients">instrument metrics · range data · session performance</p>
+                </div>
+                <button class="dish-info" onclick="event.stopPropagation(); showDishInfo('dessert', 3)">i</button>
               </div>
             </div>
           </div>
@@ -6375,6 +6551,20 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
     </div>
     <div class="generation-text" id="generation-text">Combining ingredients...</div>
+  </div>
+  
+  <!-- Dish Info Modal -->
+  <div class="dish-info-modal" id="dish-info-modal" onclick="if(event.target === this) closeDishInfo()">
+    <div class="dish-info-content">
+      <h3 id="dish-info-title">Dish Name</h3>
+      <div class="dish-ingredients" id="dish-info-ingredients">ingredients</div>
+      <div class="dish-description" id="dish-info-description">Description here</div>
+      <div class="dish-outputs">
+        <h4>Outputs</h4>
+        <div id="dish-info-outputs">Variables available in your script</div>
+      </div>
+      <button class="close-btn" onclick="closeDishInfo()">Got it</button>
+    </div>
   </div>
   
   <!-- Result Modal -->
@@ -11408,20 +11598,135 @@ const menuState = {
 // Dish name mappings
 const dishNames = {
   research: {
-    starter: { 1: 'Prev Day', 2: 'Weekly Open', 3: 'Prior Week' },
-    main: { 1: 'EMA Ribbon', 2: 'Volatility', 3: 'Daily Range' },
-    side: { 1: 'Countdown', 2: 'Sessions', 3: 'Hourly Profile' },
-    dessert: { 1: 'Weekly Summary', 2: 'Vol Report', 3: 'Pair Metrics' }
+    starter: { 1: 'Previous Day Levels', 2: 'Weekly Open', 3: 'Prior Week Range' },
+    main: { 1: 'EMA Ribbon', 2: 'Volatility State', 3: 'Range Analysis' },
+    side: { 1: 'Candle Countdown', 2: 'Session Zones', 3: 'Hourly Profile' },
+    dessert: { 1: 'Weekly Summary Table', 2: 'Volatility Report', 3: 'Pair Statistics' }
   }
 };
 
-// Course icons for animation
-const courseIcons = {
-  starter: '📍',
-  main: '📊',
-  side: '⏱️',
-  dessert: '📋'
+// Dish info data - full descriptions
+const dishInfo = {
+  research: {
+    starter: {
+      1: {
+        name: 'Previous Day Levels',
+        ingredients: 'high · low · close',
+        description: 'Plots horizontal lines at yesterday\'s high, low, and closing price. These are institutional reference levels that often act as support and resistance. Price above PDH suggests strength; below PDL suggests weakness.',
+        outputs: 'pd_high, pd_low, pd_close'
+      },
+      2: {
+        name: 'Weekly Open',
+        ingredients: 'opening price · weekly bias',
+        description: 'Draws a line at the weekly opening price. Trading above the weekly open indicates bullish weekly bias; below indicates bearish. Institutions reference this level throughout the week.',
+        outputs: 'weekly_open, weekly_bias'
+      },
+      3: {
+        name: 'Prior Week Range',
+        ingredients: 'weekly high · weekly low · close',
+        description: 'Shows last week\'s high, low, and close as reference levels. These are significant for identifying weekly range expansion and key support/resistance zones.',
+        outputs: 'pw_high, pw_low, pw_close'
+      }
+    },
+    main: {
+      1: {
+        name: 'EMA Ribbon',
+        ingredients: '8 · 26 · 80 · 233 alignment',
+        description: 'Four exponential moving averages that reveal trend state. When stacked in order (8 > 26 > 80 > 233 for bullish), the trend is healthy. Crossing or compression signals potential reversals.',
+        outputs: 'ema_8, ema_26, ema_80, ema_233, ema_bias'
+      },
+      2: {
+        name: 'Volatility State',
+        ingredients: 'ATR ratio · expansion · contraction',
+        description: 'Compares current ATR to historical average to determine if the market is in expansion or contraction. Low volatility often precedes big moves; high volatility suggests exhaustion.',
+        outputs: 'atr_ratio, vol_state, is_compressed'
+      },
+      3: {
+        name: 'Range Analysis',
+        ingredients: 'daily range · average · percentile',
+        description: 'Measures today\'s range compared to the 20-day average. Shows whether the current day is wide or narrow relative to typical behavior for this instrument.',
+        outputs: 'daily_range, avg_range, range_percentile'
+      }
+    },
+    side: {
+      1: {
+        name: 'Candle Countdown',
+        ingredients: 'time remaining · close alert',
+        description: 'Displays a live countdown to the current candle close. Essential for timing entries on confirmation and avoiding false signals before candle completion.',
+        outputs: 'mins_remaining, secs_remaining'
+      },
+      2: {
+        name: 'Session Zones',
+        ingredients: 'london · new york · tokyo · sydney',
+        description: 'Highlights the major trading sessions on your chart background. Know instantly which session you\'re trading in - each has different characteristics and liquidity.',
+        outputs: 'current_session, is_london, is_ny, is_tokyo'
+      },
+      3: {
+        name: 'Hourly Profile',
+        ingredients: 'hour activity · optimal windows',
+        description: 'Analyzes which hours historically produce the most movement for this pair. Helps identify optimal trading windows and avoid low-probability periods.',
+        outputs: 'current_hour_rank, is_optimal_hour'
+      }
+    },
+    dessert: {
+      1: {
+        name: 'Weekly Summary Table',
+        ingredients: 'performance · win rate · P&L',
+        description: 'Displays an on-chart table summarizing weekly performance metrics. Track your week\'s progress including number of trades, win rate, and cumulative P&L.',
+        outputs: 'weekly_trades, weekly_wins, weekly_pnl'
+      },
+      2: {
+        name: 'Volatility Report',
+        ingredients: 'ATR analysis · compression · expansion',
+        description: 'A detailed volatility dashboard showing ATR values, compression duration, and probability of expansion. Essential for position sizing and timing.',
+        outputs: 'vol_state, compression_bars, expansion_prob'
+      },
+      3: {
+        name: 'Pair Statistics',
+        ingredients: 'instrument metrics · range data · session performance',
+        description: 'Comprehensive statistics panel for the current instrument. Shows average ranges, best performing sessions, and historical behavior patterns.',
+        outputs: 'pair_avg_range, best_session, historical_bias'
+      }
+    }
+  }
 };
+
+// Code snippets for animation (representative lines)
+const codeSnippets = {
+  starter: [
+    'pd_high = request.security("D", high[1])',
+    'plot(pd_high, "PDH", color=#c9a84c)'
+  ],
+  main: [
+    'ema_8 = ta.ema(close, 8)',
+    'bias = ema_8 > ema_26 ? "BULL" : "BEAR"'
+  ],
+  side: [
+    'remaining = time_close - timenow',
+    'is_london = time("0800-1600")'
+  ],
+  dessert: [
+    'table.cell(tbl, 0, 0, "Weekly P&L")',
+    'pnl = strategy.netprofit'
+  ]
+};
+
+// Show dish info modal
+function showDishInfo(course, dish) {
+  const info = dishInfo.research[course]?.[dish];
+  if (!info) return;
+  
+  document.getElementById('dish-info-title').textContent = info.name;
+  document.getElementById('dish-info-ingredients').textContent = info.ingredients;
+  document.getElementById('dish-info-description').textContent = info.description;
+  document.getElementById('dish-info-outputs').textContent = info.outputs;
+  document.getElementById('dish-info-modal').classList.add('active');
+}
+
+// Close dish info modal
+function closeDishInfo() {
+  document.getElementById('dish-info-modal').classList.remove('active');
+}
 
 // Switch between marketplace and menu modes
 function switchMarketplaceMode(mode) {
@@ -11550,7 +11855,7 @@ function resetMenuSelections() {
   updateGenerateButton();
 }
 
-// Generate instrument with dopamine animation
+// Generate instrument with code-based dopamine animation
 async function generateInstrument() {
   const buildId = updateBuildId();
   
@@ -11578,18 +11883,23 @@ async function generateInstrument() {
   rings.forEach(r => r.classList.remove('burst'));
   confettiContainer.innerHTML = '';
   
-  // Build animation dishes
-  let animHtml = '';
+  // Get selected courses and their code snippets
   const selectedCourses = [];
   ['starter', 'main', 'side', 'dessert'].forEach(course => {
     if (menuState.selections[course] > 0) {
       selectedCourses.push(course);
-      animHtml += `<div class="gen-dish phase-1">${courseIcons[course]}</div>`;
     }
+  });
+  
+  // Build code snippet cards
+  let animHtml = '';
+  selectedCourses.forEach(course => {
+    const snippet = codeSnippets[course][0]; // Get first line of code
+    animHtml += `<div class="gen-code-card phase-1"><code>${escapeHtml(snippet)}</code></div>`;
   });
   animContainer.innerHTML = animHtml;
   
-  const dishes = animContainer.querySelectorAll('.gen-dish');
+  const codeCards = animContainer.querySelectorAll('.gen-code-card');
   
   // Show overlay
   overlay.classList.add('active');
@@ -11601,42 +11911,42 @@ async function generateInstrument() {
   });
   
   try {
-    // PHASE 1: Dishes appear in corners (already set via CSS class)
+    // PHASE 1: Code cards appear scattered
     await sleep(100);
     
     // PHASE 2: Fly in to center
-    genText.textContent = 'Gathering ingredients...';
+    genText.textContent = 'Extracting code blocks...';
     genText.classList.add('show');
-    dishes.forEach(d => {
-      d.classList.remove('phase-1');
-      d.classList.add('phase-2');
+    codeCards.forEach((c, i) => {
+      setTimeout(() => {
+        c.classList.remove('phase-1');
+        c.classList.add('phase-2');
+      }, i * 150);
+    });
+    await sleep(600 + selectedCourses.length * 150);
+    
+    // PHASE 3: Suspense shake
+    genText.textContent = 'Merging syntax...';
+    codeCards.forEach(c => {
+      c.classList.remove('phase-2');
+      c.classList.add('phase-3');
     });
     await sleep(800);
     
-    // PHASE 3: Suspense wobble
-    genText.textContent = 'Building suspense...';
-    dishes.forEach(d => {
-      d.classList.remove('phase-2');
-      d.classList.add('phase-3');
+    // PHASE 4: Merge collision - cards shrink toward center
+    genText.textContent = 'Compiling...';
+    codeCards.forEach(c => {
+      c.classList.remove('phase-3');
+      c.classList.add('phase-4');
     });
-    await sleep(600);
+    await sleep(400);
     
-    // PHASE 4: Merge collision
-    genText.textContent = 'Combining...';
-    dishes.forEach(d => {
-      d.classList.remove('phase-3');
-      d.classList.add('phase-4');
-    });
-    await sleep(300);
-    
-    // PHASE 5: Explosion + rings
+    // PHASE 5: Explosion + rings + confetti
     mergeCenter.classList.add('explode');
     rings.forEach(r => r.classList.add('burst'));
+    spawnConfetti(confettiContainer, 60);
     
-    // Spawn confetti
-    spawnConfetti(confettiContainer, 50);
-    
-    await sleep(400);
+    await sleep(500);
     
     // PHASE 6: Reveal result card
     genText.classList.remove('show');
@@ -11671,6 +11981,13 @@ async function generateInstrument() {
     overlay.classList.remove('active');
     alert('Failed to load instrument. Please try again.');
   }
+}
+
+// Escape HTML for safe display
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 // Helper sleep function
