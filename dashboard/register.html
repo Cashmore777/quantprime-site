@@ -381,10 +381,17 @@ if ((promoCode && promoTier) || (isPaid && promoTier)) {
   document.querySelector('.auth-card').insertBefore(notice, document.querySelector('.error-message'));
 }
 
+// Get redirect URL from storage or default to /dashboard/
+function getRedirectUrl() {
+  const stored = sessionStorage.getItem('qp_redirect_after_login');
+  sessionStorage.removeItem('qp_redirect_after_login');
+  return stored || '/dashboard/';
+}
+
 // Check if already logged in
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (session) {
-    window.location.href = '/dashboard/';
+    window.location.href = getRedirectUrl();
   }
 });
 

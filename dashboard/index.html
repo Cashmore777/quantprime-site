@@ -7660,6 +7660,26 @@ if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
 const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
 
+// ==========================================
+// EARLY URL PARAM DETECTION
+// Parse URL params immediately to determine target view
+// ==========================================
+const _urlParams = new URLSearchParams(window.location.search);
+const _targetView = _urlParams.get('view');
+const _targetPaper = _urlParams.get('paper');
+const _targetTab = _urlParams.get('tab');
+
+// View mapping (same as handleUrlRouting but available immediately)
+const _viewMap = {
+  'home': 'home', 'research': 'research', 'community': 'community',
+  'build': 'marketplace', 'marketplace': 'marketplace',
+  'recoil': 'recoil', 'meridian': 'meridian', 'cockpit': 'cockpit',
+  'intelligence': 'intel', 'settings': 'settings', 'academy': 'academy',
+  'notebook': 'notebook', 'journal': 'notebook', 'mentorship': 'mentorship',
+  'automation': 'automation', 'admin': 'admin', 'affiliates': 'affiliates'
+};
+const _resolvedView = _targetView ? (_viewMap[_targetView.toLowerCase()] || null) : null;
+
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let authUser = null;
 var userTier = 'free';  // var so it's accessible as window.userTier
@@ -7753,6 +7773,11 @@ async function checkAuth() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   
   if (!session) {
+    // Store current URL (including query params) for redirect after login
+    const currentUrl = window.location.pathname + window.location.search;
+    if (currentUrl !== '/dashboard/' && currentUrl !== '/dashboard') {
+      sessionStorage.setItem('qp_redirect_after_login', currentUrl);
+    }
     window.location.href = '/dashboard/login.html';
     return;
   }
@@ -7916,8 +7941,63 @@ async function checkAuth() {
   
   document.getElementById('username-modal').classList.add('hidden');
   
+  // Handle URL routing AFTER auth complete
+  handleUrlRouting();
+  
   // Check if we should show welcome modal (first-time users)
   setTimeout(() => checkShowWelcome(), 500);
+}
+
+// ==========================================
+// URL ROUTING
+// Uses _resolvedView, _targetPaper, _targetTab parsed at script load
+// ==========================================
+function handleUrlRouting() {
+  console.log('[URL Routing] Target view:', _resolvedView, 'Paper:', _targetPaper, 'Tab:', _targetTab);
+  
+  if (!_resolvedView) {
+    console.log('[URL Routing] No view param, staying on home');
+    return;
+  }
+  
+  // Switch to the target view
+  console.log('[URL Routing] Switching to:', _resolvedView);
+  switchView(_resolvedView);
+  
+  // Handle sub-params with delay to ensure view is rendered
+  setTimeout(() => {
+    // Research paper deep link
+    if (_resolvedView === 'research' && _targetPaper) {
+      const paperNum = _targetPaper.padStart(2, '0');
+      console.log('[URL Routing] Loading paper:', paperNum);
+      if (typeof loadPaper === 'function') {
+        loadPaper(paperNum);
+      }
+    }
+    
+    // Research archive tab
+    if (_resolvedView === 'research' && _targetTab === 'archive') {
+      const archiveTab = document.querySelector('[data-research-tab="archive"], .research-tab[data-tab="archive"], [onclick*="showArchive"]');
+      if (archiveTab) {
+        console.log('[URL Routing] Clicking archive tab');
+        archiveTab.click();
+      }
+    }
+    
+    // Settings billing tab
+    if (_resolvedView === 'settings' && _targetTab === 'billing') {
+      const billingSection = document.querySelector('#settings-billing, .billing-section, [data-settings-tab="billing"]');
+      if (billingSection) {
+        console.log('[URL Routing] Scrolling to billing');
+        billingSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, 400);
+  
+  // Clear URL params after routing (clean URL, but keep path)
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 }
 
 // Manual check for pending tier upgrades - auto-runs on login now, kept for manual trigger if needed
@@ -13956,6 +14036,19 @@ async function loadResearchEmails() {
 
 // Initialize home page on load
 document.addEventListener('DOMContentLoaded', function() {
+  // EARLY VIEW SWITCH: Apply URL param view immediately to prevent Home flash
+  if (_resolvedView) {
+    console.log('[DOMContentLoaded] Early switch to:', _resolvedView);
+    // Direct DOM manipulation for instant switch (before switchView function may be ready)
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    const targetEl = document.getElementById('view-' + _resolvedView);
+    if (targetEl) targetEl.classList.add('active');
+    // Update nav buttons too
+    document.querySelectorAll('.nav-item, #mobile-nav button').forEach(b => {
+      b.classList.toggle('active', b.dataset.view === _resolvedView);
+    });
+  }
+  
   // Small delay for visual effect
   setTimeout(() => {
     animateCounters();

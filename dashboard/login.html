@@ -337,16 +337,23 @@ if (promoCode && promoTier) {
   document.querySelector('.auth-card').insertBefore(notice, document.querySelector('.error-message'));
 }
 
+// Get redirect URL from storage or default to /dashboard/
+function getRedirectUrl() {
+  const stored = sessionStorage.getItem('qp_redirect_after_login');
+  sessionStorage.removeItem('qp_redirect_after_login'); // Clear after reading
+  return stored || '/dashboard/';
+}
+
 // Check if already logged in
 supabaseClient.auth.getSession().then(({ data: { session } }) => {
   if (session) {
     // If logged in with promo, update tier first
     if (promoCode && promoTier && session.user.email === promoEmail) {
       updateUserTierForPromo(session.user.id, promoTier).then(() => {
-        window.location.href = '/dashboard/';
+        window.location.href = getRedirectUrl();
       });
     } else {
-      window.location.href = '/dashboard/';
+      window.location.href = getRedirectUrl();
     }
   }
 });
@@ -393,8 +400,8 @@ form.addEventListener('submit', async (e) => {
       await updateUserTierForPromo(data.user.id, promoTier);
     }
     
-    // Success - redirect to dashboard
-    window.location.href = '/dashboard/';
+    // Success - redirect to stored URL or dashboard
+    window.location.href = getRedirectUrl();
     
   } catch (error) {
     errorEl.textContent = error.message || 'Failed to sign in. Please try again.';
