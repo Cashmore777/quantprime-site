@@ -2204,7 +2204,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   MENU SYSTEM - Instrument Builder
+   MENU SYSTEM - Restaurant Style
    ═══════════════════════════════════════════════════════════════════════ */
 
 .marketplace-mode-toggle {
@@ -2213,14 +2213,15 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-radius: 10px;
   padding: 4px;
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  max-width: 320px;
 }
 
 .marketplace-mode-toggle button {
   flex: 1;
-  padding: 12px 24px;
+  padding: 10px 20px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-2);
   transition: all 0.2s;
@@ -2236,15 +2237,6 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--text-1);
 }
 
-/* Menu container */
-.menu-system {
-  display: none;
-}
-
-.menu-system.active {
-  display: block;
-}
-
 /* Marketplace mode visibility */
 .marketplace-mode {
   display: none;
@@ -2254,25 +2246,29 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: block;
 }
 
-/* Menu tier tabs */
+/* Menu tier tabs - compact */
 .menu-tier-tabs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
 }
 
 .menu-tier-tab {
-  padding: 10px 20px;
+  padding: 8px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-2);
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+}
+
+.menu-tier-tab svg:first-child {
+  width: 14px;
+  height: 14px;
 }
 
 .menu-tier-tab.active {
@@ -2282,125 +2278,78 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .menu-tier-tab.locked {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .menu-tier-tab .lock-icon {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  opacity: 0.6;
 }
 
-/* Menu layout */
+/* Restaurant-style menu layout */
 .menu-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 32px;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
+  max-height: calc(100vh - 280px);
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   .menu-layout {
     grid-template-columns: 1fr;
+    max-height: none;
   }
 }
 
-/* Course sections */
+/* Course sections - compact 2x2 grid */
 .menu-courses {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 800px) {
+  .menu-courses {
+    grid-template-columns: 1fr;
+  }
 }
 
 .menu-course {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  padding: var(--card-padding);
+  border-radius: 12px;
+  padding: 14px;
   transition: all 0.2s;
-}
-
-.menu-course:hover {
-  border-color: var(--border-hover);
 }
 
 .menu-course.has-selection {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow);
+  box-shadow: 0 0 0 2px var(--gold-glow);
 }
 
 .course-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 16px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
 }
 
 .course-header h3 {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .course-header h3 .course-number {
-  width: 28px;
-  height: 28px;
-  background: var(--gold);
-  color: #000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.course-header .course-question {
-  font-size: 13px;
-  color: var(--text-3);
-  font-style: italic;
-}
-
-.course-dishes {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 700px) {
-  .course-dishes {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Dish card */
-.dish-card {
-  background: var(--surface-raised);
-  border: 2px solid transparent;
-  border-radius: 10px;
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.dish-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-
-.dish-card.selected {
-  border-color: var(--gold);
-  background: var(--gold-glow);
-}
-
-.dish-card.selected::after {
-  content: '✓';
-  position: absolute;
-  top: 8px;
-  right: 8px;
   width: 22px;
   height: 22px;
   background: var(--gold);
@@ -2409,69 +2358,138 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.course-header .course-question {
+  font-size: 11px;
+  color: var(--text-3);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Dish items - restaurant menu style */
+.course-dishes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dish-card {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dish-card:hover {
+  background: var(--surface-raised);
+}
+
+.dish-card.selected {
+  background: var(--gold-glow);
+}
+
+.dish-card.selected::before {
+  content: '✓';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: var(--gold);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .dish-card h4 {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+  padding-left: 16px;
+}
+
+.dish-card.selected h4 {
   font-weight: 600;
-  margin: 0 0 6px 0;
+  color: var(--gold);
 }
 
 .dish-card p {
-  font-size: 12px;
-  color: var(--text-2);
+  font-size: 11px;
+  color: var(--text-3);
   margin: 0;
-  line-height: 1.4;
+  font-style: italic;
 }
 
-/* Order summary sidebar */
+/* Order summary - compact sidebar */
 .order-summary {
   position: sticky;
-  top: 24px;
+  top: 16px;
 }
 
 .order-summary-card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  padding: var(--card-padding);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 20px var(--gold-glow);
 }
 
 .order-summary-card h3 {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-align: center;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
 .order-summary-card h3 svg {
   stroke: var(--gold);
+  width: 16px;
+  height: 16px;
 }
 
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
 }
 
 .order-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px;
+  padding: 6px 8px;
   background: var(--surface-raised);
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 6px;
+  font-size: 11px;
 }
 
 .order-item .course-label {
   color: var(--text-3);
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -2479,66 +2497,73 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .order-item .dish-name {
   font-weight: 600;
   color: var(--text-1);
+  font-size: 12px;
 }
 
 .order-item.empty {
-  opacity: 0.4;
-  font-style: italic;
+  opacity: 0.35;
 }
 
 .order-item.empty .dish-name {
   color: var(--text-3);
+  font-weight: 400;
 }
 
 .order-build-id {
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 16px;
   text-align: center;
-  padding: 12px;
-  background: var(--surface-raised);
+  padding: 10px;
+  background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
   border-radius: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
   color: var(--gold);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .generate-btn {
   width: 100%;
-  padding: 16px 24px;
+  padding: 14px 20px;
   background: linear-gradient(135deg, var(--gold), var(--gold-light));
   color: #000;
   border-radius: 10px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(201,168,76,0.4);
   transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .generate-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.5);
 }
 
 .generate-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
   transform: none;
 }
 
 .generate-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
 }
 
-/* Generation animation */
+/* ═══════════════════════════════════════════════════════════════════════
+   GENERATION ANIMATION - Dopamine Hit with Confetti
+   ═══════════════════════════════════════════════════════════════════════ */
+
 .generation-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
+  background: radial-gradient(circle at center, rgba(10,10,15,0.95) 0%, rgba(0,0,0,0.98) 100%);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -2546,7 +2571,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s;
+  transition: opacity 0.4s;
+  overflow: hidden;
 }
 
 .generation-overlay.active {
@@ -2554,62 +2580,268 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   pointer-events: auto;
 }
 
-.generation-animation {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 32px;
+/* Animated background particles */
+.generation-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(201,168,76,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(0,171,255,0.08) 0%, transparent 40%);
+  animation: bgPulse 2s ease-in-out infinite;
 }
 
-.gen-dish {
-  width: 60px;
-  height: 60px;
-  background: var(--surface);
-  border: 2px solid var(--gold);
-  border-radius: 12px;
+@keyframes bgPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.generation-stage {
+  position: relative;
+  width: 400px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  opacity: 0;
-  transform: translateY(20px) scale(0.8);
-  animation: dishAppear 0.4s forwards;
 }
 
-.gen-dish:nth-child(1) { animation-delay: 0.1s; }
-.gen-dish:nth-child(2) { animation-delay: 0.3s; }
-.gen-dish:nth-child(3) { animation-delay: 0.5s; }
-.gen-dish:nth-child(4) { animation-delay: 0.7s; }
+.generation-animation {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  z-index: 2;
+}
 
-@keyframes dishAppear {
-  to {
+/* Dish cards that fly in */
+.gen-dish {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--surface) 0%, #1a1a22 100%);
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  position: relative;
+  box-shadow: 0 0 20px rgba(201,168,76,0.3);
+}
+
+/* Initial state - scattered */
+.gen-dish.phase-1 {
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.gen-dish:nth-child(1).phase-1 { transform: translate(-150px, -100px) scale(0.3) rotate(-20deg); }
+.gen-dish:nth-child(2).phase-1 { transform: translate(150px, -80px) scale(0.3) rotate(15deg); }
+.gen-dish:nth-child(3).phase-1 { transform: translate(-120px, 100px) scale(0.3) rotate(-10deg); }
+.gen-dish:nth-child(4).phase-1 { transform: translate(140px, 90px) scale(0.3) rotate(25deg); }
+
+/* Fly in animation */
+.gen-dish.phase-2 {
+  animation: flyIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.gen-dish:nth-child(1).phase-2 { animation-delay: 0.1s; }
+.gen-dish:nth-child(2).phase-2 { animation-delay: 0.2s; }
+.gen-dish:nth-child(3).phase-2 { animation-delay: 0.3s; }
+.gen-dish:nth-child(4).phase-2 { animation-delay: 0.4s; }
+
+@keyframes flyIn {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+}
+
+/* Suspense wobble */
+.gen-dish.phase-3 {
+  animation: suspenseWobble 0.15s ease-in-out infinite;
+}
+
+.gen-dish:nth-child(1).phase-3 { animation-delay: 0s; }
+.gen-dish:nth-child(2).phase-3 { animation-delay: 0.05s; }
+.gen-dish:nth-child(3).phase-3 { animation-delay: 0.1s; }
+.gen-dish:nth-child(4).phase-3 { animation-delay: 0.15s; }
+
+@keyframes suspenseWobble {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-2px, -1px) scale(1.02); }
+  50% { transform: translate(2px, 1px) scale(0.98); }
+  75% { transform: translate(-1px, 2px) scale(1.01); }
+}
+
+/* Merge collision */
+.gen-dish.phase-4 {
+  animation: mergeCollide 0.4s cubic-bezier(0.6, -0.28, 0.74, 0.05) forwards;
+}
+
+@keyframes mergeCollide {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(0, 0) scale(0); opacity: 0; }
+}
+
+/* Center merge explosion */
+.gen-merge-center {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+  opacity: 0;
+  z-index: 10;
+}
+
+.gen-merge-center.explode {
+  animation: mergeExplode 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes mergeExplode {
+  0% { transform: scale(0); opacity: 0; }
+  20% { transform: scale(0.5); opacity: 1; }
+  40% { transform: scale(2); opacity: 1; }
+  60% { transform: scale(1.8); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* Ring burst effect */
+.gen-ring {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 3px solid var(--gold);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.gen-ring.burst {
+  animation: ringBurst 0.6s ease-out forwards;
+}
+
+.gen-ring:nth-child(1).burst { animation-delay: 0s; }
+.gen-ring:nth-child(2).burst { animation-delay: 0.1s; }
+.gen-ring:nth-child(3).burst { animation-delay: 0.2s; }
+
+@keyframes ringBurst {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* Confetti container */
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+}
+
+.confetti.pop {
+  animation: confettiFall 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes confettiFall {
+  0% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) rotate(720deg);
   }
 }
 
-.gen-merge {
+/* Result reveal */
+.gen-result-card {
   position: absolute;
-  width: 80px;
-  height: 80px;
-  background: var(--gold);
-  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 24px 32px;
+  text-align: center;
   opacity: 0;
-  animation: mergePulse 1s 1.2s forwards;
+  transform: scale(0.8);
+  box-shadow: 0 0 60px rgba(201,168,76,0.4), 0 20px 40px rgba(0,0,0,0.4);
+  z-index: 30;
 }
 
-@keyframes mergePulse {
-  0% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1.2); }
-  100% { opacity: 0; transform: scale(2); }
+.gen-result-card.reveal {
+  animation: resultReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes resultReveal {
+  0% { opacity: 0; transform: scale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.gen-result-card h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  margin: 0 0 8px 0;
+}
+
+.gen-result-card .build-code {
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 16px;
+}
+
+.gen-result-card .result-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.gen-result-card .result-actions button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.gen-result-card .btn-copy {
+  background: var(--gold);
+  color: #000;
+}
+
+.gen-result-card .btn-download {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--text-1);
 }
 
 .generation-text {
-  font-size: 18px;
+  position: absolute;
+  bottom: 80px;
+  font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  opacity: 0;
 }
 
-/* Result modal */
+.generation-text.show {
+  animation: textFade 0.5s forwards;
+}
+
+@keyframes textFade {
+  to { opacity: 1; }
+}
+
+/* Result modal (fallback/detailed view) */
 .result-modal {
   position: fixed;
   inset: 0;
@@ -2632,9 +2864,9 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .result-modal-content {
   background: var(--surface);
   border-radius: 16px;
-  max-width: 800px;
+  max-width: 700px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -2642,7 +2874,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .result-header {
-  padding: 24px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
@@ -2650,7 +2882,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .result-header h3 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   margin: 0;
 }
@@ -2663,14 +2895,14 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .result-close {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--surface-raised);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   color: var(--text-2);
   transition: all 0.2s;
 }
@@ -2683,22 +2915,22 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .result-body {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 20px 24px;
 }
 
 .result-dishes {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 16px;
 }
 
 .result-dish-tag {
-  padding: 6px 12px;
+  padding: 5px 10px;
   background: var(--gold-glow);
   border: 1px solid var(--gold);
-  border-radius: 6px;
-  font-size: 12px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--gold);
 }
@@ -2706,36 +2938,37 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .result-code {
   background: #1a1a22;
   border-radius: 10px;
-  padding: 20px;
+  padding: 16px;
   font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.6;
+  font-size: 11px;
+  line-height: 1.5;
   color: #e0e0e0;
   white-space: pre-wrap;
   word-break: break-all;
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
 }
 
 .result-footer {
-  padding: 20px 24px;
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .result-footer .btn {
   flex: 1;
+  padding: 12px;
 }
 
 .result-instructions {
   background: var(--surface-raised);
   border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 20px;
-  font-size: 13px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
   color: var(--text-2);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .result-instructions strong {
@@ -5935,8 +6168,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
         Marketplace
       </button>
       <button data-mode="menus" onclick="switchMarketplaceMode('menus')">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 6px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
-        Build Instrument
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 6px;"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8"/><path d="M8 11h6"/></svg>
+        Menu
       </button>
     </div>
     
@@ -6125,9 +6358,23 @@ button, .nav-item, .room, .video-item, .filter-chip {
   
   <!-- Generation Overlay -->
   <div class="generation-overlay" id="generation-overlay">
-    <div class="generation-animation" id="generation-animation"></div>
-    <div class="gen-merge"></div>
-    <div class="generation-text">Building your instrument...</div>
+    <div class="generation-stage">
+      <div class="generation-animation" id="generation-animation"></div>
+      <div class="gen-merge-center" id="gen-merge-center"></div>
+      <div class="gen-ring" id="ring-1"></div>
+      <div class="gen-ring" id="ring-2"></div>
+      <div class="gen-ring" id="ring-3"></div>
+      <div class="confetti-container" id="confetti-container"></div>
+      <div class="gen-result-card" id="gen-result-card">
+        <h4>✨ Instrument Ready!</h4>
+        <div class="build-code" id="gen-build-code">RES-0000</div>
+        <div class="result-actions">
+          <button class="btn-copy" onclick="copyInstrumentCode()">📋 Copy Code</button>
+          <button class="btn-download" onclick="downloadInstrumentCode()">💾 Download</button>
+        </div>
+      </div>
+    </div>
+    <div class="generation-text" id="generation-text">Combining ingredients...</div>
   </div>
   
   <!-- Result Modal -->
@@ -11303,7 +11550,7 @@ function resetMenuSelections() {
   updateGenerateButton();
 }
 
-// Generate instrument
+// Generate instrument with dopamine animation
 async function generateInstrument() {
   const buildId = updateBuildId();
   
@@ -11315,36 +11562,106 @@ async function generateInstrument() {
   // Track generation start
   trackMenuEvent('generate_started', { buildId, tier: menuState.currentTier });
   
-  // Show animation overlay
+  // Get elements
   const overlay = document.getElementById('generation-overlay');
   const animContainer = document.getElementById('generation-animation');
+  const mergeCenter = document.getElementById('gen-merge-center');
+  const confettiContainer = document.getElementById('confetti-container');
+  const resultCard = document.getElementById('gen-result-card');
+  const genText = document.getElementById('generation-text');
+  const rings = [document.getElementById('ring-1'), document.getElementById('ring-2'), document.getElementById('ring-3')];
+  
+  // Reset all elements
+  mergeCenter.classList.remove('explode');
+  resultCard.classList.remove('reveal');
+  genText.classList.remove('show');
+  rings.forEach(r => r.classList.remove('burst'));
+  confettiContainer.innerHTML = '';
   
   // Build animation dishes
   let animHtml = '';
+  const selectedCourses = [];
   ['starter', 'main', 'side', 'dessert'].forEach(course => {
     if (menuState.selections[course] > 0) {
-      animHtml += `<div class="gen-dish">${courseIcons[course]}</div>`;
+      selectedCourses.push(course);
+      animHtml += `<div class="gen-dish phase-1">${courseIcons[course]}</div>`;
     }
   });
   animContainer.innerHTML = animHtml;
   
+  const dishes = animContainer.querySelectorAll('.gen-dish');
+  
+  // Show overlay
   overlay.classList.add('active');
   
-  // Fetch the code
+  // Fetch the code in parallel
+  const codePromise = fetch(`/data/menus/research/${buildId}.txt`).then(r => {
+    if (!r.ok) throw new Error('Build not found');
+    return r.text();
+  });
+  
   try {
-    const response = await fetch(`/data/menus/research/${buildId}.txt`);
-    if (!response.ok) throw new Error('Build not found');
+    // PHASE 1: Dishes appear in corners (already set via CSS class)
+    await sleep(100);
     
-    const code = await response.text();
+    // PHASE 2: Fly in to center
+    genText.textContent = 'Gathering ingredients...';
+    genText.classList.add('show');
+    dishes.forEach(d => {
+      d.classList.remove('phase-1');
+      d.classList.add('phase-2');
+    });
+    await sleep(800);
     
-    // Wait for animation (2.5s)
-    await new Promise(r => setTimeout(r, 2500));
+    // PHASE 3: Suspense wobble
+    genText.textContent = 'Building suspense...';
+    dishes.forEach(d => {
+      d.classList.remove('phase-2');
+      d.classList.add('phase-3');
+    });
+    await sleep(600);
     
-    // Hide overlay
-    overlay.classList.remove('active');
+    // PHASE 4: Merge collision
+    genText.textContent = 'Combining...';
+    dishes.forEach(d => {
+      d.classList.remove('phase-3');
+      d.classList.add('phase-4');
+    });
+    await sleep(300);
     
-    // Show result modal
-    showResultModal(buildId, code);
+    // PHASE 5: Explosion + rings
+    mergeCenter.classList.add('explode');
+    rings.forEach(r => r.classList.add('burst'));
+    
+    // Spawn confetti
+    spawnConfetti(confettiContainer, 50);
+    
+    await sleep(400);
+    
+    // PHASE 6: Reveal result card
+    genText.classList.remove('show');
+    document.getElementById('gen-build-code').textContent = buildId;
+    resultCard.classList.add('reveal');
+    
+    // Get the code (should be ready by now)
+    const code = await codePromise;
+    
+    // Store code for copy/download
+    document.getElementById('result-modal').dataset.buildId = buildId;
+    document.getElementById('result-modal').dataset.code = code;
+    
+    // Also update the result modal in case they want to see full code
+    const tierDishes = dishNames[menuState.currentTier] || dishNames.research;
+    let dishTagsHtml = '';
+    ['starter', 'main', 'side', 'dessert'].forEach(course => {
+      if (menuState.selections[course] > 0) {
+        const dishName = tierDishes[course][menuState.selections[course]];
+        dishTagsHtml += `<span class="result-dish-tag">${dishName}</span>`;
+      }
+    });
+    document.getElementById('result-dishes').innerHTML = dishTagsHtml;
+    document.getElementById('result-code').textContent = code;
+    document.getElementById('result-build-id').textContent = buildId;
     
     // Track generation complete
     trackMenuEvent('generate_completed', { buildId, tier: menuState.currentTier });
@@ -11355,6 +11672,59 @@ async function generateInstrument() {
     alert('Failed to load instrument. Please try again.');
   }
 }
+
+// Helper sleep function
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+// Spawn confetti particles
+function spawnConfetti(container, count) {
+  const colors = ['#c9a84c', '#d4b85a', '#00abff', '#22c55e', '#ef4444', '#8b5cf6', '#f59e0b'];
+  const shapes = ['square', 'circle'];
+  
+  for (let i = 0; i < count; i++) {
+    const confetti = document.createElement('div');
+    confetti.className = 'confetti';
+    
+    // Random properties
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    const size = 6 + Math.random() * 8;
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = 150 + Math.random() * 200;
+    const tx = Math.cos(angle) * velocity;
+    const ty = Math.sin(angle) * velocity - 100; // Bias upward
+    
+    confetti.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      background: ${color};
+      border-radius: ${shape === 'circle' ? '50%' : '2px'};
+      --tx: ${tx}px;
+      --ty: ${ty}px;
+    `;
+    
+    confetti.classList.add('pop');
+    container.appendChild(confetti);
+  }
+}
+
+// Close generation overlay
+function closeGenerationOverlay() {
+  document.getElementById('generation-overlay').classList.remove('active');
+}
+
+// Click outside result card to close
+document.addEventListener('click', (e) => {
+  const overlay = document.getElementById('generation-overlay');
+  const resultCard = document.getElementById('gen-result-card');
+  if (overlay.classList.contains('active') && resultCard.classList.contains('reveal')) {
+    if (!resultCard.contains(e.target)) {
+      closeGenerationOverlay();
+    }
+  }
+});
 
 // Show result modal
 function showResultModal(buildId, code) {
