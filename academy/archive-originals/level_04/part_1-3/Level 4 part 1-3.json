@@ -1,0 +1,822 @@
+{
+  "source_file": "Level 4 part 1-3.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_04\\part_1-3",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 6.08,
+      "text": "Welcome to level 4 parts 1 to 3. I quickly just want to thank everyone for joining VIP. It really"
+    },
+    {
+      "start": 6.08,
+      "end": 10.08,
+      "text": "does mean a lot to me and I appreciate the fact that you're supporting the cause. I know that"
+    },
+    {
+      "start": 10.08,
+      "end": 15.28,
+      "text": "this entire part was free to join. I appreciate the fact that you took the leap to actually grow"
+    },
+    {
+      "start": 15.28,
+      "end": 20.8,
+      "text": "and develop. So let's get straight into level 4. Part 1 is going to be structured trading rules."
+    },
+    {
+      "start": 20.8,
+      "end": 25.52,
+      "text": "What most people do is they rush this part. They learn a strategy, they learn risk management"
+    },
+    {
+      "start": 25.52,
+      "end": 29.76,
+      "text": "but they never take the time to form the structure of their day-to-day trading habits"
+    },
+    {
+      "start": 29.76,
+      "end": 35.12,
+      "text": "which actually have the largest impact on their long-term results. They might create some rules"
+    },
+    {
+      "start": 35.12,
+      "end": 41.84,
+      "text": "and stick to them very strictly for a few days or a few weeks but in general those rules bend or even"
+    },
+    {
+      "start": 41.84,
+      "end": 48.0,
+      "text": "vanish over long periods of time. Consistency is the one thing that people tend to lack, not skill."
+    },
+    {
+      "start": 48.0,
+      "end": 51.76,
+      "text": "So here's what you're going to do and here's what you are going to stick to. You're going to"
+    },
+    {
+      "start": 51.76,
+      "end": 57.2,
+      "text": "create a maximum daily loss limit. This will protect your capital. Let's just say that your maximum"
+    },
+    {
+      "start": 57.2,
+      "end": 64.8,
+      "text": "daily loss limit would be let's just say 2% or 1%. Whatever you're willing to risk and lose"
+    },
+    {
+      "start": 64.8,
+      "end": 70.32,
+      "text": "every day. If you were to lose 1% of your account every day, how would you feel? If that's too much"
+    },
+    {
+      "start": 70.32,
+      "end": 76.0,
+      "text": "for you, drop it to 0.5%. If you feel like it's too little, up it to 3%. I don't know. Whatever"
+    },
+    {
+      "start": 76.0,
+      "end": 80.64,
+      "text": "you feel like you are comfortable with losing every day, that's what you need to set it to."
+    },
+    {
+      "start": 80.64,
+      "end": 85.44,
+      "text": "You also need to create a maximum weekly loss limit because let's just say you have"
+    },
+    {
+      "start": 85.44,
+      "end": 91.2,
+      "text": "3 losing days in the week. You've lost on Monday, Tuesday and Wednesday. When it comes to Thursday,"
+    },
+    {
+      "start": 91.2,
+      "end": 96.0,
+      "text": "would you make the decision to not trade or would you make the emotional decision?"
+    },
+    {
+      "start": 96.0,
+      "end": 100.16,
+      "text": "Let's just trade Thursday because hopefully it makes some of the loss back. You need to not"
+    },
+    {
+      "start": 100.16,
+      "end": 105.84,
+      "text": "think like that. You need to think in the way of the fact that you've just had 3 losing"
+    },
+    {
+      "start": 105.84,
+      "end": 111.92,
+      "text": "days back to back. Maybe you should skip Thursday to see how Thursday performs. It's all about"
+    },
+    {
+      "start": 111.92,
+      "end": 117.28,
+      "text": "collecting data. You need to create a profit target. This prevents greed and bad habits from"
+    },
+    {
+      "start": 117.28,
+      "end": 122.72,
+      "text": "forming. This might be harder to do if you're risking a certain amount or percentage of your"
+    },
+    {
+      "start": 122.72,
+      "end": 127.76,
+      "text": "account every day. But for me personally, I use a fixed lot size. So the way that my"
+    },
+    {
+      "start": 127.76,
+      "end": 132.8,
+      "text": "bot is set up, the bot that will be the master account for the copper trading service for"
+    },
+    {
+      "start": 132.8,
+      "end": 140.56,
+      "text": "the PIG pig bot, the way that's set up is it will either risk £100 per day over the"
+    },
+    {
+      "start": 140.56,
+      "end": 148.72,
+      "text": "course of the entire day to make £100 or £1000 or £10,000. There is no lower risk setting than that."
+    },
+    {
+      "start": 148.72,
+      "end": 153.36,
+      "text": "Technically, you'll probably need about £1000 in your account to start trading with the bot."
+    },
+    {
+      "start": 153.36,
+      "end": 158.32,
+      "text": "The next thing is you need to create a trade amount limit. You can set your limit attempts"
+    },
+    {
+      "start": 158.32,
+      "end": 162.88,
+      "text": "and re-entries. If you feel like you're taking too many trades or you feel like"
+    },
+    {
+      "start": 162.88,
+      "end": 167.44,
+      "text": "you've just lost a trade and then you re-enter into another one way too quick without"
+    },
+    {
+      "start": 167.44,
+      "end": 173.84,
+      "text": "any actual logical explanation, then you can set a trade amount limit. So you're only allowed to take"
+    },
+    {
+      "start": 173.84,
+      "end": 179.28,
+      "text": "two or three or four trades per day. Depending on what your actual approach is, this will"
+    },
+    {
+      "start": 179.28,
+      "end": 184.96,
+      "text": "change depending on that. The next thing is you need to create a journal or a statistical"
+    },
+    {
+      "start": 184.96,
+      "end": 190.32,
+      "text": "analytical tool because data is key. Every single trade that you take you could track it"
+    },
+    {
+      "start": 190.32,
+      "end": 195.6,
+      "text": "so you can create equity curves and see how each day of the week performs separately."
+    },
+    {
+      "start": 195.6,
+      "end": 201.2,
+      "text": "Or you can log the profit or loss of the day at the end of each day. At the end of each week,"
+    },
+    {
+      "start": 201.2,
+      "end": 209.76,
+      "text": "you can make a little recap where you can break down how the account either grew or decreased in size"
+    },
+    {
+      "start": 209.76,
+      "end": 214.32,
+      "text": "over the course of the entire week. That way, you can collect all of the data,"
+    },
+    {
+      "start": 214.32,
+      "end": 218.56,
+      "text": "you can make notes on certain days, you can pick apart the actual strategy that you're"
+    },
+    {
+      "start": 218.64,
+      "end": 226.08,
+      "text": "testing and you can, over time, see the equity curve on a smaller and longer timeframe basis."
+    },
+    {
+      "start": 226.08,
+      "end": 230.48,
+      "text": "Next, you're going to create a set of guidelines for days that you will avoid. For example,"
+    },
+    {
+      "start": 230.48,
+      "end": 236.48,
+      "text": "you can avoid high volatility days or just bad days in general. If you're looking at the news"
+    },
+    {
+      "start": 236.48,
+      "end": 241.52,
+      "text": "for the day and there's like nine red folders or even just four red folders, this might be a day"
+    },
+    {
+      "start": 241.52,
+      "end": 247.04,
+      "text": "that you want to avoid or however many millions of let's just say you've woke up one morning"
+    },
+    {
+      "start": 247.04,
+      "end": 254.64,
+      "text": "and Trump has basically been playing pirates with Venezuela and captured however many millions of"
+    },
+    {
+      "start": 254.64,
+      "end": 263.84,
+      "text": "dollars worth of oil. You might want to not trade a USD based pair because that is going to have"
+    },
+    {
+      "start": 263.84,
+      "end": 267.28,
+      "text": "an increased amount of volatility based on the world events that are going on."
+    },
+    {
+      "start": 267.28,
+      "end": 271.04,
+      "text": "And also just bad days in general. If you haven't had enough sleep or you've got something"
+    },
+    {
+      "start": 271.04,
+      "end": 275.44,
+      "text": "going on in your personal life, you can just avoid days where you don't feel 100%"
+    },
+    {
+      "start": 275.44,
+      "end": 279.36,
+      "text": "sure of the fact that you're going to make money today because at the end of the day,"
+    },
+    {
+      "start": 279.36,
+      "end": 282.8,
+      "text": "that's what it's all about. It's all about consistency and it's all about being in the"
+    },
+    {
+      "start": 282.8,
+      "end": 287.28,
+      "text": "right mindset to be able to approach the markets in the right way. Otherwise,"
+    },
+    {
+      "start": 287.28,
+      "end": 291.12,
+      "text": "you're not going to be approaching it in the right way because of your bad mindset and you're"
+    },
+    {
+      "start": 291.12,
+      "end": 294.24,
+      "text": "going to take a bad trade and then you're going to feel bad after because you've lost,"
+    },
+    {
+      "start": 294.24,
+      "end": 299.12,
+      "text": "basically. And the next thing you're going to do is create a clear set up an entry guideline"
+    },
+    {
+      "start": 299.2,
+      "end": 307.44,
+      "text": "that you follow religiously. You need to know exactly when, how and why you're entering the trade"
+    },
+    {
+      "start": 307.44,
+      "end": 312.16,
+      "text": "and you also need to know the exact same thing for how you exit the trade because a lot of people"
+    },
+    {
+      "start": 312.16,
+      "end": 318.32,
+      "text": "get the entry perfect and then they kind of disregard the exit but the exit is as important"
+    },
+    {
+      "start": 318.32,
+      "end": 323.84,
+      "text": "as the entry because you could take the best trade in the world. It could be a 150 risk to"
+    },
+    {
+      "start": 323.84,
+      "end": 330.4,
+      "text": "reward ratio but if you don't close that trade at 150 RR and it comes back to break even,"
+    },
+    {
+      "start": 330.4,
+      "end": 335.76,
+      "text": "that's because your entry is perfect and your exit is shit. So you need to work on the exit,"
+    },
+    {
+      "start": 336.56,
+      "end": 342.56,
+      "text": "how you leave your trade as much as how you enter your trade. You need a strict set of either"
+    },
+    {
+      "start": 342.56,
+      "end": 347.6,
+      "text": "rules or a gut feeling when you see a certain type of behavior in the market. You need to"
+    },
+    {
+      "start": 347.6,
+      "end": 352.4,
+      "text": "understand when you're supposed to leave instead of taking a screenshot and bragging about"
+    },
+    {
+      "start": 352.4,
+      "end": 357.2,
+      "text": "some profits that are currently there which I can guarantee we have all done at some point."
+    },
+    {
+      "start": 357.2,
+      "end": 362.16,
+      "text": "I would highly recommend that you perfect your exit, how you leave the trade. Is it going to be"
+    },
+    {
+      "start": 362.16,
+      "end": 367.12,
+      "text": "partially? Is it going to be fully? Is it going to be each different position has a different TP"
+    },
+    {
+      "start": 367.12,
+      "end": 373.2,
+      "text": "or is it all going to be close 75% here and let the rest run or 50% and let the rest run?"
+    },
+    {
+      "start": 373.2,
+      "end": 378.08,
+      "text": "Whatever you feel like is best for the way that you approach everything because it all depends"
+    },
+    {
+      "start": 378.08,
+      "end": 384.64,
+      "text": "on you at the end of the day. There's no written set of rules with this. It's all about you and"
+    },
+    {
+      "start": 384.64,
+      "end": 391.28,
+      "text": "the market mirrors your behavior back at you when you are acting correctly. Now these are some statistics"
+    },
+    {
+      "start": 391.28,
+      "end": 400.56,
+      "text": "of structured strict traders versus unorganized no plan traders. Now the average win rate of"
+    },
+    {
+      "start": 400.56,
+      "end": 409.04,
+      "text": "someone who has a structured set up and a structured approach is 55 to 65% win rate versus"
+    },
+    {
+      "start": 409.04,
+      "end": 417.12,
+      "text": "unorganized no plan 35% to 45% win rate and as you can see the max account drawdown for a structured"
+    },
+    {
+      "start": 417.12,
+      "end": 424.08,
+      "text": "trader will be 10 to 15 and the unorganized trader will be 25 to 40 or blowing the account."
+    },
+    {
+      "start": 424.08,
+      "end": 429.04,
+      "text": "Now the risk per trade of a structured trader will be 1 to 2% and an unorganized"
+    },
+    {
+      "start": 429.04,
+      "end": 435.68,
+      "text": "no plan trader would probably be risking 5 to 10% or even more because they have no plan. The objective"
+    },
+    {
+      "start": 436.24,
+      "end": 443.6,
+      "text": "rule based data driven decision making comes from the structured strict trader. The unorganized"
+    },
+    {
+      "start": 443.6,
+      "end": 452.24,
+      "text": "trader has emotional, impulsive and trusts their gut feeling quote unquote thinking that it is"
+    },
+    {
+      "start": 452.24,
+      "end": 457.92,
+      "text": "their ego performance. The consistent and predictable results come from a structured trader"
+    },
+    {
+      "start": 457.92,
+      "end": 463.2,
+      "text": "and the inconsistent and unpredictable comes from the unorganized. Trade journaling happens"
+    },
+    {
+      "start": 463.2,
+      "end": 469.6,
+      "text": "when you are structured and strict unorganized traders rarely or never journal their trades"
+    },
+    {
+      "start": 469.6,
+      "end": 476.24,
+      "text": "and the focus of a structured trader is the process and the risk management and the unorganized"
+    },
+    {
+      "start": 476.24,
+      "end": 482.48,
+      "text": "trader with no plan is chasing payouts and excitement and a bit of a buzz from gambling"
+    },
+    {
+      "start": 482.48,
+      "end": 489.28,
+      "text": "essentially never forget your rules like I said before people lack consistency if you want to out"
+    },
+    {
+      "start": 489.28,
+      "end": 494.64,
+      "text": "perform everyone else you have to purposefully do the opposite of what holds everyone else back"
+    },
+    {
+      "start": 494.64,
+      "end": 499.68,
+      "text": "you need to print your rules out or write them on a node and leave them on your desk place it"
+    },
+    {
+      "start": 499.68,
+      "end": 504.56,
+      "text": "somewhere you'll always see it while you're analyzing your chart read your rules once you've"
+    },
+    {
+      "start": 504.56,
+      "end": 509.68,
+      "text": "finished analyzing and you're waiting for a setup read them again and again and again"
+    },
+    {
+      "start": 509.68,
+      "end": 514.56,
+      "text": "until the drilled into your head do not take a trade unless you've literally just read through"
+    },
+    {
+      "start": 514.56,
+      "end": 520.32,
+      "text": "your rules you need to keep yourself in check constantly stay aware and stay focused part two"
+    },
+    {
+      "start": 520.32,
+      "end": 525.76,
+      "text": "is training your intuition so how do you even train your intuition one of the top mistakes"
+    },
+    {
+      "start": 525.76,
+      "end": 530.72,
+      "text": "that people make is not knowing the difference between their gut feeling and their ego's opinion"
+    },
+    {
+      "start": 531.6,
+      "end": 536.0,
+      "text": "when you think it's your intuition telling you to do something it's sometimes your ego"
+    },
+    {
+      "start": 536.0,
+      "end": 542.16,
+      "text": "tricking you to avoid this it's very simple it's all about the first instinct that you feel"
+    },
+    {
+      "start": 542.16,
+      "end": 547.12,
+      "text": "these instincts are formed over time after you've gathered some experience and knowledge about"
+    },
+    {
+      "start": 547.12,
+      "end": 552.0,
+      "text": "what tends to happen next you will develop a gut feeling that if you listen to it"
+    },
+    {
+      "start": 552.0,
+      "end": 556.16,
+      "text": "it can trade better than any strategy you will ever try to use i'm not saying to just"
+    },
+    {
+      "start": 556.16,
+      "end": 559.92,
+      "text": "go into the market and start doing this right now though i'm just saying that over time"
+    },
+    {
+      "start": 560.48,
+      "end": 564.72,
+      "text": "you will gain a much more personal understanding of when and how you're supposed"
+    },
+    {
+      "start": 564.8,
+      "end": 569.52,
+      "text": "to act based on that gut feeling the most important piece of advice that i think i have"
+    },
+    {
+      "start": 569.52,
+      "end": 576.08,
+      "text": "given you so far is that repetition and becoming comfortable with each scenario that can occur"
+    },
+    {
+      "start": 576.08,
+      "end": 580.64,
+      "text": "is by far the most valuable time that you can spend whether you're a beginner"
+    },
+    {
+      "start": 580.64,
+      "end": 585.76,
+      "text": "or you've been trading for a while and you're looking for an exercise to build your confidence"
+    },
+    {
+      "start": 585.76,
+      "end": 591.36,
+      "text": "you need to a hundred percent understand what you're looking at and understand the behaviors"
+    },
+    {
+      "start": 591.36,
+      "end": 595.76,
+      "text": "to be able to read them like the back of your hand if you find hundreds of examples"
+    },
+    {
+      "start": 595.76,
+      "end": 599.12,
+      "text": "and you absorb everything that the candles did leading up to"
+    },
+    {
+      "start": 599.76,
+      "end": 605.52,
+      "text": "during and after the setup or entry or event occurred and you collect that data in a way"
+    },
+    {
+      "start": 605.52,
+      "end": 609.76,
+      "text": "where you can fully understand it and read it obviously everyone learns differently"
+    },
+    {
+      "start": 609.76,
+      "end": 615.04,
+      "text": "you can begin to fully dive into training your intuition like never seen before to train"
+    },
+    {
+      "start": 615.04,
+      "end": 620.96,
+      "text": "your intuition the best way is to literally just analyze a chart of your choice and predict"
+    },
+    {
+      "start": 620.96,
+      "end": 625.52,
+      "text": "what you think will happen based on the logic of everything that you know so far"
+    },
+    {
+      "start": 625.52,
+      "end": 629.6,
+      "text": "you need to feel the heartbeat of the market and begin to fully align with it"
+    },
+    {
+      "start": 629.6,
+      "end": 632.96,
+      "text": "i forgot what these are called i think i think these are called i think this is a"
+    },
+    {
+      "start": 632.96,
+      "end": 637.84,
+      "text": "Venn diagram i'm not too sure but as you can see there is a clear balance between"
+    },
+    {
+      "start": 637.84,
+      "end": 643.12,
+      "text": "the rules you have in place or your boundaries your personal development or experience"
+    },
+    {
+      "start": 643.12,
+      "end": 648.16,
+      "text": "and following your intuition or your gut feeling perfect balance of these having a"
+    },
+    {
+      "start": 648.16,
+      "end": 654.72,
+      "text": "perfect balance of these and landing in this sweet spot here is where the profitable traders are"
+    },
+    {
+      "start": 654.72,
+      "end": 661.68,
+      "text": "this is the perfect balance of everything when it comes to your approach part three is algorithmic"
+    },
+    {
+      "start": 661.68,
+      "end": 668.32,
+      "text": "time alignment what the fuck is that it's the concept of being one with the flow behaviors or"
+    },
+    {
+      "start": 668.32,
+      "end": 673.84,
+      "text": "heartbeat that moves the price throughout time by using everything that you now know you can"
+    },
+    {
+      "start": 673.84,
+      "end": 678.24,
+      "text": "begin to feel the actual algorithmic flow that is moving through the time"
+    },
+    {
+      "start": 678.88,
+      "end": 683.84,
+      "text": "no matter which time frame you choose always remember that the higher time frames are just"
+    },
+    {
+      "start": 683.84,
+      "end": 688.72,
+      "text": "the vehicles that the smaller time frames are riding inside of if the 30 minute is"
+    },
+    {
+      "start": 688.72,
+      "end": 694.16,
+      "text": "trending bearish heavily you want to align with that on a smaller time frame so that you can ride"
+    },
+    {
+      "start": 694.16,
+      "end": 700.4,
+      "text": "inside of the vehicle instead of being hit by it it all starts with the lessons that i've taught"
+    },
+    {
+      "start": 700.4,
+      "end": 705.52,
+      "text": "if you're comfortable with those at this point now is all about becoming purely aligned with the"
+    },
+    {
+      "start": 705.52,
+      "end": 711.68,
+      "text": "way that things work using your newfound experience and knowledge of the price and time to shape your"
+    },
+    {
+      "start": 711.68,
+      "end": 717.68,
+      "text": "own perception of what happened earlier why it happened and what's happening right now"
+    },
+    {
+      "start": 717.68,
+      "end": 722.72,
+      "text": "that is going to cause something to happen in the future once this muscle has strengthened"
+    },
+    {
+      "start": 722.72,
+      "end": 729.28,
+      "text": "this will be your secret weapon that erases your false entries coincidences you'll"
+    },
+    {
+      "start": 729.28,
+      "end": 734.08,
+      "text": "know that you're beginning to become aligned when you start to see synchronicities in your life"
+    },
+    {
+      "start": 734.08,
+      "end": 741.6,
+      "text": "people call these moments coincidences and they think nothing of them but this is alignment of time"
+    },
+    {
+      "start": 741.6,
+      "end": 747.44,
+      "text": "and physical matter moving through it once you begin to understand the patterns that are held"
+    },
+    {
+      "start": 747.44,
+      "end": 753.12,
+      "text": "within the way that time itself is constructed it winks back at you it can send you detailed"
+    },
+    {
+      "start": 753.12,
+      "end": 758.24,
+      "text": "messages and insights in response to something that you're thinking or talking about the"
+    },
+    {
+      "start": 758.24,
+      "end": 765.2,
+      "text": "only conclusion for this from my perception is that it is god or higher power or the universe"
+    },
+    {
+      "start": 765.2,
+      "end": 770.24,
+      "text": "but either way it's all the same thing it's something outside of time that can see everything"
+    },
+    {
+      "start": 770.24,
+      "end": 776.72,
+      "text": "inside of it which is in market talk that's price we are price moving through time it's i think"
+    },
+    {
+      "start": 776.72,
+      "end": 780.64,
+      "text": "you understand what i'm trying to say here the way that you approach trading is the way that"
+    },
+    {
+      "start": 780.64,
+      "end": 784.88,
+      "text": "you should approach life you wait for the right moment it doesn't need to be the perfect moment"
+    },
+    {
+      "start": 784.88,
+      "end": 790.56,
+      "text": "just the right one based on your intuition then you act accordingly following the path that your"
+    },
+    {
+      "start": 790.56,
+      "end": 796.32,
+      "text": "intuition and experience is guiding you in which shapes the ever-evolving perception that is already"
+    },
+    {
+      "start": 796.32,
+      "end": 801.92,
+      "text": "there you're adding on another layer of expertise and critical analysis onto the ever-growing"
+    },
+    {
+      "start": 801.92,
+      "end": 806.88,
+      "text": "intuition that you've built so far you need to have complete faith in the process because if"
+    },
+    {
+      "start": 806.88,
+      "end": 812.16,
+      "text": "you're pessimistic and you expect the glass to be half empty you're not going to grow or"
+    },
+    {
+      "start": 812.16,
+      "end": 817.36,
+      "text": "develop at a rate that will immensely change your life and last but not least you need to"
+    },
+    {
+      "start": 817.36,
+      "end": 824.08,
+      "text": "always hand over the outcome of your actions to something larger than yourself let go of the outcome"
+    },
+    {
+      "start": 824.08,
+      "end": 831.76,
+      "text": "of your trade just align with the fact that it will either be a win or a loss if it loses"
+    },
+    {
+      "start": 832.32,
+      "end": 838.72,
+      "text": "good if it wins good it doesn't really matter let go of the outcome soon as you click buy or"
+    },
+    {
+      "start": 838.72,
+      "end": 846.0,
+      "text": "sell set your stop loss and tp come back later if it wins thank you god if it lost thank you god"
+    },
+    {
+      "start": 846.0,
+      "end": 852.08,
+      "text": "that's it it's not it does not get more easy than that so your next steps before we move on to level"
+    },
+    {
+      "start": 852.08,
+      "end": 858.64,
+      "text": "four parts four or six is number one create your rules make sure that you cover every single"
+    },
+    {
+      "start": 858.64,
+      "end": 863.2,
+      "text": "point that i've made on that slide at the beginning and if you can come up with any extras"
+    },
+    {
+      "start": 863.2,
+      "end": 868.16,
+      "text": "that you think and and if you can come up with any extras that you think will help you to"
+    },
+    {
+      "start": 868.16,
+      "end": 874.16,
+      "text": "stay disciplined go for it number two is absorb more information the more information that you"
+    },
+    {
+      "start": 874.16,
+      "end": 879.36,
+      "text": "store in your subconscious the more wisdom and clarity you will have remember that repetition"
+    },
+    {
+      "start": 879.36,
+      "end": 886.4,
+      "text": "is the key to development be a sponge and do more number three is the algo and time alignment"
+    },
+    {
+      "start": 886.4,
+      "end": 891.2,
+      "text": "look out for synchronicities in your day-to-day life actively expect them to come to you when"
+    },
+    {
+      "start": 891.2,
+      "end": 896.8,
+      "text": "the time is right believe it know it and breathe it you'll understand what i mean when it begins"
+    },
+    {
+      "start": 896.8,
+      "end": 902.48,
+      "text": "to happen trust me so that was level four parts one of three if you do have any questions just"
+    },
+    {
+      "start": 902.48,
+      "end": 908.64,
+      "text": "drop messages in the vip or trading chat but part from that i'll see you in the next one"
+    }
+  ]
+}

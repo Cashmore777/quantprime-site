@@ -1,0 +1,1632 @@
+{
+  "source_file": "Level 7 Part 4-6.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_07\\part_4-6",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 8.0,
+      "text": "Welcome back to level 7. This is parts 4 to 6. Without further ado, let's dive straight into the education."
+    },
+    {
+      "start": 8.0,
+      "end": 13.0,
+      "text": "Part 1 is going to be high risk to reward reversals. How to catch them?"
+    },
+    {
+      "start": 13.0,
+      "end": 19.0,
+      "text": "The main thing we need to look for to catch a high RR reversal is a liquidity pool being broken,"
+    },
+    {
+      "start": 19.0,
+      "end": 27.0,
+      "text": "and then confirmation of the reversal. If you combine this with the hours that I gave you in the last parts,"
+    },
+    {
+      "start": 27.0,
+      "end": 35.0,
+      "text": "you will begin to instantly see that the way of catching the reversal isn't going to be perfect every time,"
+    },
+    {
+      "start": 35.0,
+      "end": 41.0,
+      "text": "but there are things that we can do to increase our chances of catching the actual reversal itself."
+    },
+    {
+      "start": 41.0,
+      "end": 45.0,
+      "text": "If you can mark up important highs and lows from different timeframes,"
+    },
+    {
+      "start": 45.0,
+      "end": 50.0,
+      "text": "and you know how to spot a fractal market structure shift on any timeframe"
+    },
+    {
+      "start": 50.0,
+      "end": 57.0,
+      "text": "and engulfing candle in the desired direction is a smaller timeframe market structure shift,"
+    },
+    {
+      "start": 57.0,
+      "end": 63.0,
+      "text": "you are able to find and catch a high RR reversal if you can do this."
+    },
+    {
+      "start": 63.0,
+      "end": 69.0,
+      "text": "If you've been trying to catch the top of the reversal, and you keep hitting stop loss over and over and over,"
+    },
+    {
+      "start": 69.0,
+      "end": 73.0,
+      "text": "the problem is that you haven't reached the end of the higher timeframe swing."
+    },
+    {
+      "start": 73.0,
+      "end": 77.0,
+      "text": "You're trying to catch the reversal that hasn't even started reversing yet."
+    },
+    {
+      "start": 77.0,
+      "end": 84.0,
+      "text": "You need to understand that if the price is bearish for a while, it has to pull back and then go bullish eventually."
+    },
+    {
+      "start": 84.0,
+      "end": 89.0,
+      "text": "If you keep hitting stop loss, you're entering prematurely, the first method."
+    },
+    {
+      "start": 89.0,
+      "end": 95.0,
+      "text": "If you'd like to have a few failed attempts, which is perfectly fine when you're risk to reward is between 5 and 20,"
+    },
+    {
+      "start": 95.0,
+      "end": 99.0,
+      "text": "all you have to do is wait for an engulfing candle, enter when it closes,"
+    },
+    {
+      "start": 99.0,
+      "end": 104.0,
+      "text": "and place the stop loss below or above the body of the candle that you're entering from."
+    },
+    {
+      "start": 104.0,
+      "end": 110.0,
+      "text": "Here is three examples of different reversals at different points of the day."
+    },
+    {
+      "start": 110.0,
+      "end": 117.0,
+      "text": "The first one on the left is just a clean pullback before continuing in a bullish direction."
+    },
+    {
+      "start": 117.0,
+      "end": 124.0,
+      "text": "The bearish engulfing body is the stop loss at the top of the body,"
+    },
+    {
+      "start": 124.0,
+      "end": 129.0,
+      "text": "because obviously it's a bearish engulfing, so you place the stop loss at the highest point of the body"
+    },
+    {
+      "start": 129.0,
+      "end": 134.0,
+      "text": "that allows you to squeeze a few more percent out of the trade."
+    },
+    {
+      "start": 134.0,
+      "end": 140.0,
+      "text": "If you were to have placed the stop loss at the top of the wick, then the risk to reward would have been halved."
+    },
+    {
+      "start": 140.0,
+      "end": 145.0,
+      "text": "This first trade was 5RR. If you were to have put the stop loss above the wick,"
+    },
+    {
+      "start": 145.0,
+      "end": 150.0,
+      "text": "it would have been 2 to 2.5RR, which is not what we're going for here."
+    },
+    {
+      "start": 150.0,
+      "end": 152.0,
+      "text": "We're going for high risk to reward."
+    },
+    {
+      "start": 152.0,
+      "end": 159.0,
+      "text": "The second example is a perfect showcase of what happens when you don't catch the top."
+    },
+    {
+      "start": 159.0,
+      "end": 162.0,
+      "text": "The first one, we caught it perfectly."
+    },
+    {
+      "start": 162.0,
+      "end": 166.0,
+      "text": "The second image, we grabbed liquidity above a key point."
+    },
+    {
+      "start": 166.0,
+      "end": 170.0,
+      "text": "You can see the little line on the left of the second image at the bottom or in the middle."
+    },
+    {
+      "start": 170.0,
+      "end": 172.0,
+      "text": "We swept that liquidity."
+    },
+    {
+      "start": 172.0,
+      "end": 177.0,
+      "text": "Then the first engulfing candle, if we entered from that one, it would have hit stop loss."
+    },
+    {
+      "start": 177.0,
+      "end": 184.0,
+      "text": "Every time it hits stop loss, I want you to remember that that is price grabbing more liquidity."
+    },
+    {
+      "start": 184.0,
+      "end": 189.0,
+      "text": "Every time you hit stop loss, so did 100,000 other people."
+    },
+    {
+      "start": 189.0,
+      "end": 191.0,
+      "text": "Everyone just hit stop loss."
+    },
+    {
+      "start": 191.0,
+      "end": 198.0,
+      "text": "The more stop losses that are hit, the more likely people are to give up trying to catch the reversal."
+    },
+    {
+      "start": 198.0,
+      "end": 201.0,
+      "text": "It's at this point where the market makers begin the reversal."
+    },
+    {
+      "start": 201.0,
+      "end": 205.0,
+      "text": "As you can see here, we swept the important liquidity sweep."
+    },
+    {
+      "start": 205.0,
+      "end": 208.0,
+      "text": "One failed attempt, more liquidity grab."
+    },
+    {
+      "start": 208.0,
+      "end": 213.0,
+      "text": "Second attempt actually would have been this bearish candle here."
+    },
+    {
+      "start": 213.0,
+      "end": 215.0,
+      "text": "I didn't mark it up because it would have looked really messy,"
+    },
+    {
+      "start": 215.0,
+      "end": 219.0,
+      "text": "but this took three attempts to actually catch the reversal."
+    },
+    {
+      "start": 219.0,
+      "end": 223.0,
+      "text": "This big bearish one with a big top wick there, that was the second attempt."
+    },
+    {
+      "start": 223.0,
+      "end": 228.0,
+      "text": "We swept that again, so that's big liquidity, more liquidity, more liquidity."
+    },
+    {
+      "start": 228.0,
+      "end": 232.0,
+      "text": "Then finally at the top right here, we tapped into an important level as well."
+    },
+    {
+      "start": 232.0,
+      "end": 235.0,
+      "text": "At that level, we had a bearish engulfing."
+    },
+    {
+      "start": 235.0,
+      "end": 239.0,
+      "text": "Enter from there, stop loss on the body of the candle that we're entering from."
+    },
+    {
+      "start": 239.0,
+      "end": 244.0,
+      "text": "Then as you can see, that trade there was a 12 RR trade,"
+    },
+    {
+      "start": 244.0,
+      "end": 249.0,
+      "text": "and we would have lost two leading up to it, so that would be 10 RR in total."
+    },
+    {
+      "start": 249.0,
+      "end": 255.0,
+      "text": "If you combine this with the reversal hours of the days that you can get from the pie formula,"
+    },
+    {
+      "start": 255.0,
+      "end": 259.0,
+      "text": "you can understand which times of the day that these moves"
+    },
+    {
+      "start": 259.0,
+      "end": 262.0,
+      "text": "are going to have a high probability chance of playing out in,"
+    },
+    {
+      "start": 262.0,
+      "end": 266.0,
+      "text": "and once you can obviously decipher all of that and you have the hours,"
+    },
+    {
+      "start": 266.0,
+      "end": 272.0,
+      "text": "all you need to do is this here and this here in those hours,"
+    },
+    {
+      "start": 272.0,
+      "end": 277.0,
+      "text": "based on the liquidity that was grabbed and the direction that you think it's going to go in."
+    },
+    {
+      "start": 277.0,
+      "end": 283.0,
+      "text": "You can, yeah, a few failed attempts, one big trade, Bob's Uncle, easy."
+    },
+    {
+      "start": 283.0,
+      "end": 287.0,
+      "text": "It's okay to have failed attempts as long as you're ready to take another re-entry,"
+    },
+    {
+      "start": 287.0,
+      "end": 292.0,
+      "text": "but don't overdo it, you need to have a cap on how many trades you allow yourself to take."
+    },
+    {
+      "start": 292.0,
+      "end": 295.0,
+      "text": "Part two is building a risk structure."
+    },
+    {
+      "start": 295.0,
+      "end": 300.0,
+      "text": "A lot of people diversify their portfolio by investing in different things,"
+    },
+    {
+      "start": 300.0,
+      "end": 305.0,
+      "text": "but as a forex trader, you know forex very well and other things not so well."
+    },
+    {
+      "start": 305.0,
+      "end": 309.0,
+      "text": "This structure that I've created is the ultimate scaling defence mechanism"
+    },
+    {
+      "start": 309.0,
+      "end": 311.0,
+      "text": "that will protect your capital."
+    },
+    {
+      "start": 311.0,
+      "end": 315.0,
+      "text": "As you can see here, we have high risk accounts, medium risk accounts,"
+    },
+    {
+      "start": 315.0,
+      "end": 318.0,
+      "text": "low risk accounts and very low risk accounts."
+    },
+    {
+      "start": 318.0,
+      "end": 321.0,
+      "text": "The high risk is 20, 30 and 40%."
+    },
+    {
+      "start": 321.0,
+      "end": 324.0,
+      "text": "The medium risk is 6, 9 and 12%."
+    },
+    {
+      "start": 324.0,
+      "end": 328.0,
+      "text": "The low risk is 1.5, 3 and 4.5%,"
+    },
+    {
+      "start": 328.0,
+      "end": 333.0,
+      "text": "and the very low risk is 0.33, 0.66 and 0.99%."
+    },
+    {
+      "start": 333.0,
+      "end": 338.0,
+      "text": "Now, let me explain how this keeps your capital safe."
+    },
+    {
+      "start": 338.0,
+      "end": 344.0,
+      "text": "In this method, you need a copy trader and hopefully an automated way of trading."
+    },
+    {
+      "start": 344.0,
+      "end": 349.0,
+      "text": "You have one master account and that master account copies the trades that it takes"
+    },
+    {
+      "start": 349.0,
+      "end": 351.0,
+      "text": "to all of these accounts."
+    },
+    {
+      "start": 351.0,
+      "end": 356.0,
+      "text": "All three high, all three medium and all three low and all three very low."
+    },
+    {
+      "start": 356.0,
+      "end": 361.0,
+      "text": "When you're first starting, you can just start with one high, one medium, one low."
+    },
+    {
+      "start": 361.0,
+      "end": 365.0,
+      "text": "You don't need a very low, I just think that it really,"
+    },
+    {
+      "start": 365.0,
+      "end": 368.0,
+      "text": "really helps to pool the money at the bottom and keep it all safe."
+    },
+    {
+      "start": 368.0,
+      "end": 374.0,
+      "text": "So, every time the high, medium and low risk accounts take a trade,"
+    },
+    {
+      "start": 374.0,
+      "end": 377.0,
+      "text": "they're all taking the exact same trade, okay?"
+    },
+    {
+      "start": 377.0,
+      "end": 382.0,
+      "text": "Let's just assume that your strategy is profitable or your bot is profitable."
+    },
+    {
+      "start": 382.0,
+      "end": 388.0,
+      "text": "Let's say you risk 20% on the high, 6 on the medium, 1.5 on the low."
+    },
+    {
+      "start": 388.0,
+      "end": 390.0,
+      "text": "We'll ignore the very low for now."
+    },
+    {
+      "start": 390.0,
+      "end": 394.0,
+      "text": "Let's just say the trade that you take and win is 1 to 3 RR."
+    },
+    {
+      "start": 394.0,
+      "end": 397.0,
+      "text": "The high risk account is going to make 60%."
+    },
+    {
+      "start": 397.0,
+      "end": 404.0,
+      "text": "You're going to now transfer 90% of that profit to the medium risk account."
+    },
+    {
+      "start": 404.0,
+      "end": 408.0,
+      "text": "The medium risk account, let's say there's 1,000 pound in there."
+    },
+    {
+      "start": 408.0,
+      "end": 411.0,
+      "text": "You make 6%, it would be 180 pound."
+    },
+    {
+      "start": 411.0,
+      "end": 414.0,
+      "text": "So that 180 pound would transfer into the low risk account."
+    },
+    {
+      "start": 414.0,
+      "end": 420.0,
+      "text": "20% makes 60%, 6% makes 18%, 1.5 makes 4.5%."
+    },
+    {
+      "start": 420.0,
+      "end": 422.0,
+      "text": "Let's just say that's the example."
+    },
+    {
+      "start": 422.0,
+      "end": 425.0,
+      "text": "Now, I know you're not going to get this every single day,"
+    },
+    {
+      "start": 425.0,
+      "end": 427.0,
+      "text": "but let's say you've got an 80% win rate."
+    },
+    {
+      "start": 427.0,
+      "end": 431.0,
+      "text": "This means that 4 out of 5 days of the week, you're going to have a winning day."
+    },
+    {
+      "start": 431.0,
+      "end": 438.0,
+      "text": "So let's say you lose 20%, and then you make 60, then you make 60 again,"
+    },
+    {
+      "start": 438.0,
+      "end": 441.0,
+      "text": "then you make 60 again, then you make 60 again."
+    },
+    {
+      "start": 441.0,
+      "end": 445.0,
+      "text": "So you've made 240 in total, but you lost 20."
+    },
+    {
+      "start": 445.0,
+      "end": 447.0,
+      "text": "So you've made 220%."
+    },
+    {
+      "start": 447.0,
+      "end": 450.0,
+      "text": "And let's just say you have 1,000 pound in that account."
+    },
+    {
+      "start": 450.0,
+      "end": 453.0,
+      "text": "After a week, you now have 3,200."
+    },
+    {
+      "start": 453.0,
+      "end": 455.0,
+      "text": "That's insane profit."
+    },
+    {
+      "start": 455.0,
+      "end": 459.0,
+      "text": "All of that profit gets transferred into the medium risk account."
+    },
+    {
+      "start": 459.0,
+      "end": 461.0,
+      "text": "Well, 90% of the profit."
+    },
+    {
+      "start": 461.0,
+      "end": 464.0,
+      "text": "So your medium risk account now has a few thousand."
+    },
+    {
+      "start": 464.0,
+      "end": 467.0,
+      "text": "Now 6% of 3,000 is 180."
+    },
+    {
+      "start": 467.0,
+      "end": 470.0,
+      "text": "So you're going to be risking 180 per day."
+    },
+    {
+      "start": 470.0,
+      "end": 472.0,
+      "text": "If you times that by 3, that's the profit you would make"
+    },
+    {
+      "start": 472.0,
+      "end": 475.0,
+      "text": "and you would transfer that into the low risk account."
+    },
+    {
+      "start": 475.0,
+      "end": 479.0,
+      "text": "You can decide whether or not you transfer that profit at the end of each day"
+    },
+    {
+      "start": 479.0,
+      "end": 481.0,
+      "text": "based on the size of the win."
+    },
+    {
+      "start": 481.0,
+      "end": 484.0,
+      "text": "Or if you trade a week, at the end of the week,"
+    },
+    {
+      "start": 484.0,
+      "end": 488.0,
+      "text": "over the weekend you transfer the profits into the correct account."
+    },
+    {
+      "start": 488.0,
+      "end": 492.0,
+      "text": "That would be my best option for you."
+    },
+    {
+      "start": 492.0,
+      "end": 497.0,
+      "text": "Once you've got that structure set out for one set of high, medium, low and very low,"
+    },
+    {
+      "start": 497.0,
+      "end": 500.0,
+      "text": "you don't have to have the very low, like I said."
+    },
+    {
+      "start": 500.0,
+      "end": 502.0,
+      "text": "You're going to set that up again and again,"
+    },
+    {
+      "start": 502.0,
+      "end": 506.0,
+      "text": "but you're going to increase the risk on each type."
+    },
+    {
+      "start": 506.0,
+      "end": 510.0,
+      "text": "So eventually you've got a high risk account risking 20,"
+    },
+    {
+      "start": 510.0,
+      "end": 513.0,
+      "text": "another one risk in 30, another one risk in 40."
+    },
+    {
+      "start": 513.0,
+      "end": 517.0,
+      "text": "And each one of those structures is going to be doing the exact same thing."
+    },
+    {
+      "start": 517.0,
+      "end": 521.0,
+      "text": "You have one master account, copy trading to each high risk account"
+    },
+    {
+      "start": 521.0,
+      "end": 526.0,
+      "text": "and medium and low and very low if you choose to do so."
+    },
+    {
+      "start": 526.0,
+      "end": 529.0,
+      "text": "And at the end of every week you're going to be transferring that profit"
+    },
+    {
+      "start": 529.0,
+      "end": 532.0,
+      "text": "straight into the account below it."
+    },
+    {
+      "start": 532.0,
+      "end": 535.0,
+      "text": "The profit that you make from the low risk accounts,"
+    },
+    {
+      "start": 535.0,
+      "end": 538.0,
+      "text": "you're going to only be able to keep 40% of that."
+    },
+    {
+      "start": 538.0,
+      "end": 541.0,
+      "text": "And the other 60%, you're going to split that"
+    },
+    {
+      "start": 541.0,
+      "end": 545.0,
+      "text": "among six different long-term assets that you can hold,"
+    },
+    {
+      "start": 545.0,
+      "end": 550.0,
+      "text": "like Silver, Bitcoin, XRP, Take 2 Interactive,"
+    },
+    {
+      "start": 550.0,
+      "end": 553.0,
+      "text": "which is the company that owns Rockstar that's going to make GDA 6,"
+    },
+    {
+      "start": 553.0,
+      "end": 556.0,
+      "text": "Solana and Gold."
+    },
+    {
+      "start": 556.0,
+      "end": 559.0,
+      "text": "This allows you to prioritise your long-term financials"
+    },
+    {
+      "start": 559.0,
+      "end": 562.0,
+      "text": "over how much you can withdraw."
+    },
+    {
+      "start": 562.0,
+      "end": 566.0,
+      "text": "So if you know that, let's just say from the low risk accounts,"
+    },
+    {
+      "start": 566.0,
+      "end": 568.0,
+      "text": "the profit that you've just made,"
+    },
+    {
+      "start": 568.0,
+      "end": 571.0,
+      "text": "let's say you want to withdraw 100% of the profit."
+    },
+    {
+      "start": 571.0,
+      "end": 575.0,
+      "text": "Of that 100%, let's just say it's 500 pound."
+    },
+    {
+      "start": 575.0,
+      "end": 580.0,
+      "text": "Now, that 500 pound, you're only allowed to keep 40% of it,"
+    },
+    {
+      "start": 580.0,
+      "end": 581.0,
+      "text": "which is 200."
+    },
+    {
+      "start": 581.0,
+      "end": 585.0,
+      "text": "And the other 300 has to go into these important"
+    },
+    {
+      "start": 585.0,
+      "end": 587.0,
+      "text": "long-term investment vehicles."
+    },
+    {
+      "start": 587.0,
+      "end": 589.0,
+      "text": "I hope this makes a lot of sense."
+    },
+    {
+      "start": 589.0,
+      "end": 591.0,
+      "text": "I hope you can see the vision here."
+    },
+    {
+      "start": 591.0,
+      "end": 594.0,
+      "text": "This might not make much sense to some people"
+    },
+    {
+      "start": 594.0,
+      "end": 596.0,
+      "text": "who don't know about risk diversification,"
+    },
+    {
+      "start": 596.0,
+      "end": 599.0,
+      "text": "but honestly, this is going to be an absolutely"
+    },
+    {
+      "start": 599.0,
+      "end": 602.0,
+      "text": "transformational thing that you do with your risk structure."
+    },
+    {
+      "start": 602.0,
+      "end": 604.0,
+      "text": "So here's the written version."
+    },
+    {
+      "start": 604.0,
+      "end": 607.0,
+      "text": "You need three of each account, high, medium and low."
+    },
+    {
+      "start": 607.0,
+      "end": 610.0,
+      "text": "Each set of three must be slightly increased"
+    },
+    {
+      "start": 610.0,
+      "end": 612.0,
+      "text": "or decreased compared to the others."
+    },
+    {
+      "start": 612.0,
+      "end": 617.0,
+      "text": "For example, high risk 25%, another 120%, another 115%."
+    },
+    {
+      "start": 617.0,
+      "end": 621.0,
+      "text": "Medium is 10%, another 17.5%, another 15%."
+    },
+    {
+      "start": 621.0,
+      "end": 626.0,
+      "text": "Low is 1%, another one is 0.75%, another one is 0.5%."
+    },
+    {
+      "start": 626.0,
+      "end": 629.0,
+      "text": "It has to be at the same ratios"
+    },
+    {
+      "start": 629.0,
+      "end": 631.0,
+      "text": "and it has to be either going down"
+    },
+    {
+      "start": 631.0,
+      "end": 633.0,
+      "text": "or up from where you started."
+    },
+    {
+      "start": 633.0,
+      "end": 634.0,
+      "text": "How to create it?"
+    },
+    {
+      "start": 634.0,
+      "end": 637.0,
+      "text": "For the structure itself, you can rearrange it"
+    },
+    {
+      "start": 637.0,
+      "end": 639.0,
+      "text": "so it fits to your trading methods."
+    },
+    {
+      "start": 639.0,
+      "end": 641.0,
+      "text": "Or if you're using a pig bot,"
+    },
+    {
+      "start": 641.0,
+      "end": 643.0,
+      "text": "I recommend that you start with 1,000 pound"
+    },
+    {
+      "start": 643.0,
+      "end": 645.0,
+      "text": "in your medium one account,"
+    },
+    {
+      "start": 645.0,
+      "end": 647.0,
+      "text": "risking 10% every day."
+    },
+    {
+      "start": 647.0,
+      "end": 650.0,
+      "text": "With our EA, you will make an average"
+    },
+    {
+      "start": 650.0,
+      "end": 653.0,
+      "text": "of 20% to 50% every two weeks."
+    },
+    {
+      "start": 653.0,
+      "end": 657.0,
+      "text": "90% of the profit you make on your medium one account"
+    },
+    {
+      "start": 657.0,
+      "end": 660.0,
+      "text": "must be transferred into your low one account."
+    },
+    {
+      "start": 660.0,
+      "end": 663.0,
+      "text": "Keep doing this until your low one account balance"
+    },
+    {
+      "start": 663.0,
+      "end": 667.0,
+      "text": "has increased to at least match your medium one."
+    },
+    {
+      "start": 667.0,
+      "end": 669.0,
+      "text": "After this, you're going to transfer"
+    },
+    {
+      "start": 669.0,
+      "end": 673.0,
+      "text": "all of the medium and low profits into high one"
+    },
+    {
+      "start": 673.0,
+      "end": 676.0,
+      "text": "until it reaches 1,000 pound as well."
+    },
+    {
+      "start": 676.0,
+      "end": 679.0,
+      "text": "You're going to be risking 250 of this"
+    },
+    {
+      "start": 679.0,
+      "end": 681.0,
+      "text": "per day with our EA."
+    },
+    {
+      "start": 681.0,
+      "end": 686.0,
+      "text": "25% risk on the high, 10% on the medium,"
+    },
+    {
+      "start": 686.0,
+      "end": 688.0,
+      "text": "1% on the low."
+    },
+    {
+      "start": 688.0,
+      "end": 691.0,
+      "text": "After one to two weeks, you'll be up 40 to 80%,"
+    },
+    {
+      "start": 691.0,
+      "end": 693.0,
+      "text": "which will be 4 to 800 pound."
+    },
+    {
+      "start": 693.0,
+      "end": 695.0,
+      "text": "Then you can transfer 90% of this"
+    },
+    {
+      "start": 695.0,
+      "end": 697.0,
+      "text": "into your medium one account"
+    },
+    {
+      "start": 697.0,
+      "end": 700.0,
+      "text": "and continue allowing the copy trading system to compound."
+    },
+    {
+      "start": 700.0,
+      "end": 703.0,
+      "text": "Use the transfer flow to trickle the profit down"
+    },
+    {
+      "start": 703.0,
+      "end": 706.0,
+      "text": "into the lower risk accounts to keep the profit safe."
+    },
+    {
+      "start": 706.0,
+      "end": 708.0,
+      "text": "If the high one has 1,000 pound in it"
+    },
+    {
+      "start": 708.0,
+      "end": 711.0,
+      "text": "and it's risking 25% per day with our system,"
+    },
+    {
+      "start": 711.0,
+      "end": 714.0,
+      "text": "it would gain an average of 10% per day."
+    },
+    {
+      "start": 714.0,
+      "end": 717.0,
+      "text": "This average includes a few losing days that will occur,"
+    },
+    {
+      "start": 717.0,
+      "end": 721.0,
+      "text": "but you can be expecting around 50% per week,"
+    },
+    {
+      "start": 721.0,
+      "end": 723.0,
+      "text": "which is 500 pound."
+    },
+    {
+      "start": 723.0,
+      "end": 726.0,
+      "text": "This gets deposited into the medium risk one,"
+    },
+    {
+      "start": 726.0,
+      "end": 729.0,
+      "text": "which is risking, let's say, 10% per day"
+    },
+    {
+      "start": 729.0,
+      "end": 734.0,
+      "text": "and making an average of 4.6% per day back over a week."
+    },
+    {
+      "start": 734.0,
+      "end": 737.0,
+      "text": "This is 22.5% per week."
+    },
+    {
+      "start": 737.0,
+      "end": 740.0,
+      "text": "If the money in this account is the initial 1,000 pound"
+    },
+    {
+      "start": 740.0,
+      "end": 743.0,
+      "text": "plus the 500 pound from last week's profit,"
+    },
+    {
+      "start": 743.0,
+      "end": 747.0,
+      "text": "then it's 22.5% of 1.5K,"
+    },
+    {
+      "start": 747.0,
+      "end": 751.0,
+      "text": "which is now 337 pound a week."
+    },
+    {
+      "start": 751.0,
+      "end": 753.0,
+      "text": "This is the medium account."
+    },
+    {
+      "start": 753.0,
+      "end": 756.0,
+      "text": "And then that is then being deposited into the low risk one,"
+    },
+    {
+      "start": 756.0,
+      "end": 758.0,
+      "text": "which is risking 1%, let's say."
+    },
+    {
+      "start": 758.0,
+      "end": 761.0,
+      "text": "And already making an average of 5 pounds per day"
+    },
+    {
+      "start": 761.0,
+      "end": 763.0,
+      "text": "for every 1,000 pound that is in the account."
+    },
+    {
+      "start": 763.0,
+      "end": 764.0,
+      "text": "After not very long,"
+    },
+    {
+      "start": 764.0,
+      "end": 767.0,
+      "text": "you have an aggressively increasing scaling structure"
+    },
+    {
+      "start": 767.0,
+      "end": 770.0,
+      "text": "where the large money flows into the low risk pots"
+    },
+    {
+      "start": 770.0,
+      "end": 773.0,
+      "text": "and the high risk pots stay relatively the same"
+    },
+    {
+      "start": 773.0,
+      "end": 776.0,
+      "text": "so you only leave 10% of the profits in the account"
+    },
+    {
+      "start": 776.0,
+      "end": 778.0,
+      "text": "when you transfer the 90% of profit out."
+    },
+    {
+      "start": 778.0,
+      "end": 781.0,
+      "text": "So they increase, but slowly and gradually."
+    },
+    {
+      "start": 781.0,
+      "end": 784.0,
+      "text": "Part 3, passing a fund."
+    },
+    {
+      "start": 784.0,
+      "end": 787.0,
+      "text": "The aggressive method. This is the first method I'll cover."
+    },
+    {
+      "start": 787.0,
+      "end": 790.0,
+      "text": "If the daily drawdown limit is 4%"
+    },
+    {
+      "start": 790.0,
+      "end": 793.0,
+      "text": "and your total drawdown limit is 10%,"
+    },
+    {
+      "start": 793.0,
+      "end": 796.0,
+      "text": "if you risk 2% per day with a 1 to 1 RR"
+    },
+    {
+      "start": 796.0,
+      "end": 798.0,
+      "text": "and you win 5 days in a row,"
+    },
+    {
+      "start": 798.0,
+      "end": 801.0,
+      "text": "you'll pass the target of 10%."
+    },
+    {
+      "start": 801.0,
+      "end": 804.0,
+      "text": "Even if you win 6 and lose 2,"
+    },
+    {
+      "start": 804.0,
+      "end": 806.0,
+      "text": "you will have made 10%."
+    },
+    {
+      "start": 806.0,
+      "end": 809.0,
+      "text": "So 8 trading days is more than enough"
+    },
+    {
+      "start": 809.0,
+      "end": 811.0,
+      "text": "with a 60% win rate."
+    },
+    {
+      "start": 811.0,
+      "end": 816.6,
+      "text": "If you understand that a 100 pound in a trading account"
+    },
+    {
+      "start": 816.6,
+      "end": 819.6,
+      "text": "isn't going to actually make you rich"
+    },
+    {
+      "start": 819.6,
+      "end": 821.6,
+      "text": "and a 100 pound in an account"
+    },
+    {
+      "start": 821.6,
+      "end": 823.6,
+      "text": "is actually going to make you"
+    },
+    {
+      "start": 823.6,
+      "end": 825.6,
+      "text": "kind of view trading as more of a hobby,"
+    },
+    {
+      "start": 825.6,
+      "end": 828.6,
+      "text": "then you need to do the safety first blueprint."
+    },
+    {
+      "start": 828.6,
+      "end": 830.6,
+      "text": "You need to trick yourself into believing"
+    },
+    {
+      "start": 830.6,
+      "end": 832.6,
+      "text": "that the daily drawdown limit"
+    },
+    {
+      "start": 832.6,
+      "end": 836.6,
+      "text": "is indeed the actual size of the account."
+    },
+    {
+      "start": 836.6,
+      "end": 838.6,
+      "text": "If you buy a 10K funded"
+    },
+    {
+      "start": 838.6,
+      "end": 841.6,
+      "text": "and your daily drawdown limit is 400 pound,"
+    },
+    {
+      "start": 841.6,
+      "end": 845.6,
+      "text": "I want you to risk 2% to 5%"
+    },
+    {
+      "start": 845.6,
+      "end": 848.6,
+      "text": "of that 400 pound daily drawdown limit."
+    },
+    {
+      "start": 848.6,
+      "end": 851.6,
+      "text": "Act like this limit is the size of your account"
+    },
+    {
+      "start": 851.6,
+      "end": 853.6,
+      "text": "and while you do this,"
+    },
+    {
+      "start": 853.6,
+      "end": 856.6,
+      "text": "you'll notice that it feels a lot like a demo."
+    },
+    {
+      "start": 856.6,
+      "end": 858.6,
+      "text": "Zero emotions involved."
+    },
+    {
+      "start": 858.6,
+      "end": 861.6,
+      "text": "Treat this window of time like your training grounds"
+    },
+    {
+      "start": 861.6,
+      "end": 864.6,
+      "text": "where you sharpen your edge and build your confidence."
+    },
+    {
+      "start": 864.6,
+      "end": 866.6,
+      "text": "After a month or two of doing this,"
+    },
+    {
+      "start": 866.6,
+      "end": 868.6,
+      "text": "you might be up a few percent on the account"
+    },
+    {
+      "start": 868.6,
+      "end": 870.6,
+      "text": "and this creates a buffer that you can use"
+    },
+    {
+      "start": 870.6,
+      "end": 872.6,
+      "text": "and also gets you closer"
+    },
+    {
+      "start": 872.6,
+      "end": 874.6,
+      "text": "to that initial full profit target."
+    },
+    {
+      "start": 874.6,
+      "end": 876.6,
+      "text": "Once you've done this and only then,"
+    },
+    {
+      "start": 876.6,
+      "end": 878.6,
+      "text": "that's when you can maybe start to think"
+    },
+    {
+      "start": 878.6,
+      "end": 881.6,
+      "text": "about risking 0.25 to 0.5%"
+    },
+    {
+      "start": 881.6,
+      "end": 883.6,
+      "text": "of the total account balance."
+    },
+    {
+      "start": 883.6,
+      "end": 885.6,
+      "text": "This is the safest way."
+    },
+    {
+      "start": 885.6,
+      "end": 888.6,
+      "text": "If you're only averaging a one to two RR on your trades"
+    },
+    {
+      "start": 888.6,
+      "end": 890.6,
+      "text": "and you take one trade per day"
+    },
+    {
+      "start": 890.6,
+      "end": 892.6,
+      "text": "and you have a 60% win rate,"
+    },
+    {
+      "start": 892.6,
+      "end": 896.6,
+      "text": "every six trades you will make one to two percent."
+    },
+    {
+      "start": 896.6,
+      "end": 898.6,
+      "text": "Over the course of a month,"
+    },
+    {
+      "start": 898.6,
+      "end": 900.6,
+      "text": "you'll be slowly creeping towards the profit target."
+    },
+    {
+      "start": 900.6,
+      "end": 902.6,
+      "text": "No matter what happens,"
+    },
+    {
+      "start": 902.6,
+      "end": 904.6,
+      "text": "do not increase your risk"
+    },
+    {
+      "start": 904.6,
+      "end": 906.6,
+      "text": "as you get closer to the profit target."
+    },
+    {
+      "start": 906.6,
+      "end": 908.6,
+      "text": "This is what a lot of traders do."
+    },
+    {
+      "start": 908.6,
+      "end": 911.6,
+      "text": "It is genuinely the worst time to increase your risk."
+    },
+    {
+      "start": 911.6,
+      "end": 913.6,
+      "text": "If you want to, you can decrease the risk"
+    },
+    {
+      "start": 913.6,
+      "end": 915.6,
+      "text": "at seven to eight percent"
+    },
+    {
+      "start": 915.6,
+      "end": 918.6,
+      "text": "just to make sure that any emotions that might creep in"
+    },
+    {
+      "start": 918.6,
+      "end": 920.6,
+      "text": "are going to be irrelevant to your progress."
+    },
+    {
+      "start": 920.6,
+      "end": 922.6,
+      "text": "Once you reach about eight percent,"
+    },
+    {
+      "start": 922.6,
+      "end": 924.6,
+      "text": "that's when you'll realize,"
+    },
+    {
+      "start": 924.6,
+      "end": 926.6,
+      "text": "holy shit, I'm quite close now."
+    },
+    {
+      "start": 926.6,
+      "end": 928.6,
+      "text": "This could be the thing that changes my life."
+    },
+    {
+      "start": 928.6,
+      "end": 930.6,
+      "text": "If when you realize that,"
+    },
+    {
+      "start": 930.6,
+      "end": 932.6,
+      "text": "a quarter of what you have been risking,"
+    },
+    {
+      "start": 932.6,
+      "end": 934.6,
+      "text": "that is the perfect model"
+    },
+    {
+      "start": 934.6,
+      "end": 937.6,
+      "text": "and approach to managing the risk effectively."
+    },
+    {
+      "start": 937.6,
+      "end": 940.6,
+      "text": "Here are the next tasks for level seven,"
+    },
+    {
+      "start": 940.6,
+      "end": 942.6,
+      "text": "Paths 406."
+    },
+    {
+      "start": 942.6,
+      "end": 944.6,
+      "text": "Number one is forward testing,"
+    },
+    {
+      "start": 944.6,
+      "end": 946.6,
+      "text": "reversal catching."
+    },
+    {
+      "start": 946.6,
+      "end": 948.6,
+      "text": "Get familiar with the points of liquidity"
+    },
+    {
+      "start": 948.6,
+      "end": 950.6,
+      "text": "that are most important"
+    },
+    {
+      "start": 950.6,
+      "end": 952.6,
+      "text": "and watch how even losing one to four trades"
+    },
+    {
+      "start": 952.6,
+      "end": 954.6,
+      "text": "before hitting a winner"
+    },
+    {
+      "start": 954.6,
+      "end": 957.6,
+      "text": "is the most straightforward way of becoming profitable."
+    },
+    {
+      "start": 957.6,
+      "end": 959.6,
+      "text": "It has to reverse eventually."
+    },
+    {
+      "start": 959.6,
+      "end": 961.6,
+      "text": "Remember to have good risk management"
+    },
+    {
+      "start": 961.6,
+      "end": 963.6,
+      "text": "because it is very important."
+    },
+    {
+      "start": 963.6,
+      "end": 965.6,
+      "text": "Number two is build your own"
+    },
+    {
+      "start": 965.6,
+      "end": 967.6,
+      "text": "risk scaling structure."
+    },
+    {
+      "start": 967.6,
+      "end": 969.6,
+      "text": "If you're not using our automated system"
+    },
+    {
+      "start": 969.6,
+      "end": 971.6,
+      "text": "and you want to build your own,"
+    },
+    {
+      "start": 971.6,
+      "end": 973.6,
+      "text": "you need to figure out all of the measurable"
+    },
+    {
+      "start": 973.6,
+      "end": 975.6,
+      "text": "metrics of your strategy,"
+    },
+    {
+      "start": 975.6,
+      "end": 977.6,
+      "text": "like the average drawdown,"
+    },
+    {
+      "start": 977.6,
+      "end": 979.6,
+      "text": "the loss limit, the win rate,"
+    },
+    {
+      "start": 979.6,
+      "end": 981.6,
+      "text": "the profit target."
+    },
+    {
+      "start": 981.6,
+      "end": 983.6,
+      "text": "So when you're building the structure,"
+    },
+    {
+      "start": 983.6,
+      "end": 985.6,
+      "text": "you can see what level of aggression"
+    },
+    {
+      "start": 985.6,
+      "end": 987.6,
+      "text": "each tier of the account should sit at."
+    },
+    {
+      "start": 987.6,
+      "end": 991.6,
+      "text": "You only need H1, M1, L1 first of all."
+    },
+    {
+      "start": 991.6,
+      "end": 993.6,
+      "text": "But once it's set up and rolling,"
+    },
+    {
+      "start": 993.6,
+      "end": 996.6,
+      "text": "you can start creating H2, M2 and L2"
+    },
+    {
+      "start": 996.6,
+      "end": 999.6,
+      "text": "and then move on to three once fully established."
+    },
+    {
+      "start": 999.6,
+      "end": 1001.6,
+      "text": "Number three is go funded."
+    },
+    {
+      "start": 1001.6,
+      "end": 1003.6,
+      "text": "If you're someone who is trading"
+    },
+    {
+      "start": 1003.6,
+      "end": 1005.6,
+      "text": "on very small amounts of capital,"
+    },
+    {
+      "start": 1005.6,
+      "end": 1006.6,
+      "text": "that's fine."
+    },
+    {
+      "start": 1006.6,
+      "end": 1008.6,
+      "text": "But if you want to be slowly progressing"
+    },
+    {
+      "start": 1008.6,
+      "end": 1010.6,
+      "text": "towards receiving a payout,"
+    },
+    {
+      "start": 1010.6,
+      "end": 1012.6,
+      "text": "something that can change your life"
+    },
+    {
+      "start": 1012.6,
+      "end": 1014.6,
+      "text": "and that can increase the size"
+    },
+    {
+      "start": 1014.6,
+      "end": 1016.6,
+      "text": "of your personal trading account,"
+    },
+    {
+      "start": 1016.6,
+      "end": 1017.6,
+      "text": "that's fine."
+    },
+    {
+      "start": 1017.6,
+      "end": 1019.6,
+      "text": "Number four is go funded,"
+    },
+    {
+      "start": 1019.6,
+      "end": 1021.6,
+      "text": "even if it's just a small account"
+    },
+    {
+      "start": 1021.6,
+      "end": 1024.6,
+      "text": "and do it how I mentioned in the previous slides,"
+    },
+    {
+      "start": 1024.6,
+      "end": 1026.6,
+      "text": "either on safety mode or aggressive mode."
+    },
+    {
+      "start": 1026.6,
+      "end": 1028.6,
+      "text": "This has been level seven parts four to six."
+    },
+    {
+      "start": 1028.6,
+      "end": 1030.6,
+      "text": "This is just an introduction"
+    },
+    {
+      "start": 1030.6,
+      "end": 1032.6,
+      "text": "to the behind the scenes"
+    },
+    {
+      "start": 1032.6,
+      "end": 1034.6,
+      "text": "and the structure that you need to have"
+    },
+    {
+      "start": 1034.6,
+      "end": 1036.6,
+      "text": "if you want to start taking this seriously"
+    },
+    {
+      "start": 1036.6,
+      "end": 1038.6,
+      "text": "and you want to change your life for the better,"
+    },
+    {
+      "start": 1038.6,
+      "end": 1040.6,
+      "text": "which I'm sure you all do."
+    },
+    {
+      "start": 1040.6,
+      "end": 1042.6,
+      "text": "I hope that the insights in this video"
+    },
+    {
+      "start": 1042.6,
+      "end": 1043.6,
+      "text": "have been informative"
+    },
+    {
+      "start": 1043.6,
+      "end": 1045.6,
+      "text": "from level seven to nine."
+    }
+  ]
+}

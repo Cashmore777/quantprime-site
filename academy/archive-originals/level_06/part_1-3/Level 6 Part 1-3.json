@@ -1,0 +1,867 @@
+{
+  "source_file": "Level 6 Part 1-3.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_06\\part_1-3",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.36,
+      "text": "Welcome to level six. This is part one to three. We're going to dive straight in and start talking"
+    },
+    {
+      "start": 5.36,
+      "end": 12.64,
+      "text": "about advanced market engineering. Part one is directional decisions, the importance of direction."
+    },
+    {
+      "start": 12.64,
+      "end": 18.24,
+      "text": "Without direction, you're literally flipping a coin. So far you understand the basic principles of"
+    },
+    {
+      "start": 18.24,
+      "end": 23.52,
+      "text": "accumulation, manipulation, distribution and how to understand the direction that it gives."
+    },
+    {
+      "start": 23.52,
+      "end": 32.08,
+      "text": "But here I'm going to show you why direction is not actually the most important factor because as"
+    },
+    {
+      "start": 32.08,
+      "end": 38.08,
+      "text": "you can see here on the left we have a buy that would have hit take profit and on the right"
+    },
+    {
+      "start": 38.08,
+      "end": 44.16,
+      "text": "at the exact same moment if you clicked sell you would have also hit take profit. It all depends on"
+    },
+    {
+      "start": 44.16,
+      "end": 49.92,
+      "text": "the risk management because if you were entering buy here and your stop loss was about here"
+    },
+    {
+      "start": 50.8,
+      "end": 54.8,
+      "text": "obviously you would have hit stop loss but if you click buy here then as you're going down and"
+    },
+    {
+      "start": 54.8,
+      "end": 61.2,
+      "text": "down and down and down and down you keep adding more buy positions then this trade when it hit full"
+    },
+    {
+      "start": 61.2,
+      "end": 67.28,
+      "text": "TP would have been huge or you could have even closed it at the first position's entry point"
+    },
+    {
+      "start": 67.28,
+      "end": 71.76,
+      "text": "and all of the positions that you added down here would have been the actual winning trades."
+    },
+    {
+      "start": 71.76,
+      "end": 75.6,
+      "text": "Now that sell actually did play out a lot faster than what the buy would have but at the same"
+    },
+    {
+      "start": 75.6,
+      "end": 80.24,
+      "text": "time you could have taken any of these trades and the only thing that would have dictated"
+    },
+    {
+      "start": 80.24,
+      "end": 86.72,
+      "text": "whether you won or lost wasn't the direction it was the risk management where your stop"
+    },
+    {
+      "start": 86.72,
+      "end": 92.08,
+      "text": "loss was placed. In a previous level I said that there is infinite AMD's all running"
+    },
+    {
+      "start": 92.08,
+      "end": 97.68,
+      "text": "simultaneously and following on from this this means that there are also infinite AMD's overlapping"
+    },
+    {
+      "start": 97.68,
+      "end": 102.96,
+      "text": "one another stretched across different periods of time. If they are all overlapping this"
+    },
+    {
+      "start": 102.96,
+      "end": 108.8,
+      "text": "technically means that the price is always accumulating manipulating and distributing"
+    },
+    {
+      "start": 108.8,
+      "end": 113.68,
+      "text": "all at the same time. When you see a period of consolidation it's because that there were"
+    },
+    {
+      "start": 113.68,
+      "end": 119.52,
+      "text": "more accumulations overlapping in that moment meaning that the manipulation and distribution"
+    },
+    {
+      "start": 119.52,
+      "end": 125.44,
+      "text": "phases are just weaker at this specific moment that you're viewing. Clear moments of manipulation"
+    },
+    {
+      "start": 125.44,
+      "end": 131.76,
+      "text": "are also just moments where a lot of manipulation phases all aligned with each other causing a"
+    },
+    {
+      "start": 131.76,
+      "end": 137.84,
+      "text": "more influential moment of manipulation. These moments of alignment are the moments where your AMD"
+    },
+    {
+      "start": 137.84,
+      "end": 144.16,
+      "text": "entries will have a higher chance of being a win. Knowing this the better the A looks the higher"
+    },
+    {
+      "start": 144.16,
+      "end": 150.72,
+      "text": "quality that M's manipulation will be which will then cause D to have a successful push in the"
+    },
+    {
+      "start": 150.72,
+      "end": 158.16,
+      "text": "correct direction so the quality of A directly impacts the quality of M which directly impacts"
+    },
+    {
+      "start": 158.16,
+      "end": 166.88,
+      "text": "the quality of D. If there is a 42 minute accumulation a 21 minute M and a 21 minute D"
+    },
+    {
+      "start": 166.88,
+      "end": 172.96,
+      "text": "which would just be a normal typical AMD where A is double the length of M and double the length of D"
+    },
+    {
+      "start": 172.96,
+      "end": 179.68,
+      "text": "there is also a 45 minute accumulation a 51 minute accumulation a 33 minute accumulation"
+    },
+    {
+      "start": 179.68,
+      "end": 184.4,
+      "text": "a 30 minute accumulation and so on and so on. If they're all running alongside each other"
+    },
+    {
+      "start": 184.4,
+      "end": 190.16,
+      "text": "when a few of them overlap we get a more obvious clean consolidation because if you think about it"
+    },
+    {
+      "start": 190.16,
+      "end": 197.36,
+      "text": "the one hour long accumulation and a 30 minute M and a 30 minute D that might start at midnight right"
+    },
+    {
+      "start": 198.24,
+      "end": 204.0,
+      "text": "but if you have a 30 minute A that's going to start at midnight too let's just say"
+    },
+    {
+      "start": 204.64,
+      "end": 210.24,
+      "text": "after a certain amount of hours the one hour and the 30 minute are going to realign and start"
+    },
+    {
+      "start": 210.24,
+      "end": 217.12,
+      "text": "at the exact same point again but knowing that you also understand that there is infinite amounts of A's"
+    },
+    {
+      "start": 217.68,
+      "end": 225.28,
+      "text": "M's and D's lengths it could be a four a four day accumulation a nine day accumulation"
+    },
+    {
+      "start": 225.84,
+      "end": 235.28,
+      "text": "a 14 week accumulation a 14 second accumulate like there's so many different lengths it's infinite"
+    },
+    {
+      "start": 235.28,
+      "end": 239.84,
+      "text": "and they're all overlapping but when they align that's when you get the cleanest price action"
+    },
+    {
+      "start": 239.84,
+      "end": 244.48,
+      "text": "when these different lengths of cycles run a full circle over the course of a certain amount of hours"
+    },
+    {
+      "start": 244.48,
+      "end": 251.12,
+      "text": "days or weeks just like I said eventually the 33 the 30 and the 27 minute accumulation zones"
+    },
+    {
+      "start": 251.12,
+      "end": 257.2,
+      "text": "will all start at the exact same minute again and when this happens you get a perfect clear"
+    },
+    {
+      "start": 257.2,
+      "end": 262.96,
+      "text": "clean consolidation the amount of different lengths that align equals the better the price"
+    },
+    {
+      "start": 262.96,
+      "end": 267.68,
+      "text": "action that will occur no one can fully grasp where each and every one of these cycles are"
+    },
+    {
+      "start": 267.68,
+      "end": 274.4,
+      "text": "currently at if you drag your AMD over 60 minutes you stand a certain percentage of a chance of aligning"
+    },
+    {
+      "start": 274.4,
+      "end": 279.92,
+      "text": "with a couple of other cycles within that 60 minutes this is why sometimes the A will be"
+    },
+    {
+      "start": 279.92,
+      "end": 285.76,
+      "text": "distributing or the M will be consolidating AMD is a good foundational understanding of when"
+    },
+    {
+      "start": 285.76,
+      "end": 291.44,
+      "text": "where and why the price is moving but it really only scratches the surface it's like looking at"
+    },
+    {
+      "start": 291.44,
+      "end": 299.04,
+      "text": "the charts through a lens this here is a little example of the fact that yes this is one hour and"
+    },
+    {
+      "start": 299.04,
+      "end": 306.88,
+      "text": "this is an AMD but within that AMD you have all of these other random lines which are actually the"
+    },
+    {
+      "start": 306.88,
+      "end": 315.76,
+      "text": "beginning or end of AMDs within that big AMD and I know that a lot of those lines are very close"
+    },
+    {
+      "start": 315.76,
+      "end": 321.44,
+      "text": "together and this is the one minute chart but if you have access to the 15 second chart or the five"
+    },
+    {
+      "start": 321.44,
+      "end": 329.52,
+      "text": "second or three second chart those lines will be quite a distance away from each other so within"
+    },
+    {
+      "start": 329.52,
+      "end": 336.24,
+      "text": "all of those different sections there is actually AMDs playing out on a smaller fractal constantly"
+    },
+    {
+      "start": 336.24,
+      "end": 339.6,
+      "text": "so I know this looks really really messy but it's just an example of the fact that"
+    },
+    {
+      "start": 340.16,
+      "end": 346.4,
+      "text": "yes there's AMD but there's also overlapping AMDs that might not actually be aligned with the hour"
+    },
+    {
+      "start": 346.4,
+      "end": 353.04,
+      "text": "and they're all just kind of scrambled about the place um but when they all align that is when"
+    },
+    {
+      "start": 353.04,
+      "end": 358.32,
+      "text": "you get some clean clear price action in this scenario here the manipulation that broke the"
+    },
+    {
+      "start": 358.32,
+      "end": 364.08,
+      "text": "laws where the circle is was inside of a distribution window people think that this means it's"
+    },
+    {
+      "start": 364.08,
+      "end": 371.04,
+      "text": "slightly offset like I show you how to use AMD when a turns into x and you drag it a certain amount of"
+    },
+    {
+      "start": 371.04,
+      "end": 375.6,
+      "text": "minutes forward so you can actually catch the consolidation phase properly but the reality"
+    },
+    {
+      "start": 375.6,
+      "end": 381.36,
+      "text": "is a little bit more complex in the D zone there were actually more manipulation zones"
+    },
+    {
+      "start": 381.36,
+      "end": 386.56,
+      "text": "from different lengths of cycles overlapping and this caused it to happen in the wrong place"
+    },
+    {
+      "start": 386.56,
+      "end": 393.84,
+      "text": "which makes it look offset if you just look at the image you can clearly see AMD without"
+    },
+    {
+      "start": 393.84,
+      "end": 398.4,
+      "text": "all of these labels at the bottom these labels is what you would typically put on it you've got a"
+    },
+    {
+      "start": 398.4,
+      "end": 407.44,
+      "text": "larger AMD and two smaller AMDs running inside of that but in reality these AMDs were not aligned"
+    },
+    {
+      "start": 407.44,
+      "end": 415.44,
+      "text": "with the actual cycles overlapping this low here was manipulation so it's almost like"
+    },
+    {
+      "start": 415.44,
+      "end": 423.44,
+      "text": "this is a and then this m here is double the length and then this a here is the distribution"
+    },
+    {
+      "start": 424.0,
+      "end": 428.96,
+      "text": "and this d here is the x the continuation so the fact that there's so many different"
+    },
+    {
+      "start": 428.96,
+      "end": 434.32,
+      "text": "lengths of cycle it can make things look offset or it can make things happen too early or too late"
+    },
+    {
+      "start": 434.32,
+      "end": 440.08,
+      "text": "but it is literally just based on the fact that the cycle lengths are not currently aligned"
+    },
+    {
+      "start": 440.08,
+      "end": 446.16,
+      "text": "part two is precise fractal alignment the bigger picture aligning with the bigger picture can't"
+    },
+    {
+      "start": 446.16,
+      "end": 452.24,
+      "text": "be achieved by staring at the one-minute chart it takes multiple different angles of the market to"
+    },
+    {
+      "start": 452.24,
+      "end": 458.08,
+      "text": "fully understand where you're at in the overarching cycle it takes intuition and trust in your"
+    },
+    {
+      "start": 458.08,
+      "end": 463.76,
+      "text": "instincts to be able to adapt to price action on multiple timeframes to be able to understand"
+    },
+    {
+      "start": 463.76,
+      "end": 470.16,
+      "text": "which part of the overlapping moment that you're in and how long you have left before the overlap"
+    },
+    {
+      "start": 470.16,
+      "end": 476.72,
+      "text": "is over once you can seamlessly switch between timeframes and fully understand where each timeframe"
+    },
+    {
+      "start": 476.72,
+      "end": 482.48,
+      "text": "is within its cycle you'll quickly notice that you can predict 99 percent of moves the charts"
+    },
+    {
+      "start": 482.48,
+      "end": 488.16,
+      "text": "are a lot simpler than everyone teaches and once you can align with it it's like reading a book"
+    },
+    {
+      "start": 488.16,
+      "end": 492.96,
+      "text": "here we can see on the left there's the 30-minute timeframe where price broke structure"
+    },
+    {
+      "start": 492.96,
+      "end": 498.32,
+      "text": "and then pulled back up into that fair value gap if you were going to enter that trade on the 30-minute"
+    },
+    {
+      "start": 498.32,
+      "end": 504.24,
+      "text": "timeframe then you can do that and you would have a lot less risk to reward ratio but if we then"
+    },
+    {
+      "start": 504.24,
+      "end": 509.92,
+      "text": "drop down onto the three-minute timeframe inside of that big 30-minute fair value gap"
+    },
+    {
+      "start": 509.92,
+      "end": 515.68,
+      "text": "there was a smaller three-minute fair value gap and that smaller three-minute fair value gap"
+    },
+    {
+      "start": 515.68,
+      "end": 521.44,
+      "text": "got perfectly touched by the highest point of that pullback as you can see there how precise"
+    },
+    {
+      "start": 521.44,
+      "end": 527.2,
+      "text": "this is is fucking insane if you see a 30-minute fair value gap and you go on the three-minute which"
+    },
+    {
+      "start": 527.2,
+      "end": 534.16,
+      "text": "is fractalized by 10 times it's 10 times smaller then you will see the exact same thing occurring"
+    },
+    {
+      "start": 534.16,
+      "end": 538.32,
+      "text": "on the three-minute chart that you will see on the 30-minute chart and what you get from this"
+    },
+    {
+      "start": 538.32,
+      "end": 544.88,
+      "text": "is more detail a more precise understanding of where the price is actually going to reverse from"
+    },
+    {
+      "start": 544.88,
+      "end": 548.88,
+      "text": "once that pullback is over so from here you could have clicked sell when it reached that"
+    },
+    {
+      "start": 548.88,
+      "end": 554.8,
+      "text": "centre line on this one you can enter on the top wick to the exact pip of the pullback and this"
+    },
+    {
+      "start": 554.8,
+      "end": 560.88,
+      "text": "three-minute fair value gap as well if you had the three-second chart or the 30-second chart"
+    },
+    {
+      "start": 560.88,
+      "end": 565.6,
+      "text": "you'd be able to go on to those and inside of this three-minute fair value gap there would have"
+    },
+    {
+      "start": 565.6,
+      "end": 571.52,
+      "text": "been a 30-second or three-second fair value gap as well so that gets you even closer and closer"
+    },
+    {
+      "start": 571.52,
+      "end": 576.96,
+      "text": "and closer to the exact price level that it's going to tap into the easiest way to achieve"
+    },
+    {
+      "start": 576.96,
+      "end": 583.12,
+      "text": "this is by further strengthening your intuition and polishing your perspective of the charts"
+    },
+    {
+      "start": 583.12,
+      "end": 587.92,
+      "text": "there's no simple steps to achieve this it comes from experience and understanding"
+    },
+    {
+      "start": 587.92,
+      "end": 593.2,
+      "text": "it's like learning a new language and eventually you become fluent part three is the price mirror"
+    },
+    {
+      "start": 593.2,
+      "end": 597.12,
+      "text": "i'm not sure if you've noticed yet but because the price is based on an underlying"
+    },
+    {
+      "start": 597.12,
+      "end": 602.96,
+      "text": "geometrical sequence it likes to replicate itself sometimes mirrored sometimes upside down"
+    },
+    {
+      "start": 602.96,
+      "end": 608.24,
+      "text": "sometimes both this effect allows us to understand that if something that we are expecting where to"
+    },
+    {
+      "start": 608.24,
+      "end": 614.4,
+      "text": "actually happen it can accurately show us when and where it's likely to occur time doesn't always"
+    },
+    {
+      "start": 614.4,
+      "end": 620.08,
+      "text": "follow this mirror just keep that in mind time can expand and retract which causes the same price"
+    },
+    {
+      "start": 620.08,
+      "end": 625.84,
+      "text": "levels to be tapped faster or slower you probably call these moments higher or lower volume candles"
+    },
+    {
+      "start": 625.84,
+      "end": 630.56,
+      "text": "these mirrors hold insane insights and confirmation to your ideas and they can"
+    },
+    {
+      "start": 630.56,
+      "end": 635.92,
+      "text": "shape or adjust your key support and resistance levels so perfectly that you can catch the top"
+    },
+    {
+      "start": 635.92,
+      "end": 641.12,
+      "text": "or bottom of large moves without even doubting it to play out in your favor most people analyze their"
+    },
+    {
+      "start": 641.12,
+      "end": 646.4,
+      "text": "chart place lines where the general support and resistance is but they forget to look at the"
+    },
+    {
+      "start": 646.4,
+      "end": 653.12,
+      "text": "levels that have already been touched in the mirror effect that's playing out 24 7 levels are mirrored"
+    },
+    {
+      "start": 653.12,
+      "end": 658.32,
+      "text": "the mirror doesn't always have to be symmetrical the mirror can be distorted just remember that"
+    },
+    {
+      "start": 658.32,
+      "end": 665.52,
+      "text": "levels and moments are recreated sometimes it's a near perfect mirror sometimes certain levels"
+    },
+    {
+      "start": 665.52,
+      "end": 671.04,
+      "text": "or liquidity have to occur before the mirror can happen like in the next example as we can see here"
+    },
+    {
+      "start": 671.76,
+      "end": 678.56,
+      "text": "the overall structure of this uptrend here this was the probably the most important swing high"
+    },
+    {
+      "start": 679.52,
+      "end": 684.96,
+      "text": "before the high so this is the highest point this is the key swing high before it"
+    },
+    {
+      "start": 685.28,
+      "end": 693.28,
+      "text": "now I'm aware that this big push down here was a news release but that doesn't change the fact that"
+    },
+    {
+      "start": 693.28,
+      "end": 699.84,
+      "text": "this price if it wants to start going bearish now it has to still follow the same structure"
+    },
+    {
+      "start": 699.84,
+      "end": 706.24,
+      "text": "that the uptrend followed so this was the most recent swing high before the high was created"
+    },
+    {
+      "start": 706.24,
+      "end": 712.24,
+      "text": "it came down grabbed all of this liquidity which then give enough momentum to push back"
+    },
+    {
+      "start": 712.32,
+      "end": 717.92,
+      "text": "up and tap into the level of this swing high here this is what people are talking about when"
+    },
+    {
+      "start": 717.92,
+      "end": 724.72,
+      "text": "they say imbalance and balance so this fair value gap here fair value gap is a place of"
+    },
+    {
+      "start": 724.72,
+      "end": 730.16,
+      "text": "imbalance so the price pushed down so fast and hard that it created a gap in the market"
+    },
+    {
+      "start": 730.16,
+      "end": 737.36,
+      "text": "that had to be filled for balance to be achieved now that is correct but at the same time"
+    },
+    {
+      "start": 737.44,
+      "end": 744.0,
+      "text": "but at the same time filling that fair value gap achieved balance here on the mirror"
+    },
+    {
+      "start": 745.2,
+      "end": 750.32,
+      "text": "it wasn't just the fair value gap it's not just the up and down that has to be balanced it has to"
+    },
+    {
+      "start": 750.32,
+      "end": 756.32,
+      "text": "be the left and right balanced and by left and right I don't mean time I just mean the"
+    },
+    {
+      "start": 757.2,
+      "end": 763.52,
+      "text": "overarching support and resistance levels that a lot of people kind of disregard because"
+    },
+    {
+      "start": 763.6,
+      "end": 767.84,
+      "text": "everyone started out using support and resistance and then everyone developed a kind of ego about"
+    },
+    {
+      "start": 767.84,
+      "end": 772.16,
+      "text": "support and resistance thinking it was too simple and your support and resistance traders"
+    },
+    {
+      "start": 773.28,
+      "end": 780.32,
+      "text": "but when it comes down to it the support and resistance levels do not have to be levels"
+    },
+    {
+      "start": 780.32,
+      "end": 786.96,
+      "text": "that haven't been tapped this level here was the most important part of this entire screenshot"
+    },
+    {
+      "start": 786.96,
+      "end": 792.8,
+      "text": "that little level there was a perfect hint at where the price was going to tap into"
+    },
+    {
+      "start": 793.6,
+      "end": 800.32,
+      "text": "before it continued pushing down this example here is a more symmetrical price mirror as you can see the"
+    },
+    {
+      "start": 800.32,
+      "end": 806.72,
+      "text": "blue here there was a high here and a high here it created a little m then the orange did the"
+    },
+    {
+      "start": 806.72,
+      "end": 813.6,
+      "text": "exact same thing created an m created an m and then price fell a little bit this little part"
+    },
+    {
+      "start": 813.6,
+      "end": 818.56,
+      "text": "here wasn't a part of the mirror it did not get it did not get recreated on this side"
+    },
+    {
+      "start": 818.56,
+      "end": 825.04,
+      "text": "but the purple it came down all the way to the bottom pushed back up created a swing high and"
+    },
+    {
+      "start": 825.04,
+      "end": 831.92,
+      "text": "then fell this one here came down all the way to the bottom that level of support it pushed back"
+    },
+    {
+      "start": 831.92,
+      "end": 838.0,
+      "text": "up all the way to the top very close to where this high was and then it fell right down back to"
+    },
+    {
+      "start": 838.0,
+      "end": 844.8,
+      "text": "there where this one came from so that is a symmetrical price mirror and this is more of"
+    },
+    {
+      "start": 845.6,
+      "end": 850.64,
+      "text": "intuitive price mirror where you would only understand that this is what it was about to do"
+    },
+    {
+      "start": 851.2,
+      "end": 857.04,
+      "text": "if you'd seen it hundreds of times before which I have so this is the more complex one that you"
+    },
+    {
+      "start": 857.04,
+      "end": 862.32,
+      "text": "might not be able to grasp or be able to put into action as soon as you would like this one here"
+    },
+    {
+      "start": 862.32,
+      "end": 868.64,
+      "text": "is a very obvious price mirror like if you saw that this was playing out when price came down"
+    },
+    {
+      "start": 868.64,
+      "end": 875.12,
+      "text": "to here this bottom wick you could have bought there and placed your tp here you could have had a"
+    },
+    {
+      "start": 875.12,
+      "end": 881.2,
+      "text": "quick scalp it would only have lasted like five minutes you could have bought there closed there"
+    },
+    {
+      "start": 881.2,
+      "end": 887.36,
+      "text": "sold there held until this bottom fair value gap you can follow price around you just have to know"
+    },
+    {
+      "start": 887.36,
+      "end": 893.2,
+      "text": "why and what and where it is it is going to go and what's causing it to do that and you have"
+    },
+    {
+      "start": 893.2,
+      "end": 898.0,
+      "text": "to just fully immerse yourself in the fact that you do understand the market you're just"
+    },
+    {
+      "start": 898.0,
+      "end": 903.2,
+      "text": "tricking yourself into believing you don't the first tasks I'm going to give you for level six"
+    },
+    {
+      "start": 903.2,
+      "end": 909.52,
+      "text": "number one is spot high versus low influence zones I want you to back test and look at moments where"
+    },
+    {
+      "start": 909.52,
+      "end": 917.92,
+      "text": "the hourly AMD did not work watch the air check the previous AMD spot patterns make notes download"
+    },
+    {
+      "start": 917.92,
+      "end": 924.88,
+      "text": "more knowledge I want you to try and figure out how you can spot amd's that are not going to work"
+    },
+    {
+      "start": 924.88,
+      "end": 929.44,
+      "text": "if you want to trade at 11am and you're going to do a simple AMD over the course of an hour"
+    },
+    {
+      "start": 929.44,
+      "end": 935.04,
+      "text": "and split those and and split the hour into 30 minutes and put amd's on those as well before"
+    },
+    {
+      "start": 935.04,
+      "end": 941.6,
+      "text": "you even do that if you can look at the price action and you can fully understand that amd is"
+    },
+    {
+      "start": 941.6,
+      "end": 946.96,
+      "text": "not going to work because it's not aligned then you can completely avoid days before you even get"
+    },
+    {
+      "start": 946.96,
+      "end": 952.96,
+      "text": "started number two is pick a time frame and fractally expand I use the three minute the 30"
+    },
+    {
+      "start": 952.96,
+      "end": 957.76,
+      "text": "minute and the three hour it's the cleanest and it's where the most important for value gaps are"
+    },
+    {
+      "start": 957.76,
+      "end": 962.72,
+      "text": "and where they align with each other because it's fractal three thirty three hour three day three"
+    },
+    {
+      "start": 962.72,
+      "end": 967.92,
+      "text": "week three month I only use the threes I want you to spend at least two hours switching between"
+    },
+    {
+      "start": 967.92,
+      "end": 973.84,
+      "text": "your chosen time frames focus on the correlation of patterns between these time frames for example"
+    },
+    {
+      "start": 973.84,
+      "end": 978.24,
+      "text": "when the 30 minute is doing this and this is what we would look for on the three minute or when"
+    },
+    {
+      "start": 978.24,
+      "end": 983.92,
+      "text": "the three hour is doing this the 30 minute is doing this and the three minute will be doing this"
+    },
+    {
+      "start": 983.92,
+      "end": 989.2,
+      "text": "so you can kind of understand exactly where you are at all points and the last task"
+    },
+    {
+      "start": 989.92,
+      "end": 995.52,
+      "text": "for level six part one the three is exercise the mirror concept I want you to live forward"
+    },
+    {
+      "start": 995.52,
+      "end": 1001.12,
+      "text": "test the mirror behaviors don't trade it just learn about it begin to understand which parts"
+    },
+    {
+      "start": 1001.12,
+      "end": 1006.0,
+      "text": "of the price will be mirrored after certain things happen or certain things align doing this will"
+    },
+    {
+      "start": 1006.0,
+      "end": 1011.84,
+      "text": "give you a clear understanding of right now we are here we were there this happened over there"
+    },
+    {
+      "start": 1011.84,
+      "end": 1016.24,
+      "text": "so this is going to happen here once you can strengthen this muscle and the intuition around"
+    },
+    {
+      "start": 1016.24,
+      "end": 1020.8,
+      "text": "it has been built you will feel so much more confident entering trades this has been level"
+    },
+    {
+      "start": 1020.8,
+      "end": 1025.68,
+      "text": "six parts one of three I hope you've been taking some notes as there was quite a bit of information"
+    },
+    {
+      "start": 1025.68,
+      "end": 1030.56,
+      "text": "there but yeah I hope that was very informative for you all and I will see you in the next part"
+    }
+  ]
+}

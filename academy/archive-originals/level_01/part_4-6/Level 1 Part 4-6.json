@@ -1,0 +1,837 @@
+{
+  "source_file": "Level 1 Part 4-6.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_01\\part_4-6",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 6.6,
+      "text": "Welcome back everyone. This is level one part four to six the next video for setting the correct foundations in trading"
+    },
+    {
+      "start": 7.8,
+      "end": 11.36,
+      "text": "Part four is going to be how to manage risk effectively"
+    },
+    {
+      "start": 12.76,
+      "end": 14.76,
+      "text": "Calculating your lot size"
+    },
+    {
+      "start": 14.92,
+      "end": 19.36,
+      "text": "Your lot size determines how much money you put on the line per trade"
+    },
+    {
+      "start": 19.76,
+      "end": 25.28,
+      "text": "So you need to pick a percentage of your account that you're willing to comfortably risk on every trade"
+    },
+    {
+      "start": 25.28,
+      "end": 30.88,
+      "text": "Get comfortable with calculating your lot size quickly and under pressure because time and efficiency"
+    },
+    {
+      "start": 31.76,
+      "end": 37.48,
+      "text": "Equals better results. So using the lot size calculator that I recommended in the last video"
+    },
+    {
+      "start": 38.64,
+      "end": 42.28,
+      "text": "You can practice this over and over and over and just become very comfortable"
+    },
+    {
+      "start": 42.76,
+      "end": 48.28,
+      "text": "With calculating the actual lot size because the faster you can do this the faster you can enter the trades"
+    },
+    {
+      "start": 48.68,
+      "end": 52.12,
+      "text": "Or the faster you can prepare in every few seconds that you save"
+    },
+    {
+      "start": 52.24,
+      "end": 56.12,
+      "text": "You're a few seconds ahead of where you would have been so just keep practicing"
+    },
+    {
+      "start": 56.52,
+      "end": 60.32,
+      "text": "Also, if you're on a computer, there are tools that you can use that automatically"
+    },
+    {
+      "start": 61.04,
+      "end": 66.96,
+      "text": "Calculate your lot size on MetaTrader 5 if you would like some help in setting this up or you would like me to recommend"
+    },
+    {
+      "start": 67.64,
+      "end": 68.96,
+      "text": "some"
+    },
+    {
+      "start": 68.96,
+      "end": 72.92,
+      "text": "Automated lot size or risk calculators for PC users"
+    },
+    {
+      "start": 72.92,
+      "end": 76.88,
+      "text": "Just open a ticket in the support section and we'll help you with setting one of those up"
+    },
+    {
+      "start": 77.12,
+      "end": 84.72,
+      "text": "What are PIPs? So I know this is very basic, but this is for beginners. I don't want the people who are"
+    },
+    {
+      "start": 85.84,
+      "end": 87.68,
+      "text": "experienced traders to be"
+    },
+    {
+      "start": 87.68,
+      "end": 88.8,
+      "text": "bored"
+    },
+    {
+      "start": 88.8,
+      "end": 90.0,
+      "text": "by"
+    },
+    {
+      "start": 90.0,
+      "end": 92.0,
+      "text": "This very beginner level"
+    },
+    {
+      "start": 92.92,
+      "end": 99.2,
+      "text": "Education I want everyone to be approached with a fresh clean slate so we can all be on the same page as"
+    },
+    {
+      "start": 99.6,
+      "end": 106.24,
+      "text": "You progress through the levels. So a PIP is a measurement just like centimeters or meters or inches"
+    },
+    {
+      "start": 106.88,
+      "end": 110.64,
+      "text": "or miles or kilometers. So the calculation is at"
+    },
+    {
+      "start": 111.56,
+      "end": 117.44,
+      "text": "1.5 000 0 and then the price moves to 1.5 000 1 0"
+    },
+    {
+      "start": 118.16,
+      "end": 121.12,
+      "text": "That equals a 10 PIP difference"
+    },
+    {
+      "start": 122.16,
+      "end": 128.16,
+      "text": "We always want to look at the fourth and fifth number after the decimal point and that's how you calculate the PIPs"
+    },
+    {
+      "start": 128.76,
+      "end": 132.64,
+      "text": "On trading view your long or short position tool"
+    },
+    {
+      "start": 132.96,
+      "end": 138.72,
+      "text": "Will actually show you the amount of PIPs that your stop loss is placed at so you can avoid having to do this"
+    },
+    {
+      "start": 138.92,
+      "end": 146.04,
+      "text": "Calculation every time as I know that personally in the past when I've been trying to do this manually you can accidentally measure"
+    },
+    {
+      "start": 146.8,
+      "end": 151.64,
+      "text": "One decimal place to the left or to the right and you can mess things up quite a bit"
+    },
+    {
+      "start": 151.8,
+      "end": 155.76,
+      "text": "So I would recommend that you just use the long or short"
+    },
+    {
+      "start": 156.64,
+      "end": 158.64,
+      "text": "position tool"
+    },
+    {
+      "start": 159.12,
+      "end": 160.88,
+      "text": "Managing your trade"
+    },
+    {
+      "start": 160.88,
+      "end": 168.64,
+      "text": "If you want you can exit some of your trade at a certain percentage of the full take profit to secure some profits or"
+    },
+    {
+      "start": 169.72,
+      "end": 175.12,
+      "text": "If you want you can close half or 75 percent of the trade at a certain percentage"
+    },
+    {
+      "start": 175.12,
+      "end": 181.04,
+      "text": "And then leave the remaining parts of the trade to keep running until the full take profit level"
+    },
+    {
+      "start": 181.04,
+      "end": 183.04,
+      "text": "This is called taking partials"
+    },
+    {
+      "start": 183.68,
+      "end": 185.68,
+      "text": "If you're going to take partials"
+    },
+    {
+      "start": 185.72,
+      "end": 191.56,
+      "text": "When you do please make sure that you put your stop loss to break even so that the trade becomes risk-free"
+    },
+    {
+      "start": 192.6,
+      "end": 199.2,
+      "text": "You've secured some profit and you've taken your risk off the table now. Whatever happens you win"
+    },
+    {
+      "start": 201.2,
+      "end": 207.04,
+      "text": "Backtesting backtesting is the art of looking at previous days and finding the strategy"
+    },
+    {
+      "start": 207.48,
+      "end": 212.56,
+      "text": "That you want to use actually playing out and hitting the take profit or the stop loss"
+    },
+    {
+      "start": 213.04,
+      "end": 217.48,
+      "text": "When you start testing your strategy, it's best to stick to a 1% risk rule"
+    },
+    {
+      "start": 217.72,
+      "end": 224.8,
+      "text": "So you can track the exact percentage you would have made all lost over a period of time while risking 1% of your capital"
+    },
+    {
+      "start": 225.92,
+      "end": 228.04,
+      "text": "Backtesting is where you find out more information"
+    },
+    {
+      "start": 228.96,
+      "end": 233.64,
+      "text": "Learn lessons and rules about your trading strategy without losing any real money"
+    },
+    {
+      "start": 233.64,
+      "end": 236.84,
+      "text": "And this is where strategy development actually happens"
+    },
+    {
+      "start": 239.2,
+      "end": 240.72,
+      "text": "part 5"
+    },
+    {
+      "start": 240.72,
+      "end": 242.72,
+      "text": "finding your style"
+    },
+    {
+      "start": 243.36,
+      "end": 245.36,
+      "text": "different styles of"
+    },
+    {
+      "start": 245.84,
+      "end": 247.84,
+      "text": "taking profit"
+    },
+    {
+      "start": 249.04,
+      "end": 251.2,
+      "text": "Holding until the full take profit level"
+    },
+    {
+      "start": 252.24,
+      "end": 258.64,
+      "text": "Closing a certain percentage of the take profit or closing a certain percentage at a certain percentage"
+    },
+    {
+      "start": 259.28,
+      "end": 262.8,
+      "text": "Of the take profit and holding the rest until the full take profit"
+    },
+    {
+      "start": 264.16,
+      "end": 269.92,
+      "text": "Now in my humble opinion people say trading style as a way to determine whether you want to scalp"
+    },
+    {
+      "start": 270.48,
+      "end": 272.48,
+      "text": "hold trades for multiple days"
+    },
+    {
+      "start": 272.88,
+      "end": 273.84,
+      "text": "or"
+    },
+    {
+      "start": 273.84,
+      "end": 280.32,
+      "text": "Whatever, but the things I will be teaching you work fractally. So there's no need to even question"
+    },
+    {
+      "start": 280.88,
+      "end": 281.92,
+      "text": "your"
+    },
+    {
+      "start": 281.92,
+      "end": 283.92,
+      "text": "actual holding style"
+    },
+    {
+      "start": 283.92,
+      "end": 285.92,
+      "text": "Just do whatever is best for you"
+    },
+    {
+      "start": 286.56,
+      "end": 288.4,
+      "text": "Rules for longevity"
+    },
+    {
+      "start": 288.4,
+      "end": 293.04,
+      "text": "If your win rate is high hold to the full tp. If the market conditions are choppy"
+    },
+    {
+      "start": 293.6,
+      "end": 296.0,
+      "text": "You can close at a lower percentage of the tp"
+    },
+    {
+      "start": 296.48,
+      "end": 301.44,
+      "text": "If your idea or bias says that you're probably going to be trading in a continuation of a trend"
+    },
+    {
+      "start": 302.16,
+      "end": 306.08,
+      "text": "Then you can close at a percentage and then leave the rest running to the full tp"
+    },
+    {
+      "start": 308.22,
+      "end": 311.9,
+      "text": "Now which style suits you as a person you need to figure out how you trade"
+    },
+    {
+      "start": 312.86,
+      "end": 315.34,
+      "text": "Do you sit and watch the chart for the entire trade?"
+    },
+    {
+      "start": 315.9,
+      "end": 317.9,
+      "text": "Or do you close your phone and check it later?"
+    },
+    {
+      "start": 318.86,
+      "end": 323.5,
+      "text": "Emotions can affect your decisions. So you need to pick one style that is the opposite of how you act"
+    },
+    {
+      "start": 324.3,
+      "end": 326.3,
+      "text": "And never deviate from it"
+    },
+    {
+      "start": 327.18,
+      "end": 331.26,
+      "text": "A lot of people fall at the first hurdle and it's a slippery slope from there"
+    },
+    {
+      "start": 332.14,
+      "end": 335.66,
+      "text": "Stay aware of your thoughts and your gut feeling in situations"
+    },
+    {
+      "start": 337.02,
+      "end": 341.98,
+      "text": "If you have a feeling of it's only a few quid more it's only a little bit more risk"
+    },
+    {
+      "start": 342.7,
+      "end": 348.78,
+      "text": "Stop rethink what you're doing because this behavior is a seed that plants bad habits for the future"
+    },
+    {
+      "start": 349.82,
+      "end": 352.86,
+      "text": "Part six the reality of trading"
+    },
+    {
+      "start": 354.14,
+      "end": 356.14,
+      "text": "A hobby ends up becoming a lifestyle"
+    },
+    {
+      "start": 357.26,
+      "end": 361.1,
+      "text": "Trading was a hobby for me and then I became completely obsessed with it"
+    },
+    {
+      "start": 361.5,
+      "end": 365.18,
+      "text": "And understanding how it works and what moves the chart behind the scenes"
+    },
+    {
+      "start": 366.3,
+      "end": 369.74,
+      "text": "A lot of people stop at support and resistance trend lines"
+    },
+    {
+      "start": 369.74,
+      "end": 375.66,
+      "text": "A lot of people stop there, but not me. I had to go deeper on whatever it was that was"
+    },
+    {
+      "start": 376.78,
+      "end": 378.78,
+      "text": "Causing people to lose"
+    },
+    {
+      "start": 379.42,
+      "end": 383.18,
+      "text": "Because it fascinates me truly it really does fascinate me. There's nothing"
+    },
+    {
+      "start": 384.78,
+      "end": 389.42,
+      "text": "There's no other explanation. I just became completely obsessed with figuring it out"
+    },
+    {
+      "start": 389.98,
+      "end": 391.98,
+      "text": "I want to know how the algorithm works"
+    },
+    {
+      "start": 392.62,
+      "end": 396.86,
+      "text": "How the banks use it to their advantage and how I can generate wealth from it too"
+    },
+    {
+      "start": 399.73,
+      "end": 401.17,
+      "text": "the algorithm"
+    },
+    {
+      "start": 401.17,
+      "end": 408.77,
+      "text": "Now the algorithm that moves the chart is a man-made version of the same pattern that is seen all throughout nature"
+    },
+    {
+      "start": 409.89,
+      "end": 415.33,
+      "text": "It's what we call fractal. So it's permanently duplicating itself on larger and smaller scales"
+    },
+    {
+      "start": 416.29,
+      "end": 422.29,
+      "text": "Every time frame on the chart is exactly the same as those shorter and longer"
+    },
+    {
+      "start": 422.61,
+      "end": 427.57,
+      "text": "So don't be fooled by people saying that certain things work best on certain time frames"
+    },
+    {
+      "start": 428.05,
+      "end": 433.97,
+      "text": "When you adopt the perspective of fractal patterns, you'll begin to notice the world in a much kinder"
+    },
+    {
+      "start": 434.53,
+      "end": 436.61,
+      "text": "clearer and simplified way"
+    },
+    {
+      "start": 436.61,
+      "end": 438.13,
+      "text": "Not just in trading"
+    },
+    {
+      "start": 438.13,
+      "end": 443.25,
+      "text": "I'll be given an introduction to fractals and the time and price loop in level two"
+    },
+    {
+      "start": 445.86,
+      "end": 447.86,
+      "text": "How do the banks use the algorithm?"
+    },
+    {
+      "start": 449.62,
+      "end": 451.94,
+      "text": "Banks take money from me and you"
+    },
+    {
+      "start": 453.14,
+      "end": 458.9,
+      "text": "Not me anymore though by creating something called liquidity hunts or liquidity traps"
+    },
+    {
+      "start": 459.86,
+      "end": 462.74,
+      "text": "Banks can manipulate the price in a certain direction"
+    },
+    {
+      "start": 463.46,
+      "end": 466.58,
+      "text": "Just enough to make a lot of people lose their trades"
+    },
+    {
+      "start": 467.62,
+      "end": 470.82,
+      "text": "The only way to avoid being manipulated out of your money"
+    },
+    {
+      "start": 471.78,
+      "end": 474.1,
+      "text": "Is to gain an understanding of how they do it"
+    },
+    {
+      "start": 474.82,
+      "end": 479.3,
+      "text": "And when they do it so that you can join in with them instead of fighting against them"
+    },
+    {
+      "start": 481.68,
+      "end": 483.68,
+      "text": "Now how can you print money like them?"
+    },
+    {
+      "start": 485.66,
+      "end": 489.98,
+      "text": "First you need to understand the concept of how they actually milk everyone dry"
+    },
+    {
+      "start": 490.86,
+      "end": 496.06,
+      "text": "And once you understand how manipulative of the market actually truly is"
+    },
+    {
+      "start": 496.38,
+      "end": 501.5,
+      "text": "You can begin to learn the underlying methods and then use them to make losing rarity"
+    },
+    {
+      "start": 502.46,
+      "end": 508.46,
+      "text": "Once you've found those patterns and behaviors, you can wait patiently and enter your trade when they do"
+    },
+    {
+      "start": 509.1,
+      "end": 511.1,
+      "text": "After they've manipulated everyone else"
+    },
+    {
+      "start": 513.06,
+      "end": 515.3,
+      "text": "This example here, we have that first trade"
+    },
+    {
+      "start": 516.1,
+      "end": 520.42,
+      "text": "If you were to enter sales on that first trade with the stop loss just above the high"
+    },
+    {
+      "start": 521.22,
+      "end": 527.7,
+      "text": "We can see clearly that the banks or the market makers or the algorithm whatever you would like to call it"
+    },
+    {
+      "start": 528.58,
+      "end": 531.3,
+      "text": "It doesn't matter what you want to call it. You can call it whatever you'd like"
+    },
+    {
+      "start": 531.78,
+      "end": 533.78,
+      "text": "It's all the same thing"
+    },
+    {
+      "start": 534.1,
+      "end": 539.62,
+      "text": "Right after we entered that trade we can see that the stop loss was hit and then the trade"
+    },
+    {
+      "start": 540.34,
+      "end": 544.9,
+      "text": "Perfectly went in our direction after making people lose"
+    },
+    {
+      "start": 546.42,
+      "end": 548.42,
+      "text": "Now"
+    },
+    {
+      "start": 548.66,
+      "end": 550.66,
+      "text": "Being able to avoid that first loss"
+    },
+    {
+      "start": 551.54,
+      "end": 553.22,
+      "text": "Saves you"
+    },
+    {
+      "start": 553.22,
+      "end": 554.18,
+      "text": "a"
+    },
+    {
+      "start": 554.18,
+      "end": 557.54,
+      "text": "Big chunk of time energy and money"
+    },
+    {
+      "start": 558.26,
+      "end": 562.18,
+      "text": "Let's just say that that second position if you only entered that position"
+    },
+    {
+      "start": 562.26,
+      "end": 566.1,
+      "text": "I'm going to estimate that that's probably about a seven or eight r r"
+    },
+    {
+      "start": 566.5,
+      "end": 571.7,
+      "text": "Maybe more now if you only took the first one you would be minus one percent"
+    },
+    {
+      "start": 572.26,
+      "end": 576.98,
+      "text": "If you only took the second one you'd be plus seven or eight or nine percent"
+    },
+    {
+      "start": 578.26,
+      "end": 583.86,
+      "text": "If you took them both you would be one percent less than whatever that next win was and over time"
+    },
+    {
+      "start": 584.74,
+      "end": 589.7,
+      "text": "That one percent less can eat a lot of the actual profit that you make"
+    },
+    {
+      "start": 590.1,
+      "end": 595.94,
+      "text": "Especially if you didn't only just take that first trade, but you also took a trade down here"
+    },
+    {
+      "start": 596.66,
+      "end": 600.1,
+      "text": "Here here here trying to catch a reversal"
+    },
+    {
+      "start": 601.62,
+      "end": 610.58,
+      "text": "Now what is extremely important is that we can avoid here here here and here and only take this one here"
+    },
+    {
+      "start": 611.54,
+      "end": 617.62,
+      "text": "Now I will have very descriptive in depth guides on this specific scenario"
+    },
+    {
+      "start": 618.34,
+      "end": 623.3,
+      "text": "in future levels for the people that are impatient and really really"
+    },
+    {
+      "start": 624.1,
+      "end": 626.9,
+      "text": "Want to see all of that and skip all of this"
+    },
+    {
+      "start": 627.62,
+      "end": 632.18,
+      "text": "One thing I've got to say is no, you're not allowed because you have to be"
+    },
+    {
+      "start": 632.9,
+      "end": 636.42,
+      "text": "Um of the same understanding and you have to have the same perspective"
+    },
+    {
+      "start": 637.3,
+      "end": 644.18,
+      "text": "Of everyone else in tmp because we're trying to create a group of people that have the same understanding and perspective"
+    },
+    {
+      "start": 645.7,
+      "end": 652.42,
+      "text": "So your next tasks are on trading view find a moment where price manipulated to make people lose"
+    },
+    {
+      "start": 653.22,
+      "end": 655.22,
+      "text": "Think about how you could have seen it coming"
+    },
+    {
+      "start": 655.78,
+      "end": 662.42,
+      "text": "What telltale signs showed up before actually happened and what could you have done to avoid being manipulated like everyone else?"
+    },
+    {
+      "start": 663.38,
+      "end": 666.9,
+      "text": "You need to decide on what your style of taking profit will be"
+    },
+    {
+      "start": 667.7,
+      "end": 672.74,
+      "text": "Will you hold your trade until full take profit level or will you close a partial at a certain percentage?"
+    },
+    {
+      "start": 673.22,
+      "end": 676.66,
+      "text": "You need to decide on what percentage of risk you're also going to stick with"
+    },
+    {
+      "start": 677.78,
+      "end": 681.54,
+      "text": "Risking 0.25 percent to 1 percent is safe"
+    },
+    {
+      "start": 682.1,
+      "end": 685.54,
+      "text": "And it's very good for scaring accounts slowly over a long period of time"
+    },
+    {
+      "start": 686.42,
+      "end": 692.1,
+      "text": "Risking one to two percent is normally what professionals would do once they have a good understanding of the market"
+    },
+    {
+      "start": 692.42,
+      "end": 698.58,
+      "text": "And risking two to five percent is for scaling accounts faster with higher probability setups"
+    },
+    {
+      "start": 699.06,
+      "end": 704.74,
+      "text": "You need to make sure that you don't change your risk amount until you've hit a certain milestone"
+    },
+    {
+      "start": 705.3,
+      "end": 708.1,
+      "text": "Of knowledge or development in your journey"
+    },
+    {
+      "start": 709.46,
+      "end": 711.46,
+      "text": "If you want to increase risk"
+    },
+    {
+      "start": 711.54,
+      "end": 714.98,
+      "text": "Ask yourself why and really think deeply about it"
+    },
+    {
+      "start": 715.54,
+      "end": 721.14,
+      "text": "Because nine times out of 10 you want to increase risk because of the benefits that higher risk brings"
+    },
+    {
+      "start": 721.86,
+      "end": 723.86,
+      "text": "When you win a trade"
+    },
+    {
+      "start": 724.82,
+      "end": 729.22,
+      "text": "Stay aware of the impulsive feelings that you might get in your good"
+    },
+    {
+      "start": 730.26,
+      "end": 735.62,
+      "text": "Because these feelings are feelings of formal feelings of fear feelings of hope"
+    },
+    {
+      "start": 736.58,
+      "end": 740.5,
+      "text": "And they all have an impact on the logical decisions that you make"
+    },
+    {
+      "start": 741.38,
+      "end": 743.14,
+      "text": "throughout trading"
+    },
+    {
+      "start": 743.14,
+      "end": 745.14,
+      "text": "So please just stay aware of your mind"
+    },
+    {
+      "start": 745.7,
+      "end": 751.06,
+      "text": "And forget about the money because trading isn't about the money money's a byproduct of"
+    },
+    {
+      "start": 751.62,
+      "end": 754.58,
+      "text": "The quality of the setups that we can take"
+    },
+    {
+      "start": 755.54,
+      "end": 757.54,
+      "text": "That's how you need to view it"
+    },
+    {
+      "start": 757.62,
+      "end": 762.26,
+      "text": "Money doesn't matter money isn't real money is a tool created to control people"
+    },
+    {
+      "start": 762.74,
+      "end": 764.74,
+      "text": "So you need to forget about the money"
+    },
+    {
+      "start": 764.9,
+      "end": 769.38,
+      "text": "Focus on the art of taking and finding and entering on the perfect setup"
+    },
+    {
+      "start": 770.18,
+      "end": 774.42,
+      "text": "And that's all you need. I hope you've been writing everything down taking notes"
+    },
+    {
+      "start": 774.42,
+      "end": 779.62,
+      "text": "Rewiring your brain in a positive way and I will see you in the next video"
+    }
+  ]
+}

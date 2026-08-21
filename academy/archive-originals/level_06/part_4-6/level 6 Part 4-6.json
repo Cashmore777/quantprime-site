@@ -1,0 +1,942 @@
+{
+  "source_file": "level 6 Part 4-6.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_06\\part_4-6",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 9.0,
+      "text": "Welcome back everyone, this is Level 6 Parts 4 or 6, we're going to dive straight back into the advanced market engineering parts of the education."
+    },
+    {
+      "start": 9.0,
+      "end": 18.0,
+      "text": "Part 1 is going to be geometry understanding. The truth is that if you've been trading for a while, you will have noticed that a lot of different things work on the charts"
+    },
+    {
+      "start": 18.0,
+      "end": 32.0,
+      "text": "like trend lines, fractal AMD, fibonacci sequence, circles, squares, rectangles and knowing that all of these things work from the basic all the way to the complicated, you need to know why."
+    },
+    {
+      "start": 32.0,
+      "end": 42.0,
+      "text": "I mentioned in an earlier level that it does not matter what you use, all that matters is how well you understand the tool that you're using."
+    },
+    {
+      "start": 42.0,
+      "end": 55.0,
+      "text": "I broke down the geometric shape called E8 and I mentioned in that level that everything is inside of it, for example ratios for all fractal AMDs, all angles of trend lines."
+    },
+    {
+      "start": 55.0,
+      "end": 66.0,
+      "text": "If you drag a rectangle where a fair value gap is, you can see that rectangles are inside of the charts algorithm but so are circles and so are triangles and so are fucking dodecahedrons."
+    },
+    {
+      "start": 66.0,
+      "end": 73.0,
+      "text": "All shapes exist inside of the algorithm and this is why everything works because everything is there."
+    },
+    {
+      "start": 73.0,
+      "end": 88.0,
+      "text": "On the left we have an example of circles that have been drawn from the highest and lowest point of fractal AMDs, creating a trend line that price reacted from which is literally by the way this is a completely random analysis."
+    },
+    {
+      "start": 88.0,
+      "end": 101.0,
+      "text": "I did this as an example, I thought if I mark out the high of that and I mark out the low of that and then I draw a line and then I get the circle tool and I click from where the low is and I expand it 30 minutes into the future."
+    },
+    {
+      "start": 101.0,
+      "end": 116.0,
+      "text": "That will give me a circle, I'll do that for the highest point as well and then I did that and then I was like okay now I'll just draw a trend line and as you can see that trend line was perfectly respected for no other reason than everything works."
+    },
+    {
+      "start": 116.0,
+      "end": 125.0,
+      "text": "On the right there we have an example of using a price Fibonacci, on a higher time frame I found a swing high and swing low, dragged it from the bottom of that to the top."
+    },
+    {
+      "start": 125.0,
+      "end": 143.0,
+      "text": "Then I went on the smaller time frame and dragged that from the current swing low that's just been created and then the equilibrium of the previous swing high and swing low which is half of the size of the previous swing high and swing low was at that 50% mark there."
+    },
+    {
+      "start": 143.0,
+      "end": 159.0,
+      "text": "So every time the price tapped from a level and then closed bullish like there and there you could enter a trade targeting half of the size of the previous swing low to swing high."
+    },
+    {
+      "start": 159.0,
+      "end": 167.0,
+      "text": "And again this was a completely random analysis just based on the fact that everything works."
+    },
+    {
+      "start": 167.0,
+      "end": 175.0,
+      "text": "This right here on the left is probably someone's edge and this right here on the right is also probably someone's edge."
+    },
+    {
+      "start": 175.0,
+      "end": 180.0,
+      "text": "Not mine but it's someone else's because everything works and everything exists."
+    },
+    {
+      "start": 180.0,
+      "end": 189.0,
+      "text": "So it does not matter what you choose, the most important factor of trading in general overall is risk management, not how you trade."
+    },
+    {
+      "start": 189.0,
+      "end": 196.0,
+      "text": "Knowing this once you do enough testing you'll begin to understand that it does not matter what you analyse or how you do it."
+    },
+    {
+      "start": 196.0,
+      "end": 203.0,
+      "text": "However following the same set of rules every day is the best way to compound your success."
+    },
+    {
+      "start": 203.0,
+      "end": 212.0,
+      "text": "The underlying message here is that even if you click buy when your analysis is telling you to sell with the correct risk management you can still be profitable."
+    },
+    {
+      "start": 212.0,
+      "end": 219.0,
+      "text": "The only thing that sets you apart is evolving your strategy as you get better and this takes time and experience."
+    },
+    {
+      "start": 219.0,
+      "end": 222.0,
+      "text": "Part 2, how to follow price."
+    },
+    {
+      "start": 222.0,
+      "end": 230.0,
+      "text": "Once your intuition has been trained the direction that your gut feeling tells you is correct 99.9% of the time."
+    },
+    {
+      "start": 230.0,
+      "end": 235.0,
+      "text": "Sometimes you just can't feel it because other emotions are overpowering it."
+    },
+    {
+      "start": 235.0,
+      "end": 239.0,
+      "text": "Now I'm going to show you exactly how to trust that instinct."
+    },
+    {
+      "start": 239.0,
+      "end": 244.0,
+      "text": "On the left here this image shows highs and lows being swept for liquidity."
+    },
+    {
+      "start": 244.0,
+      "end": 249.0,
+      "text": "These would have looked like huge moves if you were watching from the 15 second time frame."
+    },
+    {
+      "start": 249.0,
+      "end": 254.0,
+      "text": "As you can see this first trade we have this swing high, this wick broke it."
+    },
+    {
+      "start": 254.0,
+      "end": 258.0,
+      "text": "As soon as that happened and it closed you click sell, target these lows."
+    },
+    {
+      "start": 258.0,
+      "end": 263.0,
+      "text": "That liquidity gets swept, closed bullish, click buy, target those highs."
+    },
+    {
+      "start": 263.0,
+      "end": 269.0,
+      "text": "Price broke those highs, broke those highs, swept that bearish and gulfon."
+    },
+    {
+      "start": 269.0,
+      "end": 276.0,
+      "text": "You can click sell, target somewhere down here and then after that TP was hit."
+    },
+    {
+      "start": 276.0,
+      "end": 282.0,
+      "text": "Just remember that wherever your TP is that is most likely someone else's stop loss."
+    },
+    {
+      "start": 282.0,
+      "end": 290.0,
+      "text": "So if you target this swing low here that is someone who is in a buy that's their stop loss level just below this little wick."
+    },
+    {
+      "start": 290.0,
+      "end": 296.0,
+      "text": "And that's why it broke that. As soon as it broke that you could enter a buy in the opposite direction again"
+    },
+    {
+      "start": 296.0,
+      "end": 301.0,
+      "text": "because the stop loss has been hit successfully and now you can push the opposite direction."
+    },
+    {
+      "start": 301.0,
+      "end": 305.0,
+      "text": "That's basically how it works. So yeah that's literally just based on liquidity."
+    },
+    {
+      "start": 305.0,
+      "end": 308.0,
+      "text": "There's nothing else, just liquidity and engulfing candles."
+    },
+    {
+      "start": 308.0,
+      "end": 314.0,
+      "text": "On the right here this is the exact same method but during a trend continuation"
+    },
+    {
+      "start": 314.0,
+      "end": 320.0,
+      "text": "where we're expecting the highest point there the buy side liquidity to be swept."
+    },
+    {
+      "start": 320.0,
+      "end": 323.0,
+      "text": "We can see here that there is a point of liquidity here."
+    },
+    {
+      "start": 323.0,
+      "end": 327.0,
+      "text": "It was swept by liquidity here."
+    },
+    {
+      "start": 327.0,
+      "end": 334.0,
+      "text": "It was swept by liquidity swept by liquidity swept by liquidity swept by liquidity swept by liquidity swept by."
+    },
+    {
+      "start": 334.0,
+      "end": 337.0,
+      "text": "So you can use this to follow higher time frame trends."
+    },
+    {
+      "start": 337.0,
+      "end": 340.0,
+      "text": "If you're on the 30 minute time frame and there is a bullish trend,"
+    },
+    {
+      "start": 340.0,
+      "end": 343.0,
+      "text": "you can drop down to the three minute time frame."
+    },
+    {
+      "start": 343.0,
+      "end": 349.08,
+      "text": "Literally just part of moving average so you can be sure that you are following the correct direction"
+    },
+    {
+      "start": 349.08,
+      "end": 353.76,
+      "text": "And I do have a very specific moving average"
+    },
+    {
+      "start": 354.32,
+      "end": 355.52,
+      "text": "length"
+    },
+    {
+      "start": 355.52,
+      "end": 361.28,
+      "text": "Input that I use for my trading bot is the most accurate moving average I've ever fucking seen"
+    },
+    {
+      "start": 362.36,
+      "end": 366.4,
+      "text": "Yeah, this here and this here are the exact same methods"
+    },
+    {
+      "start": 366.88,
+      "end": 371.08,
+      "text": "Apart from this had one overarching point of liquidity that we were aiming for"
+    },
+    {
+      "start": 371.44,
+      "end": 376.62,
+      "text": "Based on the trend continuing bullish and this one here was just used in consolidation"
+    },
+    {
+      "start": 376.96,
+      "end": 383.66,
+      "text": "Literally just liquidity and engulfing so liquidity and the size of wicks as"
+    },
+    {
+      "start": 384.56,
+      "end": 389.84,
+      "text": "Confirmation for the fact that price is about to reverse. So, yeah, same method different style"
+    },
+    {
+      "start": 390.08,
+      "end": 396.72,
+      "text": "Just using the moving average and the fractal indicator to show you where the highs and lows are can bring great results in"
+    },
+    {
+      "start": 397.12,
+      "end": 399.12,
+      "text": "Trading the simpler the better"
+    },
+    {
+      "start": 399.44,
+      "end": 406.08,
+      "text": "Following price is about understanding the concept of where you are and where you are heading to people say it's flipping a coin"
+    },
+    {
+      "start": 406.28,
+      "end": 410.44,
+      "text": "But if you stare at the charts for long enough, you develop a non-emotional bias"
+    },
+    {
+      "start": 410.92,
+      "end": 417.44,
+      "text": "Towards where we're going next based on the obvious patterns and behaviors that are appearing in front of you"
+    },
+    {
+      "start": 417.44,
+      "end": 423.76,
+      "text": "You need to understand the balance between the cycles and the liquidity and the time and the price in the image"
+    },
+    {
+      "start": 423.8,
+      "end": 429.12,
+      "text": "Above you can see that a key liquidity sweep has been swept. This is in the bottom left corner here"
+    },
+    {
+      "start": 429.6,
+      "end": 436.24,
+      "text": "This was an important level of liquidity. Then we had this inversion fair value gap and"
+    },
+    {
+      "start": 436.72,
+      "end": 440.56,
+      "text": "This normal fair value gap found support on there then pushed up"
+    },
+    {
+      "start": 440.56,
+      "end": 445.68,
+      "text": "So some people would have been taking this trade here buying at this fair value gap"
+    },
+    {
+      "start": 445.8,
+      "end": 451.96,
+      "text": "But if you missed that so right now, we are in a consolidation phase before a large move occurs"
+    },
+    {
+      "start": 451.96,
+      "end": 457.84,
+      "text": "The higher fair value gap got tapped and respected this one here in this little circle"
+    },
+    {
+      "start": 457.84,
+      "end": 462.56,
+      "text": "That's where it tapped and respected it and currently the price is coming up to find support on"
+    },
+    {
+      "start": 463.04,
+      "end": 467.44,
+      "text": "That fair value gap so that it can boost itself up to the next levels above"
+    },
+    {
+      "start": 467.44,
+      "end": 471.36,
+      "text": "I don't want to over complicate this because I'm aware that this might look a little bit messy"
+    },
+    {
+      "start": 471.4,
+      "end": 475.92,
+      "text": "But this is what happened after that fair value gap was turned into a level of support"
+    },
+    {
+      "start": 476.28,
+      "end": 478.36,
+      "text": "If you can spot this in real time"
+    },
+    {
+      "start": 478.36,
+      "end": 483.96,
+      "text": "You become instantly aligned and ready to just follow the flow of the market without forcing anything"
+    },
+    {
+      "start": 483.96,
+      "end": 490.4,
+      "text": "I saw that this fair value gap had already been tapped and that the price was coming up through the fair value gap and"
+    },
+    {
+      "start": 490.4,
+      "end": 492.64,
+      "text": "Finding support on it after that happened"
+    },
+    {
+      "start": 492.64,
+      "end": 496.2,
+      "text": "There was a few different points where it could have been classed as a swing low"
+    },
+    {
+      "start": 496.2,
+      "end": 498.56,
+      "text": "All three of them were swept at that point"
+    },
+    {
+      "start": 498.56,
+      "end": 501.06,
+      "text": "You can enter bullish targeting this liquidity"
+    },
+    {
+      "start": 501.38,
+      "end": 506.94,
+      "text": "Knowing the fact that you are now on this support level and you are going to be pushing up to the next level"
+    },
+    {
+      "start": 506.94,
+      "end": 508.9,
+      "text": "Which is here if you entered a buy there"
+    },
+    {
+      "start": 508.9,
+      "end": 513.14,
+      "text": "You would have perfectly hit your take profit here and once that take profit was hit"
+    },
+    {
+      "start": 513.14,
+      "end": 517.62,
+      "text": "This is when the game begins because we've just mirrored this high here"
+    },
+    {
+      "start": 517.78,
+      "end": 523.34,
+      "text": "We know that once we swing pass that high or anywhere in the area of this high"
+    },
+    {
+      "start": 523.7,
+      "end": 525.7,
+      "text": "This is a mirror"
+    },
+    {
+      "start": 525.7,
+      "end": 531.54,
+      "text": "Taking place once that happens. We can see over here to the left that the price"
+    },
+    {
+      "start": 531.9,
+      "end": 535.02,
+      "text": "After it tap this level it dropped down to here"
+    },
+    {
+      "start": 535.06,
+      "end": 541.06,
+      "text": "Right as you can see after price tap that level it dropped down to here. So it did the mirror of"
+    },
+    {
+      "start": 542.3,
+      "end": 547.9,
+      "text": "The move that happened before and this is a perfect perfect price mirror example"
+    },
+    {
+      "start": 547.94,
+      "end": 551.22,
+      "text": "So once this first buy hit the take profit at that point"
+    },
+    {
+      "start": 551.22,
+      "end": 557.02,
+      "text": "You could instantly click sell based on the fact that this top wick here was so big"
+    },
+    {
+      "start": 557.02,
+      "end": 561.22,
+      "text": "And the bottom wick was less big and it just it shows a smaller time frame"
+    },
+    {
+      "start": 561.94,
+      "end": 563.7,
+      "text": "Reversal is about to occur"
+    },
+    {
+      "start": 563.7,
+      "end": 569.62,
+      "text": "Which then obviously it played out and then the TP for this sell was at the bottom of this gap here"
+    },
+    {
+      "start": 569.62,
+      "end": 572.94,
+      "text": "As you probably know all gaps need to be filled that came down"
+    },
+    {
+      "start": 573.18,
+      "end": 578.74,
+      "text": "Tapped through that gap at the bottom as soon as that happened this little candle here had no bottom wick"
+    },
+    {
+      "start": 579.3,
+      "end": 580.42,
+      "text": "the"
+    },
+    {
+      "start": 580.42,
+      "end": 582.42,
+      "text": "candle that hit our TP"
+    },
+    {
+      "start": 583.22,
+      "end": 589.78,
+      "text": "Slightly broke below that candle grabbing liquidity giving it a bottom wick and filling this gap all in one go"
+    },
+    {
+      "start": 589.9,
+      "end": 592.62,
+      "text": "As soon as that happened after your TP was hit"
+    },
+    {
+      "start": 592.62,
+      "end": 597.54,
+      "text": "You could have entered buy in the opposite direction and you could have held until this price mirror played out here"
+    },
+    {
+      "start": 597.54,
+      "end": 601.02,
+      "text": "So there's this swing high this swing high these swing highs"
+    },
+    {
+      "start": 601.58,
+      "end": 608.58,
+      "text": "Anywhere in this general area would have been somewhere that you could have placed this buys TP at I put the TP here"
+    },
+    {
+      "start": 608.58,
+      "end": 610.58,
+      "text": "at the top of this blue rectangle"
+    },
+    {
+      "start": 610.74,
+      "end": 612.74,
+      "text": "targeting this price mirror here and"
+    },
+    {
+      "start": 613.26,
+      "end": 617.66,
+      "text": "Price flew straight through it and I'm going to guess this is about seven"
+    },
+    {
+      "start": 618.18,
+      "end": 625.9,
+      "text": "Plus six plus another seven are which is insane just based on the behaviors that were seen leading up to it"
+    },
+    {
+      "start": 625.9,
+      "end": 627.02,
+      "text": "You need to align with it"
+    },
+    {
+      "start": 627.02,
+      "end": 631.06,
+      "text": "It's the only way to have a consistent understanding of the market at all times"
+    },
+    {
+      "start": 631.3,
+      "end": 637.14,
+      "text": "You don't just watch the market you have to think like the market you have to know when it's hunting the stop losses"
+    },
+    {
+      "start": 637.14,
+      "end": 644.78,
+      "text": "The liquidity and when the exact moment to enter and exit the trade is by using the concepts that I've just showed you in the previous slides"
+    },
+    {
+      "start": 644.82,
+      "end": 651.58,
+      "text": "This short burst of understanding would have given you about 18% profit from only risking 1% on each entry"
+    },
+    {
+      "start": 651.58,
+      "end": 657.14,
+      "text": "All from the power of aligning time with the price at the exact correct places"
+    },
+    {
+      "start": 657.58,
+      "end": 663.54,
+      "text": "Now if we take those exact trades that we just looked at before and we slap an AMD on top of it"
+    },
+    {
+      "start": 664.26,
+      "end": 671.18,
+      "text": "You can clearly see that this example also lined up with 6 p.m. To 9 p.m. 3 hour cycle"
+    },
+    {
+      "start": 672.9,
+      "end": 679.14,
+      "text": "This was a three hour window not a one hour with both of the last m's being perfect examples of"
+    },
+    {
+      "start": 679.58,
+      "end": 684.62,
+      "text": "manipulation and direction so you can see here that this manipulation phase here"
+    },
+    {
+      "start": 685.58,
+      "end": 687.74,
+      "text": "swept these laws and then went bullish"
+    },
+    {
+      "start": 688.42,
+      "end": 692.66,
+      "text": "this larger manipulation phase was the phase that"
+    },
+    {
+      "start": 693.34,
+      "end": 700.76,
+      "text": "Broke these highs here, so that was obviously an aligned manipulation and then this last manipulation phase was also"
+    },
+    {
+      "start": 701.46,
+      "end": 703.94,
+      "text": "Correct where everything was aligned in this situation"
+    },
+    {
+      "start": 703.94,
+      "end": 707.86,
+      "text": "And that's why it was so easy to take advantage of this price action"
+    },
+    {
+      "start": 707.86,
+      "end": 709.86,
+      "text": "It found support on that fair value gap"
+    },
+    {
+      "start": 709.98,
+      "end": 711.66,
+      "text": "it pushed up"
+    },
+    {
+      "start": 711.66,
+      "end": 716.02,
+      "text": "Like we thought it would and then it mirrored the price action that happened earlier"
+    },
+    {
+      "start": 716.46,
+      "end": 722.1,
+      "text": "Dropping down to around the same level of support after it filled this gap and then we could ping pong straight back up"
+    },
+    {
+      "start": 722.1,
+      "end": 728.46,
+      "text": "No one that it's gonna create a mirror of this high or this high. So, yeah, very simple, but very"
+    },
+    {
+      "start": 729.9,
+      "end": 734.0,
+      "text": "Detailed at the same time. There's a lot of moving parts to this as you can see"
+    },
+    {
+      "start": 734.26,
+      "end": 737.22,
+      "text": "You're not really analyzing where you think it's going next"
+    },
+    {
+      "start": 737.22,
+      "end": 742.26,
+      "text": "You're simply looking at the whole picture and being able to know what image will lie"
+    },
+    {
+      "start": 742.34,
+      "end": 747.38,
+      "text": "Just to the right of the image to the left like when your brain makes up something in your vision"
+    },
+    {
+      "start": 747.58,
+      "end": 753.22,
+      "text": "When it's a certain blind spot in your eye you have to see it that way like it's just a part of you"
+    },
+    {
+      "start": 753.22,
+      "end": 756.38,
+      "text": "And you know exactly why it's doing what it is doing"
+    },
+    {
+      "start": 756.38,
+      "end": 760.94,
+      "text": "You're not trying to predict you just trying to read it and the better you can read the more"
+    },
+    {
+      "start": 761.3,
+      "end": 768.5,
+      "text": "Understanding you have if something unexpected happens or unusual you need to figure out why not just oh it was because of this"
+    },
+    {
+      "start": 768.5,
+      "end": 775.78,
+      "text": "I mean you have to literally investigate it and figure out what it was why it happened and how you can know it's coming next time"
+    },
+    {
+      "start": 776.3,
+      "end": 781.5,
+      "text": "What indicators gave it away or what information did you hear that could have caused this?"
+    },
+    {
+      "start": 781.94,
+      "end": 784.74,
+      "text": "Surge or drop in gold or silver for example"
+    },
+    {
+      "start": 784.82,
+      "end": 791.94,
+      "text": "You have to fully understand everything that's going on part three is components and models entry and exit structure"
+    },
+    {
+      "start": 792.34,
+      "end": 796.5,
+      "text": "You need to have this down to a tee and it has to be precise and have accuracy"
+    },
+    {
+      "start": 797.18,
+      "end": 799.86,
+      "text": "Not just a maybe it has to be perfect"
+    },
+    {
+      "start": 800.54,
+      "end": 802.54,
+      "text": "Your entry can be based on anything"
+    },
+    {
+      "start": 803.1,
+      "end": 808.46,
+      "text": "Just know why you're doing it and know what you need to track the stats of so that you can watch your edge"
+    },
+    {
+      "start": 808.66,
+      "end": 812.62,
+      "text": "Slowly getting sharpened in real time figure out your way of doing things"
+    },
+    {
+      "start": 813.14,
+      "end": 817.38,
+      "text": "Step into your intuition fully and trust the entire process that you're completing"
+    },
+    {
+      "start": 817.38,
+      "end": 822.9,
+      "text": "Whether you choose engulfing candles or fair value gap taps to enter from you need to figure out exactly"
+    },
+    {
+      "start": 823.3,
+      "end": 829.86,
+      "text": "When that entry model is going to work based on following price for a higher probability risk management models"
+    },
+    {
+      "start": 829.86,
+      "end": 836.74,
+      "text": "Do you hold your trades until the TP levels that you've actually created for yourself or do you leave too early or do you hold for too long?"
+    },
+    {
+      "start": 836.74,
+      "end": 844.54,
+      "text": "Do you have one big loss that wipes out your monthly or quarterly profits because risk management is the most important factor in any strategy?"
+    },
+    {
+      "start": 845.06,
+      "end": 849.02,
+      "text": "Because like I told you earlier, it's not the type of strategy that's important"
+    },
+    {
+      "start": 849.18,
+      "end": 851.9,
+      "text": "It's all about having top tier risk management"
+    },
+    {
+      "start": 851.98,
+      "end": 855.82,
+      "text": "If you wanted to you could flip a coin heads is by tails of cell"
+    },
+    {
+      "start": 856.02,
+      "end": 861.9,
+      "text": "You could do that and that could be your strategy and it would work successfully and all you would have to"
+    },
+    {
+      "start": 862.22,
+      "end": 868.86,
+      "text": "Actually focus on is the risk management if I were you I would be seriously looking into how you can automate your risk management"
+    },
+    {
+      "start": 868.86,
+      "end": 871.34,
+      "text": "I spoke about it briefly in one of the first levels"
+    },
+    {
+      "start": 871.66,
+      "end": 877.5,
+      "text": "But trust me automate your risk management or turn your strategy into a bot if you can't do this on your own"
+    },
+    {
+      "start": 877.86,
+      "end": 881.06,
+      "text": "Open a ticket and support so it can come up with a solution for you"
+    },
+    {
+      "start": 881.06,
+      "end": 886.92,
+      "text": "If you keep leaving trades too early, you need to actually test what happens if you hold longer from now on"
+    },
+    {
+      "start": 887.34,
+      "end": 890.54,
+      "text": "If you see good results, that's a tweak you've just made"
+    },
+    {
+      "start": 891.42,
+      "end": 895.46,
+      "text": "Upgrading it ever so slightly which adds on to the compounding overall result"
+    },
+    {
+      "start": 895.5,
+      "end": 901.34,
+      "text": "If you put your stop loss to break even too early or your stop loss keeps getting hit or you're over risking"
+    },
+    {
+      "start": 901.58,
+      "end": 904.62,
+      "text": "Pick apart whichever of these things is affecting you the most"
+    },
+    {
+      "start": 905.26,
+      "end": 910.94,
+      "text": "critically analyze the actual components that cause it to occur if you're in a big drawdown and the rules"
+    },
+    {
+      "start": 910.94,
+      "end": 918.14,
+      "text": "That you've set for yourself have allowed it you can stack positions at support and resistance or points of interest as you're going into drawdown"
+    },
+    {
+      "start": 918.22,
+      "end": 921.62,
+      "text": "So it will be easier to get back to break even or into profit"
+    },
+    {
+      "start": 922.1,
+      "end": 927.9,
+      "text": "This method can come with some large drawdowns, but it improves the overall winter loss ratio dramatically"
+    },
+    {
+      "start": 928.42,
+      "end": 931.26,
+      "text": "Everything that you decide to change as a part of your tests"
+    },
+    {
+      "start": 931.26,
+      "end": 936.34,
+      "text": "It's about what you would like to prioritize while making the next change or improvement"
+    },
+    {
+      "start": 936.74,
+      "end": 943.8,
+      "text": "Because where you focus your energy flows the next tasks that I need you to do before we can head into the next module is this"
+    },
+    {
+      "start": 944.66,
+      "end": 950.86,
+      "text": "number one is to just mess around and place different variations of shapes with different dimensions and"
+    },
+    {
+      "start": 950.98,
+      "end": 955.34,
+      "text": "Place it on the chart and line it up with a few moments and there you have it"
+    },
+    {
+      "start": 955.34,
+      "end": 957.34,
+      "text": "You just prove that this"
+    },
+    {
+      "start": 957.34,
+      "end": 963.22,
+      "text": "Disproportioned shape also exists inside of the algorithm. I want to really stick in your mind that"
+    },
+    {
+      "start": 963.46,
+      "end": 965.26,
+      "text": "All of the different"
+    },
+    {
+      "start": 965.26,
+      "end": 972.18,
+      "text": "Fucking tools that we use all of them are equal to each other and even if you draw a random shape on the chart"
+    },
+    {
+      "start": 973.18,
+      "end": 976.98,
+      "text": "You can make it line up with certain events and certain moments"
+    },
+    {
+      "start": 976.98,
+      "end": 980.66,
+      "text": "And that means that that random our shape that you just drew is"
+    },
+    {
+      "start": 981.58,
+      "end": 988.24,
+      "text": "Also inside of the algorithm everything is I want you to be able to understand that and be able to see it first hand"
+    },
+    {
+      "start": 988.64,
+      "end": 994.48,
+      "text": "Number two is practice the price following teachings try it for yourself on any time frame of your choice"
+    },
+    {
+      "start": 994.8,
+      "end": 999.4,
+      "text": "Do it on a demo and try it and gain an understanding of how you actually"
+    },
+    {
+      "start": 1000.16,
+      "end": 1005.04,
+      "text": "Subconsciously get good at this because once you are your entire progress will skyrocket"
+    },
+    {
+      "start": 1005.04,
+      "end": 1009.6,
+      "text": "And last but not least number three is the components and models you need to collect data"
+    },
+    {
+      "start": 1010.2,
+      "end": 1017.24,
+      "text": "Analyze it and then make one change that would allow something to potentially get better and then keep doing this until you"
+    },
+    {
+      "start": 1017.24,
+      "end": 1023.88,
+      "text": "Have a well understood system that you know like the back of your hand. This is now your edge defined and completed"
+    },
+    {
+      "start": 1023.88,
+      "end": 1026.8,
+      "text": "I'm aware that this video has been a little bit of a longer one"
+    },
+    {
+      "start": 1026.8,
+      "end": 1031.0,
+      "text": "But there was a lot of information that I had to that I had to cram into this one"
+    },
+    {
+      "start": 1031.0,
+      "end": 1033.0,
+      "text": "So I hope you've been making a lot of notes"
+    },
+    {
+      "start": 1033.12,
+      "end": 1037.8,
+      "text": "And I will see you in the last module of level six part seven to nine"
+    }
+  ]
+}

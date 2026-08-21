@@ -1,0 +1,712 @@
+{
+  "source_file": "level 3 part 4-6.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_03\\part_4-6",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 5.2,
+      "text": "Welcome to part four to six of level three. We are going to continue covering the execution"
+    },
+    {
+      "start": 5.2,
+      "end": 14.0,
+      "text": "basics in this module. Part one is perfect entries. Fair value gap entries. This is how to get a"
+    },
+    {
+      "start": 14.0,
+      "end": 18.88,
+      "text": "perfect entry from a fair value gap. There's a few things that you need to have as your rules"
+    },
+    {
+      "start": 18.88,
+      "end": 25.2,
+      "text": "for entering. Number one, you want the candles wick to tap the center line of the fair value gap"
+    },
+    {
+      "start": 25.2,
+      "end": 30.0,
+      "text": "and not close above or below the line depending on which direction you want to go in."
+    },
+    {
+      "start": 31.28,
+      "end": 38.96,
+      "text": "As you can see here we had a high broken market structure shift closing below this low here"
+    },
+    {
+      "start": 38.96,
+      "end": 44.72,
+      "text": "indicating a shift in direction. Then we pulled back up into this fair value gap and you can see"
+    },
+    {
+      "start": 44.72,
+      "end": 50.72,
+      "text": "that this wick here tapped through the line but the body did not close above the line."
+    },
+    {
+      "start": 50.72,
+      "end": 55.52,
+      "text": "This is what you want to see. The wicks went through the center but the candles closed respecting."
+    },
+    {
+      "start": 57.04,
+      "end": 61.04,
+      "text": "Number two, you want to enter the trade after it touches the center line"
+    },
+    {
+      "start": 61.04,
+      "end": 66.08,
+      "text": "and then leaves the fair value gap. As soon as it leaves the fair value gap you can enter"
+    },
+    {
+      "start": 66.08,
+      "end": 71.76,
+      "text": "and it doesn't need to close it just needs to leave so you enter as the candle crosses over"
+    },
+    {
+      "start": 71.76,
+      "end": 78.24,
+      "text": "back out of the fair value gap. As you can see here the center line was tapped and then as"
+    },
+    {
+      "start": 78.24,
+      "end": 84.8,
+      "text": "the candle was leaving the fair value gap so in this case we would click sell when we see that the"
+    },
+    {
+      "start": 84.8,
+      "end": 91.28,
+      "text": "price is starting to reverse out of the fair value gap. Using this method it guarantees that the"
+    },
+    {
+      "start": 91.28,
+      "end": 96.88,
+      "text": "balance has been made between tapping the center and then price action on a lower time frame"
+    },
+    {
+      "start": 96.88,
+      "end": 102.08,
+      "text": "has started to create structure going back down away from the fair value gap. As it leaves that's"
+    },
+    {
+      "start": 102.08,
+      "end": 108.64,
+      "text": "our queue to enter as the price is starting to reverse. Next we're going to cover engulfing candle"
+    },
+    {
+      "start": 108.64,
+      "end": 113.6,
+      "text": "entries and engulfing candle entries are the best way to achieve a higher risk to reward ratio."
+    },
+    {
+      "start": 114.24,
+      "end": 118.24,
+      "text": "They allow us to catch the top of the move instead of waiting for the fair value gap"
+    },
+    {
+      "start": 118.24,
+      "end": 125.2,
+      "text": "to form so we can enter. If you want you can use the fair value gap entry as a re-entry on the"
+    },
+    {
+      "start": 125.2,
+      "end": 130.88,
+      "text": "first position which would allow you to get two entries on the same trade. So as you can see here"
+    },
+    {
+      "start": 130.88,
+      "end": 137.28,
+      "text": "this is the exact same trade as before but this time we're going to look for a bearish engulfing"
+    },
+    {
+      "start": 137.28,
+      "end": 143.44,
+      "text": "candle after the sweep. We want a body of a candle to close below the previous candle's body and wick."
+    },
+    {
+      "start": 144.16,
+      "end": 150.08,
+      "text": "Now the first one to do that was this bearish candle here. We can enter off of that with the"
+    },
+    {
+      "start": 150.08,
+      "end": 155.6,
+      "text": "stop loss at the high of the candle we're entering off and then what do you know? We came down"
+    },
+    {
+      "start": 155.6,
+      "end": 160.24,
+      "text": "and tapped the very top of this fair value gap down here which is one of the take profit"
+    },
+    {
+      "start": 160.24,
+      "end": 167.81,
+      "text": "styles that I mentioned in an earlier video. Targeting the same take profit level and placing"
+    },
+    {
+      "start": 167.81,
+      "end": 173.25,
+      "text": "the stop loss above the engulfing candle's top wick we can squeeze a few extra percent out of the"
+    },
+    {
+      "start": 173.25,
+      "end": 178.93,
+      "text": "exact same move and engulfing candle is a market structure shift on a smaller time frame. This is"
+    },
+    {
+      "start": 178.93,
+      "end": 184.21,
+      "text": "a smaller fractal of what played out just minutes later with the larger market structure shift."
+    },
+    {
+      "start": 185.17,
+      "end": 191.65,
+      "text": "Part two is going to be late entries. How to find a moment to enter quote unquote"
+    },
+    {
+      "start": 191.65,
+      "end": 197.97,
+      "text": "late in a trade. Like I mentioned before if you wanted to take that fair value gap entry after"
+    },
+    {
+      "start": 197.97,
+      "end": 202.21,
+      "text": "you've already entered from the engulfing candle you could do that and it would be"
+    },
+    {
+      "start": 202.21,
+      "end": 207.25,
+      "text": "classed as a re-entry. If you missed the engulfing candle and you wanted to get in"
+    },
+    {
+      "start": 207.25,
+      "end": 212.69,
+      "text": "but didn't know where or how you could use that fair value gap entry as your late entry"
+    },
+    {
+      "start": 212.69,
+      "end": 219.41,
+      "text": "as you missed the first one. If you could have caught the top of a large reversal but you missed it"
+    },
+    {
+      "start": 219.41,
+      "end": 224.13,
+      "text": "you can take late entries that have the same approach. Wait for the market structure shift,"
+    },
+    {
+      "start": 224.13,
+      "end": 229.73,
+      "text": "wait for the fair value gap to be created, wait for the pullback and then enter. Targeting the"
+    },
+    {
+      "start": 229.73,
+      "end": 237.01,
+      "text": "TP level you would have initially had. As you can see in this example here we have this entry"
+    },
+    {
+      "start": 237.01,
+      "end": 242.69,
+      "text": "let's just say that we missed this one. We have a small fair value gap here. After this"
+    },
+    {
+      "start": 242.69,
+      "end": 246.85,
+      "text": "market structure shift we could have waited for price to pull back up into this highest fair"
+    },
+    {
+      "start": 246.85,
+      "end": 252.77,
+      "text": "value gap. We could have entered there. Even if we missed this one we could have waited for"
+    },
+    {
+      "start": 253.41,
+      "end": 259.33,
+      "text": "this market structure shift here and then for price to pull back up into this fair value gap."
+    },
+    {
+      "start": 259.33,
+      "end": 263.65,
+      "text": "So you could have caught this one with the engulfing candle or you could have caught this"
+    },
+    {
+      "start": 263.73,
+      "end": 268.45,
+      "text": "one with the fair value gap or this one with the fair value gap all apart of the same move."
+    },
+    {
+      "start": 270.37,
+      "end": 276.05,
+      "text": "In my opinion there's no such thing as a late entry because you don't lose the opportunity to catch"
+    },
+    {
+      "start": 276.05,
+      "end": 282.77,
+      "text": "the trade you just missed the first opportunity. If you caught all three of the trades I just"
+    },
+    {
+      "start": 282.77,
+      "end": 288.53,
+      "text": "gave an example of you would be hugely profitable from just those three entries. It might seem"
+    },
+    {
+      "start": 288.53,
+      "end": 294.53,
+      "text": "insane that it's that easy but in honesty it isn't very hard when you use a simple system like this"
+    },
+    {
+      "start": 294.53,
+      "end": 301.65,
+      "text": "one. If you risked 50 pound on each entry the first trade the engulfing candle trade was a"
+    },
+    {
+      "start": 301.65,
+      "end": 307.65,
+      "text": "one to five risk to reward so that would have been 250 profit. The second trade or the first"
+    },
+    {
+      "start": 307.65,
+      "end": 314.13,
+      "text": "reentry or the first late entry was a one to 43 hour trade. If you risked 50 pound that would"
+    },
+    {
+      "start": 314.13,
+      "end": 320.69,
+      "text": "have made 2,150 pound minus commission whatever that would have been and the third trade the last"
+    },
+    {
+      "start": 320.69,
+      "end": 327.49,
+      "text": "reentry or late entry was a one to nine hour which is 450 pound profit. The total profit"
+    },
+    {
+      "start": 327.49,
+      "end": 334.61,
+      "text": "of all three of those trades would have been 2,850 if you caught all three but if you only caught"
+    },
+    {
+      "start": 334.61,
+      "end": 339.01,
+      "text": "the first one you would have been up five percent and if you caught the second one you would have"
+    },
+    {
+      "start": 339.01,
+      "end": 344.37,
+      "text": "been hugely in profit and if you caught the third one you would have been up nine percent."
+    },
+    {
+      "start": 345.01,
+      "end": 350.37,
+      "text": "Now any of these trades if you can just catch one of these a week you are still insanely profitable"
+    },
+    {
+      "start": 350.37,
+      "end": 357.01,
+      "text": "more profitable than the financial institutions that charge you to make you money. If you risk"
+    },
+    {
+      "start": 357.01,
+      "end": 362.85,
+      "text": "one percent and you only make five rr that's five percent if you can do that once a week you're"
+    },
+    {
+      "start": 362.85,
+      "end": 368.13,
+      "text": "making 20 to 25 percent a month depending on how many weeks are in the month now if you times"
+    },
+    {
+      "start": 368.21,
+      "end": 375.49,
+      "text": "that by 12 that's 240 percent a year which is way way way more than enough and keep in mind you are"
+    },
+    {
+      "start": 375.49,
+      "end": 381.01,
+      "text": "going to have losses it's not going to be smooth sailing but that is an insane percentage figure"
+    },
+    {
+      "start": 381.01,
+      "end": 385.65,
+      "text": "so just keep that in mind you don't have to over complicate things you can keep it as simple as"
+    },
+    {
+      "start": 385.65,
+      "end": 392.13,
+      "text": "possible. Part three is going to be following trends. Once a trend starts you might not"
+    },
+    {
+      "start": 392.13,
+      "end": 396.53,
+      "text": "initially know it it might just look like it's breaking highs or lows for the first time"
+    },
+    {
+      "start": 397.09,
+      "end": 402.61,
+      "text": "might be a liquidity grab but once the trend begins you can clearly see it making highs and"
+    },
+    {
+      "start": 402.61,
+      "end": 410.45,
+      "text": "lows either bullish or bearish never go against the trend always try to follow it. If you try to go"
+    },
+    {
+      "start": 410.45,
+      "end": 415.89,
+      "text": "against it to try and catch a reversal you're going to have loss after loss after loss we always"
+    },
+    {
+      "start": 415.89,
+      "end": 422.21,
+      "text": "think we can catch the end of a trend but truth be told we can't 99% of the time unless we look"
+    },
+    {
+      "start": 422.21,
+      "end": 426.93,
+      "text": "at higher time frames to figure out where it's pushing towards. Your best option is to follow"
+    },
+    {
+      "start": 426.93,
+      "end": 431.25,
+      "text": "the trend to the place it's going instead of trying to predict when it'll reverse."
+    },
+    {
+      "start": 432.53,
+      "end": 439.17,
+      "text": "In this example here we have this larger A the lows are broken by this larger M"
+    },
+    {
+      "start": 440.21,
+      "end": 449.01,
+      "text": "price comes down this M then breaks this A now initially if you were looking for this"
+    },
+    {
+      "start": 449.01,
+      "end": 455.81,
+      "text": "larger A to be broken it did and then you might start being impatient and trying to take buys here"
+    },
+    {
+      "start": 455.81,
+      "end": 460.53,
+      "text": "or here or here on a smaller time frame if you were to do this you would either lose a lot of"
+    },
+    {
+      "start": 460.53,
+      "end": 467.25,
+      "text": "trades or you would be in a lot of drawdown and yeah what we want to try and do is avoid"
+    },
+    {
+      "start": 467.25,
+      "end": 473.17,
+      "text": "moments like this if you're using smaller time frames for entries but using a higher time frame"
+    },
+    {
+      "start": 473.17,
+      "end": 478.53,
+      "text": "for bias and direction you could have lost a lot of entries only using this as you don't"
+    },
+    {
+      "start": 478.53,
+      "end": 483.33,
+      "text": "actually know where the bottom of the reversal is going to be you're just taking attempts based"
+    },
+    {
+      "start": 483.33,
+      "end": 488.69,
+      "text": "on liquidity being grabbed now this is it on the one minute time frame instead of the three"
+    },
+    {
+      "start": 488.69,
+      "end": 493.25,
+      "text": "minute or five minute as you can see if you were taking engulfing candle entries you would have"
+    },
+    {
+      "start": 493.25,
+      "end": 500.69,
+      "text": "had one two three four failed attempts before finally catching this big winner now that big"
+    },
+    {
+      "start": 500.69,
+      "end": 506.13,
+      "text": "win would have made back what you lost obviously this would have been a profitable trade"
+    },
+    {
+      "start": 506.13,
+      "end": 511.25,
+      "text": "but what we want to try and do is avoid those losses in the first place now if we zoom out a"
+    },
+    {
+      "start": 511.25,
+      "end": 519.65,
+      "text": "little bit we can see that there are a lot more laws that can be broken here here here and finally"
+    },
+    {
+      "start": 519.65,
+      "end": 528.13,
+      "text": "down here now the lowest point of all of these has the most stop losses sat underneath it"
+    },
+    {
+      "start": 529.09,
+      "end": 537.49,
+      "text": "this was a key point obviously but when we're looking at the previous higher time frame trend"
+    },
+    {
+      "start": 537.49,
+      "end": 545.97,
+      "text": "which was bullish what we want to look for is equal laws now if this here was your chosen point"
+    },
+    {
+      "start": 545.97,
+      "end": 550.21,
+      "text": "where you think the most liquidity would have been grabbed then you could start looking for"
+    },
+    {
+      "start": 550.21,
+      "end": 558.77,
+      "text": "entries below that line which was oddly close to the one that i chose right about here the more"
+    },
+    {
+      "start": 558.77,
+      "end": 566.21,
+      "text": "liquidity that's been grabbed the further your tp can go if a very important level of liquidity"
+    },
+    {
+      "start": 566.21,
+      "end": 572.05,
+      "text": "let's just say this liquidity was grabbed instead of this one here then the move upwards would"
+    },
+    {
+      "start": 572.05,
+      "end": 577.73,
+      "text": "have been a lot bigger because more stop losses have been hit we can push further in our direction"
+    },
+    {
+      "start": 577.73,
+      "end": 584.61,
+      "text": "that's how the algo works so as we just saw a more significant liquidity pool was tapped into"
+    },
+    {
+      "start": 585.25,
+      "end": 590.77,
+      "text": "this would have had thousands and thousands of retail traders stop losses placed right underneath"
+    },
+    {
+      "start": 590.77,
+      "end": 597.01,
+      "text": "it so we swept it which means more liquidity grabbed for price to be catapulted upwards"
+    },
+    {
+      "start": 598.61,
+      "end": 603.41,
+      "text": "and as you can see as soon as that happens and gulfing candle entry and we would have had"
+    },
+    {
+      "start": 603.49,
+      "end": 612.19,
+      "text": "a nice juicy trade if we can see that the accumulations low has been swept but we also have"
+    },
+    {
+      "start": 612.19,
+      "end": 618.99,
+      "text": "a better point of liquidity that can be grabbed before reversing we can follow the trend in the"
+    },
+    {
+      "start": 618.99,
+      "end": 623.55,
+      "text": "direction that it's already heading in targeting the level that we think is going to be the main"
+    },
+    {
+      "start": 623.55,
+      "end": 629.79,
+      "text": "point of liquidity for the higher time frame reversal so for example after the accumulation"
+    },
+    {
+      "start": 629.79,
+      "end": 636.83,
+      "text": "law was broken if you believe that this was not going to instantly reverse because the move that"
+    },
+    {
+      "start": 636.83,
+      "end": 643.95,
+      "text": "you were expecting was larger than what just this law would have done which is just up to here these"
+    },
+    {
+      "start": 643.95,
+      "end": 651.47,
+      "text": "highs if we swept these laws would be targeting these highs correct but when we sweep further"
+    },
+    {
+      "start": 651.47,
+      "end": 658.91,
+      "text": "laws we target higher highs because more liquidity has been grabbed so yeah on the way down to"
+    },
+    {
+      "start": 658.91,
+      "end": 664.35,
+      "text": "grabbing the next point of liquidity you could have been taking cells based on fair value gaps and"
+    },
+    {
+      "start": 664.35,
+      "end": 669.31,
+      "text": "order blocks and i don't really like using them i prefer fair value gaps because they're a lot"
+    },
+    {
+      "start": 669.31,
+      "end": 675.55,
+      "text": "more clear and they have a strict set of rules that they follow but these trades here you could"
+    },
+    {
+      "start": 675.55,
+      "end": 681.15,
+      "text": "have caught on the way down to grabbing liquidity and actually reversing this is just following"
+    },
+    {
+      "start": 681.15,
+      "end": 686.67,
+      "text": "the trend so now you know how to follow lower time frame trends based on higher time frame"
+    },
+    {
+      "start": 686.67,
+      "end": 692.75,
+      "text": "points of liquidity and direction you now know what happens after important liquidity pools or"
+    },
+    {
+      "start": 692.75,
+      "end": 697.87,
+      "text": "liquidity grabs happen you now know how to use fair value gaps and engulfing candle entries"
+    },
+    {
+      "start": 697.87,
+      "end": 703.23,
+      "text": "you now know when trends will end and change direction and now you know when the trends"
+    },
+    {
+      "start": 703.23,
+      "end": 707.39,
+      "text": "will end and change direction based on the importance of the liquidity pool that has"
+    },
+    {
+      "start": 707.39,
+      "end": 713.47,
+      "text": "been swept has been swept this is the basics and the most simple way that i can show you"
+    },
+    {
+      "start": 713.47,
+      "end": 717.87,
+      "text": "the real way of trading the charts although this is just a fraction of what i know"
+    },
+    {
+      "start": 717.87,
+      "end": 722.19,
+      "text": "i believe that this is enough for you to get started you know the basics of when where and how"
+    },
+    {
+      "start": 722.19,
+      "end": 727.79,
+      "text": "and now it's time for you to put it into action your next tasks are going to be the most important"
+    },
+    {
+      "start": 727.79,
+      "end": 732.67,
+      "text": "ones you have done so far these tasks are for you to set the standard for yourself who you will"
+    },
+    {
+      "start": 732.67,
+      "end": 738.27,
+      "text": "become and what you will be doing while becoming who you want to become the first task is"
+    },
+    {
+      "start": 738.27,
+      "end": 744.03,
+      "text": "using everything i've taught you so far back test on the chart find an angle that you can approach it"
+    },
+    {
+      "start": 744.03,
+      "end": 749.55,
+      "text": "from if you can only trade between eight and nine a.m use that hour use the amd inside of it"
+    },
+    {
+      "start": 749.55,
+      "end": 756.19,
+      "text": "and fractally expand the amd stretching from six to nine for a higher time frame confluence"
+    },
+    {
+      "start": 756.19,
+      "end": 761.95,
+      "text": "your next task will be once you have found your edge your approach and your perspective"
+    },
+    {
+      "start": 762.51,
+      "end": 767.15,
+      "text": "you can begin finding patterns within this edge things that you can do better"
+    },
+    {
+      "start": 767.15,
+      "end": 772.59,
+      "text": "and things that you can ignore this is the most important part because this is how you sharpen"
+    },
+    {
+      "start": 772.59,
+      "end": 778.43,
+      "text": "your edge task number three is going to be repetition keep back testing your approach"
+    },
+    {
+      "start": 778.43,
+      "end": 783.47,
+      "text": "then once you're comfortable try it forward testing just pretend to take live trades and"
+    },
+    {
+      "start": 783.47,
+      "end": 787.55,
+      "text": "once you're getting comfortable with that and you can see that what you're doing really does have"
+    },
+    {
+      "start": 787.55,
+      "end": 793.31,
+      "text": "some potential start using it on a demo make sure that you journal everything keep track of"
+    },
+    {
+      "start": 793.31,
+      "end": 799.47,
+      "text": "your wins and your losses analyze all losses and treat them as lessons not losses you can learn from"
+    },
+    {
+      "start": 799.47,
+      "end": 804.59,
+      "text": "every win and loss so never stop critically thinking about what you're doing these three tasks are"
+    },
+    {
+      "start": 804.59,
+      "end": 809.87,
+      "text": "the vehicle that will catapult you to wherever you may end up over the past three levels i've"
+    },
+    {
+      "start": 809.87,
+      "end": 816.99,
+      "text": "broken down everything from the cycles the entries the stop loss take profit risk management"
+    },
+    {
+      "start": 816.99,
+      "end": 822.19,
+      "text": "following trends understanding manipulation i've taught you how to enter how to take"
+    },
+    {
+      "start": 822.19,
+      "end": 827.39,
+      "text": "re-entries how to take late entries i've taught you the basics of everything you need to know"
+    },
+    {
+      "start": 827.39,
+      "end": 833.15,
+      "text": "to now hop onto the chart and start putting in the work this is the basics of everything you"
+    },
+    {
+      "start": 833.15,
+      "end": 840.27,
+      "text": "will know from now on this has been level two part four to six i hope you've enjoyed this so far"
+    },
+    {
+      "start": 840.91,
+      "end": 842.91,
+      "text": "i will see you in the next video"
+    }
+  ]
+}

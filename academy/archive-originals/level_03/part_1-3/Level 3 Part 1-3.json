@@ -1,0 +1,832 @@
+{
+  "source_file": "Level 3 Part 1-3.mp4",
+  "folder": "C:\\clawdbot\\zir_knowledge\\education\\level_03\\part_1-3",
+  "language": "en",
+  "segments": [
+    {
+      "start": 0.0,
+      "end": 4.8,
+      "text": "Welcome back everyone, welcome to the first video of level 3. I am re-recording this video,"
+    },
+    {
+      "start": 4.8,
+      "end": 9.28,
+      "text": "it was half an hour long and I have to record the entire thing. I'm dedicated to giving you"
+    },
+    {
+      "start": 9.28,
+      "end": 13.28,
+      "text": "the value that I've promised. First thing we're going to cover is a trading model that you can"
+    },
+    {
+      "start": 13.28,
+      "end": 19.36,
+      "text": "actually start to learn and begin to use in the market. The power of three, accumulate,"
+    },
+    {
+      "start": 19.36,
+      "end": 24.88,
+      "text": "manipulate, distribute. This is something you've heard of by now, AMD. The market creates a range,"
+    },
+    {
+      "start": 24.88,
+      "end": 28.72,
+      "text": "it grabs liquidity and then it pushes in the opposite direction. This happens on"
+    },
+    {
+      "start": 28.72,
+      "end": 35.44,
+      "text": "all periods of time, every 45 minutes, every 21 minutes, every 3 minutes, every 3 hours."
+    },
+    {
+      "start": 35.44,
+      "end": 42.16,
+      "text": "It happens on all timeframes and time scales. The most simple version of this, what I'd recommend"
+    },
+    {
+      "start": 42.16,
+      "end": 47.76,
+      "text": "doing is starting out by choosing two different timeframes, so for example the 15 minute and"
+    },
+    {
+      "start": 47.76,
+      "end": 53.68,
+      "text": "the 1 minute. On the 15 minute timeframe, draw your AMD zones, A being double the size of"
+    },
+    {
+      "start": 53.68,
+      "end": 60.56,
+      "text": "M and D, so for example we have A is at midnight to three, that's three hour long accumulation,"
+    },
+    {
+      "start": 60.56,
+      "end": 64.48,
+      "text": "then we have a one and a half hour long manipulation and a one and a half hour long"
+    },
+    {
+      "start": 64.48,
+      "end": 69.28,
+      "text": "distribution. You can choose any length of zone, so just choose what aligns with your day."
+    },
+    {
+      "start": 69.28,
+      "end": 74.32,
+      "text": "You could do a one hour accumulation and a 30 minute manipulation and distribution,"
+    },
+    {
+      "start": 74.32,
+      "end": 80.0,
+      "text": "or an hour and a half accumulation and a 45 minute manipulation, 45 minute distribution,"
+    },
+    {
+      "start": 80.0,
+      "end": 86.72,
+      "text": "you choose, just make it align with when you want to trade. Here's a few examples of AMD stretching"
+    },
+    {
+      "start": 86.72,
+      "end": 93.12,
+      "text": "from midnight to 6 a.m. We can see the first M swept the low of the A, after that wait for an"
+    },
+    {
+      "start": 93.12,
+      "end": 99.52,
+      "text": "engulfing candle and then we entered. This first attempt was a fail and the second attempt,"
+    },
+    {
+      "start": 99.52,
+      "end": 105.36,
+      "text": "it swept the low again, it swept the stop loss and the first engulfing candle, if we"
+    },
+    {
+      "start": 105.36,
+      "end": 110.16,
+      "text": "entered from that one, it would have hit the full take profit, the high of the accumulation zone."
+    },
+    {
+      "start": 110.16,
+      "end": 118.16,
+      "text": "So let me just break this down quickly, let me just recap, we have AMD, AMD, but when you zoom out,"
+    },
+    {
+      "start": 118.16,
+      "end": 124.8,
+      "text": "if you forget about this M and this D, this is one huge A, the left side of the screen is"
+    },
+    {
+      "start": 124.8,
+      "end": 133.52,
+      "text": "accumulation, then this first bigger zone is the larger M for this larger A, then these last"
+    },
+    {
+      "start": 133.52,
+      "end": 140.56,
+      "text": "two zones, this M and D can be classed as one big D, wink wink. So we have AMD, AMD,"
+    },
+    {
+      "start": 140.56,
+      "end": 150.16,
+      "text": "sat inside of a larger AMD, where this TP was hit, that was actually the larger"
+    },
+    {
+      "start": 150.16,
+      "end": 156.56,
+      "text": "manipulation zone sweeping the high of this entire accumulation zone. Once that happened,"
+    },
+    {
+      "start": 156.56,
+      "end": 162.0,
+      "text": "if we waited for another engulfing candle taking cells this time, we could have targeted"
+    },
+    {
+      "start": 162.0,
+      "end": 168.0,
+      "text": "the lowest point of this larger A. So we had the smaller AMD in buys and it was correct,"
+    },
+    {
+      "start": 168.0,
+      "end": 174.24,
+      "text": "then we had the larger AMD in cells and it hit the take profit. So that's two successful trades"
+    },
+    {
+      "start": 174.24,
+      "end": 181.6,
+      "text": "and one failed attempt. Then once we get into the last smaller AMD, we can see the low of the A"
+    },
+    {
+      "start": 181.6,
+      "end": 188.88,
+      "text": "was here, came down, swept that low, then we had two failed attempts off the engulfing candle"
+    },
+    {
+      "start": 188.88,
+      "end": 194.56,
+      "text": "entry model. We took the first entry and that was a loss, took the second entry, when the next"
+    },
+    {
+      "start": 194.56,
+      "end": 201.92,
+      "text": "engulfing candle happened, that was also a loss, and then the third entry was successful, full TP"
+    },
+    {
+      "start": 201.92,
+      "end": 207.12,
+      "text": "at the high of the accumulation zone. So here we've got six hours, we've got three wins, three"
+    },
+    {
+      "start": 207.12,
+      "end": 212.32,
+      "text": "losses, but the wins generated a lot more profit than what those three losses would have lost."
+    },
+    {
+      "start": 212.32,
+      "end": 217.36,
+      "text": "So like I was just saying, if you're splitting the entire three hours into two separate AMDs,"
+    },
+    {
+      "start": 217.36,
+      "end": 223.76,
+      "text": "you can treat the second A as an M because there's actually one larger AMD spanning over"
+    },
+    {
+      "start": 223.76,
+      "end": 228.64,
+      "text": "the entire three hours or six hours, whatever you decide to choose. And the larger M is in the same"
+    },
+    {
+      "start": 228.64,
+      "end": 234.48,
+      "text": "place that the second AMD would start. Now, when you combine this over any length of time"
+    },
+    {
+      "start": 234.48,
+      "end": 238.48,
+      "text": "with your liquidity sweeps, this gives you the direction and the window of time where"
+    },
+    {
+      "start": 238.48,
+      "end": 243.12,
+      "text": "you will be looking to enter, always enter in the manipulation phase or right at the start"
+    },
+    {
+      "start": 243.12,
+      "end": 248.4,
+      "text": "of distribution trading in the opposite direction of the liquidity grab, targeting the opposite"
+    },
+    {
+      "start": 248.4,
+      "end": 254.88,
+      "text": "liquidity or a fair value gap near the liquidity for your take profit. Here is another example,"
+    },
+    {
+      "start": 254.88,
+      "end": 260.32,
+      "text": "we have the first smaller AMD, there was no sweep of the higher law of the accumulation,"
+    },
+    {
+      "start": 260.32,
+      "end": 269.12,
+      "text": "then we have the larger AMD, AMD, this larger M swept the law of the larger A,"
+    },
+    {
+      "start": 269.12,
+      "end": 273.76,
+      "text": "then we went to full take profit. Now, when you are analyzing the chart,"
+    },
+    {
+      "start": 273.76,
+      "end": 279.04,
+      "text": "let's just say you sat down to start trading at 3pm here, you would be looking for the high of"
+    },
+    {
+      "start": 279.04,
+      "end": 283.84,
+      "text": "this smaller A to get swept once it crosses over quarter past three. So you would have been looking"
+    },
+    {
+      "start": 283.84,
+      "end": 288.32,
+      "text": "to take this sell what you need to be able to do when you sit down and start trading is to look"
+    },
+    {
+      "start": 288.32,
+      "end": 294.48,
+      "text": "back and understand what is currently going on. If you start trading at three, when this buy"
+    },
+    {
+      "start": 294.48,
+      "end": 299.6,
+      "text": "was already in play, you wouldn't have known it was already in play unless you analyzed it and"
+    },
+    {
+      "start": 299.6,
+      "end": 303.92,
+      "text": "saw that it was there. So you would have been looking to take this sell, but this sell would"
+    },
+    {
+      "start": 303.92,
+      "end": 307.6,
+      "text": "have been a failed attempt, and then there would have been another failed attempt shortly after"
+    },
+    {
+      "start": 307.6,
+      "end": 312.72,
+      "text": "to avoid those failed attempts. If you look back and you see that this buy is currently in play,"
+    },
+    {
+      "start": 312.72,
+      "end": 317.12,
+      "text": "you don't want to try and trade the opposite direction until that take profit has been hit,"
+    },
+    {
+      "start": 317.12,
+      "end": 324.24,
+      "text": "which is also the accumulation being manipulated. So after this buy hit the take profit,"
+    },
+    {
+      "start": 324.24,
+      "end": 329.28,
+      "text": "we started to see the reversal play out. Another thing I want to teach you is when"
+    },
+    {
+      "start": 329.28,
+      "end": 335.36,
+      "text": "the manipulation zone here manipulated above this A, if you took engulfing entries,"
+    },
+    {
+      "start": 335.36,
+      "end": 339.84,
+      "text": "you would have taken an engulfing candle entry where my mouse is here, and the stop"
+    },
+    {
+      "start": 339.84,
+      "end": 344.4,
+      "text": "loss would have been just above this high and the stop loss would have been hit. Now,"
+    },
+    {
+      "start": 344.4,
+      "end": 351.36,
+      "text": "when the distribution zone, the smaller distribution zone here, manipulates above"
+    },
+    {
+      "start": 351.36,
+      "end": 357.44,
+      "text": "the manipulation high, instead of targeting the accumulation low, like you would have if the"
+    },
+    {
+      "start": 357.44,
+      "end": 363.36,
+      "text": "manipulation actually successfully started to reverse and come down, now that the distribution"
+    },
+    {
+      "start": 363.36,
+      "end": 369.2,
+      "text": "has manipulated above the manipulation, you want to target the low of the manipulation zone,"
+    },
+    {
+      "start": 369.2,
+      "end": 374.16,
+      "text": "not the accumulation zone. I hope that stuck in your brain okay, I know that was a lot of"
+    },
+    {
+      "start": 374.16,
+      "end": 380.72,
+      "text": "long words, but basically if the manipulation manipulates above the accumulation, then you"
+    },
+    {
+      "start": 380.72,
+      "end": 386.56,
+      "text": "can target the accumulation opposite liquidity. If the distribution manipulates above the"
+    },
+    {
+      "start": 386.56,
+      "end": 391.36,
+      "text": "manipulation, then you can target the opposite liquidity of the manipulation zone,"
+    },
+    {
+      "start": 391.36,
+      "end": 396.08,
+      "text": "not the accumulation zone. As you can see, it hit that perfectly and then shortly after"
+    },
+    {
+      "start": 396.08,
+      "end": 401.36,
+      "text": "it reversed, it did not reach the accumulation zone low because the distribution manipulated"
+    },
+    {
+      "start": 401.36,
+      "end": 406.4,
+      "text": "the manipulation caused in the reversal instead of the manipulation manipulating the accumulation."
+    },
+    {
+      "start": 406.4,
+      "end": 411.52,
+      "text": "Do you understand? I am aware that this is beginner level stuff, but that is what level"
+    },
+    {
+      "start": 411.52,
+      "end": 415.92,
+      "text": "one, two and three are for. Knowing what I've taught you so far, keeping it this simple,"
+    },
+    {
+      "start": 415.92,
+      "end": 420.88,
+      "text": "using liquidity sweeps for direction and manipulation zones for knowing when to enter,"
+    },
+    {
+      "start": 420.88,
+      "end": 425.2,
+      "text": "it can't be more simple than that. You can decide on your own type of entry,"
+    },
+    {
+      "start": 425.28,
+      "end": 430.08,
+      "text": "whether it's an engulfing candle, a clean market structure shift, and then a pullback into a fair"
+    },
+    {
+      "start": 430.08,
+      "end": 434.96,
+      "text": "value gap. You will learn a lot of things along the way that you will pick up on that others won't,"
+    },
+    {
+      "start": 434.96,
+      "end": 439.6,
+      "text": "because it's all about your perception and how you develop from your own experiences while"
+    },
+    {
+      "start": 439.6,
+      "end": 445.92,
+      "text": "taking trades. Part two is the power of X, fractal expansion. When you're fractally shifting between"
+    },
+    {
+      "start": 445.92,
+      "end": 451.44,
+      "text": "a higher time frame and a lower time frame using AMD, because it works on every time frame,"
+    },
+    {
+      "start": 451.44,
+      "end": 457.76,
+      "text": "you need to remember a few things. Number one is always anchor the start of your first A to a"
+    },
+    {
+      "start": 457.76,
+      "end": 462.8,
+      "text": "specific moment. It could be midnight, it could be 12 midday, or any beginning of the hour,"
+    },
+    {
+      "start": 462.8,
+      "end": 467.04,
+      "text": "or any 30 minute. Basically, it can be anything that is the beginning of a cycle."
+    },
+    {
+      "start": 467.92,
+      "end": 475.04,
+      "text": "Number two, there is such thing as AMD X, where the X is a continuation or reversal of what the"
+    },
+    {
+      "start": 475.04,
+      "end": 479.6,
+      "text": "previous D did. And this will play out in the first part of the next year. So if you have"
+    },
+    {
+      "start": 479.6,
+      "end": 486.88,
+      "text": "midnight to 1am, where 0 to 30 is a cumulate, 30 to 45 minutes is manipulate, 45 minutes to the"
+    },
+    {
+      "start": 486.88,
+      "end": 492.48,
+      "text": "end of the hour is the distribution, then the next hour's A, if it doesn't consolidate, it has a big"
+    },
+    {
+      "start": 492.48,
+      "end": 497.52,
+      "text": "reversal or continuation of the move that happened in the previous D, then you need to"
+    },
+    {
+      "start": 497.52,
+      "end": 502.24,
+      "text": "wait for it to start consolidating again. And it might start halfway through what was going to"
+    },
+    {
+      "start": 502.24,
+      "end": 507.12,
+      "text": "be the next A, or at the end of it. Here's an example of what I'm talking about. The first"
+    },
+    {
+      "start": 507.12,
+      "end": 513.12,
+      "text": "AMD played out perfectly. Engulfing candle entry, we call it buys, targeted the highs,"
+    },
+    {
+      "start": 513.12,
+      "end": 519.68,
+      "text": "hit take profit. But when you look at the next AMD, you can see that A was a continuation of the"
+    },
+    {
+      "start": 519.68,
+      "end": 526.32,
+      "text": "direction that D went in. So D here, very bullish, pulled back. But instead of accumulation, actually"
+    },
+    {
+      "start": 526.32,
+      "end": 530.48,
+      "text": "starting to consolidate like this, which is what you want to see, you want to see a range with"
+    },
+    {
+      "start": 530.48,
+      "end": 536.32,
+      "text": "a high and low, what it started to do was trend following the direction of the distribution."
+    },
+    {
+      "start": 536.32,
+      "end": 540.88,
+      "text": "Now, if this happened, but it went bearish instead. So instead of pushing up a lot,"
+    },
+    {
+      "start": 540.88,
+      "end": 546.4,
+      "text": "it came down a lot that also counts as what I would call X. Now, all you need to do when this happens"
+    },
+    {
+      "start": 546.4,
+      "end": 552.8,
+      "text": "is slide the AMD accordingly, shift it to the right slightly until it starts to form a proper"
+    },
+    {
+      "start": 552.8,
+      "end": 558.16,
+      "text": "range. In this example, I have slid the beginning of the A to quarter past three. And it gives"
+    },
+    {
+      "start": 558.16,
+      "end": 562.72,
+      "text": "this range here, we have these highs, and we have this level of support here that it was"
+    },
+    {
+      "start": 562.72,
+      "end": 567.28,
+      "text": "tapped into again. Now, after that, it manipulated below those lows, and then there was"
+    },
+    {
+      "start": 567.28,
+      "end": 572.16,
+      "text": "an engulfing candle. If we entered from there, targeting the highs, that would have been a"
+    },
+    {
+      "start": 572.16,
+      "end": 577.92,
+      "text": "successful trade, all just from shifting the AMD slightly to the right. It became offset,"
+    },
+    {
+      "start": 577.92,
+      "end": 583.68,
+      "text": "so we realigned with the offset. Part three is multi timeframe confluence."
+    },
+    {
+      "start": 585.6,
+      "end": 591.52,
+      "text": "Using higher timeframes to show the direction. If you're going to be using the AMD over an hour,"
+    },
+    {
+      "start": 591.6,
+      "end": 596.56,
+      "text": "like I just gave an example of, another amazing thing you can do to enhance your probability,"
+    },
+    {
+      "start": 596.56,
+      "end": 603.52,
+      "text": "win rate and take profit levels is by aligning a higher timeframe AMD over the top of the hour"
+    },
+    {
+      "start": 603.52,
+      "end": 608.56,
+      "text": "you're choosing. This is what I've been talking about when I've been saying fractal expansion,"
+    },
+    {
+      "start": 608.56,
+      "end": 618.16,
+      "text": "or multi timeframe fractal confluences. The last example showed 2pm to 3pm as an AMD cycle."
+    },
+    {
+      "start": 618.16,
+      "end": 624.72,
+      "text": "This time, if we overlay from 1pm to 4pm, a 3 hour cycle, we can see that the exact trade that we"
+    },
+    {
+      "start": 624.72,
+      "end": 630.64,
+      "text": "caught in the earlier example played out also on this 3 hour cycle, and the TP level was much"
+    },
+    {
+      "start": 630.64,
+      "end": 636.8,
+      "text": "larger with the exact same stop loss size. It more than doubled the profit on the exact same trade."
+    },
+    {
+      "start": 636.8,
+      "end": 642.08,
+      "text": "Aligning different periods of time gives us the strongest indication of reversals playing out."
+    },
+    {
+      "start": 642.08,
+      "end": 648.88,
+      "text": "So here we can see from 1pm to 4pm to 3 hour cycle. Now in the previous zone,"
+    },
+    {
+      "start": 649.6,
+      "end": 657.68,
+      "text": "this first buy here, we targeted the highs and the TP was quite small. Now if we go to the next"
+    },
+    {
+      "start": 657.68,
+      "end": 663.92,
+      "text": "example, we can see that initially we were targeting this high here, which is about half"
+    },
+    {
+      "start": 663.92,
+      "end": 669.76,
+      "text": "the distance of the higher timeframe AMD could reach. The highest point of the accumulation"
+    },
+    {
+      "start": 669.76,
+      "end": 675.68,
+      "text": "was here on that first line. That is the highest point. Another thing I want to just say is when"
+    },
+    {
+      "start": 675.68,
+      "end": 683.12,
+      "text": "you drag the AMD, the first candle of a zone is the candle on the line. So at 230, when the"
+    },
+    {
+      "start": 683.12,
+      "end": 689.6,
+      "text": "manipulation zone started, the candle on that line is the first candle of manipulation. So if"
+    },
+    {
+      "start": 689.6,
+      "end": 696.48,
+      "text": "that first candle manipulates below is low, for example, that would count as a sweep. Now,"
+    },
+    {
+      "start": 696.48,
+      "end": 700.56,
+      "text": "like I said, we were initially targeting this level. But now on the higher timeframe,"
+    },
+    {
+      "start": 700.56,
+      "end": 707.92,
+      "text": "we'd be targeting this level. If you had this AMD, and then you also had your 2pm to 3pm AMD,"
+    },
+    {
+      "start": 707.92,
+      "end": 711.92,
+      "text": "everything would have been aligned and you would have taken the exact same trade. But"
+    },
+    {
+      "start": 711.92,
+      "end": 716.72,
+      "text": "you would have known that you could have extended your take profit level up to here."
+    },
+    {
+      "start": 716.72,
+      "end": 721.04,
+      "text": "You could have closed maybe half the trade at the first TP, and then you could have left"
+    },
+    {
+      "start": 721.04,
+      "end": 725.6,
+      "text": "the rest running until this full TP, this larger TP. And if you want to do it again,"
+    },
+    {
+      "start": 725.6,
+      "end": 730.72,
+      "text": "you could zoom out from like 12 to 12. And if this aligned again,"
+    },
+    {
+      "start": 730.72,
+      "end": 735.2,
+      "text": "you would be able to find a much bigger TP than even this, because it is fractal."
+    },
+    {
+      "start": 736.4,
+      "end": 742.32,
+      "text": "Inside of the huge AMD from zero to 12, and from 12 to midnight again, there are infinitely"
+    },
+    {
+      "start": 742.32,
+      "end": 747.52,
+      "text": "smaller AMDs inside of the larger ones. The larger ones show us the overall higher"
+    },
+    {
+      "start": 747.52,
+      "end": 752.4,
+      "text": "timeframe direction. And using the smaller ones, we can catch smaller trades throughout the"
+    },
+    {
+      "start": 752.4,
+      "end": 760.88,
+      "text": "larger zones. Inside every AMD, there is a smaller AMD. On the next image, I'll show you"
+    },
+    {
+      "start": 760.88,
+      "end": 765.04,
+      "text": "an entire day from midnight to midnight. The first half of the day is going to be split"
+    },
+    {
+      "start": 765.04,
+      "end": 771.04,
+      "text": "up into fractal AMDs inside of one another. And the second half of the day is just a larger AMD."
+    },
+    {
+      "start": 771.04,
+      "end": 776.24,
+      "text": "So you can see how they both run simultaneously. So as you can see here, this is from midnight"
+    },
+    {
+      "start": 776.24,
+      "end": 781.2,
+      "text": "to midnight. This is an entire day. The first half of the day is split up into the fractal"
+    },
+    {
+      "start": 781.2,
+      "end": 786.88,
+      "text": "smaller AMDs that are sat inside of the larger ones. And the second half of the day is just the"
+    },
+    {
+      "start": 786.88,
+      "end": 792.16,
+      "text": "larger AMD. As you can see, in the first half of the day, there were a lot more smaller trades"
+    },
+    {
+      "start": 792.16,
+      "end": 796.72,
+      "text": "throughout the larger zones. And the second half of the day, we can see that the larger zones"
+    },
+    {
+      "start": 796.72,
+      "end": 802.72,
+      "text": "were still in action, taking those larger trades over a longer period of time. They were probably"
+    },
+    {
+      "start": 802.72,
+      "end": 808.08,
+      "text": "about the same risk to reward ratio, but they last longer. That is the main difference."
+    },
+    {
+      "start": 808.64,
+      "end": 813.84,
+      "text": "Everything is the same. Every time frame is the same and every trade is technically the same."
+    },
+    {
+      "start": 813.84,
+      "end": 818.56,
+      "text": "All that matters is when you enter and how long you're going to be in that trade for."
+    },
+    {
+      "start": 818.56,
+      "end": 823.84,
+      "text": "That's really the only two variables that can impact the actual experience you have while trading."
+    },
+    {
+      "start": 825.44,
+      "end": 831.92,
+      "text": "Your next tasks, your first tasks of level three, number one is going to be to analyze an entire"
+    },
+    {
+      "start": 831.92,
+      "end": 837.28,
+      "text": "day from the largest AMD that you can possibly go to. So from midnight all the way to the"
+    },
+    {
+      "start": 837.28,
+      "end": 842.32,
+      "text": "next midnight, then once you've analyzed the trades that played out on that time frame and you're"
+    },
+    {
+      "start": 842.32,
+      "end": 847.92,
+      "text": "comfortable with doing that over a few days going back, then you can start placing AMD inside of"
+    },
+    {
+      "start": 847.92,
+      "end": 853.84,
+      "text": "the larger AMD, finding sweeps and watching how the price reversed. Then you can start placing smaller"
+    },
+    {
+      "start": 853.84,
+      "end": 860.4,
+      "text": "AMDs inside of every AMD. Do it one at a time. So inside of that midnight to midnight AMD,"
+    },
+    {
+      "start": 860.4,
+      "end": 865.76,
+      "text": "you can then place a midnight to 12. And then inside of that you'll have a zero to six"
+    },
+    {
+      "start": 865.76,
+      "end": 871.6,
+      "text": "accumulation. Inside of that accumulation zone, you can do another AMD and just keep breaking it down"
+    },
+    {
+      "start": 871.6,
+      "end": 876.16,
+      "text": "and zooming in further and further and further. Once you're comfortable with doing that,"
+    },
+    {
+      "start": 876.16,
+      "end": 882.16,
+      "text": "you're then ready to move to the next task. Number two is to analyze the chart,"
+    },
+    {
+      "start": 882.16,
+      "end": 886.56,
+      "text": "place your AMDs and watch it happen live. Don't take the trades, just watch the"
+    },
+    {
+      "start": 886.56,
+      "end": 891.84,
+      "text": "manipulations, the distributions reacting to one another. If you notice that the next"
+    },
+    {
+      "start": 891.84,
+      "end": 898.0,
+      "text": "A is doing a big sharp reversal or continuation, note it down and remember that the next A is now"
+    },
+    {
+      "start": 898.0,
+      "end": 902.88,
+      "text": "slightly offset. Get used to this behavior and get comfortable with it and begin to understand how"
+    },
+    {
+      "start": 902.88,
+      "end": 908.32,
+      "text": "you feel in certain moments, the FOMO, the hope, the different emotions that come with"
+    },
+    {
+      "start": 908.32,
+      "end": 913.6,
+      "text": "the act of watching a trade that you could have taken play out. When you're doing this,"
+    },
+    {
+      "start": 913.6,
+      "end": 918.56,
+      "text": "I want you to journal how you feel, journal what you would have done, take notes on your own"
+    },
+    {
+      "start": 918.56,
+      "end": 923.36,
+      "text": "mind and what your thoughts were on certain situations and scenarios. Once you've back tested"
+    },
+    {
+      "start": 923.36,
+      "end": 928.72,
+      "text": "a few days for task one, then you can move on to forward testing for task two. Once you've completed"
+    },
+    {
+      "start": 928.72,
+      "end": 934.4,
+      "text": "that, then I would recommend that you move on to level three, part four to six. I'll see you in the next one."
+    }
+  ]
+}
