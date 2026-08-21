@@ -12,13 +12,13 @@
     :root {
       --qp-black: #0a0a0f;
       --qp-dark: #12121a;
+      --qp-darker: #08080c;
       --qp-blue: #3b82f6;
       --qp-blue-glow: #60a5fa;
       --qp-gold: #f59e0b;
       --qp-gold-glow: #fbbf24;
       --qp-white: #f8fafc;
       --qp-gray: #94a3b8;
-      --qp-orange: #f97316;
     }
     
     html, body {
@@ -32,55 +32,104 @@
       color: var(--qp-white);
     }
     
-    /* === NORMAL MODE: Fullscreen centered === */
+    /* === PRESENTATION (always centered) === */
+    .presentation-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      transition: padding 0.3s ease;
+    }
+    
+    .hud-active .presentation-container {
+      padding: 80px 40px;
+    }
+    
+    .presentation-wrapper {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: center center;
+    }
+    
     .presentation {
       width: 1920px;
       height: 1080px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-origin: center center;
       background: var(--qp-black);
       overflow: hidden;
+      position: relative;
     }
     
-    /* === HUD MODE === */
-    .hud-active .presentation {
-      /* Will be repositioned by JS */
+    /* === CROP BORDER (QP themed) === */
+    .crop-border {
+      display: none;
+      position: absolute;
+      inset: -4px;
+      border: 4px solid transparent;
+      border-radius: 8px;
+      background: linear-gradient(var(--qp-black), var(--qp-black)) padding-box,
+                  linear-gradient(135deg, var(--qp-blue), var(--qp-gold)) border-box;
+      pointer-events: none;
+      z-index: 100;
     }
     
+    .hud-active .crop-border { display: block; }
+    
+    /* === HUD TELEPROMPTER (QP themed) === */
     .teleprompter {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      padding: 20px 40px;
-      background: #000;
-      border-bottom: 3px solid var(--qp-orange);
+      padding: 16px 40px;
+      background: linear-gradient(180deg, var(--qp-darker) 0%, var(--qp-black) 100%);
+      border-bottom: 2px solid;
+      border-image: linear-gradient(90deg, var(--qp-blue), var(--qp-gold)) 1;
       text-align: center;
       z-index: 2000;
     }
     
     .hud-active .teleprompter { display: block; }
     
+    .teleprompter-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(90deg, var(--qp-blue), var(--qp-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    
     .teleprompter-line {
-      font-size: 26px;
+      font-size: 24px;
       line-height: 1.4;
       color: var(--qp-white);
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
     }
     
+    .teleprompter-line .next-hint {
+      color: var(--qp-gold);
+      font-weight: 600;
+    }
+    
+    /* === HUD FOOTER (QP themed) === */
     .hud-footer {
       display: none;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 15px 40px;
-      background: #000;
-      border-top: 3px solid var(--qp-orange);
+      padding: 12px 40px;
+      background: linear-gradient(0deg, var(--qp-darker) 0%, var(--qp-black) 100%);
+      border-top: 2px solid;
+      border-image: linear-gradient(90deg, var(--qp-blue), var(--qp-gold)) 1;
       justify-content: space-between;
       align-items: center;
       z-index: 2000;
@@ -88,44 +137,44 @@
     
     .hud-active .hud-footer { display: flex; }
     
-    .click-counter {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--qp-orange);
+    .hud-stat {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     
-    .slide-info {
-      font-size: 18px;
+    .hud-stat-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
       color: var(--qp-gray);
     }
     
-    .hud-hint {
-      font-size: 14px;
-      color: #666;
+    .hud-stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--qp-blue), var(--qp-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     
-    .crop-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1500;
+    .hud-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--qp-gray);
     }
     
-    .hud-active .crop-overlay { display: block; }
-    
-    .crop-overlay::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-    }
-    
-    .crop-window {
-      position: absolute;
-      border: 4px solid var(--qp-orange);
+    .hud-center kbd {
+      background: var(--qp-dark);
+      border: 1px solid var(--qp-gray);
       border-radius: 4px;
-      box-shadow: 0 0 0 9999px rgba(0,0,0,0.6);
+      padding: 2px 6px;
+      font-family: monospace;
+      font-size: 11px;
     }
     
     /* === SLIDE STYLES === */
@@ -227,208 +276,191 @@
   </style>
 </head>
 <body>
-  <!-- TELEPROMPTER -->
+  <!-- HUD TELEPROMPTER -->
   <div class="teleprompter">
+    <div class="teleprompter-label">SCRIPT</div>
     <div class="teleprompter-line" id="scriptLine">Welcome to Quant Prime.</div>
   </div>
-  
-  <!-- CROP OVERLAY -->
-  <div class="crop-overlay">
-    <div class="crop-window" id="cropWindow"></div>
-  </div>
 
-  <!-- PRESENTATION -->
-  <div class="presentation" id="presentation">
-    <div class="bg-grid"></div>
-    <div class="logo">QUANT PRIME</div>
-    
-    <!-- SLIDE 1 -->
-    <div class="slide active" id="slide-1">
-      <div class="title-mega anim-scale" data-script="Welcome to Quant Prime.">QUANT PRIME</div>
-      <div class="subtitle anim" data-script="(pause)">Welcome to the Academy</div>
-    </div>
-    
-    <!-- SLIDE 2 -->
-    <div class="slide" id="slide-2">
-      <div class="title-lg glow-gold anim-scale" data-script="Before you dive into the education...">YOUR JOURNEY STARTS HERE</div>
-      <div class="text-body anim" style="margin-top: 48px;" data-script="...let me give you a quick overview of what you've unlocked and how to get the most out of it.">Let me show you what you've unlocked... and how to get the most out of it.</div>
-    </div>
-    
-    <!-- SLIDE 3 -->
-    <div class="slide" id="slide-3">
-      <div class="title-md anim" data-script="Quant Prime is a quantitative trading system.">WHAT IS QUANT PRIME?</div>
-      <div class="text-body anim" style="margin-top: 48px;" data-script="We don't predict the market...">A quantitative trading system.<br>We don't <span class="text-highlight">predict</span> the market...</div>
-    </div>
-    
-    <!-- SLIDE 4 -->
-    <div class="slide" id="slide-4">
-      <div class="tagline tagline-glow anim-scale" data-script="...we measure it.">MEASURE. DON'T PREDICT.</div>
-      <div class="text-body anim" style="margin-top: 48px;" data-script="Our instruments analyze price through mathematical models, identifying moments where the algorithm reveals itself.">Our instruments analyze price through mathematical models,<br>identifying moments where the algorithm reveals itself.</div>
-    </div>
-    
-    <!-- SLIDE 5 -->
-    <div class="slide" id="slide-5">
-      <div class="title-md anim" data-script="You have access to two primary instruments:">YOUR INSTRUMENTS</div>
-      <div class="instrument-grid">
-        <div class="instrument-card anim-left" data-script="Meridian — Your precision tool. It operates during specific windows where market structure tends to be cleanest.">
-          <h3>MERIDIAN</h3>
-          <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Precision Tool</div>
-          <div class="time-slot">00:00 - 02:00 UTC</div>
-          <div class="time-slot">04:00 - 06:00 UTC</div>
-          <div class="time-slot">19:00 - 20:00 UTC</div>
+  <!-- PRESENTATION CONTAINER -->
+  <div class="presentation-container">
+    <div class="presentation-wrapper" id="wrapper">
+      <div class="crop-border"></div>
+      <div class="presentation" id="presentation">
+        <div class="bg-grid"></div>
+        <div class="logo">QUANT PRIME</div>
+        
+        <!-- SLIDE 1 -->
+        <div class="slide active" id="slide-1">
+          <div class="title-mega anim-scale" data-script="Welcome to Quant Prime.">QUANT PRIME</div>
+          <div class="subtitle anim" data-script="">Welcome to the Academy</div>
         </div>
-        <div class="instrument-card gold anim-right" data-script="Recoil — Your momentum tool. It captures the energy of market sessions.">
-          <h3>RECOIL</h3>
-          <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Momentum Tool</div>
-          <div class="time-slot">07:00 - 09:00 UTC</div>
-          <div class="time-slot">13:00 - 14:00 UTC</div>
-          <div class="time-slot">19:00 - 20:00 UTC</div>
+        
+        <!-- SLIDE 2 -->
+        <div class="slide" id="slide-2">
+          <div class="title-lg glow-gold anim-scale" data-script="Before you dive into the education...">YOUR JOURNEY STARTS HERE</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="...let me give you a quick overview of what you've unlocked and how to get the most out of it.">Let me show you what you've unlocked... and how to get the most out of it.</div>
         </div>
-      </div>
-    </div>
-    
-    <!-- SLIDE 6 -->
-    <div class="slide" id="slide-6">
-      <div class="text-body anim" style="font-size: 42px;" data-script="These aren't just indicators.">These aren't just indicators.</div>
-      <div class="title-md glow-blue anim-scale" style="margin-top: 32px;" data-script="They're measurement systems.">They're measurement systems.</div>
-      <div class="text-body anim" style="margin-top: 32px; color: var(--qp-gray);" data-script="Built on years of research.">Built on years of research.</div>
-    </div>
-    
-    <!-- SLIDE 7 -->
-    <div class="slide" id="slide-7">
-      <div class="title-md anim" data-script="The education is structured across nine levels... three modules each.">THE EDUCATION</div>
-      <div class="stat-row anim-scale" data-script="(let the stats sink in)">
-        <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Levels</div></div>
-        <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">Modules</div></div>
-      </div>
-    </div>
-    
-    <!-- SLIDE 8: Pyramid - Foundation FIRST (bottom up) -->
-    <div class="slide" id="slide-8">
-      <div class="pyramid">
-        <div class="pyramid-level mastery anim" data-script="Levels 7-9: Mastery — Advanced techniques that separate serious traders from everyone else.">
-          <span class="level-badge">7-9</span><span>MASTERY</span><span style="color: var(--qp-gray); font-weight: 400;">Advanced techniques</span>
+        
+        <!-- SLIDE 3 -->
+        <div class="slide" id="slide-3">
+          <div class="title-md anim" data-script="Quant Prime is a quantitative trading system.">WHAT IS QUANT PRIME?</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="We don't predict the market...">A quantitative trading system.<br>We don't <span class="text-highlight">predict</span> the market...</div>
         </div>
-        <div class="pyramid-level structure anim" data-script="Levels 4-6: Structure — The theories and methods that shape how you perceive price action.">
-          <span class="level-badge">4-6</span><span>STRUCTURE</span><span style="color: var(--qp-gray); font-weight: 400;">Methods & perception</span>
+        
+        <!-- SLIDE 4 -->
+        <div class="slide" id="slide-4">
+          <div class="tagline tagline-glow anim-scale" data-script="...we measure it.">MEASURE. DON'T PREDICT.</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="Our instruments analyze price through mathematical models, identifying moments where the algorithm reveals itself.">Our instruments analyze price through mathematical models,<br>identifying moments where the algorithm reveals itself.</div>
         </div>
-        <div class="pyramid-level foundation anim" data-script="Levels 1-3: Foundations — Your mindset, the truth about markets, and the building blocks.">
-          <span class="level-badge">1-3</span><span>FOUNDATIONS</span><span style="color: var(--qp-gray); font-weight: 400;">Mindset & building blocks</span>
+        
+        <!-- SLIDE 5 -->
+        <div class="slide" id="slide-5">
+          <div class="title-md anim" data-script="You have access to two primary instruments:">YOUR INSTRUMENTS</div>
+          <div class="instrument-grid">
+            <div class="instrument-card anim-left" data-script="Meridian — Your precision tool. It operates during specific windows where market structure tends to be cleanest.">
+              <h3>MERIDIAN</h3>
+              <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Precision Tool</div>
+              <div class="time-slot">00:00 - 02:00 UTC</div>
+              <div class="time-slot">04:00 - 06:00 UTC</div>
+              <div class="time-slot">19:00 - 20:00 UTC</div>
+            </div>
+            <div class="instrument-card gold anim-right" data-script="Recoil — Your momentum tool. It captures the energy of market sessions.">
+              <h3>RECOIL</h3>
+              <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Momentum Tool</div>
+              <div class="time-slot">07:00 - 09:00 UTC</div>
+              <div class="time-slot">13:00 - 14:00 UTC</div>
+              <div class="time-slot">19:00 - 20:00 UTC</div>
+            </div>
+          </div>
         </div>
+        
+        <!-- SLIDE 6 -->
+        <div class="slide" id="slide-6">
+          <div class="text-body anim" style="font-size: 42px;" data-script="These aren't just indicators.">These aren't just indicators.</div>
+          <div class="title-md glow-blue anim-scale" style="margin-top: 32px;" data-script="They're measurement systems.">They're measurement systems.</div>
+          <div class="text-body anim" style="margin-top: 32px; color: var(--qp-gray);" data-script="Built on years of research.">Built on years of research.</div>
+        </div>
+        
+        <!-- SLIDE 7 -->
+        <div class="slide" id="slide-7">
+          <div class="title-md anim" data-script="The education is structured across nine levels... three modules each.">THE EDUCATION</div>
+          <div class="stat-row anim-scale" data-script="">
+            <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Levels</div></div>
+            <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">Modules</div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 8: Pyramid -->
+        <div class="slide" id="slide-8">
+          <div class="pyramid">
+            <div class="pyramid-level mastery anim" data-script="Levels 7-9: Mastery — Advanced techniques that separate serious traders from everyone else.">
+              <span class="level-badge">7-9</span><span>MASTERY</span><span style="color: var(--qp-gray); font-weight: 400;">Advanced techniques</span>
+            </div>
+            <div class="pyramid-level structure anim" data-script="Levels 4-6: Structure — The theories and methods that shape how you perceive price action.">
+              <span class="level-badge">4-6</span><span>STRUCTURE</span><span style="color: var(--qp-gray); font-weight: 400;">Methods & perception</span>
+            </div>
+            <div class="pyramid-level foundation anim" data-script="Levels 1-3: Foundations — Your mindset, the truth about markets, and the building blocks.">
+              <span class="level-badge">1-3</span><span>FOUNDATIONS</span><span style="color: var(--qp-gray); font-weight: 400;">Mindset & building blocks</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 9 -->
+        <div class="slide" id="slide-9">
+          <div style="font-size: 80px; margin-bottom: 32px;">⚠️</div>
+          <div class="title-md anim-scale" data-script="Important: Process these in order.">PROCESS IN ORDER</div>
+          <div class="text-body anim" style="margin-top: 32px;" data-script="Each level builds on the previous. Skipping ahead will leave gaps in your understanding.">Each level builds on the previous.<br><span class="text-highlight">Skipping ahead will leave gaps.</span></div>
+        </div>
+        
+        <!-- SLIDE 10 -->
+        <div class="slide" id="slide-10">
+          <div class="title-md anim" data-script="Here's how to get the most out of your membership:">HOW TO GET THE MOST OUT OF THIS</div>
+          <div class="step-list">
+            <div class="step-item anim-left" data-script="One. Watch each module fully before moving to the next. Take notes."><div class="step-number">1</div><div class="step-content">Watch each module fully before moving on. <span class="text-highlight">Take notes.</span></div></div>
+            <div class="step-item anim-left" data-script="Two. Don't rush. Understanding beats speed."><div class="step-number">2</div><div class="step-content">Don't rush. <span class="text-highlight">Understanding beats speed.</span></div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 11 -->
+        <div class="slide" id="slide-11">
+          <div class="step-list">
+            <div class="step-item anim-left" data-script="Three. Apply what you learn on demo first. Paper trade until the concepts click."><div class="step-number">3</div><div class="step-content">Apply what you learn on demo first. <span class="text-highlight">Paper trade.</span></div></div>
+            <div class="step-item anim-left" data-script="Four. Use the community. Ask questions."><div class="step-number">4</div><div class="step-content">Use the community. <span class="text-highlight">Ask questions.</span></div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 12 -->
+        <div class="slide" id="slide-12">
+          <div class="subtitle anim" data-script="A quick message from the founder:">A MESSAGE FROM</div>
+          <div class="title-md glow-gold anim-scale" data-script="">THE FOUNDER</div>
+        </div>
+        
+        <!-- SLIDE 13 -->
+        <div class="slide" id="slide-13">
+          <div class="quote-card anim-scale" data-script="">
+            <div class="quote-text anim" data-script="This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side.">"This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side."</div>
+            <div class="quote-author anim" data-script="">— The Founder</div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 14 -->
+        <div class="slide" id="slide-14">
+          <div class="title-lg glow-blue anim-scale pulse" data-script="You have everything you need.">READY?</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="">You have everything you need.</div>
+        </div>
+        
+        <!-- SLIDE 15 -->
+        <div class="slide" id="slide-15">
+          <div class="subtitle anim" data-script="Your first module awaits.">YOUR FIRST MODULE AWAITS</div>
+          <div class="title-lg glow-gold anim-scale" style="margin-top: 24px;" data-script="">LEVEL 1 • MODULE 1</div>
+          <div class="tagline anim" style="margin-top: 64px; font-size: 36px; letter-spacing: 4px;" data-script="Let's begin.">LET'S BEGIN</div>
+        </div>
+        
+        <div class="progress-bar" id="progress"></div>
+        <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
+        <div class="click-hint">→ Click or press arrow | H for recording mode</div>
       </div>
     </div>
-    
-    <!-- SLIDE 9 -->
-    <div class="slide" id="slide-9">
-      <div style="font-size: 80px; margin-bottom: 32px;">⚠️</div>
-      <div class="title-md anim-scale" data-script="Important: Process these in order.">PROCESS IN ORDER</div>
-      <div class="text-body anim" style="margin-top: 32px;" data-script="Each level builds on the previous. Skipping ahead will leave gaps in your understanding.">Each level builds on the previous.<br><span class="text-highlight">Skipping ahead will leave gaps.</span></div>
-    </div>
-    
-    <!-- SLIDE 10 -->
-    <div class="slide" id="slide-10">
-      <div class="title-md anim" data-script="Here's how to get the most out of your membership:">HOW TO GET THE MOST OUT OF THIS</div>
-      <div class="step-list">
-        <div class="step-item anim-left" data-script="One. Watch each module fully before moving to the next. Take notes."><div class="step-number">1</div><div class="step-content">Watch each module fully before moving on. <span class="text-highlight">Take notes.</span></div></div>
-        <div class="step-item anim-left" data-script="Two. Don't rush. Understanding beats speed."><div class="step-number">2</div><div class="step-content">Don't rush. <span class="text-highlight">Understanding beats speed.</span></div></div>
-      </div>
-    </div>
-    
-    <!-- SLIDE 11 -->
-    <div class="slide" id="slide-11">
-      <div class="step-list">
-        <div class="step-item anim-left" data-script="Three. Apply what you learn on demo first. Paper trade until the concepts click."><div class="step-number">3</div><div class="step-content">Apply what you learn on demo first. <span class="text-highlight">Paper trade.</span></div></div>
-        <div class="step-item anim-left" data-script="Four. Use the community. Ask questions."><div class="step-number">4</div><div class="step-content">Use the community. <span class="text-highlight">Ask questions.</span></div></div>
-      </div>
-    </div>
-    
-    <!-- SLIDE 12 -->
-    <div class="slide" id="slide-12">
-      <div class="subtitle anim" data-script="A quick message from the founder:">A MESSAGE FROM</div>
-      <div class="title-md glow-gold anim-scale" data-script="(pause)">THE FOUNDER</div>
-    </div>
-    
-    <!-- SLIDE 13 -->
-    <div class="slide" id="slide-13">
-      <div class="quote-card anim-scale" data-script="(quote appears)">
-        <div class="quote-text anim" data-script="'This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side.'">"This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side."</div>
-        <div class="quote-author anim" data-script="(pause)">— The Founder</div>
-      </div>
-    </div>
-    
-    <!-- SLIDE 14 -->
-    <div class="slide" id="slide-14">
-      <div class="title-lg glow-blue anim-scale pulse" data-script="You have everything you need.">READY?</div>
-      <div class="text-body anim" style="margin-top: 48px;" data-script="(pause)">You have everything you need.</div>
-    </div>
-    
-    <!-- SLIDE 15 -->
-    <div class="slide" id="slide-15">
-      <div class="subtitle anim" data-script="Your first module awaits.">YOUR FIRST MODULE AWAITS</div>
-      <div class="title-lg glow-gold anim-scale" style="margin-top: 24px;" data-script="(title appears)">LEVEL 1 • MODULE 1</div>
-      <div class="tagline anim" style="margin-top: 64px; font-size: 36px; letter-spacing: 4px;" data-script="Let's begin.">LET'S BEGIN</div>
-    </div>
-    
-    <div class="progress-bar" id="progress"></div>
-    <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
-    <div class="click-hint">→ Click or press arrow | H for recording HUD</div>
   </div>
   
   <!-- HUD FOOTER -->
   <div class="hud-footer">
-    <div class="click-counter">CLICK <span id="clickCurrent">1</span> / <span id="clickTotal">2</span></div>
-    <div class="slide-info">SLIDE <span id="slideNum">1</span> / 15</div>
-    <div class="hud-hint">H to hide HUD</div>
+    <div class="hud-stat">
+      <span class="hud-stat-label">Click</span>
+      <span class="hud-stat-value"><span id="clickCurrent">1</span> / <span id="clickTotal">2</span></span>
+    </div>
+    <div class="hud-center">
+      <kbd>H</kbd> hide HUD
+      <kbd>←</kbd><kbd>→</kbd> navigate
+    </div>
+    <div class="hud-stat">
+      <span class="hud-stat-label">Slide</span>
+      <span class="hud-stat-value"><span id="slideNum">1</span> / 15</span>
+    </div>
   </div>
   
   <script>
-    const presentation = document.getElementById('presentation');
-    const cropWindow = document.getElementById('cropWindow');
+    const wrapper = document.getElementById('wrapper');
     const scriptLine = document.getElementById('scriptLine');
     let hudMode = false;
     
     function scalePresentation() {
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+      const container = document.querySelector('.presentation-container');
+      const rect = container.getBoundingClientRect();
       
-      // In HUD mode, leave room for header/footer
-      const availH = hudMode ? vh - 140 : vh;
-      const availW = vw;
-      
-      const scaleX = availW / 1920;
-      const scaleY = availH / 1080;
+      const scaleX = rect.width / 1920;
+      const scaleY = rect.height / 1080;
       const scale = Math.min(scaleX, scaleY);
       
-      if (hudMode) {
-        // Position below teleprompter
-        const scaledW = 1920 * scale;
-        const scaledH = 1080 * scale;
-        const left = (vw - scaledW) / 2;
-        const top = 70 + (availH - scaledH) / 2;
-        
-        presentation.style.transform = `scale(${scale})`;
-        presentation.style.left = left + 'px';
-        presentation.style.top = top + 'px';
-        presentation.style.transformOrigin = 'top left';
-        
-        // Position crop window
-        cropWindow.style.left = left + 'px';
-        cropWindow.style.top = top + 'px';
-        cropWindow.style.width = scaledW + 'px';
-        cropWindow.style.height = scaledH + 'px';
-      } else {
-        // Center with translate
-        presentation.style.transform = `translate(-50%, -50%) scale(${scale})`;
-        presentation.style.left = '50%';
-        presentation.style.top = '50%';
-        presentation.style.transformOrigin = 'center center';
-      }
+      wrapper.style.transform = `scale(${scale})`;
     }
     
     function toggleHUD() {
       hudMode = !hudMode;
       document.body.classList.toggle('hud-active', hudMode);
-      scalePresentation();
+      // Wait for CSS transition then rescale
+      setTimeout(scalePresentation, 50);
       updateHUD();
     }
     
@@ -450,25 +482,24 @@
     }
     
     function updateHUD() {
-      if (!hudMode) return;
       document.getElementById('slideNum').textContent = currentSlide + 1;
       
-      // Click counter: total = number of elements (first auto-shows, rest need clicks, final click = next slide)
-      const totalClicks = animQueue.length;
+      const totalClicks = animQueue.length || 1;
       document.getElementById('clickTotal').textContent = totalClicks;
-      document.getElementById('clickCurrent').textContent = animIdx; // animIdx = how many revealed
+      document.getElementById('clickCurrent').textContent = Math.min(animIdx, totalClicks);
       
-      // Script: show text for the element that's CURRENTLY VISIBLE (last revealed)
+      // Script: show text for currently visible element
       if (animIdx > 0 && animIdx <= animQueue.length) {
-        const currentEl = animQueue[animIdx - 1];
-        let text = currentEl.dataset.script || '—';
-        // If this is the last element, append next slide hint
+        const el = animQueue[animIdx - 1];
+        let text = el.dataset.script || '';
+        if (!text) text = '—';
         if (animIdx === animQueue.length) {
-          text += '  ▶ NEXT SLIDE';
+          scriptLine.innerHTML = text + ' <span class="next-hint">▶ NEXT</span>';
+        } else {
+          scriptLine.textContent = text;
         }
-        scriptLine.textContent = text;
       } else {
-        scriptLine.textContent = '▶ NEXT SLIDE';
+        scriptLine.innerHTML = '<span class="next-hint">▶ NEXT SLIDE</span>';
       }
     }
     
@@ -492,14 +523,13 @@
     }
     
     function nextAnim() {
-      // Check if there are more elements to reveal
       if (animIdx < animQueue.length) {
         animQueue[animIdx].classList.add('visible');
         animIdx++;
         updateHUD();
         return true;
       }
-      return false; // All shown, next click goes to next slide
+      return false;
     }
     
     function nextSlide() {
@@ -514,7 +544,6 @@
       if (currentSlide > 0) {
         currentSlide--;
         showSlide(currentSlide);
-        // Show all elements on previous slide
         animQueue.forEach(el => el.classList.add('visible'));
         animIdx = animQueue.length;
         updateHUD();
