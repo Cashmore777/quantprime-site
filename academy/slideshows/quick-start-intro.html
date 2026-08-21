@@ -18,6 +18,7 @@
       --qp-gold-glow: #fbbf24;
       --qp-white: #f8fafc;
       --qp-gray: #94a3b8;
+      --qp-orange: #f97316;
     }
     
     html, body {
@@ -26,25 +27,105 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background: var(--qp-black);
+      background: #000;
     }
     
-    body {
-      font-family: 'Inter', -apple-system, sans-serif;
+    body { font-family: 'Inter', -apple-system, sans-serif; color: var(--qp-white); }
+    
+    /* === HUD CONTAINER === */
+    .hud-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* === TELEPROMPTER (TOP) === */
+    .teleprompter {
+      display: none;
+      width: 100%;
+      padding: 20px 40px;
+      background: #111;
+      border-bottom: 3px solid var(--qp-orange);
+      text-align: center;
+      min-height: 100px;
+    }
+    
+    .hud-mode .teleprompter { display: block; }
+    
+    .teleprompter-line {
+      font-size: 28px;
+      line-height: 1.5;
       color: var(--qp-white);
+      max-width: 1400px;
+      margin: 0 auto;
     }
     
+    /* === PRESENTATION WRAPPER === */
+    .presentation-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    
+    /* === CROP BORDER === */
+    .crop-border {
+      display: none;
+      position: absolute;
+      border: 4px solid var(--qp-orange);
+      border-radius: 8px;
+      pointer-events: none;
+      z-index: 1000;
+      box-shadow: 0 0 0 9999px rgba(0,0,0,0.7);
+    }
+    
+    .hud-mode .crop-border { display: block; }
+    
+    /* === PRESENTATION === */
     .presentation {
       width: 1920px;
       height: 1080px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
+      position: relative;
       transform-origin: center center;
       background: var(--qp-black);
       overflow: hidden;
     }
     
+    /* === HUD FOOTER === */
+    .hud-footer {
+      display: none;
+      width: 100%;
+      padding: 15px 40px;
+      background: #111;
+      border-top: 3px solid var(--qp-orange);
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .hud-mode .hud-footer { display: flex; }
+    
+    .click-counter {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--qp-orange);
+    }
+    
+    .slide-info {
+      font-size: 20px;
+      color: var(--qp-gray);
+    }
+    
+    .hud-hint {
+      font-size: 16px;
+      color: #666;
+    }
+    
+    /* === SLIDE STYLES === */
     .bg-grid {
       position: absolute;
       inset: 0;
@@ -81,8 +162,8 @@
       text-align: center;
     }
     
-    .title-lg { font-size: 80px; font-weight: 800; letter-spacing: -2px; }
-    .title-md { font-size: 56px; font-weight: 700; }
+    .title-lg { font-size: 80px; font-weight: 800; letter-spacing: -2px; text-align: center; }
+    .title-md { font-size: 56px; font-weight: 700; text-align: center; }
     .subtitle { font-size: 32px; color: var(--qp-gray); font-weight: 400; margin-top: 24px; }
     .text-body { font-size: 36px; line-height: 1.6; max-width: 1400px; text-align: center; }
     .text-highlight { color: var(--qp-gold); font-weight: 600; }
@@ -90,12 +171,10 @@
     .glow-blue { text-shadow: 0 0 60px rgba(59, 130, 246, 0.5); }
     .glow-gold { text-shadow: 0 0 60px rgba(245, 158, 11, 0.5); }
     
-    .anim-element { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-    .anim-element.visible { opacity: 1; transform: translateY(0); }
+    .anim { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .anim.visible { opacity: 1; transform: translateY(0); }
     .anim-scale { opacity: 0; transform: scale(0.8); transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .anim-scale.visible { opacity: 1; transform: scale(1); }
-    .anim-fade { opacity: 0; transition: opacity 0.5s ease; }
-    .anim-fade.visible { opacity: 1; }
     .anim-left { opacity: 0; transform: translateX(-100px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
     .anim-left.visible { opacity: 1; transform: translateX(0); }
     .anim-right { opacity: 0; transform: translateX(100px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -111,7 +190,7 @@
     .instrument-card.gold .time-slot { background: rgba(245, 158, 11, 0.1); }
     
     .pyramid { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-top: 48px; }
-    .pyramid-level { display: flex; align-items: center; gap: 24px; padding: 24px 48px; border-radius: 16px; font-size: 28px; font-weight: 600; }
+    .pyramid-level { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 24px 48px; border-radius: 16px; font-size: 28px; font-weight: 600; }
     .pyramid-level.foundation { background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.1)); border: 2px solid rgba(59, 130, 246, 0.3); width: 900px; }
     .pyramid-level.structure { background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1)); border: 2px solid rgba(139, 92, 246, 0.3); width: 700px; }
     .pyramid-level.mastery { background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.1)); border: 2px solid rgba(245, 158, 11, 0.3); width: 500px; }
@@ -140,140 +219,207 @@
     .slide-counter { position: absolute; bottom: 40px; right: 60px; font-size: 24px; color: var(--qp-gray); font-weight: 500; }
     .logo { position: absolute; top: 40px; left: 60px; font-size: 28px; font-weight: 800; letter-spacing: 2px; color: var(--qp-blue); }
     .click-hint { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 18px; color: var(--qp-gray); opacity: 0.5; }
+    .hud-mode .click-hint { display: none; }
     .pulse { animation: pulse 2s ease-in-out infinite; }
     @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
   </style>
 </head>
 <body>
-  <div class="presentation" id="presentation">
-    <div class="bg-grid"></div>
-    <div class="logo">QUANT PRIME</div>
-    
-    <div class="slide active" id="slide-1">
-      <div class="title-mega anim-scale">QUANT PRIME</div>
-      <div class="subtitle anim-element" style="transition-delay: 0.4s">Welcome to the Academy</div>
+  <div class="hud-container" id="hudContainer">
+    <!-- TELEPROMPTER -->
+    <div class="teleprompter" id="teleprompter">
+      <div class="teleprompter-line" id="scriptLine">Press H to toggle recording HUD</div>
     </div>
     
-    <div class="slide" id="slide-2">
-      <div class="title-lg glow-gold anim-scale">YOUR JOURNEY STARTS HERE</div>
-      <div class="text-body anim-element" style="margin-top: 48px; transition-delay: 0.3s">Let me show you what you've unlocked... and how to get the most out of it.</div>
-    </div>
-    
-    <div class="slide" id="slide-3">
-      <div class="title-md anim-element">WHAT IS QUANT PRIME?</div>
-      <div class="text-body anim-element" style="margin-top: 48px; transition-delay: 0.3s">A quantitative trading system.<br>We don't <span class="text-highlight">predict</span> the market...</div>
-    </div>
-    
-    <div class="slide" id="slide-4">
-      <div class="tagline tagline-glow anim-scale">MEASURE. DON'T PREDICT.</div>
-      <div class="text-body anim-element" style="margin-top: 48px; transition-delay: 0.3s">Our instruments analyze price through mathematical models,<br>identifying moments where the algorithm reveals itself.</div>
-    </div>
-    
-    <div class="slide" id="slide-5">
-      <div class="title-md anim-element">YOUR INSTRUMENTS</div>
-      <div class="instrument-grid">
-        <div class="instrument-card anim-left" style="transition-delay: 0.2s">
-          <h3>MERIDIAN</h3>
-          <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Precision Tool</div>
-          <div class="time-slot">00:00 - 02:00 UTC</div>
-          <div class="time-slot">04:00 - 06:00 UTC</div>
-          <div class="time-slot">19:00 - 20:00 UTC</div>
+    <!-- PRESENTATION WRAPPER -->
+    <div class="presentation-wrapper">
+      <div class="crop-border" id="cropBorder"></div>
+      <div class="presentation" id="presentation">
+        <div class="bg-grid"></div>
+        <div class="logo">QUANT PRIME</div>
+        
+        <!-- SLIDE 1: Welcome -->
+        <div class="slide active" id="slide-1">
+          <div class="title-mega anim-scale" data-script="Welcome to Quant Prime.">QUANT PRIME</div>
+          <div class="subtitle anim" data-script="(pause)">Welcome to the Academy</div>
         </div>
-        <div class="instrument-card gold anim-right" style="transition-delay: 0.4s">
-          <h3>RECOIL</h3>
-          <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Momentum Tool</div>
-          <div class="time-slot">07:00 - 09:00 UTC</div>
-          <div class="time-slot">13:00 - 14:00 UTC</div>
-          <div class="time-slot">19:00 - 20:00 UTC</div>
+        
+        <!-- SLIDE 2: Journey Starts -->
+        <div class="slide" id="slide-2">
+          <div class="title-lg glow-gold anim-scale" data-script="Before you dive into the education...">YOUR JOURNEY STARTS HERE</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="...let me give you a quick overview of what you've unlocked and how to get the most out of it.">Let me show you what you've unlocked... and how to get the most out of it.</div>
         </div>
-      </div>
-    </div>
-    
-    <div class="slide" id="slide-6">
-      <div class="text-body anim-element" style="font-size: 42px;">These aren't just indicators.</div>
-      <div class="title-md glow-blue anim-scale" style="margin-top: 32px; transition-delay: 0.3s">They're measurement systems.</div>
-      <div class="text-body anim-element" style="margin-top: 32px; transition-delay: 0.5s; color: var(--qp-gray);">Built on years of research.</div>
-    </div>
-    
-    <div class="slide" id="slide-7">
-      <div class="title-md anim-element">THE EDUCATION</div>
-      <div class="stat-row anim-scale" style="transition-delay: 0.3s">
-        <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Levels</div></div>
-        <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">Modules</div></div>
-      </div>
-    </div>
-    
-    <div class="slide" id="slide-8">
-      <div class="pyramid">
-        <div class="pyramid-level mastery anim-element" style="transition-delay: 0.6s">
-          <span class="level-badge">7-9</span><span>MASTERY</span><span style="color: var(--qp-gray); font-weight: 400;">Advanced techniques</span>
+        
+        <!-- SLIDE 3: What is QP -->
+        <div class="slide" id="slide-3">
+          <div class="title-md anim" data-script="Quant Prime is a quantitative trading system.">WHAT IS QUANT PRIME?</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="We don't predict the market...">A quantitative trading system.<br>We don't <span class="text-highlight">predict</span> the market...</div>
         </div>
-        <div class="pyramid-level structure anim-element" style="transition-delay: 0.4s">
-          <span class="level-badge">4-6</span><span>STRUCTURE</span><span style="color: var(--qp-gray); font-weight: 400;">Methods & perception</span>
+        
+        <!-- SLIDE 4: Measure Don't Predict -->
+        <div class="slide" id="slide-4">
+          <div class="tagline tagline-glow anim-scale" data-script="...we measure it.">MEASURE. DON'T PREDICT.</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="Our instruments analyze price through mathematical models, identifying moments where the algorithm reveals itself.">Our instruments analyze price through mathematical models,<br>identifying moments where the algorithm reveals itself.</div>
         </div>
-        <div class="pyramid-level foundation anim-element" style="transition-delay: 0.2s">
-          <span class="level-badge">1-3</span><span>FOUNDATIONS</span><span style="color: var(--qp-gray); font-weight: 400;">Mindset & building blocks</span>
+        
+        <!-- SLIDE 5: Instruments -->
+        <div class="slide" id="slide-5">
+          <div class="title-md anim" data-script="You have access to two primary instruments:">YOUR INSTRUMENTS</div>
+          <div class="instrument-grid">
+            <div class="instrument-card anim-left" data-script="Meridian — Your precision tool. It operates during specific windows where market structure tends to be cleanest.">
+              <h3>MERIDIAN</h3>
+              <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Precision Tool</div>
+              <div class="time-slot">00:00 - 02:00 UTC</div>
+              <div class="time-slot">04:00 - 06:00 UTC</div>
+              <div class="time-slot">19:00 - 20:00 UTC</div>
+            </div>
+            <div class="instrument-card gold anim-right" data-script="Recoil — Your momentum tool. It captures the energy of market sessions.">
+              <h3>RECOIL</h3>
+              <div style="color: var(--qp-gray); font-size: 24px; margin-bottom: 24px;">Momentum Tool</div>
+              <div class="time-slot">07:00 - 09:00 UTC</div>
+              <div class="time-slot">13:00 - 14:00 UTC</div>
+              <div class="time-slot">19:00 - 20:00 UTC</div>
+            </div>
+          </div>
         </div>
+        
+        <!-- SLIDE 6: Not Just Indicators -->
+        <div class="slide" id="slide-6">
+          <div class="text-body anim" style="font-size: 42px;" data-script="These aren't just indicators.">These aren't just indicators.</div>
+          <div class="title-md glow-blue anim-scale" style="margin-top: 32px;" data-script="They're measurement systems.">They're measurement systems.</div>
+          <div class="text-body anim" style="margin-top: 32px; color: var(--qp-gray);" data-script="Built on years of research.">Built on years of research.</div>
+        </div>
+        
+        <!-- SLIDE 7: Education Stats -->
+        <div class="slide" id="slide-7">
+          <div class="title-md anim" data-script="The education is structured across nine levels... three modules each.">THE EDUCATION</div>
+          <div class="stat-row anim-scale" data-script="(let the stats sink in)">
+            <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Levels</div></div>
+            <div class="stat-item"><div class="stat-number">27</div><div class="stat-label">Modules</div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 8: Pyramid (FIXED ORDER - Foundation first, builds up) -->
+        <div class="slide" id="slide-8">
+          <div class="pyramid">
+            <div class="pyramid-level mastery anim" data-script="Levels 7-9: Mastery — Advanced techniques that separate serious traders from everyone else.">
+              <span class="level-badge">7-9</span><span>MASTERY</span><span style="color: var(--qp-gray); font-weight: 400;">Advanced techniques</span>
+            </div>
+            <div class="pyramid-level structure anim" data-script="Levels 4-6: Structure — The theories, methods, and approaches that shape how you perceive price action.">
+              <span class="level-badge">4-6</span><span>STRUCTURE</span><span style="color: var(--qp-gray); font-weight: 400;">Methods & perception</span>
+            </div>
+            <div class="pyramid-level foundation anim" data-script="Levels 1-3: Foundations — Your mindset, the truth about markets, and the building blocks.">
+              <span class="level-badge">1-3</span><span>FOUNDATIONS</span><span style="color: var(--qp-gray); font-weight: 400;">Mindset & building blocks</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 9: Process In Order -->
+        <div class="slide" id="slide-9">
+          <div style="font-size: 80px; margin-bottom: 32px;">⚠️</div>
+          <div class="title-md anim-scale" data-script="Important: Process these in order.">PROCESS IN ORDER</div>
+          <div class="text-body anim" style="margin-top: 32px;" data-script="Each level builds on the previous. Skipping ahead will leave gaps in your understanding.">Each level builds on the previous.<br><span class="text-highlight">Skipping ahead will leave gaps.</span></div>
+        </div>
+        
+        <!-- SLIDE 10: How To (1-2) -->
+        <div class="slide" id="slide-10">
+          <div class="title-md anim" data-script="Here's how to get the most out of your membership:">HOW TO GET THE MOST OUT OF THIS</div>
+          <div class="step-list">
+            <div class="step-item anim-left" data-script="One. Watch each module fully before moving to the next. Take notes."><div class="step-number">1</div><div class="step-content">Watch each module fully before moving on. <span class="text-highlight">Take notes.</span></div></div>
+            <div class="step-item anim-left" data-script="Two. Don't rush. Understanding beats speed. Some modules will need multiple watches."><div class="step-number">2</div><div class="step-content">Don't rush. <span class="text-highlight">Understanding beats speed.</span></div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 11: How To (3-4) -->
+        <div class="slide" id="slide-11">
+          <div class="step-list">
+            <div class="step-item anim-left" data-script="Three. Apply what you learn on demo first. Paper trade until the concepts click."><div class="step-number">3</div><div class="step-content">Apply what you learn on demo first. <span class="text-highlight">Paper trade.</span></div></div>
+            <div class="step-item anim-left" data-script="Four. Use the community. Ask questions. The Quant Prime community is here to help."><div class="step-number">4</div><div class="step-content">Use the community. <span class="text-highlight">Ask questions.</span></div></div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 12: Founder Intro -->
+        <div class="slide" id="slide-12">
+          <div class="subtitle anim" data-script="A quick message from the founder:">A MESSAGE FROM</div>
+          <div class="title-md glow-gold anim-scale" data-script="(pause for title)">THE FOUNDER</div>
+        </div>
+        
+        <!-- SLIDE 13: Quote -->
+        <div class="slide" id="slide-13">
+          <div class="quote-card anim-scale" data-script="(quote card appears)">
+            <div class="quote-text anim" data-script="'This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side.'">"This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side."</div>
+            <div class="quote-author anim" data-script="(pause)">— The Founder</div>
+          </div>
+        </div>
+        
+        <!-- SLIDE 14: Ready -->
+        <div class="slide" id="slide-14">
+          <div class="title-lg glow-blue anim-scale pulse" data-script="You have everything you need.">READY?</div>
+          <div class="text-body anim" style="margin-top: 48px;" data-script="(pause)">You have everything you need.</div>
+        </div>
+        
+        <!-- SLIDE 15: Begin -->
+        <div class="slide" id="slide-15">
+          <div class="subtitle anim" data-script="Your first module awaits.">YOUR FIRST MODULE AWAITS</div>
+          <div class="title-lg glow-gold anim-scale" style="margin-top: 24px;" data-script="(title appears)">LEVEL 1 • MODULE 1</div>
+          <div class="tagline anim" style="margin-top: 64px; font-size: 36px; letter-spacing: 4px;" data-script="Let's begin.">LET'S BEGIN</div>
+        </div>
+        
+        <div class="progress-bar" id="progress"></div>
+        <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
+        <div class="click-hint">→ Click or press arrow to continue</div>
       </div>
     </div>
     
-    <div class="slide" id="slide-9">
-      <div style="font-size: 80px; margin-bottom: 32px;">⚠️</div>
-      <div class="title-md anim-scale">PROCESS IN ORDER</div>
-      <div class="text-body anim-element" style="margin-top: 32px; transition-delay: 0.3s">Each level builds on the previous.<br><span class="text-highlight">Skipping ahead will leave gaps.</span></div>
+    <!-- HUD FOOTER -->
+    <div class="hud-footer" id="hudFooter">
+      <div class="click-counter">CLICK <span id="clickCurrent">1</span> OF <span id="clickTotal">2</span></div>
+      <div class="slide-info">SLIDE <span id="slideNum">1</span> / 15</div>
+      <div class="hud-hint">Press H to hide HUD | ← → to navigate</div>
     </div>
-    
-    <div class="slide" id="slide-10">
-      <div class="title-md anim-element">HOW TO GET THE MOST OUT OF THIS</div>
-      <div class="step-list">
-        <div class="step-item anim-left" style="transition-delay: 0.2s"><div class="step-number">1</div><div class="step-content">Watch each module fully before moving on. <span class="text-highlight">Take notes.</span></div></div>
-        <div class="step-item anim-left" style="transition-delay: 0.3s"><div class="step-number">2</div><div class="step-content">Don't rush. <span class="text-highlight">Understanding beats speed.</span></div></div>
-      </div>
-    </div>
-    
-    <div class="slide" id="slide-11">
-      <div class="step-list">
-        <div class="step-item anim-left" style="transition-delay: 0.1s"><div class="step-number">3</div><div class="step-content">Apply what you learn on demo first. <span class="text-highlight">Paper trade.</span></div></div>
-        <div class="step-item anim-left" style="transition-delay: 0.2s"><div class="step-number">4</div><div class="step-content">Use the community. <span class="text-highlight">Ask questions.</span></div></div>
-      </div>
-    </div>
-    
-    <div class="slide" id="slide-12">
-      <div class="subtitle anim-element">A MESSAGE FROM</div>
-      <div class="title-md glow-gold anim-scale" style="transition-delay: 0.3s">THE FOUNDER</div>
-    </div>
-    
-    <div class="slide" id="slide-13">
-      <div class="quote-card anim-scale">
-        <div class="quote-text anim-element" style="transition-delay: 0.3s">"This education took years to develop. Not because I wanted to gatekeep... but because I wanted to get it right. Every module exists for a reason. Trust the process. Do the work. And I'll see you on the other side."</div>
-        <div class="quote-author anim-element" style="transition-delay: 0.5s">— The Founder</div>
-      </div>
-    </div>
-    
-    <div class="slide" id="slide-14">
-      <div class="title-lg glow-blue anim-scale pulse">READY?</div>
-      <div class="text-body anim-element" style="margin-top: 48px; transition-delay: 0.3s">You have everything you need.</div>
-    </div>
-    
-    <div class="slide" id="slide-15">
-      <div class="subtitle anim-element">YOUR FIRST MODULE AWAITS</div>
-      <div class="title-lg glow-gold anim-scale" style="margin-top: 24px; transition-delay: 0.3s">LEVEL 1 • MODULE 1</div>
-      <div class="tagline anim-element" style="margin-top: 64px; transition-delay: 0.5s; font-size: 36px; letter-spacing: 4px;">LET'S BEGIN</div>
-    </div>
-    
-    <div class="progress-bar" id="progress"></div>
-    <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
-    <div class="click-hint">→ Click or press arrow to continue</div>
   </div>
   
   <script>
-    // Scale presentation to fit viewport
+    let hudMode = false;
+    const hudContainer = document.getElementById('hudContainer');
+    const presentation = document.getElementById('presentation');
+    const cropBorder = document.getElementById('cropBorder');
+    const scriptLine = document.getElementById('scriptLine');
+    
+    // Scale and position
     function scalePresentation() {
-      const presentation = document.getElementById('presentation');
-      const scaleX = window.innerWidth / 1920;
-      const scaleY = window.innerHeight / 1080;
-      const scale = Math.min(scaleX, scaleY);
-      presentation.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+      const wrapper = document.querySelector('.presentation-wrapper');
+      const availHeight = hudMode ? window.innerHeight - 200 : window.innerHeight;
+      const availWidth = window.innerWidth;
+      
+      const scaleX = availWidth / 1920;
+      const scaleY = availHeight / 1080;
+      const scale = Math.min(scaleX, scaleY) * (hudMode ? 0.85 : 1);
+      
+      presentation.style.transform = 'scale(' + scale + ')';
+      presentation.style.position = 'relative';
+      presentation.style.left = 'auto';
+      presentation.style.top = 'auto';
+      
+      // Position crop border
+      if (hudMode) {
+        const rect = presentation.getBoundingClientRect();
+        cropBorder.style.width = rect.width + 'px';
+        cropBorder.style.height = rect.height + 'px';
+        cropBorder.style.left = rect.left + 'px';
+        cropBorder.style.top = (rect.top - wrapper.getBoundingClientRect().top) + 'px';
+      }
+    }
+    
+    function toggleHUD() {
+      hudMode = !hudMode;
+      if (hudMode) {
+        hudContainer.classList.add('hud-mode');
+      } else {
+        hudContainer.classList.remove('hud-mode');
+      }
+      scalePresentation();
+      updateHUD();
     }
     
     window.addEventListener('resize', scalePresentation);
@@ -294,16 +440,35 @@
       document.getElementById('current').textContent = currentSlide + 1;
     }
     
+    function updateHUD() {
+      if (!hudMode) return;
+      
+      document.getElementById('slideNum').textContent = currentSlide + 1;
+      document.getElementById('clickTotal').textContent = animationQueue.length + 1; // +1 for next slide
+      document.getElementById('clickCurrent').textContent = animationIndex + 1;
+      
+      // Get current script line
+      if (animationIndex < animationQueue.length) {
+        const el = animationQueue[animationIndex];
+        scriptLine.textContent = el.dataset.script || '(no script for this element)';
+      } else {
+        scriptLine.textContent = '→ NEXT SLIDE';
+      }
+    }
+    
     function showSlide(index) {
       slides.forEach((slide, i) => {
         slide.classList.remove('active');
         if (i === index) {
           slide.classList.add('active');
-          const elements = slide.querySelectorAll('.anim-element, .anim-scale, .anim-fade, .anim-left, .anim-right');
+          const elements = slide.querySelectorAll('[data-script]');
           animationQueue = Array.from(elements);
           animationIndex = 0;
           elements.forEach(el => el.classList.remove('visible'));
-          setTimeout(nextAnimation, 100);
+          setTimeout(() => {
+            nextAnimation();
+            updateHUD();
+          }, 100);
         }
       });
       updateProgress();
@@ -313,6 +478,7 @@
       if (animationIndex < animationQueue.length) {
         animationQueue[animationIndex].classList.add('visible');
         animationIndex++;
+        updateHUD();
         return true;
       }
       return false;
@@ -330,16 +496,22 @@
       if (currentSlide > 0) {
         currentSlide--;
         showSlide(currentSlide);
-        const elements = slides[currentSlide].querySelectorAll('.anim-element, .anim-scale, .anim-fade, .anim-left, .anim-right');
+        const elements = slides[currentSlide].querySelectorAll('[data-script]');
         elements.forEach(el => el.classList.add('visible'));
         animationIndex = elements.length;
+        updateHUD();
       }
     }
     
-    document.addEventListener('click', nextSlide);
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.hud-footer') || e.target.closest('.teleprompter')) return;
+      nextSlide();
+    });
+    
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       else if (e.key === 'ArrowLeft') prevSlide();
+      else if (e.key === 'h' || e.key === 'H') toggleHUD();
     });
     
     showSlide(0);
