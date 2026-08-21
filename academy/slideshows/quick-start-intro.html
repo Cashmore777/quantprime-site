@@ -452,13 +452,23 @@
     function updateHUD() {
       if (!hudMode) return;
       document.getElementById('slideNum').textContent = currentSlide + 1;
-      document.getElementById('clickTotal').textContent = animQueue.length + 1;
-      document.getElementById('clickCurrent').textContent = animIdx + 1;
       
-      if (animIdx < animQueue.length) {
-        scriptLine.textContent = animQueue[animIdx].dataset.script || '—';
+      // Click counter: total = number of elements (first auto-shows, rest need clicks, final click = next slide)
+      const totalClicks = animQueue.length;
+      document.getElementById('clickTotal').textContent = totalClicks;
+      document.getElementById('clickCurrent').textContent = animIdx; // animIdx = how many revealed
+      
+      // Script: show text for the element that's CURRENTLY VISIBLE (last revealed)
+      if (animIdx > 0 && animIdx <= animQueue.length) {
+        const currentEl = animQueue[animIdx - 1];
+        let text = currentEl.dataset.script || '—';
+        // If this is the last element, append next slide hint
+        if (animIdx === animQueue.length) {
+          text += '  ▶ NEXT SLIDE';
+        }
+        scriptLine.textContent = text;
       } else {
-        scriptLine.textContent = '→ NEXT SLIDE';
+        scriptLine.textContent = '▶ NEXT SLIDE';
       }
     }
     
@@ -470,20 +480,26 @@
           animQueue = Array.from(els);
           animIdx = 0;
           els.forEach(el => el.classList.remove('visible'));
-          setTimeout(() => { nextAnim(); updateHUD(); }, 100);
+          // Auto-show first element
+          if (animQueue.length > 0) {
+            animQueue[0].classList.add('visible');
+            animIdx = 1;
+          }
+          setTimeout(updateHUD, 50);
         }
       });
       updateProgress();
     }
     
     function nextAnim() {
+      // Check if there are more elements to reveal
       if (animIdx < animQueue.length) {
         animQueue[animIdx].classList.add('visible');
         animIdx++;
         updateHUD();
         return true;
       }
-      return false;
+      return false; // All shown, next click goes to next slide
     }
     
     function nextSlide() {
@@ -498,6 +514,7 @@
       if (currentSlide > 0) {
         currentSlide--;
         showSlide(currentSlide);
+        // Show all elements on previous slide
         animQueue.forEach(el => el.classList.add('visible'));
         animIdx = animQueue.length;
         updateHUD();
