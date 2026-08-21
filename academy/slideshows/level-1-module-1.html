@@ -27,9 +27,6 @@
       padding: 0;
       overflow: hidden;
       background: var(--qp-black);
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     
     body { font-family: 'Inter', -apple-system, sans-serif; color: var(--qp-white); }
@@ -37,7 +34,9 @@
     .presentation {
       width: 1920px;
       height: 1080px;
-      position: relative;
+      position: absolute;
+      left: 50%;
+      top: 50%;
       transform-origin: center center;
       background: var(--qp-black);
       overflow: hidden;
@@ -351,7 +350,7 @@
       const scaleX = window.innerWidth / 1920;
       const scaleY = window.innerHeight / 1080;
       const scale = Math.min(scaleX, scaleY);
-      presentation.style.transform = 'scale(' + scale + ')';
+      presentation.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
     }
     
     window.addEventListener('resize', scalePresentation);
