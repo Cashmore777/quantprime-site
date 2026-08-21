@@ -419,7 +419,7 @@
         
         <div class="progress-bar" id="progress"></div>
         <div class="slide-counter"><span id="current">1</span> / <span id="total">15</span></div>
-        <div class="click-hint">→ Click or press arrow | H for recording mode</div>
+        <div class="click-hint">→ Click/Arrow | H=HUD | R=Redo | ⌫=Restart | 1-9=Jump</div>
       </div>
     </div>
   </div>
@@ -431,8 +431,10 @@
       <span class="hud-stat-value"><span id="clickCurrent">1</span> / <span id="clickTotal">2</span></span>
     </div>
     <div class="hud-center">
-      <kbd>H</kbd> hide HUD
-      <kbd>←</kbd><kbd>→</kbd> navigate
+      <kbd>R</kbd> redo slide
+      <kbd>⌫</kbd> restart all
+      <kbd>1-9</kbd> jump
+      <kbd>H</kbd> hide
     </div>
     <div class="hud-stat">
       <span class="hud-stat-label">Slide</span>
@@ -561,10 +563,45 @@
       nextSlide();
     });
     
+    function restartSlide() {
+      // Reset current slide animations
+      animQueue.forEach(el => el.classList.remove('visible'));
+      animIdx = 0;
+      if (animQueue.length > 0) {
+        animQueue[0].classList.add('visible');
+        animIdx = 1;
+      }
+      updateHUD();
+    }
+    
+    function restartAll() {
+      currentSlide = 0;
+      showSlide(0);
+    }
+    
+    function goToSlide(num) {
+      const idx = Math.max(0, Math.min(num - 1, totalSlides - 1));
+      currentSlide = idx;
+      showSlide(idx);
+    }
+    
     document.addEventListener('keydown', e => {
+      // Navigation
       if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
       else if (e.key === 'ArrowLeft') prevSlide();
+      else if (e.key === 'Home') goToSlide(1);
+      else if (e.key === 'End') goToSlide(totalSlides);
+      
+      // Restart controls
+      else if (e.key === 'r' || e.key === 'R') restartSlide();
+      else if (e.key === 'Backspace') { e.preventDefault(); restartAll(); }
+      
+      // HUD toggle
       else if (e.key === 'h' || e.key === 'H') toggleHUD();
+      
+      // Number keys 1-9 jump to slide
+      else if (e.key >= '1' && e.key <= '9') goToSlide(parseInt(e.key));
+      else if (e.key === '0') goToSlide(10);
     });
     
     showSlide(0);
