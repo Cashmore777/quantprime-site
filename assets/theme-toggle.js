@@ -1,10 +1,16 @@
 /**
  * Quant Prime Theme Toggle
  * Syncs theme across site and dashboard
+ * Skip on dashboard (has its own theme system)
  */
 
 (function() {
   'use strict';
+
+  // Skip on dashboard - it has its own theme toggle
+  if (window.location.pathname.includes('/dashboard')) {
+    return;
+  }
 
   const STORAGE_KEY = 'qp-theme';
 
@@ -20,21 +26,12 @@
     document.documentElement.setAttribute('data-theme', theme);
     document.body.classList.remove('light', 'dark');
     document.body.classList.add(theme);
-    
-    // Also update any iframes (dashboard embeds)
-    document.querySelectorAll('iframe').forEach(iframe => {
-      try {
-        iframe.contentDocument?.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
-    });
   }
 
   // Save and apply theme
   function setTheme(theme) {
     localStorage.setItem(STORAGE_KEY, theme);
     applyTheme(theme);
-    
-    // Dispatch event for other components
     window.dispatchEvent(new CustomEvent('themechange', { detail: { theme } }));
   }
 
@@ -48,72 +45,61 @@
 
   // Create toggle button
   function createToggleButton() {
-    // Check if already exists
     if (document.getElementById('qp-theme-toggle')) return;
     
     const btn = document.createElement('button');
     btn.id = 'qp-theme-toggle';
     btn.setAttribute('aria-label', 'Toggle theme');
-    btn.innerHTML = `
-      <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="5"/>
-        <line x1="12" y1="1" x2="12" y2="3"/>
-        <line x1="12" y1="21" x2="12" y2="23"/>
-        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-        <line x1="1" y1="12" x2="3" y2="12"/>
-        <line x1="21" y1="12" x2="23" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-      </svg>
-      <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-      </svg>
-    `;
     
     // Styles
     const style = document.createElement('style');
     style.textContent = `
       #qp-theme-toggle {
         position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 9999;
+        bottom: 100px;
+        right: 24px;
+        z-index: 99998;
         width: 44px;
         height: 44px;
         border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.1);
-        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(20,20,25,0.9);
         backdrop-filter: blur(10px);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
-        color: currentColor;
+        color: #fafafa;
+        padding: 0;
       }
       
       #qp-theme-toggle:hover {
-        background: rgba(255,255,255,0.1);
+        background: rgba(40,40,50,0.95);
         transform: scale(1.05);
+        border-color: rgba(255,255,255,0.25);
       }
       
       [data-theme="light"] #qp-theme-toggle {
         border-color: rgba(0,0,0,0.1);
-        background: rgba(0,0,0,0.05);
+        background: rgba(255,255,255,0.9);
+        color: #1a1a1a;
       }
       
       [data-theme="light"] #qp-theme-toggle:hover {
-        background: rgba(0,0,0,0.1);
+        background: rgba(245,245,245,0.95);
+        border-color: rgba(0,0,0,0.2);
       }
       
-      #qp-theme-toggle .sun-icon { display: none; }
-      #qp-theme-toggle .moon-icon { display: block; }
+      #qp-theme-toggle svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+      }
       
-      [data-theme="light"] #qp-theme-toggle .sun-icon { display: block; }
-      [data-theme="light"] #qp-theme-toggle .moon-icon { display: none; }
-      
-      /* Theme CSS variables */
+      /* Theme CSS variables for main site */
       :root, [data-theme="dark"] {
         --qp-bg: #0a0a0f;
         --qp-surface: #141419;
@@ -136,7 +122,24 @@
     document.head.appendChild(style);
     document.body.appendChild(btn);
     
-    btn.addEventListener('click', toggleTheme);
+    // Update icon based on current theme
+    function updateIcon() {
+      const theme = getTheme();
+      if (theme === 'dark') {
+        // Show sun icon (click to go light)
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+      } else {
+        // Show moon icon (click to go dark)
+        btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+      }
+    }
+    
+    updateIcon();
+    
+    btn.addEventListener('click', () => {
+      toggleTheme();
+      updateIcon();
+    });
   }
 
   // Listen for storage changes (sync across tabs)
