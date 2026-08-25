@@ -1,0 +1,240 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-0030
+// -------------------------------------------------------------
+//  Trade Planner
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 0030", shorttitle = "REC-0030", overlay = true, max_boxes_count = 100, max_labels_count = 100, max_lines_count = 100)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  SIDE 3 · TRADE PLANNER
+// ───────────────────────────────────────────────────────────────
+//  Lays out a full trade on the chart before it exists: entry,
+//  stop, first target, second target, and the point the stop
+//  moves to breakeven.
+//
+//  The targets are measured as percentages of a reference
+//  candle's body rather than as fixed distances, because that is
+//  what a fade is aiming at -- the move the candle just made,
+//  given back. A big candle offers a big target. A small one does
+//  not, however much you would like it to.
+//
+//  By default the reference is the most recent high volatility
+//  candle and the direction is the fade of it: a bearish
+//  expansion plans a long, a bullish one plans a short. Both can
+//  be overridden. Nothing here decides whether to take a trade --
+//  it only shows what one would look like.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced d3_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── REFERENCE ────────────────────────────────────────────────
+d3_gRef = "Reference Candle"
+
+d3_refMode = input.string("Last high volatility candle", "Reference", options = ["Last high volatility candle", "Current candle", "Bars back"], group = d3_gRef,
+     tooltip = "Which candle the plan is measured from. Its body sets the targets and its wick sets the stop.")
+
+d3_barsBack = input.int(1, "Bars back", minval = 0, maxval = 500, group = d3_gRef,
+     tooltip = "Only used when Reference is set to Bars back. 0 is the current candle. Point it at any past candle to see what the plan would have been, then look right to see what happened.")
+
+d3_atrLen = input.int(8, "ATR Length", minval = 1, group = d3_gRef)
+
+d3_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = d3_gRef,
+     tooltip = "A candle's body must clear this to count as a high volatility candle. Set to 0 to disable.")
+
+// ─── BAND THRESHOLDS ──────────────────────────────────────────
+d3_gBand = "Band Thresholds"
+
+d3_t1 = input.float(0.30, "Threshold 1", step = 0.05, group = d3_gBand)
+d3_t2 = input.float(0.75, "Threshold 2", step = 0.05, group = d3_gBand)
+d3_t3 = input.float(1.20, "Threshold 3", step = 0.05, group = d3_gBand)
+d3_t4 = input.float(1.65, "Threshold 4", step = 0.05, group = d3_gBand)
+d3_t5 = input.float(2.10, "Threshold 5", step = 0.05, group = d3_gBand)
+d3_t6 = input.float(2.55, "Threshold 6", step = 0.05, group = d3_gBand)
+d3_t7 = input.float(3.00, "Threshold 7", step = 0.05, group = d3_gBand)
+
+// ─── PLAN ─────────────────────────────────────────────────────
+d3_gPlan = "Plan"
+
+d3_dir = input.string("Fade the candle", "Direction", options = ["Fade the candle", "Long", "Short"], group = d3_gPlan,
+     tooltip = "Fade the candle plans the opposite of what the reference candle did. Long and Short force a direction regardless.")
+
+d3_entryIn = input.float(0.0, "Entry price (0 = candle close)", step = 0.00001, minval = 0.0, group = d3_gPlan,
+     tooltip = "Leave at 0 to plan from the reference candle's close. Type a price to plan from somewhere else -- a zone edge, a level, wherever you actually intend to act.")
+
+d3_slBuffer = input.float(3.0, "Stop: wick + x ATR", minval = 0.0, step = 0.25, group = d3_gPlan,
+     tooltip = "The stop sits this many ATRs beyond the reference candle's extreme -- its low on a long, its high on a short.")
+
+d3_tp1Pct = input.float(50.0,  "TP1 (% of body)", minval = 1.0, maxval = 200.0, step = 5.0, group = d3_gPlan,
+     tooltip = "The partial target.")
+
+d3_tp2Pct = input.float(100.0, "TP2 (% of body)", minval = 1.0, maxval = 300.0, step = 5.0, group = d3_gPlan,
+     tooltip = "The full target. 100% means the whole body given back -- for a fade of a bearish candle, price returning to where that candle opened.")
+
+d3_beOn = input.bool(true, "Move stop to breakeven at TP1", group = d3_gPlan,
+     tooltip = "Marks the breakeven line at entry, showing where the stop goes once the partial is taken.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+d3_gDisp = "Display"
+
+d3_extend = input.int(40, "Extend right (bars)", minval = 5, maxval = 200, group = d3_gDisp)
+
+d3_showBoxes = input.bool(true, "Shade the target and stop areas", group = d3_gDisp)
+d3_showInfo  = input.bool(true, "Show plan summary", group = d3_gDisp)
+
+d3_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = d3_gDisp,
+     tooltip = "Leave at 0 for automatic detection. Override where the automatic value is wrong -- for example set 1.0 for BTCUSD.")
+
+d3_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = d3_gDisp)
+
+// ─── COLOURS ──────────────────────────────────────────────────
+d3_gCol = "Colours"
+
+d3_entryC = input.color(#e8e6e1, "Entry",     group = d3_gCol)
+d3_slC    = input.color(#f23645, "Stop",      group = d3_gCol)
+d3_tpC    = input.color(#26a269, "Targets",   group = d3_gCol)
+d3_beC    = input.color(#c9a84c, "Breakeven", group = d3_gCol)
+d3_fade   = input.int(88, "Shading transparency", minval = 60, maxval = 98, group = d3_gCol)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+d3_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+d3_pip     = d3_pipIn > 0 ? d3_pipIn : d3_pipAuto
+
+d3_atr   = ta.atr(d3_atrLen)
+d3_ratio = ta.tr(true) / d3_atr
+
+d3_rawBand =
+     d3_ratio < d3_t1 ? 1 :
+     d3_ratio < d3_t2 ? 2 :
+     d3_ratio < d3_t3 ? 3 :
+     d3_ratio < d3_t4 ? 4 :
+     d3_ratio < d3_t5 ? 5 :
+     d3_ratio < d3_t6 ? 6 :
+     d3_ratio < d3_t7 ? 7 : 8
+
+d3_bodyNow = math.abs(close - open)
+d3_minBody = math.max(syminfo.mintick, d3_atr * d3_minBodyAtr)
+d3_bodyOk  = d3_minBodyAtr <= 0 or d3_bodyNow > d3_minBody
+d3_band    = d3_rawBand >= 6 and not d3_bodyOk ? 5 : d3_rawBand
+
+// Remember the last qualifying candle.
+var int   d3_refBar  = na
+var float d3_refHi   = na
+var float d3_refLo   = na
+var float d3_refOp   = na
+var float d3_refCl   = na
+var float d3_refAtr  = na
+var int   d3_refBand = na
+
+if barstate.isconfirmed and d3_band >= 6
+    d3_refBar  := bar_index
+    d3_refHi   := high
+    d3_refLo   := low
+    d3_refOp   := open
+    d3_refCl   := close
+    d3_refAtr  := d3_atr
+    d3_refBand := d3_band
+
+// Resolve which candle the plan is built from.
+d3_useBack = d3_refMode == "Bars back" ? d3_barsBack : d3_refMode == "Current candle" ? 0 : na
+
+d3_pHi   = na(d3_useBack) ? d3_refHi   : high[d3_useBack]
+d3_pLo   = na(d3_useBack) ? d3_refLo   : low[d3_useBack]
+d3_pOp   = na(d3_useBack) ? d3_refOp   : open[d3_useBack]
+d3_pCl   = na(d3_useBack) ? d3_refCl   : close[d3_useBack]
+d3_pAtr  = na(d3_useBack) ? d3_refAtr  : d3_atr[d3_useBack]
+d3_pBand = na(d3_useBack) ? d3_refBand : d3_band[d3_useBack]
+d3_pBar  = na(d3_useBack) ? d3_refBar  : bar_index - d3_useBack
+
+d3_valid = not na(d3_pHi) and not na(d3_pCl) and not na(d3_pBar)
+
+// Direction, body, and the five prices.
+d3_isLong = d3_dir == "Long" ? true : d3_dir == "Short" ? false : d3_pCl < d3_pOp
+
+d3_body  = math.abs(d3_pCl - d3_pOp)
+d3_entry = d3_entryIn > 0 ? d3_entryIn : d3_pCl
+
+d3_sl  = d3_isLong ? d3_pLo - d3_pAtr * d3_slBuffer : d3_pHi + d3_pAtr * d3_slBuffer
+d3_tp1 = d3_isLong ? d3_entry + d3_body * d3_tp1Pct / 100.0 : d3_entry - d3_body * d3_tp1Pct / 100.0
+d3_tp2 = d3_isLong ? d3_entry + d3_body * d3_tp2Pct / 100.0 : d3_entry - d3_body * d3_tp2Pct / 100.0
+
+d3_slDist  = math.abs(d3_entry - d3_sl)
+d3_tp2Dist = math.abs(d3_tp2 - d3_entry)
+d3_rr      = d3_slDist > 0 ? d3_tp2Dist / d3_slDist : 0.0
+
+// ─── RENDER ───────────────────────────────────────────────────
+d3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+var line  d3_lnEntry = na
+var line  d3_lnSl    = na
+var line  d3_lnTp1   = na
+var line  d3_lnTp2   = na
+var line  d3_lnBe    = na
+var box   d3_bxTp    = na
+var box   d3_bxSl    = na
+var label d3_lbInfo  = na
+var label d3_lbSl    = na
+var label d3_lbTp1   = na
+var label d3_lbTp2   = na
+
+if barstate.islast
+    line.delete(d3_lnEntry)
+    line.delete(d3_lnSl)
+    line.delete(d3_lnTp1)
+    line.delete(d3_lnTp2)
+    line.delete(d3_lnBe)
+    box.delete(d3_bxTp)
+    box.delete(d3_bxSl)
+    label.delete(d3_lbInfo)
+    label.delete(d3_lbSl)
+    label.delete(d3_lbTp1)
+    label.delete(d3_lbTp2)
+
+    if d3_valid
+        int _l = d3_pBar
+        int _r = bar_index + d3_extend
+
+        if d3_showBoxes
+            d3_bxTp := box.new(_l, math.max(d3_entry, d3_tp2), _r, math.min(d3_entry, d3_tp2),
+                 bgcolor = color.new(d3_tpC, d3_fade), border_color = color.new(d3_tpC, 100))
+            d3_bxSl := box.new(_l, math.max(d3_entry, d3_sl), _r, math.min(d3_entry, d3_sl),
+                 bgcolor = color.new(d3_slC, d3_fade), border_color = color.new(d3_slC, 100))
+
+        d3_lnEntry := line.new(_l, d3_entry, _r, d3_entry, color = d3_entryC, width = 1)
+        d3_lnSl    := line.new(_l, d3_sl,    _r, d3_sl,    color = d3_slC,    width = 2)
+        d3_lnTp1   := line.new(_l, d3_tp1,   _r, d3_tp1,   color = d3_tpC,    width = 1, style = line.style_dashed)
+        d3_lnTp2   := line.new(_l, d3_tp2,   _r, d3_tp2,   color = d3_tpC,    width = 2)
+
+        if d3_beOn
+            d3_lnBe := line.new(_l, d3_entry, _r, d3_entry, color = d3_beC, width = 1, style = line.style_dotted)
+
+        d3_lbSl  := label.new(_r, d3_sl,  "SL  " + str.tostring(d3_slDist / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_slC, size = d3_sizeOf(d3_lblSize))
+        d3_lbTp1 := label.new(_r, d3_tp1, "TP1  " + str.tostring(math.abs(d3_tp1 - d3_entry) / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_tpC, size = d3_sizeOf(d3_lblSize))
+        d3_lbTp2 := label.new(_r, d3_tp2, "TP2  " + str.tostring(d3_tp2Dist / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_tpC, size = d3_sizeOf(d3_lblSize))
+
+        if d3_showInfo
+            string _txt = (d3_isLong ? "LONG" : "SHORT") +
+                 (na(d3_pBand) ? "" : "  ·  band " + str.tostring(d3_pBand)) +
+                 "  ·  " + str.tostring(d3_rr, "#.##") + "R\n" +
+                 "entry " + str.tostring(d3_entry, format.mintick) +
+                 "  ·  body " + str.tostring(d3_body / d3_pip, "#.#") + " pips" +
+                 (d3_beOn ? "\nstop to breakeven at TP1" : "")
+            d3_lbInfo := label.new(_l, d3_entry, _txt,
+                 style     = label.style_label_right,
+                 color     = color.new(color.black, 15),
+                 textcolor = d3_entryC,
+                 size      = d3_sizeOf(d3_lblSize))
+

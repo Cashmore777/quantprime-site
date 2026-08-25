@@ -1,0 +1,638 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-1230
+// -------------------------------------------------------------
+//  Volatility Bands + Volatility Zones + Trade Planner
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 1230", shorttitle = "REC-1230", overlay = true, max_boxes_count = 500, max_labels_count = 500, max_lines_count = 100)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  STARTER 1 · VOLATILITY BANDS
+// ───────────────────────────────────────────────────────────────
+//  Every candle's TRUE range -- its full high-to-low movement,
+//  including any gap from the prior close -- is divided by
+//  ATR(length). The result answers one question: how big is this
+//  candle compared to a normal recent candle? 1.0x is exactly
+//  average. 3.0x is three times the recent norm.
+//
+//  That ratio places the candle in one of eight bands:
+//
+//    1  Extremely Low     5  Medium
+//    2  Very Low          6  High Medium
+//    3  Low               7  High
+//    4  Lower Medium      8  Very High
+//
+//  ATR Length is the MEMORY of the baseline. Shorter (5) adapts
+//  fast and measures abnormal against the last few minutes.
+//  Longer (21) is slow, so a volatility burst keeps reading as
+//  extreme for longer. The default of 8 is deliberately
+//  responsive, suited to a short-timeframe context.
+//
+//  A wide candle built from wicks is a rejection, not an
+//  expansion, and its body is too small to measure anything
+//  useful against. The minimum body filter removes those from the
+//  high bands entirely so only workable expansions are shown.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── VOLATILITY ───────────────────────────────────────────────
+s1_gVol = "Volatility"
+
+s1_atrLen = input.int(8, "ATR Length", minval = 1, group = s1_gVol,
+     tooltip = "The averaging period used as the volatility baseline. Shorter values adapt faster; longer values keep a burst reading as extreme for longer.")
+
+s1_t1 = input.float(0.30, "Threshold 1 (Extremely Low → Very Low)",  step = 0.05, group = s1_gVol)
+s1_t2 = input.float(0.75, "Threshold 2 (Very Low → Low)",            step = 0.05, group = s1_gVol)
+s1_t3 = input.float(1.20, "Threshold 3 (Low → Lower Medium)",        step = 0.05, group = s1_gVol)
+s1_t4 = input.float(1.65, "Threshold 4 (Lower Medium → Medium)",     step = 0.05, group = s1_gVol)
+s1_t5 = input.float(2.10, "Threshold 5 (Medium → High Medium)",      step = 0.05, group = s1_gVol)
+s1_t6 = input.float(2.55, "Threshold 6 (High Medium → High)",        step = 0.05, group = s1_gVol)
+s1_t7 = input.float(3.00, "Threshold 7 (High → Very High)",          step = 0.05, group = s1_gVol)
+
+s1_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = s1_gVol,
+     tooltip = "A candle's body (open-to-close) must be at least this many ATRs to qualify for a high band. Candles that fail are filtered out of bands 6-8 and shown as Medium instead. Set to 0 to disable the filter.")
+
+s1_tagFrom = input.int(6, "Show Tag From Band # Upward", minval = 1, maxval = 8, group = s1_gVol,
+     tooltip = "The small '#.##x' text tag only appears on candles whose volatility band is this number or higher (1 = Extremely Low ... 8 = Very High). Default 6 tags only the high bands.")
+
+// ─── COLOURS ──────────────────────────────────────────────────
+s1_gCol = "Volatility — Colors"
+
+s1_c1 = input.color(#bbd9fb, "Extremely Low", group = s1_gCol)
+s1_c2 = input.color(#90bff9, "Very Low",      group = s1_gCol)
+s1_c3 = input.color(#5b9cf6, "Low",           group = s1_gCol)
+s1_c4 = input.color(#3179f5, "Lower Medium",  group = s1_gCol)
+s1_c5 = input.color(#1848cc, "Medium",        group = s1_gCol)
+s1_c6 = input.color(#ffeb3b, "High Medium",   group = s1_gCol)
+s1_c7 = input.color(#ff9800, "High",          group = s1_gCol)
+s1_c8 = input.color(#f23645, "Very High",     group = s1_gCol)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+s1_gDisp = "Display"
+
+s1_colorCandles = input.bool(true,  "Color Candles By Volatility", group = s1_gDisp)
+s1_showTag      = input.bool(false, "Show Volatility Tag",         group = s1_gDisp)
+s1_tagTextColor = input.color(color.white, "Tag Text Color",       group = s1_gDisp)
+
+s1_highOnly = input.bool(false, "Color High Bands Only", group = s1_gDisp,
+     tooltip = "Leaves bands 1-5 as your chart's normal candle colors and highlights bands 6, 7 and 8 alone.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Band classification is lifted verbatim from Quant Prime Recoil,
+// so a band 7 candle here is a candle Recoil reads as band 7.
+// M2, M3, T1 and T2 reuse this identical block.
+
+s1_trueRange = ta.tr(true)
+s1_atr       = ta.atr(s1_atrLen)
+s1_ratio     = s1_trueRange / s1_atr
+
+s1_rawBand =
+     s1_ratio < s1_t1 ? 1 :
+     s1_ratio < s1_t2 ? 2 :
+     s1_ratio < s1_t3 ? 3 :
+     s1_ratio < s1_t4 ? 4 :
+     s1_ratio < s1_t5 ? 5 :
+     s1_ratio < s1_t6 ? 6 :
+     s1_ratio < s1_t7 ? 7 : 8
+
+// Minimum body filter -- a high band candle whose body is too
+// small to be workable is dropped out of the high bands.
+s1_body    = math.abs(close - open)
+s1_minBody = math.max(syminfo.mintick, s1_atr * s1_minBodyAtr)
+s1_bodyOk  = s1_minBodyAtr <= 0 or s1_body > s1_minBody
+
+s1_band = s1_rawBand >= 6 and not s1_bodyOk ? 5 : s1_rawBand
+
+s1_color =
+     s1_band == 1 ? s1_c1 :
+     s1_band == 2 ? s1_c2 :
+     s1_band == 3 ? s1_c3 :
+     s1_band == 4 ? s1_c4 :
+     s1_band == 5 ? s1_c5 :
+     s1_band == 6 ? s1_c6 :
+     s1_band == 7 ? s1_c7 : s1_c8
+
+s1_isHigh  = s1_band >= 6
+s1_notable = s1_band >= s1_tagFrom
+
+// ─── RENDER ───────────────────────────────────────────────────
+s1_paint = s1_colorCandles and (not s1_highOnly or s1_isHigh)
+barcolor(s1_paint ? s1_color : na, title = "Volatility Color")
+
+// Tag rendering: confirmed bars get a permanent label, the live
+// bar gets a single label that is replaced each tick.
+var label s1_liveLabel = na
+label.delete(s1_liveLabel)
+
+if s1_showTag
+    if barstate.isconfirmed
+        if s1_notable
+            label.new(bar_index, high,
+                 text      = str.tostring(s1_ratio, "#.##") + "x",
+                 style     = label.style_label_down,
+                 color     = s1_color,
+                 textcolor = s1_tagTextColor,
+                 size      = size.small,
+                 yloc      = yloc.abovebar)
+        label.delete(s1_liveLabel)
+        s1_liveLabel := na
+    else if barstate.islast and s1_notable
+        label.delete(s1_liveLabel)
+        s1_liveLabel := label.new(bar_index, high,
+             text      = str.tostring(s1_ratio, "#.##") + "x",
+             style     = label.style_label_down,
+             color     = s1_color,
+             textcolor = s1_tagTextColor,
+             size      = size.small,
+             yloc      = yloc.abovebar)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_band >= 6 and s1_band[1] < 6, "Volatility expansion",
+     "A candle has closed in a high volatility band (6, 7 or 8).")
+
+alertcondition(s1_band == 8, "Band 8 candle",
+     "A candle has closed in band 8 -- the most extended condition this instrument produces.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  MAIN 2 · VOLATILITY ZONES
+// ───────────────────────────────────────────────────────────────
+//  A high volatility candle on a higher timeframe leaves behind
+//  a span of price that got covered in one move. Price tends to
+//  come back and work through it, and the quarter, half and
+//  three-quarter marks of that span are where it tends to pause.
+//
+//  Every time a candle closes in band 6, 7 or 8 on one of the
+//  chosen timeframes, four zones are drawn across its BODY -- at
+//  the quarter, half, three-quarter and full marks, measured back
+//  from where the move finished. Each zone extends right until
+//  price reaches it, then freezes.
+//
+//  The zones are anchored to the higher timeframe candle's own
+//  start, so they sit in the correct place whatever timeframe
+//  the chart is on. A 3 hour candle's zones read the same on a 3
+//  minute chart as they do on a 30 minute one.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced m2_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+m2_gTf = "Timeframes"
+
+m2_tf1On = input.bool(true,  "Timeframe 1", group = m2_gTf, inline = "t1")
+m2_tf1   = input.timeframe("3", "", group = m2_gTf, inline = "t1")
+
+m2_tf2On = input.bool(true,  "Timeframe 2", group = m2_gTf, inline = "t2")
+m2_tf2   = input.timeframe("30", "", group = m2_gTf, inline = "t2")
+
+m2_tf3On = input.bool(true,  "Timeframe 3", group = m2_gTf, inline = "t3")
+m2_tf3   = input.timeframe("180", "", group = m2_gTf, inline = "t3",
+     tooltip = "Higher timeframes produce fewer, larger zones that stay relevant for longer. Turning all three on builds a layered map at the cost of a busier chart.")
+
+// ─── ZONE MARKS ───────────────────────────────────────────────
+m2_gMarks = "Zone Marks"
+
+m2_z1On = input.bool(true, "Quarter", group = m2_gMarks, inline = "z1")
+m2_z1a  = input.float(24.0, "from", step = 1.0, group = m2_gMarks, inline = "z1")
+m2_z1b  = input.float(26.0, "to",   step = 1.0, group = m2_gMarks, inline = "z1")
+
+m2_z2On = input.bool(true, "Half", group = m2_gMarks, inline = "z2")
+m2_z2a  = input.float(48.0, "from", step = 1.0, group = m2_gMarks, inline = "z2")
+m2_z2b  = input.float(52.0, "to",   step = 1.0, group = m2_gMarks, inline = "z2")
+
+m2_z3On = input.bool(true, "Three quarter", group = m2_gMarks, inline = "z3")
+m2_z3a  = input.float(74.0, "from", step = 1.0, group = m2_gMarks, inline = "z3")
+m2_z3b  = input.float(76.0, "to",   step = 1.0, group = m2_gMarks, inline = "z3")
+
+m2_z4On = input.bool(true, "Full", group = m2_gMarks, inline = "z4")
+m2_z4a  = input.float(97.0, "from", step = 1.0, group = m2_gMarks, inline = "z4")
+m2_z4b  = input.float(100.0, "to",  step = 1.0, group = m2_gMarks, inline = "z4",
+     tooltip = "Each zone is a band between two percentages of the candle's span rather than a single line, so a near miss still counts as a reaction.")
+
+// ─── TRIGGER ──────────────────────────────────────────────────
+m2_gTrig = "Trigger"
+
+m2_atrLen = input.int(8, "ATR Length", minval = 1, group = m2_gTrig,
+     tooltip = "The volatility baseline, applied on each higher timeframe separately. Matches the Recoil default.")
+
+m2_trigBand = input.int(6, "Trigger from band # upward", minval = 6, maxval = 8, group = m2_gTrig,
+     tooltip = "A higher timeframe candle closing in this band or above lays down a set of zones. Raise to 7 or 8 for fewer, more significant sets.")
+
+m2_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = m2_gTrig,
+     tooltip = "The candle's body must clear this to qualify. Filters out wide candles made mostly of wick. Set to 0 to disable.")
+
+// ─── LIFECYCLE ────────────────────────────────────────────────
+m2_gLife = "Lifecycle"
+
+m2_tapMode = input.string("Wick touch", "A zone is reached by", options = ["Wick touch", "Close inside"], group = m2_gLife,
+     tooltip = "Wick touch freezes a zone as soon as price reaches its edge. Close inside waits for a candle to actually finish within the zone.")
+
+m2_keepTapped = input.bool(true, "Keep reached zones visible", group = m2_gLife,
+     tooltip = "On: a reached zone stops extending but stays on the chart, faded. Off: it is removed entirely.")
+
+m2_tappedFade = input.int(85, "Reached zone fade", minval = 50, maxval = 98, group = m2_gLife)
+
+m2_maxZones = input.int(40, "Maximum zones on chart", minval = 4, maxval = 200, group = m2_gLife,
+     tooltip = "Every qualifying candle creates up to four zones, so this fills faster than it looks. Once the limit is reached the oldest zones are removed.")
+
+// ─── APPEARANCE ───────────────────────────────────────────────
+m2_gApp = "Appearance"
+
+m2_c6 = input.color(#ffeb3b, "Band 6", group = m2_gApp, inline = "bc")
+m2_c7 = input.color(#ff9800, "Band 7", group = m2_gApp, inline = "bc")
+m2_c8 = input.color(#f23645, "Band 8", group = m2_gApp, inline = "bc")
+
+m2_zoneFade = input.int(88, "Zone transparency", minval = 60, maxval = 98, group = m2_gApp)
+m2_border   = input.bool(false, "Show zone borders", group = m2_gApp)
+
+m2_showLbl = input.bool(true, "Label zones", group = m2_gApp,
+     tooltip = "Marks each zone with its percentage and the timeframe it came from.")
+
+m2_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = m2_gApp)
+
+// ─── HIGHER TIMEFRAME READ ────────────────────────────────────
+// Returns the last COMPLETED candle on the requested timeframe:
+// its band, its extremes, its open and close, and the timestamp
+// it began at. Band classification is identical to Volatility
+// Bands, computed on that timeframe's own ATR.
+
+m2_htfRead() =>
+    float _atr   = ta.atr(m2_atrLen)
+    float _ratio = ta.tr(true) / _atr
+    int   _raw   = _ratio < 0.30 ? 1 : _ratio < 0.75 ? 2 : _ratio < 1.20 ? 3 : _ratio < 1.65 ? 4 : _ratio < 2.10 ? 5 : _ratio < 2.55 ? 6 : _ratio < 3.00 ? 7 : 8
+    float _body  = math.abs(close - open)
+    float _minB  = math.max(syminfo.mintick, _atr * m2_minBodyAtr)
+    bool  _ok    = m2_minBodyAtr <= 0 or _body > _minB
+    int   _band  = _raw >= 6 and not _ok ? 5 : _raw
+    [_band[1], high[1], low[1], open[1], close[1], time[1]]
+
+[m2_b1, m2_h1, m2_l1, m2_o1, m2_c1x, m2_t1t] = request.security(syminfo.tickerid, m2_tf1, m2_htfRead(), lookahead = barmerge.lookahead_off)
+[m2_b2, m2_h2, m2_l2, m2_o2, m2_c2x, m2_t2t] = request.security(syminfo.tickerid, m2_tf2, m2_htfRead(), lookahead = barmerge.lookahead_off)
+[m2_b3, m2_h3, m2_l3, m2_o3, m2_c3x, m2_t3t] = request.security(syminfo.tickerid, m2_tf3, m2_htfRead(), lookahead = barmerge.lookahead_off)
+
+// ─── ZONE STORE ───────────────────────────────────────────────
+type M2Zone
+    float top
+    float bot
+    bool  tapped
+    box   bx
+    label lb
+
+var M2Zone[] m2_zones = array.new<M2Zone>()
+
+m2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m2_bandCol(int _b) =>
+    _b == 8 ? m2_c8 : _b == 7 ? m2_c7 : m2_c6
+
+// Turns a timeframe string into something readable. TradingView
+// stores intraday timeframes as plain minutes, so "180" needs to
+// come out as "3H" rather than being mistaken for a percentage.
+m2_tfLabel(string _tf) =>
+    string _out = _tf
+    float  _n   = str.tonumber(_tf)
+    if not na(_n)
+        int _m = int(_n)
+        _out := _m >= 1440 and _m % 1440 == 0 ? str.tostring(_m / 1440) + "D" :
+             _m >= 60 and _m % 60 == 0 ? str.tostring(_m / 60) + "H" :
+             str.tostring(_m) + "M"
+    _out
+
+// Build one zone between two percentages of the candle's span.
+m2_addZone(bool _on, float _pa, float _pb, string _zName, float _anchor, float _span, int _dir, int _band, int _startT, string _tfName) =>
+    if _on and _span > 0
+        float _p1 = _anchor + _dir * _span * _pa / 100.0
+        float _p2 = _anchor + _dir * _span * _pb / 100.0
+        float _top = math.max(_p1, _p2)
+        float _bot = math.min(_p1, _p2)
+        color _col = m2_bandCol(_band)
+
+        box _bx = box.new(_startT, _top, time, _bot,
+             xloc         = xloc.bar_time,
+             bgcolor      = color.new(_col, m2_zoneFade),
+             border_color = m2_border ? color.new(_col, 40) : color.new(_col, 100),
+             border_width = m2_border ? 1 : 0)
+
+        label _lb = na
+        if m2_showLbl
+            _lb := label.new(time, _top, _tfName + " · " + _zName,
+                 xloc      = xloc.bar_time,
+                 style     = label.style_label_left,
+                 color     = color.new(color.black, 100),
+                 textcolor = color.new(_col, 20),
+                 size      = m2_sizeOf(m2_lblSize))
+
+        array.push(m2_zones, M2Zone.new(_top, _bot, false, _bx, _lb))
+
+// Lay down a full set of four from one qualifying candle.
+m2_addSet(int _band, float _h, float _l, float _o, float _c, int _startT, string _tfName) =>
+    // The span is the BODY, open to close. Wicks are rejection,
+    // not the move, and everything else in this method measures
+    // against the body -- targets, stops, the minimum size filter.
+    //
+    // Zones are read as a retracement of that move, measured back
+    // from where it finished. A bullish candle puts 25% just below
+    // its close and 100% down at its open; a bearish one puts 25%
+    // just above its close and 100% up at its open. Price coming
+    // back into the candle meets the small marks first.
+    float _anchor = _c
+    float _far    = _o
+    float _span   = math.abs(_far - _anchor)
+    int   _dir    = _far >= _anchor ? 1 : -1
+
+    m2_addZone(m2_z1On, m2_z1a, m2_z1b, "25%",  _anchor, _span, _dir, _band, _startT, _tfName)
+    m2_addZone(m2_z2On, m2_z2a, m2_z2b, "50%",  _anchor, _span, _dir, _band, _startT, _tfName)
+    m2_addZone(m2_z3On, m2_z3a, m2_z3b, "75%",  _anchor, _span, _dir, _band, _startT, _tfName)
+    m2_addZone(m2_z4On, m2_z4a, m2_z4b, "100%", _anchor, _span, _dir, _band, _startT, _tfName)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m2_new1 = m2_tf1On and ta.change(m2_t1t) != 0 and m2_b1 >= m2_trigBand
+m2_new2 = m2_tf2On and ta.change(m2_t2t) != 0 and m2_b2 >= m2_trigBand
+m2_new3 = m2_tf3On and ta.change(m2_t3t) != 0 and m2_b3 >= m2_trigBand
+
+if barstate.isconfirmed
+
+    // --- extend live zones, freeze the ones price has reached ---
+    int m2_n = array.size(m2_zones)
+    if m2_n > 0
+        for i = 0 to m2_n - 1
+            M2Zone z = array.get(m2_zones, i)
+            if not z.tapped
+                bool _touch = high >= z.bot and low <= z.top
+                bool _in    = close <= z.top and close >= z.bot
+                bool _hit   = m2_tapMode == "Wick touch" ? _touch : _in
+                if _hit
+                    z.tapped := true
+                    if m2_keepTapped
+                        box.set_right(z.bx, time)
+                        box.set_bgcolor(z.bx, color.new(m2_c6, m2_tappedFade))
+                        label.delete(z.lb)
+                        z.lb := na
+                    else
+                        box.delete(z.bx)
+                        label.delete(z.lb)
+                        z.bx := na
+                        z.lb := na
+                else
+                    box.set_right(z.bx, time)
+                    if not na(z.lb)
+                        label.set_x(z.lb, time)
+
+    // --- new qualifying candles ---
+    if m2_new1
+        m2_addSet(m2_b1, m2_h1, m2_l1, m2_o1, m2_c1x, m2_t1t, m2_tfLabel(m2_tf1))
+    if m2_new2
+        m2_addSet(m2_b2, m2_h2, m2_l2, m2_o2, m2_c2x, m2_t2t, m2_tfLabel(m2_tf2))
+    if m2_new3
+        m2_addSet(m2_b3, m2_h3, m2_l3, m2_o3, m2_c3x, m2_t3t, m2_tfLabel(m2_tf3))
+
+    while array.size(m2_zones) > m2_maxZones
+        M2Zone old = array.shift(m2_zones)
+        box.delete(old.bx)
+        label.delete(old.lb)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m2_new1 or m2_new2 or m2_new3, "New volatility zones",
+     "A high volatility candle has closed on a tracked timeframe -- new zones are on the chart.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  SIDE 3 · TRADE PLANNER
+// ───────────────────────────────────────────────────────────────
+//  Lays out a full trade on the chart before it exists: entry,
+//  stop, first target, second target, and the point the stop
+//  moves to breakeven.
+//
+//  The targets are measured as percentages of a reference
+//  candle's body rather than as fixed distances, because that is
+//  what a fade is aiming at -- the move the candle just made,
+//  given back. A big candle offers a big target. A small one does
+//  not, however much you would like it to.
+//
+//  By default the reference is the most recent high volatility
+//  candle and the direction is the fade of it: a bearish
+//  expansion plans a long, a bullish one plans a short. Both can
+//  be overridden. Nothing here decides whether to take a trade --
+//  it only shows what one would look like.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced d3_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── REFERENCE ────────────────────────────────────────────────
+d3_gRef = "Reference Candle"
+
+d3_refMode = input.string("Last high volatility candle", "Reference", options = ["Last high volatility candle", "Current candle", "Bars back"], group = d3_gRef,
+     tooltip = "Which candle the plan is measured from. Its body sets the targets and its wick sets the stop.")
+
+d3_barsBack = input.int(1, "Bars back", minval = 0, maxval = 500, group = d3_gRef,
+     tooltip = "Only used when Reference is set to Bars back. 0 is the current candle. Point it at any past candle to see what the plan would have been, then look right to see what happened.")
+
+d3_atrLen = input.int(8, "ATR Length", minval = 1, group = d3_gRef)
+
+d3_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = d3_gRef,
+     tooltip = "A candle's body must clear this to count as a high volatility candle. Set to 0 to disable.")
+
+// ─── BAND THRESHOLDS ──────────────────────────────────────────
+d3_gBand = "Band Thresholds"
+
+d3_t1 = input.float(0.30, "Threshold 1", step = 0.05, group = d3_gBand)
+d3_t2 = input.float(0.75, "Threshold 2", step = 0.05, group = d3_gBand)
+d3_t3 = input.float(1.20, "Threshold 3", step = 0.05, group = d3_gBand)
+d3_t4 = input.float(1.65, "Threshold 4", step = 0.05, group = d3_gBand)
+d3_t5 = input.float(2.10, "Threshold 5", step = 0.05, group = d3_gBand)
+d3_t6 = input.float(2.55, "Threshold 6", step = 0.05, group = d3_gBand)
+d3_t7 = input.float(3.00, "Threshold 7", step = 0.05, group = d3_gBand)
+
+// ─── PLAN ─────────────────────────────────────────────────────
+d3_gPlan = "Plan"
+
+d3_dir = input.string("Fade the candle", "Direction", options = ["Fade the candle", "Long", "Short"], group = d3_gPlan,
+     tooltip = "Fade the candle plans the opposite of what the reference candle did. Long and Short force a direction regardless.")
+
+d3_entryIn = input.float(0.0, "Entry price (0 = candle close)", step = 0.00001, minval = 0.0, group = d3_gPlan,
+     tooltip = "Leave at 0 to plan from the reference candle's close. Type a price to plan from somewhere else -- a zone edge, a level, wherever you actually intend to act.")
+
+d3_slBuffer = input.float(3.0, "Stop: wick + x ATR", minval = 0.0, step = 0.25, group = d3_gPlan,
+     tooltip = "The stop sits this many ATRs beyond the reference candle's extreme -- its low on a long, its high on a short.")
+
+d3_tp1Pct = input.float(50.0,  "TP1 (% of body)", minval = 1.0, maxval = 200.0, step = 5.0, group = d3_gPlan,
+     tooltip = "The partial target.")
+
+d3_tp2Pct = input.float(100.0, "TP2 (% of body)", minval = 1.0, maxval = 300.0, step = 5.0, group = d3_gPlan,
+     tooltip = "The full target. 100% means the whole body given back -- for a fade of a bearish candle, price returning to where that candle opened.")
+
+d3_beOn = input.bool(true, "Move stop to breakeven at TP1", group = d3_gPlan,
+     tooltip = "Marks the breakeven line at entry, showing where the stop goes once the partial is taken.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+d3_gDisp = "Display"
+
+d3_extend = input.int(40, "Extend right (bars)", minval = 5, maxval = 200, group = d3_gDisp)
+
+d3_showBoxes = input.bool(true, "Shade the target and stop areas", group = d3_gDisp)
+d3_showInfo  = input.bool(true, "Show plan summary", group = d3_gDisp)
+
+d3_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = d3_gDisp,
+     tooltip = "Leave at 0 for automatic detection. Override where the automatic value is wrong -- for example set 1.0 for BTCUSD.")
+
+d3_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = d3_gDisp)
+
+// ─── COLOURS ──────────────────────────────────────────────────
+d3_gCol = "Colours"
+
+d3_entryC = input.color(#e8e6e1, "Entry",     group = d3_gCol)
+d3_slC    = input.color(#f23645, "Stop",      group = d3_gCol)
+d3_tpC    = input.color(#26a269, "Targets",   group = d3_gCol)
+d3_beC    = input.color(#c9a84c, "Breakeven", group = d3_gCol)
+d3_fade   = input.int(88, "Shading transparency", minval = 60, maxval = 98, group = d3_gCol)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+d3_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+d3_pip     = d3_pipIn > 0 ? d3_pipIn : d3_pipAuto
+
+d3_atr   = ta.atr(d3_atrLen)
+d3_ratio = ta.tr(true) / d3_atr
+
+d3_rawBand =
+     d3_ratio < d3_t1 ? 1 :
+     d3_ratio < d3_t2 ? 2 :
+     d3_ratio < d3_t3 ? 3 :
+     d3_ratio < d3_t4 ? 4 :
+     d3_ratio < d3_t5 ? 5 :
+     d3_ratio < d3_t6 ? 6 :
+     d3_ratio < d3_t7 ? 7 : 8
+
+d3_bodyNow = math.abs(close - open)
+d3_minBody = math.max(syminfo.mintick, d3_atr * d3_minBodyAtr)
+d3_bodyOk  = d3_minBodyAtr <= 0 or d3_bodyNow > d3_minBody
+d3_band    = d3_rawBand >= 6 and not d3_bodyOk ? 5 : d3_rawBand
+
+// Remember the last qualifying candle.
+var int   d3_refBar  = na
+var float d3_refHi   = na
+var float d3_refLo   = na
+var float d3_refOp   = na
+var float d3_refCl   = na
+var float d3_refAtr  = na
+var int   d3_refBand = na
+
+if barstate.isconfirmed and d3_band >= 6
+    d3_refBar  := bar_index
+    d3_refHi   := high
+    d3_refLo   := low
+    d3_refOp   := open
+    d3_refCl   := close
+    d3_refAtr  := d3_atr
+    d3_refBand := d3_band
+
+// Resolve which candle the plan is built from.
+d3_useBack = d3_refMode == "Bars back" ? d3_barsBack : d3_refMode == "Current candle" ? 0 : na
+
+d3_pHi   = na(d3_useBack) ? d3_refHi   : high[d3_useBack]
+d3_pLo   = na(d3_useBack) ? d3_refLo   : low[d3_useBack]
+d3_pOp   = na(d3_useBack) ? d3_refOp   : open[d3_useBack]
+d3_pCl   = na(d3_useBack) ? d3_refCl   : close[d3_useBack]
+d3_pAtr  = na(d3_useBack) ? d3_refAtr  : d3_atr[d3_useBack]
+d3_pBand = na(d3_useBack) ? d3_refBand : d3_band[d3_useBack]
+d3_pBar  = na(d3_useBack) ? d3_refBar  : bar_index - d3_useBack
+
+d3_valid = not na(d3_pHi) and not na(d3_pCl) and not na(d3_pBar)
+
+// Direction, body, and the five prices.
+d3_isLong = d3_dir == "Long" ? true : d3_dir == "Short" ? false : d3_pCl < d3_pOp
+
+d3_body  = math.abs(d3_pCl - d3_pOp)
+d3_entry = d3_entryIn > 0 ? d3_entryIn : d3_pCl
+
+d3_sl  = d3_isLong ? d3_pLo - d3_pAtr * d3_slBuffer : d3_pHi + d3_pAtr * d3_slBuffer
+d3_tp1 = d3_isLong ? d3_entry + d3_body * d3_tp1Pct / 100.0 : d3_entry - d3_body * d3_tp1Pct / 100.0
+d3_tp2 = d3_isLong ? d3_entry + d3_body * d3_tp2Pct / 100.0 : d3_entry - d3_body * d3_tp2Pct / 100.0
+
+d3_slDist  = math.abs(d3_entry - d3_sl)
+d3_tp2Dist = math.abs(d3_tp2 - d3_entry)
+d3_rr      = d3_slDist > 0 ? d3_tp2Dist / d3_slDist : 0.0
+
+// ─── RENDER ───────────────────────────────────────────────────
+d3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+var line  d3_lnEntry = na
+var line  d3_lnSl    = na
+var line  d3_lnTp1   = na
+var line  d3_lnTp2   = na
+var line  d3_lnBe    = na
+var box   d3_bxTp    = na
+var box   d3_bxSl    = na
+var label d3_lbInfo  = na
+var label d3_lbSl    = na
+var label d3_lbTp1   = na
+var label d3_lbTp2   = na
+
+if barstate.islast
+    line.delete(d3_lnEntry)
+    line.delete(d3_lnSl)
+    line.delete(d3_lnTp1)
+    line.delete(d3_lnTp2)
+    line.delete(d3_lnBe)
+    box.delete(d3_bxTp)
+    box.delete(d3_bxSl)
+    label.delete(d3_lbInfo)
+    label.delete(d3_lbSl)
+    label.delete(d3_lbTp1)
+    label.delete(d3_lbTp2)
+
+    if d3_valid
+        int _l = d3_pBar
+        int _r = bar_index + d3_extend
+
+        if d3_showBoxes
+            d3_bxTp := box.new(_l, math.max(d3_entry, d3_tp2), _r, math.min(d3_entry, d3_tp2),
+                 bgcolor = color.new(d3_tpC, d3_fade), border_color = color.new(d3_tpC, 100))
+            d3_bxSl := box.new(_l, math.max(d3_entry, d3_sl), _r, math.min(d3_entry, d3_sl),
+                 bgcolor = color.new(d3_slC, d3_fade), border_color = color.new(d3_slC, 100))
+
+        d3_lnEntry := line.new(_l, d3_entry, _r, d3_entry, color = d3_entryC, width = 1)
+        d3_lnSl    := line.new(_l, d3_sl,    _r, d3_sl,    color = d3_slC,    width = 2)
+        d3_lnTp1   := line.new(_l, d3_tp1,   _r, d3_tp1,   color = d3_tpC,    width = 1, style = line.style_dashed)
+        d3_lnTp2   := line.new(_l, d3_tp2,   _r, d3_tp2,   color = d3_tpC,    width = 2)
+
+        if d3_beOn
+            d3_lnBe := line.new(_l, d3_entry, _r, d3_entry, color = d3_beC, width = 1, style = line.style_dotted)
+
+        d3_lbSl  := label.new(_r, d3_sl,  "SL  " + str.tostring(d3_slDist / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_slC, size = d3_sizeOf(d3_lblSize))
+        d3_lbTp1 := label.new(_r, d3_tp1, "TP1  " + str.tostring(math.abs(d3_tp1 - d3_entry) / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_tpC, size = d3_sizeOf(d3_lblSize))
+        d3_lbTp2 := label.new(_r, d3_tp2, "TP2  " + str.tostring(d3_tp2Dist / d3_pip, "#.#") + " pips",
+             style = label.style_label_left, color = color.new(color.black, 100), textcolor = d3_tpC, size = d3_sizeOf(d3_lblSize))
+
+        if d3_showInfo
+            string _txt = (d3_isLong ? "LONG" : "SHORT") +
+                 (na(d3_pBand) ? "" : "  ·  band " + str.tostring(d3_pBand)) +
+                 "  ·  " + str.tostring(d3_rr, "#.##") + "R\n" +
+                 "entry " + str.tostring(d3_entry, format.mintick) +
+                 "  ·  body " + str.tostring(d3_body / d3_pip, "#.#") + " pips" +
+                 (d3_beOn ? "\nstop to breakeven at TP1" : "")
+            d3_lbInfo := label.new(_l, d3_entry, _txt,
+                 style     = label.style_label_right,
+                 color     = color.new(color.black, 15),
+                 textcolor = d3_entryC,
+                 size      = d3_sizeOf(d3_lblSize))
+

@@ -1,0 +1,269 @@
+QUANT PRIME — RECOIL BUILD MENU
+============================================================
+
+Naming: REC-abcd
+  a = Starter   b = Main   c = Side   d = Dessert
+  0 = that course left empty
+
+Starter   1 Volatility Bands   2 ATR Envelope     3 Volatility Levels
+Main      1 ATR Stops          2 Volatility Zones 3 Regime Tracker
+Side      1 Candle Clock       2 Position Sizer   3 Trade Planner
+Dessert   1 Band Report        2 Zone Report      3 Session Report
+
+============================================================
+
+REC-0001  Band Report
+REC-0002  Zone Report
+REC-0003  Session Report
+REC-0010  Candle Clock
+REC-0011  Candle Clock + Band Report
+REC-0012  Candle Clock + Zone Report
+REC-0013  Candle Clock + Session Report
+REC-0020  Position Sizer
+REC-0021  Position Sizer + Band Report
+REC-0022  Position Sizer + Zone Report
+REC-0023  Position Sizer + Session Report
+REC-0030  Trade Planner
+REC-0031  Trade Planner + Band Report
+REC-0032  Trade Planner + Zone Report
+REC-0033  Trade Planner + Session Report
+REC-0100  ATR Stops
+REC-0101  ATR Stops + Band Report
+REC-0102  ATR Stops + Zone Report
+REC-0103  ATR Stops + Session Report
+REC-0110  ATR Stops + Candle Clock
+REC-0111  ATR Stops + Candle Clock + Band Report
+REC-0112  ATR Stops + Candle Clock + Zone Report
+REC-0113  ATR Stops + Candle Clock + Session Report
+REC-0120  ATR Stops + Position Sizer
+REC-0121  ATR Stops + Position Sizer + Band Report
+REC-0122  ATR Stops + Position Sizer + Zone Report
+REC-0123  ATR Stops + Position Sizer + Session Report
+REC-0130  ATR Stops + Trade Planner
+REC-0131  ATR Stops + Trade Planner + Band Report
+REC-0132  ATR Stops + Trade Planner + Zone Report
+REC-0133  ATR Stops + Trade Planner + Session Report
+REC-0200  Volatility Zones
+REC-0201  Volatility Zones + Band Report
+REC-0202  Volatility Zones + Zone Report
+REC-0203  Volatility Zones + Session Report
+REC-0210  Volatility Zones + Candle Clock
+REC-0211  Volatility Zones + Candle Clock + Band Report
+REC-0212  Volatility Zones + Candle Clock + Zone Report
+REC-0213  Volatility Zones + Candle Clock + Session Report
+REC-0220  Volatility Zones + Position Sizer
+REC-0221  Volatility Zones + Position Sizer + Band Report
+REC-0222  Volatility Zones + Position Sizer + Zone Report
+REC-0223  Volatility Zones + Position Sizer + Session Report
+REC-0230  Volatility Zones + Trade Planner
+REC-0231  Volatility Zones + Trade Planner + Band Report
+REC-0232  Volatility Zones + Trade Planner + Zone Report
+REC-0233  Volatility Zones + Trade Planner + Session Report
+REC-0300  Regime Tracker
+REC-0301  Regime Tracker + Band Report
+REC-0302  Regime Tracker + Zone Report
+REC-0303  Regime Tracker + Session Report
+REC-0310  Regime Tracker + Candle Clock
+REC-0311  Regime Tracker + Candle Clock + Band Report
+REC-0312  Regime Tracker + Candle Clock + Zone Report
+REC-0313  Regime Tracker + Candle Clock + Session Report
+REC-0320  Regime Tracker + Position Sizer
+REC-0321  Regime Tracker + Position Sizer + Band Report
+REC-0322  Regime Tracker + Position Sizer + Zone Report
+REC-0323  Regime Tracker + Position Sizer + Session Report
+REC-0330  Regime Tracker + Trade Planner
+REC-0331  Regime Tracker + Trade Planner + Band Report
+REC-0332  Regime Tracker + Trade Planner + Zone Report
+REC-0333  Regime Tracker + Trade Planner + Session Report
+REC-1000  Volatility Bands
+REC-1001  Volatility Bands + Band Report
+REC-1002  Volatility Bands + Zone Report
+REC-1003  Volatility Bands + Session Report
+REC-1010  Volatility Bands + Candle Clock
+REC-1011  Volatility Bands + Candle Clock + Band Report
+REC-1012  Volatility Bands + Candle Clock + Zone Report
+REC-1013  Volatility Bands + Candle Clock + Session Report
+REC-1020  Volatility Bands + Position Sizer
+REC-1021  Volatility Bands + Position Sizer + Band Report
+REC-1022  Volatility Bands + Position Sizer + Zone Report
+REC-1023  Volatility Bands + Position Sizer + Session Report
+REC-1030  Volatility Bands + Trade Planner
+REC-1031  Volatility Bands + Trade Planner + Band Report
+REC-1032  Volatility Bands + Trade Planner + Zone Report
+REC-1033  Volatility Bands + Trade Planner + Session Report
+REC-1100  Volatility Bands + ATR Stops
+REC-1101  Volatility Bands + ATR Stops + Band Report
+REC-1102  Volatility Bands + ATR Stops + Zone Report
+REC-1103  Volatility Bands + ATR Stops + Session Report
+REC-1110  Volatility Bands + ATR Stops + Candle Clock
+REC-1111  Volatility Bands + ATR Stops + Candle Clock + Band Report
+REC-1112  Volatility Bands + ATR Stops + Candle Clock + Zone Report
+REC-1113  Volatility Bands + ATR Stops + Candle Clock + Session Report
+REC-1120  Volatility Bands + ATR Stops + Position Sizer
+REC-1121  Volatility Bands + ATR Stops + Position Sizer + Band Report
+REC-1122  Volatility Bands + ATR Stops + Position Sizer + Zone Report
+REC-1123  Volatility Bands + ATR Stops + Position Sizer + Session Report
+REC-1130  Volatility Bands + ATR Stops + Trade Planner
+REC-1131  Volatility Bands + ATR Stops + Trade Planner + Band Report
+REC-1132  Volatility Bands + ATR Stops + Trade Planner + Zone Report
+REC-1133  Volatility Bands + ATR Stops + Trade Planner + Session Report
+REC-1200  Volatility Bands + Volatility Zones
+REC-1201  Volatility Bands + Volatility Zones + Band Report
+REC-1202  Volatility Bands + Volatility Zones + Zone Report
+REC-1203  Volatility Bands + Volatility Zones + Session Report
+REC-1210  Volatility Bands + Volatility Zones + Candle Clock
+REC-1211  Volatility Bands + Volatility Zones + Candle Clock + Band Report
+REC-1212  Volatility Bands + Volatility Zones + Candle Clock + Zone Report
+REC-1213  Volatility Bands + Volatility Zones + Candle Clock + Session Report
+REC-1220  Volatility Bands + Volatility Zones + Position Sizer
+REC-1221  Volatility Bands + Volatility Zones + Position Sizer + Band Report
+REC-1222  Volatility Bands + Volatility Zones + Position Sizer + Zone Report
+REC-1223  Volatility Bands + Volatility Zones + Position Sizer + Session Report
+REC-1230  Volatility Bands + Volatility Zones + Trade Planner
+REC-1231  Volatility Bands + Volatility Zones + Trade Planner + Band Report
+REC-1232  Volatility Bands + Volatility Zones + Trade Planner + Zone Report
+REC-1233  Volatility Bands + Volatility Zones + Trade Planner + Session Report
+REC-1300  Volatility Bands + Regime Tracker
+REC-1301  Volatility Bands + Regime Tracker + Band Report
+REC-1302  Volatility Bands + Regime Tracker + Zone Report
+REC-1303  Volatility Bands + Regime Tracker + Session Report
+REC-1310  Volatility Bands + Regime Tracker + Candle Clock
+REC-1311  Volatility Bands + Regime Tracker + Candle Clock + Band Report
+REC-1312  Volatility Bands + Regime Tracker + Candle Clock + Zone Report
+REC-1313  Volatility Bands + Regime Tracker + Candle Clock + Session Report
+REC-1320  Volatility Bands + Regime Tracker + Position Sizer
+REC-1321  Volatility Bands + Regime Tracker + Position Sizer + Band Report
+REC-1322  Volatility Bands + Regime Tracker + Position Sizer + Zone Report
+REC-1323  Volatility Bands + Regime Tracker + Position Sizer + Session Report
+REC-1330  Volatility Bands + Regime Tracker + Trade Planner
+REC-1331  Volatility Bands + Regime Tracker + Trade Planner + Band Report
+REC-1332  Volatility Bands + Regime Tracker + Trade Planner + Zone Report
+REC-1333  Volatility Bands + Regime Tracker + Trade Planner + Session Report
+REC-2000  ATR Envelope
+REC-2001  ATR Envelope + Band Report
+REC-2002  ATR Envelope + Zone Report
+REC-2003  ATR Envelope + Session Report
+REC-2010  ATR Envelope + Candle Clock
+REC-2011  ATR Envelope + Candle Clock + Band Report
+REC-2012  ATR Envelope + Candle Clock + Zone Report
+REC-2013  ATR Envelope + Candle Clock + Session Report
+REC-2020  ATR Envelope + Position Sizer
+REC-2021  ATR Envelope + Position Sizer + Band Report
+REC-2022  ATR Envelope + Position Sizer + Zone Report
+REC-2023  ATR Envelope + Position Sizer + Session Report
+REC-2030  ATR Envelope + Trade Planner
+REC-2031  ATR Envelope + Trade Planner + Band Report
+REC-2032  ATR Envelope + Trade Planner + Zone Report
+REC-2033  ATR Envelope + Trade Planner + Session Report
+REC-2100  ATR Envelope + ATR Stops
+REC-2101  ATR Envelope + ATR Stops + Band Report
+REC-2102  ATR Envelope + ATR Stops + Zone Report
+REC-2103  ATR Envelope + ATR Stops + Session Report
+REC-2110  ATR Envelope + ATR Stops + Candle Clock
+REC-2111  ATR Envelope + ATR Stops + Candle Clock + Band Report
+REC-2112  ATR Envelope + ATR Stops + Candle Clock + Zone Report
+REC-2113  ATR Envelope + ATR Stops + Candle Clock + Session Report
+REC-2120  ATR Envelope + ATR Stops + Position Sizer
+REC-2121  ATR Envelope + ATR Stops + Position Sizer + Band Report
+REC-2122  ATR Envelope + ATR Stops + Position Sizer + Zone Report
+REC-2123  ATR Envelope + ATR Stops + Position Sizer + Session Report
+REC-2130  ATR Envelope + ATR Stops + Trade Planner
+REC-2131  ATR Envelope + ATR Stops + Trade Planner + Band Report
+REC-2132  ATR Envelope + ATR Stops + Trade Planner + Zone Report
+REC-2133  ATR Envelope + ATR Stops + Trade Planner + Session Report
+REC-2200  ATR Envelope + Volatility Zones
+REC-2201  ATR Envelope + Volatility Zones + Band Report
+REC-2202  ATR Envelope + Volatility Zones + Zone Report
+REC-2203  ATR Envelope + Volatility Zones + Session Report
+REC-2210  ATR Envelope + Volatility Zones + Candle Clock
+REC-2211  ATR Envelope + Volatility Zones + Candle Clock + Band Report
+REC-2212  ATR Envelope + Volatility Zones + Candle Clock + Zone Report
+REC-2213  ATR Envelope + Volatility Zones + Candle Clock + Session Report
+REC-2220  ATR Envelope + Volatility Zones + Position Sizer
+REC-2221  ATR Envelope + Volatility Zones + Position Sizer + Band Report
+REC-2222  ATR Envelope + Volatility Zones + Position Sizer + Zone Report
+REC-2223  ATR Envelope + Volatility Zones + Position Sizer + Session Report
+REC-2230  ATR Envelope + Volatility Zones + Trade Planner
+REC-2231  ATR Envelope + Volatility Zones + Trade Planner + Band Report
+REC-2232  ATR Envelope + Volatility Zones + Trade Planner + Zone Report
+REC-2233  ATR Envelope + Volatility Zones + Trade Planner + Session Report
+REC-2300  ATR Envelope + Regime Tracker
+REC-2301  ATR Envelope + Regime Tracker + Band Report
+REC-2302  ATR Envelope + Regime Tracker + Zone Report
+REC-2303  ATR Envelope + Regime Tracker + Session Report
+REC-2310  ATR Envelope + Regime Tracker + Candle Clock
+REC-2311  ATR Envelope + Regime Tracker + Candle Clock + Band Report
+REC-2312  ATR Envelope + Regime Tracker + Candle Clock + Zone Report
+REC-2313  ATR Envelope + Regime Tracker + Candle Clock + Session Report
+REC-2320  ATR Envelope + Regime Tracker + Position Sizer
+REC-2321  ATR Envelope + Regime Tracker + Position Sizer + Band Report
+REC-2322  ATR Envelope + Regime Tracker + Position Sizer + Zone Report
+REC-2323  ATR Envelope + Regime Tracker + Position Sizer + Session Report
+REC-2330  ATR Envelope + Regime Tracker + Trade Planner
+REC-2331  ATR Envelope + Regime Tracker + Trade Planner + Band Report
+REC-2332  ATR Envelope + Regime Tracker + Trade Planner + Zone Report
+REC-2333  ATR Envelope + Regime Tracker + Trade Planner + Session Report
+REC-3000  Volatility Levels
+REC-3001  Volatility Levels + Band Report
+REC-3002  Volatility Levels + Zone Report
+REC-3003  Volatility Levels + Session Report
+REC-3010  Volatility Levels + Candle Clock
+REC-3011  Volatility Levels + Candle Clock + Band Report
+REC-3012  Volatility Levels + Candle Clock + Zone Report
+REC-3013  Volatility Levels + Candle Clock + Session Report
+REC-3020  Volatility Levels + Position Sizer
+REC-3021  Volatility Levels + Position Sizer + Band Report
+REC-3022  Volatility Levels + Position Sizer + Zone Report
+REC-3023  Volatility Levels + Position Sizer + Session Report
+REC-3030  Volatility Levels + Trade Planner
+REC-3031  Volatility Levels + Trade Planner + Band Report
+REC-3032  Volatility Levels + Trade Planner + Zone Report
+REC-3033  Volatility Levels + Trade Planner + Session Report
+REC-3100  Volatility Levels + ATR Stops
+REC-3101  Volatility Levels + ATR Stops + Band Report
+REC-3102  Volatility Levels + ATR Stops + Zone Report
+REC-3103  Volatility Levels + ATR Stops + Session Report
+REC-3110  Volatility Levels + ATR Stops + Candle Clock
+REC-3111  Volatility Levels + ATR Stops + Candle Clock + Band Report
+REC-3112  Volatility Levels + ATR Stops + Candle Clock + Zone Report
+REC-3113  Volatility Levels + ATR Stops + Candle Clock + Session Report
+REC-3120  Volatility Levels + ATR Stops + Position Sizer
+REC-3121  Volatility Levels + ATR Stops + Position Sizer + Band Report
+REC-3122  Volatility Levels + ATR Stops + Position Sizer + Zone Report
+REC-3123  Volatility Levels + ATR Stops + Position Sizer + Session Report
+REC-3130  Volatility Levels + ATR Stops + Trade Planner
+REC-3131  Volatility Levels + ATR Stops + Trade Planner + Band Report
+REC-3132  Volatility Levels + ATR Stops + Trade Planner + Zone Report
+REC-3133  Volatility Levels + ATR Stops + Trade Planner + Session Report
+REC-3200  Volatility Levels + Volatility Zones
+REC-3201  Volatility Levels + Volatility Zones + Band Report
+REC-3202  Volatility Levels + Volatility Zones + Zone Report
+REC-3203  Volatility Levels + Volatility Zones + Session Report
+REC-3210  Volatility Levels + Volatility Zones + Candle Clock
+REC-3211  Volatility Levels + Volatility Zones + Candle Clock + Band Report
+REC-3212  Volatility Levels + Volatility Zones + Candle Clock + Zone Report
+REC-3213  Volatility Levels + Volatility Zones + Candle Clock + Session Report
+REC-3220  Volatility Levels + Volatility Zones + Position Sizer
+REC-3221  Volatility Levels + Volatility Zones + Position Sizer + Band Report
+REC-3222  Volatility Levels + Volatility Zones + Position Sizer + Zone Report
+REC-3223  Volatility Levels + Volatility Zones + Position Sizer + Session Report
+REC-3230  Volatility Levels + Volatility Zones + Trade Planner
+REC-3231  Volatility Levels + Volatility Zones + Trade Planner + Band Report
+REC-3232  Volatility Levels + Volatility Zones + Trade Planner + Zone Report
+REC-3233  Volatility Levels + Volatility Zones + Trade Planner + Session Report
+REC-3300  Volatility Levels + Regime Tracker
+REC-3301  Volatility Levels + Regime Tracker + Band Report
+REC-3302  Volatility Levels + Regime Tracker + Zone Report
+REC-3303  Volatility Levels + Regime Tracker + Session Report
+REC-3310  Volatility Levels + Regime Tracker + Candle Clock
+REC-3311  Volatility Levels + Regime Tracker + Candle Clock + Band Report
+REC-3312  Volatility Levels + Regime Tracker + Candle Clock + Zone Report
+REC-3313  Volatility Levels + Regime Tracker + Candle Clock + Session Report
+REC-3320  Volatility Levels + Regime Tracker + Position Sizer
+REC-3321  Volatility Levels + Regime Tracker + Position Sizer + Band Report
+REC-3322  Volatility Levels + Regime Tracker + Position Sizer + Zone Report
+REC-3323  Volatility Levels + Regime Tracker + Position Sizer + Session Report
+REC-3330  Volatility Levels + Regime Tracker + Trade Planner
+REC-3331  Volatility Levels + Regime Tracker + Trade Planner + Band Report
+REC-3332  Volatility Levels + Regime Tracker + Trade Planner + Zone Report
+REC-3333  Volatility Levels + Regime Tracker + Trade Planner + Session Report

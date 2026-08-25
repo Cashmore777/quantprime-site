@@ -1,0 +1,770 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-1113
+// -------------------------------------------------------------
+//  Volatility Bands + ATR Stops + Candle Clock + Session Report
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 1113", shorttitle = "REC-1113", overlay = true, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  STARTER 1 · VOLATILITY BANDS
+// ───────────────────────────────────────────────────────────────
+//  Every candle's TRUE range -- its full high-to-low movement,
+//  including any gap from the prior close -- is divided by
+//  ATR(length). The result answers one question: how big is this
+//  candle compared to a normal recent candle? 1.0x is exactly
+//  average. 3.0x is three times the recent norm.
+//
+//  That ratio places the candle in one of eight bands:
+//
+//    1  Extremely Low     5  Medium
+//    2  Very Low          6  High Medium
+//    3  Low               7  High
+//    4  Lower Medium      8  Very High
+//
+//  ATR Length is the MEMORY of the baseline. Shorter (5) adapts
+//  fast and measures abnormal against the last few minutes.
+//  Longer (21) is slow, so a volatility burst keeps reading as
+//  extreme for longer. The default of 8 is deliberately
+//  responsive, suited to a short-timeframe context.
+//
+//  A wide candle built from wicks is a rejection, not an
+//  expansion, and its body is too small to measure anything
+//  useful against. The minimum body filter removes those from the
+//  high bands entirely so only workable expansions are shown.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── VOLATILITY ───────────────────────────────────────────────
+s1_gVol = "Volatility"
+
+s1_atrLen = input.int(8, "ATR Length", minval = 1, group = s1_gVol,
+     tooltip = "The averaging period used as the volatility baseline. Shorter values adapt faster; longer values keep a burst reading as extreme for longer.")
+
+s1_t1 = input.float(0.30, "Threshold 1 (Extremely Low → Very Low)",  step = 0.05, group = s1_gVol)
+s1_t2 = input.float(0.75, "Threshold 2 (Very Low → Low)",            step = 0.05, group = s1_gVol)
+s1_t3 = input.float(1.20, "Threshold 3 (Low → Lower Medium)",        step = 0.05, group = s1_gVol)
+s1_t4 = input.float(1.65, "Threshold 4 (Lower Medium → Medium)",     step = 0.05, group = s1_gVol)
+s1_t5 = input.float(2.10, "Threshold 5 (Medium → High Medium)",      step = 0.05, group = s1_gVol)
+s1_t6 = input.float(2.55, "Threshold 6 (High Medium → High)",        step = 0.05, group = s1_gVol)
+s1_t7 = input.float(3.00, "Threshold 7 (High → Very High)",          step = 0.05, group = s1_gVol)
+
+s1_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = s1_gVol,
+     tooltip = "A candle's body (open-to-close) must be at least this many ATRs to qualify for a high band. Candles that fail are filtered out of bands 6-8 and shown as Medium instead. Set to 0 to disable the filter.")
+
+s1_tagFrom = input.int(6, "Show Tag From Band # Upward", minval = 1, maxval = 8, group = s1_gVol,
+     tooltip = "The small '#.##x' text tag only appears on candles whose volatility band is this number or higher (1 = Extremely Low ... 8 = Very High). Default 6 tags only the high bands.")
+
+// ─── COLOURS ──────────────────────────────────────────────────
+s1_gCol = "Volatility — Colors"
+
+s1_c1 = input.color(#bbd9fb, "Extremely Low", group = s1_gCol)
+s1_c2 = input.color(#90bff9, "Very Low",      group = s1_gCol)
+s1_c3 = input.color(#5b9cf6, "Low",           group = s1_gCol)
+s1_c4 = input.color(#3179f5, "Lower Medium",  group = s1_gCol)
+s1_c5 = input.color(#1848cc, "Medium",        group = s1_gCol)
+s1_c6 = input.color(#ffeb3b, "High Medium",   group = s1_gCol)
+s1_c7 = input.color(#ff9800, "High",          group = s1_gCol)
+s1_c8 = input.color(#f23645, "Very High",     group = s1_gCol)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+s1_gDisp = "Display"
+
+s1_colorCandles = input.bool(true,  "Color Candles By Volatility", group = s1_gDisp)
+s1_showTag      = input.bool(false, "Show Volatility Tag",         group = s1_gDisp)
+s1_tagTextColor = input.color(color.white, "Tag Text Color",       group = s1_gDisp)
+
+s1_highOnly = input.bool(false, "Color High Bands Only", group = s1_gDisp,
+     tooltip = "Leaves bands 1-5 as your chart's normal candle colors and highlights bands 6, 7 and 8 alone.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Band classification is lifted verbatim from Quant Prime Recoil,
+// so a band 7 candle here is a candle Recoil reads as band 7.
+// M2, M3, T1 and T2 reuse this identical block.
+
+s1_trueRange = ta.tr(true)
+s1_atr       = ta.atr(s1_atrLen)
+s1_ratio     = s1_trueRange / s1_atr
+
+s1_rawBand =
+     s1_ratio < s1_t1 ? 1 :
+     s1_ratio < s1_t2 ? 2 :
+     s1_ratio < s1_t3 ? 3 :
+     s1_ratio < s1_t4 ? 4 :
+     s1_ratio < s1_t5 ? 5 :
+     s1_ratio < s1_t6 ? 6 :
+     s1_ratio < s1_t7 ? 7 : 8
+
+// Minimum body filter -- a high band candle whose body is too
+// small to be workable is dropped out of the high bands.
+s1_body    = math.abs(close - open)
+s1_minBody = math.max(syminfo.mintick, s1_atr * s1_minBodyAtr)
+s1_bodyOk  = s1_minBodyAtr <= 0 or s1_body > s1_minBody
+
+s1_band = s1_rawBand >= 6 and not s1_bodyOk ? 5 : s1_rawBand
+
+s1_color =
+     s1_band == 1 ? s1_c1 :
+     s1_band == 2 ? s1_c2 :
+     s1_band == 3 ? s1_c3 :
+     s1_band == 4 ? s1_c4 :
+     s1_band == 5 ? s1_c5 :
+     s1_band == 6 ? s1_c6 :
+     s1_band == 7 ? s1_c7 : s1_c8
+
+s1_isHigh  = s1_band >= 6
+s1_notable = s1_band >= s1_tagFrom
+
+// ─── RENDER ───────────────────────────────────────────────────
+s1_paint = s1_colorCandles and (not s1_highOnly or s1_isHigh)
+barcolor(s1_paint ? s1_color : na, title = "Volatility Color")
+
+// Tag rendering: confirmed bars get a permanent label, the live
+// bar gets a single label that is replaced each tick.
+var label s1_liveLabel = na
+label.delete(s1_liveLabel)
+
+if s1_showTag
+    if barstate.isconfirmed
+        if s1_notable
+            label.new(bar_index, high,
+                 text      = str.tostring(s1_ratio, "#.##") + "x",
+                 style     = label.style_label_down,
+                 color     = s1_color,
+                 textcolor = s1_tagTextColor,
+                 size      = size.small,
+                 yloc      = yloc.abovebar)
+        label.delete(s1_liveLabel)
+        s1_liveLabel := na
+    else if barstate.islast and s1_notable
+        label.delete(s1_liveLabel)
+        s1_liveLabel := label.new(bar_index, high,
+             text      = str.tostring(s1_ratio, "#.##") + "x",
+             style     = label.style_label_down,
+             color     = s1_color,
+             textcolor = s1_tagTextColor,
+             size      = size.small,
+             yloc      = yloc.abovebar)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_band >= 6 and s1_band[1] < 6, "Volatility expansion",
+     "A candle has closed in a high volatility band (6, 7 or 8).")
+
+alertcondition(s1_band == 8, "Band 8 candle",
+     "A candle has closed in band 8 -- the most extended condition this instrument produces.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  MAIN 1 · ATR STOPS
+// ───────────────────────────────────────────────────────────────
+//  A stop placed just past a candle's extreme gets taken out by
+//  noise. A stop placed a fixed number of pips away means
+//  something different on a quiet Tuesday than it does during a
+//  release. Padding the candle's own wick by a multiple of ATR
+//  solves both: the level moves with the instrument and with the
+//  conditions, and it behaves the same way on gold as it does on
+//  a currency pair.
+//
+//  Two rails trail every candle -- one below its low for a long,
+//  one above its high for a short. Wherever you decide to act,
+//  the stop is already on the chart and the distance is already
+//  measured in pips.
+//
+//  These are not levels to trade against and they are not meant
+//  to hold. They answer one question only: if a position were
+//  opened here, where does the stop belong and how far away is
+//  it.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced m1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── STOP ─────────────────────────────────────────────────────
+m1_gStop = "Stop"
+
+m1_atrLen = input.int(8, "ATR Length", minval = 1, group = m1_gStop,
+     tooltip = "The volatility baseline the buffer is measured in. Matches the Recoil default. Shorter values make the rails react faster to a change in conditions.")
+
+m1_buf1On = input.bool(true, "Wide stop", group = m1_gStop, inline = "b1")
+m1_buf1   = input.float(3.0, "x ATR", minval = 0.0, step = 0.25, group = m1_gStop, inline = "b1",
+     tooltip = "How far beyond the candle's wick the stop sits, in ATR multiples. 3.0 is the Recoil scalping default.")
+
+m1_buf2On = input.bool(false, "Tight stop", group = m1_gStop, inline = "b2")
+m1_buf2   = input.float(1.0, "x ATR", minval = 0.0, step = 0.25, group = m1_gStop, inline = "b2",
+     tooltip = "An optional second pair of rails at a smaller buffer, for comparing what a tighter stop would have survived.")
+
+m1_showLong  = input.bool(true, "Long stops (below)",  group = m1_gStop, inline = "sd")
+m1_showShort = input.bool(true, "Short stops (above)", group = m1_gStop, inline = "sd")
+
+// ─── READOUT ──────────────────────────────────────────────────
+m1_gRead = "Readout"
+
+m1_showPips = input.bool(true, "Show stop distance in pips", group = m1_gRead,
+     tooltip = "Labels the current candle's stop levels with how far each sits from price, so a position size can be worked out straight off the chart.")
+
+m1_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = m1_gRead,
+     tooltip = "Leave at 0 for automatic detection. Override where the automatic value is wrong -- for example set 1.0 for BTCUSD.")
+
+m1_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = m1_gRead)
+
+m1_warnPips = input.float(0.0, "Warn above N pips", minval = 0.0, step = 1.0, group = m1_gRead,
+     tooltip = "Colours the readout and fires an alert when the stop distance exceeds this. Useful for spotting conditions where the correct stop is wider than you are willing to take. 0 disables it.")
+
+// ─── COLOURS ──────────────────────────────────────────────────
+m1_gCol = "Colours"
+
+m1_longCol  = input.color(#00abff, "Long stop",  group = m1_gCol)
+m1_shortCol = input.color(#c9a84c, "Short stop", group = m1_gCol)
+m1_warnCol  = input.color(#f23645, "Warning",    group = m1_gCol)
+m1_width    = input.int(1, "Line width", minval = 1, maxval = 4, group = m1_gCol)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m1_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+m1_pip     = m1_pipIn > 0 ? m1_pipIn : m1_pipAuto
+
+m1_atr = ta.atr(m1_atrLen)
+
+m1_short1 = high + m1_atr * m1_buf1
+m1_long1  = low  - m1_atr * m1_buf1
+m1_short2 = high + m1_atr * m1_buf2
+m1_long2  = low  - m1_atr * m1_buf2
+
+// ─── RENDER ───────────────────────────────────────────────────
+plot(m1_buf1On and m1_showShort ? m1_short1 : na, title = "Short stop (wide)",
+     color = m1_shortCol, linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf1On and m1_showLong ? m1_long1 : na, title = "Long stop (wide)",
+     color = m1_longCol, linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf2On and m1_showShort ? m1_short2 : na, title = "Short stop (tight)",
+     color = color.new(m1_shortCol, 45), linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf2On and m1_showLong ? m1_long2 : na, title = "Long stop (tight)",
+     color = color.new(m1_longCol, 45), linewidth = m1_width, style = plot.style_linebr)
+
+// ─── PIP READOUT ──────────────────────────────────────────────
+m1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m1_longPips  = math.abs(close - m1_long1)  / m1_pip
+m1_shortPips = math.abs(m1_short1 - close) / m1_pip
+
+m1_longWarn  = m1_warnPips > 0 and m1_longPips  > m1_warnPips
+m1_shortWarn = m1_warnPips > 0 and m1_shortPips > m1_warnPips
+
+var label m1_lblLong  = na
+var label m1_lblShort = na
+
+if barstate.islast and m1_showPips
+    label.delete(m1_lblLong)
+    label.delete(m1_lblShort)
+
+    if m1_buf1On and m1_showLong
+        m1_lblLong := label.new(bar_index, m1_long1,
+             text      = str.tostring(m1_longPips, "#.#") + " pips",
+             style     = label.style_label_left,
+             color     = color.new(color.black, 15),
+             textcolor = m1_longWarn ? m1_warnCol : m1_longCol,
+             size      = m1_sizeOf(m1_lblSize))
+
+    if m1_buf1On and m1_showShort
+        m1_lblShort := label.new(bar_index, m1_short1,
+             text      = str.tostring(m1_shortPips, "#.#") + " pips",
+             style     = label.style_label_left,
+             color     = color.new(color.black, 15),
+             textcolor = m1_shortWarn ? m1_warnCol : m1_shortCol,
+             size      = m1_sizeOf(m1_lblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m1_longWarn or m1_shortWarn, "Stop distance above limit",
+     "The ATR stop distance has exceeded the limit set on this instrument.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  SIDE 1 · CANDLE CLOCK
+// ───────────────────────────────────────────────────────────────
+//  Nothing else in this menu tells you WHEN. Every other piece
+//  reads a candle that has already closed, but a higher timeframe
+//  candle spends most of its life unfinished, and what it is
+//  going to become is often decided long before it prints.
+//
+//  For each timeframe this shows two numbers side by side: how
+//  far through the candle you are, and how much of its usual
+//  range it has already covered. Twenty percent through and
+//  eighty percent of the range spent is a candle that is going to
+//  matter. Eighty percent through and twenty percent spent is a
+//  candle that is not.
+//
+//  It also counts down. A 3 hour candle that closes in four
+//  minutes is about to be finalised, and whatever levels it
+//  leaves behind are about to become real.
+//
+//  Draws one table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced d1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+d1_gTf = "Timeframes"
+
+d1_tf1On = input.bool(true, "Timeframe 1", group = d1_gTf, inline = "t1")
+d1_tf1   = input.timeframe("3", "", group = d1_gTf, inline = "t1")
+
+d1_tf2On = input.bool(true, "Timeframe 2", group = d1_gTf, inline = "t2")
+d1_tf2   = input.timeframe("30", "", group = d1_gTf, inline = "t2")
+
+d1_tf3On = input.bool(true, "Timeframe 3", group = d1_gTf, inline = "t3")
+d1_tf3   = input.timeframe("180", "", group = d1_gTf, inline = "t3",
+     tooltip = "Each enabled timeframe gets a row. Leave one off to keep the panel compact.")
+
+d1_atrLen = input.int(8, "ATR Length", minval = 1, group = d1_gTf,
+     tooltip = "The typical range each candle's progress is measured against, calculated on that timeframe's own data.")
+
+// ─── PACE ─────────────────────────────────────────────────────
+d1_gPace = "Pace"
+
+d1_hotGap = input.float(20.0, "Expanding above", minval = 5.0, maxval = 80.0, step = 5.0, group = d1_gPace,
+     tooltip = "When range used runs ahead of time elapsed by more than this many points, the candle is covering ground faster than its clock and reads as expanding.")
+
+d1_coldGap = input.float(20.0, "Drifting below", minval = 5.0, maxval = 80.0, step = 5.0, group = d1_gPace,
+     tooltip = "When time elapsed runs ahead of range used by more than this, the candle is going nowhere and reads as drifting.")
+
+d1_warnMins = input.float(5.0, "Closing soon (minutes)", minval = 0.0, step = 1.0, group = d1_gPace,
+     tooltip = "Highlights a timeframe when its candle is this close to closing. 0 disables it.")
+
+// ─── PANEL ────────────────────────────────────────────────────
+d1_gPanel = "Panel"
+
+d1_pos = input.string("Bottom right", "Position", options = ["Top right", "Bottom right", "Bottom left", "Top left"], group = d1_gPanel,
+     tooltip = "When combining several pieces, give each one its own corner so nothing stacks.")
+
+d1_txtSize = input.string("Tiny", "Text size", options = ["Tiny", "Small", "Normal", "Large"], group = d1_gPanel)
+
+d1_showBars = input.bool(true, "Show progress bars", group = d1_gPanel,
+     tooltip = "Draws each percentage as a small block bar alongside the number, so the two can be compared at a glance.")
+
+// ─── THEME ────────────────────────────────────────────────────
+d1_gTheme = "Theme"
+
+d1_bg     = input.color(#131313, "Panel background", group = d1_gTheme)
+d1_title  = input.color(#c9a84c, "Title",            group = d1_gTheme)
+d1_label  = input.color(#8a877f, "Labels",           group = d1_gTheme)
+d1_white  = input.color(#e8e6e1, "Values",           group = d1_gTheme)
+d1_border = input.color(#1a1d24, "Border",           group = d1_gTheme)
+d1_hotCol = input.color(#ff9800, "Expanding",        group = d1_gTheme, inline = "hc")
+d1_coldCol= input.color(#5b9cf6, "Drifting",         group = d1_gTheme, inline = "hc")
+d1_warnCol= input.color(#f23645, "Closing soon",     group = d1_gTheme)
+
+// ─── HELPERS ──────────────────────────────────────────────────
+d1_tfLabel(string _tf) =>
+    string _out = _tf
+    float  _n   = str.tonumber(_tf)
+    if not na(_n)
+        int _m = int(_n)
+        _out := _m >= 1440 and _m % 1440 == 0 ? str.tostring(_m / 1440) + "D" :
+             _m >= 60 and _m % 60 == 0 ? str.tostring(_m / 60) + "H" :
+             str.tostring(_m) + "M"
+    _out
+
+// Remaining time as h:mm or m:ss, whichever reads better.
+d1_clock(float _ms) =>
+    float _s   = math.max(0.0, _ms / 1000.0)
+    int   _hh  = int(math.floor(_s / 3600))
+    int   _mm  = int(math.floor((_s - _hh * 3600) / 60))
+    int   _ss  = int(math.floor(_s - _hh * 3600 - _mm * 60))
+    _hh > 0 ? str.tostring(_hh) + "h " + str.tostring(_mm) + "m" : str.tostring(_mm) + ":" + (_ss < 10 ? "0" : "") + str.tostring(_ss)
+
+// A small block bar, ten cells wide.
+d1_bar(float _pct) =>
+    int _filled = int(math.round(math.min(100.0, math.max(0.0, _pct)) / 10.0))
+    string _out = ""
+    for i = 1 to 10
+        _out := _out + (i <= _filled ? "▊" : "·")
+    _out
+
+d1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : _s == "Normal" ? size.normal : size.large
+
+d1_posOf(_p) =>
+    _p == "Top right" ? position.top_right : _p == "Bottom right" ? position.bottom_right : _p == "Bottom left" ? position.bottom_left : position.top_left
+
+// ─── HIGHER TIMEFRAME READ ────────────────────────────────────
+// The developing candle on each timeframe: when it opened, and
+// how much range it has covered so far against its own typical.
+
+d1_read() =>
+    [time, high - low, ta.atr(d1_atrLen)]
+
+[d1_t1, d1_r1, d1_a1] = request.security(syminfo.tickerid, d1_tf1, d1_read(), lookahead = barmerge.lookahead_off)
+[d1_t2, d1_r2, d1_a2] = request.security(syminfo.tickerid, d1_tf2, d1_read(), lookahead = barmerge.lookahead_off)
+[d1_t3, d1_r3, d1_a3] = request.security(syminfo.tickerid, d1_tf3, d1_read(), lookahead = barmerge.lookahead_off)
+
+d1_secs1 = timeframe.in_seconds(d1_tf1) * 1000.0
+d1_secs2 = timeframe.in_seconds(d1_tf2) * 1000.0
+d1_secs3 = timeframe.in_seconds(d1_tf3) * 1000.0
+
+d1_elapsed1 = timenow - d1_t1
+d1_elapsed2 = timenow - d1_t2
+d1_elapsed3 = timenow - d1_t3
+
+d1_pctT1 = math.min(100.0, math.max(0.0, d1_elapsed1 / d1_secs1 * 100.0))
+d1_pctT2 = math.min(100.0, math.max(0.0, d1_elapsed2 / d1_secs2 * 100.0))
+d1_pctT3 = math.min(100.0, math.max(0.0, d1_elapsed3 / d1_secs3 * 100.0))
+
+d1_pctR1 = d1_a1 > 0 ? d1_r1 / d1_a1 * 100.0 : 0.0
+d1_pctR2 = d1_a2 > 0 ? d1_r2 / d1_a2 * 100.0 : 0.0
+d1_pctR3 = d1_a3 > 0 ? d1_r3 / d1_a3 * 100.0 : 0.0
+
+d1_left1 = d1_secs1 - d1_elapsed1
+d1_left2 = d1_secs2 - d1_elapsed2
+d1_left3 = d1_secs3 - d1_elapsed3
+
+// ─── PANEL ────────────────────────────────────────────────────
+var table d1_tbl = na
+
+d1_paceWord(float _pctT, float _pctR) =>
+    _pctR - _pctT > d1_hotGap ? "expanding" : _pctT - _pctR > d1_coldGap ? "drifting" : "steady"
+
+d1_paceCol(float _pctT, float _pctR) =>
+    _pctR - _pctT > d1_hotGap ? d1_hotCol : _pctT - _pctR > d1_coldGap ? d1_coldCol : d1_white
+
+d1_row(int _r, bool _on, string _tf, float _pctT, float _pctR, float _left) =>
+    if _on
+        bool _soon = d1_warnMins > 0 and _left <= d1_warnMins * 60000.0
+        table.cell(d1_tbl, 0, _r, " " + d1_tfLabel(_tf) + " ",
+             text_color = _soon ? d1_warnCol : d1_white, text_size = d1_sizeOf(d1_txtSize), bgcolor = d1_bg)
+        table.cell(d1_tbl, 1, _r, " " + str.tostring(_pctT, "#") + "% " + (d1_showBars ? d1_bar(_pctT) : "") + " ",
+             text_color = d1_label, text_size = d1_sizeOf(d1_txtSize), bgcolor = d1_bg)
+        table.cell(d1_tbl, 2, _r, " " + str.tostring(_pctR, "#") + "% " + (d1_showBars ? d1_bar(_pctR) : "") + " ",
+             text_color = d1_paceCol(_pctT, _pctR), text_size = d1_sizeOf(d1_txtSize), bgcolor = d1_bg)
+        table.cell(d1_tbl, 3, _r, " " + d1_paceWord(_pctT, _pctR) + " ",
+             text_color = d1_paceCol(_pctT, _pctR), text_size = d1_sizeOf(d1_txtSize), bgcolor = d1_bg)
+        table.cell(d1_tbl, 4, _r, " " + d1_clock(_left) + " ",
+             text_color = _soon ? d1_warnCol : d1_label, text_size = d1_sizeOf(d1_txtSize), bgcolor = d1_bg)
+    true
+
+if barstate.islast
+    if na(d1_tbl)
+        d1_tbl := table.new(d1_posOf(d1_pos), 5, 5,
+             bgcolor      = d1_bg,
+             border_color = d1_border,
+             border_width = 1,
+             frame_color  = d1_title,
+             frame_width  = 1)
+
+    table.cell(d1_tbl, 0, 0, " QUANT PRIME — CANDLE CLOCK ",
+         text_color = d1_title, text_size = d1_sizeOf(d1_txtSize), bgcolor = color.rgb(10, 10, 25))
+    table.merge_cells(d1_tbl, 0, 0, 4, 0)
+
+    table.cell(d1_tbl, 0, 1, " TF ",       text_color = d1_label, text_size = size.tiny, bgcolor = d1_bg)
+    table.cell(d1_tbl, 1, 1, " ELAPSED ",  text_color = d1_label, text_size = size.tiny, bgcolor = d1_bg)
+    table.cell(d1_tbl, 2, 1, " RANGE ",    text_color = d1_label, text_size = size.tiny, bgcolor = d1_bg)
+    table.cell(d1_tbl, 3, 1, " PACE ",     text_color = d1_label, text_size = size.tiny, bgcolor = d1_bg)
+    table.cell(d1_tbl, 4, 1, " CLOSES ",   text_color = d1_label, text_size = size.tiny, bgcolor = d1_bg)
+
+    d1_row(2, d1_tf1On, d1_tf1, d1_pctT1, d1_pctR1, d1_left1)
+    d1_row(3, d1_tf2On, d1_tf2, d1_pctT2, d1_pctR2, d1_left2)
+    d1_row(4, d1_tf3On, d1_tf3, d1_pctT3, d1_pctR3, d1_left3)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+d1_anyExpanding = (d1_tf1On and d1_pctR1 - d1_pctT1 > d1_hotGap) or (d1_tf2On and d1_pctR2 - d1_pctT2 > d1_hotGap) or (d1_tf3On and d1_pctR3 - d1_pctT3 > d1_hotGap)
+
+alertcondition(d1_anyExpanding, "Candle expanding",
+     "A tracked timeframe is covering range faster than its clock is running.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  DESSERT 3 · SESSION REPORT
+// ───────────────────────────────────────────────────────────────
+//  The same method does not behave the same way at every hour.
+//  Three windows are worth watching on most instruments, and this
+//  measures all three side by side against everything outside
+//  them.
+//
+//  For each window it reports how much the average candle moves,
+//  how often a high volatility candle appears, and how those
+//  candles then behaved -- using the same before-invalidation
+//  measurement as the Band Report, so the numbers are comparable
+//  between the two.
+//
+//  The windows are editable and default to the ones the Recoil
+//  method uses. Point them at your own hours and the report
+//  answers whether those hours are actually where this
+//  instrument does what you need it to.
+//
+//  Draws one table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced t3_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── WINDOWS ──────────────────────────────────────────────────
+t3_gWin = "Windows"
+
+t3_tz = input.string("UTC", "Timezone", options = ["UTC", "Europe/London", "America/New_York", "America/Chicago"], group = t3_gWin)
+
+t3_w1s = input.int(7,  "Window 1 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w1")
+t3_w1e = input.int(9,  "to",            minval = 0, maxval = 24, group = t3_gWin, inline = "w1",
+     tooltip = "To is exclusive. 7 to 9 covers 07:00 through 08:59.")
+
+t3_w2s = input.int(13, "Window 2 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w2")
+t3_w2e = input.int(14, "to",            minval = 0, maxval = 24, group = t3_gWin, inline = "w2")
+
+t3_w3s = input.int(19, "Window 3 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w3")
+t3_w3e = input.int(20, "to",            minval = 0, maxval = 24, group = t3_gWin, inline = "w3")
+
+t3_showOut = input.bool(true, "Include an outside the windows row", group = t3_gWin,
+     tooltip = "The comparison that matters. A window only earns its place if it beats the hours it excludes.")
+
+// ─── SAMPLE ───────────────────────────────────────────────────
+t3_gSample = "Sample"
+
+t3_window = input.int(5000, "Candles in sample", minval = 200, maxval = 20000, group = t3_gSample,
+     tooltip = "How many recent candles the report covers. Session comparisons need a large sample -- each window is only a couple of hours a day.")
+
+t3_horizon = input.int(5, "Measure over the next N bars", minval = 1, maxval = 50, group = t3_gSample,
+     tooltip = "Matches the Band Report so the two can be read together.")
+
+t3_atrLen = input.int(8, "ATR Length", minval = 1, group = t3_gSample)
+
+t3_trigBand = input.int(6, "High volatility from band #", minval = 1, maxval = 8, group = t3_gSample)
+
+t3_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = t3_gSample)
+
+// ─── BAND THRESHOLDS ──────────────────────────────────────────
+t3_gBand = "Band Thresholds"
+
+t3_t1 = input.float(0.30, "Threshold 1", step = 0.05, group = t3_gBand)
+t3_t2 = input.float(0.75, "Threshold 2", step = 0.05, group = t3_gBand)
+t3_t3 = input.float(1.20, "Threshold 3", step = 0.05, group = t3_gBand)
+t3_t4 = input.float(1.65, "Threshold 4", step = 0.05, group = t3_gBand)
+t3_t5 = input.float(2.10, "Threshold 5", step = 0.05, group = t3_gBand)
+t3_t6 = input.float(2.55, "Threshold 6", step = 0.05, group = t3_gBand)
+t3_t7 = input.float(3.00, "Threshold 7", step = 0.05, group = t3_gBand)
+
+// ─── REPORT ───────────────────────────────────────────────────
+t3_gRep = "Report"
+
+t3_hitA = input.float(50.0,  "Reversion mark A (% of body)", minval = 5.0, maxval = 300.0, step = 5.0, group = t3_gRep)
+t3_hitB = input.float(100.0, "Reversion mark B (% of body)", minval = 5.0, maxval = 300.0, step = 5.0, group = t3_gRep)
+
+t3_invalBuf = input.float(0.0, "Invalidation buffer (x ATR)", minval = 0.0, step = 0.25, group = t3_gRep,
+     tooltip = "How far beyond the candle's own extreme price must go before the measurement is abandoned. Matches the Band Report.")
+
+t3_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = t3_gRep)
+
+t3_goodPct = input.float(50.0, "Strong above", minval = 0.0, maxval = 100.0, step = 5.0, group = t3_gRep)
+t3_badPct  = input.float(25.0, "Weak below",   minval = 0.0, maxval = 100.0, step = 5.0, group = t3_gRep)
+t3_minN    = input.int(30, "Minimum sample to grade", minval = 1, maxval = 500, group = t3_gRep)
+
+// ─── PANEL ────────────────────────────────────────────────────
+t3_gPanel = "Panel"
+
+t3_pos = input.string("Bottom left", "Position", options = ["Top right", "Bottom right", "Bottom left", "Top left"], group = t3_gPanel)
+t3_txtSize = input.string("Tiny", "Text size", options = ["Tiny", "Small", "Normal", "Large"], group = t3_gPanel)
+
+// ─── THEME ────────────────────────────────────────────────────
+t3_gTheme = "Theme"
+
+t3_bg     = input.color(#131313, "Panel background", group = t3_gTheme)
+t3_title  = input.color(#c9a84c, "Title",            group = t3_gTheme)
+t3_label  = input.color(#8a877f, "Labels",           group = t3_gTheme)
+t3_white  = input.color(#e8e6e1, "Values",           group = t3_gTheme)
+t3_border = input.color(#1a1d24, "Border",           group = t3_gTheme)
+t3_good   = input.color(#26a269, "Strong", group = t3_gTheme, inline = "gr")
+t3_bad    = input.color(#f23645, "Weak",   group = t3_gTheme, inline = "gr")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+t3_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+t3_pip     = t3_pipIn > 0 ? t3_pipIn : t3_pipAuto
+
+t3_atr   = ta.atr(t3_atrLen)
+t3_ratio = ta.tr(true) / t3_atr
+
+t3_rawBand =
+     t3_ratio < t3_t1 ? 1 :
+     t3_ratio < t3_t2 ? 2 :
+     t3_ratio < t3_t3 ? 3 :
+     t3_ratio < t3_t4 ? 4 :
+     t3_ratio < t3_t5 ? 5 :
+     t3_ratio < t3_t6 ? 6 :
+     t3_ratio < t3_t7 ? 7 : 8
+
+t3_bodyNow = math.abs(close - open)
+t3_minBody = math.max(syminfo.mintick, t3_atr * t3_minBodyAtr)
+t3_bodyOk  = t3_minBodyAtr <= 0 or t3_bodyNow > t3_minBody
+t3_band    = t3_rawBand >= 6 and not t3_bodyOk ? 5 : t3_rawBand
+
+t3_inWin(int _h, int _s, int _e) =>
+    _s < _e ? _h >= _s and _h < _e : _h >= _s or _h < _e
+
+// Which window a bar belongs to. 0 means outside all of them.
+t3_winOf(int _h) =>
+    t3_inWin(_h, t3_w1s, t3_w1e) ? 1 : t3_inWin(_h, t3_w2s, t3_w2e) ? 2 : t3_inWin(_h, t3_w3s, t3_w3e) ? 3 : 0
+
+// ─── SAMPLE STORE ─────────────────────────────────────────────
+// Every candle is judged once the horizon has passed, then queued
+// with the window it belonged to. The queue rolls forward.
+
+var int[]   t3_qWin   = array.new<int>()
+var float[] t3_qRange = array.new<float>()
+var int[]   t3_qHigh  = array.new<int>()
+var int[]   t3_qA     = array.new<int>()
+var int[]   t3_qB     = array.new<int>()
+
+if barstate.isconfirmed and bar_index > t3_horizon + t3_atrLen
+
+    int   _w    = t3_winOf(hour(time[t3_horizon], t3_tz))
+    int   _b    = t3_band[t3_horizon]
+    float _op   = open[t3_horizon]
+    float _cl   = close[t3_horizon]
+    float _body = math.abs(_cl - _op)
+    float _rng  = high[t3_horizon] - low[t3_horizon]
+
+    bool _isHigh = _b >= t3_trigBand
+    bool _gotA   = false
+    bool _gotB   = false
+
+    // Reversion is only measured on the candles the method acts
+    // on. Everything else contributes range and count only.
+    if _isHigh and _body > 0
+        bool  _bear   = _cl < _op
+        float _atrRef = t3_atr[t3_horizon]
+        float _inval  = _bear ? low[t3_horizon] - _atrRef * t3_invalBuf : high[t3_horizon] + _atrRef * t3_invalBuf
+        float _tgtA   = _bear ? _cl + _body * t3_hitA / 100.0 : _cl - _body * t3_hitA / 100.0
+        float _tgtB   = _bear ? _cl + _body * t3_hitB / 100.0 : _cl - _body * t3_hitB / 100.0
+
+        bool _dead = false
+        for i = t3_horizon - 1 to 0
+            if not _dead
+                bool _broke = _bear ? low[i] <= _inval : high[i] >= _inval
+                if _broke
+                    _dead := true
+                else
+                    if not _gotA and (_bear ? high[i] >= _tgtA : low[i] <= _tgtA)
+                        _gotA := true
+                    if not _gotB and (_bear ? high[i] >= _tgtB : low[i] <= _tgtB)
+                        _gotB := true
+
+    array.push(t3_qWin,   _w)
+    array.push(t3_qRange, _rng)
+    array.push(t3_qHigh,  _isHigh ? 1 : 0)
+    array.push(t3_qA,     _gotA ? 1 : 0)
+    array.push(t3_qB,     _gotB ? 1 : 0)
+
+    while array.size(t3_qWin) > t3_window
+        array.shift(t3_qWin)
+        array.shift(t3_qRange)
+        array.shift(t3_qHigh)
+        array.shift(t3_qA)
+        array.shift(t3_qB)
+
+// ─── PANEL ────────────────────────────────────────────────────
+t3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : _s == "Normal" ? size.normal : size.large
+
+t3_posOf(_p) =>
+    _p == "Top right" ? position.top_right : _p == "Bottom right" ? position.bottom_right : _p == "Bottom left" ? position.bottom_left : position.top_left
+
+t3_gradeOf(float _pct, int _n) =>
+    _n < t3_minN ? t3_label : _pct >= t3_goodPct ? t3_good : _pct < t3_badPct ? t3_bad : t3_white
+
+t3_hh(int _h) =>
+    (_h < 10 ? "0" : "") + str.tostring(_h) + ":00"
+
+t3_winName(int _w) =>
+    _w == 1 ? t3_hh(t3_w1s) + "-" + t3_hh(t3_w1e) :
+     _w == 2 ? t3_hh(t3_w2s) + "-" + t3_hh(t3_w2e) :
+     _w == 3 ? t3_hh(t3_w3s) + "-" + t3_hh(t3_w3e) : "outside"
+
+var table t3_tbl = na
+
+if barstate.islast
+    int _rows = (t3_showOut ? 4 : 3) + 3
+
+    if na(t3_tbl)
+        t3_tbl := table.new(t3_posOf(t3_pos), 6, _rows,
+             bgcolor      = t3_bg,
+             border_color = t3_border,
+             border_width = 1,
+             frame_color  = t3_title,
+             frame_width  = 1)
+
+    // Tally.
+    var int[]   _cnt  = array.new<int>(4, 0)
+    var float[] _rsum = array.new<float>(4, 0.0)
+    var int[]   _hi   = array.new<int>(4, 0)
+    var int[]   _ha   = array.new<int>(4, 0)
+    var int[]   _hb   = array.new<int>(4, 0)
+
+    for w = 0 to 3
+        array.set(_cnt,  w, 0)
+        array.set(_rsum, w, 0.0)
+        array.set(_hi,   w, 0)
+        array.set(_ha,   w, 0)
+        array.set(_hb,   w, 0)
+
+    int _n = array.size(t3_qWin)
+    if _n > 0
+        for i = 0 to _n - 1
+            int _w = array.get(t3_qWin, i)
+            array.set(_cnt,  _w, array.get(_cnt, _w) + 1)
+            array.set(_rsum, _w, array.get(_rsum, _w) + array.get(t3_qRange, i))
+            array.set(_hi,   _w, array.get(_hi, _w) + array.get(t3_qHigh, i))
+            array.set(_ha,   _w, array.get(_ha, _w) + array.get(t3_qA, i))
+            array.set(_hb,   _w, array.get(_hb, _w) + array.get(t3_qB, i))
+
+    table.cell(t3_tbl, 0, 0, " QUANT PRIME — SESSION REPORT ",
+         text_color = t3_title, text_size = t3_sizeOf(t3_txtSize), bgcolor = color.rgb(10, 10, 25))
+    table.merge_cells(t3_tbl, 0, 0, 5, 0)
+
+    table.cell(t3_tbl, 0, 1, " WINDOW ", text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+    table.cell(t3_tbl, 1, 1, " BARS ",   text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+    table.cell(t3_tbl, 2, 1, " RANGE ",  text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+    table.cell(t3_tbl, 3, 1, " HIGH ",   text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+    table.cell(t3_tbl, 4, 1, " ≥" + str.tostring(t3_hitA, "#") + "% ", text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+    table.cell(t3_tbl, 5, 1, " ≥" + str.tostring(t3_hitB, "#") + "% ", text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg)
+
+    int _r = 2
+    for w = 1 to (t3_showOut ? 4 : 3)
+        int _idx = w == 4 ? 0 : w
+        int   _c  = array.get(_cnt, _idx)
+        float _av = _c > 0 ? array.get(_rsum, _idx) / _c / t3_pip : 0.0
+        int   _h  = array.get(_hi, _idx)
+        float _hp = _c > 0 ? _h / _c * 100.0 : 0.0
+        float _pa = _h > 0 ? array.get(_ha, _idx) / _h * 100.0 : 0.0
+        float _pb = _h > 0 ? array.get(_hb, _idx) / _h * 100.0 : 0.0
+
+        table.cell(t3_tbl, 0, _r, " " + t3_winName(_idx) + " ",
+             text_color = _idx == 0 ? t3_label : t3_white, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        table.cell(t3_tbl, 1, _r, " " + str.tostring(_c) + " ",
+             text_color = t3_label, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        table.cell(t3_tbl, 2, _r, " " + (_c > 0 ? str.tostring(_av, "#.#") : "—") + " ",
+             text_color = t3_white, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        table.cell(t3_tbl, 3, _r, " " + (_c > 0 ? str.tostring(_hp, "#.#") + "%" : "—") + " ",
+             text_color = t3_white, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        table.cell(t3_tbl, 4, _r, " " + (_h > 0 ? str.tostring(_pa, "#") + "%" + (_h < t3_minN ? "*" : "") : "—") + " ",
+             text_color = _h > 0 ? t3_gradeOf(_pa, _h) : t3_label, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        table.cell(t3_tbl, 5, _r, " " + (_h > 0 ? str.tostring(_pb, "#") + "%" + (_h < t3_minN ? "*" : "") : "—") + " ",
+             text_color = _h > 0 ? t3_gradeOf(_pb, _h) : t3_label, text_size = t3_sizeOf(t3_txtSize), bgcolor = t3_bg)
+        _r += 1
+
+    table.cell(t3_tbl, 0, _r,
+         " " + str.tostring(_n) + " candles  ·  " + t3_tz + "  ·  " + timeframe.period +
+         "  ·  reversion on band " + str.tostring(t3_trigBand) + "+ only  ·  * too few to grade ",
+         text_color = t3_label, text_size = size.tiny, bgcolor = t3_bg, text_formatting = text.format_italic)
+    table.merge_cells(t3_tbl, 0, _r, 5, _r)
+

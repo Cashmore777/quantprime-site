@@ -1,0 +1,141 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-2000
+// -------------------------------------------------------------
+//  ATR Envelope
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 2000", shorttitle = "REC-2000", overlay = true, max_labels_count = 100)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  STARTER 2 · ATR ENVELOPE
+// ───────────────────────────────────────────────────────────────
+//  Three pairs of rails set at fixed ATR distances either side of
+//  a moving anchor. They answer a different question to the
+//  volatility bands: those measure how big THIS candle is, these
+//  measure how far price has TRAVELLED from equilibrium.
+//
+//  A candle can be perfectly ordinary and still sit three ATRs
+//  from the anchor after a long grind. Equally a single band 8
+//  candle can leave price barely stretched at all if it started
+//  on the far side. Reading both together is the point.
+//
+//  Rails escalate in colour the same way the volatility bands do:
+//  blue is normal, yellow is stretched, red is extended.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced s2_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── ANCHOR ───────────────────────────────────────────────────
+s2_gAnchor = "Anchor"
+
+s2_anchorType = input.string("EMA", "Anchor type", options = ["EMA", "SMA"], group = s2_gAnchor,
+     tooltip = "The centre line the rails are measured from. EMA reacts faster to recent price; SMA gives a steadier centre.")
+
+s2_anchorLen = input.int(26, "Anchor length", minval = 1, group = s2_gAnchor,
+     tooltip = "Shorter anchors hug price, so the rails only flag sharp moves. Longer anchors stay put, so a slow grind away from value still registers as stretched.")
+
+s2_showAnchor = input.bool(true, "Show anchor line", group = s2_gAnchor)
+s2_anchorCol  = input.color(#8a877f, "Anchor color", group = s2_gAnchor)
+
+// ─── ATR ──────────────────────────────────────────────────────
+s2_gAtr = "ATR"
+
+s2_atrLen = input.int(8, "ATR Length", minval = 1, group = s2_gAtr,
+     tooltip = "Matches the Recoil default so rail distances stay consistent with the volatility band readings.")
+
+// ─── RAILS ────────────────────────────────────────────────────
+s2_gRails = "Rails"
+
+s2_r1On   = input.bool(true, "Rail 1", group = s2_gRails, inline = "r1")
+s2_r1Mult = input.float(1.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r1")
+s2_r1Col  = input.color(#3179f5, "", group = s2_gRails, inline = "r1")
+
+s2_r2On   = input.bool(true, "Rail 2", group = s2_gRails, inline = "r2")
+s2_r2Mult = input.float(2.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r2")
+s2_r2Col  = input.color(#ffeb3b, "", group = s2_gRails, inline = "r2")
+
+s2_r3On   = input.bool(true, "Rail 3", group = s2_gRails, inline = "r3")
+s2_r3Mult = input.float(3.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r3")
+s2_r3Col  = input.color(#f23645, "", group = s2_gRails, inline = "r3")
+
+s2_width = input.int(1, "Line width", minval = 1, maxval = 4, group = s2_gRails)
+
+s2_fill = input.bool(false, "Shade between rails", group = s2_gRails,
+     tooltip = "Fills the space between the rails at low opacity. Useful for reading stretch at a glance, busier on a dense chart.")
+
+s2_fillOp = input.int(94, "Shade transparency", minval = 70, maxval = 99, group = s2_gRails)
+
+// ─── STRETCH READOUT ──────────────────────────────────────────
+s2_gRead = "Stretch Readout"
+
+s2_showRead = input.bool(true, "Show stretch label on last bar", group = s2_gRead,
+     tooltip = "A single label at the current bar showing how many ATRs price sits from the anchor, and which side.")
+
+s2_readSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = s2_gRead)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+s2_atr    = ta.atr(s2_atrLen)
+s2_anchor = s2_anchorType == "EMA" ? ta.ema(close, s2_anchorLen) : ta.sma(close, s2_anchorLen)
+
+s2_u1 = s2_anchor + s2_atr * s2_r1Mult
+s2_l1 = s2_anchor - s2_atr * s2_r1Mult
+s2_u2 = s2_anchor + s2_atr * s2_r2Mult
+s2_l2 = s2_anchor - s2_atr * s2_r2Mult
+s2_u3 = s2_anchor + s2_atr * s2_r3Mult
+s2_l3 = s2_anchor - s2_atr * s2_r3Mult
+
+// How far price sits from the anchor, expressed in ATRs.
+s2_stretch = s2_atr > 0 ? (close - s2_anchor) / s2_atr : 0.0
+s2_absStr  = math.abs(s2_stretch)
+
+s2_zoneCol = s2_absStr >= s2_r3Mult ? s2_r3Col : s2_absStr >= s2_r2Mult ? s2_r2Col : s2_absStr >= s2_r1Mult ? s2_r1Col : s2_anchorCol
+
+// ─── RENDER ───────────────────────────────────────────────────
+s2_pAnchor = plot(s2_showAnchor ? s2_anchor : na, title = "Anchor", color = s2_anchorCol, linewidth = 1)
+
+s2_pU1 = plot(s2_r1On ? s2_u1 : na, title = "Rail 1 upper", color = s2_r1Col, linewidth = s2_width)
+s2_pL1 = plot(s2_r1On ? s2_l1 : na, title = "Rail 1 lower", color = s2_r1Col, linewidth = s2_width)
+s2_pU2 = plot(s2_r2On ? s2_u2 : na, title = "Rail 2 upper", color = s2_r2Col, linewidth = s2_width)
+s2_pL2 = plot(s2_r2On ? s2_l2 : na, title = "Rail 2 lower", color = s2_r2Col, linewidth = s2_width)
+s2_pU3 = plot(s2_r3On ? s2_u3 : na, title = "Rail 3 upper", color = s2_r3Col, linewidth = s2_width)
+s2_pL3 = plot(s2_r3On ? s2_l3 : na, title = "Rail 3 lower", color = s2_r3Col, linewidth = s2_width)
+
+fill(s2_pU1, s2_pU2, color = s2_fill ? color.new(s2_r2Col, s2_fillOp) : na, title = "Upper 1 to 2")
+fill(s2_pU2, s2_pU3, color = s2_fill ? color.new(s2_r3Col, s2_fillOp) : na, title = "Upper 2 to 3")
+fill(s2_pL2, s2_pL1, color = s2_fill ? color.new(s2_r2Col, s2_fillOp) : na, title = "Lower 1 to 2")
+fill(s2_pL3, s2_pL2, color = s2_fill ? color.new(s2_r3Col, s2_fillOp) : na, title = "Lower 2 to 3")
+
+s2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+var label s2_readLbl = na
+
+if barstate.islast and s2_showRead
+    label.delete(s2_readLbl)
+    string s2_side = s2_stretch > 0 ? "above" : s2_stretch < 0 ? "below" : "at"
+    s2_readLbl := label.new(bar_index, close,
+         text      = str.tostring(s2_absStr, "#.##") + " ATR " + s2_side,
+         style     = label.style_label_left,
+         color     = color.new(color.black, 15),
+         textcolor = s2_zoneCol,
+         size      = s2_sizeOf(s2_readSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(ta.crossover(close, s2_u3), "Stretched above outer rail",
+     "Price has closed beyond the outer ATR rail on the upside.")
+
+alertcondition(ta.crossunder(close, s2_l3), "Stretched below outer rail",
+     "Price has closed beyond the outer ATR rail on the downside.")
+
+alertcondition(ta.crossover(s2_absStr, s2_r2Mult), "Stretch exceeded rail 2",
+     "Price has moved beyond the middle ATR rail from the anchor.")
+

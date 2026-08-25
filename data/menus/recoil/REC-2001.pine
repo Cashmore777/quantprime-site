@@ -1,0 +1,442 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-2001
+// -------------------------------------------------------------
+//  ATR Envelope + Band Report
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 2001", shorttitle = "REC-2001", overlay = true, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  STARTER 2 · ATR ENVELOPE
+// ───────────────────────────────────────────────────────────────
+//  Three pairs of rails set at fixed ATR distances either side of
+//  a moving anchor. They answer a different question to the
+//  volatility bands: those measure how big THIS candle is, these
+//  measure how far price has TRAVELLED from equilibrium.
+//
+//  A candle can be perfectly ordinary and still sit three ATRs
+//  from the anchor after a long grind. Equally a single band 8
+//  candle can leave price barely stretched at all if it started
+//  on the far side. Reading both together is the point.
+//
+//  Rails escalate in colour the same way the volatility bands do:
+//  blue is normal, yellow is stretched, red is extended.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced s2_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── ANCHOR ───────────────────────────────────────────────────
+s2_gAnchor = "Anchor"
+
+s2_anchorType = input.string("EMA", "Anchor type", options = ["EMA", "SMA"], group = s2_gAnchor,
+     tooltip = "The centre line the rails are measured from. EMA reacts faster to recent price; SMA gives a steadier centre.")
+
+s2_anchorLen = input.int(26, "Anchor length", minval = 1, group = s2_gAnchor,
+     tooltip = "Shorter anchors hug price, so the rails only flag sharp moves. Longer anchors stay put, so a slow grind away from value still registers as stretched.")
+
+s2_showAnchor = input.bool(true, "Show anchor line", group = s2_gAnchor)
+s2_anchorCol  = input.color(#8a877f, "Anchor color", group = s2_gAnchor)
+
+// ─── ATR ──────────────────────────────────────────────────────
+s2_gAtr = "ATR"
+
+s2_atrLen = input.int(8, "ATR Length", minval = 1, group = s2_gAtr,
+     tooltip = "Matches the Recoil default so rail distances stay consistent with the volatility band readings.")
+
+// ─── RAILS ────────────────────────────────────────────────────
+s2_gRails = "Rails"
+
+s2_r1On   = input.bool(true, "Rail 1", group = s2_gRails, inline = "r1")
+s2_r1Mult = input.float(1.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r1")
+s2_r1Col  = input.color(#3179f5, "", group = s2_gRails, inline = "r1")
+
+s2_r2On   = input.bool(true, "Rail 2", group = s2_gRails, inline = "r2")
+s2_r2Mult = input.float(2.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r2")
+s2_r2Col  = input.color(#ffeb3b, "", group = s2_gRails, inline = "r2")
+
+s2_r3On   = input.bool(true, "Rail 3", group = s2_gRails, inline = "r3")
+s2_r3Mult = input.float(3.0, "x ATR", minval = 0.1, step = 0.25, group = s2_gRails, inline = "r3")
+s2_r3Col  = input.color(#f23645, "", group = s2_gRails, inline = "r3")
+
+s2_width = input.int(1, "Line width", minval = 1, maxval = 4, group = s2_gRails)
+
+s2_fill = input.bool(false, "Shade between rails", group = s2_gRails,
+     tooltip = "Fills the space between the rails at low opacity. Useful for reading stretch at a glance, busier on a dense chart.")
+
+s2_fillOp = input.int(94, "Shade transparency", minval = 70, maxval = 99, group = s2_gRails)
+
+// ─── STRETCH READOUT ──────────────────────────────────────────
+s2_gRead = "Stretch Readout"
+
+s2_showRead = input.bool(true, "Show stretch label on last bar", group = s2_gRead,
+     tooltip = "A single label at the current bar showing how many ATRs price sits from the anchor, and which side.")
+
+s2_readSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = s2_gRead)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+s2_atr    = ta.atr(s2_atrLen)
+s2_anchor = s2_anchorType == "EMA" ? ta.ema(close, s2_anchorLen) : ta.sma(close, s2_anchorLen)
+
+s2_u1 = s2_anchor + s2_atr * s2_r1Mult
+s2_l1 = s2_anchor - s2_atr * s2_r1Mult
+s2_u2 = s2_anchor + s2_atr * s2_r2Mult
+s2_l2 = s2_anchor - s2_atr * s2_r2Mult
+s2_u3 = s2_anchor + s2_atr * s2_r3Mult
+s2_l3 = s2_anchor - s2_atr * s2_r3Mult
+
+// How far price sits from the anchor, expressed in ATRs.
+s2_stretch = s2_atr > 0 ? (close - s2_anchor) / s2_atr : 0.0
+s2_absStr  = math.abs(s2_stretch)
+
+s2_zoneCol = s2_absStr >= s2_r3Mult ? s2_r3Col : s2_absStr >= s2_r2Mult ? s2_r2Col : s2_absStr >= s2_r1Mult ? s2_r1Col : s2_anchorCol
+
+// ─── RENDER ───────────────────────────────────────────────────
+s2_pAnchor = plot(s2_showAnchor ? s2_anchor : na, title = "Anchor", color = s2_anchorCol, linewidth = 1)
+
+s2_pU1 = plot(s2_r1On ? s2_u1 : na, title = "Rail 1 upper", color = s2_r1Col, linewidth = s2_width)
+s2_pL1 = plot(s2_r1On ? s2_l1 : na, title = "Rail 1 lower", color = s2_r1Col, linewidth = s2_width)
+s2_pU2 = plot(s2_r2On ? s2_u2 : na, title = "Rail 2 upper", color = s2_r2Col, linewidth = s2_width)
+s2_pL2 = plot(s2_r2On ? s2_l2 : na, title = "Rail 2 lower", color = s2_r2Col, linewidth = s2_width)
+s2_pU3 = plot(s2_r3On ? s2_u3 : na, title = "Rail 3 upper", color = s2_r3Col, linewidth = s2_width)
+s2_pL3 = plot(s2_r3On ? s2_l3 : na, title = "Rail 3 lower", color = s2_r3Col, linewidth = s2_width)
+
+fill(s2_pU1, s2_pU2, color = s2_fill ? color.new(s2_r2Col, s2_fillOp) : na, title = "Upper 1 to 2")
+fill(s2_pU2, s2_pU3, color = s2_fill ? color.new(s2_r3Col, s2_fillOp) : na, title = "Upper 2 to 3")
+fill(s2_pL2, s2_pL1, color = s2_fill ? color.new(s2_r2Col, s2_fillOp) : na, title = "Lower 1 to 2")
+fill(s2_pL3, s2_pL2, color = s2_fill ? color.new(s2_r3Col, s2_fillOp) : na, title = "Lower 2 to 3")
+
+s2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+var label s2_readLbl = na
+
+if barstate.islast and s2_showRead
+    label.delete(s2_readLbl)
+    string s2_side = s2_stretch > 0 ? "above" : s2_stretch < 0 ? "below" : "at"
+    s2_readLbl := label.new(bar_index, close,
+         text      = str.tostring(s2_absStr, "#.##") + " ATR " + s2_side,
+         style     = label.style_label_left,
+         color     = color.new(color.black, 15),
+         textcolor = s2_zoneCol,
+         size      = s2_sizeOf(s2_readSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(ta.crossover(close, s2_u3), "Stretched above outer rail",
+     "Price has closed beyond the outer ATR rail on the upside.")
+
+alertcondition(ta.crossunder(close, s2_l3), "Stretched below outer rail",
+     "Price has closed beyond the outer ATR rail on the downside.")
+
+alertcondition(ta.crossover(s2_absStr, s2_r2Mult), "Stretch exceeded rail 2",
+     "Price has moved beyond the middle ATR rail from the anchor.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  DESSERT 1 · BAND REPORT
+// ───────────────────────────────────────────────────────────────
+//  Counts how often each volatility band has appeared on this
+//  instrument, and measures what price did afterwards.
+//
+//  For every candle it walks forward through the bars that
+//  followed and asks two things. Where did price finish, relative
+//  to the candle's own body -- back above where it closed, or
+//  further away. And did it reach the reversion marks BEFORE
+//  breaking the candle's own extreme.
+//
+//  That ordering is what makes the numbers mean anything. Over
+//  enough bars price will drift back across almost any single
+//  candle's body at some point, so measuring the furthest it ever
+//  got would report near certainty for every band. Reaching the
+//  mark first, while the candle's extreme still held, is a
+//  different and much smaller number.
+//
+//  Nothing here is a recommendation and no trade is simulated.
+//  It reports what this instrument has actually done, on the
+//  timeframe you are looking at, over the window you choose. Two
+//  pairs will not give the same answer, and neither will the same
+//  pair on a different timeframe -- which is the point of being
+//  able to run it yourself.
+//
+//  Draws one table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced t1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── SAMPLE ───────────────────────────────────────────────────
+t1_gSample = "Sample"
+
+t1_window = input.int(500, "Candles in sample", minval = 50, maxval = 5000, group = t1_gSample,
+     tooltip = "How many recent candles the report covers. Larger samples are steadier but slower to reflect a change in conditions.")
+
+t1_horizon = input.int(5, "Measure over the next N bars", minval = 1, maxval = 50, group = t1_gSample,
+     tooltip = "How long after a candle closes the reversion is measured. Short horizons describe an immediate snap back, longer ones allow a slower return.")
+
+t1_atrLen = input.int(8, "ATR Length", minval = 1, group = t1_gSample)
+
+t1_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = t1_gSample,
+     tooltip = "A candle's body must clear this to qualify for a high band, exactly as in Volatility Bands. Set to 0 to disable.")
+
+// ─── BAND THRESHOLDS ──────────────────────────────────────────
+t1_gBand = "Band Thresholds"
+
+t1_t1 = input.float(0.30, "Threshold 1", step = 0.05, group = t1_gBand)
+t1_t2 = input.float(0.75, "Threshold 2", step = 0.05, group = t1_gBand)
+t1_t3 = input.float(1.20, "Threshold 3", step = 0.05, group = t1_gBand)
+t1_t4 = input.float(1.65, "Threshold 4", step = 0.05, group = t1_gBand)
+t1_t5 = input.float(2.10, "Threshold 5", step = 0.05, group = t1_gBand)
+t1_t6 = input.float(2.55, "Threshold 6", step = 0.05, group = t1_gBand)
+t1_t7 = input.float(3.00, "Threshold 7", step = 0.05, group = t1_gBand)
+
+// ─── REPORT ───────────────────────────────────────────────────
+t1_gRep = "Report"
+
+t1_hitA = input.float(50.0,  "Reversion mark A (% of body)", minval = 5.0, maxval = 300.0, step = 5.0, group = t1_gRep,
+     tooltip = "The first level a reversion is counted against. Matches the TP1 default in the Trade Planner.")
+
+t1_hitB = input.float(100.0, "Reversion mark B (% of body)", minval = 5.0, maxval = 300.0, step = 5.0, group = t1_gRep,
+     tooltip = "The second level. 100% is the whole body given back.")
+
+t1_invalBuf = input.float(0.0, "Invalidation buffer (x ATR)", minval = 0.0, step = 0.25, group = t1_gRep,
+     tooltip = "How far beyond the candle's own extreme price must go before the measurement is abandoned. 0 uses the extreme itself. Raise it to allow the sort of overshoot a real stop would have absorbed.")
+
+t1_gradeGood = input.float(50.0, "Strong hit rate above", minval = 0.0, maxval = 100.0, step = 5.0, group = t1_gRep,
+     tooltip = "Hit rates at or above this render green. Between the two values they render neutral, below the weak level they render red. This grades the two right hand columns only -- the counts and shares are descriptive, not results.")
+
+t1_gradeBad = input.float(25.0, "Weak hit rate below", minval = 0.0, maxval = 100.0, step = 5.0, group = t1_gRep)
+
+t1_markBands = input.int(0, "Mark candles from band # on chart", minval = 0, maxval = 8, group = t1_gRep,
+     tooltip = "Diagnostic. Labels every candle this report has counted at or above the chosen band with the band it was filed under. 0 switches it off. Use it to confirm this report and Volatility Bands agree -- if they disagree, their Min Body Size settings differ.")
+
+t1_highOnly = input.bool(false, "Show high bands only", group = t1_gRep,
+     tooltip = "Collapses the table to bands 6, 7 and 8. Useful once you only care about the candles the method acts on.")
+
+// ─── PANEL ────────────────────────────────────────────────────
+t1_gPanel = "Panel"
+
+t1_pos = input.string("Bottom left", "Position", options = ["Top right", "Bottom right", "Bottom left", "Top left"], group = t1_gPanel,
+     tooltip = "When combining several pieces, give each one its own corner so nothing stacks.")
+
+t1_txtSize = input.string("Tiny", "Text size", options = ["Tiny", "Small", "Normal", "Large"], group = t1_gPanel)
+
+// ─── THEME ────────────────────────────────────────────────────
+t1_gTheme = "Theme"
+
+t1_bg     = input.color(#131313, "Panel background", group = t1_gTheme)
+t1_title  = input.color(#c9a84c, "Title",            group = t1_gTheme)
+t1_label  = input.color(#8a877f, "Labels",           group = t1_gTheme)
+t1_white  = input.color(#e8e6e1, "Values",           group = t1_gTheme)
+t1_border = input.color(#1a1d24, "Border",           group = t1_gTheme)
+
+t1_good = input.color(#26a269, "Strong",  group = t1_gTheme, inline = "gr")
+t1_bad  = input.color(#f23645, "Weak",    group = t1_gTheme, inline = "gr")
+
+t1_c1 = input.color(#bbd9fb, "Band 1", group = t1_gTheme, inline = "b12")
+t1_c2 = input.color(#90bff9, "Band 2", group = t1_gTheme, inline = "b12")
+t1_c3 = input.color(#5b9cf6, "Band 3", group = t1_gTheme, inline = "b34")
+t1_c4 = input.color(#3179f5, "Band 4", group = t1_gTheme, inline = "b34")
+t1_c5 = input.color(#1848cc, "Band 5", group = t1_gTheme, inline = "b56")
+t1_c6 = input.color(#ffeb3b, "Band 6", group = t1_gTheme, inline = "b56")
+t1_c7 = input.color(#ff9800, "Band 7", group = t1_gTheme, inline = "b78")
+t1_c8 = input.color(#f23645, "Band 8", group = t1_gTheme, inline = "b78")
+
+// ─── BAND ENGINE ──────────────────────────────────────────────
+t1_atr   = ta.atr(t1_atrLen)
+t1_ratio = ta.tr(true) / t1_atr
+
+t1_rawBand =
+     t1_ratio < t1_t1 ? 1 :
+     t1_ratio < t1_t2 ? 2 :
+     t1_ratio < t1_t3 ? 3 :
+     t1_ratio < t1_t4 ? 4 :
+     t1_ratio < t1_t5 ? 5 :
+     t1_ratio < t1_t6 ? 6 :
+     t1_ratio < t1_t7 ? 7 : 8
+
+t1_bodyNow = math.abs(close - open)
+t1_minBody = math.max(syminfo.mintick, t1_atr * t1_minBodyAtr)
+t1_bodyOk  = t1_minBodyAtr <= 0 or t1_bodyNow > t1_minBody
+t1_band    = t1_rawBand >= 6 and not t1_bodyOk ? 5 : t1_rawBand
+
+t1_colOf(int _b) =>
+     _b == 8 ? t1_c8 : _b == 7 ? t1_c7 : _b == 6 ? t1_c6 : _b == 5 ? t1_c5 :
+     _b == 4 ? t1_c4 : _b == 3 ? t1_c3 : _b == 2 ? t1_c2 : t1_c1
+
+// Grades a hit rate rather than describing which band it came
+// from. Anything with too few samples to mean anything stays
+// neutral regardless of what the percentage says.
+t1_gradeOf(float _pct, int _n) =>
+    _n < 30 ? t1_label : _pct >= t1_gradeGood ? t1_good : _pct < t1_gradeBad ? t1_bad : t1_white
+
+t1_nameOf(int _b) =>
+     _b == 8 ? "Very High" : _b == 7 ? "High" : _b == 6 ? "High Med" : _b == 5 ? "Medium" :
+     _b == 4 ? "Low Med" : _b == 3 ? "Low" : _b == 2 ? "Very Low" : "Extr Low"
+
+// ─── SAMPLE STORE ─────────────────────────────────────────────
+// A candle can only be judged once the horizon has passed, so
+// every measurement is taken from the candle t1_horizon bars ago
+// and the result is queued. The queue is capped at the sample
+// size, which makes the window roll forward as new bars arrive.
+
+var int[]   t1_qBand = array.new<int>()
+var float[] t1_qRev  = array.new<float>()
+var int[]   t1_qA    = array.new<int>()
+var int[]   t1_qB    = array.new<int>()
+
+if barstate.isconfirmed and bar_index > t1_horizon + t1_atrLen
+
+    int   _b    = t1_band[t1_horizon]
+    float _op   = open[t1_horizon]
+    float _cl   = close[t1_horizon]
+    float _body = math.abs(_cl - _op)
+
+    if _body > 0
+        bool  _bear   = _cl < _op
+        float _atrRef = t1_atr[t1_horizon]
+
+        // The level that ends the measurement: the candle's own
+        // extreme, optionally padded.
+        float _inval = _bear ? low[t1_horizon]  - _atrRef * t1_invalBuf
+                             : high[t1_horizon] + _atrRef * t1_invalBuf
+
+        // The two reversion marks, measured back against the
+        // candle's direction from where it closed.
+        float _tgtA = _bear ? _cl + _body * t1_hitA / 100.0 : _cl - _body * t1_hitA / 100.0
+        float _tgtB = _bear ? _cl + _body * t1_hitB / 100.0 : _cl - _body * t1_hitB / 100.0
+
+        bool _dead = false
+        bool _gotA = false
+        bool _gotB = false
+
+        // Walk forward through the bars that followed, oldest
+        // first. Invalidation is checked before the targets, so a
+        // bar that does both counts as the stricter outcome.
+        for i = t1_horizon - 1 to 0
+            if not _dead
+                bool _broke = _bear ? low[i] <= _inval : high[i] >= _inval
+                if _broke
+                    _dead := true
+                else
+                    if not _gotA and (_bear ? high[i] >= _tgtA : low[i] <= _tgtA)
+                        _gotA := true
+                    if not _gotB and (_bear ? high[i] >= _tgtB : low[i] <= _tgtB)
+                        _gotB := true
+
+        // Where price actually finished, signed. Negative means
+        // it ended further away than the candle left it.
+        float _end = _bear ? close - _cl : _cl - close
+        float _pct = _end / _body * 100.0
+
+        array.push(t1_qBand, _b)
+        array.push(t1_qRev,  _pct)
+        array.push(t1_qA,    _gotA ? 1 : 0)
+        array.push(t1_qB,    _gotB ? 1 : 0)
+
+        // Diagnostic marker, placed on the candle that was
+        // measured rather than on the bar doing the measuring.
+        if t1_markBands > 0 and _b >= t1_markBands
+            label.new(bar_index - t1_horizon, high[t1_horizon], str.tostring(_b),
+                 style     = label.style_label_down,
+                 color     = color.new(color.black, 100),
+                 textcolor = t1_colOf(_b),
+                 size      = size.tiny,
+                 yloc      = yloc.abovebar)
+
+        while array.size(t1_qBand) > t1_window
+            array.shift(t1_qBand)
+            array.shift(t1_qRev)
+            array.shift(t1_qA)
+            array.shift(t1_qB)
+
+// ─── PANEL ────────────────────────────────────────────────────
+t1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : _s == "Normal" ? size.normal : size.large
+
+t1_posOf(_p) =>
+    _p == "Top right" ? position.top_right : _p == "Bottom right" ? position.bottom_right : _p == "Bottom left" ? position.bottom_left : position.top_left
+
+var table t1_tbl = na
+
+if barstate.islast
+    int _lo   = t1_highOnly ? 6 : 1
+    int _rows = (8 - _lo + 1) + 3
+
+    if na(t1_tbl)
+        t1_tbl := table.new(t1_posOf(t1_pos), 6, _rows,
+             bgcolor      = t1_bg,
+             border_color = t1_border,
+             border_width = 1,
+             frame_color  = t1_title,
+             frame_width  = 1)
+
+    // Tally the queue.
+    var int[]   _cnt = array.new<int>(9, 0)
+    var float[] _sum = array.new<float>(9, 0.0)
+    var int[]   _hitA = array.new<int>(9, 0)
+    var int[]   _hitB = array.new<int>(9, 0)
+
+    for b = 0 to 8
+        array.set(_cnt,  b, 0)
+        array.set(_sum,  b, 0.0)
+        array.set(_hitA, b, 0)
+        array.set(_hitB, b, 0)
+
+    int _n = array.size(t1_qBand)
+    if _n > 0
+        for i = 0 to _n - 1
+            int   _b = array.get(t1_qBand, i)
+            float _p = array.get(t1_qRev, i)
+            array.set(_cnt, _b, array.get(_cnt, _b) + 1)
+            array.set(_sum, _b, array.get(_sum, _b) + _p)
+            array.set(_hitA, _b, array.get(_hitA, _b) + array.get(t1_qA, i))
+            array.set(_hitB, _b, array.get(_hitB, _b) + array.get(t1_qB, i))
+
+    table.cell(t1_tbl, 0, 0, " QUANT PRIME — BAND REPORT ",
+         text_color = t1_title, text_size = t1_sizeOf(t1_txtSize), bgcolor = color.rgb(10, 10, 25))
+    table.merge_cells(t1_tbl, 0, 0, 5, 0)
+
+    table.cell(t1_tbl, 0, 1, " BAND ",  text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+    table.cell(t1_tbl, 1, 1, " N ",     text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+    table.cell(t1_tbl, 2, 1, " SHARE ", text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+    table.cell(t1_tbl, 3, 1, " END ",   text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+    table.cell(t1_tbl, 4, 1, " ≥" + str.tostring(t1_hitA, "#") + "% ", text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+    table.cell(t1_tbl, 5, 1, " ≥" + str.tostring(t1_hitB, "#") + "% ", text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg)
+
+    int _r = 2
+    for b = _lo to 8
+        int   _c  = array.get(_cnt, b)
+        float _av = _c > 0 ? array.get(_sum, b) / _c : 0.0
+        float _pa = _c > 0 ? array.get(_hitA, b) / _c * 100.0 : 0.0
+        float _pb = _c > 0 ? array.get(_hitB, b) / _c * 100.0 : 0.0
+        float _sh = _n > 0 ? _c / _n * 100.0 : 0.0
+        color _bc = t1_colOf(b)
+
+        table.cell(t1_tbl, 0, _r, " " + str.tostring(b) + " " + t1_nameOf(b) + " ",
+             text_color = _bc, text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        table.cell(t1_tbl, 1, _r, " " + str.tostring(_c) + (_c > 0 and _c < 30 ? "*" : "") + " ",
+             text_color = _c >= 30 ? t1_white : t1_label, text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        table.cell(t1_tbl, 2, _r, " " + str.tostring(_sh, "#.#") + "% ",
+             text_color = t1_label, text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        table.cell(t1_tbl, 3, _r, " " + (_c > 0 ? str.tostring(_av, "#") + "%" : "—") + " ",
+             text_color = _c == 0 ? t1_label : _av >= 0 ? t1_white : #f23645,
+             text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        table.cell(t1_tbl, 4, _r, " " + (_c > 0 ? str.tostring(_pa, "#") + "%" : "—") + " ",
+             text_color = _c > 0 ? t1_gradeOf(_pa, _c) : t1_label, text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        table.cell(t1_tbl, 5, _r, " " + (_c > 0 ? str.tostring(_pb, "#") + "%" : "—") + " ",
+             text_color = _c > 0 ? t1_gradeOf(_pb, _c) : t1_label, text_size = t1_sizeOf(t1_txtSize), bgcolor = t1_bg)
+        _r += 1
+
+    table.cell(t1_tbl, 0, _r,
+         " " + str.tostring(_n) + " candles measured  ·  " + str.tostring(t1_horizon) + " bar horizon  ·  " + timeframe.period + "  ·  * too few to grade ",
+         text_color = t1_label, text_size = size.tiny, bgcolor = t1_bg, text_formatting = text.format_italic)
+    table.merge_cells(t1_tbl, 0, _r, 5, _r)
+

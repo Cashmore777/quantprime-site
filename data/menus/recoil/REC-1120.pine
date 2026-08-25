@@ -1,0 +1,484 @@
+//@version=6
+// =============================================================
+//  QUANT PRIME — RECOIL BUILD  ·  REC-1120
+// -------------------------------------------------------------
+//  Volatility Bands + ATR Stops + Position Sizer
+//
+//  Generated from the Recoil Build menu. Each piece keeps its
+//  own settings group and its own namespace, so nothing here
+//  interferes with anything else. Remove a piece by rebuilding
+//  from the menu rather than editing this file.
+// =============================================================
+
+indicator("QP · Recoil 1120", shorttitle = "REC-1120", overlay = true, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  STARTER 1 · VOLATILITY BANDS
+// ───────────────────────────────────────────────────────────────
+//  Every candle's TRUE range -- its full high-to-low movement,
+//  including any gap from the prior close -- is divided by
+//  ATR(length). The result answers one question: how big is this
+//  candle compared to a normal recent candle? 1.0x is exactly
+//  average. 3.0x is three times the recent norm.
+//
+//  That ratio places the candle in one of eight bands:
+//
+//    1  Extremely Low     5  Medium
+//    2  Very Low          6  High Medium
+//    3  Low               7  High
+//    4  Lower Medium      8  Very High
+//
+//  ATR Length is the MEMORY of the baseline. Shorter (5) adapts
+//  fast and measures abnormal against the last few minutes.
+//  Longer (21) is slow, so a volatility burst keeps reading as
+//  extreme for longer. The default of 8 is deliberately
+//  responsive, suited to a short-timeframe context.
+//
+//  A wide candle built from wicks is a rejection, not an
+//  expansion, and its body is too small to measure anything
+//  useful against. The minimum body filter removes those from the
+//  high bands entirely so only workable expansions are shown.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── VOLATILITY ───────────────────────────────────────────────
+s1_gVol = "Volatility"
+
+s1_atrLen = input.int(8, "ATR Length", minval = 1, group = s1_gVol,
+     tooltip = "The averaging period used as the volatility baseline. Shorter values adapt faster; longer values keep a burst reading as extreme for longer.")
+
+s1_t1 = input.float(0.30, "Threshold 1 (Extremely Low → Very Low)",  step = 0.05, group = s1_gVol)
+s1_t2 = input.float(0.75, "Threshold 2 (Very Low → Low)",            step = 0.05, group = s1_gVol)
+s1_t3 = input.float(1.20, "Threshold 3 (Low → Lower Medium)",        step = 0.05, group = s1_gVol)
+s1_t4 = input.float(1.65, "Threshold 4 (Lower Medium → Medium)",     step = 0.05, group = s1_gVol)
+s1_t5 = input.float(2.10, "Threshold 5 (Medium → High Medium)",      step = 0.05, group = s1_gVol)
+s1_t6 = input.float(2.55, "Threshold 6 (High Medium → High)",        step = 0.05, group = s1_gVol)
+s1_t7 = input.float(3.00, "Threshold 7 (High → Very High)",          step = 0.05, group = s1_gVol)
+
+s1_minBodyAtr = input.float(0.5, "Min Body Size (x ATR)", minval = 0.0, step = 0.05, group = s1_gVol,
+     tooltip = "A candle's body (open-to-close) must be at least this many ATRs to qualify for a high band. Candles that fail are filtered out of bands 6-8 and shown as Medium instead. Set to 0 to disable the filter.")
+
+s1_tagFrom = input.int(6, "Show Tag From Band # Upward", minval = 1, maxval = 8, group = s1_gVol,
+     tooltip = "The small '#.##x' text tag only appears on candles whose volatility band is this number or higher (1 = Extremely Low ... 8 = Very High). Default 6 tags only the high bands.")
+
+// ─── COLOURS ──────────────────────────────────────────────────
+s1_gCol = "Volatility — Colors"
+
+s1_c1 = input.color(#bbd9fb, "Extremely Low", group = s1_gCol)
+s1_c2 = input.color(#90bff9, "Very Low",      group = s1_gCol)
+s1_c3 = input.color(#5b9cf6, "Low",           group = s1_gCol)
+s1_c4 = input.color(#3179f5, "Lower Medium",  group = s1_gCol)
+s1_c5 = input.color(#1848cc, "Medium",        group = s1_gCol)
+s1_c6 = input.color(#ffeb3b, "High Medium",   group = s1_gCol)
+s1_c7 = input.color(#ff9800, "High",          group = s1_gCol)
+s1_c8 = input.color(#f23645, "Very High",     group = s1_gCol)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+s1_gDisp = "Display"
+
+s1_colorCandles = input.bool(true,  "Color Candles By Volatility", group = s1_gDisp)
+s1_showTag      = input.bool(false, "Show Volatility Tag",         group = s1_gDisp)
+s1_tagTextColor = input.color(color.white, "Tag Text Color",       group = s1_gDisp)
+
+s1_highOnly = input.bool(false, "Color High Bands Only", group = s1_gDisp,
+     tooltip = "Leaves bands 1-5 as your chart's normal candle colors and highlights bands 6, 7 and 8 alone.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Band classification is lifted verbatim from Quant Prime Recoil,
+// so a band 7 candle here is a candle Recoil reads as band 7.
+// M2, M3, T1 and T2 reuse this identical block.
+
+s1_trueRange = ta.tr(true)
+s1_atr       = ta.atr(s1_atrLen)
+s1_ratio     = s1_trueRange / s1_atr
+
+s1_rawBand =
+     s1_ratio < s1_t1 ? 1 :
+     s1_ratio < s1_t2 ? 2 :
+     s1_ratio < s1_t3 ? 3 :
+     s1_ratio < s1_t4 ? 4 :
+     s1_ratio < s1_t5 ? 5 :
+     s1_ratio < s1_t6 ? 6 :
+     s1_ratio < s1_t7 ? 7 : 8
+
+// Minimum body filter -- a high band candle whose body is too
+// small to be workable is dropped out of the high bands.
+s1_body    = math.abs(close - open)
+s1_minBody = math.max(syminfo.mintick, s1_atr * s1_minBodyAtr)
+s1_bodyOk  = s1_minBodyAtr <= 0 or s1_body > s1_minBody
+
+s1_band = s1_rawBand >= 6 and not s1_bodyOk ? 5 : s1_rawBand
+
+s1_color =
+     s1_band == 1 ? s1_c1 :
+     s1_band == 2 ? s1_c2 :
+     s1_band == 3 ? s1_c3 :
+     s1_band == 4 ? s1_c4 :
+     s1_band == 5 ? s1_c5 :
+     s1_band == 6 ? s1_c6 :
+     s1_band == 7 ? s1_c7 : s1_c8
+
+s1_isHigh  = s1_band >= 6
+s1_notable = s1_band >= s1_tagFrom
+
+// ─── RENDER ───────────────────────────────────────────────────
+s1_paint = s1_colorCandles and (not s1_highOnly or s1_isHigh)
+barcolor(s1_paint ? s1_color : na, title = "Volatility Color")
+
+// Tag rendering: confirmed bars get a permanent label, the live
+// bar gets a single label that is replaced each tick.
+var label s1_liveLabel = na
+label.delete(s1_liveLabel)
+
+if s1_showTag
+    if barstate.isconfirmed
+        if s1_notable
+            label.new(bar_index, high,
+                 text      = str.tostring(s1_ratio, "#.##") + "x",
+                 style     = label.style_label_down,
+                 color     = s1_color,
+                 textcolor = s1_tagTextColor,
+                 size      = size.small,
+                 yloc      = yloc.abovebar)
+        label.delete(s1_liveLabel)
+        s1_liveLabel := na
+    else if barstate.islast and s1_notable
+        label.delete(s1_liveLabel)
+        s1_liveLabel := label.new(bar_index, high,
+             text      = str.tostring(s1_ratio, "#.##") + "x",
+             style     = label.style_label_down,
+             color     = s1_color,
+             textcolor = s1_tagTextColor,
+             size      = size.small,
+             yloc      = yloc.abovebar)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_band >= 6 and s1_band[1] < 6, "Volatility expansion",
+     "A candle has closed in a high volatility band (6, 7 or 8).")
+
+alertcondition(s1_band == 8, "Band 8 candle",
+     "A candle has closed in band 8 -- the most extended condition this instrument produces.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  MAIN 1 · ATR STOPS
+// ───────────────────────────────────────────────────────────────
+//  A stop placed just past a candle's extreme gets taken out by
+//  noise. A stop placed a fixed number of pips away means
+//  something different on a quiet Tuesday than it does during a
+//  release. Padding the candle's own wick by a multiple of ATR
+//  solves both: the level moves with the instrument and with the
+//  conditions, and it behaves the same way on gold as it does on
+//  a currency pair.
+//
+//  Two rails trail every candle -- one below its low for a long,
+//  one above its high for a short. Wherever you decide to act,
+//  the stop is already on the chart and the distance is already
+//  measured in pips.
+//
+//  These are not levels to trade against and they are not meant
+//  to hold. They answer one question only: if a position were
+//  opened here, where does the stop belong and how far away is
+//  it.
+//
+//  Draws no table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced m1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── STOP ─────────────────────────────────────────────────────
+m1_gStop = "Stop"
+
+m1_atrLen = input.int(8, "ATR Length", minval = 1, group = m1_gStop,
+     tooltip = "The volatility baseline the buffer is measured in. Matches the Recoil default. Shorter values make the rails react faster to a change in conditions.")
+
+m1_buf1On = input.bool(true, "Wide stop", group = m1_gStop, inline = "b1")
+m1_buf1   = input.float(3.0, "x ATR", minval = 0.0, step = 0.25, group = m1_gStop, inline = "b1",
+     tooltip = "How far beyond the candle's wick the stop sits, in ATR multiples. 3.0 is the Recoil scalping default.")
+
+m1_buf2On = input.bool(false, "Tight stop", group = m1_gStop, inline = "b2")
+m1_buf2   = input.float(1.0, "x ATR", minval = 0.0, step = 0.25, group = m1_gStop, inline = "b2",
+     tooltip = "An optional second pair of rails at a smaller buffer, for comparing what a tighter stop would have survived.")
+
+m1_showLong  = input.bool(true, "Long stops (below)",  group = m1_gStop, inline = "sd")
+m1_showShort = input.bool(true, "Short stops (above)", group = m1_gStop, inline = "sd")
+
+// ─── READOUT ──────────────────────────────────────────────────
+m1_gRead = "Readout"
+
+m1_showPips = input.bool(true, "Show stop distance in pips", group = m1_gRead,
+     tooltip = "Labels the current candle's stop levels with how far each sits from price, so a position size can be worked out straight off the chart.")
+
+m1_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = m1_gRead,
+     tooltip = "Leave at 0 for automatic detection. Override where the automatic value is wrong -- for example set 1.0 for BTCUSD.")
+
+m1_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = m1_gRead)
+
+m1_warnPips = input.float(0.0, "Warn above N pips", minval = 0.0, step = 1.0, group = m1_gRead,
+     tooltip = "Colours the readout and fires an alert when the stop distance exceeds this. Useful for spotting conditions where the correct stop is wider than you are willing to take. 0 disables it.")
+
+// ─── COLOURS ──────────────────────────────────────────────────
+m1_gCol = "Colours"
+
+m1_longCol  = input.color(#00abff, "Long stop",  group = m1_gCol)
+m1_shortCol = input.color(#c9a84c, "Short stop", group = m1_gCol)
+m1_warnCol  = input.color(#f23645, "Warning",    group = m1_gCol)
+m1_width    = input.int(1, "Line width", minval = 1, maxval = 4, group = m1_gCol)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m1_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+m1_pip     = m1_pipIn > 0 ? m1_pipIn : m1_pipAuto
+
+m1_atr = ta.atr(m1_atrLen)
+
+m1_short1 = high + m1_atr * m1_buf1
+m1_long1  = low  - m1_atr * m1_buf1
+m1_short2 = high + m1_atr * m1_buf2
+m1_long2  = low  - m1_atr * m1_buf2
+
+// ─── RENDER ───────────────────────────────────────────────────
+plot(m1_buf1On and m1_showShort ? m1_short1 : na, title = "Short stop (wide)",
+     color = m1_shortCol, linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf1On and m1_showLong ? m1_long1 : na, title = "Long stop (wide)",
+     color = m1_longCol, linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf2On and m1_showShort ? m1_short2 : na, title = "Short stop (tight)",
+     color = color.new(m1_shortCol, 45), linewidth = m1_width, style = plot.style_linebr)
+
+plot(m1_buf2On and m1_showLong ? m1_long2 : na, title = "Long stop (tight)",
+     color = color.new(m1_longCol, 45), linewidth = m1_width, style = plot.style_linebr)
+
+// ─── PIP READOUT ──────────────────────────────────────────────
+m1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m1_longPips  = math.abs(close - m1_long1)  / m1_pip
+m1_shortPips = math.abs(m1_short1 - close) / m1_pip
+
+m1_longWarn  = m1_warnPips > 0 and m1_longPips  > m1_warnPips
+m1_shortWarn = m1_warnPips > 0 and m1_shortPips > m1_warnPips
+
+var label m1_lblLong  = na
+var label m1_lblShort = na
+
+if barstate.islast and m1_showPips
+    label.delete(m1_lblLong)
+    label.delete(m1_lblShort)
+
+    if m1_buf1On and m1_showLong
+        m1_lblLong := label.new(bar_index, m1_long1,
+             text      = str.tostring(m1_longPips, "#.#") + " pips",
+             style     = label.style_label_left,
+             color     = color.new(color.black, 15),
+             textcolor = m1_longWarn ? m1_warnCol : m1_longCol,
+             size      = m1_sizeOf(m1_lblSize))
+
+    if m1_buf1On and m1_showShort
+        m1_lblShort := label.new(bar_index, m1_short1,
+             text      = str.tostring(m1_shortPips, "#.#") + " pips",
+             style     = label.style_label_left,
+             color     = color.new(color.black, 15),
+             textcolor = m1_shortWarn ? m1_warnCol : m1_shortCol,
+             size      = m1_sizeOf(m1_lblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m1_longWarn or m1_shortWarn, "Stop distance above limit",
+     "The ATR stop distance has exceeded the limit set on this instrument.")
+
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · RECOIL TIER
+//  SIDE 2 · POSITION SIZER
+// ───────────────────────────────────────────────────────────────
+//  A stop that moves with volatility means a position size that
+//  has to move with it too. Trading a fixed lot through changing
+//  conditions is not consistent risk -- it is the same size
+//  taking wildly different amounts off the account depending on
+//  how wide the correct stop happened to be that hour.
+//
+//  This reads the stop distance straight off the chart, applies
+//  the risk you are willing to take, and returns the size that
+//  makes those two agree. Long and short are shown separately
+//  because their stops are not the same distance away.
+//
+//  It calculates its own stop rather than depending on any other
+//  piece, so it works on its own.
+//
+//  Draws one table. Safe to combine with any other Recoil piece.
+//  All identifiers namespaced d2_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+
+// ─── ACCOUNT ──────────────────────────────────────────────────
+d2_gAcct = "Account"
+
+d2_balance = input.float(1000.0, "Account balance", minval = 1.0, step = 100.0, group = d2_gAcct,
+     tooltip = "Your own figure. Nothing is read from a broker -- this is a calculator, not a connection.")
+
+d2_ccy = input.string("£", "Currency symbol", group = d2_gAcct)
+
+d2_riskMode = input.string("Percent of balance", "Risk as", options = ["Percent of balance", "Fixed amount"], group = d2_gAcct)
+
+d2_riskPct = input.float(1.0, "Risk percent", minval = 0.01, maxval = 100.0, step = 0.25, group = d2_gAcct)
+
+d2_riskAmt = input.float(10.0, "Risk amount", minval = 0.01, step = 1.0, group = d2_gAcct)
+
+// ─── STOP ─────────────────────────────────────────────────────
+d2_gStop = "Stop"
+
+d2_atrLen = input.int(8, "ATR Length", minval = 1, group = d2_gStop,
+     tooltip = "The volatility baseline the buffer is measured in. Matches the Recoil default.")
+
+d2_buffer = input.float(3.0, "Wick buffer (x ATR)", minval = 0.0, step = 0.25, group = d2_gStop,
+     tooltip = "How far beyond the current candle's wick the stop sits. 3.0 is the Recoil scalping default. Set both this and ATR Length to match whatever you actually trade.")
+
+d2_manualOn = input.bool(false, "Use a manual stop distance instead", group = d2_gStop,
+     tooltip = "Ignores the chart and sizes against a fixed pip distance you type in. Useful for planning a trade you have already decided the stop for.")
+
+d2_manualPips = input.float(10.0, "Manual stop (pips)", minval = 0.1, step = 0.5, group = d2_gStop)
+
+// ─── INSTRUMENT ───────────────────────────────────────────────
+d2_gInst = "Instrument"
+
+d2_pipIn = input.float(0.0, "Pip size (0 = auto)", step = 0.00001, minval = 0.0, group = d2_gInst,
+     tooltip = "Leave at 0 for automatic detection. Override where the automatic value is wrong -- for example set 1.0 for BTCUSD.")
+
+d2_contract = input.float(100000.0, "Units per lot", minval = 1.0, step = 1000.0, group = d2_gInst,
+     tooltip = "100000 for a standard forex lot. Set to 1 on instruments quoted in units rather than lots, and the size column reads as a straight unit count.")
+
+d2_convert = input.float(1.0, "Conversion rate", minval = 0.0001, step = 0.01, group = d2_gInst,
+     tooltip = "Only needed when the instrument's quote currency is not your account currency. On EURUSD with a dollar account, leave at 1. On EURGBP with a dollar account, set this to the GBP to USD rate. Getting it wrong scales every size shown here by the same factor.")
+
+d2_maxLots = input.float(0.0, "Warn above N lots", minval = 0.0, step = 0.1, group = d2_gInst,
+     tooltip = "Highlights the size in red when the calculation returns more than this. 0 disables it.")
+
+// ─── PANEL ────────────────────────────────────────────────────
+d2_gPanel = "Panel"
+
+d2_pos = input.string("Bottom right", "Position", options = ["Top right", "Bottom right", "Bottom left", "Top left"], group = d2_gPanel,
+     tooltip = "When combining several pieces, give each one its own corner so nothing stacks.")
+
+d2_txtSize = input.string("Tiny", "Text size", options = ["Tiny", "Small", "Normal", "Large"], group = d2_gPanel)
+
+d2_showLines = input.bool(true, "Show the stop levels on the chart", group = d2_gPanel)
+
+// ─── THEME ────────────────────────────────────────────────────
+d2_gTheme = "Theme"
+
+d2_bg     = input.color(#131313, "Panel background", group = d2_gTheme)
+d2_title  = input.color(#c9a84c, "Title",            group = d2_gTheme)
+d2_label  = input.color(#8a877f, "Labels",           group = d2_gTheme)
+d2_white  = input.color(#e8e6e1, "Values",           group = d2_gTheme)
+d2_border = input.color(#1a1d24, "Border",           group = d2_gTheme)
+d2_longC  = input.color(#00abff, "Long",             group = d2_gTheme, inline = "ls")
+d2_shortC = input.color(#c9a84c, "Short",            group = d2_gTheme, inline = "ls")
+d2_warnC  = input.color(#f23645, "Warning",          group = d2_gTheme)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+d2_pipAuto = syminfo.mintick * (syminfo.mintick == 0.00001 or syminfo.mintick == 0.001 ? 10 : 1)
+d2_pip     = d2_pipIn > 0 ? d2_pipIn : d2_pipAuto
+
+d2_atr = ta.atr(d2_atrLen)
+
+// Stop levels, taken from the current candle's own extremes.
+d2_longStop  = low  - d2_atr * d2_buffer
+d2_shortStop = high + d2_atr * d2_buffer
+
+// Distance in price, then in pips.
+d2_longDist  = d2_manualOn ? d2_manualPips * d2_pip : math.max(close - d2_longStop,  syminfo.mintick)
+d2_shortDist = d2_manualOn ? d2_manualPips * d2_pip : math.max(d2_shortStop - close, syminfo.mintick)
+
+d2_longPips  = d2_longDist  / d2_pip
+d2_shortPips = d2_shortDist / d2_pip
+
+// What is actually at risk.
+d2_risk = d2_riskMode == "Percent of balance" ? d2_balance * d2_riskPct / 100.0 : d2_riskAmt
+
+// Value of one pip on one lot, in account currency.
+d2_pipValue = d2_pip * d2_contract * d2_convert
+
+d2_longLots  = d2_pipValue > 0 and d2_longPips  > 0 ? d2_risk / (d2_longPips  * d2_pipValue) : 0.0
+d2_shortLots = d2_pipValue > 0 and d2_shortPips > 0 ? d2_risk / (d2_shortPips * d2_pipValue) : 0.0
+
+// What the sized position gains or loses per pip of movement.
+d2_longPerPip  = d2_longLots  * d2_pipValue
+d2_shortPerPip = d2_shortLots * d2_pipValue
+
+d2_longWarn  = d2_maxLots > 0 and d2_longLots  > d2_maxLots
+d2_shortWarn = d2_maxLots > 0 and d2_shortLots > d2_maxLots
+
+// ─── STOP LEVELS ON CHART ─────────────────────────────────────
+plot(d2_showLines and not d2_manualOn ? d2_longStop : na, title = "Long stop",
+     color = d2_longC, linewidth = 1, style = plot.style_linebr)
+
+plot(d2_showLines and not d2_manualOn ? d2_shortStop : na, title = "Short stop",
+     color = d2_shortC, linewidth = 1, style = plot.style_linebr)
+
+// ─── PANEL ────────────────────────────────────────────────────
+d2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : _s == "Normal" ? size.normal : size.large
+
+d2_posOf(_p) =>
+    _p == "Top right" ? position.top_right : _p == "Bottom right" ? position.bottom_right : _p == "Bottom left" ? position.bottom_left : position.top_left
+
+// Lots need more decimals than units do.
+d2_lotStr(float _l) =>
+    _l >= 100 ? str.tostring(_l, "#") : _l >= 10 ? str.tostring(_l, "#.#") : str.tostring(_l, "#.##")
+
+var table d2_tbl = na
+
+if barstate.islast
+    if na(d2_tbl)
+        d2_tbl := table.new(d2_posOf(d2_pos), 3, 7,
+             bgcolor      = d2_bg,
+             border_color = d2_border,
+             border_width = 1,
+             frame_color  = d2_title,
+             frame_width  = 1)
+
+    string _sz = d2_txtSize
+
+    table.cell(d2_tbl, 0, 0, " QUANT PRIME — POSITION SIZER ",
+         text_color = d2_title, text_size = d2_sizeOf(_sz), bgcolor = color.rgb(10, 10, 25))
+    table.merge_cells(d2_tbl, 0, 0, 2, 0)
+
+    table.cell(d2_tbl, 0, 1, " RISK ", text_color = d2_label, text_size = size.tiny, bgcolor = d2_bg)
+    table.cell(d2_tbl, 1, 1,
+         " " + d2_ccy + str.tostring(d2_risk, "#.##") +
+         (d2_riskMode == "Percent of balance" ? "  ·  " + str.tostring(d2_riskPct, "#.##") + "% of " + d2_ccy + str.tostring(d2_balance, "#") : "") + " ",
+         text_color = d2_white, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.merge_cells(d2_tbl, 1, 1, 2, 1)
+
+    table.cell(d2_tbl, 0, 2, "",        text_color = d2_label, text_size = size.tiny, bgcolor = d2_bg)
+    table.cell(d2_tbl, 1, 2, " LONG ",  text_color = d2_longC, text_size = size.tiny, bgcolor = d2_bg)
+    table.cell(d2_tbl, 2, 2, " SHORT ", text_color = d2_shortC, text_size = size.tiny, bgcolor = d2_bg)
+
+    table.cell(d2_tbl, 0, 3, " STOP ", text_color = d2_label, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 1, 3, " " + str.tostring(d2_longPips,  "#.#") + " pips ", text_color = d2_white, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 2, 3, " " + str.tostring(d2_shortPips, "#.#") + " pips ", text_color = d2_white, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+
+    table.cell(d2_tbl, 0, 4, " SIZE ", text_color = d2_label, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 1, 4, " " + d2_lotStr(d2_longLots)  + " lots ", text_color = d2_longWarn  ? d2_warnC : d2_longC,  text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 2, 4, " " + d2_lotStr(d2_shortLots) + " lots ", text_color = d2_shortWarn ? d2_warnC : d2_shortC, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+
+    table.cell(d2_tbl, 0, 5, " PER PIP ", text_color = d2_label, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 1, 5, " " + d2_ccy + str.tostring(d2_longPerPip,  "#.##") + " ", text_color = d2_white, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+    table.cell(d2_tbl, 2, 5, " " + d2_ccy + str.tostring(d2_shortPerPip, "#.##") + " ", text_color = d2_white, text_size = d2_sizeOf(_sz), bgcolor = d2_bg)
+
+    table.cell(d2_tbl, 0, 6,
+         " " + (d2_manualOn ? "manual stop " + str.tostring(d2_manualPips, "#.#") + " pips" :
+              "wick + " + str.tostring(d2_buffer, "#.##") + " ATR") +
+         "  ·  " + d2_ccy + str.tostring(d2_pipValue, "#.##") + " per pip per lot ",
+         text_color = d2_label, text_size = size.tiny, bgcolor = d2_bg, text_formatting = text.format_italic)
+    table.merge_cells(d2_tbl, 0, 6, 2, 6)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(d2_longWarn or d2_shortWarn, "Position size above limit",
+     "The calculated position size has exceeded the limit set on this instrument.")
+
