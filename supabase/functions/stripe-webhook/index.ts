@@ -33,6 +33,17 @@ const TIER_FEATURES: Record<string, any> = {
   'suite': { chatAllowance: -1, indicatorAccess: true, researchAccess: true },
 }
 
+// Brevo list IDs per tier
+const TIER_LIST_ID: Record<string, number> = {
+  'research': 7,
+  'recoil': 9,
+  'terminal': 10,
+  'suite': 11
+}
+
+const WINBACK_LIST_TRIAL = 12
+const WINBACK_LIST_MEMBER = 13
+
 // Verify Stripe signature
 async function verifySignature(payload: string, signature: string, secret: string): Promise<boolean> {
   const elements = signature.split(',')
@@ -128,6 +139,61 @@ async function syncToBrevo(email: string, attributes: Record<string, any>) {
   }
 }
 
+// Add contact to Brevo list
+async function addToBrevoList(email: string, listId: number) {
+  const brevoKey = Deno.env.get('BREVO_API_KEY')
+  if (!brevoKey || !listId) return
+  
+  try {
+    await fetch(`https://api.brevo.com/v3/contacts/lists/${listId}/contacts/add`, {
+      method: 'POST',
+      headers: {
+        'api-key': brevoKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ emails: [email] })
+    })
+    console.log(`[Brevo] Added ${email} to list ${listId}`)
+  } catch (e) {
+    console.error('[Brevo] Add to list error:', e)
+  }
+}
+
+// Remove contact from Brevo list
+async function removeFromBrevoList(email: string, listId: number) {
+  const brevoKey = Deno.env.get('BREVO_API_KEY')
+  if (!brevoKey || !listId) return
+  
+  try {
+    await fetch(`https://api.brevo.com/v3/contacts/lists/${listId}/contacts/remove`, {
+      method: 'POST',
+      headers: {
+        'api-key': brevoKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ emails: [email] })
+    })
+    console.log(`[Brevo] Removed ${email} from list ${listId}`)
+  } catch (e) {
+    console.error('[Brevo] Remove from list error:', e)
+  }
+}
+
+// Update Brevo lists on tier change
+async function updateBrevoLists(email: string, oldTier: string, newTier: string) {
+  // Remove from old tier list
+  const oldListId = TIER_LIST_ID[oldTier]
+  if (oldListId) {
+    await removeFromBrevoList(email, oldListId)
+  }
+  
+  // Add to new tier list
+  const newListId = TIER_LIST_ID[newTier]
+  if (newListId) {
+    await addToBrevoList(email, newListId)
+  }
+}
+
 serve(async (req) => {
   // Only accept POST
   if (req.method !== 'POST') {
@@ -205,6 +271,9 @@ serve(async (req) => {
             STRIPE_CUSTOMER_ID: sub.customer
           })
           
+          // Add to tier list (new sub = from free)
+          await updateBrevoLists(email, 'free', tier)
+          
           // Log tier change
           const { data: profile } = await supabase
             .from('profiles')
@@ -276,6 +345,9 @@ serve(async (req) => {
               trigger_source: 'stripe_webhook',
               trigger_event_id: event.id
             })
+            
+            // Update Brevo lists (remove from old, add to new)
+            await updateBrevoLists(email, oldTier, tier)
           }
         }
         break
@@ -326,6 +398,18 @@ serve(async (req) => {
               trigger_event_id: event.id
             })
           }
+          
+          // Remove from tier list
+          const oldListId = TIER_LIST_ID[oldTier]
+          if (oldListId) {
+            await removeFromBrevoList(email, oldListId)
+          }
+          
+          // Add to winback list (trial if cancelled within 7 days, otherwise member)
+          const subCreated = new Date(sub.created * 1000)
+          const daysSinceCreated = (Date.now() - subCreated.getTime()) / (1000 * 60 * 60 * 24)
+          const winbackList = daysSinceCreated <= 7 ? WINBACK_LIST_TRIAL : WINBACK_LIST_MEMBER
+          await addToBrevoList(email, winbackList)
         }
         break
       }
