@@ -12361,6 +12361,22 @@ const dishNames = {
   }
 };
 
+// Course questions per tier
+const courseQuestions = {
+  research: {
+    starter: 'Where are we?',
+    main: 'What state is it in?',
+    side: 'When does it matter?',
+    dessert: 'What does the record say?'
+  },
+  recoil: {
+    starter: 'How volatile is it?',
+    main: 'Where do I act?',
+    side: 'What do I need to know?',
+    dessert: 'What does the data say?'
+  }
+};
+
 // Dish info data - full descriptions
 const dishInfo = {
   research: {
@@ -12697,6 +12713,18 @@ function updateGenerateButton() {
 function updateDishCards(tier) {
   const tierDishes = dishNames[tier] || dishNames.research;
   const tierInfo = dishInfo[tier] || dishInfo.research;
+  const tierQuestions = courseQuestions[tier] || courseQuestions.research;
+  
+  // Update course questions
+  document.querySelectorAll('.menu-course').forEach(courseEl => {
+    const course = courseEl.dataset.course;
+    if (tierQuestions[course]) {
+      const questionEl = courseEl.querySelector('.course-question');
+      if (questionEl) {
+        questionEl.textContent = tierQuestions[course];
+      }
+    }
+  });
   
   // Update each dish card
   document.querySelectorAll('.dish-card').forEach(card => {
@@ -12704,14 +12732,19 @@ function updateDishCards(tier) {
     const dish = parseInt(card.dataset.dish);
     
     if (tierDishes[course] && tierDishes[course][dish]) {
-      const nameEl = card.querySelector('.dish-name');
+      // Update the dish name (h4 element)
+      const nameEl = card.querySelector('h4');
       if (nameEl) {
         nameEl.textContent = tierDishes[course][dish];
       }
       
-      // Update tooltip/description if info exists
+      // Update ingredients text if info exists
       if (tierInfo[course] && tierInfo[course][dish]) {
         const info = tierInfo[course][dish];
+        const ingredientsEl = card.querySelector('.ingredients');
+        if (ingredientsEl) {
+          ingredientsEl.textContent = info.ingredients;
+        }
         card.setAttribute('data-tooltip', info.description);
       }
     }
