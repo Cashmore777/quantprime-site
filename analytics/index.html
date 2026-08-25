@@ -666,11 +666,16 @@ const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
 const DASHBOARD_PASSWORD = '2026iWillBRich!';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let supabase = null;
+try {
+  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+} catch (err) {
+  console.error('Supabase init failed:', err);
+}
 
 let currentRange = 7;
 
-// Login
+// Login - register this FIRST before anything else can fail
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const pwd = document.getElementById('passwordInput').value;
