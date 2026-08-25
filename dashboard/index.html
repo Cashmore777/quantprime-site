@@ -12352,6 +12352,12 @@ const dishNames = {
     main: { 1: 'EMA Ribbon', 2: 'Volatility State', 3: 'Range Analysis' },
     side: { 1: 'Candle Countdown', 2: 'Session Zones', 3: 'Hourly Profile' },
     dessert: { 1: 'Weekly Summary Table', 2: 'Volatility Report', 3: 'Pair Statistics' }
+  },
+  recoil: {
+    starter: { 1: 'Volatility Bands', 2: 'ATR Envelope', 3: 'Volatility Levels' },
+    main: { 1: 'ATR Stops', 2: 'Volatility Zones', 3: 'Regime Tracker' },
+    side: { 1: 'Candle Clock', 2: 'Position Sizer', 3: 'Trade Planner' },
+    dessert: { 1: 'Band Report', 2: 'Zone Report', 3: 'Session Report' }
   }
 };
 
@@ -12438,6 +12444,88 @@ const dishInfo = {
         outputs: 'pair_avg_range, best_session, historical_bias'
       }
     }
+  },
+  recoil: {
+    starter: {
+      1: {
+        name: 'Volatility Bands',
+        ingredients: 'candle size · 8-band scale · expansion classification',
+        description: 'Colours every candle by how big it is against the recent average, on an eight band scale. Bands 6, 7 and 8 are the expansion candles the Recoil method is built around — everything else in this menu keys off the same classification, so start here if you are building more than one piece.',
+        outputs: 'vol_band, is_expansion, band_color'
+      },
+      2: {
+        name: 'ATR Envelope',
+        ingredients: 'ATR distance · anchor · three rail pairs',
+        description: 'Three pairs of rails at fixed ATR distances either side of a moving anchor. Where the bands measure how big one candle is, these measure how far price has travelled from equilibrium — a quiet grind can leave price just as stretched as a single violent candle.',
+        outputs: 'atr_upper_1, atr_lower_1, anchor_price'
+      },
+      3: {
+        name: 'Volatility Levels',
+        ingredients: 'high-vol candles · OHLC rails · persistence',
+        description: 'Draws the high, low, open and close of recent high volatility candles as rails that extend until price passes through them. A rail still running is a level the market has not dealt with yet.',
+        outputs: 'vol_high, vol_low, vol_open, vol_close'
+      }
+    },
+    main: {
+      1: {
+        name: 'ATR Stops',
+        ingredients: 'wick padding · ATR multiple · pip distance',
+        description: 'Plots where a stop belongs on every candle — past its wick, padded by a multiple of ATR — with the distance measured in pips. These are not levels to trade against; they answer where the stop goes and how far away it is if you were to act here.',
+        outputs: 'stop_long, stop_short, stop_pips'
+      },
+      2: {
+        name: 'Volatility Zones',
+        ingredients: 'HTF expansion · quarter marks · zone persistence',
+        description: 'When a high volatility candle closes on a higher timeframe, marks the quarter, half, three quarter and full points of its body as zones, extending until price returns to them. Run it on 30M and 3H first — the 3M layer generates a lot and is best added last.',
+        outputs: 'zone_25, zone_50, zone_75, zone_100'
+      },
+      3: {
+        name: 'Regime Tracker',
+        ingredients: 'QP score · stability · trend components',
+        description: 'The Quant Prime regime score out of 90 for the chart you are on, broken into its stability and trend components, with a strip showing its recent history. Note that stability rewards consistency rather than size, so a run of expansion candles pushes the score down.',
+        outputs: 'regime_score, stability, trend_score'
+      }
+    },
+    side: {
+      1: {
+        name: 'Candle Clock',
+        ingredients: 'candle progress · range spent · projection',
+        description: 'For each timeframe, shows how far through the current candle you are against how much of its usual range it has already covered. A candle a quarter of the way through that has spent most of its range is going to close large, and you know it while there is still time to act.',
+        outputs: 'time_pct, range_pct, projected_size'
+      },
+      2: {
+        name: 'Position Sizer',
+        ingredients: 'account size · risk % · stop distance',
+        description: 'Takes your account size and risk, reads the stop distance off the chart, and returns the position size and what it costs per pip. Long and short are shown separately because their stops are not the same distance away. Check the conversion rate setting if the instrument is not quoted in your account currency.',
+        outputs: 'lot_size_long, lot_size_short, cost_per_pip'
+      },
+      3: {
+        name: 'Trade Planner',
+        ingredients: 'entry · stop · targets · breakeven',
+        description: 'Lays out a complete trade from the last high volatility candle — entry, stop, both targets and the breakeven point — with targets measured as a share of that candle\'s body. Set the reference to a past candle to see what the plan would have been, then look right to see what happened.',
+        outputs: 'entry_price, sl_price, tp1, tp2, be_price'
+      }
+    },
+    dessert: {
+      1: {
+        name: 'Band Report',
+        ingredients: 'band frequency · follow-through · retracement',
+        description: 'Counts how often each volatility band appears on this instrument and measures what price did afterwards, including how often it retraced before breaking the candle\'s extreme. Use a large sample — rows with fewer than thirty candles are marked and left ungraded because they mean nothing.',
+        outputs: 'band_counts, retrace_rate, follow_through'
+      },
+      2: {
+        name: 'Zone Report',
+        ingredients: 'zone hit rate · time to hit · reversal rate',
+        description: 'Measures whether the Volatility Zones are worth drawing: how often each level is reached, how long it takes, and how far price then travels back. A level reached constantly that produces nothing is a line; one reached less often that turns price is a level.',
+        outputs: 'zone_hit_rate, avg_bars_to_hit, reversal_rate'
+      },
+      3: {
+        name: 'Session Report',
+        ingredients: 'session comparison · expansion frequency · behavior',
+        description: 'Compares your three trading windows against every hour outside them, on candle size, how often expansion appears, and how those candles behaved. Run it on 30M or higher — on 3M there is not enough history for each window to reach a meaningful sample.',
+        outputs: 'session_rank, expansion_freq, session_bias'
+      }
+    }
   }
 };
 
@@ -12513,15 +12601,16 @@ function switchMenuTier(tier) {
     if (tab.dataset.tier === tier) tab.classList.add('active');
   });
   
-  // Show menu layout only for Research, coming soon for others
+  // Show menu layout for Research and Recoil, coming soon for others
   const menuLayout = document.getElementById('menu-layout');
   const comingSoon = document.getElementById('menu-coming-soon');
   
-  if (tier === 'research') {
+  if (tier === 'research' || tier === 'recoil') {
     menuLayout.style.display = 'grid';
     comingSoon.style.display = 'none';
-    // Reset selections when switching back to research
+    // Reset selections and update dish cards when switching tiers
     resetMenuSelections();
+    updateDishCards(tier);
   } else {
     menuLayout.style.display = 'none';
     comingSoon.style.display = 'flex';
@@ -12590,7 +12679,7 @@ function updateOrderSummary() {
 // Update build ID display
 function updateBuildId() {
   const prefix = menuState.currentTier === 'research' ? 'RES' : 
-                 menuState.currentTier === 'recoil' ? 'REC' :
+                 menuState.currentTier === 'recoil' ? 'RCL' :
                  menuState.currentTier === 'terminal' ? 'TRM' : 'SUI';
   
   const buildId = `${prefix}-${menuState.selections.starter}${menuState.selections.main}${menuState.selections.side}${menuState.selections.dessert}`;
@@ -12602,6 +12691,31 @@ function updateBuildId() {
 function updateGenerateButton() {
   const hasAnySelection = Object.values(menuState.selections).some(v => v > 0);
   document.getElementById('generate-btn').disabled = !hasAnySelection;
+}
+
+// Update dish cards for the current tier
+function updateDishCards(tier) {
+  const tierDishes = dishNames[tier] || dishNames.research;
+  const tierInfo = dishInfo[tier] || dishInfo.research;
+  
+  // Update each dish card
+  document.querySelectorAll('.dish-card').forEach(card => {
+    const course = card.dataset.course;
+    const dish = parseInt(card.dataset.dish);
+    
+    if (tierDishes[course] && tierDishes[course][dish]) {
+      const nameEl = card.querySelector('.dish-name');
+      if (nameEl) {
+        nameEl.textContent = tierDishes[course][dish];
+      }
+      
+      // Update tooltip/description if info exists
+      if (tierInfo[course] && tierInfo[course][dish]) {
+        const info = tierInfo[course][dish];
+        card.setAttribute('data-tooltip', info.description);
+      }
+    }
+  });
 }
 
 // Reset menu selections

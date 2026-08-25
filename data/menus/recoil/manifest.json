@@ -1,0 +1,179 @@
+{
+  "tier": "recoil",
+  "prefix": "RCL",
+  "version": "1.0",
+  "generatedAt": "2026-08-25",
+  "courses": {
+    "starter": {
+      "name": "Starter",
+      "question": "How volatile is it?",
+      "description": "Volatility measurement tools",
+      "position": 0,
+      "dishes": {
+        "1": {
+          "id": "volatility-bands",
+          "name": "Volatility Bands",
+          "description": "Colours every candle by how big it is against the recent average, on an eight band scale. Bands 6, 7 and 8 are the expansion candles the Recoil method is built around — everything else in this menu keys off the same classification, so start here if you are building more than one piece.",
+          "shortDesc": "8-band candle classification"
+        },
+        "2": {
+          "id": "atr-envelope",
+          "name": "ATR Envelope",
+          "description": "Three pairs of rails at fixed ATR distances either side of a moving anchor. Where the bands measure how big one candle is, these measure how far price has travelled from equilibrium — a quiet grind can leave price just as stretched as a single violent candle.",
+          "shortDesc": "ATR distance rails"
+        },
+        "3": {
+          "id": "volatility-levels",
+          "name": "Volatility Levels",
+          "description": "Draws the high, low, open and close of recent high volatility candles as rails that extend until price passes through them. A rail still running is a level the market has not dealt with yet.",
+          "shortDesc": "High-vol candle levels"
+        }
+      }
+    },
+    "main": {
+      "name": "Main",
+      "question": "Where do I act?",
+      "description": "Entry and zone identification",
+      "position": 1,
+      "dishes": {
+        "1": {
+          "id": "atr-stops",
+          "name": "ATR Stops",
+          "description": "Plots where a stop belongs on every candle — past its wick, padded by a multiple of ATR — with the distance measured in pips. These are not levels to trade against; they answer where the stop goes and how far away it is if you were to act here.",
+          "shortDesc": "Dynamic stop placement"
+        },
+        "2": {
+          "id": "volatility-zones",
+          "name": "Volatility Zones",
+          "description": "When a high volatility candle closes on a higher timeframe, marks the quarter, half, three quarter and full points of its body as zones, extending until price returns to them. Run it on 30M and 3H first — the 3M layer generates a lot and is best added last.",
+          "shortDesc": "HTF expansion zones"
+        },
+        "3": {
+          "id": "regime-tracker",
+          "name": "Regime Tracker",
+          "description": "The Quant Prime regime score out of 90 for the chart you are on, broken into its stability and trend components, with a strip showing its recent history. Note that stability rewards consistency rather than size, so a run of expansion candles pushes the score down.",
+          "shortDesc": "Regime scoring system"
+        }
+      }
+    },
+    "side": {
+      "name": "Side",
+      "question": "What do I need to know?",
+      "description": "Timing and sizing utilities",
+      "position": 2,
+      "dishes": {
+        "1": {
+          "id": "candle-clock",
+          "name": "Candle Clock",
+          "description": "For each timeframe, shows how far through the current candle you are against how much of its usual range it has already covered. A candle a quarter of the way through that has spent most of its range is going to close large, and you know it while there is still time to act.",
+          "shortDesc": "Candle progress tracker"
+        },
+        "2": {
+          "id": "position-sizer",
+          "name": "Position Sizer",
+          "description": "Takes your account size and risk, reads the stop distance off the chart, and returns the position size and what it costs per pip. Long and short are shown separately because their stops are not the same distance away. Check the conversion rate setting if the instrument is not quoted in your account currency.",
+          "shortDesc": "Risk-based lot calculator"
+        },
+        "3": {
+          "id": "trade-planner",
+          "name": "Trade Planner",
+          "description": "Lays out a complete trade from the last high volatility candle — entry, stop, both targets and the breakeven point — with targets measured as a share of that candle's body. Set the reference to a past candle to see what the plan would have been, then look right to see what happened.",
+          "shortDesc": "Full trade blueprint"
+        }
+      }
+    },
+    "dessert": {
+      "name": "Dessert",
+      "question": "What does the data say?",
+      "description": "Statistical analysis and reporting",
+      "position": 3,
+      "dishes": {
+        "1": {
+          "id": "band-report",
+          "name": "Band Report",
+          "description": "Counts how often each volatility band appears on this instrument and measures what price did afterwards, including how often it retraced before breaking the candle's extreme. Use a large sample — rows with fewer than thirty candles are marked and left ungraded because they mean nothing.",
+          "shortDesc": "Band frequency analysis"
+        },
+        "2": {
+          "id": "zone-report",
+          "name": "Zone Report",
+          "description": "Measures whether the Volatility Zones are worth drawing: how often each level is reached, how long it takes, and how far price then travels back. A level reached constantly that produces nothing is a line; one reached less often that turns price is a level.",
+          "shortDesc": "Zone effectiveness stats"
+        },
+        "3": {
+          "id": "session-report",
+          "name": "Session Report",
+          "description": "Compares your three trading windows against every hour outside them, on candle size, how often expansion appears, and how those candles behaved. Run it on 30M or higher — on 3M there is not enough history for each window to reach a meaningful sample.",
+          "shortDesc": "Session comparison data"
+        }
+      }
+    }
+  },
+  "validBuilds": [
+    "RCL-0001", "RCL-0002", "RCL-0003",
+    "RCL-0010", "RCL-0011", "RCL-0012", "RCL-0013",
+    "RCL-0020", "RCL-0021", "RCL-0022", "RCL-0023",
+    "RCL-0030", "RCL-0031", "RCL-0032", "RCL-0033",
+    "RCL-0100", "RCL-0101", "RCL-0102", "RCL-0103",
+    "RCL-0110", "RCL-0111", "RCL-0112", "RCL-0113",
+    "RCL-0120", "RCL-0121", "RCL-0122", "RCL-0123",
+    "RCL-0130", "RCL-0131", "RCL-0132", "RCL-0133",
+    "RCL-0200", "RCL-0201", "RCL-0202", "RCL-0203",
+    "RCL-0210", "RCL-0211", "RCL-0212", "RCL-0213",
+    "RCL-0220", "RCL-0221", "RCL-0222", "RCL-0223",
+    "RCL-0230", "RCL-0231", "RCL-0232", "RCL-0233",
+    "RCL-0300", "RCL-0301", "RCL-0302", "RCL-0303",
+    "RCL-0310", "RCL-0311", "RCL-0312", "RCL-0313",
+    "RCL-0320", "RCL-0321", "RCL-0322", "RCL-0323",
+    "RCL-0330", "RCL-0331", "RCL-0332", "RCL-0333",
+    "RCL-1000", "RCL-1001", "RCL-1002", "RCL-1003",
+    "RCL-1010", "RCL-1011", "RCL-1012", "RCL-1013",
+    "RCL-1020", "RCL-1021", "RCL-1022", "RCL-1023",
+    "RCL-1030", "RCL-1031", "RCL-1032", "RCL-1033",
+    "RCL-1100", "RCL-1101", "RCL-1102", "RCL-1103",
+    "RCL-1110", "RCL-1111", "RCL-1112", "RCL-1113",
+    "RCL-1120", "RCL-1121", "RCL-1122", "RCL-1123",
+    "RCL-1130", "RCL-1131", "RCL-1132", "RCL-1133",
+    "RCL-1200", "RCL-1201", "RCL-1202", "RCL-1203",
+    "RCL-1210", "RCL-1211", "RCL-1212", "RCL-1213",
+    "RCL-1220", "RCL-1221", "RCL-1222", "RCL-1223",
+    "RCL-1230", "RCL-1231", "RCL-1232", "RCL-1233",
+    "RCL-1300", "RCL-1301", "RCL-1302", "RCL-1303",
+    "RCL-1310", "RCL-1311", "RCL-1312", "RCL-1313",
+    "RCL-1320", "RCL-1321", "RCL-1322", "RCL-1323",
+    "RCL-1330", "RCL-1331", "RCL-1332", "RCL-1333",
+    "RCL-2000", "RCL-2001", "RCL-2002", "RCL-2003",
+    "RCL-2010", "RCL-2011", "RCL-2012", "RCL-2013",
+    "RCL-2020", "RCL-2021", "RCL-2022", "RCL-2023",
+    "RCL-2030", "RCL-2031", "RCL-2032", "RCL-2033",
+    "RCL-2100", "RCL-2101", "RCL-2102", "RCL-2103",
+    "RCL-2110", "RCL-2111", "RCL-2112", "RCL-2113",
+    "RCL-2120", "RCL-2121", "RCL-2122", "RCL-2123",
+    "RCL-2130", "RCL-2131", "RCL-2132", "RCL-2133",
+    "RCL-2200", "RCL-2201", "RCL-2202", "RCL-2203",
+    "RCL-2210", "RCL-2211", "RCL-2212", "RCL-2213",
+    "RCL-2220", "RCL-2221", "RCL-2222", "RCL-2223",
+    "RCL-2230", "RCL-2231", "RCL-2232", "RCL-2233",
+    "RCL-2300", "RCL-2301", "RCL-2302", "RCL-2303",
+    "RCL-2310", "RCL-2311", "RCL-2312", "RCL-2313",
+    "RCL-2320", "RCL-2321", "RCL-2322", "RCL-2323",
+    "RCL-2330", "RCL-2331", "RCL-2332", "RCL-2333",
+    "RCL-3000", "RCL-3001", "RCL-3002", "RCL-3003",
+    "RCL-3010", "RCL-3011", "RCL-3012", "RCL-3013",
+    "RCL-3020", "RCL-3021", "RCL-3022", "RCL-3023",
+    "RCL-3030", "RCL-3031", "RCL-3032", "RCL-3033",
+    "RCL-3100", "RCL-3101", "RCL-3102", "RCL-3103",
+    "RCL-3110", "RCL-3111", "RCL-3112", "RCL-3113",
+    "RCL-3120", "RCL-3121", "RCL-3122", "RCL-3123",
+    "RCL-3130", "RCL-3131", "RCL-3132", "RCL-3133",
+    "RCL-3200", "RCL-3201", "RCL-3202", "RCL-3203",
+    "RCL-3210", "RCL-3211", "RCL-3212", "RCL-3213",
+    "RCL-3220", "RCL-3221", "RCL-3222", "RCL-3223",
+    "RCL-3230", "RCL-3231", "RCL-3232", "RCL-3233",
+    "RCL-3300", "RCL-3301", "RCL-3302", "RCL-3303",
+    "RCL-3310", "RCL-3311", "RCL-3312", "RCL-3313",
+    "RCL-3320", "RCL-3321", "RCL-3322", "RCL-3323",
+    "RCL-3330", "RCL-3331", "RCL-3332", "RCL-3333"
+  ],
+  "buildCount": 255
+}
