@@ -1,6 +1,6 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-:root {
+:root, [data-theme="light"] {
   --bg: #fafaf8;
   --surface: #ffffff;
   --surface-dim: #f2f1ed;
@@ -19,6 +19,25 @@
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
   --radius: 16px;
   --radius-sm: 10px;
+}
+
+[data-theme="dark"] {
+  --bg: #0a0a0f;
+  --surface: #141419;
+  --surface-dim: #1c1c24;
+  --text: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #6b6b75;
+  --gold: #d4b94e;
+  --gold-soft: #b8962e;
+  --gold-bg: #1f1c14;
+  --cyan: #22b8ff;
+  --cyan-soft: #0f1a20;
+  --border: #2a2a35;
+  --border-light: #1f1f28;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.15);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25);
 }
 
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -323,4 +342,17 @@ footer .nav-logo { display: block; margin-bottom: 1rem; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .included-grid { grid-template-columns: 1fr; }
   .container { padding: 0 1.2rem; }
+}
+
+/* ── DARK MODE OVERRIDES ── */
+[data-theme="dark"] nav {
+  background: rgba(10,10,15,0.92);
+}
+
+[data-theme="dark"] .nav-dropdown {
+  background: var(--surface);
+}
+
+[data-theme="dark"] footer {
+  background: var(--surface);
 }

@@ -177,7 +177,7 @@
 /* Dark mode toggle button */
 .theme-toggle {
   position: fixed;
-  bottom: 20px;
+  bottom: 90px;
   right: 20px;
   width: 44px;
   height: 44px;
@@ -188,7 +188,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 100;
+  z-index: 100000;
   box-shadow: var(--shadow-md);
   transition: all 0.2s;
 }
@@ -5938,6 +5938,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <div class="eyebrow">Daily Briefing</div>
       <h2>Market <em>Intelligence</em>.</h2>
       <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">30 instruments analyzed. Regime scoring, AI-powered outlook, updated daily at 10pm UK.</p>
+      <div style="margin-top: 12px;">
+        <select id="intel-date-select" style="padding: 8px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: var(--mono); font-size: 12px; color: var(--text-1); cursor: pointer;" onchange="loadIntelByDate(this.value)">
+          <option value="">Loading dates...</option>
+        </select>
+      </div>
     </div>
 
     <!-- Quick Stats - Compact inline row -->
@@ -14576,24 +14581,26 @@ switchView = function(viewId) {
 let intelData = null;
 let intelInstruments = [];
 
+let intelIndex = [];
+
 async function loadIntelData() {
   try {
+    // Load index for date selector
+    await loadIntelIndex();
+    
     const today = new Date().toISOString().split('T')[0];
     let response = await fetch(`/research/intel/daily/${today}.json`);
+    let loadedDate = today;
     
     if (!response.ok) {
       const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
       response = await fetch(`/research/intel/daily/${yesterday}.json`);
+      loadedDate = yesterday;
     }
     
-    if (!response.ok) {
-      response = await fetch('/research/intel/daily/index.json');
-      if (response.ok) {
-        const index = await response.json();
-        if (index.length > 0) {
-          response = await fetch(`/research/intel/daily/${index[0].filename}`);
-        }
-      }
+    if (!response.ok && intelIndex.length > 0) {
+      response = await fetch(`/research/intel/daily/${intelIndex[0].filename}`);
+      loadedDate = intelIndex[0].iso_date;
     }
     
     if (!response.ok) {
@@ -14609,6 +14616,10 @@ async function loadIntelData() {
     intelData = await response.json();
     intelInstruments = intelData.instruments || [];
     
+    // Update date selector to show current date
+    const dateSelect = document.getElementById('intel-date-select');
+    if (dateSelect) dateSelect.value = loadedDate;
+    
     renderIntelStats();
     renderIntelOutlook();
     renderIntelInstruments(intelInstruments);
@@ -14616,6 +14627,49 @@ async function loadIntelData() {
     
   } catch (e) {
     console.error('Intel load error:', e);
+  }
+}
+
+async function loadIntelIndex() {
+  try {
+    const response = await fetch('/research/intel/daily/index.json');
+    if (response.ok) {
+      intelIndex = await response.json();
+      populateIntelDateSelector();
+    }
+  } catch (e) {
+    console.error('Intel index load error:', e);
+  }
+}
+
+function populateIntelDateSelector() {
+  const select = document.getElementById('intel-date-select');
+  if (!select || intelIndex.length === 0) return;
+  
+  select.innerHTML = intelIndex.map(item => 
+    `<option value="${item.iso_date}">${item.date}</option>`
+  ).join('');
+}
+
+async function loadIntelByDate(dateStr) {
+  if (!dateStr) return;
+  
+  try {
+    const response = await fetch(`/research/intel/daily/${dateStr}.json`);
+    if (!response.ok) {
+      console.error('Failed to load briefing for', dateStr);
+      return;
+    }
+    
+    intelData = await response.json();
+    intelInstruments = intelData.instruments || [];
+    
+    renderIntelStats();
+    renderIntelOutlook();
+    renderIntelInstruments(intelInstruments);
+    
+  } catch (e) {
+    console.error('Intel load by date error:', e);
   }
 }
 
