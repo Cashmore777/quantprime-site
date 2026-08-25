@@ -666,9 +666,9 @@ const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjY4NDIsImV4cCI6MjEwMDUwMjg0Mn0.F2Jc11_uEEJ7DAI6SHKu0EyyjlX0UUDmVznU-EO9BsQ';
 const DASHBOARD_PASSWORD = '2026iWillBRich!';
 
-let supabase = null;
+let db = null;
 try {
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 } catch (err) {
   console.error('Supabase init failed:', err);
 }
@@ -740,7 +740,7 @@ async function loadData() {
   
   try {
     // Get sessions
-    const { data: sessions, error: sessionsErr } = await supabase
+    const { data: sessions, error: sessionsErr } = await db
       .from('funnel_sessions')
       .select('*')
       .gte('created_at', startDate.toISOString());
@@ -748,13 +748,13 @@ async function loadData() {
     if (sessionsErr) throw sessionsErr;
     
     // Get events
-    const { data: events, error: eventsErr } = await supabase
+    const { data: events, error: eventsErr } = await db
       .from('funnel_events')
       .select('*')
       .gte('created_at', startDate.toISOString());
     
     // Get emails
-    const { data: emails, error: emailsErr } = await supabase
+    const { data: emails, error: emailsErr } = await db
       .from('funnel_emails')
       .select('*')
       .gte('created_at', startDate.toISOString());
@@ -878,13 +878,13 @@ async function loadFunnelTree() {
   const treeContainer = document.getElementById('funnelTree');
   
   try {
-    const { data: events } = await supabase
+    const { data: events } = await db
       .from('funnel_events')
       .select('*')
       .eq('event_type', 'button_click')
       .order('created_at', { ascending: true });
     
-    const { data: sessions } = await supabase
+    const { data: sessions } = await db
       .from('funnel_sessions')
       .select('*');
     
@@ -949,7 +949,7 @@ async function loadEmails() {
   const tbody = document.getElementById('emailsTableBody');
   
   try {
-    const { data: emails } = await supabase
+    const { data: emails } = await db
       .from('funnel_emails')
       .select('*, funnel_sessions(entry_source, entry_location)')
       .order('created_at', { ascending: false })
