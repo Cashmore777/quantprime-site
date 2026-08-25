@@ -405,10 +405,12 @@ serve(async (req) => {
             await removeFromBrevoList(email, oldListId)
           }
           
-          // Add to winback list (trial if cancelled within 7 days, otherwise member)
-          const subCreated = new Date(sub.created * 1000)
-          const daysSinceCreated = (Date.now() - subCreated.getTime()) / (1000 * 60 * 60 * 24)
-          const winbackList = daysSinceCreated <= 7 ? WINBACK_LIST_TRIAL : WINBACK_LIST_MEMBER
+          // Add to winback list - trial if they never paid, member if they did
+          // Check if subscription was still in trial or had completed payments
+          const wasTrial = sub.status === 'trialing' || 
+                          (sub.trial_end && sub.trial_end * 1000 > Date.now()) ||
+                          !sub.latest_invoice // No invoice = never billed
+          const winbackList = wasTrial ? WINBACK_LIST_TRIAL : WINBACK_LIST_MEMBER
           await addToBrevoList(email, winbackList)
         }
         break
