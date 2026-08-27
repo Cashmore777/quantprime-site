@@ -7943,41 +7943,36 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="welcome-box">
     <div class="welcome-header">
       <div class="welcome-badge" id="welcome-tier-badge">RECOIL</div>
-      <button class="close-btn" onclick="closeWelcomeModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 20px;">×</button>
+      <button class="close-btn" onclick="completeOnboarding()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-3); cursor: pointer; font-size: 20px;">×</button>
     </div>
-    <h2 style="margin-bottom: 8px;">Welcome to <span style="color: var(--gold);" id="welcome-product-name">Quant Prime</span></h2>
-    <p style="color: var(--text-2); margin-bottom: 24px;">Here's how to get started:</p>
+    <h2 style="margin-bottom: 6px; font-size: 20px;">Welcome to <span style="color: var(--gold);" id="welcome-product-name">Quant Prime</span></h2>
+    <p style="color: var(--text-2); margin-bottom: 16px; font-size: 13px;">Quick start checklist:</p>
     
-    <div class="welcome-steps">
-      <div class="welcome-step" data-step="1">
-        <div class="step-num">1</div>
+    <div class="welcome-steps" style="gap: 10px;">
+      <div class="welcome-step" data-step="1" style="padding: 12px; cursor: pointer;" onclick="completeOnboarding(); switchView('settings');">
+        <div class="step-num" style="width: 28px; height: 28px; font-size: 12px;">1</div>
         <div class="step-content">
-          <h4>Set up your profile</h4>
-          <p>Add your TradingView username so we can grant indicator access.</p>
-          <button class="btn sm outline" onclick="closeWelcomeModal(); switchView('settings');">Go to Settings →</button>
+          <h4 style="font-size: 14px; margin-bottom: 2px;">Add TradingView username</h4>
+          <p style="font-size: 12px; margin: 0;">Required for indicator access</p>
         </div>
       </div>
-      <div class="welcome-step" data-step="2">
-        <div class="step-num">2</div>
+      <div class="welcome-step" data-step="2" style="padding: 12px; cursor: pointer;" onclick="completeOnboarding(); openOperatorGuide();">
+        <div class="step-num" style="width: 28px; height: 28px; font-size: 12px;">2</div>
         <div class="step-content">
-          <h4>Read the Operator Guide</h4>
-          <p>Step-by-step instructions to get your indicators running.</p>
-          <button class="btn sm outline" onclick="closeWelcomeModal(); openOperatorGuide();">Open Guide →</button>
+          <h4 style="font-size: 14px; margin-bottom: 2px;">Read setup guide</h4>
+          <p style="font-size: 12px; margin: 0;">5 min to get running</p>
         </div>
       </div>
-      <div class="welcome-step" data-step="3">
-        <div class="step-num">3</div>
+      <div class="welcome-step" data-step="3" style="padding: 12px; cursor: pointer;" onclick="completeOnboarding(); window.open('https://discord.gg/EAHKwd7HvX', '_blank');">
+        <div class="step-num" style="width: 28px; height: 28px; font-size: 12px;">3</div>
         <div class="step-content">
-          <h4>Join the Community</h4>
-          <p>Connect with other traders in our Discord server.</p>
-          <a href="https://discord.gg/EAHKwd7HvX" target="_blank" class="btn sm outline">Join Discord →</a>
+          <h4 style="font-size: 14px; margin-bottom: 2px;">Join Discord</h4>
+          <p style="font-size: 12px; margin: 0;">Community & support</p>
         </div>
       </div>
     </div>
     
-    <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-      <button class="btn gold" onclick="completeOnboarding()" style="width: 100%;">Got it, let's go!</button>
-    </div>
+    <button class="btn gold" onclick="completeOnboarding()" style="width: 100%; margin-top: 16px; padding: 14px 24px; font-size: 15px; font-weight: 700;">Let's Go →</button>
   </div>
 </div>
 
