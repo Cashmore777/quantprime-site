@@ -9568,6 +9568,7 @@ document.querySelectorAll('.nav-item, #mobile-nav button').forEach(btn => {
   btn.addEventListener('click', () => {
     const view = btn.dataset.view;
     if (btn.dataset.locked === 'true') {
+      closeSidebar(); // Close sidebar first on mobile
       showLockedModal(view);
       return;
     }
