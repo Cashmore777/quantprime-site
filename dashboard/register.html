@@ -408,6 +408,13 @@ form.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
   const tradingview = document.getElementById('tradingview').value.trim();
   
+  // Validate password length (8 chars minimum)
+  if (password.length < 8) {
+    errorEl.textContent = 'Password must be at least 8 characters.';
+    errorEl.classList.add('show');
+    return;
+  }
+  
   // Determine tier - use tier if promo code or paid flag exists, otherwise free
   // Supports both promo code flow and Stripe payment flow
   const userTier = ((promoCode && promoTier) || (isPaid && promoTier)) ? promoTier.toLowerCase() : 'free';
@@ -483,7 +490,9 @@ form.addEventListener('submit', async (e) => {
       `;
     }
     
-    // Show success message
+    // Hide the tier notice and form, show success
+    const tierNotice = document.querySelector('.auth-card > div[style*="background: rgba(34,197,94"]');
+    if (tierNotice) tierNotice.style.display = 'none';
     form.style.display = 'none';
     successEl.classList.add('show');
     
