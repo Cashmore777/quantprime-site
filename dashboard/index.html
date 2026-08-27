@@ -9126,10 +9126,10 @@ function updateDashboardData() {
       const promoView = tierPromoViews[nextTier];
       if (promoView) {
         upgradeLink.href = '#';
-        upgradeLink.onclick = (e) => { e.preventDefault(); switchView(promoView); };
+        upgradeLink.onclick = (e) => { e.preventDefault(); closeSidebar(); switchView(promoView); };
       } else {
         upgradeLink.href = '/ascension';
-        upgradeLink.onclick = null;
+        upgradeLink.onclick = () => { closeSidebar(); };
       }
     }
   }
