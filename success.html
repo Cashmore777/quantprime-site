@@ -669,6 +669,7 @@ async function trackConversion() {
     await QP_TRACK.trackPurchase(tierKey, rateInfo.price);
     console.log('[Success] Funnel purchase tracked:', tierKey, '£' + rateInfo.price);
   }
+}
 
 function initSnippetSuccess() {
   document.getElementById('title').textContent = 'Your code is ready!';

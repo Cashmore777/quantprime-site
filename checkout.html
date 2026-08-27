@@ -650,6 +650,9 @@ const tiers = {
 const params = new URLSearchParams(window.location.search);
 let currentTier = params.get('tier') || 'research';
 
+// Track if user is returning (no trial)
+let isReturningCustomer = false;
+
 // Initialize
 function init() {
   const tier = tiers[currentTier] || tiers.research;
@@ -665,19 +668,70 @@ function init() {
     </div>
   `).join('');
   
-  // Update pricing based on tier
-  if (tier.freeTrial) {
+  // Update pricing based on tier (default to trial if eligible)
+  updatePricingDisplay(tier, false);
+  
+  // Add email blur listener to check trial eligibility
+  document.getElementById('email').addEventListener('blur', checkTrialEligibility);
+}
+
+// Update pricing display based on returning customer status
+function updatePricingDisplay(tier, returning) {
+  tier = tier || tiers[currentTier] || tiers.research;
+  
+  if (tier.freeTrial && !returning) {
+    // New customer with trial-eligible tier
     document.getElementById('tierBadge').textContent = '30 Days Free';
     document.getElementById('priceAmount').textContent = '£0';
     document.getElementById('pricePeriod').textContent = 'for 30 days';
     document.getElementById('priceAfter').innerHTML = `Then £${tier.monthly}/mo<br>Cancel anytime`;
     document.getElementById('submitText').textContent = 'Start Free Trial';
+  } else if (tier.freeTrial && returning) {
+    // Returning customer - no trial
+    document.getElementById('tierBadge').textContent = 'Welcome Back';
+    document.getElementById('priceAmount').textContent = `£${tier.monthly}`;
+    document.getElementById('pricePeriod').textContent = '/month';
+    document.getElementById('priceAfter').innerHTML = `No trial (previous member)<br>Cancel anytime`;
+    document.getElementById('submitText').textContent = `Subscribe for £${tier.monthly}/mo`;
   } else {
+    // Non-trial tier
     document.getElementById('tierBadge').textContent = 'Monthly';
     document.getElementById('priceAmount').textContent = `£${tier.monthly}`;
     document.getElementById('pricePeriod').textContent = '/month';
     document.getElementById('priceAfter').innerHTML = `Billed monthly<br>Cancel anytime`;
     document.getElementById('submitText').textContent = `Pay £${tier.monthly}`;
+  }
+}
+
+// Check if email is eligible for free trial
+async function checkTrialEligibility() {
+  const email = document.getElementById('email').value.trim();
+  if (!email || !email.includes('@')) return;
+  
+  // Only check for trial-eligible tiers (Research)
+  const tier = tiers[currentTier] || tiers.research;
+  if (!tier.freeTrial) return;
+  
+  try {
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/stripe/check-trial-eligibility', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    
+    const data = await response.json();
+    
+    if (data.returning) {
+      isReturningCustomer = true;
+      updatePricingDisplay(tier, true);
+      console.log('[Checkout] Returning customer detected - no trial');
+    } else {
+      isReturningCustomer = false;
+      updatePricingDisplay(tier, false);
+    }
+  } catch (err) {
+    console.log('[Checkout] Trial eligibility check failed:', err.message);
+    // Default to showing trial (fail open)
   }
 }
 

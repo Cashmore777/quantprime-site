@@ -1,5 +1,17 @@
 [
   {
+    "date": "26 AUG 2026",
+    "filename": "2026-08-26.json",
+    "iso_date": "2026-08-26",
+    "instruments": 30
+  },
+  {
+    "date": "25 AUG 2026",
+    "filename": "2026-08-25.json",
+    "iso_date": "2026-08-25",
+    "instruments": 30
+  },
+  {
     "date": "24 AUG 2026",
     "filename": "2026-08-24.json",
     "iso_date": "2026-08-24",

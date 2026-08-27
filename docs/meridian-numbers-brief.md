@@ -19,9 +19,12 @@
 
 | Metric | Value |
 |--------|-------|
+| **Symbol** | EURUSD |
+| **Period** | 6 months |
 | **Total Trades** | 114 |
 | **Win Rate** | 73.43% |
 | **Profit Factor** | 1.98 |
+| **Sample Type** | In-sample (backtested) |
 
 ## Compliance Notes
 
