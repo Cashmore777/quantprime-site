@@ -246,6 +246,11 @@
     widget.id = 'qp-support-widget';
     widget.className = theme;
     
+    // Add dashboard-mode class if on dashboard (hides widget on mobile)
+    if (window.location.pathname.includes('/dashboard')) {
+      widget.classList.add('dashboard-mode');
+    }
+    
     widget.innerHTML = `
       <style>
         #qp-support-widget {
@@ -565,6 +570,13 @@
         
         @media (max-width: 480px) {
           .sw-panel { width: calc(100vw - 48px); max-height: 70vh; }
+        }
+        
+        /* Hide on mobile dashboard (nav bar takes this space) */
+        @media (max-width: 820px) {
+          #qp-support-widget.dashboard-mode {
+            display: none !important;
+          }
         }
       </style>
       
