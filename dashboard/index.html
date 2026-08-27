@@ -7723,510 +7723,391 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
   </div>
 
-  <!-- RECOIL PROMO PAGE - Premium Design -->
+  <!-- RECOIL PROMO PAGE -->
   <div class="view" id="view-recoil-promo">
     <style>
-      .recoil-promo {
-        max-width: 900px;
+      #view-recoil-promo {
+        --rp-gold: #c9a84c;
+        --rp-gold-dim: rgba(201,168,76,0.15);
+        --rp-radius: 12px;
+      }
+      
+      .rp-container {
+        max-width: 720px;
         margin: 0 auto;
-        padding: 20px;
+        padding: 0 20px;
       }
       
-      /* Animated Hero */
-      .recoil-hero {
+      /* Hero */
+      .rp-hero {
         text-align: center;
-        padding: 60px 20px;
-        background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.15) 0%, transparent 60%);
-        border-radius: 24px;
-        margin-bottom: 40px;
-        position: relative;
-        overflow: hidden;
+        padding: 48px 0 40px;
       }
       
-      .recoil-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(from 0deg, transparent, rgba(201,168,76,0.03), transparent 30%);
-        animation: recoil-rotate 20s linear infinite;
-      }
-      
-      @keyframes recoil-rotate {
-        to { transform: rotate(360deg); }
-      }
-      
-      .recoil-hero-content {
-        position: relative;
-        z-index: 1;
-      }
-      
-      .recoil-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: linear-gradient(135deg, rgba(201,168,76,0.2), rgba(201,168,76,0.05));
-        border: 1px solid rgba(201,168,76,0.3);
-        padding: 8px 20px;
-        border-radius: 100px;
+      .rp-eyebrow {
         font-size: 11px;
-        font-weight: 700;
-        letter-spacing: 0.15em;
-        color: var(--gold);
-        margin-bottom: 24px;
-        animation: recoil-float 3s ease-in-out infinite;
-      }
-      
-      @keyframes recoil-float {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-      }
-      
-      .recoil-title {
-        font-size: 64px;
-        font-weight: 800;
-        margin-bottom: 16px;
-        background: linear-gradient(135deg, var(--text-1) 0%, var(--gold) 50%, var(--text-1) 100%);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        animation: recoil-shimmer 3s linear infinite;
-      }
-      
-      @keyframes recoil-shimmer {
-        to { background-position: 200% center; }
-      }
-      
-      .recoil-tagline {
-        font-size: 20px;
-        color: var(--text-2);
-        margin-bottom: 32px;
-        max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      
-      .recoil-price-box {
-        display: inline-flex;
-        flex-direction: column;
-        align-items: center;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 24px 48px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1), 0 0 0 1px rgba(201,168,76,0.1);
-      }
-      
-      .recoil-price-row {
-        display: flex;
-        align-items: baseline;
-        gap: 4px;
-      }
-      
-      .recoil-price {
-        font-size: 56px;
-        font-weight: 800;
-        color: var(--gold);
-      }
-      
-      .recoil-period {
-        font-size: 18px;
-        color: var(--text-3);
-      }
-      
-      .recoil-price-note {
-        font-size: 12px;
-        color: var(--text-3);
-        margin-top: 8px;
-      }
-      
-      .recoil-price-note span {
-        text-decoration: line-through;
-        opacity: 0.6;
-      }
-      
-      /* Stats Bar */
-      .recoil-stats {
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        padding: 24px;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        margin-bottom: 40px;
-      }
-      
-      .recoil-stat {
-        text-align: center;
-      }
-      
-      .recoil-stat-value {
-        font-size: 28px;
-        font-weight: 800;
-        color: var(--gold);
-        font-family: var(--mono);
-      }
-      
-      .recoil-stat-label {
-        font-size: 11px;
-        color: var(--text-3);
+        font-weight: 600;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-top: 4px;
+        color: var(--rp-gold);
+        margin-bottom: 16px;
       }
       
-      /* Feature Cards */
-      .recoil-features {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        margin-bottom: 40px;
+      .rp-title {
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: var(--text-1);
+        margin-bottom: 12px;
       }
       
-      .recoil-feature {
+      .rp-subtitle {
+        font-size: 17px;
+        color: var(--text-2);
+        line-height: 1.6;
+        max-width: 480px;
+        margin: 0 auto 32px;
+      }
+      
+      .rp-price {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 16px;
-        padding: 28px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        padding: 16px 32px;
+        border-radius: var(--rp-radius);
       }
       
-      .recoil-feature::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, var(--gold), transparent);
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      
-      .recoil-feature:hover {
-        border-color: var(--gold);
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(201,168,76,0.15);
-      }
-      
-      .recoil-feature:hover::before {
-        opacity: 1;
-      }
-      
-      .recoil-feature.hero-feature {
-        grid-column: span 2;
-        background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
-        border-color: rgba(201,168,76,0.3);
-      }
-      
-      .recoil-feature-icon {
-        width: 48px;
-        height: 48px;
-        background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(201,168,76,0.05));
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        font-size: 24px;
-      }
-      
-      .recoil-feature h3 {
-        font-size: 18px;
+      .rp-price-amount {
+        font-size: 40px;
         font-weight: 700;
-        margin-bottom: 8px;
         color: var(--text-1);
       }
       
-      .recoil-feature p {
-        font-size: 14px;
-        color: var(--text-2);
-        line-height: 1.6;
+      .rp-price-period {
+        font-size: 15px;
+        color: var(--text-3);
       }
       
-      .recoil-feature .new-badge {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        background: var(--gold);
-        color: #000;
-        font-size: 9px;
-        font-weight: 700;
-        padding: 4px 8px;
-        border-radius: 4px;
-        letter-spacing: 0.05em;
+      /* Divider */
+      .rp-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 0 0 40px;
       }
       
-      /* CTA Section */
-      .recoil-cta {
-        text-align: center;
-        padding: 48px;
-        background: linear-gradient(135deg, rgba(201,168,76,0.1), transparent);
-        border: 1px solid rgba(201,168,76,0.2);
-        border-radius: 20px;
+      /* Section */
+      .rp-section {
         margin-bottom: 40px;
       }
       
-      .recoil-cta h3 {
-        font-size: 24px;
-        margin-bottom: 8px;
+      .rp-section-title {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        margin-bottom: 20px;
       }
       
-      .recoil-cta p {
-        color: var(--text-2);
-        margin-bottom: 24px;
-      }
-      
-      .recoil-cta-btn {
-        display: inline-flex;
-        align-items: center;
+      /* Feature List */
+      .rp-features {
+        display: flex;
+        flex-direction: column;
         gap: 12px;
-        background: linear-gradient(135deg, var(--gold), #d4a84c);
-        color: #000;
-        font-size: 18px;
-        font-weight: 700;
-        padding: 20px 48px;
-        border-radius: 12px;
-        text-decoration: none;
-        transition: all 0.3s;
-        box-shadow: 0 8px 24px rgba(201,168,76,0.4);
       }
       
-      .recoil-cta-btn:hover {
-        transform: translateY(-3px) scale(1.02);
-        box-shadow: 0 12px 32px rgba(201,168,76,0.5);
+      .rp-feature {
+        display: flex;
+        gap: 16px;
+        padding: 20px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--rp-radius);
+        transition: border-color 0.2s;
       }
       
-      .recoil-cta-btn svg {
-        transition: transform 0.3s;
+      .rp-feature:hover {
+        border-color: var(--rp-gold);
       }
       
-      .recoil-cta-btn:hover svg {
-        transform: translateX(4px);
+      .rp-feature.highlight {
+        border-color: rgba(201,168,76,0.4);
+        background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
       }
       
-      .recoil-guarantee {
+      .rp-feature-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--rp-gold-dim);
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
+        color: var(--rp-gold);
+      }
+      
+      .rp-feature-content {
+        flex: 1;
+        min-width: 0;
+      }
+      
+      .rp-feature-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-1);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
         gap: 8px;
-        margin-top: 16px;
+      }
+      
+      .rp-feature-title .tag {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        padding: 3px 6px;
+        background: var(--rp-gold);
+        color: #000;
+        border-radius: 3px;
+      }
+      
+      .rp-feature-desc {
         font-size: 13px;
-        color: var(--text-3);
+        color: var(--text-2);
+        line-height: 1.5;
       }
       
-      .recoil-guarantee svg {
-        color: var(--success);
-      }
-      
-      /* Comparison */
-      .recoil-compare {
+      /* Comparison Table */
+      .rp-table {
         background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 16px;
+        border-radius: var(--rp-radius);
         overflow: hidden;
       }
       
-      .recoil-compare-header {
-        padding: 20px 24px;
+      .rp-table-header {
+        display: grid;
+        grid-template-columns: 1fr 72px 72px;
+        padding: 14px 20px;
+        background: var(--surface-raised);
         border-bottom: 1px solid var(--border);
-        font-weight: 700;
-        font-size: 16px;
-      }
-      
-      .recoil-compare-row {
-        display: flex;
-        align-items: center;
-        padding: 14px 24px;
-        border-bottom: 1px solid var(--border);
-        transition: background 0.2s;
-      }
-      
-      .recoil-compare-row:last-child {
-        border-bottom: none;
-      }
-      
-      .recoil-compare-row:hover {
-        background: rgba(201,168,76,0.03);
-      }
-      
-      .recoil-compare-row.highlight {
-        background: rgba(201,168,76,0.05);
-      }
-      
-      .recoil-compare-feature {
-        flex: 1;
-        font-size: 14px;
-      }
-      
-      .recoil-compare-check {
-        width: 80px;
-        text-align: center;
-        font-size: 16px;
-      }
-      
-      .recoil-compare-check.yes {
-        color: var(--success);
-      }
-      
-      .recoil-compare-check.new {
-        color: var(--gold);
-        font-weight: 700;
-      }
-      
-      .recoil-compare-check.no {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
         color: var(--text-3);
       }
       
-      @media (max-width: 700px) {
-        .recoil-title { font-size: 42px; }
-        .recoil-features { grid-template-columns: 1fr; }
-        .recoil-feature.hero-feature { grid-column: span 1; }
-        .recoil-stats { flex-wrap: wrap; gap: 24px; }
-        .recoil-hero { padding: 40px 16px; }
-        .recoil-cta { padding: 32px 20px; }
-        .recoil-cta-btn { width: 100%; justify-content: center; }
+      .rp-table-row {
+        display: grid;
+        grid-template-columns: 1fr 72px 72px;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        align-items: center;
+      }
+      
+      .rp-table-row:last-child {
+        border-bottom: none;
+      }
+      
+      .rp-table-row.new {
+        background: rgba(201,168,76,0.04);
+      }
+      
+      .rp-table-cell {
+        text-align: center;
+        color: var(--text-3);
+      }
+      
+      .rp-table-cell.check {
+        color: var(--success);
+      }
+      
+      .rp-table-cell.gold {
+        color: var(--rp-gold);
+        font-weight: 600;
+      }
+      
+      /* CTA */
+      .rp-cta {
+        text-align: center;
+        padding: 40px 0;
+      }
+      
+      .rp-cta-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 360px;
+        padding: 18px 32px;
+        background: var(--rp-gold);
+        color: #000;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: var(--rp-radius);
+        transition: all 0.2s;
+      }
+      
+      .rp-cta-btn:hover {
+        background: #d4b85a;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+      }
+      
+      .rp-cta-note {
+        font-size: 12px;
+        color: var(--text-3);
+        margin-top: 12px;
+      }
+      
+      @media (max-width: 600px) {
+        .rp-title { font-size: 36px; }
+        .rp-feature { flex-direction: column; gap: 12px; }
+        .rp-table-header, .rp-table-row { grid-template-columns: 1fr 56px 56px; padding: 12px 14px; }
       }
     </style>
     
-    <div class="recoil-promo">
-      <!-- Animated Hero -->
-      <div class="recoil-hero">
-        <div class="recoil-hero-content">
-          <div class="recoil-badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            UPGRADE YOUR EDGE
-          </div>
-          <h1 class="recoil-title">Recoil</h1>
-          <p class="recoil-tagline">Fade overextended moves. Catch the snapback. The volatility instrument that measures when price has gone too far.</p>
-          <div class="recoil-price-box">
-            <div class="recoil-price-row">
-              <span class="recoil-price">£28</span>
-              <span class="recoil-period">/month</span>
+    <div class="rp-container">
+      <!-- Hero -->
+      <div class="rp-hero">
+        <div class="rp-eyebrow">Upgrade</div>
+        <h1 class="rp-title">Recoil</h1>
+        <p class="rp-subtitle">The volatility fade instrument. Measures when price has extended beyond its normal range and marks where comparable moves have historically snapped back.</p>
+        <div class="rp-price">
+          <span class="rp-price-amount">£28</span>
+          <span class="rp-price-period">/month</span>
+        </div>
+      </div>
+      
+      <div class="rp-divider"></div>
+      
+      <!-- What's Included -->
+      <div class="rp-section">
+        <div class="rp-section-title">What's included</div>
+        <div class="rp-features">
+          <div class="rp-feature highlight">
+            <div class="rp-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
             </div>
-            <div class="recoil-price-note">Save £96/year vs monthly • <span>£336</span> → £240</div>
+            <div class="rp-feature-content">
+              <div class="rp-feature-title">Recoil Instrument <span class="tag">CORE</span></div>
+              <div class="rp-feature-desc">8-band ATR classification system. When candles hit Band 6–8, they've stretched too far. See the level, the band, and historical retracement data. No signals — just the math.</div>
+            </div>
           </div>
-        </div>
-      </div>
-      
-      <!-- Stats Bar -->
-      <div class="recoil-stats">
-        <div class="recoil-stat">
-          <div class="recoil-stat-value">510</div>
-          <div class="recoil-stat-label">Combinations</div>
-        </div>
-        <div class="recoil-stat">
-          <div class="recoil-stat-value">8</div>
-          <div class="recoil-stat-label">Band Levels</div>
-        </div>
-        <div class="recoil-stat">
-          <div class="recoil-stat-value">24/7</div>
-          <div class="recoil-stat-label">Support</div>
-        </div>
-        <div class="recoil-stat">
-          <div class="recoil-stat-value">∞</div>
-          <div class="recoil-stat-label">Builds</div>
-        </div>
-      </div>
-      
-      <!-- Feature Cards -->
-      <div class="recoil-features">
-        <div class="recoil-feature hero-feature">
-          <span class="new-badge">CORE</span>
-          <div class="recoil-feature-icon">📊</div>
-          <h3>The Recoil Instrument</h3>
-          <p>Measures when price has extended beyond its normal range using an 8-band ATR classification system. When candles hit Band 6-8, they've stretched too far — and historically snap back. You see the level, the band, and how far comparable moves have retraced. No signals. No promises. Just the math.</p>
-        </div>
-        
-        <div class="recoil-feature">
-          <div class="recoil-feature-icon">🧪</div>
-          <h3>255 New Combinations</h3>
-          <p>Unlock the Recoil Build Menu. Same restaurant-style builder, different ingredients — volatility bands, extension markers, fade zone levels.</p>
-        </div>
-        
-        <div class="recoil-feature">
-          <span class="new-badge">NEW</span>
-          <div class="recoil-feature-icon">🤖</div>
-          <h3>QP Intelligence</h3>
-          <p>Your AI-powered second opinion. Ask about charts, get framework-aware analysis, review your journal with systematic precision.</p>
-        </div>
-        
-        <div class="recoil-feature">
-          <div class="recoil-feature-icon">💬</div>
-          <h3>Private Channels</h3>
-          <p>Access the Recoil discussion rooms in Discord. Trade ideas, setups, and direct support from the team.</p>
-        </div>
-        
-        <div class="recoil-feature">
-          <div class="recoil-feature-icon">📚</div>
-          <h3>Everything in Research</h3>
-          <p>Keep full access to Research Build Menu (255 combos), papers, and market intelligence.</p>
-        </div>
-      </div>
-      
-      <!-- CTA -->
-      <div class="recoil-cta">
-        <h3>Ready to catch the snapback?</h3>
-        <p>Upgrade now and unlock Recoil instantly.</p>
-        <a href="https://billing.stripe.com/p/login/8x228jcD0fMg1lb3BI4F200" target="_blank" class="recoil-cta-btn">
-          Upgrade to Recoil — £28/mo
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <div class="recoil-guarantee">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-          Cancel anytime • Instant access • Secure checkout
+          
+          <div class="rp-feature">
+            <div class="rp-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            </div>
+            <div class="rp-feature-content">
+              <div class="rp-feature-title">Recoil Build Menu</div>
+              <div class="rp-feature-desc">255 additional combinations. Volatility bands, extension markers, and fade zone levels.</div>
+            </div>
+          </div>
+          
+          <div class="rp-feature">
+            <div class="rp-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </div>
+            <div class="rp-feature-content">
+              <div class="rp-feature-title">Quant Prime Intelligence <span class="tag">NEW</span></div>
+              <div class="rp-feature-desc">AI-powered second opinion. Framework-aware chart analysis and journal review.</div>
+            </div>
+          </div>
+          
+          <div class="rp-feature">
+            <div class="rp-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="rp-feature-content">
+              <div class="rp-feature-title">Private Recoil Channels</div>
+              <div class="rp-feature-desc">Direct access to Recoil discussions, setups, and team support in Discord.</div>
+            </div>
+          </div>
+          
+          <div class="rp-feature">
+            <div class="rp-feature-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+            </div>
+            <div class="rp-feature-content">
+              <div class="rp-feature-title">Everything in Research</div>
+              <div class="rp-feature-desc">Full access to Research Build Menu (255 combos), papers, and market intelligence.</div>
+            </div>
+          </div>
         </div>
       </div>
       
       <!-- Comparison -->
-      <div class="recoil-compare">
-        <div class="recoil-compare-header">What you're unlocking</div>
-        <div class="recoil-compare-row">
-          <div class="recoil-compare-feature">Research Build Menu (255 combos)</div>
-          <div class="recoil-compare-check yes">✓</div>
-          <div class="recoil-compare-check yes">✓</div>
+      <div class="rp-section">
+        <div class="rp-section-title">Research vs Recoil</div>
+        <div class="rp-table">
+          <div class="rp-table-header">
+            <span>Feature</span>
+            <span style="text-align:center;">Research</span>
+            <span style="text-align:center;">Recoil</span>
+          </div>
+          <div class="rp-table-row">
+            <span>Research Build Menu</span>
+            <span class="rp-table-cell check">✓</span>
+            <span class="rp-table-cell check">✓</span>
+          </div>
+          <div class="rp-table-row">
+            <span>Research Papers</span>
+            <span class="rp-table-cell check">✓</span>
+            <span class="rp-table-cell check">✓</span>
+          </div>
+          <div class="rp-table-row">
+            <span>Market Intelligence</span>
+            <span class="rp-table-cell check">✓</span>
+            <span class="rp-table-cell check">✓</span>
+          </div>
+          <div class="rp-table-row">
+            <span>Community Chat</span>
+            <span class="rp-table-cell check">✓</span>
+            <span class="rp-table-cell check">✓</span>
+          </div>
+          <div class="rp-table-row new">
+            <span>Recoil Instrument</span>
+            <span class="rp-table-cell">—</span>
+            <span class="rp-table-cell gold">✓</span>
+          </div>
+          <div class="rp-table-row new">
+            <span>Recoil Build Menu</span>
+            <span class="rp-table-cell">—</span>
+            <span class="rp-table-cell gold">✓</span>
+          </div>
+          <div class="rp-table-row new">
+            <span>Private Channels</span>
+            <span class="rp-table-cell">—</span>
+            <span class="rp-table-cell gold">✓</span>
+          </div>
+          <div class="rp-table-row new">
+            <span>QP Intelligence</span>
+            <span class="rp-table-cell">—</span>
+            <span class="rp-table-cell gold">✓</span>
+          </div>
+          <div class="rp-table-row new">
+            <span>Total Combinations</span>
+            <span class="rp-table-cell">255</span>
+            <span class="rp-table-cell gold">510</span>
+          </div>
         </div>
-        <div class="recoil-compare-row">
-          <div class="recoil-compare-feature">Research Papers & Market Intelligence</div>
-          <div class="recoil-compare-check yes">✓</div>
-          <div class="recoil-compare-check yes">✓</div>
-        </div>
-        <div class="recoil-compare-row">
-          <div class="recoil-compare-feature">Community Chat</div>
-          <div class="recoil-compare-check yes">✓</div>
-          <div class="recoil-compare-check yes">✓</div>
-        </div>
-        <div class="recoil-compare-row highlight">
-          <div class="recoil-compare-feature"><strong>Recoil Build Menu (255 combos)</strong></div>
-          <div class="recoil-compare-check no">—</div>
-          <div class="recoil-compare-check new">✓</div>
-        </div>
-        <div class="recoil-compare-row highlight">
-          <div class="recoil-compare-feature"><strong>Recoil Instrument</strong></div>
-          <div class="recoil-compare-check no">—</div>
-          <div class="recoil-compare-check new">✓</div>
-        </div>
-        <div class="recoil-compare-row highlight">
-          <div class="recoil-compare-feature"><strong>Private Recoil Channels</strong></div>
-          <div class="recoil-compare-check no">—</div>
-          <div class="recoil-compare-check new">✓</div>
-        </div>
-        <div class="recoil-compare-row highlight">
-          <div class="recoil-compare-feature"><strong>Quant Prime Intelligence (AI)</strong></div>
-          <div class="recoil-compare-check no">—</div>
-          <div class="recoil-compare-check new">✓</div>
-        </div>
-        <div class="recoil-compare-row highlight">
-          <div class="recoil-compare-feature"><strong>510 Total Combinations</strong></div>
-          <div class="recoil-compare-check no">255</div>
-          <div class="recoil-compare-check new">510</div>
-        </div>
+      </div>
+      
+      <!-- CTA -->
+      <div class="rp-cta">
+        <a href="https://billing.stripe.com/p/login/8x228jcD0fMg1lb3BI4F200" target="_blank" class="rp-cta-btn">
+          Upgrade to Recoil — £28/mo
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <div class="rp-cta-note">Opens Stripe portal · Cancel anytime</div>
       </div>
     </div>
   </div>
