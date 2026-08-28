@@ -759,9 +759,79 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 #dm-panel .dm-settings {
   padding: 12px 16px;
   border-top: 1px solid var(--border);
+}
+
+/* DM Tabs */
+#dm-panel .dm-tabs {
   display: flex;
-  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+}
+
+#dm-panel .dm-tab {
+  flex: 1;
+  padding: 12px 8px;
+  background: none;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+
+#dm-panel .dm-tab:hover {
+  color: var(--text-1);
+}
+
+#dm-panel .dm-tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+#dm-panel .dm-tab-content {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+#dm-panel .dm-tab-content.active {
+  display: flex;
+}
+
+/* Friend request item */
+.friend-request-item {
+  display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.friend-request-item .fr-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.friend-request-item .fr-actions button {
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.friend-request-item .fr-accept {
+  background: var(--gold);
+  color: #1a1a1a;
+}
+
+.friend-request-item .fr-decline {
+  background: var(--surface-raised);
+  color: var(--text-2);
 }
 
 @media (max-width: 500px) {
@@ -8017,18 +8087,49 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="dm-search">
-        <input type="text" placeholder="Search users..." id="dm-search-input" oninput="filterDMUsers(this.value)">
+      
+      <!-- Tabs -->
+      <div class="dm-tabs">
+        <button class="dm-tab active" data-tab="messages" onclick="switchDMTab('messages')">Messages</button>
+        <button class="dm-tab" data-tab="friends" onclick="switchDMTab('friends')">Friends</button>
+        <button class="dm-tab" data-tab="search" onclick="switchDMTab('search')">Find Users</button>
       </div>
-      <div class="dm-list" id="dm-user-list">
-        <p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Loading online users...</p>
+      
+      <!-- Messages Tab -->
+      <div class="dm-tab-content active" id="dm-tab-messages">
+        <div class="dm-list" id="dm-conversations-list">
+          <p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No conversations yet</p>
+        </div>
       </div>
+      
+      <!-- Friends Tab -->
+      <div class="dm-tab-content" id="dm-tab-friends">
+        <div id="friend-requests-section" style="display: none;">
+          <div style="padding: 8px 16px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase;">Pending Requests</div>
+          <div id="friend-requests-list"></div>
+        </div>
+        <div style="padding: 8px 16px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; color: var(--text-3); text-transform: uppercase;">Friends</div>
+        <div class="dm-list" id="friends-list">
+          <p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No friends yet. Search for users to add!</p>
+        </div>
+      </div>
+      
+      <!-- Search Tab -->
+      <div class="dm-tab-content" id="dm-tab-search">
+        <div class="dm-search">
+          <input type="text" placeholder="Search by username..." id="dm-search-input" oninput="searchAllUsers(this.value)">
+        </div>
+        <div class="dm-list" id="dm-search-results">
+          <p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Type a username to search</p>
+        </div>
+      </div>
+      
+      <!-- Privacy toggle -->
       <div class="dm-settings">
-        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
-          <input type="checkbox" id="dm-privacy-toggle" checked style="width: 16px; height: 16px; accent-color: var(--gold);">
-          Allow messages from anyone
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; color: var(--text-2);">
+          <input type="checkbox" id="dm-privacy-toggle" checked style="width: 14px; height: 14px; accent-color: var(--gold);">
+          Allow DMs from anyone
         </label>
-        <button class="btn outline sm" onclick="showFriendsList()" style="padding: 6px 12px; font-size: 11px;">Friends</button>
       </div>
     </div>
     
@@ -13710,10 +13811,15 @@ function getDmChannelId(userId1, userId2) {
 // DM PANEL FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════
 
+let allUsersCache = [];
+let friendsCache = [];
+let friendRequestsCache = [];
+
 function openDMPanel() {
   const panel = document.getElementById('dm-panel');
   panel.classList.add('open');
-  loadDMPanelUsers();
+  loadConversations();
+  loadFriends();
 }
 
 function closeDMPanel() {
@@ -13721,64 +13827,300 @@ function closeDMPanel() {
   panel.classList.remove('open');
 }
 
-function loadDMPanelUsers() {
-  const list = document.getElementById('dm-user-list');
+function switchDMTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('#dm-panel .dm-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
   
-  if (!db) {
-    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Chat not connected</p>';
+  // Update tab content
+  document.querySelectorAll('#dm-panel .dm-tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === `dm-tab-${tab}`);
+  });
+  
+  // Load content for tab
+  if (tab === 'friends') loadFriends();
+  if (tab === 'messages') loadConversations();
+}
+
+// Load existing DM conversations
+async function loadConversations() {
+  const list = document.getElementById('dm-conversations-list');
+  if (!db || !authUser) {
+    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Not connected</p>';
     return;
   }
   
-  // Get all online users
-  db.ref('rooms').once('value', (snapshot) => {
-    const allUsers = new Map();
-    
-    snapshot.forEach((roomSnap) => {
-      const presence = roomSnap.child('presence').val();
-      if (presence) {
-        Object.entries(presence).forEach(([userId, data]) => {
-          if (userId !== authUser?.id) {
-            allUsers.set(userId, data);
-          }
-        });
-      }
-    });
-    
-    if (allUsers.size === 0) {
-      list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No users online right now</p>';
-      return;
+  // Get DMs where user is a participant
+  const snapshot = await db.ref('dms').once('value');
+  const convos = [];
+  
+  snapshot.forEach(dmSnap => {
+    const meta = dmSnap.child('meta').val();
+    if (meta?.participants && meta.participants[authUser.id]) {
+      const otherId = Object.keys(meta.participants).find(id => id !== authUser.id);
+      const otherUser = meta.participants[otherId];
+      convos.push({
+        channelId: dmSnap.key,
+        otherUserId: otherId,
+        otherUserName: otherUser?.name || 'Unknown',
+        updatedAt: meta.updatedAt || 0
+      });
     }
-    
-    list.innerHTML = Array.from(allUsers.entries()).map(([userId, data]) => `
-      <div class="dm-user-item" onclick="startDMFromPanel('${userId}', '${escapeHtml(data.user || 'Unknown')}')">
-        <div class="dm-user-avatar">${data.user ? data.user.charAt(0).toUpperCase() : '?'}</div>
-        <div class="dm-user-info">
-          <div class="dm-user-name">${escapeHtml(data.user || 'Unknown')}</div>
-          <div class="dm-user-status">Online now</div>
-        </div>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-      </div>
-    `).join('');
   });
+  
+  if (convos.length === 0) {
+    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No conversations yet</p>';
+    return;
+  }
+  
+  // Sort by most recent
+  convos.sort((a, b) => b.updatedAt - a.updatedAt);
+  
+  list.innerHTML = convos.map(c => `
+    <div class="dm-user-item" onclick="startDMFromPanel('${c.otherUserId}', '${escapeHtml(c.otherUserName)}')">
+      <div class="dm-user-avatar">${c.otherUserName.charAt(0).toUpperCase()}</div>
+      <div class="dm-user-info">
+        <div class="dm-user-name">${escapeHtml(c.otherUserName)}</div>
+        <div class="dm-user-status">Tap to open</div>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </div>
+  `).join('');
 }
 
-function filterDMUsers(query) {
-  const items = document.querySelectorAll('#dm-user-list .dm-user-item');
-  const q = query.toLowerCase();
-  items.forEach(item => {
-    const name = item.querySelector('.dm-user-name')?.textContent?.toLowerCase() || '';
-    item.style.display = name.includes(q) ? 'flex' : 'none';
-  });
+// Search ALL users from Supabase profiles
+let searchTimeout;
+async function searchAllUsers(query) {
+  const list = document.getElementById('dm-search-results');
+  
+  if (!query || query.length < 2) {
+    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Type at least 2 characters</p>';
+    return;
+  }
+  
+  // Debounce
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(async () => {
+    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 20px; font-size: 13px;">Searching...</p>';
+    
+    try {
+      const { data: users, error } = await supabaseClient
+        .from('profiles')
+        .select('id, display_name, email, tier')
+        .or(`display_name.ilike.%${query}%,email.ilike.%${query}%`)
+        .neq('id', authUser.id)
+        .limit(20);
+      
+      if (error) throw error;
+      
+      if (!users || users.length === 0) {
+        list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No users found</p>';
+        return;
+      }
+      
+      // Get friend status for each user
+      const { data: friendData } = await supabaseClient
+        .from('friends')
+        .select('user_id, friend_id, status')
+        .or(`user_id.eq.${authUser.id},friend_id.eq.${authUser.id}`);
+      
+      const friendMap = new Map();
+      (friendData || []).forEach(f => {
+        const otherId = f.user_id === authUser.id ? f.friend_id : f.user_id;
+        friendMap.set(otherId, f.status);
+      });
+      
+      list.innerHTML = users.map(u => {
+        const name = u.display_name || u.email?.split('@')[0] || 'User';
+        const status = friendMap.get(u.id) || 'none';
+        const actionBtn = status === 'accepted' 
+          ? `<button class="btn outline sm" style="padding:4px 10px;font-size:11px;" onclick="event.stopPropagation();startDMFromPanel('${u.id}','${escapeHtml(name)}')">Message</button>`
+          : status === 'pending'
+          ? `<span style="font-size:11px;color:var(--text-3);">Pending</span>`
+          : `<button class="btn sm" style="padding:4px 10px;font-size:11px;background:var(--gold);color:#1a1a1a;" onclick="event.stopPropagation();sendFriendRequest('${u.id}')">Add</button>`;
+        
+        return `
+          <div class="dm-user-item" onclick="startDMFromPanel('${u.id}', '${escapeHtml(name)}')">
+            <div class="dm-user-avatar">${name.charAt(0).toUpperCase()}</div>
+            <div class="dm-user-info">
+              <div class="dm-user-name">${escapeHtml(name)}</div>
+              <div class="dm-user-status">${u.tier || 'Free'}</div>
+            </div>
+            ${actionBtn}
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      console.error('Search error:', e);
+      list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Search failed</p>';
+    }
+  }, 300);
+}
+
+// Load friends and pending requests
+async function loadFriends() {
+  if (!authUser) return;
+  
+  try {
+    // Get all friend records involving this user
+    const { data: friendData, error } = await supabaseClient
+      .from('friends')
+      .select('*')
+      .or(`user_id.eq.${authUser.id},friend_id.eq.${authUser.id}`);
+    
+    if (error) throw error;
+    
+    const friends = [];
+    const requests = [];
+    
+    for (const f of (friendData || [])) {
+      const isRequester = f.user_id === authUser.id;
+      const otherId = isRequester ? f.friend_id : f.user_id;
+      
+      // Get other user's profile
+      const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('display_name, email')
+        .eq('id', otherId)
+        .single();
+      
+      const name = profile?.display_name || profile?.email?.split('@')[0] || 'User';
+      
+      if (f.status === 'accepted') {
+        friends.push({ id: otherId, name, friendRecordId: f.id });
+      } else if (f.status === 'pending' && !isRequester) {
+        // Incoming request (they requested us)
+        requests.push({ id: otherId, name, friendRecordId: f.id });
+      }
+    }
+    
+    friendsCache = friends;
+    friendRequestsCache = requests;
+    
+    // Render requests
+    const reqSection = document.getElementById('friend-requests-section');
+    const reqList = document.getElementById('friend-requests-list');
+    if (requests.length > 0) {
+      reqSection.style.display = 'block';
+      reqList.innerHTML = requests.map(r => `
+        <div class="friend-request-item">
+          <div class="dm-user-avatar">${r.name.charAt(0).toUpperCase()}</div>
+          <div class="dm-user-info">
+            <div class="dm-user-name">${escapeHtml(r.name)}</div>
+            <div class="dm-user-status">Wants to be friends</div>
+          </div>
+          <div class="fr-actions">
+            <button class="fr-accept" onclick="acceptFriendRequest('${r.friendRecordId}')">Accept</button>
+            <button class="fr-decline" onclick="declineFriendRequest('${r.friendRecordId}')">Decline</button>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      reqSection.style.display = 'none';
+    }
+    
+    // Render friends
+    const friendsList = document.getElementById('friends-list');
+    if (friends.length === 0) {
+      friendsList.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No friends yet. Use "Find Users" to add some!</p>';
+    } else {
+      friendsList.innerHTML = friends.map(f => `
+        <div class="dm-user-item" onclick="startDMFromPanel('${f.id}', '${escapeHtml(f.name)}')">
+          <div class="dm-user-avatar">${f.name.charAt(0).toUpperCase()}</div>
+          <div class="dm-user-info">
+            <div class="dm-user-name">${escapeHtml(f.name)}</div>
+            <div class="dm-user-status">Friend</div>
+          </div>
+          <button class="btn outline sm" style="padding:4px 10px;font-size:11px;" onclick="event.stopPropagation();removeFriend('${f.friendRecordId}')">Remove</button>
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    console.error('Load friends error:', e);
+  }
+}
+
+// Send friend request
+async function sendFriendRequest(targetUserId) {
+  if (!authUser) return;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('friends')
+      .insert({
+        user_id: authUser.id,
+        friend_id: targetUserId,
+        status: 'pending'
+      });
+    
+    if (error) throw error;
+    
+    showToast('Friend request sent!', 'success');
+    searchAllUsers(document.getElementById('dm-search-input').value);
+  } catch (e) {
+    console.error('Send friend request error:', e);
+    showToast('Failed to send request', 'error');
+  }
+}
+
+// Accept friend request
+async function acceptFriendRequest(recordId) {
+  try {
+    const { error } = await supabaseClient
+      .from('friends')
+      .update({ status: 'accepted', updated_at: new Date().toISOString() })
+      .eq('id', recordId);
+    
+    if (error) throw error;
+    
+    showToast('Friend added!', 'success');
+    loadFriends();
+  } catch (e) {
+    console.error('Accept friend error:', e);
+    showToast('Failed to accept', 'error');
+  }
+}
+
+// Decline friend request
+async function declineFriendRequest(recordId) {
+  try {
+    const { error } = await supabaseClient
+      .from('friends')
+      .delete()
+      .eq('id', recordId);
+    
+    if (error) throw error;
+    
+    showToast('Request declined', 'info');
+    loadFriends();
+  } catch (e) {
+    console.error('Decline friend error:', e);
+  }
+}
+
+// Remove friend
+async function removeFriend(recordId) {
+  if (!confirm('Remove this friend?')) return;
+  
+  try {
+    const { error } = await supabaseClient
+      .from('friends')
+      .delete()
+      .eq('id', recordId);
+    
+    if (error) throw error;
+    
+    showToast('Friend removed', 'info');
+    loadFriends();
+  } catch (e) {
+    console.error('Remove friend error:', e);
+  }
 }
 
 function startDMFromPanel(userId, username) {
   closeDMPanel();
   startDM(userId, username);
-}
-
-function showFriendsList() {
-  // TODO: Implement friends list modal
-  showToast('Friends list coming soon!', 'info');
 }
 
 // Close DM panel when clicking outside
