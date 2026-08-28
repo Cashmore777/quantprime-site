@@ -600,7 +600,8 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--success);
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
 }
 
 .nav-item .status-pip.inactive { background: var(--text-3); }
@@ -1972,7 +1973,7 @@ body {
 }
 
 .instrument-card.locked {
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .instrument-card.locked .instrument-card-status {
@@ -1989,6 +1990,19 @@ body {
   font-weight: 600;
   color: var(--text-3);
   letter-spacing: 0.05em;
+}
+
+/* Green dot for unlocked instruments */
+.instrument-card:not(.locked)::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(34,197,94,0.5);
 }
 
 .instrument-card:hover:not(.locked) {
@@ -2068,13 +2082,42 @@ body {
 }
 
 #view-community .view-header h2 {
-  font-size: 28px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+#view-community .view-header p {
+  max-width: 500px;
+}
+
+.room-category-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 14px;
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.room-category-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.room-category-label:first-of-type {
+  margin-top: 0;
 }
 
 .room-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 14px;
 }
 
 @media (max-width: 1100px) {
@@ -2090,13 +2133,14 @@ body {
 }
 
 .room-card {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 16px 18px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -2105,11 +2149,11 @@ body {
   border-color: var(--gold);
   background: var(--gold-glow);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
 
 .room-card.locked {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -2117,23 +2161,49 @@ body {
   transform: none;
   border-color: var(--border);
   background: var(--surface);
+  box-shadow: none;
+}
+
+/* Unlocked indicator - green dot */
+.room-card.unlocked::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+}
+
+/* Lock icon for locked rooms */
+.room-card.locked::after {
+  content: '🔒';
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 12px;
+  opacity: 0.6;
 }
 
 .room-card-icon {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--surface-raised);
-  border-radius: 10px;
+  border-radius: 12px;
   color: var(--text-2);
   flex-shrink: 0;
 }
 
+.room-card-icon.tier-free { color: #22c55e; background: rgba(34,197,94,0.1); }
 .room-card-icon.tier-research { color: #00abff; background: rgba(0,171,255,0.1); }
 .room-card-icon.tier-recoil { color: #26a269; background: rgba(38,162,105,0.1); }
 .room-card-icon.tier-meridian { color: #8b5cf6; background: rgba(139,92,246,0.1); }
+.room-card-icon.tier-cockpit { color: #f59e0b; background: rgba(245,158,11,0.1); }
 .room-card-icon.tier-ascension { color: #c9a84c; background: var(--gold-glow); }
 
 .room-card-info {
@@ -2142,27 +2212,30 @@ body {
 }
 
 .room-card-info h4 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-1);
-  margin-bottom: 2px;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .room-card-info p {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-3);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.4;
 }
 
 .room-card-arrow {
   color: var(--text-3);
   flex-shrink: 0;
+  transition: transform 0.2s;
 }
 
 .room-card:hover .room-card-arrow {
   color: var(--gold);
+  transform: translateX(3px);
 }
 
 .room-card-tier {
@@ -12741,14 +12814,16 @@ function canAccessRoom(roomId) {
   return hasAccessToTier(requiredTier);
 }
 
-// Apply locked styling to room cards based on user tier
+// Apply locked/unlocked styling to room cards based on user tier
 function updateRoomLocks() {
   roomCards.forEach(card => {
     const roomId = card.dataset.room;
     if (!canAccessRoom(roomId)) {
       card.classList.add('locked');
+      card.classList.remove('unlocked');
     } else {
       card.classList.remove('locked');
+      card.classList.add('unlocked');
     }
   });
 }
