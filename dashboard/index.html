@@ -606,6 +606,24 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .nav-item .status-pip.inactive { background: var(--text-3); }
 
+/* Live green dots for Community & Build (always visible) */
+.nav-item .status-pip.live-pip {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  animation: pip-pulse 2s ease-in-out infinite;
+}
+
+/* Intelligence pip - shown when Recoil+ */
+.nav-item .status-pip.intel-pip {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34,197,94,0.5);
+}
+
+@keyframes pip-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 .tier-badge {
   position: absolute;
   bottom: 24px;
@@ -2064,7 +2082,11 @@ body {
 .room-grid {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
+}
+
+.room-grid.compact {
+  gap: 8px;
 }
 
 .room-category-label {
@@ -2073,16 +2095,16 @@ body {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: -8px;
+  margin-bottom: -4px;
 }
 
 /* Tighter community view on desktop */
 #view-community .view-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 #view-community .view-header h2 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
 }
 
@@ -2091,16 +2113,16 @@ body {
 }
 
 .room-category-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 14px;
-  margin-top: 28px;
+  margin-bottom: 8px;
+  margin-top: 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .room-category-label::after {
@@ -2117,7 +2139,13 @@ body {
 .room-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
+  gap: 10px;
+}
+
+.room-cards.tier-grid {
+  /* 2x3 grid for strategy rooms - each column is a tier */
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 @media (max-width: 1100px) {
@@ -2136,11 +2164,11 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
+  gap: 10px;
+  padding: 12px 14px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -2188,13 +2216,13 @@ body {
 }
 
 .room-card-icon {
-  width: 44px;
-  height: 44px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--surface-raised);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--text-2);
   flex-shrink: 0;
 }
@@ -2212,19 +2240,19 @@ body {
 }
 
 .room-card-info h4 {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-1);
-  margin-bottom: 3px;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .room-card-info p {
-  font-size: 13px;
+  font-size: 11px;
   color: var(--text-3);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .room-card-arrow {
@@ -6650,9 +6678,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <!-- Connect -->
     <div class="nav-section">
       <div class="nav-section-label">Connect</div>
-      <button class="nav-item" data-view="community"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Community</button>
-      <button class="nav-item" data-view="marketplace"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>Build</button>
-      <button class="nav-item locked" data-view="intelligence" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>Intelligence<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
+      <button class="nav-item" data-view="community"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Community<span class="status-pip live-pip"></span></button>
+      <button class="nav-item" data-view="marketplace"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></span>Build<span class="status-pip live-pip"></span></button>
+      <button class="nav-item locked" data-view="intelligence" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span>Intelligence<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip intel-pip" style="display:none;"></span></button>
     </div>
     
     <!-- Ascension -->
@@ -7585,220 +7613,262 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-community">
     <!-- ROOM SELECTION VIEW -->
     <div id="room-selection" class="room-selection-view">
-      <div class="view-header" style="margin-bottom: 32px;">
+      <div class="view-header" style="margin-bottom: 20px;">
         <div class="eyebrow">Community</div>
-        <h2 style="font-size: 36px;">The <em style="color: var(--gold);">floor</em>.</h2>
-        <p style="color: var(--text-2); font-size: 15px; margin-top: 10px; max-width: 400px;">Where traders connect. Pick a room and join the conversation.</p>
+        <h2 style="font-size: 32px;">The <em style="color: var(--gold);">floor</em>.</h2>
+        <p style="color: var(--text-2); font-size: 14px; margin-top: 6px; max-width: 400px;">Pick a room and join the conversation.</p>
       </div>
       
-      <div class="room-grid">
+      <div class="room-grid compact">
         <!-- COMMUNITY CHATS -->
-        <div class="room-category-label">Community Chats</div>
+        <div class="room-category-label">Community</div>
         <div class="room-cards">
           <div class="room-card" data-room="introductions" data-tier="free">
             <div class="room-card-icon tier-free">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#introductions</h4>
-              <p>Say hi to the community</p>
+              <p>Say hi</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="general" data-tier="free">
             <div class="room-card-icon tier-free">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#general</h4>
-              <p>Main chat for all members</p>
+              <p>Main chat</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="market-chat" data-tier="free">
             <div class="room-card-icon tier-free">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#market-chat</h4>
-              <p>Live market discussion</p>
+              <p>Live discussion</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <!-- SYMBOL CHATS INLINE -->
+          <div class="room-card" data-room="xauusd-chat" data-tier="free">
+            <div class="room-card-icon" style="color: #c9a84c; background: rgba(201,168,76,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6M9 13h6"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>XAUUSD</h4>
+              <p>Gold</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="room-card" data-room="eurusd-chat" data-tier="free">
+            <div class="room-card-icon" style="color: #00abff; background: rgba(0,171,255,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>EURUSD</h4>
+              <p>Euro</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="room-card" data-room="btcusd-chat" data-tier="free">
+            <div class="room-card-icon" style="color: #f7931a; background: rgba(247,147,26,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 8h6v8H9z"/><path d="M12 6v2M12 16v2M9 10h6M9 14h6"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>BTCUSD</h4>
+              <p>Bitcoin</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
         </div>
         
-        <!-- PAID CHAT ROOMS -->
-        <div class="room-category-label">Paid Chat Rooms</div>
-        <div class="room-cards">
-          <div class="room-card" data-room="research-discussion" data-tier="research">
-            <div class="room-card-icon tier-research">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#research-discussion</h4>
-              <p>Weekly reports & market research</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
+        <!-- STRATEGY CHAT ROOMS - 2x3 grid by tier -->
+        <div class="room-category-label">Strategy Rooms</div>
+        <div class="room-cards tier-grid">
+          <!-- ROW 1: Discussion channels -->
           <div class="room-card" data-room="recoil" data-tier="recoil">
             <div class="room-card-icon tier-recoil">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#recoil</h4>
-              <p>Recoil volatility fade discussion</p>
+              <p>Discussion</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="meridian" data-tier="meridian">
             <div class="room-card-icon tier-meridian">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M12 2a15 15 0 000 20M2 12h20"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M12 2a15 15 0 000 20M2 12h20"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#meridian</h4>
-              <p>Meridian regime & cycle analysis</p>
+              <p>Discussion</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="cockpit" data-tier="cockpit">
             <div class="room-card-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><circle cx="8" cy="10" r="2"/><circle cx="16" cy="10" r="2"/><path d="M10 10h4"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><circle cx="8" cy="10" r="2"/><circle cx="16" cy="10" r="2"/><path d="M10 10h4"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#cockpit</h4>
-              <p>Visual analysis & multi-timeframe</p>
+              <p>Discussion</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <!-- ROW 2: Signal channels -->
+          <div class="room-card" data-room="recoil-signals" data-tier="recoil">
+            <div class="room-card-icon tier-recoil">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#recoil-signals</h4>
+              <p>Trade alerts</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="room-card" data-room="meridian-signals" data-tier="meridian">
+            <div class="room-card-icon tier-meridian">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#meridian-signals</h4>
+              <p>Trade alerts</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="room-card" data-room="cockpit-signals" data-tier="cockpit">
+            <div class="room-card-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#cockpit-signals</h4>
+              <p>Trade alerts</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- RESEARCH & ASCENSION -->
+        <div class="room-category-label">Research & Academy</div>
+        <div class="room-cards">
+          <div class="room-card" data-room="research-discussion" data-tier="research">
+            <div class="room-card-icon tier-research">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#research</h4>
+              <p>Weekly reports</p>
+            </div>
+            <div class="room-card-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="academy-chat" data-tier="ascension">
             <div class="room-card-icon tier-ascension">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>#academy-chat</h4>
-              <p>Academy curriculum discussions</p>
+              <h4>#academy</h4>
+              <p>Curriculum</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card" data-room="automation" data-tier="ascension">
             <div class="room-card-icon tier-ascension">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3 7-7"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3 7-7"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#automation</h4>
-              <p>MT5 EAs, webhooks & bots</p>
+              <p>MT5 & bots</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
         </div>
         
-        <!-- SESSION CHAT ROOMS -->
-        <div class="room-category-label">Session Chat Rooms</div>
+        <!-- SESSION DESKS -->
+        <div class="room-category-label">Session Desks</div>
         <div class="room-cards">
           <div class="room-card session-desk" data-room="london-desk" data-tier="free">
-            <div class="room-card-icon" style="color: #00abff;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="room-card-icon" style="color: #00abff; background: rgba(0,171,255,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>London Desk</h4>
-              <p>07:00 - 11:00 UTC</p>
+              <h4>London</h4>
+              <p>07-11 UTC</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card session-desk" data-room="newyork-desk" data-tier="free">
-            <div class="room-card-icon" style="color: #26a269;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="room-card-icon" style="color: #26a269; background: rgba(38,162,105,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>New York Desk</h4>
-              <p>11:00 - 21:00 UTC</p>
+              <h4>New York</h4>
+              <p>11-21 UTC</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
           
           <div class="room-card session-desk" data-room="asia-desk" data-tier="free">
-            <div class="room-card-icon" style="color: #f59e0b;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="room-card-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>Asia Desk</h4>
-              <p>21:00 - 07:00 UTC</p>
+              <h4>Asia</h4>
+              <p>21-07 UTC</p>
             </div>
             <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-        </div>
-        
-        <!-- SYMBOL CHATS -->
-        <div class="room-category-label">Symbol Chats</div>
-        <div class="room-cards">
-          <div class="room-card" data-room="xauusd-chat" data-tier="free">
-            <div class="room-card-icon" style="color: #c9a84c;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6M9 13h6"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>XAUUSD Chat</h4>
-              <p>Gold traders discussion</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
-          <div class="room-card" data-room="eurusd-chat" data-tier="free">
-            <div class="room-card-icon" style="color: #00abff;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>EURUSD Chat</h4>
-              <p>Euro traders discussion</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
-          <div class="room-card" data-room="btcusd-chat" data-tier="free">
-            <div class="room-card-icon" style="color: #f7931a;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 8h6v8H9z"/><path d="M12 6v2M12 16v2M9 10h6M9 14h6"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>BTCUSD Chat</h4>
-              <p>Bitcoin traders discussion</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
             </div>
           </div>
         </div>
