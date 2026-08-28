@@ -1413,6 +1413,117 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-bottom-left-radius: 4px;
 }
 
+.intel-message-usage {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.intel-status.thinking::before {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Image upload */
+.intel-image-btn {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-3);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.intel-image-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+#intel-image-preview {
+  display: none;
+  margin-bottom: 8px;
+}
+
+.image-preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-preview-container img {
+  max-width: 200px;
+  max-height: 100px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.remove-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  background: var(--danger);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Code blocks in messages */
+.intel-message-content pre {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.intel-message-content code {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.intel-message-content pre code {
+  color: var(--text-1);
+}
+
+.code-download-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.code-download-btn:hover {
+  background: var(--gold);
+  color: #000;
+}
+
 /* Input Area */
 .intel-input-area {
   padding: 16px 24px 24px;
@@ -8002,7 +8113,12 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
         
         <div class="intel-input-area">
+          <div id="intel-image-preview"></div>
           <div class="intel-input-wrapper">
+            <input type="file" id="intel-image-input" accept="image/*" style="display:none" onchange="handleImageUpload(this.files[0])">
+            <button class="intel-image-btn" onclick="document.getElementById('intel-image-input').click()" title="Attach image">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            </button>
             <textarea id="intel-input" placeholder="Ask QP Intelligence..." rows="1" onkeydown="handleIntelKeydown(event)"></textarea>
             <button class="intel-send-btn" onclick="sendIntelMessage()" id="intel-send-btn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
@@ -16489,25 +16605,71 @@ function renderMessages() {
     return;
   }
   
-  container.innerHTML = intelMessages.map(msg => `
-    <div class="intel-message ${msg.role}">
-      <div class="intel-message-avatar">
-        ${msg.role === 'user' ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42"/></svg>'}
+  container.innerHTML = intelMessages.map(msg => {
+    const usageHtml = msg.usage ? `
+      <div class="intel-message-usage">
+        ${msg.usage.totalTokens} tokens · £${msg.usage.cost.toFixed(3)}
       </div>
-      <div class="intel-message-content">${formatMessage(msg.content)}</div>
-    </div>
-  `).join('');
+    ` : '';
+    
+    return `
+      <div class="intel-message ${msg.role}">
+        <div class="intel-message-avatar">
+          ${msg.role === 'user' ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42"/></svg>'}
+        </div>
+        <div class="intel-message-content">
+          ${formatMessage(msg.content)}
+          ${usageHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
   
   container.scrollTop = container.scrollHeight;
 }
 
 function formatMessage(text) {
-  // Basic markdown-like formatting
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\n/g, '<br>');
+  // Handle code blocks first (```language ... ```)
+  text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+    const language = lang || 'code';
+    const downloadBtn = language === 'pinescript' || language === 'pine' 
+      ? `<button class="code-download-btn" onclick="downloadCode(\`${code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, '${language}')">Download .txt</button>`
+      : '';
+    return `<pre><code class="language-${language}">${escapeHtml(code.trim())}</code></pre>${downloadBtn}`;
+  });
+  
+  // Handle inline code
+  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  
+  // Handle bold
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  
+  // Handle italic
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  
+  // Handle line breaks
+  text = text.replace(/\n/g, '<br>');
+  
+  return text;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function downloadCode(code, language) {
+  const blob = new Blob([code], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `qp-${language}-snippet.txt`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Code downloaded!', 'success');
 }
 
 function handleIntelKeydown(e) {
@@ -16536,7 +16698,7 @@ async function sendIntelMessage() {
     return;
   }
   
-  // Add user message
+  // Add user message with pending cost
   intelMessages.push({ role: 'user', content: message });
   renderMessages();
   
@@ -16544,46 +16706,66 @@ async function sendIntelMessage() {
   input.value = '';
   input.style.height = 'auto';
   
-  // Disable send button
+  // Disable send button and show thinking
   sendBtn.disabled = true;
   document.getElementById('intel-status').textContent = 'Thinking...';
+  document.getElementById('intel-status').classList.add('thinking');
   
   try {
+    // Get user tier
+    const tier = userTier || 'research';
+    
     // Call our backend API
     const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: message,
-        history: intelMessages.slice(-10), // Last 10 messages for context
-        userId: authUser?.id
+        history: intelMessages.slice(-10),
+        userId: authUser?.id,
+        tier: tier,
+        image: pendingImage || null
       })
     });
     
     const data = await response.json();
     
     if (data.reply) {
-      intelMessages.push({ role: 'ai', content: data.reply });
+      // Add AI response with usage info
+      const aiMessage = { 
+        role: 'ai', 
+        content: data.reply,
+        usage: data.usage
+      };
+      intelMessages.push(aiMessage);
       
-      // Deduct cost (roughly £0.33 per query at 3x markup)
-      intelBalance = Math.max(0, intelBalance - 0.33);
-      localStorage.setItem('qp_intel_balance', intelBalance.toString());
-      updateBalanceDisplay();
+      // Deduct actual cost from balance
+      if (data.usage && data.usage.cost) {
+        intelBalance = Math.max(0, intelBalance - data.usage.cost);
+        localStorage.setItem('qp_intel_balance', intelBalance.toString());
+        updateBalanceDisplay();
+        
+        // Show cost toast
+        showToast(`-£${data.usage.cost.toFixed(3)} (${data.usage.totalTokens} tokens)`, 'info');
+      }
+    } else if (data.error) {
+      intelMessages.push({ role: 'ai', content: `Error: ${data.error}. ${data.details || ''}` });
     } else {
       intelMessages.push({ role: 'ai', content: 'I apologize, but I encountered an error. Please try again.' });
     }
     
     renderMessages();
-    
-    // Save chat
     saveCurrentChat();
+    
+    // Clear pending image
+    pendingImage = null;
+    updateImagePreview();
     
   } catch (e) {
     console.error('Chat error:', e);
-    // Fallback response for testing
     intelMessages.push({ 
       role: 'ai', 
-      content: 'I\'m QP Intelligence, your trading assistant. In the full version, I\'ll help you analyze markets, understand the Recoil and Meridian indicators, and provide a second opinion on your trade ideas.\n\n**What I can help with:**\n- Market regime analysis\n- Entry and exit criteria\n- Risk management strategies\n- Indicator explanations\n\nTo enable full AI responses, please ensure your dashboard server is running.'
+      content: 'Connection error. Please check your internet and try again.'
     });
     renderMessages();
     saveCurrentChat();
@@ -16591,6 +16773,56 @@ async function sendIntelMessage() {
   
   sendBtn.disabled = false;
   document.getElementById('intel-status').textContent = 'Ready';
+  document.getElementById('intel-status').classList.remove('thinking');
+}
+
+// Image upload handling
+let pendingImage = null;
+
+function handleImageUpload(file) {
+  if (!file || !file.type.startsWith('image/')) {
+    showToast('Please select an image file', 'error');
+    return;
+  }
+  
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('Image must be under 5MB', 'error');
+    return;
+  }
+  
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    pendingImage = {
+      base64: e.target.result,
+      mediaType: file.type
+    };
+    updateImagePreview();
+    showToast('Image attached', 'success');
+  };
+  reader.readAsDataURL(file);
+}
+
+function updateImagePreview() {
+  const preview = document.getElementById('intel-image-preview');
+  if (!preview) return;
+  
+  if (pendingImage) {
+    preview.innerHTML = `
+      <div class="image-preview-container">
+        <img src="${pendingImage.base64}" alt="Attached image">
+        <button onclick="clearPendingImage()" class="remove-image">×</button>
+      </div>
+    `;
+    preview.style.display = 'block';
+  } else {
+    preview.innerHTML = '';
+    preview.style.display = 'none';
+  }
+}
+
+function clearPendingImage() {
+  pendingImage = null;
+  updateImagePreview();
 }
 
 function saveCurrentChat() {
