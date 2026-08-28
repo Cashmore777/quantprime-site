@@ -1650,6 +1650,12 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   }
 }
 
+/* Hide support widget on Intelligence view */
+#view-intelligence.active ~ #support-widget,
+.intel-view.active ~ #support-widget {
+  display: none !important;
+}
+
 /* Smooth page transition */
 .page-transitioning {
   opacity: 0;
@@ -10512,6 +10518,12 @@ function switchView(viewId) {
   document.querySelectorAll('.nav-item, #mobile-nav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === viewId);
   });
+  
+  // Hide support widget on Intelligence view
+  const supportWidget = document.getElementById('support-widget');
+  if (supportWidget) {
+    supportWidget.style.display = viewId === 'intelligence' ? 'none' : '';
+  }
   
   // Scroll to top of main content
   const main = document.getElementById('main');
