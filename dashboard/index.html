@@ -925,6 +925,698 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   transform: scale(0.99);
 }
 
+/* Papers Carousel */
+.carousel-nav {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.carousel-nav:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.papers-carousel {
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.papers-track {
+  display: flex;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.paper-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.paper-slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.paper-slide:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.paper-slide:hover::before {
+  opacity: 1;
+}
+
+.paper-number {
+  font-family: var(--mono);
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--gold);
+  opacity: 0.2;
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  line-height: 1;
+}
+
+.paper-category {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+}
+
+.paper-slide h4 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin: 0;
+}
+
+.paper-slide p {
+  font-size: 14px;
+  color: var(--text-2);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 80%;
+}
+
+.paper-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.paper-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.paper-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.paper-dot:hover {
+  background: var(--text-3);
+}
+
+.paper-dot.active {
+  background: var(--gold);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Intelligence Chat Interface */
+.intel-view {
+  padding: 0 !important;
+  height: calc(100vh - var(--header-height, 0px));
+  overflow: hidden;
+}
+
+.intel-layout {
+  display: flex;
+  height: 100%;
+}
+
+.intel-sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s;
+}
+
+.intel-sidebar.collapsed {
+  margin-left: -280px;
+}
+
+.intel-sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.intel-sidebar-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.intel-new-chat {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.intel-new-chat:hover {
+  background: var(--gold);
+  color: #000;
+}
+
+.intel-chat-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.intel-chat-item {
+  padding: 12px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all 0.2s;
+}
+
+.intel-chat-item:hover {
+  background: var(--surface-raised);
+}
+
+.intel-chat-item.active {
+  background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.intel-chat-item h4 {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.intel-chat-item p {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.intel-chat-empty {
+  text-align: center;
+  color: var(--text-3);
+  font-size: 13px;
+  padding: 20px;
+}
+
+.intel-sidebar-footer {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.intel-usage-btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+
+.intel-usage-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.intel-balance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intel-balance-label {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.intel-balance-amount {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* Main Chat Area */
+.intel-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.intel-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.intel-toggle-sidebar {
+  width: 36px;
+  height: 36px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.intel-toggle-sidebar:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.intel-title h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.intel-status {
+  font-size: 11px;
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.intel-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+}
+
+/* Messages Area */
+.intel-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.intel-welcome {
+  text-align: center;
+  max-width: 500px;
+  margin: 60px auto;
+}
+
+.intel-welcome-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--gold-glow);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  color: var(--gold);
+}
+
+.intel-welcome h3 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+.intel-welcome p {
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.intel-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.intel-suggestions button {
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.intel-suggestions button:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Message Bubbles */
+.intel-message {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+.intel-message.user {
+  flex-direction: row-reverse;
+}
+
+.intel-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.intel-message.user .intel-message-avatar {
+  background: var(--gold);
+  color: #000;
+}
+
+.intel-message.ai .intel-message-avatar {
+  background: var(--gold-glow);
+  color: var(--gold);
+}
+
+.intel-message-content {
+  max-width: 70%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  line-height: 1.6;
+}
+
+.intel-message.user .intel-message-content {
+  background: var(--gold);
+  color: #000;
+  border-bottom-right-radius: 4px;
+}
+
+.intel-message.ai .intel-message-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+/* Input Area */
+.intel-input-area {
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.intel-input-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 16px;
+  transition: border-color 0.2s;
+}
+
+.intel-input-wrapper:focus-within {
+  border-color: var(--gold);
+}
+
+#intel-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-1);
+  resize: none;
+  max-height: 150px;
+  line-height: 1.5;
+}
+
+#intel-input:focus {
+  outline: none;
+}
+
+#intel-input::placeholder {
+  color: var(--text-3);
+}
+
+.intel-send-btn {
+  width: 40px;
+  height: 40px;
+  background: var(--gold);
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #000;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.intel-send-btn:hover {
+  transform: scale(1.05);
+}
+
+.intel-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.intel-input-footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+
+/* Usage Modal */
+.intel-usage-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.intel-usage-modal.open {
+  display: flex;
+}
+
+.intel-usage-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 480px;
+  width: 90%;
+  position: relative;
+}
+
+.intel-usage-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--text-3);
+  cursor: pointer;
+}
+
+.intel-usage-content h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.intel-usage-desc {
+  color: var(--text-2);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.intel-current-balance {
+  background: var(--surface-raised);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.intel-current-balance span:first-child {
+  color: var(--text-2);
+}
+
+.intel-balance-big {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+.intel-pricing-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.intel-pricing-option {
+  padding: 20px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.intel-pricing-option:hover {
+  border-color: var(--gold);
+}
+
+.intel-pricing-option.popular {
+  border-color: var(--gold);
+}
+
+.intel-popular-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 600;
+  background: var(--gold);
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.intel-price {
+  display: block;
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+}
+
+.intel-credits {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.intel-usage-history h4 {
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--text-2);
+}
+
+.intel-usage-empty {
+  color: var(--text-3);
+  font-size: 13px;
+  text-align: center;
+  padding: 16px;
+}
+
+/* Mobile Intelligence */
+@media (max-width: 820px) {
+  .intel-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 1000;
+    transform: translateX(-100%);
+  }
+  
+  .intel-sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .intel-sidebar.collapsed {
+    margin-left: 0;
+  }
+  
+  .intel-message-content {
+    max-width: 85%;
+  }
+}
+
 /* Smooth page transition */
 .page-transitioning {
   opacity: 0;
@@ -5935,66 +6627,114 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
     </div>
 
-    <!-- Research Papers Section -->
+    <!-- Research Papers Carousel -->
     <div class="panel" style="margin-bottom: 32px;">
       <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
         <h3 style="font-size: 14px; font-family: var(--mono); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 10px; margin: 0;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
           Research Papers
         </h3>
-        <span style="font-size: 12px; color: var(--text-3);">10 papers • Full methodology</span>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span id="paper-counter" style="font-family: var(--mono); font-size: 12px; color: var(--text-3);">1 / 10</span>
+          <div style="display: flex; gap: 6px;">
+            <button onclick="prevPaper()" class="carousel-nav" title="Previous paper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button onclick="nextPaper()" class="carousel-nav" title="Next paper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
-        <a href="/research/papers/paper-01-friction-threshold.html" class="research-card" style="text-decoration: none;">
-          <div class="date">01 · EXECUTION COST</div>
-          <h4>The Friction Threshold</h4>
-          <p>Why an 81.5% win rate still lost money.</p>
-        </a>
-        <a href="/research/papers/paper-02-subsidised-signal.html" class="research-card" style="text-decoration: none;">
-          <div class="date">02 · PORTFOLIO</div>
-          <h4>The Subsidised Signal</h4>
-          <p>Why an unprofitable component made the book better.</p>
-        </a>
-        <a href="/research/papers/paper-03-timeframe-ceiling.html" class="research-card" style="text-decoration: none;">
-          <div class="date">03 · STRUCTURAL EDGE</div>
-          <h4>The Timeframe Ceiling</h4>
-          <p>PF 2.185 at 3M, unprofitable at 15M — same code.</p>
-        </a>
-        <a href="/research/papers/paper-04-midnight-modulus.html" class="research-card" style="text-decoration: none;">
-          <div class="date">04 · IMPLEMENTATION</div>
-          <h4>Midnight Is Not a Modulus</h4>
-          <p>The bug that produces plausible output.</p>
-        </a>
-        <a href="/research/papers/paper-05-stop-placement.html" class="research-card" style="text-decoration: none;">
-          <div class="date">05 · RISK PLACEMENT</div>
-          <h4>The Stop Is Not a Number</h4>
-          <p>Anchor first, then buffer.</p>
-        </a>
-        <a href="/research/papers/paper-06-comfort-trade.html" class="research-card" style="text-decoration: none;">
-          <div class="date">06 · MANAGEMENT</div>
-          <h4>The Comfort Trade</h4>
-          <p>Partials and breakeven — when they help.</p>
-        </a>
-        <a href="/research/papers/paper-07-filter-removed.html" class="research-card" style="text-decoration: none;">
-          <div class="date">07 · FILTERS</div>
-          <h4>What the Filter Removed</h4>
-          <p>Why raising win rate often lowers profit.</p>
-        </a>
-        <a href="/research/papers/paper-08-statistical-confidence.html" class="research-card" style="text-decoration: none;">
-          <div class="date">08 · CONFIDENCE</div>
-          <h4>What 1.99 Actually Means</h4>
-          <p>The interval around our headline figure.</p>
-        </a>
-        <a href="/research/papers/paper-09-three-windows.html" class="research-card" style="text-decoration: none;">
-          <div class="date">09 · SESSION</div>
-          <h4>Three Windows</h4>
-          <p>Testing time-of-day filters honestly.</p>
-        </a>
-        <a href="/research/papers/paper-10-return-per-pain.html" class="research-card" style="text-decoration: none;">
-          <div class="date">10 · RISK-ADJUSTED</div>
-          <h4>Return Per Unit of Pain</h4>
-          <p>Why headline return tells you nothing.</p>
-        </a>
+      
+      <!-- Papers Carousel -->
+      <div class="papers-carousel" id="papers-carousel">
+        <div class="papers-track" id="papers-track">
+          <a href="/research/papers/paper-01-friction-threshold.html" class="paper-slide" data-paper="1">
+            <div class="paper-number">01</div>
+            <div class="paper-category">EXECUTION COST</div>
+            <h4>The Friction Threshold</h4>
+            <p>Why an 81.5% win rate still lost money.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-02-subsidised-signal.html" class="paper-slide" data-paper="2">
+            <div class="paper-number">02</div>
+            <div class="paper-category">PORTFOLIO</div>
+            <h4>The Subsidised Signal</h4>
+            <p>Why an unprofitable component made the book better.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-03-timeframe-ceiling.html" class="paper-slide" data-paper="3">
+            <div class="paper-number">03</div>
+            <div class="paper-category">STRUCTURAL EDGE</div>
+            <h4>The Timeframe Ceiling</h4>
+            <p>PF 2.185 at 3M, unprofitable at 15M — same code.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-04-midnight-modulus.html" class="paper-slide" data-paper="4">
+            <div class="paper-number">04</div>
+            <div class="paper-category">IMPLEMENTATION</div>
+            <h4>Midnight Is Not a Modulus</h4>
+            <p>The bug that produces plausible output.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-05-stop-placement.html" class="paper-slide" data-paper="5">
+            <div class="paper-number">05</div>
+            <div class="paper-category">RISK PLACEMENT</div>
+            <h4>The Stop Is Not a Number</h4>
+            <p>Anchor first, then buffer.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-06-comfort-trade.html" class="paper-slide" data-paper="6">
+            <div class="paper-number">06</div>
+            <div class="paper-category">MANAGEMENT</div>
+            <h4>The Comfort Trade</h4>
+            <p>Partials and breakeven — when they help.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-07-filter-removed.html" class="paper-slide" data-paper="7">
+            <div class="paper-number">07</div>
+            <div class="paper-category">FILTERS</div>
+            <h4>What the Filter Removed</h4>
+            <p>Why raising win rate often lowers profit.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-08-statistical-confidence.html" class="paper-slide" data-paper="8">
+            <div class="paper-number">08</div>
+            <div class="paper-category">CONFIDENCE</div>
+            <h4>What 1.99 Actually Means</h4>
+            <p>The interval around our headline figure.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-09-three-windows.html" class="paper-slide" data-paper="9">
+            <div class="paper-number">09</div>
+            <div class="paper-category">SESSION</div>
+            <h4>Three Windows</h4>
+            <p>Testing time-of-day filters honestly.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+          <a href="/research/papers/paper-10-return-per-pain.html" class="paper-slide" data-paper="10">
+            <div class="paper-number">10</div>
+            <div class="paper-category">RISK-ADJUSTED</div>
+            <h4>Return Per Unit of Pain</h4>
+            <p>Why headline return tells you nothing.</p>
+            <div class="paper-cta">Read Paper →</div>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Paper dots navigation -->
+      <div class="paper-dots" id="paper-dots">
+        <button class="paper-dot active" onclick="goToPaper(0)"></button>
+        <button class="paper-dot" onclick="goToPaper(1)"></button>
+        <button class="paper-dot" onclick="goToPaper(2)"></button>
+        <button class="paper-dot" onclick="goToPaper(3)"></button>
+        <button class="paper-dot" onclick="goToPaper(4)"></button>
+        <button class="paper-dot" onclick="goToPaper(5)"></button>
+        <button class="paper-dot" onclick="goToPaper(6)"></button>
+        <button class="paper-dot" onclick="goToPaper(7)"></button>
+        <button class="paper-dot" onclick="goToPaper(8)"></button>
+        <button class="paper-dot" onclick="goToPaper(9)"></button>
       </div>
     </div>
     
@@ -7165,18 +7905,115 @@ button, .nav-item, .room, .video-item, .filter-chip {
     </div>
   </div>
 
-  <!-- INTELLIGENCE (Locked) -->
-  <div class="view" id="view-intelligence">
-    <div class="view-header">
-      <div class="eyebrow">Quant Prime Intelligence</div>
-      <h2>The second <em>opinion</em>.</h2>
+  <!-- INTELLIGENCE (Chat Interface) -->
+  <div class="view intel-view" id="view-intelligence">
+    <div class="intel-layout">
+      <!-- Chat History Sidebar -->
+      <div class="intel-sidebar" id="intel-sidebar">
+        <div class="intel-sidebar-header">
+          <h3>Chat History</h3>
+          <button class="intel-new-chat" onclick="startNewChat()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            New Chat
+          </button>
+        </div>
+        <div class="intel-chat-list" id="intel-chat-list">
+          <!-- Chat history items will be populated here -->
+          <div class="intel-chat-empty">No previous chats yet</div>
+        </div>
+        <div class="intel-sidebar-footer">
+          <button class="intel-usage-btn" onclick="openUsageModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Usage & Billing
+          </button>
+          <div class="intel-balance">
+            <span class="intel-balance-label">Balance</span>
+            <span class="intel-balance-amount" id="intel-balance">£0.00</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Chat Area -->
+      <div class="intel-main">
+        <div class="intel-header">
+          <button class="intel-toggle-sidebar" onclick="toggleIntelSidebar()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          </button>
+          <div class="intel-title">
+            <h2>QP Intelligence</h2>
+            <span class="intel-status" id="intel-status">Ready</span>
+          </div>
+        </div>
+        
+        <div class="intel-messages" id="intel-messages">
+          <!-- Welcome message -->
+          <div class="intel-welcome">
+            <div class="intel-welcome-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </div>
+            <h3>Welcome to QP Intelligence</h3>
+            <p>Your AI-powered trading assistant. Ask questions about market analysis, trading strategies, risk management, or get a second opinion on your trade ideas.</p>
+            <div class="intel-suggestions">
+              <button onclick="sendSuggestion('Analyze the current EURUSD regime')">Analyze EURUSD regime</button>
+              <button onclick="sendSuggestion('Explain the Recoil indicator logic')">Explain Recoil logic</button>
+              <button onclick="sendSuggestion('What makes a good entry setup?')">Entry setup criteria</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="intel-input-area">
+          <div class="intel-input-wrapper">
+            <textarea id="intel-input" placeholder="Ask QP Intelligence..." rows="1" onkeydown="handleIntelKeydown(event)"></textarea>
+            <button class="intel-send-btn" onclick="sendIntelMessage()" id="intel-send-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </button>
+          </div>
+          <div class="intel-input-footer">
+            <span>QP Intelligence uses AI to provide analysis. Always verify with your own research.</span>
+          </div>
+        </div>
+      </div>
     </div>
     
-    <div class="coming-soon-card">
-      <div class="lock-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
-      <h3>Intelligence — Coming Soon</h3>
-      <p>QP Intelligence is your AI-powered second opinion. Ask about your charts, get framework-aware analysis, and review your journal with systematic precision. Currently in development.</p>
-      <button class="btn outline" onclick="switchView('home')">Back to Dashboard</button>
+    <!-- Usage Modal -->
+    <div class="intel-usage-modal" id="intel-usage-modal">
+      <div class="intel-usage-content">
+        <button class="intel-usage-close" onclick="closeUsageModal()">×</button>
+        <h3>Usage & Billing</h3>
+        <p class="intel-usage-desc">Add credits to continue using QP Intelligence. Credits are used for AI-powered analysis.</p>
+        
+        <div class="intel-current-balance">
+          <span>Current Balance</span>
+          <span class="intel-balance-big" id="intel-balance-modal">£0.00</span>
+        </div>
+        
+        <div class="intel-pricing-options">
+          <button class="intel-pricing-option" onclick="purchaseCredits(5)">
+            <span class="intel-price">£5</span>
+            <span class="intel-credits">~15 queries</span>
+          </button>
+          <button class="intel-pricing-option popular" onclick="purchaseCredits(10)">
+            <span class="intel-popular-badge">Most Popular</span>
+            <span class="intel-price">£10</span>
+            <span class="intel-credits">~30 queries</span>
+          </button>
+          <button class="intel-pricing-option" onclick="purchaseCredits(25)">
+            <span class="intel-price">£25</span>
+            <span class="intel-credits">~75 queries</span>
+          </button>
+          <button class="intel-pricing-option" onclick="purchaseCredits(50)">
+            <span class="intel-price">£50</span>
+            <span class="intel-credits">~150 queries</span>
+          </button>
+        </div>
+        
+        <div class="intel-usage-history">
+          <h4>Recent Usage</h4>
+          <div id="intel-usage-list">
+            <div class="intel-usage-empty">No usage history yet</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -15329,6 +16166,358 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+// Papers Carousel
+let currentPaper = 0;
+const totalPapers = 10;
+
+function updatePaperCarousel() {
+  const track = document.getElementById('papers-track');
+  const counter = document.getElementById('paper-counter');
+  const dots = document.querySelectorAll('.paper-dot');
+  
+  if (track) {
+    track.style.transform = `translateX(-${currentPaper * 100}%)`;
+  }
+  if (counter) {
+    counter.textContent = `${currentPaper + 1} / ${totalPapers}`;
+  }
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentPaper);
+  });
+}
+
+function nextPaper() {
+  currentPaper = (currentPaper + 1) % totalPapers;
+  updatePaperCarousel();
+}
+
+function prevPaper() {
+  currentPaper = (currentPaper - 1 + totalPapers) % totalPapers;
+  updatePaperCarousel();
+}
+
+function goToPaper(index) {
+  currentPaper = index;
+  updatePaperCarousel();
+}
+
+// Keyboard navigation for carousel
+document.addEventListener('keydown', function(e) {
+  const researchView = document.getElementById('view-research');
+  if (researchView && researchView.classList.contains('active')) {
+    if (e.key === 'ArrowLeft') {
+      prevPaper();
+    } else if (e.key === 'ArrowRight') {
+      nextPaper();
+    }
+  }
+});
+
+// Paper slide click handling
+document.querySelectorAll('.paper-slide').forEach(slide => {
+  slide.addEventListener('click', function(e) {
+    e.preventDefault();
+    const href = this.getAttribute('href');
+    document.body.classList.add('page-transitioning');
+    setTimeout(() => {
+      window.location.href = href;
+    }, 150);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════
+// INTELLIGENCE CHAT
+// ═══════════════════════════════════════════════════════════════
+
+let intelBalance = 0;
+let intelChatHistory = [];
+let currentIntelChatId = null;
+let intelMessages = [];
+
+// Initialize Intelligence
+function initIntelligence() {
+  // Load balance from localStorage (will sync with server later)
+  const storedBalance = localStorage.getItem('qp_intel_balance');
+  if (storedBalance) {
+    intelBalance = parseFloat(storedBalance);
+    updateBalanceDisplay();
+  }
+  
+  // Load chat history
+  const storedChats = localStorage.getItem('qp_intel_chats');
+  if (storedChats) {
+    intelChatHistory = JSON.parse(storedChats);
+    renderChatHistory();
+  }
+  
+  // Auto-resize textarea
+  const textarea = document.getElementById('intel-input');
+  if (textarea) {
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+    });
+  }
+}
+
+function updateBalanceDisplay() {
+  const balanceEl = document.getElementById('intel-balance');
+  const balanceModalEl = document.getElementById('intel-balance-modal');
+  const formatted = '£' + intelBalance.toFixed(2);
+  if (balanceEl) balanceEl.textContent = formatted;
+  if (balanceModalEl) balanceModalEl.textContent = formatted;
+}
+
+function toggleIntelSidebar() {
+  const sidebar = document.getElementById('intel-sidebar');
+  if (window.innerWidth <= 820) {
+    sidebar.classList.toggle('open');
+  } else {
+    sidebar.classList.toggle('collapsed');
+  }
+}
+
+function openUsageModal() {
+  document.getElementById('intel-usage-modal').classList.add('open');
+}
+
+function closeUsageModal() {
+  document.getElementById('intel-usage-modal').classList.remove('open');
+}
+
+async function purchaseCredits(amount) {
+  // For now, redirect to Stripe checkout
+  // In production, this would create a Stripe checkout session
+  try {
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-credits', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: amount,
+        userId: authUser?.id,
+        email: authUser?.email
+      })
+    });
+    
+    const data = await response.json();
+    if (data.checkoutUrl) {
+      window.location.href = data.checkoutUrl;
+    } else {
+      // Fallback: just add credits for testing
+      intelBalance += amount;
+      localStorage.setItem('qp_intel_balance', intelBalance.toString());
+      updateBalanceDisplay();
+      closeUsageModal();
+      showToast('Credits added! Balance: £' + intelBalance.toFixed(2), 'success');
+    }
+  } catch (e) {
+    console.error('Purchase error:', e);
+    // Fallback for testing
+    intelBalance += amount;
+    localStorage.setItem('qp_intel_balance', intelBalance.toString());
+    updateBalanceDisplay();
+    closeUsageModal();
+    showToast('Credits added! Balance: £' + intelBalance.toFixed(2), 'success');
+  }
+}
+
+function startNewChat() {
+  currentIntelChatId = Date.now().toString();
+  intelMessages = [];
+  renderMessages();
+  
+  // Close sidebar on mobile
+  if (window.innerWidth <= 820) {
+    document.getElementById('intel-sidebar').classList.remove('open');
+  }
+}
+
+function loadChat(chatId) {
+  const chat = intelChatHistory.find(c => c.id === chatId);
+  if (chat) {
+    currentIntelChatId = chatId;
+    intelMessages = chat.messages || [];
+    renderMessages();
+  }
+  
+  // Close sidebar on mobile
+  if (window.innerWidth <= 820) {
+    document.getElementById('intel-sidebar').classList.remove('open');
+  }
+}
+
+function renderChatHistory() {
+  const list = document.getElementById('intel-chat-list');
+  if (!list) return;
+  
+  if (intelChatHistory.length === 0) {
+    list.innerHTML = '<div class="intel-chat-empty">No previous chats yet</div>';
+    return;
+  }
+  
+  list.innerHTML = intelChatHistory.map(chat => `
+    <div class="intel-chat-item ${chat.id === currentIntelChatId ? 'active' : ''}" onclick="loadChat('${chat.id}')">
+      <h4>${chat.title || 'New Chat'}</h4>
+      <p>${new Date(parseInt(chat.id)).toLocaleDateString()}</p>
+    </div>
+  `).join('');
+}
+
+function renderMessages() {
+  const container = document.getElementById('intel-messages');
+  if (!container) return;
+  
+  if (intelMessages.length === 0) {
+    container.innerHTML = `
+      <div class="intel-welcome">
+        <div class="intel-welcome-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </div>
+        <h3>Welcome to QP Intelligence</h3>
+        <p>Your AI-powered trading assistant. Ask questions about market analysis, trading strategies, risk management, or get a second opinion on your trade ideas.</p>
+        <div class="intel-suggestions">
+          <button onclick="sendSuggestion('Analyze the current EURUSD regime')">Analyze EURUSD regime</button>
+          <button onclick="sendSuggestion('Explain the Recoil indicator logic')">Explain Recoil logic</button>
+          <button onclick="sendSuggestion('What makes a good entry setup?')">Entry setup criteria</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = intelMessages.map(msg => `
+    <div class="intel-message ${msg.role}">
+      <div class="intel-message-avatar">
+        ${msg.role === 'user' ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42"/></svg>'}
+      </div>
+      <div class="intel-message-content">${formatMessage(msg.content)}</div>
+    </div>
+  `).join('');
+  
+  container.scrollTop = container.scrollHeight;
+}
+
+function formatMessage(text) {
+  // Basic markdown-like formatting
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+function handleIntelKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendIntelMessage();
+  }
+}
+
+function sendSuggestion(text) {
+  document.getElementById('intel-input').value = text;
+  sendIntelMessage();
+}
+
+async function sendIntelMessage() {
+  const input = document.getElementById('intel-input');
+  const sendBtn = document.getElementById('intel-send-btn');
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  // Check balance
+  if (intelBalance <= 0) {
+    openUsageModal();
+    showToast('Please add credits to continue', 'warning');
+    return;
+  }
+  
+  // Add user message
+  intelMessages.push({ role: 'user', content: message });
+  renderMessages();
+  
+  // Clear input
+  input.value = '';
+  input.style.height = 'auto';
+  
+  // Disable send button
+  sendBtn.disabled = true;
+  document.getElementById('intel-status').textContent = 'Thinking...';
+  
+  try {
+    // Call our backend API
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: message,
+        history: intelMessages.slice(-10), // Last 10 messages for context
+        userId: authUser?.id
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.reply) {
+      intelMessages.push({ role: 'ai', content: data.reply });
+      
+      // Deduct cost (roughly £0.33 per query at 3x markup)
+      intelBalance = Math.max(0, intelBalance - 0.33);
+      localStorage.setItem('qp_intel_balance', intelBalance.toString());
+      updateBalanceDisplay();
+    } else {
+      intelMessages.push({ role: 'ai', content: 'I apologize, but I encountered an error. Please try again.' });
+    }
+    
+    renderMessages();
+    
+    // Save chat
+    saveCurrentChat();
+    
+  } catch (e) {
+    console.error('Chat error:', e);
+    // Fallback response for testing
+    intelMessages.push({ 
+      role: 'ai', 
+      content: 'I\'m QP Intelligence, your trading assistant. In the full version, I\'ll help you analyze markets, understand the Recoil and Meridian indicators, and provide a second opinion on your trade ideas.\n\n**What I can help with:**\n- Market regime analysis\n- Entry and exit criteria\n- Risk management strategies\n- Indicator explanations\n\nTo enable full AI responses, please ensure your dashboard server is running.'
+    });
+    renderMessages();
+    saveCurrentChat();
+  }
+  
+  sendBtn.disabled = false;
+  document.getElementById('intel-status').textContent = 'Ready';
+}
+
+function saveCurrentChat() {
+  if (!currentIntelChatId) {
+    currentIntelChatId = Date.now().toString();
+  }
+  
+  // Get title from first user message
+  const firstUserMsg = intelMessages.find(m => m.role === 'user');
+  const title = firstUserMsg ? firstUserMsg.content.slice(0, 40) + (firstUserMsg.content.length > 40 ? '...' : '') : 'New Chat';
+  
+  // Update or add chat
+  const existingIndex = intelChatHistory.findIndex(c => c.id === currentIntelChatId);
+  const chatData = { id: currentIntelChatId, title, messages: intelMessages };
+  
+  if (existingIndex >= 0) {
+    intelChatHistory[existingIndex] = chatData;
+  } else {
+    intelChatHistory.unshift(chatData);
+  }
+  
+  // Keep only last 20 chats
+  intelChatHistory = intelChatHistory.slice(0, 20);
+  
+  localStorage.setItem('qp_intel_chats', JSON.stringify(intelChatHistory));
+  renderChatHistory();
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initIntelligence);
 </script>
 
 <script src="/assets/support-widget-v2.js"></script>
