@@ -16531,7 +16531,7 @@ function animateBalanceDeduction() {
   // Create floating -£0.05 element
   const deduction = document.createElement('span');
   deduction.className = 'balance-deduction';
-  deduction.textContent = '-£0.05';
+  deduction.textContent = '-£0.10';
   balanceEl.parentElement.style.position = 'relative';
   balanceEl.parentElement.appendChild(deduction);
   
@@ -16844,7 +16844,7 @@ async function sendIntelMessage() {
       // Update balance from server response
       if (data.balance !== undefined) {
         intelBalance = data.balance;
-        messagesRemaining = data.messagesRemaining || Math.floor(intelBalance / 0.05);
+        messagesRemaining = data.messagesRemaining || Math.floor(intelBalance / 0.10);
         updateBalanceDisplay();
         
         // Show cost toast
