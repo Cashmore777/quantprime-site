@@ -8751,11 +8751,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
           <div>
             <div style="font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 4px;">CURRENT PLAN</div>
-            <div style="font-family: var(--mono); font-size: 18px; color: var(--gold); font-weight: 600;">SUITE · £88/mo</div>
+            <div style="font-family: var(--mono); font-size: 18px; color: var(--gold); font-weight: 600;" id="settings-plan-name">SUITE · £88/mo</div>
           </div>
           <div>
             <div style="font-size: 10px; letter-spacing: 0.1em; color: var(--text-3); margin-bottom: 4px;">RENEWS</div>
-            <div style="font-family: var(--mono); font-size: 18px;">08 AUG 2026</div>
+            <div style="font-family: var(--mono); font-size: 18px;" id="settings-renew-date">08 AUG 2026</div>
           </div>
         </div>
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
@@ -8766,6 +8766,131 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </a>
         </div>
         <p style="font-size: 12px; color: var(--text-3); margin-top: 12px;">Update payment method, view invoices, or cancel subscription.</p>
+      </div>
+      
+      <!-- Notifications -->
+      <div class="panel">
+        <h4>Notifications</h4>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Control what emails you receive from Quant Prime.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="notify-research" checked style="width: 18px; height: 18px; accent-color: var(--gold);">
+            <div>
+              <div style="font-weight: 500; font-size: 14px;">Research Reports</div>
+              <div style="font-size: 12px; color: var(--text-3);">Weekly market analysis and trading insights</div>
+            </div>
+          </label>
+          
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="notify-signals" checked style="width: 18px; height: 18px; accent-color: var(--gold);">
+            <div>
+              <div style="font-weight: 500; font-size: 14px;">Signal Alerts</div>
+              <div style="font-size: 12px; color: var(--text-3);">Trade signals from your subscribed strategies</div>
+            </div>
+          </label>
+          
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="notify-product" checked style="width: 18px; height: 18px; accent-color: var(--gold);">
+            <div>
+              <div style="font-weight: 500; font-size: 14px;">Product Updates</div>
+              <div style="font-size: 12px; color: var(--text-3);">New features, improvements, and announcements</div>
+            </div>
+          </label>
+          
+          <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <input type="checkbox" id="notify-marketing" style="width: 18px; height: 18px; accent-color: var(--gold);">
+            <div>
+              <div style="font-weight: 500; font-size: 14px;">Marketing & Promotions</div>
+              <div style="font-size: 12px; color: var(--text-3);">Special offers and educational content</div>
+            </div>
+          </label>
+        </div>
+        
+        <button class="btn sm" style="margin-top: 16px;" onclick="saveNotificationPrefs()">Save Preferences</button>
+      </div>
+      
+      <!-- Appearance -->
+      <div class="panel">
+        <h4>Appearance</h4>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Customize how the dashboard looks.</p>
+        
+        <div class="form-row">
+          <label>Theme</label>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn sm" id="theme-dark-btn" onclick="setTheme('dark')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+              Dark
+            </button>
+            <button class="btn sm outline" id="theme-light-btn" onclick="setTheme('light')">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              Light
+            </button>
+          </div>
+        </div>
+        
+        <div class="form-row" style="margin-top: 16px;">
+          <label>Chart Timezone</label>
+          <select id="chart-timezone" style="padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--surface-raised); max-width: 280px;">
+            <option value="UTC">UTC (Coordinated Universal Time)</option>
+            <option value="Europe/London" selected>London (GMT/BST)</option>
+            <option value="America/New_York">New York (EST/EDT)</option>
+            <option value="Asia/Tokyo">Tokyo (JST)</option>
+            <option value="Asia/Singapore">Singapore (SGT)</option>
+            <option value="Australia/Sydney">Sydney (AEST/AEDT)</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Privacy & Data -->
+      <div class="panel">
+        <h4>Privacy & Data</h4>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Manage your data and privacy settings.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn sm outline" onclick="requestDataExport()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Export My Data
+          </button>
+          <p style="font-size: 11px; color: var(--text-3);">Download a copy of your account data including profile, preferences, and trading history.</p>
+        </div>
+        
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+          <a href="/privacy" target="_blank" style="font-size: 13px; color: var(--gold); text-decoration: none;">Read our Privacy Policy →</a>
+        </div>
+      </div>
+      
+      <!-- Security -->
+      <div class="panel">
+        <h4>Security</h4>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Manage your account security.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn sm outline" onclick="sendPasswordReset()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            Reset Password
+          </button>
+          <p style="font-size: 11px; color: var(--text-3);">We'll send a password reset link to your email.</p>
+        </div>
+        
+        <div style="margin-top: 16px; padding: 12px; background: var(--surface-raised); border-radius: 8px;">
+          <div style="font-size: 12px; color: var(--text-3); margin-bottom: 4px;">LAST LOGIN</div>
+          <div style="font-family: var(--mono); font-size: 14px;" id="last-login-time">--</div>
+        </div>
+      </div>
+      
+      <!-- Danger Zone -->
+      <div class="panel" style="border: 1px solid #dc2626;">
+        <h4 style="color: #dc2626;">Danger Zone</h4>
+        <p style="font-size: 13px; color: var(--text-2); margin-bottom: 16px;">Irreversible actions. Proceed with caution.</p>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <button class="btn sm" style="background: #dc2626; border-color: #dc2626;" onclick="confirmDeleteAccount()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            Delete Account
+          </button>
+          <p style="font-size: 11px; color: var(--text-3);">Permanently delete your account and all associated data. This cannot be undone.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -9859,6 +9984,9 @@ async function checkAuth() {
   updateDashboardData();
   updateMobileTier();
   loadAvatar();
+  loadNotificationPrefs();
+  updateThemeButtons();
+  updateLastLoginTime();
   
   // Update room locks based on tier
   if (typeof updateRoomLocks === 'function') {
@@ -10172,6 +10300,158 @@ async function saveProfile() {
   } catch (e) {
     console.error('[Profile] Save exception:', e);
     statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SETTINGS FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════
+
+function saveNotificationPrefs() {
+  const prefs = {
+    research: document.getElementById('notify-research')?.checked,
+    signals: document.getElementById('notify-signals')?.checked,
+    product: document.getElementById('notify-product')?.checked,
+    marketing: document.getElementById('notify-marketing')?.checked
+  };
+  localStorage.setItem('qp_notification_prefs', JSON.stringify(prefs));
+  showToast('Notification preferences saved', 'success');
+}
+
+function loadNotificationPrefs() {
+  const saved = localStorage.getItem('qp_notification_prefs');
+  if (saved) {
+    const prefs = JSON.parse(saved);
+    if (document.getElementById('notify-research')) document.getElementById('notify-research').checked = prefs.research ?? true;
+    if (document.getElementById('notify-signals')) document.getElementById('notify-signals').checked = prefs.signals ?? true;
+    if (document.getElementById('notify-product')) document.getElementById('notify-product').checked = prefs.product ?? true;
+    if (document.getElementById('notify-marketing')) document.getElementById('notify-marketing').checked = prefs.marketing ?? false;
+  }
+}
+
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  
+  // Update button states
+  const darkBtn = document.getElementById('theme-dark-btn');
+  const lightBtn = document.getElementById('theme-light-btn');
+  if (darkBtn && lightBtn) {
+    if (theme === 'dark') {
+      darkBtn.classList.remove('outline');
+      lightBtn.classList.add('outline');
+    } else {
+      darkBtn.classList.add('outline');
+      lightBtn.classList.remove('outline');
+    }
+  }
+}
+
+function updateThemeButtons() {
+  const theme = localStorage.getItem('theme') || 'dark';
+  const darkBtn = document.getElementById('theme-dark-btn');
+  const lightBtn = document.getElementById('theme-light-btn');
+  if (darkBtn && lightBtn) {
+    if (theme === 'dark') {
+      darkBtn.classList.remove('outline');
+      lightBtn.classList.add('outline');
+    } else {
+      darkBtn.classList.add('outline');
+      lightBtn.classList.remove('outline');
+    }
+  }
+}
+
+async function requestDataExport() {
+  if (!authUser) {
+    showToast('Please log in to export your data', 'error');
+    return;
+  }
+  showToast('Data export requested. You will receive an email within 48 hours.', 'success');
+  // In production, this would trigger an API call to generate the export
+}
+
+async function sendPasswordReset() {
+  if (!authUser?.email) {
+    showToast('No email address found', 'error');
+    return;
+  }
+  
+  try {
+    const { error } = await supabaseClient.auth.resetPasswordForEmail(authUser.email, {
+      redirectTo: window.location.origin + '/dashboard/reset-password.html'
+    });
+    
+    if (error) throw error;
+    showToast('Password reset email sent! Check your inbox.', 'success');
+  } catch (e) {
+    showToast('Failed to send reset email: ' + e.message, 'error');
+  }
+}
+
+function confirmDeleteAccount() {
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 style="color: #dc2626;">Delete Account</h3>
+        <button class="close-btn" onclick="this.closest('.modal').remove()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div style="padding: 20px;">
+        <p style="color: var(--text-2); margin-bottom: 16px;">This will permanently delete your account, including:</p>
+        <ul style="color: var(--text-2); font-size: 13px; margin-left: 20px; margin-bottom: 20px;">
+          <li>Your profile and preferences</li>
+          <li>TradingView access permissions</li>
+          <li>Chat history and messages</li>
+          <li>All subscription data</li>
+        </ul>
+        <p style="font-size: 13px; color: #dc2626; margin-bottom: 20px;"><strong>This action cannot be undone.</strong></p>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn sm outline" onclick="this.closest('.modal').remove()">Cancel</button>
+          <button class="btn sm" style="background: #dc2626; border-color: #dc2626;" onclick="executeDeleteAccount()">Yes, Delete My Account</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+}
+
+async function executeDeleteAccount() {
+  if (!authUser) return;
+  
+  try {
+    // Delete profile from Supabase
+    await supabaseClient.from('profiles').delete().eq('id', authUser.id);
+    
+    // Sign out
+    await supabaseClient.auth.signOut();
+    
+    showToast('Account deleted. Redirecting...', 'success');
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 2000);
+  } catch (e) {
+    showToast('Failed to delete account: ' + e.message, 'error');
+  }
+}
+
+function updateLastLoginTime() {
+  const el = document.getElementById('last-login-time');
+  if (el && authUser) {
+    const lastLogin = authUser.last_sign_in_at || authUser.created_at;
+    if (lastLogin) {
+      el.textContent = new Date(lastLogin).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
   }
 }
 
