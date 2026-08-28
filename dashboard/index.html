@@ -16699,11 +16699,8 @@ function renderMessages() {
   }
   
   container.innerHTML = intelMessages.map(msg => {
-    const usageHtml = msg.usage ? `
-      <div class="intel-message-usage">
-        ${msg.usage.totalTokens} tokens · £${msg.usage.cost.toFixed(3)}
-      </div>
-    ` : '';
+    // Don't show token/cost info in messages - cleaner UI
+    const usageHtml = '';
     
     return `
       <div class="intel-message ${msg.role}">
