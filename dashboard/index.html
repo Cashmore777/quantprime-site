@@ -16813,8 +16813,7 @@ async function sendIntelMessage() {
   document.getElementById('intel-status').classList.remove('thinking');
 }
 
-// Image upload handling
-let pendingImage = null;
+// Image upload handling (pendingImage declared above)
 
 function handleImageUpload(file) {
   if (!file || !file.type.startsWith('image/')) {
