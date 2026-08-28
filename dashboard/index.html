@@ -1651,8 +1651,9 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 /* Hide support widget on Intelligence view */
-#view-intelligence.active ~ #support-widget,
-.intel-view.active ~ #support-widget {
+#view-intelligence.active ~ #qp-support-widget,
+.intel-view.active ~ #qp-support-widget,
+body:has(#view-intelligence.active) #qp-support-widget {
   display: none !important;
 }
 
@@ -10520,7 +10521,7 @@ function switchView(viewId) {
   });
   
   // Hide support widget on Intelligence view
-  const supportWidget = document.getElementById('support-widget');
+  const supportWidget = document.getElementById('qp-support-widget');
   if (supportWidget) {
     supportWidget.style.display = viewId === 'intelligence' ? 'none' : '';
   }
@@ -16374,9 +16375,10 @@ function closeUsageModal() {
 }
 
 async function purchaseCredits(amount) {
-  // For now, redirect to Stripe checkout
-  // In production, this would create a Stripe checkout session
   try {
+    closeUsageModal();
+    showToast('Redirecting to checkout...', 'info');
+    
     const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-credits', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -16390,22 +16392,36 @@ async function purchaseCredits(amount) {
     const data = await response.json();
     if (data.checkoutUrl) {
       window.location.href = data.checkoutUrl;
-    } else {
-      // Fallback: just add credits for testing
-      intelBalance += amount;
-      localStorage.setItem('qp_intel_balance', intelBalance.toString());
-      updateBalanceDisplay();
-      closeUsageModal();
-      showToast('Credits added! Balance: £' + intelBalance.toFixed(2), 'success');
+    } else if (data.error) {
+      showToast('Error: ' + data.error, 'error');
     }
   } catch (e) {
     console.error('Purchase error:', e);
-    // Fallback for testing
+    showToast('Failed to create checkout. Please try again.', 'error');
+  }
+}
+
+// Handle credit purchase success from URL params
+function handleIntelCreditSuccess() {
+  const params = new URLSearchParams(window.location.search);
+  const credits = params.get('intel_credits');
+  const sessionId = params.get('session_id');
+  
+  if (credits && sessionId) {
+    // Add credits to balance
+    const amount = parseInt(credits);
     intelBalance += amount;
     localStorage.setItem('qp_intel_balance', intelBalance.toString());
     updateBalanceDisplay();
-    closeUsageModal();
-    showToast('Credits added! Balance: £' + intelBalance.toFixed(2), 'success');
+    
+    // Show success message
+    showToast(`£${amount} credits added! Balance: £${intelBalance.toFixed(2)}`, 'success');
+    
+    // Clean up URL
+    window.history.replaceState({}, '', '/dashboard/');
+    
+    // Switch to intelligence view
+    switchView('intelligence');
   }
 }
 
@@ -16604,7 +16620,10 @@ function saveCurrentChat() {
 }
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', initIntelligence);
+document.addEventListener('DOMContentLoaded', function() {
+  initIntelligence();
+  handleIntelCreditSuccess();
+});
 </script>
 
 <script src="/assets/support-widget-v2.js"></script>
