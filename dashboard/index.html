@@ -16207,7 +16207,7 @@ function renderIntelInstruments(instruments) {
     const regimePercent = Math.min(100, Math.max(0, inst.regime_score));
     
     return `
-    <div class="panel intel-card" style="cursor: pointer; padding: 14px 18px;" onclick="this.classList.toggle('expanded')">
+    <div class="panel intel-card" style="padding: 14px 18px;">`
       <!-- Header Row - Mobile friendly -->
       <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
@@ -16221,8 +16221,8 @@ function renderIntelInstruments(instruments) {
         </div>
       </div>
       
-      <!-- Expanded Body -->
-      <div class="intel-card-body" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+      <!-- Body - Always Visible -->
+      <div class="intel-card-body" style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
         <!-- Stats Row - All inline -->
         <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
           <div style="flex: 1; min-width: 100px; background: var(--surface-2, #f5f5f5); border-radius: 8px; padding: 12px; text-align: center;">
@@ -16272,15 +16272,6 @@ function renderIntelInstruments(instruments) {
     `;
   }).join('');
   
-  // Add click handlers to expand cards
-  document.querySelectorAll('.intel-card').forEach(card => {
-    card.onclick = function() {
-      const body = this.querySelector('.intel-card-body');
-      if (body) {
-        body.style.display = body.style.display === 'none' ? 'block' : 'none';
-      }
-    };
-  });
 }
 
 function formatIntelPrice(price, type, name) {
