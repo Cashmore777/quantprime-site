@@ -16435,25 +16435,22 @@ document.querySelectorAll('.paper-slide').forEach(slide => {
 // ═══════════════════════════════════════════════════════════════
 
 let intelBalance = 0;
+let messagesRemaining = 0;
 let intelChatHistory = [];
 let currentIntelChatId = null;
 let intelMessages = [];
 
 // Initialize Intelligence
-function initIntelligence() {
-  // Load balance from localStorage (will sync with server later)
-  const storedBalance = localStorage.getItem('qp_intel_balance');
-  if (storedBalance) {
-    intelBalance = parseFloat(storedBalance);
-    updateBalanceDisplay();
-  }
-  
-  // Load chat history
+async function initIntelligence() {
+  // Load chat history from localStorage
   const storedChats = localStorage.getItem('qp_intel_chats');
   if (storedChats) {
     intelChatHistory = JSON.parse(storedChats);
     renderChatHistory();
   }
+  
+  // Fetch real balance from server
+  await fetchIntelBalance();
   
   // Auto-resize textarea
   const textarea = document.getElementById('intel-input');
@@ -16465,12 +16462,40 @@ function initIntelligence() {
   }
 }
 
+// Fetch real balance from server
+async function fetchIntelBalance() {
+  if (!authUser?.id) {
+    updateBalanceDisplay();
+    return;
+  }
+  
+  try {
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-balance', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: authUser.id })
+    });
+    
+    const data = await response.json();
+    if (data.balance !== undefined) {
+      intelBalance = data.balance;
+      messagesRemaining = data.messagesRemaining || Math.floor(intelBalance / 0.05);
+      updateBalanceDisplay();
+    }
+  } catch (e) {
+    console.error('Failed to fetch intel balance:', e);
+  }
+}
+
 function updateBalanceDisplay() {
   const balanceEl = document.getElementById('intel-balance');
   const balanceModalEl = document.getElementById('intel-balance-modal');
+  const msgsEl = document.getElementById('intel-messages-remaining');
   const formatted = '£' + intelBalance.toFixed(2);
+  const msgsFormatted = messagesRemaining + ' messages';
   if (balanceEl) balanceEl.textContent = formatted;
   if (balanceModalEl) balanceModalEl.textContent = formatted;
+  if (msgsEl) msgsEl.textContent = msgsFormatted;
 }
 
 function toggleIntelSidebar() {
@@ -16518,20 +16543,21 @@ async function purchaseCredits(amount) {
 }
 
 // Handle credit purchase success from URL params
-function handleIntelCreditSuccess() {
+async function handleIntelCreditSuccess() {
   const params = new URLSearchParams(window.location.search);
   const credits = params.get('intel_credits');
   const sessionId = params.get('session_id');
   
   if (credits && sessionId) {
-    // Add credits to balance
     const amount = parseInt(credits);
-    intelBalance += amount;
-    localStorage.setItem('qp_intel_balance', intelBalance.toString());
-    updateBalanceDisplay();
+    
+    // Fetch updated balance from server (Stripe webhook will have added credits)
+    // Small delay to allow webhook to process
+    await new Promise(r => setTimeout(r, 2000));
+    await fetchIntelBalance();
     
     // Show success message
-    showToast(`£${amount} credits added! Balance: £${intelBalance.toFixed(2)}`, 'success');
+    showToast(`£${amount} credits purchased! Balance: £${intelBalance.toFixed(2)} (~${messagesRemaining} messages)`, 'success');
     
     // Clean up URL
     window.history.replaceState({}, '', '/dashboard/');
@@ -16730,6 +16756,18 @@ async function sendIntelMessage() {
     
     const data = await response.json();
     
+    // Handle insufficient credits
+    if (response.status === 402) {
+      intelBalance = data.balance || 0;
+      messagesRemaining = 0;
+      updateBalanceDisplay();
+      openUsageModal();
+      showToast('Insufficient credits. Please top up to continue.', 'warning');
+      intelMessages.pop(); // Remove user message that didn't send
+      renderMessages();
+      return;
+    }
+    
     if (data.reply) {
       // Add AI response with usage info
       const aiMessage = { 
@@ -16739,14 +16777,14 @@ async function sendIntelMessage() {
       };
       intelMessages.push(aiMessage);
       
-      // Deduct actual cost from balance
-      if (data.usage && data.usage.cost) {
-        intelBalance = Math.max(0, intelBalance - data.usage.cost);
-        localStorage.setItem('qp_intel_balance', intelBalance.toString());
+      // Update balance from server response
+      if (data.balance !== undefined) {
+        intelBalance = data.balance;
+        messagesRemaining = data.messagesRemaining || Math.floor(intelBalance / 0.05);
         updateBalanceDisplay();
         
         // Show cost toast
-        showToast(`-£${data.usage.cost.toFixed(3)} (${data.usage.totalTokens} tokens)`, 'info');
+        showToast(`-£0.05 · ${messagesRemaining} messages left`, 'info');
       }
     } else if (data.error) {
       intelMessages.push({ role: 'ai', content: `Error: ${data.error}. ${data.details || ''}` });
