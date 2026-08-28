@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-:root {
+:root, [data-theme="light"] {
   --gold: #c9a84c;
   --gold-light: #d4b85a;
   --gold-glow: rgba(201,168,76,0.12);
@@ -35,6 +35,21 @@
   --red: #dc2626;
 }
 
+[data-theme="dark"] {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --bg: #0a0a0f;
+  --surface: #141419;
+  --surface-elevated: #1c1c24;
+  --border: rgba(255,255,255,0.08);
+  --text-primary: #fafafa;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
 body {
   background: var(--bg);
   color: var(--text-primary);
@@ -44,7 +59,7 @@ body {
 .page-header {
   padding: 8rem 0 4rem;
   text-align: center;
-  background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
   position: relative;
   overflow: hidden;
 }
@@ -866,6 +881,7 @@ footer p { color: var(--text-secondary); }
   </div>
 </footer>
 
+<script src="/assets/theme-toggle.js"></script>
 <script src="/js/main.js?v=3"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>

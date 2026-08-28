@@ -15,7 +15,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-:root {
+:root, [data-theme="light"] {
   --gold: #c9a84c;
   --gold-light: #d4b85a;
   --gold-glow: rgba(201,168,76,0.12);
@@ -27,6 +27,20 @@
   --text-muted: rgba(0,0,0,0.4);
   --error: #dc2626;
   --success: #16a34a;
+}
+
+[data-theme="dark"] {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --bg: #0a0a0f;
+  --surface: #141419;
+  --border: rgba(255,255,255,0.08);
+  --text-primary: #fafafa;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+  --error: #ef4444;
+  --success: #22c55e;
 }
 
 body {
@@ -798,5 +812,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
+<script src="/assets/theme-toggle.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <style>
-:root {
+:root, [data-theme="light"] {
   --gold: #c9a84c;
   --gold-light: #d4b85a;
   --gold-glow: rgba(201,168,76,0.12);
@@ -20,6 +20,21 @@
   --text-primary: #1a1a1a;
   --text-secondary: rgba(0,0,0,0.6);
   --text-muted: rgba(0,0,0,0.4);
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+[data-theme="dark"] {
+  --gold: #c9a84c;
+  --gold-light: #d4b85a;
+  --gold-glow: rgba(201,168,76,0.15);
+  --bg: #0a0a0f;
+  --surface: #141419;
+  --surface-alt: #1c1c24;
+  --border: rgba(255,255,255,0.08);
+  --text-primary: #fafafa;
+  --text-secondary: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
   --success: #22c55e;
   --danger: #ef4444;
 }
@@ -860,5 +875,6 @@ document.getElementById('phone').addEventListener('input', function(e) {
 init();
 </script>
 <script src="/js/funnel-tracking.js"></script>
+<script src="/assets/theme-toggle.js"></script>
 </body>
 </html>
