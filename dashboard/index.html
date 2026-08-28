@@ -1514,41 +1514,74 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 /* Code blocks in messages */
-.intel-message-content pre {
-  background: var(--bg);
-  border: 1px solid var(--border);
+.code-block-container {
+  margin: 12px 0;
   border-radius: 8px;
-  padding: 12px;
-  overflow-x: auto;
-  margin: 8px 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: #1a1a22;
 }
 
-.intel-message-content code {
-  font-family: var(--mono);
-  font-size: 13px;
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #252530;
+  border-bottom: 1px solid var(--border);
 }
 
-.intel-message-content pre code {
-  color: var(--text-1);
-}
-
-.code-download-btn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 6px 12px;
-  background: var(--gold-glow);
-  border: 1px solid rgba(201,168,76,0.3);
-  border-radius: 6px;
+.code-lang {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--gold);
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.5px;
+}
+
+.code-copy-btn {
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-2);
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.code-download-btn:hover {
-  background: var(--gold);
-  color: #000;
+.code-copy-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.code-copy-btn.copied {
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.code-block-container pre {
+  margin: 0;
+  padding: 16px;
+  background: #1a1a22;
+  overflow-x: auto;
+}
+
+.code-block-container code {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e4e4e7;
+}
+
+.intel-message-content .inline-code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--gold);
 }
 
 /* Input Area */
@@ -16719,28 +16752,54 @@ function renderMessages() {
 }
 
 function formatMessage(text) {
-  // Handle code blocks first (```language ... ```)
-  text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+  // Handle code blocks first (```language ... ```) - more robust regex
+  text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
     const language = lang || 'code';
-    const downloadBtn = language === 'pinescript' || language === 'pine' 
-      ? `<button class="code-download-btn" onclick="downloadCode(\`${code.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, '${language}')">Download .txt</button>`
-      : '';
-    return `<pre><code class="language-${language}">${escapeHtml(code.trim())}</code></pre>${downloadBtn}`;
+    const codeId = 'code-' + Math.random().toString(36).substr(2, 9);
+    const escapedCode = escapeHtml(code.trim());
+    
+    return `<div class="code-block-container">
+      <div class="code-block-header">
+        <span class="code-lang">${language.toUpperCase()}</span>
+        <button class="code-copy-btn" onclick="copyCode('${codeId}')">Copy</button>
+      </div>
+      <pre id="${codeId}"><code class="language-${language}">${escapedCode}</code></pre>
+    </div>`;
   });
   
   // Handle inline code
-  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+  text = text.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
   
   // Handle bold
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   
-  // Handle italic
-  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Handle italic (but not if it's part of bold)
+  text = text.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
   
   // Handle line breaks
   text = text.replace(/\n/g, '<br>');
   
   return text;
+}
+
+function copyCode(codeId) {
+  const codeEl = document.getElementById(codeId);
+  if (!codeEl) return;
+  
+  const code = codeEl.textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    // Find the button and show feedback
+    const btn = codeEl.parentElement.querySelector('.code-copy-btn');
+    if (btn) {
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+  });
 }
 
 function escapeHtml(text) {
