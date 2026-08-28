@@ -160,10 +160,16 @@ body {
 /* Tier Cards Container */
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
+}
+
+@media (max-width: 1200px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Individual Tier Card - PANEL STYLE */
@@ -422,7 +428,6 @@ body {
   .pricing-grid {
     grid-template-columns: 1fr;
     max-width: 440px;
-    margin: 0 auto;
   }
   
   .tier-card {
@@ -794,68 +799,6 @@ footer p { color: var(--text-secondary); }
         </div>
       </div>
       
-      <!-- ASCENSION -->
-      <div class="tier-card" data-tier="ascension">
-        <div class="tier-badge premium">90-Day Program</div>
-        <div class="tier-header">
-          <div class="tier-name">Ascension</div>
-          <p class="tier-tagline">The complete transformation. From wherever you are to consistently profitable — with me guiding every step.</p>
-          
-          <div class="tier-price">
-            <span class="currency">£</span>
-            <span class="amount">3,497</span>
-          </div>
-          <div class="tier-billing">One-time investment · Payment plans available</div>
-        </div>
-        
-        <a href="/ascension-apply" class="tier-cta secondary">Apply Now</a>
-        <p class="tier-guarantee">Completion guarantee — see terms</p>
-        
-        <div class="tier-features">
-          <div class="feature-section-label">The Full Package</div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <div class="feature-text">
-              <strong>12 weekly 1-on-1 calls (30 min)</strong>
-              <div class="feature-desc">Private calls with me every week — strategy, psychology, execution</div>
-            </div>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <div class="feature-text">
-              <strong>Complete 9-level education</strong>
-              <div class="feature-desc">From foundation to advanced quant systems — structured curriculum</div>
-            </div>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <div class="feature-text">
-              <strong>All indicators (lifetime access)</strong>
-              <div class="feature-desc">Recoil, Meridian, Cockpit — yours forever, including future updates</div>
-            </div>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <div class="feature-text">
-              <strong>Automation setup guarantee</strong>
-              <div class="feature-desc">We'll configure your MT5/TV automation together — or I do it for you</div>
-            </div>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <div class="feature-text">
-              <strong>90-day completion guarantee</strong>
-              <div class="feature-desc">Complete the curriculum, document your trading — results or refund</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
     </div>
   </div>
 </section>
@@ -877,8 +820,8 @@ footer p { color: var(--text-secondary); }
         <p>After purchase, you provide your TradingView username. We grant access within 24 hours. They appear in your "Invite-only scripts" section.</p>
       </div>
       <div class="faq-item">
-        <h4>What's the Completion Guarantee?</h4>
-        <p>For Ascension members: Complete the full curriculum with documented trading over 90 days. If you don't see improvement, you get a full refund. We want results, not revenue.</p>
+        <h4>Do you offer refunds?</h4>
+        <p>Yes — all paid tiers have a 14-day money-back guarantee. If the content isn't what you expected, email us within 14 days for a full refund. No questions asked.</p>
       </div>
     </div>
   </div>
