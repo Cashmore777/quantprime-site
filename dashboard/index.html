@@ -16613,9 +16613,30 @@ async function handleIntelCreditSuccess() {
   }
 }
 
-function startNewChat() {
+async function startNewChat() {
   currentIntelChatId = Date.now().toString();
   intelMessages = [];
+  
+  // Fetch welcome message from server
+  try {
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/intel-welcome');
+    const data = await response.json();
+    if (data.welcome) {
+      intelMessages.push({
+        role: 'ai',
+        content: data.welcome,
+        isWelcome: true
+      });
+    }
+  } catch (e) {
+    // Fallback welcome
+    intelMessages.push({
+      role: 'ai',
+      content: `Hey! I'm Quant Prime Intelligence - your trading research assistant.\n\nI can help you with:\n• Understanding the QP indicators and methodology\n• Pine Script code and TradingView setup\n• Trading concepts and strategy questions\n• Getting a second opinion on trade ideas\n\nWhat's on your mind?`,
+      isWelcome: true
+    });
+  }
+  
   renderMessages();
   
   // Close sidebar on mobile
