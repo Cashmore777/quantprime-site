@@ -963,13 +963,22 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 28px;
-  text-decoration: none;
+  text-decoration: none !important;
   display: flex;
   flex-direction: column;
   gap: 12px;
   transition: all 0.2s;
   position: relative;
   overflow: hidden;
+}
+
+.paper-slide * {
+  text-decoration: none !important;
+}
+
+.paper-slide:hover h4 {
+  text-decoration: underline !important;
+  text-underline-offset: 4px;
 }
 
 .paper-slide::before {
@@ -979,9 +988,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--gold), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent 80%);
+  opacity: 1;
+}
+
+.paper-slide::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .paper-slide:hover {
@@ -9260,9 +9279,9 @@ let currentUserEmail = null;
 const TIER_ACCESS = {
   'free': ['community', 'marketplace'],
   'research': ['community', 'marketplace', 'research'],
-  'recoil': ['community', 'marketplace', 'research', 'recoil'],
-  'terminal': ['community', 'marketplace', 'research', 'recoil', 'meridian'],
-  'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit'],
+  'recoil': ['community', 'marketplace', 'research', 'recoil', 'intelligence'],
+  'terminal': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'intelligence'],
+  'suite': ['community', 'marketplace', 'research', 'recoil', 'meridian', 'cockpit', 'intelligence'],
   'ascension': ['community', 'marketplace', 'notebook', 'research', 'recoil', 'meridian', 'cockpit', 'academy', 'mentorship', 'automation', 'intelligence'],
   'admin': ['community', 'marketplace', 'notebook', 'research', 'recoil', 'meridian', 'cockpit', 'academy', 'mentorship', 'automation', 'intelligence', 'admin']
 };
@@ -10519,6 +10538,27 @@ function showLockedModal(view, requiredTier) {
       isApplication: true,
       description: 'The complete 9-level curriculum with weekly 1-on-1 calls, the notebook system, and full automation setup.',
       value: 'Limited spots available — application required.'
+    },
+    'notebook': {
+      title: 'Ascension Journal',
+      tier: 'ascension',
+      isApplication: true,
+      description: 'Document your trades, track your mindset, and review your decisions with AI-powered insights.',
+      value: 'Part of the Ascension program — application required.'
+    },
+    'mentorship': {
+      title: 'Weekly 1-on-1 Calls',
+      tier: 'ascension',
+      isApplication: true,
+      description: '12 weekly 30-minute calls to review trades, discuss challenges, and refine your strategy.',
+      value: 'Part of the Ascension program — application required.'
+    },
+    'automation': {
+      title: 'Full Automation Setup',
+      tier: 'ascension',
+      isApplication: true,
+      description: 'Complete MT5/TradingView automation configured for your trading style.',
+      value: 'Part of the Ascension program — application required.'
     },
     'cockpit': {
       title: 'Cockpit — Visual Analysis',
