@@ -624,6 +624,157 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   50% { opacity: 0.6; }
 }
 
+/* DM FAB Button */
+.dm-fab {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  color: #1a1a1a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+  transition: all 0.2s;
+}
+
+.dm-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+}
+
+.dm-fab .dm-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  background: #ef4444;
+  color: white;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+}
+
+/* DM Panel Popup */
+#dm-panel {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  width: 360px;
+  max-height: calc(100vh - 120px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#dm-panel.open { display: flex; }
+
+#dm-panel .dm-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+#dm-panel .dm-panel-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+#dm-panel .dm-search {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+#dm-panel .dm-search input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--surface-raised);
+}
+
+#dm-panel .dm-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+#dm-panel .dm-user-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#dm-panel .dm-user-item:hover {
+  background: var(--surface-raised);
+}
+
+#dm-panel .dm-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), #d4b85a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+#dm-panel .dm-user-info {
+  flex: 1;
+}
+
+#dm-panel .dm-user-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+#dm-panel .dm-user-status {
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+#dm-panel .dm-settings {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (max-width: 500px) {
+  #dm-panel {
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+}
+
 .tier-badge {
   position: absolute;
   bottom: 24px;
@@ -7613,14 +7764,21 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-community">
     <!-- ROOM SELECTION VIEW -->
     <div id="room-selection" class="room-selection-view">
-      <div class="view-header" style="margin-bottom: 20px;">
-        <div class="eyebrow">Community</div>
-        <h2 style="font-size: 32px;">The <em style="color: var(--gold);">floor</em>.</h2>
-        <p style="color: var(--text-2); font-size: 14px; margin-top: 6px; max-width: 400px;">Pick a room and join the conversation.</p>
+      <div class="view-header" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <div class="eyebrow">Community</div>
+          <h2 style="font-size: 32px;">The <em style="color: var(--gold);">floor</em>.</h2>
+          <p style="color: var(--text-2); font-size: 14px; margin-top: 6px; max-width: 400px;">Pick a room and join the conversation.</p>
+        </div>
+        <!-- DM BUTTON - Top Right -->
+        <button class="dm-fab" onclick="openDMPanel()" title="Direct Messages">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg>
+          <span class="dm-badge" id="dm-unread-badge" style="display: none;">0</span>
+        </button>
       </div>
       
       <div class="room-grid compact">
-        <!-- COMMUNITY CHATS -->
+        <!-- COMMUNITY -->
         <div class="room-category-label">Community</div>
         <div class="room-cards">
           <div class="room-card" data-room="introductions" data-tier="free">
@@ -7631,9 +7789,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>#introductions</h4>
               <p>Say hi</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card" data-room="general" data-tier="free">
@@ -7644,9 +7800,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>#general</h4>
               <p>Main chat</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card" data-room="market-chat" data-tier="free">
@@ -7657,67 +7811,66 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>#market-chat</h4>
               <p>Live discussion</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
-          <!-- SYMBOL CHATS INLINE -->
-          <div class="room-card" data-room="xauusd-chat" data-tier="free">
+          <div class="room-card" data-room="xauusd-room" data-tier="free">
             <div class="room-card-icon" style="color: #c9a84c; background: rgba(201,168,76,0.1);">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M9 11h6M9 13h6"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>XAUUSD</h4>
+              <h4>#xauusd-room</h4>
               <p>Gold</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
-          <div class="room-card" data-room="eurusd-chat" data-tier="free">
+          <div class="room-card" data-room="eurusd-room" data-tier="free">
             <div class="room-card-icon" style="color: #00abff; background: rgba(0,171,255,0.1);">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="12" r="6"/><circle cx="15" cy="12" r="6"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>EURUSD</h4>
+              <h4>#eurusd-room</h4>
               <p>Euro</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
-          <div class="room-card" data-room="btcusd-chat" data-tier="free">
+          <div class="room-card" data-room="btcusd-room" data-tier="free">
             <div class="room-card-icon" style="color: #f7931a; background: rgba(247,147,26,0.1);">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 8h6v8H9z"/><path d="M12 6v2M12 16v2M9 10h6M9 14h6"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>BTCUSD</h4>
+              <h4>#btcusd-room</h4>
               <p>Bitcoin</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
         </div>
         
-        <!-- STRATEGY CHAT ROOMS - 2x3 grid by tier -->
+        <!-- STRATEGY ROOMS -->
         <div class="room-category-label">Strategy Rooms</div>
-        <div class="room-cards tier-grid">
-          <!-- ROW 1: Discussion channels -->
+        <div class="room-cards">
+          <div class="room-card" data-room="research" data-tier="research">
+            <div class="room-card-icon tier-research">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#research</h4>
+              <p>Weekly reports</p>
+            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          
           <div class="room-card" data-room="recoil" data-tier="recoil">
             <div class="room-card-icon tier-recoil">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
             </div>
             <div class="room-card-info">
               <h4>#recoil</h4>
-              <p>Discussion</p>
+              <p>Volatility fade</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card" data-room="meridian" data-tier="meridian">
@@ -7726,11 +7879,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
             </div>
             <div class="room-card-info">
               <h4>#meridian</h4>
-              <p>Discussion</p>
+              <p>Regime & cycles</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card" data-room="cockpit" data-tier="cockpit">
@@ -7739,99 +7890,36 @@ button, .nav-item, .room, .video-item, .filter-chip {
             </div>
             <div class="room-card-info">
               <h4>#cockpit</h4>
-              <p>Discussion</p>
+              <p>Multi-timeframe</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
-          <!-- ROW 2: Signal channels -->
-          <div class="room-card" data-room="recoil-signals" data-tier="recoil">
+          <div class="room-card" data-room="custom-strategy" data-tier="recoil">
             <div class="room-card-icon tier-recoil">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>#recoil-signals</h4>
-              <p>Trade alerts</p>
+              <h4>#custom-strategy</h4>
+              <p>Your builds</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
-          <div class="room-card" data-room="meridian-signals" data-tier="meridian">
-            <div class="room-card-icon tier-meridian">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <div class="room-card" data-room="tweaks" data-tier="recoil">
+            <div class="room-card-icon tier-recoil">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
             </div>
             <div class="room-card-info">
-              <h4>#meridian-signals</h4>
-              <p>Trade alerts</p>
+              <h4>#tweaks</h4>
+              <p>Optimizations</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
-          <div class="room-card" data-room="cockpit-signals" data-tier="cockpit">
-            <div class="room-card-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#cockpit-signals</h4>
-              <p>Trade alerts</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
         </div>
         
-        <!-- RESEARCH & ASCENSION -->
-        <div class="room-category-label">Research & Academy</div>
-        <div class="room-cards">
-          <div class="room-card" data-room="research-discussion" data-tier="research">
-            <div class="room-card-icon tier-research">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#research</h4>
-              <p>Weekly reports</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
-          <div class="room-card" data-room="academy-chat" data-tier="ascension">
-            <div class="room-card-icon tier-ascension">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#academy</h4>
-              <p>Curriculum</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-          
-          <div class="room-card" data-room="automation" data-tier="ascension">
-            <div class="room-card-icon tier-ascension">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3 7-7"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#automation</h4>
-              <p>MT5 & bots</p>
-            </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
-          </div>
-        </div>
-        
-        <!-- SESSION DESKS -->
-        <div class="room-category-label">Session Desks</div>
+        <!-- SESSION CHATS -->
+        <div class="room-category-label">Session Chats</div>
         <div class="room-cards">
           <div class="room-card session-desk" data-room="london-desk" data-tier="free">
             <div class="room-card-icon" style="color: #00abff; background: rgba(0,171,255,0.1);">
@@ -7841,9 +7929,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>London</h4>
               <p>07-11 UTC</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card session-desk" data-room="newyork-desk" data-tier="free">
@@ -7854,9 +7940,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>New York</h4>
               <p>11-21 UTC</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
           <div class="room-card session-desk" data-room="asia-desk" data-tier="free">
@@ -7867,25 +7951,44 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <h4>Asia</h4>
               <p>21-07 UTC</p>
             </div>
-            <div class="room-card-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
         </div>
         
-        <!-- DIRECT MESSAGES -->
-        <div class="room-category-label" style="display: flex; justify-content: space-between; align-items: center;">
-          <span>Direct Messages</span>
-          <button class="btn outline sm" onclick="showOnlineUsers()" style="padding: 4px 10px; font-size: 11px;">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-            New DM
-          </button>
-        </div>
-        <div id="dm-list" class="room-cards">
-          <div style="text-align: center; padding: 24px 16px; color: var(--text-3);">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 8px; opacity: 0.5;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-            <p style="font-size: 13px; margin: 0;">No conversations yet</p>
-            <p style="font-size: 11px; margin: 4px 0 0; opacity: 0.7;">Click "New DM" to message someone</p>
+        <!-- ASCENSION -->
+        <div class="room-category-label">Ascension</div>
+        <div class="room-cards">
+          <div class="room-card" data-room="academy-chat" data-tier="ascension">
+            <div class="room-card-icon tier-ascension">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#academy-chat</h4>
+              <p>Curriculum</p>
+            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          
+          <div class="room-card" data-room="1-1-feedback" data-tier="ascension">
+            <div class="room-card-icon tier-ascension">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#1-1-feedback</h4>
+              <p>Personal review</p>
+            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          
+          <div class="room-card" data-room="automation" data-tier="ascension">
+            <div class="room-card-icon tier-ascension">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3 7-7"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#automation</h4>
+              <p>MT5 & bots</p>
+            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
         </div>
       </div>
@@ -7903,6 +8006,29 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div id="online-users-list" style="max-height: 400px; overflow-y: auto; padding: 16px;">
           <p style="color: var(--text-3); text-align: center;">Loading...</p>
         </div>
+      </div>
+    </div>
+    
+    <!-- DM PANEL POPUP -->
+    <div id="dm-panel">
+      <div class="dm-panel-header">
+        <h3>Messages</h3>
+        <button class="close-btn" onclick="closeDMPanel()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="dm-search">
+        <input type="text" placeholder="Search users..." id="dm-search-input" oninput="filterDMUsers(this.value)">
+      </div>
+      <div class="dm-list" id="dm-user-list">
+        <p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Loading online users...</p>
+      </div>
+      <div class="dm-settings">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer;">
+          <input type="checkbox" id="dm-privacy-toggle" checked style="width: 16px; height: 16px; accent-color: var(--gold);">
+          Allow messages from anyone
+        </label>
+        <button class="btn outline sm" onclick="showFriendsList()" style="padding: 6px 12px; font-size: 11px;">Friends</button>
       </div>
     </div>
     
@@ -13579,6 +13705,90 @@ function getDmChannelId(userId1, userId2) {
   // Consistent channel ID regardless of who initiates
   return [userId1, userId2].sort().join('_');
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// DM PANEL FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════
+
+function openDMPanel() {
+  const panel = document.getElementById('dm-panel');
+  panel.classList.add('open');
+  loadDMPanelUsers();
+}
+
+function closeDMPanel() {
+  const panel = document.getElementById('dm-panel');
+  panel.classList.remove('open');
+}
+
+function loadDMPanelUsers() {
+  const list = document.getElementById('dm-user-list');
+  
+  if (!db) {
+    list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">Chat not connected</p>';
+    return;
+  }
+  
+  // Get all online users
+  db.ref('rooms').once('value', (snapshot) => {
+    const allUsers = new Map();
+    
+    snapshot.forEach((roomSnap) => {
+      const presence = roomSnap.child('presence').val();
+      if (presence) {
+        Object.entries(presence).forEach(([userId, data]) => {
+          if (userId !== authUser?.id) {
+            allUsers.set(userId, data);
+          }
+        });
+      }
+    });
+    
+    if (allUsers.size === 0) {
+      list.innerHTML = '<p style="color: var(--text-3); text-align: center; padding: 40px 20px; font-size: 13px;">No users online right now</p>';
+      return;
+    }
+    
+    list.innerHTML = Array.from(allUsers.entries()).map(([userId, data]) => `
+      <div class="dm-user-item" onclick="startDMFromPanel('${userId}', '${escapeHtml(data.user || 'Unknown')}')">
+        <div class="dm-user-avatar">${data.user ? data.user.charAt(0).toUpperCase() : '?'}</div>
+        <div class="dm-user-info">
+          <div class="dm-user-name">${escapeHtml(data.user || 'Unknown')}</div>
+          <div class="dm-user-status">Online now</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-3)" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </div>
+    `).join('');
+  });
+}
+
+function filterDMUsers(query) {
+  const items = document.querySelectorAll('#dm-user-list .dm-user-item');
+  const q = query.toLowerCase();
+  items.forEach(item => {
+    const name = item.querySelector('.dm-user-name')?.textContent?.toLowerCase() || '';
+    item.style.display = name.includes(q) ? 'flex' : 'none';
+  });
+}
+
+function startDMFromPanel(userId, username) {
+  closeDMPanel();
+  startDM(userId, username);
+}
+
+function showFriendsList() {
+  // TODO: Implement friends list modal
+  showToast('Friends list coming soon!', 'info');
+}
+
+// Close DM panel when clicking outside
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('dm-panel');
+  const fab = document.querySelector('.dm-fab');
+  if (panel && panel.classList.contains('open') && !panel.contains(e.target) && !fab?.contains(e.target)) {
+    closeDMPanel();
+  }
+});
 
 function showOnlineUsers() {
   const modal = document.getElementById('online-users-modal');
