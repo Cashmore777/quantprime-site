@@ -1246,6 +1246,33 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--gold);
 }
 
+/* Balance deduction animation */
+.balance-deduction {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #ef4444;
+  opacity: 0;
+  transform: translateY(0);
+  pointer-events: none;
+  transition: all 0.6s ease-out;
+}
+
+.balance-deduction.animate {
+  opacity: 1;
+  transform: translateY(-20px);
+  animation: fadeUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 1; transform: translateY(0); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-25px); }
+}
+
 /* Main Chat Area */
 .intel-main {
   flex: 1;
@@ -12576,7 +12603,7 @@ async function fetchUnreadCount(roomId) {
     
     return snapshot.numChildren();
   } catch (e) {
-    console.error('Error fetching unread for', roomId, e);
+    // Silently fail - Firebase permissions not configured
     return 0;
   }
 }
@@ -16497,6 +16524,26 @@ function updateBalanceDisplay() {
   if (msgsEl) msgsEl.textContent = msgsFormatted;
 }
 
+function animateBalanceDeduction() {
+  const balanceEl = document.getElementById('intel-balance');
+  if (!balanceEl) return;
+  
+  // Create floating -£0.05 element
+  const deduction = document.createElement('span');
+  deduction.className = 'balance-deduction';
+  deduction.textContent = '-£0.05';
+  balanceEl.parentElement.style.position = 'relative';
+  balanceEl.parentElement.appendChild(deduction);
+  
+  // Trigger animation
+  requestAnimationFrame(() => {
+    deduction.classList.add('animate');
+  });
+  
+  // Remove after animation
+  setTimeout(() => deduction.remove(), 1000);
+}
+
 function toggleIntelSidebar() {
   const sidebar = document.getElementById('intel-sidebar');
   if (window.innerWidth <= 820) {
@@ -16783,7 +16830,8 @@ async function sendIntelMessage() {
         updateBalanceDisplay();
         
         // Show cost toast
-        showToast(`-£0.05 · ${messagesRemaining} messages left`, 'info');
+        // Animate balance deduction
+        animateBalanceDeduction();
       }
     } else if (data.error) {
       intelMessages.push({ role: 'ai', content: `Error: ${data.error}. ${data.details || ''}` });
