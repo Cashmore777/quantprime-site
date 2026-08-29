@@ -7335,64 +7335,10 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- Animated Hero -->
     <div class="instrument-hero recoil-hero" style="margin-bottom: 24px;">
-      <div class="hero-visual">
-        <svg class="recoil-animation" viewBox="0 0 400 140" preserveAspectRatio="xMidYMid meet">
-          <!-- Candlestick chart with volatility-colored candles -->
-          <g class="candles">
-            <!-- Band 1-2: Dark (low vol) -->
-            <rect x="20" y="75" width="6" height="20" fill="#2a2a36"/>
-            <line x1="23" y1="70" x2="23" y2="100" stroke="#2a2a36" stroke-width="1"/>
-            <rect x="35" y="80" width="6" height="15" fill="#363644"/>
-            <line x1="38" y1="75" x2="38" y2="100" stroke="#363644" stroke-width="1"/>
-            <!-- Band 3-4: Medium -->
-            <rect x="50" y="65" width="6" height="25" fill="#424252"/>
-            <line x1="53" y1="60" x2="53" y2="95" stroke="#424252" stroke-width="1"/>
-            <rect x="65" y="70" width="6" height="20" fill="#4e4e60"/>
-            <line x1="68" y1="65" x2="68" y2="95" stroke="#4e4e60" stroke-width="1"/>
-            <!-- Band 5: Building -->
-            <rect x="80" y="55" width="6" height="35" fill="#4e4e60"/>
-            <line x1="83" y1="50" x2="83" y2="95" stroke="#4e4e60" stroke-width="1"/>
-            <!-- Band 6: Yellow trigger -->
-            <rect x="95" y="40" width="6" height="50" fill="#e6a830"/>
-            <line x1="98" y1="35" x2="98" y2="95" stroke="#e6a830" stroke-width="1"/>
-            <!-- Band 7: Gold trigger -->
-            <rect x="110" y="25" width="6" height="65" fill="#c9a84c" class="trigger-candle-7"/>
-            <line x1="113" y1="20" x2="113" y2="95" stroke="#c9a84c" stroke-width="1"/>
-            <!-- Band 8: RED extreme (biggest candle) -->
-            <rect x="125" y="10" width="6" height="80" fill="#f23645" class="trigger-candle-8"/>
-            <line x1="128" y1="5" x2="128" y2="95" stroke="#f23645" stroke-width="1"/>
-            <!-- SNAP BACK (mean reversion) -->
-            <rect x="140" y="45" width="6" height="40" fill="#26a269"/>
-            <line x1="143" y1="40" x2="143" y2="90" stroke="#26a269" stroke-width="1"/>
-            <rect x="155" y="55" width="6" height="30" fill="#26a269"/>
-            <line x1="158" y1="50" x2="158" y2="90" stroke="#26a269" stroke-width="1"/>
-            <!-- Return to normal -->
-            <rect x="170" y="65" width="6" height="20" fill="#363644"/>
-            <line x1="173" y1="60" x2="173" y2="90" stroke="#363644" stroke-width="1"/>
-          </g>
-          <!-- Trigger label -->
-          <g class="trigger-label" opacity="0">
-            <rect x="115" y="2" width="40" height="14" rx="3" fill="rgba(242,54,69,0.9)"/>
-            <text x="135" y="12" fill="white" font-size="8" font-family="var(--mono)" text-anchor="middle">BAND 8</text>
-          </g>
-          <!-- Fade arrow -->
-          <g class="fade-arrow" opacity="0">
-            <path d="M128,95 L128,105 L143,105 L143,50" fill="none" stroke="#26a269" stroke-width="2" stroke-dasharray="4"/>
-            <polygon points="143,55 140,62 146,62" fill="#26a269"/>
-            <text x="155" y="108" fill="#26a269" font-size="9" font-family="var(--mono)">FADE</text>
-          </g>
-          <!-- Band legend -->
-          <g transform="translate(200, 20)">
-            <rect x="0" y="0" width="8" height="8" fill="#2a2a36"/><text x="12" y="7" fill="var(--text-3)" font-size="8">1-2 Low</text>
-            <rect x="0" y="14" width="8" height="8" fill="#4e4e60"/><text x="12" y="21" fill="var(--text-3)" font-size="8">3-5 Medium</text>
-            <rect x="0" y="28" width="8" height="8" fill="#e6a830"/><text x="12" y="35" fill="#e6a830" font-size="8">6 Trigger 1×</text>
-            <rect x="0" y="42" width="8" height="8" fill="#c9a84c"/><text x="12" y="49" fill="#c9a84c" font-size="8">7 Trigger 2×</text>
-            <rect x="0" y="56" width="8" height="8" fill="#f23645"/><text x="12" y="63" fill="#f23645" font-size="8">8 Trigger 5×</text>
-          </g>
-          <!-- ATR indicator -->
-          <text x="200" y="95" fill="var(--text-3)" font-size="9" font-family="var(--mono)">ATR Ratio: <tspan fill="#f23645">3.2×</tspan> → BAND 8</text>
-          <text x="200" y="108" fill="var(--text-2)" font-size="8">Overextended candle → Fade for mean reversion</text>
-        </svg>
+      <div class="hero-visual" style="border-radius: 12px; overflow: hidden;">
+        <video autoplay loop muted playsinline style="width: 100%; height: auto; display: block; border-radius: 12px;">
+          <source src="/assets/recoil-preview.mp4" type="video/mp4">
+        </video>
       </div>
       <div class="hero-content">
         <div class="instrument-header">
