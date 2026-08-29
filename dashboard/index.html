@@ -7745,6 +7745,17 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
           
+          <div class="room-card" data-room="custom-strategy" data-tier="recoil">
+            <div class="room-card-icon tier-recoil">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="room-card-info">
+              <h4>#custom-strategy</h4>
+              <p>Your builds</p>
+            </div>
+            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          
           <div class="room-card" data-room="meridian" data-tier="meridian">
             <div class="room-card-icon tier-meridian">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 010 20M12 2a15 15 0 000 20M2 12h20"/></svg>
@@ -7763,17 +7774,6 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <div class="room-card-info">
               <h4>#cockpit</h4>
               <p>Multi-timeframe</p>
-            </div>
-            <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
-          </div>
-          
-          <div class="room-card" data-room="custom-strategy" data-tier="recoil">
-            <div class="room-card-icon tier-recoil">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            </div>
-            <div class="room-card-info">
-              <h4>#custom-strategy</h4>
-              <p>Your builds</p>
             </div>
             <div class="room-card-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
           </div>
@@ -13140,21 +13140,29 @@ const ROOM_TIER_MAP = {
   'general': 'free',
   'market-chat': 'free',
   'introductions': 'free',
-  // Paid Chat Rooms
+  // Symbol Chats (free)
+  'xauusd-room': 'free',
+  'eurusd-room': 'free',
+  'btcusd-room': 'free',
+  'xauusd-chat': 'free',
+  'eurusd-chat': 'free',
+  'btcusd-chat': 'free',
+  // Strategy Rooms (paid)
+  'research': 'research',
   'research-discussion': 'research',
   'recoil': 'recoil',
+  'custom-strategy': 'recoil',
+  'tweaks': 'recoil',
   'meridian': 'meridian',
   'cockpit': 'cockpit',
+  // Ascension Rooms
   'academy-chat': 'ascension',
+  '1-1-feedback': 'ascension',
   'automation': 'ascension',
   // Session Chat Rooms (free)
   'london-desk': 'free',
   'newyork-desk': 'free',
-  'asia-desk': 'free',
-  // Symbol Chats (free)
-  'xauusd-chat': 'free',
-  'eurusd-chat': 'free',
-  'btcusd-chat': 'free'
+  'asia-desk': 'free'
 };
 
 // Tier hierarchy for access checks
