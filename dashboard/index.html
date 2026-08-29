@@ -2231,18 +2231,7 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* Green dot for unlocked instruments */
-.instrument-card:not(.locked)::before {
-  content: '';
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 10px;
-  height: 10px;
-  background: #22c55e;
-  border-radius: 50%;
-  box-shadow: 0 0 8px rgba(34,197,94,0.5);
-}
+/* Green dot for unlocked instruments - removed, using ACTIVE text instead */
 
 .instrument-card:hover:not(.locked) {
   border-color: var(--gold);
