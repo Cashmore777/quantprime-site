@@ -220,17 +220,6 @@ h3.sub{font-family:'Archivo',Helvetica,sans-serif;font-size:19px;font-weight:700
 .sig-by{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--ink-faint)}
 footer{border-top:1px solid var(--rule);padding:44px 0 72px;margin-top:72px;font-size:13px;color:var(--ink-faint);max-width:var(--measure);line-height:1.7}
 
-/* ─── theme toggle ─────────────────────────────────── */
-.toggle{
-  position:fixed;top:22px;right:22px;z-index:50;width:38px;height:38px;
-  border:1px solid var(--rule);background:var(--paper);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;transition:border-color .18s ease;
-}
-.toggle:hover{border-color:var(--gold)}
-.toggle:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
-.toggle span{width:11px;height:11px;border-radius:50%;background:var(--ink);box-shadow:inset -3px -3px 0 0 var(--paper)}
-[data-theme="dark"] .toggle span{box-shadow:inset 3px 3px 0 0 var(--paper)}
-
 /* ─── entrance ─────────────────────────────────────── */
 .rise{opacity:0;transform:translateY(14px)}
 .rise.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
@@ -242,8 +231,6 @@ footer{border-top:1px solid var(--rule);padding:44px 0 72px;margin-top:72px;font
 </style>
 </head>
 <body>
-
-<button class="toggle" onclick="flip()" aria-label="Switch theme"><span></span></button>
 
 <nav class="rail" aria-hidden="true">
   <div class="rail-ticks" id="ticks"></div>
@@ -517,14 +504,8 @@ footer{border-top:1px solid var(--rule);padding:44px 0 72px;margin-top:72px;font
 </div>
 
 <script>
-function flip(){
-  const r=document.documentElement;
-  const next=r.getAttribute('data-theme')==='dark'?'light':'dark';
-  r.setAttribute('data-theme',next);
-  try{localStorage.setItem('qp-manifesto-theme',next)}catch(e){}
-}
 (function(){
-  try{ if(localStorage.getItem('qp-manifesto-theme')==='dark')
+  try{ if(localStorage.getItem('qp-theme')==='dark')
     document.documentElement.setAttribute('data-theme','dark'); }catch(e){}
 })();
 
@@ -610,5 +591,6 @@ const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   },1750);
 })();
 </script>
+<script src="/assets/theme-toggle.js"></script>
 </body>
 </html>
