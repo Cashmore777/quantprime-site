@@ -6,7 +6,7 @@
 const QP_FUNNEL = {
   // Page order in the canonical funnel
   FUNNEL_ORDER: [
-    { slug: 'free-guide', name: 'Free Guide', path: '/free-guide.html' },
+    { slug: 'manifesto', name: 'The Manifesto', path: '/manifesto.html' },
     { slug: 'framework', name: 'The Framework', path: '/framework.html' },
     { slug: 'results', name: 'Verified Results', path: '/results.html' },
     { slug: 'compounding', name: 'Compounding Calculator', path: '/compounding.html' },

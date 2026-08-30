@@ -84,10 +84,10 @@
       ]
     },
     'free-guide': {
-      title: 'Free Guide Help',
+      title: 'Manifesto Help',
       presets: [
-        { text: 'How do I download the guide?', category: 'guide' },
-        { text: 'What\'s included in the manifesto?', category: 'guide' },
+        { text: 'How do I access The Manifesto?', category: 'guide' },
+        { text: 'What\'s included in The Manifesto?', category: 'guide' },
         { text: 'How do I get started after reading?', category: 'guide' },
         { text: 'I need help with something else', category: 'other' }
       ]
@@ -152,7 +152,7 @@ Recommended lot: 0.01 for accounts under £1k`
     }
     
     // Check path
-    if (path.includes('free-guide')) return 'free-guide';
+    if (path.includes('manifesto') || path.includes('free-guide')) return 'free-guide';
     if (path.includes('dashboard')) return 'dashboard';
     if (path.includes('recoil')) return 'recoil';
     if (path.includes('meridian')) return 'meridian';

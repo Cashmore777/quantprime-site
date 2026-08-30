@@ -482,6 +482,19 @@ form.addEventListener('submit', async (e) => {
       }
     }
     
+    // Notify Brevo that account was created (for "no account" reminder automation)
+    try {
+      await fetch('/api/account-created', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      console.log('[Register] Notified Brevo: HAS_ACCOUNT=true');
+    } catch (e) {
+      console.error('[Register] Failed to notify Brevo:', e.message);
+      // Non-blocking - don't fail registration if this fails
+    }
+    
     // Update success message if promo was applied
     if (userTier !== 'free') {
       successEl.innerHTML = `

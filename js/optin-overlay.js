@@ -15,8 +15,8 @@ const QP_OPTIN = {
       return;
     }
     
-    // Don't show on free-guide page (has its own form)
-    if (window.location.pathname.includes('free-guide')) {
+    // Don't show on manifesto page (has its own form)
+    if (window.location.pathname.includes('manifesto') || window.location.pathname.includes('free-guide')) {
       return;
     }
     
@@ -191,7 +191,7 @@ const QP_OPTIN = {
       </style>
       <div class="qp-optin-modal">
         <button class="qp-optin-close" onclick="QP_OPTIN.hideOverlay()">×</button>
-        <div class="qp-optin-badge">FREE GUIDE</div>
+        <div class="qp-optin-badge">THE MANIFESTO</div>
         <h2 class="qp-optin-title">Want the full breakdown?</h2>
         <p class="qp-optin-subtitle">Get The Quant Prime Blueprint — 5 principles that power institutional-grade trading systems.</p>
         <form class="qp-optin-form" onsubmit="QP_OPTIN.handleSubmit(event)">
