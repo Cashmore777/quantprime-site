@@ -1,927 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Quant Prime Manifesto</title>
-    <link rel="icon" href="/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #fafaf8;
-            --surface: #ffffff;
-            --surface-dim: #f2f1ed;
-            --text: #1a1a1a;
-            --text-secondary: #6b6b6b;
-            --text-muted: #9a9a9a;
-            --gold: #b8962e;
-            --gold-soft: #d4b94e;
-            --gold-bg: #faf6eb;
-            --cyan: #0088cc;
-            --cyan-bg: #e8f4fa;
-            --green: #16a34a;
-            --green-bg: #f0fdf4;
-            --red: #dc2626;
-            --red-bg: #fef2f2;
-            --border: #e8e6e0;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
-            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
-            --radius: 16px;
-        }
-
-        [data-theme="dark"] {
-            --bg: #0a0a0a;
-            --surface: #141414;
-            --surface-dim: #1a1a1a;
-            --text: #f5f5f5;
-            --text-secondary: #a0a0a0;
-            --text-muted: #666666;
-            --gold: #d4b94e;
-            --gold-soft: #b8962e;
-            --gold-bg: rgba(184, 150, 46, 0.15);
-            --cyan: #4db8ff;
-            --cyan-bg: rgba(0, 136, 204, 0.15);
-            --green: #22c55e;
-            --green-bg: rgba(22, 163, 74, 0.15);
-            --red: #f87171;
-            --red-bg: rgba(220, 38, 38, 0.15);
-            --border: #2a2a2a;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-            --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
-        }
-
-        /* Theme toggle button */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
-        }
-
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            fill: var(--text-secondary);
-            stroke: var(--text-secondary);
-        }
-
-        .theme-toggle .sun { display: none; }
-        .theme-toggle .moon { display: block; }
-        [data-theme="dark"] .theme-toggle .sun { display: block; }
-        [data-theme="dark"] .theme-toggle .moon { display: none; }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.7;
-            font-size: 16px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           COVER PAGE
-        ═══════════════════════════════════════════════════════════ */
-        .cover {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            text-align: center;
-            padding: 120px 24px 60px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-        }
-        
-        @media (min-width: 600px) {
-            .cover {
-                padding-top: 15vh;
-            }
-        }
-
-        .cover-logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.3em;
-            color: var(--text-muted);
-            margin-bottom: 40px;
-        }
-
-        .cover-logo span { color: var(--gold); }
-
-        .cover h1 {
-            font-size: clamp(36px, 8vw, 56px);
-            font-weight: 300;
-            letter-spacing: -0.03em;
-            margin-bottom: 16px;
-            color: var(--text);
-        }
-
-        .cover-subtitle {
-            font-size: 18px;
-            color: var(--text-secondary);
-            font-weight: 400;
-            margin-bottom: 40px;
-        }
-
-        .cover-formula {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: var(--cyan);
-            background: var(--cyan-bg);
-            padding: 14px 28px;
-            border-radius: 100px;
-            margin-bottom: 50px;
-        }
-
-        .cover-tagline {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-
-        /* ═══════════════════════════════════════════════════════════
-           CONTENT PAGES
-        ═══════════════════════════════════════════════════════════ */
-        .page {
-            max-width: 680px;
-            margin: 0 auto;
-            padding: 80px 24px;
-        }
-
-        .section-title {
-            font-size: 28px;
-            font-weight: 300;
-            color: var(--text);
-            margin-bottom: 32px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-            letter-spacing: -0.02em;
-        }
-
-        .section-title .gold { color: var(--gold); }
-
-        h2 {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text);
-            margin-top: 40px;
-            margin-bottom: 16px;
-        }
-
-        h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--gold);
-            margin-top: 28px;
-            margin-bottom: 12px;
-        }
-
-        p {
-            margin-bottom: 16px;
-            color: var(--text-secondary);
-        }
-
-        p.lead {
-            font-size: 19px;
-            color: var(--text);
-            font-weight: 400;
-        }
-
-        strong { color: var(--text); font-weight: 600; }
-
-        ul, ol {
-            margin: 16px 0 16px 24px;
-            color: var(--text-secondary);
-        }
-
-        li { margin-bottom: 10px; }
-        li strong { color: var(--gold); }
-
-        /* Highlight box */
-        .highlight {
-            background: var(--gold-bg);
-            border-left: 3px solid var(--gold);
-            padding: 20px 24px;
-            margin: 28px 0;
-            border-radius: 0 var(--radius) var(--radius) 0;
-        }
-
-        .highlight p { margin: 0; color: var(--text); font-size: 15px; }
-
-        /* Stat box */
-        .stat-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 40px;
-            margin: 32px 0;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-box .number {
-            font-size: 64px;
-            font-weight: 300;
-            color: var(--gold);
-            display: block;
-            margin-bottom: 8px;
-            letter-spacing: -0.03em;
-        }
-
-        .stat-box .label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Formula boxes */
-        .formula-section { margin: 32px 0; }
-
-        .formula-intro {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--cyan);
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .formula-intro::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--cyan);
-            border-radius: 50%;
-        }
-
-        .formula-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            position: relative;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .formula-box .tag {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 9px;
-            color: var(--text-muted);
-            letter-spacing: 0.1em;
-        }
-
-        .formula-box pre {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            line-height: 1.9;
-            margin: 0;
-            white-space: pre-wrap;
-            color: var(--text-secondary);
-        }
-
-        .formula-box .keyword { color: #7c3aed; font-weight: 500; }
-        .formula-box .number { color: #d97706; }
-        .formula-box .string { color: var(--green); }
-        .formula-box .function { color: var(--cyan); }
-        .formula-box .comment { color: var(--text-muted); }
-        .formula-box .locked { color: var(--text-muted); }
-
-        .formula-unlock {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 16px;
-            padding-top: 14px;
-            border-top: 1px dashed var(--border);
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .formula-unlock span { color: var(--gold); font-weight: 600; }
-
-        /* Approach boxes */
-        .approach-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .approach-box.bad { border-left: 3px solid var(--red); background: var(--red-bg); }
-        .approach-box.good { border-left: 3px solid var(--green); background: var(--green-bg); }
-
-        .approach-box h4 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 14px;
-        }
-
-        .approach-box.bad h4 { color: var(--red); }
-        .approach-box.good h4 { color: var(--green); }
-
-        .approach-box ol { margin: 0; padding-left: 20px; font-size: 14px; }
-        .approach-box p.choice-text { color: var(--text-secondary); font-size: 14px; margin: 0; }
-
-        /* Operator box */
-        .operator-box {
-            background: var(--gold-bg);
-            border: 1px solid rgba(184, 150, 46, 0.2);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-top: 28px;
-        }
-
-        .operator-box h4 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gold);
-            margin-bottom: 12px;
-        }
-
-        .operator-box p { font-size: 13px; margin-bottom: 14px; }
-        .operator-box ul { margin: 0; padding-left: 20px; font-size: 13px; }
-        .operator-box li { margin-bottom: 8px; }
-
-        /* Firm cards */
-        .firm-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin: 16px 0;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .firm-card h4 {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--gold);
-            margin-bottom: 8px;
-        }
-
-        .firm-card p { font-size: 13px; margin-bottom: 6px; }
-
-        /* Regime grid */
-        .regime-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin: 24px 0;
-        }
-
-        .regime-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .regime-card.prime { border-top: 3px solid var(--green); }
-        .regime-card.favourable { border-top: 3px solid #3b82f6; }
-        .regime-card.marginal { border-top: 3px solid #f59e0b; }
-        .regime-card.degraded { border-top: 3px solid var(--red); }
-
-        .regime-card h5 {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
-
-        .regime-card.prime h5 { color: var(--green); }
-        .regime-card.favourable h5 { color: #3b82f6; }
-        .regime-card.marginal h5 { color: #f59e0b; }
-        .regime-card.degraded h5 { color: var(--red); }
-
-        .regime-card p { font-size: 11px; margin: 0; color: var(--text-muted); }
-
-        /* CTA Section */
-        .cta-section {
-            background: var(--surface);
-            border: 2px solid var(--gold);
-            border-radius: 24px;
-            padding: 40px 28px;
-            margin: 40px 0;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .cta-badge {
-            display: inline-block;
-            background: var(--gold);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 100px;
-            margin-bottom: 20px;
-            letter-spacing: 0.05em;
-        }
-
-        .cta-section h3 {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 12px;
-        }
-
-        .cta-section .price {
-            font-size: 48px;
-            font-weight: 300;
-            color: var(--gold);
-            margin-bottom: 4px;
-        }
-
-        .cta-section .price span {
-            font-size: 16px;
-            color: var(--text-muted);
-        }
-
-        .cta-section .price-sub {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 28px;
-        }
-
-        .cta-section .price-sub strong { color: var(--green); }
-
-        .value-stack {
-            background: var(--surface-dim);
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 28px;
-            text-align: left;
-        }
-
-        .value-stack h4 {
-            font-size: 10px;
-            color: var(--text-muted);
-            letter-spacing: 0.15em;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-
-        .value-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .value-item:last-child { border-bottom: none; }
-
-        .value-item::before {
-            content: '✓';
-            color: var(--green);
-            font-size: 12px;
-            margin-right: 12px;
-        }
-
-        .cta-button {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            background: var(--gold);
-            border: none;
-            border-radius: 100px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            text-decoration: none;
-            text-align: center;
-            transition: all 0.2s;
-        }
-
-        .cta-button:hover {
-            background: #a6851f;
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .guarantee {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 16px;
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .or-divider {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin: 16px 0;
-        }
-
-        .discord-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 14px;
-            background: #5865F2;
-            border-radius: 100px;
-            color: #fff;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .discord-button:hover { background: #4752c4; }
-        .discord-button svg { width: 18px; height: 18px; fill: currentColor; }
-
-        /* Quote */
-        .quote {
-            font-size: 18px;
-            font-style: italic;
-            color: var(--text);
-            text-align: center;
-            padding: 40px 24px;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            margin: 40px 0;
-            font-weight: 300;
-        }
-
-        .quote-author {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            font-style: normal;
-            margin-top: 16px;
-            font-weight: 500;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 32px 24px;
-            color: var(--text-muted);
-            font-size: 11px;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer .logo {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 0.2em;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-        }
-
-        .footer .logo span { color: var(--gold); }
-
-        @media print {
-            .page { padding: 40px 20px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Manifesto — Quant Prime</title>
+<link rel="icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F5F1;
+  --paper-raised:#FFFFFF;
+  --ink:#101215;
+  --ink-soft:#4A4E56;
+  --ink-faint:#9A9DA3;
+  --rule:#CFCABA;
+  --rule-soft:#E2DED2;
+  --gold:#A8842B;
+  --data:#0B6E99;
+  --warn:#B4342A;
+  --ok:#2F6B41;
+  --measure:66ch;
+}
+[data-theme="dark"]{
+  --paper:#0C0E11;
+  --paper-raised:#14171B;
+  --ink:#EDEDE9;
+  --ink-soft:#9CA0A7;
+  --ink-faint:#5C6069;
+  --rule:#23262B;
+  --rule-soft:#1A1D21;
+  --gold:#D4B94E;
+  --data:#4FB3E8;
+  --warn:#E06A5E;
+  --ok:#5CB37A;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Newsreader',Georgia,serif;
+  font-size:19px;
+  line-height:1.68;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ─── calibration rail ─────────────────────────────── */
+.rail{
+  position:fixed;left:0;top:0;bottom:0;width:76px;
+  border-right:1px solid var(--rule-soft);
+  display:none;z-index:40;background:var(--paper);
+}
+@media(min-width:1080px){ .rail{display:block} }
+
+.rail-ticks{position:absolute;inset:0;overflow:hidden}
+.rail-tick{position:absolute;right:0;height:1px;background:var(--rule);width:7px;opacity:.5}
+.rail-tick.major{width:15px;opacity:.9}
+.rail-progress{position:absolute;right:-1px;top:0;width:2px;background:var(--gold);height:0;transition:height .12s linear}
+.rail-marks{position:absolute;inset:0}
+.rail-mark{
+  position:absolute;left:0;width:76px;padding-right:24px;text-align:right;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;
+  color:var(--ink-faint);transition:color .35s ease;
+  cursor:pointer;text-decoration:none;display:block;
+}
+.rail-mark.on{color:var(--gold)}
+
+/* ─── shell ────────────────────────────────────────── */
+.shell{max-width:1180px;margin:0 auto;padding:0 28px}
+@media(min-width:1080px){ .shell{padding-left:150px;padding-right:48px} }
+
+/* ─── cover ────────────────────────────────────────── */
+.cover{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:96px 0 72px}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.34em;color:var(--ink-faint);margin-bottom:56px}
+.eyebrow b{color:var(--gold);font-weight:500}
+
+.cover h1{
+  font-family:'Archivo',Helvetica,sans-serif;font-weight:800;
+  font-size:clamp(56px,14.5vw,168px);line-height:.82;letter-spacing:-.045em;
+  text-transform:uppercase;margin-bottom:34px;
+}
+.cover h1 em{font-style:normal;color:var(--gold)}
+.cover-sub{font-size:clamp(19px,2.4vw,25px);font-weight:400;color:var(--ink-soft);max-width:32ch;line-height:1.4;margin-bottom:64px}
+
+.readout{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:26px 0;max-width:640px}
+.readout-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-faint);margin-bottom:16px}
+.readout-line{
+  font-family:'JetBrains Mono',monospace;font-size:clamp(13px,2.1vw,17px);
+  line-height:2.1;color:var(--ink-soft);white-space:nowrap;overflow-x:auto;scrollbar-width:none;
+}
+.readout-line::-webkit-scrollbar{display:none}
+.readout-line .v{color:var(--data)}
+.readout-line.result{color:var(--ink);font-weight:500}
+.readout-line.result .n{color:var(--warn);font-size:1.24em}
+.readout-verdict{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;
+  color:var(--warn);margin-top:14px;opacity:0;transition:opacity .7s ease;
+}
+.readout-verdict.on{opacity:1}
+.scroll-cue{margin-top:56px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-faint)}
+
+/* ─── sections ─────────────────────────────────────── */
+section.chapter{padding:104px 0;border-top:1px solid var(--rule-soft)}
+.chapter-no{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;color:var(--gold);margin-bottom:22px}
+@media(min-width:1080px){ .chapter-no{display:none} }
+
+h2.chapter-title{
+  font-family:'Archivo',Helvetica,sans-serif;font-weight:800;
+  font-size:clamp(32px,5.6vw,56px);line-height:.98;letter-spacing:-.035em;
+  text-transform:uppercase;margin-bottom:44px;max-width:15ch;
+}
+h2.chapter-title em{font-style:normal;color:var(--gold)}
+
+.chapter p{max-width:var(--measure);margin-bottom:24px;color:var(--ink-soft)}
+.chapter p strong{color:var(--ink);font-weight:500}
+.chapter p em{font-style:italic}
+.chapter p.opener{font-size:clamp(22px,3vw,29px);line-height:1.4;color:var(--ink);font-weight:500;margin-bottom:34px;max-width:26ch}
+
+h3.sub{font-family:'Archivo',Helvetica,sans-serif;font-size:19px;font-weight:700;letter-spacing:-.01em;text-transform:uppercase;color:var(--ink);margin:48px 0 14px}
+
+/* ─── dictionary entry ─────────────────────────────── */
+.entry{border-left:2px solid var(--gold);padding:6px 0 6px 26px;margin:40px 0 44px;max-width:var(--measure)}
+.entry-word{font-family:'Archivo',Helvetica,sans-serif;font-weight:800;font-size:38px;line-height:1.05;letter-spacing:-.03em;margin-bottom:6px}
+.entry-pron{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-faint);margin-bottom:16px}
+.entry-pos{font-style:italic;color:var(--gold);font-size:16px;margin-bottom:6px}
+.entry-def{color:var(--ink);margin-bottom:14px}
+.entry-note{font-size:16px;color:var(--ink-soft);margin:0}
+
+/* ─── pull ─────────────────────────────────────────── */
+.pull{
+  font-family:'Archivo',Helvetica,sans-serif;font-weight:600;
+  font-size:clamp(23px,3.2vw,33px);line-height:1.16;letter-spacing:-.025em;color:var(--ink);
+  border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);
+  padding:32px 0;margin:52px 0;max-width:26ch;
+}
+.pull.gold{border-top-color:var(--gold)}
+.pull.gold{color:var(--gold)}
+
+/* ─── measurement readout ──────────────────────────── */
+.measure-block{margin:52px 0;border-top:2px solid var(--ink);padding-top:22px;max-width:var(--measure)}
+.measure-scale{display:flex;align-items:flex-end;gap:3px;height:26px;margin-bottom:20px}
+.measure-scale i{flex:1;background:var(--rule);height:8px;display:block}
+.measure-scale i.f{background:var(--gold);height:20px}
+.measure-scale i.last{background:var(--warn);height:26px}
+.measure-figure{font-family:'Archivo',Helvetica,sans-serif;font-weight:800;font-size:clamp(64px,13vw,128px);line-height:.86;letter-spacing:-.05em;margin-bottom:12px}
+.measure-cap{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:var(--ink-soft)}
+.measure-cap b{color:var(--warn);font-weight:500}
+
+/* ─── code ─────────────────────────────────────────── */
+.code{background:var(--paper-raised);border:1px solid var(--rule);padding:26px;margin:40px 0;max-width:var(--measure);position:relative;overflow-x:auto}
+.code-tag{position:absolute;top:14px;right:18px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;color:var(--gold)}
+.code pre{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:2;color:var(--ink-soft);white-space:pre}
+.code .c{color:var(--ink-faint);font-style:italic}
+.code .k{color:var(--gold)}
+.code .n{color:var(--data)}
+.code .s{color:var(--ok)}
+.code .bad{color:var(--warn);font-weight:500}
+.code-note{margin-top:20px;padding-top:16px;border-top:1px solid var(--rule-soft);font-size:16px;color:var(--ink-soft)}
+
+/* ─── comparison ───────────────────────────────────── */
+.compare{display:grid;gap:0;border-top:1px solid var(--rule);margin:44px 0;max-width:var(--measure)}
+@media(min-width:760px){ .compare{grid-template-columns:1fr 1fr} }
+.compare-col{padding:26px 0;border-bottom:1px solid var(--rule-soft)}
+@media(min-width:760px){
+  .compare-col:first-child{padding-right:34px;border-right:1px solid var(--rule-soft)}
+  .compare-col:last-child{padding-left:34px}
+}
+.compare-col h4{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;font-weight:500;margin-bottom:18px}
+.compare-col:first-child h4{color:var(--warn)}
+.compare-col:last-child h4{color:var(--ok)}
+.compare-col ol{list-style:none;counter-reset:c}
+.compare-col li{counter-increment:c;font-size:17px;line-height:1.5;color:var(--ink-soft);padding:9px 0 9px 30px;position:relative}
+.compare-col li::before{content:counter(c);position:absolute;left:0;top:9px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint)}
+
+/* ─── regime scale ─────────────────────────────────── */
+.regime{margin:44px 0;max-width:var(--measure)}
+.regime-bar{display:flex;height:5px;margin-bottom:2px}
+.regime-bar i{flex:1;display:block}
+.regime-rows{border-top:1px solid var(--rule)}
+.regime-row{display:flex;align-items:baseline;gap:18px;padding:15px 0;border-bottom:1px solid var(--rule-soft)}
+.regime-row dt{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;width:104px;flex-shrink:0;font-weight:500}
+.regime-row dd{font-size:17px;color:var(--ink-soft)}
+
+/* ─── build list ───────────────────────────────────── */
+.builds{margin:36px 0;max-width:var(--measure);border-top:1px solid var(--rule)}
+.build{display:flex;gap:20px;align-items:baseline;padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+.build b{font-weight:500;color:var(--ink);width:190px;flex-shrink:0;font-size:17px}
+.build span{font-size:17px;color:var(--ink-soft)}
+@media(max-width:640px){ .build{flex-direction:column;gap:2px} .build b{width:auto} }
+
+/* ─── offer ────────────────────────────────────────── */
+.offer{border:2px solid var(--ink);padding:clamp(30px,5vw,52px);margin:56px 0;max-width:620px;background:var(--paper-raised)}
+.offer-head{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--gold);margin-bottom:20px}
+.offer h3{font-family:'Archivo',Helvetica,sans-serif;font-size:40px;font-weight:800;letter-spacing:-.035em;text-transform:uppercase;line-height:1;margin-bottom:8px}
+.offer-price{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink-soft);margin-bottom:30px}
+.offer-price s{color:var(--ink-faint);margin-right:8px}
+.offer ul{list-style:none;border-top:1px solid var(--rule);margin-bottom:32px}
+.offer li{padding:12px 0;border-bottom:1px solid var(--rule-soft);font-size:17px;color:var(--ink-soft);display:flex;gap:14px;align-items:baseline}
+.offer li::before{content:'';width:5px;height:5px;flex-shrink:0;background:var(--gold);border-radius:50%;transform:translateY(-3px)}
+.btn{
+  display:block;text-align:center;padding:19px;background:var(--ink);color:var(--paper);
+  text-decoration:none;font-family:'Archivo',sans-serif;font-size:16px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;
+  transition:background .18s ease,transform .18s ease;
+}
+.btn:hover{background:var(--gold);transform:translateY(-1px)}
+.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.btn-alt{display:block;text-align:center;padding:15px;margin-top:12px;border:1px solid var(--rule);color:var(--ink-soft);text-decoration:none;font-size:16px;transition:border-color .18s ease,color .18s ease}
+.btn-alt:hover{border-color:var(--gold);color:var(--gold)}
+.offer-fine{margin-top:18px;font-size:14px;color:var(--ink-faint);text-align:center}
+
+/* ─── close ────────────────────────────────────────── */
+.sig{font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:clamp(25px,3.6vw,36px);line-height:1.32;font-style:italic;max-width:26ch;margin:80px 0 26px}
+.sig-by{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:var(--ink-faint)}
+footer{border-top:1px solid var(--rule);padding:44px 0 72px;margin-top:72px;font-size:13px;color:var(--ink-faint);max-width:var(--measure);line-height:1.7}
+
+/* ─── theme toggle ─────────────────────────────────── */
+.toggle{
+  position:fixed;top:22px;right:22px;z-index:50;width:38px;height:38px;
+  border:1px solid var(--rule);background:var(--paper);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:border-color .18s ease;
+}
+.toggle:hover{border-color:var(--gold)}
+.toggle:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.toggle span{width:11px;height:11px;border-radius:50%;background:var(--ink);box-shadow:inset -3px -3px 0 0 var(--paper)}
+[data-theme="dark"] .toggle span{box-shadow:inset 3px 3px 0 0 var(--paper)}
+
+/* ─── entrance ─────────────────────────────────────── */
+.rise{opacity:0;transform:translateY(14px)}
+.rise.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
+@media(prefers-reduced-motion:reduce){
+  .rise,.rise.in{opacity:1;transform:none;transition:none}
+  .readout-verdict{opacity:1}
+  html{scroll-behavior:auto}
+}
+</style>
 </head>
 <body>
 
-<!-- Theme Toggle Button -->
-<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-    <svg class="moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-</button>
+<button class="toggle" onclick="flip()" aria-label="Switch theme"><span></span></button>
+
+<nav class="rail" aria-hidden="true">
+  <div class="rail-ticks" id="ticks"></div>
+  <div class="rail-progress" id="prog"></div>
+  <div class="rail-marks" id="marks"></div>
+</nav>
+
+<div class="shell">
+
+<header class="cover">
+  <div class="eyebrow">QUANT<b>PRIME</b> &nbsp;·&nbsp; A DOCUMENT, NOT A SALES PAGE</div>
+  <h1>The<br>Mani<em>festo</em></h1>
+  <p class="cover-sub">Why I stopped predicting and started measuring.</p>
+
+  <div class="readout">
+    <div class="readout-label">EXPECTANCY · 1,398 TRADES · 81.5% WIN RATE</div>
+    <div class="readout-line" id="l1">E = (W × Aw) − (L × Al) − C</div>
+    <div class="readout-line" id="l2">&nbsp;</div>
+    <div class="readout-line result" id="l3">&nbsp;</div>
+    <div class="readout-verdict" id="verdict">DOES NOT SURVIVE EXECUTION</div>
+  </div>
+
+  <div class="scroll-cue">↓ &nbsp; TEN MINUTES</div>
+</header>
+
+<section class="chapter" id="s1">
+  <div class="chapter-no">01</div>
+  <h2 class="chapter-title rise">One <em>hour</em></h2>
+
+  <p class="opener rise">I turned £800 into £1,300 in a month, then gave it all back in an hour.</p>
+
+  <p class="rise">I was eighteen. It was my own money in a live FX account, and I had spent months learning the market properly before putting any of it at risk. For four weeks it worked. Then one session I stopped following what I had built and started following what I felt, and the whole month was undone before the afternoon was out.</p>
+
+  <p class="rise">What bothered me afterwards was not the money. It was that I could not explain what had happened in a way that would stop it happening again. I had no record of what my method actually was, no measurement of whether it had ever worked, and no way to tell the difference between a bad run and a bad system.</p>
+
+  <p class="rise">I had opinions about the market. I had no evidence about myself.</p>
+
+  <p class="rise">So I stopped buying courses and started measuring. Not because measurement is glamorous, but because it was the only thing I had not tried.</p>
+
+  <div class="pull gold rise">This is what I would hand my eighteen year old self. All of it is given away, including the parts that make my own products look worse.</div>
+</section>
+
+<section class="chapter" id="s2">
+  <div class="chapter-no">02</div>
+  <h2 class="chapter-title rise">What <em>quantitative</em> actually means</h2>
+
+  <p class="opener rise">It is not a maths degree. It is a method.</p>
+
+  <div class="entry rise">
+    <div class="entry-word">quantitative</div>
+    <div class="entry-pron">/ˈkwɒn.tɪ.tə.tɪv/</div>
+    <div class="entry-pos">adjective</div>
+    <p class="entry-def">Relating to, measuring, or measured by the <strong>quantity</strong> of something rather than its quality.</p>
+    <p class="entry-note">From the Latin <em>quantitas</em>, "how much". Its opposite is qualitative, which describes a thing by its character. A qualitative account of a trade is that it looked strong. A quantitative one is that price closed 2.3 standard deviations above its twenty period mean.</p>
+  </div>
+
+  <p class="rise">Applied to trading, that gives a working definition with nothing to do with hedge funds or physicists:</p>
+
+  <p class="rise"><strong>Quantitative trading means every decision is expressed as a measurable quantity, so it can be tested before you risk anything on it.</strong></p>
+
+  <p class="rise">Which makes the real difference not intelligence, and not access to expensive data. It is whether a decision survives being written down.</p>
+
+  <p class="rise">"I go long when the market looks strong" cannot be tested. It changes shape depending on how you feel when you read it. "I go long when price sweeps the prior session low and closes back above it within three bars" can be tested, and inside an hour you will know whether it has ever worked.</p>
+
+  <p class="rise">A system, in this sense, is not software. It is a set of statements precise enough that two people reading them would take the same trade. Automation comes later and only matters once that exists.</p>
+
+  <p class="rise">Most retail methods are the first kind. That is why somebody can follow the same strategy for two years without ever establishing whether it works.</p>
+
+  <div class="compare rise">
+    <div class="compare-col">
+      <h4>QUALITATIVE</h4>
+      <ol>
+        <li>Find a setup that looks good</li>
+        <li>Trust your read on the day</li>
+        <li>Move the stop when it gets close</li>
+        <li>Exit on fear or greed</li>
+        <li>Conclude the market is manipulated</li>
+        <li>Look for a better setup</li>
+      </ol>
+    </div>
+    <div class="compare-col">
+      <h4>QUANTITATIVE</h4>
+      <ol>
+        <li>Write the rule down precisely</li>
+        <li>Test it on data you did not choose</li>
+        <li>Include the cost of trading it</li>
+        <li>Check the sample is large enough to mean anything</li>
+        <li>Size it so a losing run does not end you</li>
+        <li>Keep measuring after it goes live</li>
+      </ol>
+    </div>
+  </div>
+
+  <p class="rise">The second column is not harder. It is less enjoyable, and nobody sells a course on it, because there is nothing left to keep buying afterwards.</p>
+</section>
+
+<section class="chapter" id="s3">
+  <div class="chapter-no">03</div>
+  <h2 class="chapter-title rise">The number that cost me <em>seventeen hours</em></h2>
+
+  <p class="opener rise">The most useful thing I know about trading.</p>
+
+  <p class="rise">Earlier this year I set out to prove a volatility fade setup worked on the one minute chart. I marked every trade by hand rather than automating it, because I did not trust a script to be honest with me.</p>
+
+  <p class="rise">Seventeen hours of clicking. 1,398 trades.</p>
+
+  <div class="measure-block rise">
+    <div class="measure-scale">
+      <i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="f"></i>
+      <i class="f"></i><i class="f"></i><i class="f"></i><i></i><i class="last"></i>
+    </div>
+    <div class="measure-figure">81.5%</div>
+    <div class="measure-cap">WIN RATE &nbsp;·&nbsp; 1,398 TRADES &nbsp;·&nbsp; <b>UNPROFITABLE</b></div>
+  </div>
+
+  <p class="rise">Four out of five trades correct, and the money still went the wrong way.</p>
+
+  <p class="rise">The average winner came in under five pips. Spread and commission together cost roughly three pips per round trip. An 81.5% win rate on a four pip edge against three pips of cost is not an edge. It is a rounding error you are paying a broker to generate on your behalf.</p>
+
+  <div class="pull rise">Win rate is the least useful number in a backtest. It is also the one every course sells you on, because it is the one that looks best in a screenshot.</div>
+
+  <p class="rise">What matters is expectancy, and it takes ten minutes.</p>
+
+  <div class="code rise">
+    <span class="code-tag">GIVEN AWAY IN FULL</span>
+<pre><span class="c">// W  win rate as a decimal        0.815</span>
+<span class="c">// Aw average winning trade        in pips</span>
+<span class="c">// L  loss rate                    1 − W</span>
+<span class="c">// Al average losing trade</span>
+<span class="c">// C  full round trip cost         spread + commission</span>
+
+<span class="k">E</span> = (W × Aw) − (L × Al) − C
+
+<span class="c">// the one that caught me</span>
+<span class="k">E</span> = (<span class="n">0.815</span> × <span class="n">4.2</span>) − (<span class="n">0.185</span> × <span class="n">6.1</span>) − <span class="n">3.0</span>
+<span class="k">E</span> = <span class="n">3.42</span> − <span class="n">1.13</span> − <span class="n">3.0</span>
+<span class="k">E</span> = <span class="bad">−0.71</span> pips per trade
+
+<span class="k">if</span> E &lt;= <span class="n">0</span> <span class="k">then</span> <span class="s">"does not survive execution"</span></pre>
+    <div class="code-note">That is the entire formula. There is no locked version and no premium tier where the real one lives. Anybody withholding this is selling you the withholding.</div>
+  </div>
+
+  <p class="rise">Run it tonight on whatever you are trading. If what is left is at or below zero, the win rate does not matter, the entry does not matter, and no indicator will fix it.</p>
+
+  <div class="pull gold rise">Almost nobody loses because they were wrong about the market. They lose because the thing that was right on paper did not survive contact with cost.</div>
+</section>
+
+<section class="chapter" id="s4">
+  <div class="chapter-no">04</div>
+  <h2 class="chapter-title rise">Not every week is the <em>same week</em></h2>
+
+  <p class="opener rise">A system that works does not work all the time.</p>
+
+  <p class="rise">This is the second thing that took me too long. A method has conditions it was built for, and when those conditions are absent it does not get slightly worse. It stops working.</p>
+
+  <p class="rise">Most losses from a system that genuinely has an edge come from running it in the wrong conditions, not from the system being wrong.</p>
+
+  <p class="rise">So the question before a trade is not only whether this is a setup. It is whether this is the kind of market the setup was built for. And that question is measurable: volatility either sits near its own recent average or it does not, trend strength is either present or it is not. Combine the two and market quality has a grade.</p>
+
+  <div class="regime rise">
+    <div class="regime-bar">
+      <i style="background:var(--ok)"></i>
+      <i style="background:var(--data)"></i>
+      <i style="background:var(--gold)"></i>
+      <i style="background:var(--warn)"></i>
+    </div>
+    <dl class="regime-rows">
+      <div class="regime-row"><dt style="color:var(--ok)">PRIME</dt><dd>Conditions match what the system was measured against. Full size.</dd></div>
+      <div class="regime-row"><dt style="color:var(--data)">FAVOURABLE</dt><dd>Workable. Standard size.</dd></div>
+      <div class="regime-row"><dt style="color:var(--gold)">MARGINAL</dt><dd>Something is off. Reduce, or wait.</dd></div>
+      <div class="regime-row"><dt style="color:var(--warn)">DEGRADED</dt><dd>Wrong conditions entirely. Minimal, or nothing.</dd></div>
+    </dl>
+  </div>
+
+  <p class="rise">The uncomfortable part is that a run of enormous candles usually pushes the grade <em>down</em>, not up. Volatility that has broken away from its own average is not opportunity. It is the market doing something other than what your system was measured against.</p>
+
+  <p class="rise">Every instrument I build reports this grade, including when it is bad, and including when it is bad for my own configuration.</p>
+</section>
+
+<section class="chapter" id="s5">
+  <div class="chapter-no">05</div>
+  <h2 class="chapter-title rise">What most education actually <em>sells</em></h2>
+
+  <p class="opener rise">Certainty, and then dependency.</p>
+
+  <p class="rise">Trading education has an unusual problem. The honest version of the product is unsatisfying, and the unsatisfying version does not sell, so almost everybody sells the other one.</p>
+
+  <p class="rise">The honest version says: here is a method, here are the conditions it needs, here is where it fails, here is the drawdown you will have to sit through, and here is the arithmetic that decides whether it survives your broker's costs.</p>
+
+  <p class="rise">The version that sells says: here is a setup that works.</p>
+
+  <p class="rise">Notice what follows. If a strategy comes with no stated failure mode, every loss must be your fault. You were undisciplined. You lacked conviction. You did not follow it properly. The product can never be wrong, which is precisely why it keeps selling.</p>
+
+  <div class="pull rise">A strategy with no documented failure mode has not been tested. It has been marketed.</div>
+
+  <p class="rise">The second problem is dependency. A signal you cannot generate yourself. A group you have to keep paying to stay inside. A setup you cannot evaluate without somebody confirming it. None of those leave you owning anything, and the day you stop paying you are back where you started, only older.</p>
+
+  <p class="rise">The test I would apply to anybody selling you something, including me:</p>
+
+  <div class="pull gold rise">After twelve months of this, do I need them less, or more?</div>
+
+  <p class="rise">If the answer is more, you are not buying an education. You are renting a feeling.</p>
+</section>
+
+<section class="chapter" id="s6">
+  <div class="chapter-no">06</div>
+  <h2 class="chapter-title rise">What Quant Prime <em>is</em></h2>
+
+  <p class="opener rise">A research and software company. Not a signals group.</p>
+
+  <p class="rise">I build instruments that measure the market rather than predict it, publish what I find whether it flatters me or not, and hand people the tools to check my work on their own instrument rather than take my word for it.</p>
+
+  <p class="rise">Every system we publish is one we run and test ourselves, and every result arrives with its boundaries stated first.</p>
+
+  <h3 class="sub rise">Measured, not predicted</h3>
+  <p class="rise">Nothing here forecasts. The instruments describe what has happened and what conditions currently exist. What you do with that is yours.</p>
+
+  <h3 class="sub rise">Failure modes published first</h3>
+  <p class="rise">One of our instruments stops working above the fifteen minute chart. That is written into the material rather than buried in a footnote. One of the research papers grades a configuration of our own work as DEGRADED, and it stayed in.</p>
+
+  <h3 class="sub rise">Built to be understood</h3>
+  <p class="rise">The Build system hands you components rather than a finished chart, because a chart configured by somebody else is a chart you cannot fix.</p>
+
+  <div class="builds rise">
+    <div class="build"><b>Regime scanner</b><span>Market quality, graded, per timeframe</span></div>
+    <div class="build"><b>Volatility engine</b><span>Expansion measured against its own baseline</span></div>
+    <div class="build"><b>Structure dashboard</b><span>Liquidity and alignment across timeframes</span></div>
+    <div class="build"><b>Position sizer</b><span>Size from your stop, not from habit</span></div>
+    <div class="build"><b>Reports</b><span>Test all of the above on your own pair, and disagree with us</span></div>
+  </div>
+
+  <p class="rise">That last one matters most. Every claim in this document is checkable inside the product, on your instrument, with your data. If the reports contradict my defaults on your pair, believe the reports.</p>
+</section>
+
+<section class="chapter" id="s7">
+  <div class="chapter-no">07</div>
+  <h2 class="chapter-title rise">Where to <em>start</em></h2>
+
+  <p class="opener rise">You do not need any of this to use what you have just read.</p>
+
+  <p class="rise">The expectancy formula is yours. Run it tonight on whatever you are trading. If the answer is negative, you have learned more in ten minutes than most people manage in a year, and it cost you nothing.</p>
+
+  <p class="rise">If you want the rest, Research opens the library for thirty days without charging anything.</p>
+
+  <div class="offer rise">
+    <div class="offer-head">START HERE</div>
+    <h3>Research</h3>
+    <div class="offer-price"><s>£8/mo</s> £0 for 30 days, then £8/mo · cancel anytime</div>
+    <ul>
+      <li>Ten research papers, failure modes included</li>
+      <li>The Build system, 255 combinations</li>
+      <li>Daily market recaps and the full archive</li>
+      <li>Private research community</li>
+      <li>Full dashboard access</li>
+    </ul>
+    <a class="btn" href="https://quantprime.uk/checkout?tier=research">Start 30 days free</a>
+    <a class="btn-alt" href="https://discord.gg/EAHKwd7HvX" target="_blank" rel="noopener">Or join the free community</a>
+    <div class="offer-fine">44 days risk free · 30 day trial plus a 14 day money back guarantee</div>
+  </div>
+
+  <p class="rise">And if a month goes by and you have not opened anything, cancel before you are charged. I would rather have fifty members who read everything than five hundred who forgot they subscribed.</p>
+
+  <div class="sig">"The market doesn't reward conviction. It rewards precision. Stop guessing. Start measuring."</div>
+  <div class="sig-by">SEAN DAVIES &nbsp;·&nbsp; FOUNDER</div>
+
+  <footer>
+    © 2026 Quant Prime. Educational content only, not financial advice. Quant Prime is not FCA authorised. All performance figures are backtested or hand tested and hypothetical; no live capital produced them. Past performance does not indicate future results. Trading carries risk of loss.
+  </footer>
+</section>
+
+</div>
 
 <script>
-function toggleTheme() {
-    const html = document.documentElement;
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('qp-manifesto-theme', newTheme);
+function flip(){
+  const r=document.documentElement;
+  const next=r.getAttribute('data-theme')==='dark'?'light':'dark';
+  r.setAttribute('data-theme',next);
+  try{localStorage.setItem('qp-manifesto-theme',next)}catch(e){}
 }
+(function(){
+  try{ if(localStorage.getItem('qp-manifesto-theme')==='dark')
+    document.documentElement.setAttribute('data-theme','dark'); }catch(e){}
+})();
 
-// Load saved theme
-(function() {
-    const saved = localStorage.getItem('qp-manifesto-theme');
-    if (saved === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* calibration rail */
+(function(){
+  const t=document.getElementById('ticks');
+  if(t){
+    const n=Math.ceil(window.innerHeight/13)+2;
+    let h='';
+    for(let i=0;i<n;i++){
+      h+='<i class="rail-tick'+(i%5===0?' major':'')+'" style="top:'+(i*13)+'px"></i>';
     }
+    t.innerHTML=h;
+  }
+  const marks=document.getElementById('marks');
+  const secs=[].slice.call(document.querySelectorAll('section.chapter'));
+  if(marks){
+    marks.innerHTML=secs.map(function(s,i){
+      return '<a class="rail-mark" href="#'+s.id+'" style="top:'+(20+i*7)+'%">'+
+        String(i+1).padStart(2,'0')+'</a>';
+    }).join('');
+  }
+  const prog=document.getElementById('prog');
+  const railMarks=[].slice.call(document.querySelectorAll('.rail-mark'));
+  function onScroll(){
+    const max=document.body.scrollHeight-window.innerHeight;
+    if(prog) prog.style.height=(max>0?(window.scrollY/max)*100:0)+'%';
+    let cur=-1;
+    secs.forEach(function(s,i){ if(s.getBoundingClientRect().top<window.innerHeight*0.4) cur=i; });
+    railMarks.forEach(function(m,i){ m.classList.toggle('on',i===cur); });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+
+/* section entrances */
+(function(){
+  const els=[].slice.call(document.querySelectorAll('.rise'));
+  if(reduce||!('IntersectionObserver' in window)){
+    els.forEach(function(e){e.classList.add('in')}); return;
+  }
+  const io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  },{rootMargin:'0px 0px -8% 0px',threshold:0.05});
+  els.forEach(function(e){io.observe(e)});
+})();
+
+/* the hero equation resolves */
+(function(){
+  const l2=document.getElementById('l2'),
+        l3=document.getElementById('l3'),
+        v =document.getElementById('verdict');
+  if(!l2||!l3) return;
+
+  const substituted='E = (<span class="v">0.815</span> × <span class="v">4.2</span>) − (<span class="v">0.185</span> × <span class="v">6.1</span>) − <span class="v">3.0</span>';
+
+  if(reduce){
+    l2.innerHTML=substituted;
+    l3.innerHTML='E = <span class="n">−0.71</span> pips per trade';
+    v.classList.add('on');
+    return;
+  }
+
+  setTimeout(function(){ l2.innerHTML=substituted; },900);
+
+  setTimeout(function(){
+    const start=3.42, target=-0.71, steps=34;
+    let i=0;
+    const tick=setInterval(function(){
+      i++;
+      const val=start+(target-start)*(i/steps);
+      l3.innerHTML='E = <span class="n">'+(val>=0?'':'−')+Math.abs(val).toFixed(2)+'</span> pips per trade';
+      if(i>=steps){
+        clearInterval(tick);
+        l3.innerHTML='E = <span class="n">−0.71</span> pips per trade';
+        v.classList.add('on');
+      }
+    },26);
+  },1750);
 })();
 </script>
-
-<!-- COVER -->
-<div class="cover">
-    <div class="cover-logo">QUANT<span>PRIME</span></div>
-    <h1>The Manifesto</h1>
-    <p class="cover-subtitle">An Introduction to Quantitative Trading</p>
-    <div class="cover-formula">α = Σ(w<sub>i</sub> × r<sub>i</sub>) − β × R<sub>m</sub></div>
-    <p class="cover-tagline">Where Mathematics Meets Markets</p>
-</div>
-
-<!-- PAGE 1: THE GREAT DIVIDE -->
-<div class="page">
-    <h1 class="section-title">The Great <span class="gold">Divide</span></h1>
-    
-    <p class="lead">There are two types of traders.</p>
-    
-    <p>The first watches YouTube, buys courses from self-proclaimed gurus, and hopes their "intuition" beats algorithms built by mathematicians with PhDs.</p>
-    
-    <p>The second operates in silence — managing billions through systems so precise that emotion never enters the equation.</p>
-    
-    <p><strong>The first group loses. Consistently.</strong></p>
-    <p><strong>The second group runs the world.</strong></p>
-    
-    <div class="stat-box">
-        <span class="number">66%</span>
-        <span class="label">Average Annual Return — Renaissance Medallion Fund</span>
-    </div>
-    
-    <div class="formula-section">
-        <div class="formula-intro">How We Calculate Edge</div>
-        <div class="formula-box">
-            <span class="tag">QP.CORE.001</span>
-            <pre><span class="comment">// Basic edge formula</span>
-<span class="keyword">edge</span> = (<span class="function">winRate</span> × avgWin) − (<span class="function">lossRate</span> × avgLoss)
-<span class="keyword">if</span> edge > <span class="number">0</span> <span class="keyword">then</span> <span class="string">"DEPLOY"</span>
-
-<span class="comment">// Our proprietary edge calculation</span>
-<span class="keyword">qp_edge</span> = <span class="locked">████████████████████████</span></pre>
-            <div class="formula-unlock">🔒 Full formula in <span>Research Tier</span></div>
-        </div>
-    </div>
-    
-    <p>This isn't luck. This is <strong>quantitative trading</strong> — extracting consistent returns through mathematics.</p>
-    
-    <div class="highlight">
-        <p>This guide exists because you deserve to know how the game is actually played.</p>
-    </div>
-</div>
-
-<!-- PAGE 2: WHAT IS QUANT TRADING -->
-<div class="page">
-    <h1 class="section-title">What Is <span class="gold">Quant Trading</span>?</h1>
-    
-    <p class="lead">Precision over prediction.</p>
-    
-    <p><strong>Quantitative trading</strong> uses mathematical models to identify opportunities — with minimal human intervention.</p>
-    
-    <p>Where retail sees candles, quants see:</p>
-    
-    <ul>
-        <li><strong>Probability distributions</strong></li>
-        <li><strong>Statistical edges</strong></li>
-        <li><strong>Correlation matrices</strong></li>
-        <li><strong>Regime states</strong></li>
-    </ul>
-    
-    <div class="formula-section">
-        <div class="formula-intro">Signal Generation</div>
-        <div class="formula-box">
-            <span class="tag">QP.SIGNAL.002</span>
-            <pre><span class="comment">// Momentum signal logic</span>
-<span class="keyword">mom</span> = <span class="function">close</span> − <span class="function">close</span>[<span class="number">20</span>]
-<span class="keyword">vol</span> = <span class="function">stdev</span>(close, <span class="number">20</span>)
-<span class="keyword">z_score</span> = mom / vol
-
-<span class="keyword">if</span> z_score > <span class="number">1.5</span> <span class="keyword">AND</span> regime == <span class="string">"PRIME"</span>:
-    <span class="keyword">signal</span> = <span class="string">"BUY"</span></pre>
-        </div>
-    </div>
-    
-    <p>The difference isn't intelligence. It's <strong>methodology</strong>.</p>
-    
-    <div class="approach-box bad">
-        <h4>❌ Retail Approach</h4>
-        <ol>
-            <li>Find a "setup" that looks good</li>
-            <li>Trust your gut</li>
-            <li>Move stop loss when close</li>
-            <li>Exit on fear or greed</li>
-            <li>Blame the market</li>
-            <li>Repeat until broke</li>
-        </ol>
-    </div>
-    
-    <div class="approach-box good">
-        <h4>✓ Quant Approach</h4>
-        <ol>
-            <li>Formulate hypothesis</li>
-            <li>Build mathematical model</li>
-            <li>Backtest rigorously</li>
-            <li>Measure significance</li>
-            <li>Optimize sizing</li>
-            <li>Monitor and adapt</li>
-        </ol>
-    </div>
-    
-    <p style="text-align: center;"><strong>One is gambling. The other is engineering.</strong></p>
-</div>
-
-<!-- PAGE 3: THE GIANTS -->
-<div class="page">
-    <h1 class="section-title">The <span class="gold">Giants</span></h1>
-    
-    <p class="lead">Who's already doing this?</p>
-    
-    <div class="firm-card">
-        <h4>Renaissance Technologies</h4>
-        <p><strong>66% annual returns</strong> since 1988. They hire mathematicians and physicists, not traders.</p>
-    </div>
-    
-    <div class="firm-card">
-        <h4>Two Sigma</h4>
-        <p><strong>$60B</strong> under management. Every market movement contains information. Their job: extract it.</p>
-    </div>
-    
-    <div class="firm-card">
-        <h4>Citadel</h4>
-        <p><strong>25% of all US equity volume.</strong> When you click "buy," they're often on the other side.</p>
-    </div>
-    
-    <h3>What They All Share</h3>
-    <ol>
-        <li>Zero emotion in decisions</li>
-        <li>Everything tested first</li>
-        <li>Edge quantified mathematically</li>
-        <li>Adapt to regime changes</li>
-        <li>Risk managed with precision</li>
-    </ol>
-</div>
-
-<!-- PAGE 4: REGIME & RISK -->
-<div class="page">
-    <h1 class="section-title">Regime <span class="gold">Detection</span></h1>
-    
-    <p>Markets shift. Quants detect it live.</p>
-    
-    <div class="regime-grid">
-        <div class="regime-card prime">
-            <h5>PRIME</h5>
-            <p>Full deployment</p>
-        </div>
-        <div class="regime-card favourable">
-            <h5>FAVOURABLE</h5>
-            <p>Standard size</p>
-        </div>
-        <div class="regime-card marginal">
-            <h5>MARGINAL</h5>
-            <p>Reduced exposure</p>
-        </div>
-        <div class="regime-card degraded">
-            <h5>DEGRADED</h5>
-            <p>Minimal trading</p>
-        </div>
-    </div>
-    
-    <h2>Risk Management</h2>
-    <p>Retail: "Where's my stop?"</p>
-    <p>Quants calculate:</p>
-    
-    <div class="formula-section">
-        <div class="formula-intro">Risk Calculation</div>
-        <div class="formula-box">
-            <span class="tag">QP.RISK.003</span>
-            <pre><span class="keyword">VaR95</span> = value × z × σ
-<span class="keyword">max_pos</span> = risk_per_trade / stop_dist
-<span class="keyword">kelly_f</span> = (win% × payoff − loss%) / payoff
-
-<span class="comment">// Correlation-adjusted sizing</span>
-<span class="keyword">adj</span> = <span class="locked">████████████████████</span></pre>
-            <div class="formula-unlock">🔒 Risk system in <span>Terminal Tier</span></div>
-        </div>
-    </div>
-    
-    <div class="highlight">
-        <p>Risk isn't an afterthought. It's the foundation.</p>
-    </div>
-</div>
-
-<!-- PAGE 5: THE QP WAY -->
-<div class="page">
-    <h1 class="section-title">The <span class="gold">QP</span> Way</h1>
-    
-    <p class="lead">We're not another course.</p>
-    
-    <div class="highlight">
-        <p><strong>We're a quant firm that trades real capital — and we've opened our methodology.</strong></p>
-    </div>
-    
-    <h3>We Trade Real Money</h3>
-    <p>Our algorithms run daily. We share what actually works.</p>
-    
-    <h3>Systematic Process</h3>
-    <p>Hypothesis → Model → Test → Validate → Deploy → Monitor</p>
-    
-    <h3>Regime Awareness</h3>
-    <p>Systems detect shifts and adjust automatically.</p>
-    
-    <div class="operator-box">
-        <h4>What Operators Build</h4>
-        <p>Custom instruments from our core systems:</p>
-        <ul>
-            <li><strong>Regime Scanner</strong> — Deployment conditions</li>
-            <li><strong>Volatility Engine</strong> — Recoil ATR logic</li>
-            <li><strong>Structure Dashboard</strong> — Meridian alignment</li>
-            <li><strong>Entry Algorithm</strong> — Signal generation</li>
-            <li><strong>Risk Engine</strong> — Position sizing</li>
-        </ul>
-    </div>
-</div>
-
-<!-- PAGE 6: YOUR PATH + CTA -->
-<div class="page">
-    <h1 class="section-title">Your <span class="gold">Path</span></h1>
-    
-    <p class="lead">Two choices.</p>
-    
-    <div class="approach-box bad">
-        <h4>Stay Retail</h4>
-        <p class="choice-text">Keep drawing lines. Trust your gut. Watch your account bleed. Join the 90%.</p>
-    </div>
-    
-    <div class="approach-box good">
-        <h4>Go Quant</h4>
-        <p class="choice-text">Learn professional methodology. Quantify your edge. Manage risk like a fund. Join the minority who actually profit.</p>
-    </div>
-    
-    <div class="cta-section">
-        <div class="cta-badge">🎯 START HERE FREE</div>
-        <h3>Begin Your Quant Journey</h3>
-        
-        <div class="price" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
-            <span style="font-size: 24px; color: var(--text-muted); text-decoration: line-through; text-decoration-color: #dc2626; text-decoration-thickness: 2px;">£8/mo</span>
-            <span style="font-size: 48px; color: #16a34a; font-weight: 300;">£0</span>
-        </div>
-        <p class="price-sub">for 30 days, then £8/mo · <strong>Cancel anytime</strong></p>
-        
-        <div class="value-stack">
-            <h4>EVERYTHING INCLUDED</h4>
-            <div class="value-item">Daily market movement recaps</div>
-            <div class="value-item">Weekly analysis summaries</div>
-            <div class="value-item">10 in-depth research papers</div>
-            <div class="value-item">12 quant code snippets</div>
-            <div class="value-item">Private research community</div>
-            <div class="value-item">Full dashboard access</div>
-        </div>
-        
-        <a href="https://quantprime.uk/checkout?tier=research" class="cta-button">
-            Start Your Free Trial →
-        </a>
-        <div class="guarantee">🛡️ <strong style="color: #16a34a;">44 days risk-free</strong> — 30-day trial + 14-day money-back guarantee</div>
-        
-        <p class="or-divider">— or join free community —</p>
-        
-        <a href="https://discord.gg/EAHKwd7HvX" class="discord-button" target="_blank">
-            <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.125-.094.25-.192.373-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-            Join Free Community
-        </a>
-    </div>
-    
-    <div class="quote">
-        "The market doesn't reward conviction. It rewards precision. Stop guessing. Start measuring."
-        <span class="quote-author">— Sean Davies, Founder</span>
-    </div>
-    
-    <div class="footer">
-        <div class="logo">QUANT<span>PRIME</span></div>
-        <p>© 2026 Quant Prime. Educational only. Not financial advice.</p>
-    </div>
-</div>
-
 </body>
 </html>
