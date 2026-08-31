@@ -7460,9 +7460,24 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <!-- COCKPIT -->
   <div class="view" id="view-cockpit">
     <div class="view-header">
-      <div class="eyebrow">Product</div>
+      <div class="eyebrow">Suite Tier</div>
       <h2>Full Suite — <em>Complete framework</em></h2>
     </div>
+    
+    <!-- Suite Sub-Navigation -->
+    <div class="suite-tabs" style="display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0;">
+      <button class="suite-tab active" data-suite-panel="cockpit" onclick="switchSuiteTab('cockpit')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Cockpit
+      </button>
+      <button class="suite-tab" data-suite-panel="performance" onclick="switchSuiteTab('performance')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
+        Performance
+      </button>
+    </div>
+    
+    <!-- COCKPIT PANEL -->
+    <div class="suite-panel active" id="suite-panel-cockpit">
     
     <!-- Animated Hero -->
     <div class="instrument-hero cockpit-hero" style="margin-bottom: 24px;">
@@ -7583,10 +7598,14 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
     
-    <!-- PERFORMANCE REPORT SECTION -->
-    <div class="perf-section" id="perf-section" style="margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border);">
+    </div><!-- END suite-panel-cockpit -->
+    
+    <!-- PERFORMANCE PANEL -->
+    <div class="suite-panel" id="suite-panel-performance">
+    
+    <div class="perf-section" id="perf-section">
       <div class="view-header" style="margin-bottom: 24px;">
-        <div class="eyebrow">Suite Feature</div>
+        <div class="eyebrow">Analysis Tool</div>
         <h3 style="font-size: 24px; margin: 0;">Performance <em>Report</em></h3>
         <p style="color: var(--text-2); margin-top: 8px; font-size: 14px;">Upload your MT5 trade history. Get the analysis you can't find anywhere else.</p>
       </div>
@@ -7737,8 +7756,21 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
       </div>
     </div>
-  </div>
+    </div><!-- END suite-panel-performance -->
+  </div><!-- END view-cockpit -->
 
+  <!-- Suite Tab Styles -->
+  <style>
+    .suite-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .suite-tab { display: flex; align-items: center; gap: 8px; background: none; border: none; padding: 12px 20px; color: var(--text-2); font-size: 14px; font-weight: 500; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.2s; }
+    .suite-tab:hover { color: var(--text-1); background: var(--surface-2); }
+    .suite-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+    .suite-tab svg { opacity: 0.6; }
+    .suite-tab.active svg { opacity: 1; stroke: var(--gold); }
+    .suite-panel { display: none; }
+    .suite-panel.active { display: block; }
+  </style>
+  
   <!-- Performance Report Styles (used by .perf-section inside Suite view) -->
   <style>
     .perf-section .perf-container, #view-performance .perf-container { max-width: 1000px; }
@@ -7972,14 +8004,14 @@ button, .nav-item, .room, .video-item, .filter-chip {
     .hour-window { fill: rgba(201,168,76,0.1); }
     
     /* Win/Loss comparison */
-    .wl-compare { display: flex; align-items: center; gap: 24px; padding: 16px 0; }
-    .wl-bar-container { flex: 1; }
-    .wl-bar { height: 32px; border-radius: 4px; display: flex; align-items: center; padding: 0 12px; }
-    .wl-bar.win { background: var(--green); justify-content: flex-end; }
-    .wl-bar.loss { background: var(--red); justify-content: flex-start; }
-    .wl-bar span { color: #fff; font-size: 13px; font-weight: 600; font-family: var(--mono); }
-    .wl-label { font-size: 11px; color: var(--text-3); margin-top: 4px; }
-    .wl-vs { font-size: 12px; color: var(--text-3); font-weight: 600; }
+    .wl-compare { display: flex; align-items: center; gap: 16px; padding: 16px 0; }
+    .wl-bar-container { flex: 1; min-width: 0; }
+    .wl-bar { height: 36px; border-radius: 6px; display: flex; align-items: center; padding: 0 12px; min-width: 60px; }
+    .wl-bar.win { background: linear-gradient(90deg, var(--green), rgba(38,162,105,0.8)); justify-content: center; margin-left: auto; }
+    .wl-bar.loss { background: linear-gradient(90deg, rgba(239,68,68,0.8), var(--red)); justify-content: center; margin-right: auto; }
+    .wl-bar span { color: #fff; font-size: 14px; font-weight: 700; font-family: var(--mono); white-space: nowrap; }
+    .wl-label { font-size: 11px; color: var(--text-3); margin-top: 6px; }
+    .wl-vs { font-size: 14px; color: var(--text-2); font-weight: 700; flex-shrink: 0; }
     
     /* Compact tables */
     .perf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -10584,6 +10616,14 @@ function handleUrlRouting() {
         openGuide(_targetGuide);
       }
     }
+    
+    // Suite tab deep links (?view=performance, ?view=report)
+    if (_targetView && ['performance', 'report'].includes(_targetView.toLowerCase())) {
+      console.log('[URL Routing] Switching to Performance tab in Suite');
+      if (typeof switchSuiteTab === 'function') {
+        switchSuiteTab('performance');
+      }
+    }
   }, 400);
   
   // Clear URL params after routing (clean URL, but keep path)
@@ -11687,6 +11727,18 @@ function switchView(viewId) {
     // Update all room card badges
     updateAllRoomCardBadges();
   }
+}
+
+// Switch between Cockpit and Performance tabs within Suite
+function switchSuiteTab(panel) {
+  document.querySelectorAll('.suite-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.suite-panel').forEach(p => p.classList.remove('active'));
+  
+  const tab = document.querySelector(`.suite-tab[data-suite-panel="${panel}"]`);
+  const panelEl = document.getElementById('suite-panel-' + panel);
+  
+  if (tab) tab.classList.add('active');
+  if (panelEl) panelEl.classList.add('active');
 }
 
 function showLockedModal(view, requiredTier) {
@@ -18008,29 +18060,33 @@ function renderPerformanceResults(report) {
     `;
   }
   
-  // ═══ CHART 2: WIN/LOSS SIZE (R) ═══
+  // ═══ CHART 2: WIN/LOSS SIZE ═══
   const avgWinR = rDist.avg_win_R;
   const avgLossR = rDist.avg_loss_R;
-  if (avgWinR !== null && avgLossR !== null) {
-    const maxR = Math.max(Math.abs(avgWinR), Math.abs(avgLossR));
-    const winWidth = maxR > 0 ? (avgWinR / maxR) * 100 : 0;
-    const lossWidth = maxR > 0 ? (Math.abs(avgLossR) / maxR) * 100 : 0;
+  const avgWinDollar = Math.abs(core.avg_win || 0);
+  const avgLossDollar = Math.abs(core.avg_loss || 0);
+  const lossToWinRatio = avgWinDollar > 0 ? (avgLossDollar / avgWinDollar).toFixed(1) : 0;
+  
+  if (avgWinDollar > 0 || avgLossDollar > 0) {
+    const maxDollar = Math.max(avgWinDollar, avgLossDollar);
+    const winWidth = maxDollar > 0 ? Math.max((avgWinDollar / maxDollar) * 100, 15) : 15;
+    const lossWidth = maxDollar > 0 ? Math.max((avgLossDollar / maxDollar) * 100, 15) : 15;
     
     html += `
       <div class="perf-chart">
-        <h4>Average Win vs Loss (R)</h4>
+        <h4>Average Win vs Loss</h4>
         <div class="wl-compare">
-          <div class="wl-bar-container">
-            <div class="wl-bar win" style="width: ${winWidth}%;"><span>+${avgWinR}R</span></div>
-            <div class="wl-label">Avg Winner • $${core.avg_win}</div>
+          <div class="wl-bar-container" style="text-align: right;">
+            <div class="wl-bar win" style="width: ${winWidth}%; min-width: 60px;"><span>$${avgWinDollar}</span></div>
+            <div class="wl-label">${avgWinR !== null ? `+${avgWinR}R` : ''} • Avg Winner</div>
           </div>
           <div class="wl-vs">vs</div>
           <div class="wl-bar-container">
-            <div class="wl-bar loss" style="width: ${lossWidth}%;"><span>${avgLossR}R</span></div>
-            <div class="wl-label">Avg Loser • $${core.avg_loss}</div>
+            <div class="wl-bar loss" style="width: ${lossWidth}%; min-width: 60px;"><span>$${avgLossDollar}</span></div>
+            <div class="wl-label">${avgLossR !== null ? `${avgLossR}R` : ''} • Avg Loser</div>
           </div>
         </div>
-        ${Math.abs(avgLossR) > avgWinR * 1.5 ? `<p style="font-size:12px;color:var(--text-2);margin-top:12px;">⚠️ Your average loss is ${(Math.abs(avgLossR) / avgWinR).toFixed(1)}x your average win. Cut losses faster or let winners run.</p>` : ''}
+        ${avgLossDollar > avgWinDollar * 1.5 ? `<p style="font-size:12px;color:var(--text-2);margin-top:12px;">⚠️ Your average loss ($${avgLossDollar}) is ${lossToWinRatio}x your average win ($${avgWinDollar}). Cut losses faster or let winners run.</p>` : ''}
       </div>
     `;
   }
@@ -18062,7 +18118,7 @@ function renderPerformanceResults(report) {
           <span>0R</span>
           <span>+${sortedKeys[sortedKeys.length - 1]}R</span>
         </div>
-        ${risk.worst_R < -2 ? `<p style="font-size:12px;color:var(--red);margin-top:12px;">⚠️ Worst trade: ${risk.worst_R}R. That single trade undid ~${Math.abs(Math.round(risk.worst_R / (avgWinR || 0.5)))} average winners. <a href="#" class="paper-link" onclick="openPaper(2);return false;">→ Paper 02</a></p>` : ''}
+        ${risk.worst_R < -2 ? `<p style="font-size:12px;color:var(--red);margin-top:12px;">⚠️ Worst trade: ${risk.worst_R}R. Stop did not hold — that single trade undid ~${Math.abs(Math.round(risk.worst_R / (rDist.avg_win_R || 0.5)))} average winners. <a href="#" class="paper-link" onclick="openPaper(5);return false;">→ Paper 05: The Stop Is Not a Number</a></p>` : ''}
       </div>
     `;
   }
