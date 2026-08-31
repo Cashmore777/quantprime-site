@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Billing Portal — Quant Prime</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<style>
+:root {
+  --gold: #c9a84c;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text-1: #1a1a1a;
+  --text-2: #666;
+  --text-3: #999;
+  --danger: #ef4444;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', -apple-system, system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: var(--sans);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 48px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #eee;
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+h1 { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+p { color: var(--text-2); font-size: 14px; }
+.error { color: var(--danger); margin-top: 16px; }
+a { color: var(--gold); }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="spinner" id="spinner"></div>
+  <h1 id="title">Opening Billing Portal...</h1>
+  <p id="message">Please wait while we redirect you to Stripe.</p>
+  <p class="error" id="error" style="display: none;"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://pjqwnqhnuxwinwxdritp.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqcXducWhudXh3aW53eGRyaXRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjI1MjMxNjQsImV4cCI6MjAzODA5OTE2NH0.vJQBK4yHk3iPMwl9Q-l1SadJJPoOVvPjFfybNRx8zfk';
+const FALLBACK_PORTAL = 'https://billing.stripe.com/p/login/8x228jcD0fMg1lb3BI4F200';
+const DASHBOARD_API = 'https://dashboard.themoneyprinter.uk';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function showError(msg) {
+  document.getElementById('spinner').style.display = 'none';
+  document.getElementById('title').textContent = 'Error';
+  document.getElementById('message').innerHTML = msg;
+  document.getElementById('error').style.display = 'none';
+}
+
+async function init() {
+  try {
+    // Check if user is logged in
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    
+    if (!session) {
+      // Not logged in - redirect to login with return URL
+      sessionStorage.setItem('qp_redirect_after_login', '/dashboard/billing.html');
+      window.location.href = '/dashboard/login.html';
+      return;
+    }
+    
+    // Get user's profile to find stripe_customer_id
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('stripe_customer_id')
+      .eq('id', session.user.id)
+      .single();
+    
+    if (profileError) {
+      console.error('Profile error:', profileError);
+      showError('Could not load your profile. <a href="/dashboard/">Return to dashboard</a>');
+      return;
+    }
+    
+    if (!profile?.stripe_customer_id) {
+      // No Stripe customer ID - redirect to fallback portal
+      console.log('No stripe_customer_id, using fallback portal');
+      window.location.href = FALLBACK_PORTAL;
+      return;
+    }
+    
+    // Create portal session via backend API
+    const response = await fetch(`${DASHBOARD_API}/api/stripe/portal`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerId: profile.stripe_customer_id,
+        returnUrl: 'https://quantprime.uk/dashboard/'
+      })
+    });
+    
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('Portal API error:', errText);
+      // Fallback to generic portal
+      window.location.href = FALLBACK_PORTAL;
+      return;
+    }
+    
+    const { url } = await response.json();
+    
+    if (url) {
+      window.location.href = url;
+    } else {
+      // Fallback
+      window.location.href = FALLBACK_PORTAL;
+    }
+    
+  } catch (err) {
+    console.error('Billing portal error:', err);
+    // On any error, fall back to generic portal
+    window.location.href = FALLBACK_PORTAL;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
