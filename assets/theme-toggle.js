@@ -59,44 +59,45 @@
         bottom: 100px;
         right: 24px;
         z-index: 99998;
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.15);
-        background: rgba(20,20,25,0.9);
+        border: 2px solid var(--gold, #b8962e);
+        background: var(--surface, #141419);
         backdrop-filter: blur(10px);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
-        color: #fafafa;
+        color: var(--gold, #b8962e);
         padding: 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       }
       
       #qp-theme-toggle:hover {
-        background: rgba(40,40,50,0.95);
-        transform: scale(1.05);
-        border-color: rgba(255,255,255,0.25);
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
       }
       
       [data-theme="light"] #qp-theme-toggle {
-        border-color: rgba(0,0,0,0.1);
-        background: rgba(255,255,255,0.9);
-        color: #1a1a1a;
+        border-color: var(--gold, #b8962e);
+        background: var(--surface, #ffffff);
+        color: var(--gold, #b8962e);
       }
       
       [data-theme="light"] #qp-theme-toggle:hover {
-        background: rgba(245,245,245,0.95);
-        border-color: rgba(0,0,0,0.2);
+        transform: scale(1.1);
       }
       
       #qp-theme-toggle svg {
-        width: 20px;
-        height: 20px;
+        width: 22px;
+        height: 22px;
         stroke: currentColor;
         fill: none;
         stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
       
       /* Theme CSS variables for main site */
