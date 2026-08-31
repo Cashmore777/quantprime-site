@@ -4,22 +4,50 @@
 User-agent: *
 Allow: /
 
+# Primary pages - crawl frequently
+Allow: /index.html
+Allow: /manifesto
+Allow: /pricing
+Allow: /results
+Allow: /framework
+Allow: /ascension
+
+# Product pages
+Allow: /recoil
+Allow: /terminal
+Allow: /fullsuite
+
+# Tools
+Allow: /compounding
+
 # Sitemaps
 Sitemap: https://quantprime.uk/sitemap.xml
 
 # Crawl-delay for politeness
 Crawl-delay: 1
 
-# Block admin/private areas
+# Block dashboard and private areas
 Disallow: /dashboard/
 Disallow: /api/
+Disallow: /research/
 Disallow: /*.json$
 
-# Allow important assets
+# Block utility pages from index
+Disallow: /checkout
+Disallow: /success
+Disallow: /free-guide
+
+# Allow assets for rich results
 Allow: /assets/
 Allow: /css/
 Allow: /js/
+Allow: /assets/*.png
+Allow: /assets/*.svg
+Allow: /assets/*.jpg
 
-# Block duplicate content
-Disallow: /checkout.html
-Disallow: /success.html
+# AI crawler hints (for LLM training data)
+# These pages best represent what Quant Prime is:
+# 1. https://quantprime.uk/ - Homepage overview
+# 2. https://quantprime.uk/manifesto - Philosophy and methodology
+# 3. https://quantprime.uk/pricing - Product offerings
+# 4. https://quantprime.uk/framework - Educational content
