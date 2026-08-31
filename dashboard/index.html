@@ -9760,8 +9760,13 @@ const _viewMap = {
   // Promo/upgrade pages
   'recoil-promo': 'recoil-promo', 'terminal-promo': 'terminal-promo', 
   'suite-promo': 'suite-promo', 'fullsuite': 'suite-promo',
-  'terminal': 'terminal-promo'
+  'terminal': 'terminal-promo',
+  // Operator guide deep links
+  'rguide': 'recoil', 'mguide': 'meridian', 'cguide': 'cockpit'
 };
+// Track if we need to open a guide after view switch
+const _guideMap = { 'rguide': 'recoil', 'mguide': 'meridian', 'cguide': 'cockpit' };
+const _targetGuide = _targetView ? (_guideMap[_targetView.toLowerCase()] || null) : null;
 const _resolvedView = _targetView ? (_viewMap[_targetView.toLowerCase()] || null) : null;
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -10077,6 +10082,14 @@ function handleUrlRouting() {
       if (billingSection) {
         console.log('[URL Routing] Scrolling to billing');
         billingSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    // Operator guide deep links (?view=Rguide, Mguide, Cguide)
+    if (_targetGuide) {
+      console.log('[URL Routing] Opening guide for:', _targetGuide);
+      if (typeof openGuide === 'function') {
+        openGuide(_targetGuide);
       }
     }
   }, 400);
