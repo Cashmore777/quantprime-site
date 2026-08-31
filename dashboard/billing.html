@@ -92,45 +92,30 @@ async function init() {
       return;
     }
     
-    // Get user's profile to find stripe_customer_id
-    const { data: profile, error: profileError } = await supabaseClient
-      .from('profiles')
-      .select('stripe_customer_id')
-      .eq('id', session.user.id)
-      .single();
-    
-    if (profileError) {
-      console.error('Profile error:', profileError);
-      showError('Could not load your profile. <a href="/dashboard/">Return to dashboard</a>');
-      return;
-    }
-    
-    if (!profile?.stripe_customer_id) {
-      // No Stripe customer ID - redirect to fallback portal
-      console.log('No stripe_customer_id, using fallback portal');
-      window.location.href = FALLBACK_PORTAL;
-      return;
-    }
-    
     // Create portal session via backend API
+    // Backend verifies token and derives customer ID server-side
     const response = await fetch(`${DASHBOARD_API}/api/stripe/portal`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        customerId: profile.stripe_customer_id,
-        returnUrl: 'https://quantprime.uk/dashboard/'
-      })
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      }
     });
     
+    const data = await response.json();
+    
     if (!response.ok) {
-      const errText = await response.text();
-      console.error('Portal API error:', errText);
-      // Fallback to generic portal
-      window.location.href = FALLBACK_PORTAL;
+      console.error('Portal API error:', data);
+      // If no billing account, fall back to generic portal
+      if (data.fallback) {
+        window.location.href = FALLBACK_PORTAL;
+        return;
+      }
+      showError('Could not open billing portal. <a href="/dashboard/">Return to dashboard</a>');
       return;
     }
     
-    const { url } = await response.json();
+    const { url } = data;
     
     if (url) {
       window.location.href = url;
