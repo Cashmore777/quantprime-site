@@ -194,26 +194,39 @@
   border-color: var(--border);
 }
 
+/* Win/Loss bar tracks - visible in dark mode */
 [data-theme="dark"] .wl-row-bar-track {
-  background: var(--surface-2);
+  background: rgba(255,255,255,0.1);
 }
 
-[data-theme="dark"] .equity-area.positive { fill: var(--green); opacity: 0.2; }
-[data-theme="dark"] .equity-area.negative { fill: var(--red); opacity: 0.2; }
-[data-theme="dark"] .equity-zero { stroke: var(--text-3); }
+/* Equity curve - brighter and more visible */
+[data-theme="dark"] .equity-area.positive { fill: #26a269; opacity: 0.35; }
+[data-theme="dark"] .equity-area.negative { fill: #ef4444; opacity: 0.35; }
+[data-theme="dark"] .equity-line.positive { stroke: #4ade80; }
+[data-theme="dark"] .equity-line.negative { stroke: #f87171; }
+[data-theme="dark"] .equity-zero { stroke: rgba(255,255,255,0.3); stroke-width: 1.5; }
 
-[data-theme="dark"] .hist-bar { fill: var(--text-2); }
-[data-theme="dark"] .hour-window { fill: rgba(201,168,76,0.15); }
+/* R Distribution histogram - bright colors */
+[data-theme="dark"] .hist-bar { fill: rgba(255,255,255,0.4); }
+[data-theme="dark"] .hist-bar.positive { fill: #4ade80; }
+[data-theme="dark"] .hist-bar.negative { fill: #f87171; }
 
-[data-theme="dark"] .grade-badge.prime { background: rgba(38,162,105,0.25); }
-[data-theme="dark"] .grade-badge.favorable { background: rgba(0,171,255,0.25); }
-[data-theme="dark"] .grade-badge.marginal { background: rgba(201,168,76,0.25); }
-[data-theme="dark"] .grade-badge.degraded { background: rgba(239,68,68,0.25); }
-[data-theme="dark"] .grade-badge.ungraded { background: rgba(102,102,102,0.25); }
+/* Hour chart - bright bars */
+[data-theme="dark"] .hour-bar { opacity: 1; }
+[data-theme="dark"] .hour-bar.positive { fill: #4ade80; }
+[data-theme="dark"] .hour-bar.negative { fill: #f87171; }
+[data-theme="dark"] .hour-window { fill: rgba(201,168,76,0.25); }
+[data-theme="dark"] .chart-zero-line { stroke: rgba(255,255,255,0.25); }
 
-[data-theme="dark"] .perf-section .sample-grade.ungraded { background: rgba(242,54,69,0.15); }
-[data-theme="dark"] .perf-section .sample-grade.thin { background: rgba(201,168,76,0.2); }
-[data-theme="dark"] .perf-section .sample-grade.normal { background: rgba(38,162,105,0.15); }
+[data-theme="dark"] .grade-badge.prime { background: rgba(38,162,105,0.3); }
+[data-theme="dark"] .grade-badge.favorable { background: rgba(0,171,255,0.3); }
+[data-theme="dark"] .grade-badge.marginal { background: rgba(201,168,76,0.3); }
+[data-theme="dark"] .grade-badge.degraded { background: rgba(239,68,68,0.3); }
+[data-theme="dark"] .grade-badge.ungraded { background: rgba(102,102,102,0.3); }
+
+[data-theme="dark"] .perf-section .sample-grade.ungraded { background: rgba(242,54,69,0.2); }
+[data-theme="dark"] .perf-section .sample-grade.thin { background: rgba(201,168,76,0.25); }
+[data-theme="dark"] .perf-section .sample-grade.normal { background: rgba(38,162,105,0.2); }
 
 [data-theme="dark"] .suite-tab { color: var(--text-2); }
 [data-theme="dark"] .suite-tab:hover { background: var(--surface-2); color: var(--text-1); }
@@ -8060,6 +8073,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
     /* Hourly chart */
     .hour-bar { transition: opacity 0.2s; }
     .hour-bar:hover { opacity: 0.8; }
+    .hour-bar.positive { fill: var(--green); }
+    .hour-bar.negative { fill: var(--red); }
+    .chart-zero-line { stroke: var(--border); stroke-width: 1; stroke-dasharray: 3 2; }
     .hour-window { fill: rgba(201,168,76,0.1); }
     
     /* Win/Loss comparison - stacked horizontal bars */
@@ -18235,15 +18251,15 @@ function renderPerformanceResults(report) {
               return `<rect x="${x1}" y="0" width="${x2 - x1}" height="50" class="hour-window"/>`;
             }).join('')}
             <!-- Zero line -->
-            <line x1="0" y1="25" x2="100" y2="25" stroke="var(--border)" stroke-dasharray="2"/>
+            <line x1="0" y1="25" x2="100" y2="25" class="chart-zero-line"/>
             <!-- Bars -->
             ${Object.entries(hours).map(([hour, data]) => {
               const h = parseInt(hour);
               const x = (h / 24) * 100;
               const barH = Math.abs(data.net) / maxNet * 20;
               const y = data.net >= 0 ? 25 - barH : 25;
-              const color = data.net >= 0 ? 'var(--green)' : 'var(--red)';
-              return data.trades > 0 ? `<rect x="${x}" y="${y}" width="3.5" height="${barH}" fill="${color}" class="hour-bar"><title>${h}:00 - ${data.trades} trades, $${data.net}</title></rect>` : '';
+              const colorClass = data.net >= 0 ? 'positive' : 'negative';
+              return data.trades > 0 ? `<rect x="${x}" y="${y}" width="3.5" height="${barH}" class="hour-bar ${colorClass}"><title>${h}:00 - ${data.trades} trades, $${data.net}</title></rect>` : '';
             }).join('')}
           </svg>
         </div>
