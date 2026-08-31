@@ -11127,9 +11127,13 @@ function handleUrlRouting() {
     }
   }, 400);
   
-  // Clear URL params after routing (clean URL, but keep path)
+  // Keep view param in URL for refresh persistence, clear others
   if (window.history && window.history.replaceState) {
-    window.history.replaceState({}, document.title, window.location.pathname);
+    const cleanUrl = new URL(window.location);
+    const currentView = cleanUrl.searchParams.get('view');
+    // Clear all params except view
+    cleanUrl.search = currentView ? `?view=${currentView}` : '';
+    window.history.replaceState({}, document.title, cleanUrl.toString());
   }
 }
 
