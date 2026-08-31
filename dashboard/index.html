@@ -118,6 +118,24 @@
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  
+  /* Premium accent gradient */
+  --premium-gradient: linear-gradient(180deg, var(--gold), var(--cyan));
+}
+
+/* Premium accent utility - adds gold→cyan left bar */
+.premium-accent {
+  position: relative;
+}
+.premium-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  border-radius: 4px 0 0 4px;
 }
 
 /* Dark mode - mobile nav bar */
@@ -1213,6 +1231,17 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   overflow: hidden;
 }
 
+/* Premium accent on research cards */
+.research-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+}
+
 .research-card::after {
   content: '→';
   position: absolute;
@@ -2286,6 +2315,18 @@ body {
   box-shadow: var(--shadow-sm);
   transition: all 0.25s;
   position: relative;
+  overflow: hidden;
+}
+
+/* Premium accent on unlocked instrument cards */
+.instrument-card:not(.locked)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
 }
 
 .instrument-card.locked {
@@ -5209,6 +5250,19 @@ body {
   align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+/* Premium accent on modal headers */
+.modal .modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  border-radius: 8px 0 0 0;
 }
 .modal .modal-header h3 {
   font-size: 16px;
@@ -7004,7 +7058,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <button class="nav-item locked" data-view="academy" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg></span>Academy<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
       <button class="nav-item locked" data-view="notebook" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>The Journal<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
       <button class="nav-item locked" data-view="mentorship" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Book Your Call<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="automation" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>QP Automation<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
+      <button class="nav-item locked" data-view="automation" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Automation<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
     </div>
     
     <!-- CEO (admin only) -->
