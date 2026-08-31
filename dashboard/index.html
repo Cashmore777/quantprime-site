@@ -18069,10 +18069,7 @@ function renderPerformanceResults(report) {
             <line x1="0" y1="${scaleY(0)}" x2="${width}" y2="${scaleY(0)}" class="equity-zero"/>
             <!-- Main line -->
             <path d="${pathD}" class="equity-line ${finalColor}" fill="none"/>
-            <!-- Peak marker -->
-            ${drawdown.peak ? `<circle cx="${scaleX(drawdown.peak.trade)}" cy="${scaleY(drawdown.peak.value)}" class="equity-marker peak"><title>Peak: $${drawdown.peak.value}</title></circle>` : ''}
-            <!-- Trough marker -->
-            ${drawdown.trough ? `<circle cx="${scaleX(drawdown.trough.trade)}" cy="${scaleY(drawdown.trough.value)}" class="equity-marker trough"><title>Trough: $${drawdown.trough.value}</title></circle>` : ''}
+<!-- Peak/trough shown in legend only -->
           </svg>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-top:8px;">
