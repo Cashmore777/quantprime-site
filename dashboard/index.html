@@ -9762,10 +9762,10 @@ const _viewMap = {
   'suite-promo': 'suite-promo', 'fullsuite': 'suite-promo',
   'terminal': 'terminal-promo',
   // Operator guide deep links
-  'rguide': 'recoil', 'mguide': 'meridian', 'cguide': 'cockpit'
+  'guide-recoil': 'recoil', 'guide-meridian': 'meridian', 'guide-cockpit': 'cockpit'
 };
 // Track if we need to open a guide after view switch
-const _guideMap = { 'rguide': 'recoil', 'mguide': 'meridian', 'cguide': 'cockpit' };
+const _guideMap = { 'guide-recoil': 'recoil', 'guide-meridian': 'meridian', 'guide-cockpit': 'cockpit' };
 const _targetGuide = _targetView ? (_guideMap[_targetView.toLowerCase()] || null) : null;
 const _resolvedView = _targetView ? (_viewMap[_targetView.toLowerCase()] || null) : null;
 
