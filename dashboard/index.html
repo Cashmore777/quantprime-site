@@ -8003,15 +8003,17 @@ button, .nav-item, .room, .video-item, .filter-chip {
     .hour-bar:hover { opacity: 0.8; }
     .hour-window { fill: rgba(201,168,76,0.1); }
     
-    /* Win/Loss comparison */
-    .wl-compare { display: flex; align-items: center; gap: 16px; padding: 16px 0; }
-    .wl-bar-container { flex: 1; min-width: 0; }
-    .wl-bar { height: 36px; border-radius: 6px; display: flex; align-items: center; padding: 0 12px; min-width: 60px; }
-    .wl-bar.win { background: linear-gradient(90deg, var(--green), rgba(38,162,105,0.8)); justify-content: center; margin-left: auto; }
-    .wl-bar.loss { background: linear-gradient(90deg, rgba(239,68,68,0.8), var(--red)); justify-content: center; margin-right: auto; }
-    .wl-bar span { color: #fff; font-size: 14px; font-weight: 700; font-family: var(--mono); white-space: nowrap; }
-    .wl-label { font-size: 11px; color: var(--text-3); margin-top: 6px; }
-    .wl-vs { font-size: 14px; color: var(--text-2); font-weight: 700; flex-shrink: 0; }
+    /* Win/Loss comparison - stacked horizontal bars */
+    .wl-stacked { display: flex; flex-direction: column; gap: 12px; padding: 8px 0; }
+    .wl-row { display: flex; align-items: center; gap: 12px; }
+    .wl-row-label { width: 60px; font-size: 12px; font-weight: 600; color: var(--text-2); }
+    .wl-row-bar-track { flex: 1; height: 28px; background: var(--surface-2); border-radius: 4px; overflow: hidden; }
+    .wl-row-bar { height: 100%; border-radius: 4px; min-width: 20px; }
+    .wl-row-bar.win { background: linear-gradient(90deg, var(--green), rgba(38,162,105,0.7)); }
+    .wl-row-bar.loss { background: linear-gradient(90deg, var(--red), rgba(239,68,68,0.7)); }
+    .wl-row-value { width: 60px; text-align: right; font-size: 14px; font-weight: 700; font-family: var(--mono); }
+    .wl-row-value.green { color: var(--green); }
+    .wl-row-value.red { color: var(--red); }
     
     /* Compact tables */
     .perf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -8034,10 +8036,24 @@ button, .nav-item, .room, .video-item, .filter-chip {
     .perf-secondary-stat .val { font-size: 18px; font-weight: 700; font-family: var(--mono); }
     .perf-secondary-stat .lbl { font-size: 10px; color: var(--text-3); text-transform: uppercase; }
     
-    @media (max-width: 600px) {
+    /* Tables row - Direction & Cycle side by side */
+    .perf-tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    
+    /* Equity curve - more visible */
+    .equity-line { stroke-width: 2.5; }
+    .equity-line.positive { stroke: var(--green); }
+    .equity-line.negative { stroke: var(--red); }
+    .equity-area.positive { fill: var(--green); opacity: 0.15; }
+    .equity-area.negative { fill: var(--red); opacity: 0.15; }
+    .equity-zero { stroke: var(--text-2); stroke-width: 1; stroke-dasharray: 4 2; }
+    .equity-marker { stroke: #fff; stroke-width: 2; }
+    .equity-marker.peak { fill: var(--green); r: 5; }
+    .equity-marker.trough { fill: var(--red); r: 5; }
+    
+    @media (max-width: 700px) {
+      .perf-tables-row { grid-template-columns: 1fr; }
       .perf-hero { grid-template-columns: 1fr; }
       .perf-hero-card .hero-value { font-size: 28px; }
-      .wl-compare { flex-direction: column; gap: 12px; }
     }
   </style>
   
@@ -17992,13 +18008,16 @@ function renderPerformanceResults(report) {
   // ═══ HERO: EXPECTANCY / GRADE / SAMPLE ═══
   const expClass = core.expectancy >= 0 ? 'positive' : 'negative';
   const gradeClass = (overallGrade.grade || 'UNGRADED').toLowerCase();
+  const avgR = risk.avg_R;
   
   html += `
     <div class="perf-hero">
       <div class="perf-hero-card primary ${expClass}">
-        <div class="hero-value" style="color: var(--${core.expectancy >= 0 ? 'green' : 'red'})">${core.expectancy >= 0 ? '+' : ''}${core.expectancy}</div>
+        <div class="hero-value" style="color: var(--${core.expectancy >= 0 ? 'green' : 'red'})">
+          ${avgR !== null ? `${avgR >= 0 ? '+' : ''}${avgR}R` : `${core.expectancy >= 0 ? '+' : ''}$${core.expectancy}`}
+        </div>
         <div class="hero-label">Expectancy per trade</div>
-        <div class="hero-sub">${core.expectancy >= 0 ? 'Making money on average' : 'Losing money on average'}</div>
+        <div class="hero-sub">${avgR !== null ? `($${core.expectancy >= 0 ? '+' : ''}${core.expectancy} avg)` : (core.expectancy >= 0 ? 'Making money on average' : 'Losing money on average')}</div>
       </div>
       <div class="perf-hero-card">
         <div class="hero-value"><span class="grade-badge ${gradeClass}">${overallGrade.grade || 'UNGRADED'}</span></div>
@@ -18042,18 +18061,26 @@ function renderPerformanceResults(report) {
     html += `
       <div class="perf-chart">
         <h4>Equity Curve</h4>
-        <div class="perf-chart-area">
-          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
-            <path d="${areaD}" class="equity-area" fill="${curve[curve.length - 1] >= 0 ? 'var(--green)' : 'var(--red)'}"/>
-            <line x1="0" y1="${scaleY(0)}" x2="${width}" y2="${scaleY(0)}" stroke="var(--border)" stroke-dasharray="2"/>
-            <path d="${pathD}" class="equity-line ${finalColor}"/>
-            ${drawdown.peak ? `<circle cx="${scaleX(drawdown.peak.trade)}" cy="${scaleY(drawdown.peak.value)}" class="equity-marker peak"/>` : ''}
-            ${drawdown.trough ? `<circle cx="${scaleX(drawdown.trough.trade)}" cy="${scaleY(drawdown.trough.value)}" class="equity-marker trough"/>` : ''}
+        <div class="perf-chart-area" style="height:180px;">
+          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow:visible;">
+            <!-- Fill area -->
+            <path d="${areaD}" class="equity-area ${finalColor}"/>
+            <!-- Zero line -->
+            <line x1="0" y1="${scaleY(0)}" x2="${width}" y2="${scaleY(0)}" class="equity-zero"/>
+            <!-- Main line -->
+            <path d="${pathD}" class="equity-line ${finalColor}" fill="none"/>
+            <!-- Peak marker -->
+            ${drawdown.peak ? `<circle cx="${scaleX(drawdown.peak.trade)}" cy="${scaleY(drawdown.peak.value)}" class="equity-marker peak"><title>Peak: $${drawdown.peak.value}</title></circle>` : ''}
+            <!-- Trough marker -->
+            ${drawdown.trough ? `<circle cx="${scaleX(drawdown.trough.trade)}" cy="${scaleY(drawdown.trough.value)}" class="equity-marker trough"><title>Trough: $${drawdown.trough.value}</title></circle>` : ''}
           </svg>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-top:8px;">
           <span>Trade 1</span>
-          <span>Peak: $${drawdown.peak?.value || 0} → Trough: $${drawdown.trough?.value || 0}</span>
+          <span style="display:flex;gap:16px;">
+            <span style="color:var(--green);">● Peak: $${drawdown.peak?.value || 0}</span>
+            <span style="color:var(--red);">● Trough: $${drawdown.trough?.value || 0}</span>
+          </span>
           <span>Trade ${curve.length}</span>
         </div>
       </div>
@@ -18065,28 +18092,39 @@ function renderPerformanceResults(report) {
   const avgLossR = rDist.avg_loss_R;
   const avgWinDollar = Math.abs(core.avg_win || 0);
   const avgLossDollar = Math.abs(core.avg_loss || 0);
-  const lossToWinRatio = avgWinDollar > 0 ? (avgLossDollar / avgWinDollar).toFixed(1) : 0;
   
-  if (avgWinDollar > 0 || avgLossDollar > 0) {
-    const maxDollar = Math.max(avgWinDollar, avgLossDollar);
-    const winWidth = maxDollar > 0 ? Math.max((avgWinDollar / maxDollar) * 100, 15) : 15;
-    const lossWidth = maxDollar > 0 ? Math.max((avgLossDollar / maxDollar) * 100, 15) : 15;
+  // Calculate ratio from R values (matching what's displayed)
+  const rRatio = (avgWinR && avgLossR && avgWinR > 0) ? (Math.abs(avgLossR) / avgWinR).toFixed(1) : null;
+  
+  if (avgWinR !== null && avgLossR !== null) {
+    const maxR = Math.max(Math.abs(avgWinR), Math.abs(avgLossR));
+    const winWidthPct = maxR > 0 ? (Math.abs(avgWinR) / maxR) * 100 : 50;
+    const lossWidthPct = maxR > 0 ? (Math.abs(avgLossR) / maxR) * 100 : 50;
     
     html += `
       <div class="perf-chart">
         <h4>Average Win vs Loss</h4>
-        <div class="wl-compare">
-          <div class="wl-bar-container" style="text-align: right;">
-            <div class="wl-bar win" style="width: ${winWidth}%; min-width: 60px;"><span>$${avgWinDollar}</span></div>
-            <div class="wl-label">${avgWinR !== null ? `+${avgWinR}R` : ''} • Avg Winner</div>
+        <div class="wl-stacked">
+          <div class="wl-row">
+            <span class="wl-row-label">Winner</span>
+            <div class="wl-row-bar-track">
+              <div class="wl-row-bar win" style="width: ${winWidthPct}%;"></div>
+            </div>
+            <span class="wl-row-value green">+${avgWinR}R</span>
           </div>
-          <div class="wl-vs">vs</div>
-          <div class="wl-bar-container">
-            <div class="wl-bar loss" style="width: ${lossWidth}%; min-width: 60px;"><span>$${avgLossDollar}</span></div>
-            <div class="wl-label">${avgLossR !== null ? `${avgLossR}R` : ''} • Avg Loser</div>
+          <div class="wl-row">
+            <span class="wl-row-label">Loser</span>
+            <div class="wl-row-bar-track">
+              <div class="wl-row-bar loss" style="width: ${lossWidthPct}%;"></div>
+            </div>
+            <span class="wl-row-value red">${avgLossR}R</span>
           </div>
         </div>
-        ${avgLossDollar > avgWinDollar * 1.5 ? `<p style="font-size:12px;color:var(--text-2);margin-top:12px;">⚠️ Your average loss ($${avgLossDollar}) is ${lossToWinRatio}x your average win ($${avgWinDollar}). Cut losses faster or let winners run.</p>` : ''}
+        <div style="font-size:11px;color:var(--text-3);margin-top:12px;display:flex;justify-content:space-between;">
+          <span>$${avgWinDollar} avg win</span>
+          <span>$${avgLossDollar} avg loss</span>
+        </div>
+        ${rRatio && parseFloat(rRatio) > 1.5 ? `<p style="font-size:12px;color:var(--text-2);margin-top:12px;">⚠️ Your average loss is ${rRatio}x your average win. Cut losses faster or let winners run.</p>` : ''}
       </div>
     `;
   }
@@ -18164,7 +18202,7 @@ function renderPerformanceResults(report) {
   }
   
   // ═══ TABLES: Direction & Session ═══
-  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">`;
+  html += `<div class="perf-tables-row">`;
   
   // Direction table
   html += `<div class="perf-chart" style="margin-bottom:0;">
