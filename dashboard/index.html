@@ -658,8 +658,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .nav-item.active {
   color: var(--text-1);
-  border-left-color: var(--gold);
   background: linear-gradient(90deg, var(--gold-glow), transparent);
+  position: relative;
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  border-radius: 0 2px 2px 0;
 }
 
 .nav-item .icon {
@@ -1143,15 +1154,12 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  opacity: 0;
-  transition: opacity 0.2s;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
 }
 
 @media (hover: hover) {
-  .stat-card:hover::before { opacity: 1; }
   .stat-card:hover { box-shadow: var(--shadow-md); }
 }
 
@@ -2302,7 +2310,8 @@ body {
 
 .callout {
   background: linear-gradient(90deg, var(--gold-glow), transparent);
-  border-left: 3px solid var(--gold);
+  border-left: 4px solid transparent;
+  border-image: var(--premium-gradient) 1;
   border-radius: 0 8px 8px 0;
   padding: 14px 18px;
   font-size: 13px;
@@ -2950,6 +2959,18 @@ body {
   flex-direction: column;
   overflow: hidden;
   box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.chat-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  z-index: 1;
 }
 
 .chat-header {
@@ -3405,6 +3426,16 @@ body {
   min-width: 0;
   position: relative;
   overflow: hidden;
+}
+
+.marketplace-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
 }
 
 @media (hover: hover) {
@@ -6010,6 +6041,18 @@ button, .nav-item, .room, .video-item, .filter-chip {
   background: var(--surface-raised);
   border: 1px solid var(--border);
   border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.system-status::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
 }
 
 .system-status .status-row {
@@ -8302,7 +8345,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     /* Hero Stats Row */
     .perf-hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .perf-hero-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; animation: fadeSlideUp 0.5s ease-out backwards; }
+    .perf-hero-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; animation: fadeSlideUp 0.5s ease-out backwards; position: relative; overflow: hidden; }
+    .perf-hero-stat::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--premium-gradient); }
     .perf-hero-stat:nth-child(1) { animation-delay: 0.1s; }
     .perf-hero-stat:nth-child(2) { animation-delay: 0.15s; }
     .perf-hero-stat:nth-child(3) { animation-delay: 0.2s; }
