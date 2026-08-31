@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recoil — Operator Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111117;
+      --border: rgba(255,255,255,0.08);
+      --text-1: #f2f4f7;
+      --text-2: #a0a4ab;
+      --text-3: #6b7078;
+      --gold: #c9a84c;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.7;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--gold);
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      color: var(--text-1);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: var(--gold);
+    }
+    p {
+      margin-bottom: 16px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      color: var(--text-2);
+    }
+    td:first-child {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+    .mono {
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .gold { color: var(--gold); }
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    .callout {
+      background: rgba(201,168,76,0.08);
+      border-left: 3px solid var(--gold);
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .warning {
+      background: rgba(239,68,68,0.08);
+      border-left: 3px solid #ef4444;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-3);
+    }
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
+    .tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  </style>
+</head>
+<body>
+
+<h1>Recoil</h1>
+<p class="subtitle">A volatility fade instrument. It measures when a candle is statistically exceptional, marks where the level sits, and reports what price has historically done afterwards. It does not tell you to buy or sell.</p>
+
+<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+<h2>What it measures</h2>
+<p>Every candle's true range is divided by the average true range of the last eight candles. That ratio answers one question: how big is this candle compared to a normal recent candle? A ratio of 1.0 is exactly average. 3.0 is three times the recent norm.</p>
+
+<p>The ratio places the candle in one of eight bands:</p>
+
+<table>
+  <thead>
+    <tr><th>Band</th><th>Name</th><th>Ratio</th><th>Colour</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td>Extremely Low</td><td class="mono">under 0.30</td><td><span class="tag blue">pale blue</span></td></tr>
+    <tr><td>2</td><td>Very Low</td><td class="mono">0.30 – 0.75</td><td><span class="tag blue">light blue</span></td></tr>
+    <tr><td>3</td><td>Low</td><td class="mono">0.75 – 1.20</td><td><span class="tag blue">blue</span></td></tr>
+    <tr><td>4</td><td>Lower Medium</td><td class="mono">1.20 – 1.65</td><td><span class="tag blue">mid blue</span></td></tr>
+    <tr><td>5</td><td>Medium</td><td class="mono">1.65 – 2.10</td><td><span class="tag blue">deep blue</span></td></tr>
+    <tr><td>6</td><td>High Medium</td><td class="mono">2.10 – 2.55</td><td><span class="tag yellow">yellow — trigger 1×</span></td></tr>
+    <tr><td>7</td><td>High</td><td class="mono">2.55 – 3.00</td><td><span class="tag orange">orange — trigger 2×</span></td></tr>
+    <tr><td>8</td><td>Very High</td><td class="mono">3.00 and above</td><td><span class="tag red">red — trigger 5×</span></td></tr>
+  </tbody>
+</table>
+
+<p>Bands 6, 7 and 8 are the trigger bands. Everything below them is context.</p>
+
+<h2>What it does with that</h2>
+<p>When a candle closes in band 6, 7 or 8, Recoil marks a fade. A bearish exceptional candle marks a long. A bullish one marks a short. The premise is that overextended candles snap back.</p>
+
+<p>That is the entire engine. One measurement, one response. No pattern recognition, no prediction, no stack of indicators agreeing with each other.</p>
+
+<div class="callout">
+  Recoil marks conditions. You decide. Nothing here is a signal to follow blindly, and the instrument has no opinion about whether now is a sensible time to be trading at all.
+</div>
+
+<h2>Setup</h2>
+
+<h3>1 · Add it to TradingView</h3>
+<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Recoil</strong> and add it to your chart.</p>
+<p>You must be logged into the TradingView account matching the username on your dashboard. Access is granted manually and can take a few hours after purchase.</p>
+
+<h3>2 · Leave the settings alone</h3>
+<p>The panel ships on Custom, and every value in it is already the configuration actually traded. Custom does not mean unconfigured. It means the individual settings below are live rather than being overridden by a preset.</p>
+<p>Change nothing for the first session.</p>
+
+<h3>3 · Watch before you act</h3>
+<p>Put it on a 3M EURUSD chart and watch one session without touching anything. You are looking for two things: how often a coloured candle appears, and what price does in the twenty minutes afterwards.</p>
+<p>How often it triggers on your instrument decides whether Recoil is a daily tool for you or a weekly one, and those are two different habits.</p>
+
+<h2>The settings that matter</h2>
+
+<h3>Trading Style — Custom</h3>
+<p>Two options. Custom uses the individual settings in the panel, which is how it ships. Scalping (3M) overrides the take profit and stop loss with the backtested three minute configuration: TP at 100% of body, SL at wick plus 3.0 ATR.</p>
+
+<h3>Time windows — 07:00–09:00, 13:00–14:00, 19:00–20:00 UTC</h3>
+<p>All three enabled. Conditions only resolve inside these hours, and switching all three off runs the instrument around the clock.</p>
+<p>These are not windows where expansion is more likely. It is not. They are windows where the same expansion is worth more in pips while the spread stays exactly the same.</p>
+
+<h3>ATR Length — 8</h3>
+<p>The memory of the baseline. It decides what "abnormal" is measured against.</p>
+<p>Shorter, around 5, and the baseline adapts fast. Longer, around 21, and a volatility burst keeps reading as extreme for longer because the baseline is slow to catch up.</p>
+
+<h3>Thresholds 1 to 7</h3>
+<p>The seven boundaries between the eight bands, as ratios of true range to ATR.</p>
+<p>Threshold 5 is the one that matters most, because it is the gate into band 6 and therefore into trading at all. Raising it means fewer triggers, lowering it means more.</p>
+
+<h3>Band risk multipliers — 1× / 2× / 5×</h3>
+<p>Band 6 at 1× your base unit, band 7 at 2×, band 8 at 5×. Each band can also be switched off entirely.</p>
+
+<div class="callout warning">
+  The uncomfortable part: band 8 candles are not profitable on their own. Tested in isolation, they lose. They stay because their winners are large enough that at 5× they subsidise the losses across bands 6 and 7, and the three together outperform any two. Removing the losing band makes the whole thing worse. Paper 02 is the full write-up.
+</div>
+
+<h3>Trend alignment — 2× with, 0.5× against, 1× consolidation</h3>
+<p>The EMA stack classifies trend state and scales risk by it. It does not gate entries. A fade agreeing with a genuine trend runs at 2× the band foundation, one opposing it at 0.5×.</p>
+<p>Set "against trend" to 0 to block counter-trend fades entirely, which is the single most effective change if your results are being damaged by fading strong trends.</p>
+
+<h3>Take profit — % of body, 100%</h3>
+<p>The target is a percentage of the trigger candle's body, not a fixed pip distance. At 100%, a fade of a bearish candle targets the price that candle opened at.</p>
+
+<h3>Stop loss — wick plus 3.0 ATR</h3>
+<p>The stop sits this many ATRs beyond the trigger candle's extreme. Below the low on a long, above the high on a short.</p>
+<p>It is wider than feels comfortable, deliberately. Narrowing this is the most common change people make and the most common reason their results get worse.</p>
+
+<h2>Where Recoil fails</h2>
+
+<h3>It does not work in every condition</h3>
+<p>Recoil fades expansion. In a strong sustained trend an exceptional candle is often the start of something rather than an overreaction, and the fade is on the wrong side of it. This is the failure mode that costs money.</p>
+
+<h3>It does not tell you when to stay out</h3>
+<p>The Regime Tracker will tell you market quality has degraded. Recoil itself keeps triggering regardless. Check the regime before acting on a trigger. That single habit does more for your results than any setting in the indicator.</p>
+
+<h2>When it looks wrong</h2>
+<table>
+  <thead>
+    <tr><th>What you see</th><th>Usually</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>No coloured candles at all</td><td>ATR length too long for your timeframe, or thresholds too high</td></tr>
+    <tr><td>Coloured candles constantly</td><td>ATR length too short, or minimum body size set to 0</td></tr>
+    <tr><td>Coloured candles but nothing marked</td><td>Price is outside the three time windows, or the band's fade toggle is off</td></tr>
+    <tr><td>Stop distance looks enormous</td><td>Correct, and intentional. Check it in pips with the Position Sizer</td></tr>
+    <tr><td>Fades keep failing in the same direction</td><td>Likely a trending market. Check the Regime Tracker</td></tr>
+  </tbody>
+</table>
+
+<h2>Test it on your own instrument</h2>
+<p>Three reports in the Build menu exist to let you check all of the above rather than accept it:</p>
+<ul>
+  <li><strong>Band Report</strong> — how often each band appears on your instrument and what price did afterwards</li>
+  <li><strong>Zone Report</strong> — whether the volatility zones turn price or decorate the chart</li>
+  <li><strong>Session Report</strong> — whether the three windows are right for your pair</li>
+</ul>
+<p>Use a large sample. Five thousand candles, not five hundred. If the reports disagree with these defaults on your pair, believe the reports.</p>
+
+<div class="footer">
+  <p>Related papers: 01 The Friction Threshold · 02 The Subsidised Signal · 03 The Timeframe Ceiling · 05 The Stop Is Not a Number · 06 The Comfort Trade · 09 Three Windows</p>
+  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+</div>
+
+</body>
+</html>

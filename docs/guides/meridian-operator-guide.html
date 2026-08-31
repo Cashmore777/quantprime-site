@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meridian — Operator Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111117;
+      --border: rgba(255,255,255,0.08);
+      --text-1: #f2f4f7;
+      --text-2: #a0a4ab;
+      --text-3: #6b7078;
+      --gold: #c9a84c;
+      --cyan: #00abff;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.7;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--cyan);
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      color: var(--text-1);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: var(--cyan);
+    }
+    p {
+      margin-bottom: 16px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      color: var(--text-2);
+    }
+    td:first-child {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+    .mono {
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .gold { color: var(--gold); }
+    .cyan { color: var(--cyan); }
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    .callout {
+      background: rgba(0,171,255,0.08);
+      border-left: 3px solid var(--cyan);
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .warning {
+      background: rgba(239,68,68,0.08);
+      border-left: 3px solid #ef4444;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-3);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Meridian</h1>
+<p class="subtitle">A reversal instrument. It tracks the accumulation, manipulation and distribution rhythm underneath the session, and marks conditions when a level is swept and price rejects it. It does not tell you to buy or sell.</p>
+
+<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+<h2>What it measures</h2>
+<p>The market moves through repeating phases. A period of accumulation where price ranges and positions get built. A manipulation phase where it pushes through an obvious level to take out the orders resting there. Then distribution, where it actually moves.</p>
+
+<p>Meridian tracks that rhythm on three cycle lengths: 12 hour, 6 hour and 3 hour. Only the 12 hour cycle is enabled by default.</p>
+
+<p>Each cycle leaves behind <strong>A-lines</strong>, which mark the highs and lows of its accumulation phase. Those are the levels the instrument watches, because they are where the obvious stops sit.</p>
+
+<p>A condition resolves when two things happen in order:</p>
+<ol>
+  <li>An A-line gets swept, which sets the directional bias</li>
+  <li>Then price taps a vortex level, which marks the entry</li>
+</ol>
+<p>The sweep decides the direction. The tap decides the moment.</p>
+
+<div class="callout">
+  Meridian marks conditions. You decide. Nothing here is a signal to follow blindly.
+</div>
+
+<h2>Why the cycles are anchored, not rolling</h2>
+<p>The cycles anchor to a timestamp origin at midnight in the chosen timezone, not to a window that rolls with the current bar.</p>
+<p>That difference matters more than it sounds. A rolling window puts the phase boundaries wherever you happen to be looking. An anchored one puts them where everybody else's are too, and the entire point is to be positioned where the liquidity actually sits rather than where your own arbitrary window says it should.</p>
+
+<h2>Setup</h2>
+
+<h3>1 · Add it to TradingView</h3>
+<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Meridian</strong> and add it to your chart.</p>
+
+<h3>2 · Understand that there are two timezone settings</h3>
+<p>This catches people out, so it is worth being explicit.</p>
+<ul>
+  <li><strong>Timezone (cycle anchor)</strong>, in the AMD section, defaults to UTC+1. It decides where the AMD cycles start counting.</li>
+  <li><strong>Timezone</strong>, in the Time Windows section, defaults to UTC. It only applies to the trading windows.</li>
+</ul>
+<p>They are deliberately different and they are not a mistake.</p>
+
+<h3>3 · Leave the defaults alone</h3>
+<p>These are the configuration actually traded. Change nothing for the first two weeks.</p>
+
+<h3>4 · Run it alone first</h3>
+<p>If you also have Recoil, take Recoil off the chart to begin with. One instrument at a time until you know what each does on its own.</p>
+
+<h3>5 · Learn to see the sweep manually</h3>
+<p>Before relying on the marks, go back through a day and find a sweep yourself. An A-line that price pushed through and came back from. Once you can spot it by eye, the instrument stops being a black box.</p>
+
+<h2>The settings that matter</h2>
+
+<h3>AMD engine — on</h3>
+<p>The whole cycle layer. Off, and there are no A-lines and no conditions.</p>
+
+<h3>Timezone, cycle anchor — UTC+1</h3>
+<p>The single most consequential setting in the instrument, and the first thing to check if Meridian appears not to work on your pair. Every phase boundary moves with it, which means every A-line and every condition moves with it.</p>
+
+<h3>Cycles — 12H on, 6H and 3H off</h3>
+<p>All three can run at once. Only the 12 hour is enabled by default because it produced the results the defaults are based on.</p>
+<p>The 6H and 3H cycles produce more conditions and finer structure. Turn them on one at a time, and give each a fortnight before deciding.</p>
+
+<h3>Vortex — how a level qualifies</h3>
+<p>Once an A-line has been swept and a bias is set, the vortex layer decides which price levels count as a tap. It works on digits, and it changes every hour.</p>
+
+<table>
+  <thead>
+    <tr><th>Active family</th><th>Hours</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="mono">3, 6, 9</td><td>00, 03, 06, 09, 12, 15, 18, 21</td></tr>
+    <tr><td class="mono">1, 4, 7</td><td>01, 04, 07, 10, 13, 16, 19, 22</td></tr>
+    <tr><td class="mono">2, 5, 8</td><td>02, 05, 08, 11, 14, 17, 20, 23</td></tr>
+  </tbody>
+</table>
+
+<p>The price supplies the digit. A level qualifies when its digits reduce to one of the three in the active family.</p>
+
+<h3>Time windows — 00:00–02:00, 04:00–06:00, 19:00–20:00 UTC</h3>
+<p>Conditions only resolve inside these hours. These are not Recoil's windows and they should not be. The two instruments trigger on different conditions and those conditions cluster at different times.</p>
+
+<h3>Exit mode — Opposite Prime Only</h3>
+<p>Positions close when an opposite condition appears, and the whole position flips. This is a bias decision rather than a stop-loss decision.</p>
+
+<h3>Stacking</h3>
+<p>Meridian stacks. Same-direction conditions mark additional positions rather than being ignored, and there is no limit on how many.</p>
+<p>Size each entry so the full stack sits within what you would have risked on one trade, not each position within it.</p>
+
+<h2>Where Meridian fails</h2>
+
+<h3>It stops working above the 15 minute chart</h3>
+<p>Not degrades. Stops. The cycles need a certain number of bars of structure inside each phase before a condition can resolve, and on 15M and above those bars do not exist.</p>
+
+<div class="callout warning">
+  If you were planning to take it to 1H because the marks look cleaner up there, do not. This is a documented failure mode rather than a tuning problem and no setting fixes it.
+</div>
+
+<h3>Its drawdown is roughly seven times Recoil's</h3>
+<p>Backtested over six months on EURUSD: maximum drawdown 11.59% against Recoil's 1.57%. Profit factor is higher, 1.995 against 1.657, so it earns the risk, but the ride is not comparable.</p>
+
+<h3>It triggers infrequently</h3>
+<p>Recoil fires on a candle, so it happens often. Meridian needs a sweep, a tap and the right window, so it happens rarely. Your sample builds slowly and you need more history before concluding anything about your pair.</p>
+
+<h2>When it looks wrong</h2>
+<table>
+  <thead>
+    <tr><th>What you see</th><th>Usually</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Almost nothing marked</td><td>Cycle anchor timezone. Check it before anything else.</td></tr>
+    <tr><td>Phases offset from the session</td><td>Cycle anchor again.</td></tr>
+    <tr><td>A-lines but no conditions</td><td>Prime signals disabled, or outside time windows</td></tr>
+    <tr><td>Position larger than expected</td><td>The stack. Several same-direction entries are open.</td></tr>
+    <tr><td>Everything closed and reversed at once</td><td>Working as designed. Opposite condition flips the whole position.</td></tr>
+  </tbody>
+</table>
+
+<h2>Test it on your own instrument</h2>
+<ul>
+  <li><strong>Sweep Report</strong> — how often a swept level produces a rejection rather than a continuation</li>
+  <li><strong>Phase Report</strong> — which AMD phase actually produces movement on your instrument</li>
+  <li><strong>Session Report</strong> — the three windows against every hour outside them</li>
+</ul>
+<p>Give these more history than you would give Recoil's. Meridian reaches statistical significance considerably more slowly.</p>
+
+<div class="footer">
+  <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 09 Three Windows · 10 Return Per Unit of Pain</p>
+  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+</div>
+
+</body>
+</html>

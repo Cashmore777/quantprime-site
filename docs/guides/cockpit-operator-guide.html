@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cockpit — Operator Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111117;
+      --border: rgba(255,255,255,0.08);
+      --text-1: #f2f4f7;
+      --text-2: #a0a4ab;
+      --text-3: #6b7078;
+      --gold: #c9a84c;
+      --red: #ef4444;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', -apple-system, system-ui, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text-1);
+      line-height: 1.7;
+      padding: 40px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--red);
+    }
+    .subtitle {
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      color: var(--text-1);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      color: var(--gold);
+    }
+    p {
+      margin-bottom: 16px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td {
+      color: var(--text-2);
+    }
+    td:first-child {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+    .mono {
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .gold { color: var(--gold); }
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    .callout {
+      background: rgba(201,168,76,0.08);
+      border-left: 3px solid var(--gold);
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .warning {
+      background: rgba(239,68,68,0.08);
+      border-left: 3px solid #ef4444;
+    }
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--text-3);
+    }
+    .grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .grade.prime { background: rgba(38,162,105,0.15); color: #26a269; }
+    .grade.favorable { background: rgba(0,171,255,0.15); color: #00abff; }
+    .grade.marginal { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .grade.degraded { background: rgba(239,68,68,0.15); color: #ef4444; }
+  </style>
+</head>
+<body>
+
+<h1>Cockpit</h1>
+<p class="subtitle">An analytical instrument. It takes no trades, has no entries and produces no signals. What it does is measure the conditions across five timeframes at once, so the decision about what to trade is made against a graded reading rather than a feeling.</p>
+
+<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+<h2>What it is for</h2>
+<p>Recoil and Meridian both trigger when their own conditions appear. Neither has an opinion about whether the wider market suits them, because neither is looking at it.</p>
+
+<p>That gap is where most losses come from in a system that genuinely works. Recoil faded in a strong trend. Meridian traded in a session with no clean liquidity. The instrument did exactly what it was built to do, in conditions it was not built for.</p>
+
+<p>Cockpit is the wider picture. It does not tell you which instrument to run, and it never will. It tells you what kind of market you are in, and you decide what that means.</p>
+
+<div class="callout warning">
+  Judged as a trading instrument, Cockpit fails immediately. It makes no money on its own. The correct test is whether it stops you giving money back in weeks you should not have been trading.
+</div>
+
+<h2>The regime score</h2>
+<p>The number the whole instrument is built around. It grades market quality out of 90, per timeframe, from two components:</p>
+
+<ul>
+  <li><strong>Stability, 0 to 40.</strong> Current ATR measured against its own 50 period average. Scores 40 when they sit close together, 20 when loosely aligned, 0 when they diverge.</li>
+  <li><strong>Trend, 0 to 50.</strong> ADX, capped at 50.</li>
+</ul>
+
+<p>Note what stability is actually measuring. Not how much the market is moving. Whether it is moving the way it has recently been moving. So a run of enormous expansion candles pushes the score down, not up.</p>
+
+<table>
+  <thead>
+    <tr><th>Grade</th><th>Score</th><th>Reading</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="grade prime">PRIME</span></td><td class="mono">above 70</td><td>Conditions match what the systems were measured against</td></tr>
+    <tr><td><span class="grade favorable">FAVORABLE</span></td><td class="mono">above 55</td><td>Workable</td></tr>
+    <tr><td><span class="grade marginal">MARGINAL</span></td><td class="mono">above 40</td><td>Something is off. Reduce, or wait.</td></tr>
+    <tr><td><span class="grade degraded">DEGRADED</span></td><td class="mono">40 or below</td><td>Wrong conditions entirely</td></tr>
+  </tbody>
+</table>
+
+<p>A Recoil fade taken at 74 is a different trade from the identical fade at 41, even though the candle looks the same. The candle is the trigger. The score is the context.</p>
+
+<h2>Reading the dashboard</h2>
+<p>Five rows, five columns, top right by default.</p>
+<p><strong>Rows</strong> are timeframes: 1 day, 3 hours, 30 minutes, your current chart, and 3 minutes. All five are editable.</p>
+<p><strong>Columns</strong> are regime, score, EMA bias, volatility band and trend.</p>
+
+<p>The useful reading is not any single row. It is whether they agree.</p>
+
+<p><strong>Five rows pointing the same way</strong> is a market doing one thing at every scale. Rare, and it is when trend following works and fading anything is expensive.</p>
+
+<p><strong>Rows disagreeing</strong>, daily bullish against 30M bearish, is a market doing different things at different scales. That is when reversal methods find their setups and trend following gets chopped to pieces.</p>
+
+<div class="callout">
+  You do not need a rule for this. You need the habit of looking at the five rows before you act, and asking whether the instrument you are about to use suits what you are seeing.
+</div>
+
+<h2>Setup</h2>
+
+<h3>1 · Add it to TradingView</h3>
+<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Cockpit</strong> and add it to your chart.</p>
+
+<h3>2 · Look at the dashboard only</h3>
+<p>For the first few days, ignore everything Cockpit draws on the chart. Read the five rows and nothing else.</p>
+<p>Cockpit ships with every layer enabled: EMAs, liquidity across three timeframes, gaps across two, phase shading on three cycles, and higher timeframe candles, all at once. That is a great deal to look at and it is not how you should be using it.</p>
+
+<h3>3 · Then turn most of it off</h3>
+<p>Add layers back one at a time and keep only the ones that change a decision.</p>
+
+<h2>The layers</h2>
+
+<h3>EMAs — on, 8 / 26 / 80 / 233</h3>
+<p>The trend classification behind the dashboard's bias and trend columns. A genuine trend requires the full 26/80/233 stack in order; anything else is consolidation.</p>
+
+<h3>Liquidity pool levels — on, 3M / 30M / 3H</h3>
+<p>Fractal pivot highs and lows across three timeframes, extending right and freezing when swept.</p>
+<p>Scale matters more than most people treat it. A 3M level getting taken is noise most of the time. A 3H level getting taken is an event.</p>
+<p>This is the layer that adds the most to Meridian. Meridian sees a sweep and a rejection but does not distinguish between a 3M level nobody cared about and a 3H level half the market was watching. Cockpit does.</p>
+
+<h3>Fair value gaps — on, 3M and 30M</h3>
+<p>Three candle gaps tracked with a full lifecycle: fresh, tapped at midpoint, then filled.</p>
+<p>The busiest layer on the chart. The recommended approach is to keep this off and turn it on when you specifically need it.</p>
+
+<h3>Volatility candle colours — on</h3>
+<p>The same eight band system Recoil uses, with identical thresholds. A band 7 candle here is a candle Recoil reads as band 7.</p>
+<p>If you run Recoil and Cockpit on the same chart, one of them should have candle colouring switched off.</p>
+
+<h3>AMD phase shading — on, 24H / 12H / 6H, UTC+0</h3>
+<p>Shades the manipulation phase of each cycle, with vertical lines and labels at each phase start.</p>
+<p>Cockpit's cycles are 24, 12 and 6 hour, anchored to UTC+0. Meridian's are 12, 6 and 3 hour, anchored to UTC+1. They are different layers serving different purposes.</p>
+
+<h3>Higher timeframe candles — on, 30M and 3H</h3>
+<p>Draws the current 30 minute and 3 hour candles to the right of your chart. Tells you how far through the higher timeframe candle you are and what shape it is currently making.</p>
+
+<h2>What Cockpit does not do</h2>
+
+<h3>It does not tell you which instrument to use</h3>
+<p>It reports conditions. Applying those conditions to a choice between your instruments is a judgement you make.</p>
+
+<h3>It does not produce entries</h3>
+<p>No signals, no alerts on setups, nothing to execute. If you are waiting for it to tell you something is happening, you are using it wrong.</p>
+
+<h3>It does not make money</h3>
+<p>Nothing in it generates a return. Its entire value is in the trades you do not take and the weeks you size down in.</p>
+
+<h2>Using it with the other instruments</h2>
+<p>The order that works: <strong>Cockpit first, then instrument, then build.</strong></p>
+<p>Cockpit tells you what kind of market this is. That informs whether Recoil or Meridian is the appropriate engine, or whether neither is and you sit out.</p>
+
+<div class="callout">
+  If reading the week is the part you are unsure about, ask QP Intelligence. It knows all three engines and how they relate.
+</div>
+
+<h2>When it looks wrong</h2>
+<table>
+  <thead>
+    <tr><th>What you see</th><th>Usually</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Chart unreadable</td><td>Every layer is on by default. Turn FVGs off first.</td></tr>
+    <tr><td>Score low during a big move</td><td>Working correctly. Stability measures consistency, not size.</td></tr>
+    <tr><td>Score high in a quiet market</td><td>Also correct, if ATR is near its average and ADX is present.</td></tr>
+    <tr><td>Rows disagreeing with each other</td><td>Not a fault. That disagreement is the reading.</td></tr>
+  </tbody>
+</table>
+
+<div class="footer">
+  <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 10 Return Per Unit of Pain</p>
+  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+</div>
+
+</body>
+</html>
