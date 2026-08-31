@@ -678,9 +678,10 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border-radius: 50%;
   background: #22c55e;
   box-shadow: 0 0 6px rgba(34,197,94,0.5);
+  animation: pip-pulse 2s ease-in-out infinite;
 }
 
-.nav-item .status-pip.inactive { background: var(--text-3); }
+.nav-item .status-pip.inactive { background: var(--text-3); animation: none; }
 
 /* Live green dots for Community & Build (always visible) */
 .nav-item .status-pip.live-pip {
