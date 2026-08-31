@@ -176,6 +176,65 @@
   border-color: var(--border);
 }
 
+/* Dark mode - Performance Report */
+[data-theme="dark"] .perf-chart,
+[data-theme="dark"] .perf-hero-card,
+[data-theme="dark"] .perf-section .account-badge,
+[data-theme="dark"] .intel-summary {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .perf-secondary {
+  background: var(--surface-2);
+}
+
+[data-theme="dark"] .perf-table th,
+[data-theme="dark"] .perf-table td {
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .wl-row-bar-track {
+  background: var(--surface-2);
+}
+
+[data-theme="dark"] .equity-area.positive { fill: var(--green); opacity: 0.2; }
+[data-theme="dark"] .equity-area.negative { fill: var(--red); opacity: 0.2; }
+[data-theme="dark"] .equity-zero { stroke: var(--text-3); }
+
+[data-theme="dark"] .hist-bar { fill: var(--text-2); }
+[data-theme="dark"] .hour-window { fill: rgba(201,168,76,0.15); }
+
+[data-theme="dark"] .grade-badge.prime { background: rgba(38,162,105,0.25); }
+[data-theme="dark"] .grade-badge.favorable { background: rgba(0,171,255,0.25); }
+[data-theme="dark"] .grade-badge.marginal { background: rgba(201,168,76,0.25); }
+[data-theme="dark"] .grade-badge.degraded { background: rgba(239,68,68,0.25); }
+[data-theme="dark"] .grade-badge.ungraded { background: rgba(102,102,102,0.25); }
+
+[data-theme="dark"] .perf-section .sample-grade.ungraded { background: rgba(242,54,69,0.15); }
+[data-theme="dark"] .perf-section .sample-grade.thin { background: rgba(201,168,76,0.2); }
+[data-theme="dark"] .perf-section .sample-grade.normal { background: rgba(38,162,105,0.15); }
+
+[data-theme="dark"] .suite-tab { color: var(--text-2); }
+[data-theme="dark"] .suite-tab:hover { background: var(--surface-2); color: var(--text-1); }
+[data-theme="dark"] .suite-tab.active { color: var(--gold); }
+
+[data-theme="dark"] .perf-section .perf-tab { color: var(--text-2); }
+[data-theme="dark"] .perf-section .perf-tab:hover { background: var(--surface-2); }
+
+[data-theme="dark"] .perf-section .upload-zone { 
+  background: var(--surface); 
+  border-color: var(--border); 
+}
+[data-theme="dark"] .perf-section .upload-zone:hover { 
+  background: rgba(201,168,76,0.08); 
+}
+
+[data-theme="dark"] .perf-section .questionnaire {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
 /* Dark mode toggle button - hidden on desktop (now in sidebar) */
 .theme-toggle {
   position: fixed;
