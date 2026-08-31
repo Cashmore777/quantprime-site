@@ -6843,8 +6843,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <button class="nav-item locked" data-view="research" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg></span>Research<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
       <button class="nav-item locked" data-view="recoil" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></span>Recoil<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
       <button class="nav-item locked" data-view="meridian" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg></span>Meridian<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="cockpit" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>Cockpit<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
-      <button class="nav-item locked" data-view="performance" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21H4.6c-.56 0-.84 0-1.05-.11a1 1 0 01-.44-.44C3 20.24 3 19.96 3 19.4V3"/><path d="M7 14l4-4 4 4 6-6"/></svg></span>Performance<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
+      <button class="nav-item locked" data-view="cockpit" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></span>Suite<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="status-pip" style="display:none;"></span></button>
     </div>
     
     <!-- Connect -->
@@ -7396,7 +7395,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-cockpit">
     <div class="view-header">
       <div class="eyebrow">Product</div>
-      <h2>Cockpit — <em>Fractal command center</em></h2>
+      <h2>Full Suite — <em>Complete framework</em></h2>
     </div>
     
     <!-- Animated Hero -->
@@ -7517,257 +7516,258 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
       <div class="callout">This username controls your indicator access. Check it character-for-character — access follows the username, not a download.</div>
     </div>
-  </div>
-
-  <!-- PERFORMANCE REPORT (Suite+) -->
-  <div class="view" id="view-performance">
-    <style>
-      #view-performance .perf-container { max-width: 1000px; }
-      #view-performance .perf-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-      #view-performance .perf-tab { background: none; border: none; padding: 8px 16px; color: var(--text-2); font-size: 13px; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
-      #view-performance .perf-tab:hover { background: var(--surface-2); }
-      #view-performance .perf-tab.active { background: var(--gold); color: #000; font-weight: 600; }
-      #view-performance .perf-panel { display: none; }
-      #view-performance .perf-panel.active { display: block; }
-      
-      /* Upload Form */
-      #view-performance .upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 48px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
-      #view-performance .upload-zone:hover, #view-performance .upload-zone.dragover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-      #view-performance .upload-zone svg { width: 48px; height: 48px; stroke: var(--text-3); margin-bottom: 16px; }
-      #view-performance .upload-zone h3 { font-size: 16px; margin-bottom: 8px; }
-      #view-performance .upload-zone p { font-size: 13px; color: var(--text-2); }
-      #view-performance .upload-zone input { display: none; }
-      
-      /* Questionnaire */
-      #view-performance .questionnaire { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 24px; }
-      #view-performance .questionnaire h3 { font-size: 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-      #view-performance .questionnaire h3::before { content: ''; width: 3px; height: 14px; background: var(--gold); border-radius: 2px; }
-      #view-performance .q-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-      #view-performance .q-field { display: flex; flex-direction: column; gap: 6px; }
-      #view-performance .q-field label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; }
-      #view-performance .q-field select, #view-performance .q-field input, #view-performance .q-field textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--text-1); }
-      #view-performance .q-field select:focus, #view-performance .q-field input:focus, #view-performance .q-field textarea:focus { outline: none; border-color: var(--gold); }
-      
-      /* Session Windows Editor */
-      #view-performance .session-windows { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-      #view-performance .session-tag { display: flex; align-items: center; gap: 6px; background: var(--surface-2); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-family: var(--mono); }
-      #view-performance .session-tag button { background: none; border: none; color: var(--text-3); cursor: pointer; padding: 2px; }
-      #view-performance .session-tag button:hover { color: var(--red); }
-      #view-performance .add-session { background: var(--surface-2); border: 1px dashed var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; color: var(--text-2); cursor: pointer; }
-      #view-performance .add-session:hover { border-color: var(--gold); color: var(--gold); }
-      
-      /* Submit */
-      #view-performance .submit-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
-      #view-performance .btn-primary { background: var(--gold); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
-      #view-performance .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-      #view-performance .btn-secondary { background: var(--surface-2); color: var(--text-1); border: 1px solid var(--border); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; }
-      
-      /* Results */
-      #view-performance .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-      #view-performance .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; }
-      #view-performance .metric-card.flagged { border-color: var(--red); background: rgba(242,54,69,0.05); }
-      #view-performance .metric-card.positive { border-color: var(--green); background: rgba(38,162,105,0.05); }
-      #view-performance .metric-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
-      #view-performance .metric-value { font-size: 24px; font-weight: 700; font-family: var(--mono); }
-      #view-performance .metric-value.red { color: var(--red); }
-      #view-performance .metric-value.green { color: var(--green); }
-      #view-performance .metric-note { font-size: 11px; color: var(--text-2); margin-top: 4px; }
-      #view-performance .metric-annotation { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; font-weight: 700; color: #000; }
-      
-      /* Section Headers */
-      #view-performance .section-header { font-size: 12px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-      #view-performance .section-header svg { width: 16px; height: 16px; stroke: var(--gold); }
-      
-      /* Sessions Table */
-      #view-performance .sessions-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
-      #view-performance .sessions-table th, #view-performance .sessions-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
-      #view-performance .sessions-table th { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
-      #view-performance .sessions-table .highlight { background: rgba(201,168,76,0.1); }
-      
-      /* Intelligence Summary */
-      #view-performance .intel-summary { background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.02)); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 24px; margin-top: 32px; }
-      #view-performance .intel-summary h3 { font-size: 14px; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-      #view-performance .intel-findings { list-style: none; padding: 0; margin: 0 0 16px; }
-      #view-performance .intel-findings li { padding: 12px 0; border-bottom: 1px solid rgba(201,168,76,0.2); font-size: 14px; line-height: 1.6; }
-      #view-performance .intel-findings li:last-child { border-bottom: none; }
-      #view-performance .intel-summary-text { font-size: 14px; line-height: 1.7; color: var(--text-1); }
-      #view-performance .intel-cta { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(201,168,76,0.2); }
-      #view-performance .intel-cta span { font-size: 12px; color: var(--text-2); }
-      
-      /* Sample Grade */
-      #view-performance .sample-grade { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 100px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px; }
-      #view-performance .sample-grade.ungraded { background: rgba(242,54,69,0.1); color: var(--red); }
-      #view-performance .sample-grade.thin { background: rgba(201,168,76,0.15); color: var(--gold); }
-      #view-performance .sample-grade.normal { background: rgba(38,162,105,0.1); color: var(--green); }
-      
-      /* Account Badge */
-      #view-performance .account-badge { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; }
-      #view-performance .account-badge.demo { border-color: var(--gold); background: rgba(201,168,76,0.05); }
-      #view-performance .account-badge .badge-label { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
-      #view-performance .account-badge .badge-label.demo { background: var(--gold); color: #000; }
-      #view-performance .account-badge .badge-label.live { background: var(--green); color: #fff; }
-      #view-performance .account-info { font-size: 13px; color: var(--text-2); }
-      
-      /* Loading State */
-      #view-performance .loading-overlay { position: absolute; inset: 0; background: rgba(10,10,15,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: 12px; }
-      #view-performance .loading-overlay .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      #view-performance .loading-overlay p { margin-top: 12px; font-size: 13px; color: var(--text-2); }
-    </style>
     
-    <div class="view-header">
-      <div class="eyebrow">Suite Feature</div>
-      <h2>Performance <em>Report</em></h2>
-      <p style="color: var(--text-2); margin-top: 8px;">Upload your MT5 trade history. Get the analysis you can't find anywhere else.</p>
-    </div>
-    
-    <div class="perf-container">
-      <div class="perf-tabs">
-        <button class="perf-tab active" data-panel="upload">Upload</button>
-        <button class="perf-tab" data-panel="results" id="perf-results-tab" style="display: none;">Results</button>
-        <button class="perf-tab" data-panel="history">History</button>
+    <!-- PERFORMANCE REPORT SECTION -->
+    <div class="perf-section" id="perf-section" style="margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--border);">
+      <div class="view-header" style="margin-bottom: 24px;">
+        <div class="eyebrow">Suite Feature</div>
+        <h3 style="font-size: 24px; margin: 0;">Performance <em>Report</em></h3>
+        <p style="color: var(--text-2); margin-top: 8px; font-size: 14px;">Upload your MT5 trade history. Get the analysis you can't find anywhere else.</p>
       </div>
       
-      <!-- UPLOAD PANEL -->
-      <div class="perf-panel active" id="perf-upload">
-        <div class="upload-zone" id="perf-dropzone">
-          <input type="file" id="perf-file-input" accept=".xlsx">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-            <polyline points="17,8 12,3 7,8"/>
-            <line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          <h3>Drop your MT5 export here</h3>
-          <p>or click to browse • XLSX only • Max 5MB</p>
-          <p style="margin-top: 12px; font-size: 11px; color: var(--text-3);">MT5 Desktop → History tab → Right click → Report → Export as XLSX</p>
+      <div class="perf-container">
+        <div class="perf-tabs">
+          <button class="perf-tab active" data-panel="upload">Upload</button>
+          <button class="perf-tab" data-panel="results" id="perf-results-tab" style="display: none;">Results</button>
+          <button class="perf-tab" data-panel="history">History</button>
         </div>
         
-        <div class="questionnaire" id="perf-questionnaire" style="display: none;">
-          <h3>Tell us about your trading</h3>
-          <p style="font-size: 13px; color: var(--text-2); margin-bottom: 20px;">This helps us compare your stated approach to your actual behavior.</p>
+        <!-- UPLOAD PANEL -->
+        <div class="perf-panel active" id="perf-upload">
+          <div class="upload-zone" id="perf-dropzone">
+            <input type="file" id="perf-file-input" accept=".xlsx">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+              <polyline points="17,8 12,3 7,8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <h3>Drop your MT5 export here</h3>
+            <p>or click to browse • XLSX only • Max 5MB</p>
+            <p style="margin-top: 12px; font-size: 11px; color: var(--text-3);">MT5 Desktop → History tab → Right click → Report → Export as XLSX</p>
+          </div>
           
-          <div class="q-grid">
-            <div class="q-field">
-              <label>Primary Strategy</label>
-              <select id="pq-strategy">
-                <option value="">Select...</option>
-                <option value="recoil">Recoil (reversals)</option>
-                <option value="meridian">Meridian (trend)</option>
-                <option value="both">Both</option>
-                <option value="other">Other / Mixed</option>
-              </select>
-            </div>
+          <div class="questionnaire" id="perf-questionnaire" style="display: none;">
+            <h3>Tell us about your trading</h3>
+            <p style="font-size: 13px; color: var(--text-2); margin-bottom: 20px;">This helps us compare your stated approach to your actual behavior.</p>
             
-            <div class="q-field">
-              <label>Trading Style</label>
-              <select id="pq-style">
-                <option value="">Select...</option>
-                <option value="scalp">Scalp (minutes)</option>
-                <option value="day">Intraday (hours)</option>
-                <option value="swing">Swing (days)</option>
-              </select>
-            </div>
-            
-            <div class="q-field">
-              <label>Typical Risk Per Trade</label>
-              <select id="pq-risk">
-                <option value="">Select...</option>
-                <option value="0.25%">0.25%</option>
-                <option value="0.5%">0.5%</option>
-                <option value="1%">1%</option>
-                <option value="2%">2%</option>
-                <option value="varies">It varies</option>
-              </select>
-            </div>
-            
-            <div class="q-field">
-              <label>Stop Loss Usage</label>
-              <select id="pq-stops">
-                <option value="">Select...</option>
-                <option value="always">Always</option>
-                <option value="usually">Usually</option>
-                <option value="sometimes">Sometimes</option>
-                <option value="rarely">Rarely</option>
-              </select>
-            </div>
-            
-            <div class="q-field">
-              <label>Average Trades Per Day</label>
-              <select id="pq-frequency">
-                <option value="">Select...</option>
-                <option value="1-2">1-2</option>
-                <option value="3-5">3-5</option>
-                <option value="5-10">5-10</option>
-                <option value="10+">10+</option>
-              </select>
-            </div>
-            
-            <div class="q-field">
-              <label>Your Session Windows (UTC)</label>
-              <div class="session-windows" id="pq-sessions">
-                <div class="session-tag">07:00-09:00 <button onclick="removeSession(this)">×</button></div>
-                <div class="session-tag">13:00-14:00 <button onclick="removeSession(this)">×</button></div>
-                <div class="session-tag">19:00-20:00 <button onclick="removeSession(this)">×</button></div>
-                <button class="add-session" onclick="addSessionPrompt()">+ Add</button>
+            <div class="q-grid">
+              <div class="q-field">
+                <label>Primary Strategy</label>
+                <select id="pq-strategy">
+                  <option value="">Select...</option>
+                  <option value="recoil">Recoil (reversals)</option>
+                  <option value="meridian">Meridian (trend)</option>
+                  <option value="both">Both</option>
+                  <option value="other">Other / Mixed</option>
+                </select>
+              </div>
+              
+              <div class="q-field">
+                <label>Trading Style</label>
+                <select id="pq-style">
+                  <option value="">Select...</option>
+                  <option value="scalp">Scalp (minutes)</option>
+                  <option value="day">Intraday (hours)</option>
+                  <option value="swing">Swing (days)</option>
+                </select>
+              </div>
+              
+              <div class="q-field">
+                <label>Typical Risk Per Trade</label>
+                <select id="pq-risk">
+                  <option value="">Select...</option>
+                  <option value="0.25%">0.25%</option>
+                  <option value="0.5%">0.5%</option>
+                  <option value="1%">1%</option>
+                  <option value="2%">2%</option>
+                  <option value="varies">It varies</option>
+                </select>
+              </div>
+              
+              <div class="q-field">
+                <label>Stop Loss Usage</label>
+                <select id="pq-stops">
+                  <option value="">Select...</option>
+                  <option value="always">Always</option>
+                  <option value="usually">Usually</option>
+                  <option value="sometimes">Sometimes</option>
+                  <option value="rarely">Rarely</option>
+                </select>
+              </div>
+              
+              <div class="q-field">
+                <label>Average Trades Per Day</label>
+                <select id="pq-frequency">
+                  <option value="">Select...</option>
+                  <option value="1-2">1-2</option>
+                  <option value="3-5">3-5</option>
+                  <option value="5-10">5-10</option>
+                  <option value="10+">10+</option>
+                </select>
+              </div>
+              
+              <div class="q-field">
+                <label>Your Session Windows (UTC)</label>
+                <div class="session-windows" id="pq-sessions">
+                  <div class="session-tag">07:00-09:00 <button onclick="removeSession(this)">×</button></div>
+                  <div class="session-tag">13:00-14:00 <button onclick="removeSession(this)">×</button></div>
+                  <div class="session-tag">19:00-20:00 <button onclick="removeSession(this)">×</button></div>
+                  <button class="add-session" onclick="addSessionPrompt()">+ Add</button>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div class="q-grid" style="margin-top: 16px;">
-            <div class="q-field">
-              <label>Biggest Challenge Right Now</label>
-              <textarea id="pq-challenge" rows="2" placeholder="e.g., Cutting losses, overtrading, discipline..."></textarea>
+            
+            <div class="q-grid" style="margin-top: 16px;">
+              <div class="q-field">
+                <label>Biggest Challenge Right Now</label>
+                <textarea id="pq-challenge" rows="2" placeholder="e.g., Cutting losses, overtrading, discipline..."></textarea>
+              </div>
+              
+              <div class="q-field">
+                <label>What Do You Want From This Report?</label>
+                <textarea id="pq-goal" rows="2" placeholder="e.g., Find my weak spots, validate my edge..."></textarea>
+              </div>
             </div>
             
-            <div class="q-field">
-              <label>What Do You Want From This Report?</label>
-              <textarea id="pq-goal" rows="2" placeholder="e.g., Find my weak spots, validate my edge..."></textarea>
+            <div class="submit-row">
+              <button class="btn-secondary" onclick="cancelUpload()">Cancel</button>
+              <button class="btn-primary" id="perf-submit-btn" onclick="submitPerformanceReport()">
+                Analyze My Trading
+              </button>
             </div>
           </div>
           
-          <div class="submit-row">
-            <button class="btn-secondary" onclick="cancelUpload()">Cancel</button>
-            <button class="btn-primary" id="perf-submit-btn" onclick="submitPerformanceReport()">
-              Analyze My Trading
-            </button>
+          <div id="perf-file-preview" style="display: none; margin-top: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
+                <div>
+                  <div style="font-weight: 600; font-size: 14px;" id="perf-filename">—</div>
+                  <div style="font-size: 12px; color: var(--text-2);" id="perf-filesize">—</div>
+                </div>
+              </div>
+              <button onclick="clearFile()" style="background: none; border: none; color: var(--text-3); cursor: pointer; padding: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
           </div>
         </div>
         
-        <div id="perf-file-preview" style="display: none; margin-top: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
-              <div>
-                <div style="font-weight: 600; font-size: 14px;" id="perf-filename">—</div>
-                <div style="font-size: 12px; color: var(--text-2);" id="perf-filesize">—</div>
-              </div>
-            </div>
-            <button onclick="clearFile()" style="background: none; border: none; color: var(--text-3); cursor: pointer; padding: 8px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+        <!-- RESULTS PANEL -->
+        <div class="perf-panel" id="perf-results">
+          <div id="perf-results-content">
+            <!-- Populated by JS -->
           </div>
         </div>
-      </div>
-      
-      <!-- RESULTS PANEL -->
-      <div class="perf-panel" id="perf-results">
-        <div id="perf-results-content">
-          <!-- Populated by JS -->
+        
+        <!-- HISTORY PANEL -->
+        <div class="perf-panel" id="perf-history">
+          <div style="text-align: center; padding: 48px; color: var(--text-2);">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; opacity: 0.5;"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
+            <p>Your previous reports will appear here.</p>
+            <p style="font-size: 12px; margin-top: 8px;">Upload your first report to get started.</p>
+          </div>
+          <div id="perf-history-list"></div>
         </div>
-      </div>
-      
-      <!-- HISTORY PANEL -->
-      <div class="perf-panel" id="perf-history">
-        <div style="text-align: center; padding: 48px; color: var(--text-2);">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 16px; opacity: 0.5;"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>
-          <p>Your previous reports will appear here.</p>
-          <p style="font-size: 12px; margin-top: 8px;">Upload your first report to get started.</p>
-        </div>
-        <div id="perf-history-list"></div>
       </div>
     </div>
   </div>
 
+  <!-- Performance Report Styles (used by .perf-section inside Suite view) -->
+  <style>
+    .perf-section .perf-container, #view-performance .perf-container { max-width: 1000px; }
+    .perf-section .perf-tabs, #view-performance .perf-tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+    .perf-section .perf-tab, #view-performance .perf-tab { background: none; border: none; padding: 8px 16px; color: var(--text-2); font-size: 13px; cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+    .perf-section .perf-tab:hover, #view-performance .perf-tab:hover { background: var(--surface-2); }
+    .perf-section .perf-tab.active, #view-performance .perf-tab.active { background: var(--gold); color: #000; font-weight: 600; }
+    .perf-section .perf-panel, #view-performance .perf-panel { display: none; }
+    .perf-section .perf-panel.active, #view-performance .perf-panel.active { display: block; }
+    
+    /* Upload Form */
+    .perf-section .upload-zone, #view-performance .upload-zone { border: 2px dashed var(--border); border-radius: 12px; padding: 48px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface); }
+    .perf-section .upload-zone:hover, .perf-section .upload-zone.dragover, #view-performance .upload-zone:hover, #view-performance .upload-zone.dragover { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+    .perf-section .upload-zone svg, #view-performance .upload-zone svg { width: 48px; height: 48px; stroke: var(--text-3); margin-bottom: 16px; }
+    .perf-section .upload-zone h3, #view-performance .upload-zone h3 { font-size: 16px; margin-bottom: 8px; }
+    .perf-section .upload-zone p, #view-performance .upload-zone p { font-size: 13px; color: var(--text-2); }
+    .perf-section .upload-zone input, #view-performance .upload-zone input { display: none; }
+    
+    /* Questionnaire */
+    .perf-section .questionnaire, #view-performance .questionnaire { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-top: 24px; }
+    .perf-section .questionnaire h3, #view-performance .questionnaire h3 { font-size: 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .perf-section .questionnaire h3::before, #view-performance .questionnaire h3::before { content: ''; width: 3px; height: 14px; background: var(--gold); border-radius: 2px; }
+    .perf-section .q-grid, #view-performance .q-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .perf-section .q-field, #view-performance .q-field { display: flex; flex-direction: column; gap: 6px; }
+    .perf-section .q-field label, #view-performance .q-field label { font-size: 11px; font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.05em; }
+    .perf-section .q-field select, .perf-section .q-field input, .perf-section .q-field textarea, #view-performance .q-field select, #view-performance .q-field input, #view-performance .q-field textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--text-1); }
+    .perf-section .q-field select:focus, .perf-section .q-field input:focus, .perf-section .q-field textarea:focus, #view-performance .q-field select:focus, #view-performance .q-field input:focus, #view-performance .q-field textarea:focus { outline: none; border-color: var(--gold); }
+    
+    /* Session Windows Editor */
+    .perf-section .session-windows, #view-performance .session-windows { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .perf-section .session-tag, #view-performance .session-tag { display: flex; align-items: center; gap: 6px; background: var(--surface-2); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-family: var(--mono); }
+    .perf-section .session-tag button, #view-performance .session-tag button { background: none; border: none; color: var(--text-3); cursor: pointer; padding: 2px; }
+    .perf-section .session-tag button:hover, #view-performance .session-tag button:hover { color: var(--red); }
+    .perf-section .add-session, #view-performance .add-session { background: var(--surface-2); border: 1px dashed var(--border); padding: 6px 12px; border-radius: 6px; font-size: 12px; color: var(--text-2); cursor: pointer; }
+    .perf-section .add-session:hover, #view-performance .add-session:hover { border-color: var(--gold); color: var(--gold); }
+    
+    /* Submit */
+    .perf-section .submit-row, #view-performance .submit-row { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .perf-section .btn-primary, #view-performance .btn-primary { background: var(--gold); color: #000; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; }
+    .perf-section .btn-primary:disabled, #view-performance .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .perf-section .btn-secondary, #view-performance .btn-secondary { background: var(--surface-2); color: var(--text-1); border: 1px solid var(--border); padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+    
+    /* Results */
+    .perf-section .results-grid, #view-performance .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .perf-section .metric-card, #view-performance .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; position: relative; }
+    .perf-section .metric-card.flagged, #view-performance .metric-card.flagged { border-color: var(--red); background: rgba(242,54,69,0.05); }
+    .perf-section .metric-card.positive, #view-performance .metric-card.positive { border-color: var(--green); background: rgba(38,162,105,0.05); }
+    .perf-section .metric-label, #view-performance .metric-label { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .perf-section .metric-value, #view-performance .metric-value { font-size: 24px; font-weight: 700; font-family: var(--mono); }
+    .perf-section .metric-value.red, #view-performance .metric-value.red { color: var(--red); }
+    .perf-section .metric-value.green, #view-performance .metric-value.green { color: var(--green); }
+    .perf-section .metric-note, #view-performance .metric-note { font-size: 11px; color: var(--text-2); margin-top: 4px; }
+    .perf-section .metric-annotation, #view-performance .metric-annotation { position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; font-weight: 700; color: #000; }
+    
+    /* Section Headers */
+    .perf-section .section-header, #view-performance .section-header { font-size: 12px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.1em; margin: 32px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .perf-section .section-header svg, #view-performance .section-header svg { width: 16px; height: 16px; stroke: var(--gold); }
+    
+    /* Sessions Table */
+    .perf-section .sessions-table, #view-performance .sessions-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .perf-section .sessions-table th, .perf-section .sessions-table td, #view-performance .sessions-table th, #view-performance .sessions-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .perf-section .sessions-table th, #view-performance .sessions-table th { font-size: 10px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+    .perf-section .sessions-table .highlight, #view-performance .sessions-table .highlight { background: rgba(201,168,76,0.1); }
+    
+    /* Intelligence Summary */
+    .perf-section .intel-summary, #view-performance .intel-summary { background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.02)); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 24px; margin-top: 32px; }
+    .perf-section .intel-summary h3, #view-performance .intel-summary h3 { font-size: 14px; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .perf-section .intel-findings, #view-performance .intel-findings { list-style: none; padding: 0; margin: 0 0 16px; }
+    .perf-section .intel-findings li, #view-performance .intel-findings li { padding: 12px 0; border-bottom: 1px solid rgba(201,168,76,0.2); font-size: 14px; line-height: 1.6; }
+    .perf-section .intel-findings li:last-child, #view-performance .intel-findings li:last-child { border-bottom: none; }
+    .perf-section .intel-summary-text, #view-performance .intel-summary-text { font-size: 14px; line-height: 1.7; color: var(--text-1); }
+    .perf-section .intel-cta, #view-performance .intel-cta { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(201,168,76,0.2); }
+    .perf-section .intel-cta span, #view-performance .intel-cta span { font-size: 12px; color: var(--text-2); }
+    
+    /* Sample Grade */
+    .perf-section .sample-grade, #view-performance .sample-grade { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 100px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px; }
+    .perf-section .sample-grade.ungraded, #view-performance .sample-grade.ungraded { background: rgba(242,54,69,0.1); color: var(--red); }
+    .perf-section .sample-grade.thin, #view-performance .sample-grade.thin { background: rgba(201,168,76,0.15); color: var(--gold); }
+    .perf-section .sample-grade.normal, #view-performance .sample-grade.normal { background: rgba(38,162,105,0.1); color: var(--green); }
+    
+    /* Account Badge */
+    .perf-section .account-badge, #view-performance .account-badge { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; }
+    .perf-section .account-badge.demo, #view-performance .account-badge.demo { border-color: var(--gold); background: rgba(201,168,76,0.05); }
+    .perf-section .account-badge .badge-label, #view-performance .account-badge .badge-label { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; }
+    .perf-section .account-badge .badge-label.demo, #view-performance .account-badge .badge-label.demo { background: var(--gold); color: #000; }
+    .perf-section .account-badge .badge-label.live, #view-performance .account-badge .badge-label.live { background: var(--green); color: #fff; }
+    .perf-section .account-info, #view-performance .account-info { font-size: 13px; color: var(--text-2); }
+    
+    /* Loading State */
+    .perf-section .loading-overlay, #view-performance .loading-overlay { position: absolute; inset: 0; background: rgba(10,10,15,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; border-radius: 12px; }
+    .perf-section .loading-overlay .spinner, #view-performance .loading-overlay .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .perf-section .loading-overlay p, #view-performance .loading-overlay p { margin-top: 12px; font-size: 13px; color: var(--text-2); }
+  </style>
+  
   <!-- ACADEMY (Locked) -->
   <div class="view" id="view-academy">
     <div class="view-header">
@@ -10004,7 +10004,7 @@ const _viewMap = {
   'home': 'home', 'research': 'research', 'community': 'community',
   'build': 'marketplace', 'marketplace': 'marketplace',
   'recoil': 'recoil', 'meridian': 'meridian', 'cockpit': 'cockpit',
-  'performance': 'performance', 'report': 'performance',
+  'suite': 'cockpit', 'performance': 'cockpit', 'report': 'cockpit',
   'intelligence': 'intel', 'settings': 'settings', 'academy': 'academy',
   'notebook': 'notebook', 'journal': 'notebook', 'mentorship': 'mentorship',
   'automation': 'automation', 'admin': 'admin', 'affiliates': 'affiliates',
@@ -11480,11 +11480,11 @@ function showLockedModal(view, requiredTier) {
       value: 'Part of the Ascension program — application required.'
     },
     'cockpit': {
-      title: 'Cockpit — Visual Analysis',
-      tier: 'cockpit',
+      title: 'Full Suite',
+      tier: 'suite',
       price: '£88',
-      description: 'Multi-timeframe visual analysis overlay — EMAs, liquidity pools, FVGs, AMD phases, and fractal dashboards.',
-      value: 'See what the institutions see.'
+      description: 'The complete framework: Cockpit indicator, Performance Reports, and full access to all three build menus (1,020 combinations).',
+      value: 'Everything. No compromises.'
     },
     'recoil': {
       title: 'Recoil Indicator',
@@ -17393,11 +17393,11 @@ const PERF_API_URL = 'http://95.214.180.36/perf-api';
 let perfSelectedFile = null;
 let perfCurrentReport = null;
 
-// Tab switching
-document.querySelectorAll('#view-performance .perf-tab').forEach(tab => {
+// Tab switching (Performance Report - now inside Suite view)
+document.querySelectorAll('.perf-section .perf-tab').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('#view-performance .perf-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('#view-performance .perf-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.perf-section .perf-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.perf-section .perf-panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('perf-' + tab.dataset.panel).classList.add('active');
   });
