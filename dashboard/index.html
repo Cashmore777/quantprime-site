@@ -18341,8 +18341,13 @@ function renderPerfInterpretation(interp) {
     html += `</div>`;
   }
   
-  // Summary
-  if (interp.summary) {
+  // Recommendation (replaces summary)
+  if (interp.recommendation) {
+    html += `<div class="intel-recommendation" style="margin-top: 16px; padding: 12px 16px; background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); font-size: 14px; line-height: 1.6;">
+      <strong style="color: var(--gold);">Recommendation:</strong> ${interp.recommendation}
+    </div>`;
+  } else if (interp.summary) {
+    // Fallback for old format
     html += `<div class="intel-summary-text">${interp.summary}</div>`;
   }
   
