@@ -7832,6 +7832,93 @@ button, .nav-item, .room, .video-item, .filter-chip {
     .perf-section .loading-overlay .spinner, #view-performance .loading-overlay .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .perf-section .loading-overlay p, #view-performance .loading-overlay p { margin-top: 12px; font-size: 13px; color: var(--text-2); }
+    
+    /* ═══ Enhanced Performance Charts ═══ */
+    
+    /* Hero Stats Row */
+    .perf-hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .perf-hero-stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; animation: fadeSlideUp 0.5s ease-out backwards; }
+    .perf-hero-stat:nth-child(1) { animation-delay: 0.1s; }
+    .perf-hero-stat:nth-child(2) { animation-delay: 0.15s; }
+    .perf-hero-stat:nth-child(3) { animation-delay: 0.2s; }
+    .perf-hero-stat:nth-child(4) { animation-delay: 0.25s; }
+    .perf-hero-stat .stat-value { font-size: 32px; font-weight: 800; font-family: var(--mono); line-height: 1; margin-bottom: 6px; }
+    .perf-hero-stat .stat-value.green { color: var(--green); }
+    .perf-hero-stat .stat-value.red { color: var(--red); }
+    .perf-hero-stat .stat-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; }
+    
+    /* Donut Chart */
+    .perf-donut-container { display: flex; align-items: center; justify-content: center; gap: 32px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 24px; animation: fadeSlideUp 0.5s ease-out 0.3s backwards; }
+    .perf-donut { position: relative; width: 140px; height: 140px; flex-shrink: 0; }
+    .perf-donut svg { transform: rotate(-90deg); }
+    .perf-donut-bg { fill: none; stroke: var(--border); stroke-width: 12; }
+    .perf-donut-fill { fill: none; stroke-width: 12; stroke-linecap: round; transition: stroke-dasharray 1s ease-out; }
+    .perf-donut-fill.green { stroke: var(--green); }
+    .perf-donut-fill.red { stroke: var(--red); }
+    .perf-donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+    .perf-donut-center .big { font-size: 28px; font-weight: 800; font-family: var(--mono); }
+    .perf-donut-center .small { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; }
+    .perf-donut-legend { display: flex; flex-direction: column; gap: 12px; }
+    .perf-donut-legend-item { display: flex; align-items: center; gap: 10px; }
+    .perf-donut-legend-item .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .perf-donut-legend-item .dot.green { background: var(--green); }
+    .perf-donut-legend-item .dot.red { background: var(--red); }
+    .perf-donut-legend-item .info { display: flex; flex-direction: column; }
+    .perf-donut-legend-item .info .count { font-size: 18px; font-weight: 700; font-family: var(--mono); }
+    .perf-donut-legend-item .info .label { font-size: 11px; color: var(--text-3); }
+    
+    /* Bar Charts */
+    .perf-bars-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; animation: fadeSlideUp 0.5s ease-out 0.4s backwards; }
+    .perf-bars-section h4 { font-size: 11px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .perf-bars-section h4 svg { width: 14px; height: 14px; stroke: var(--gold); }
+    .perf-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .perf-bar-row:last-child { margin-bottom: 0; }
+    .perf-bar-label { width: 80px; font-size: 12px; font-weight: 600; color: var(--text-2); flex-shrink: 0; }
+    .perf-bar-track { flex: 1; height: 24px; background: var(--surface-2); border-radius: 4px; overflow: hidden; position: relative; }
+    .perf-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease-out; display: flex; align-items: center; padding: 0 8px; }
+    .perf-bar-fill.green { background: linear-gradient(90deg, var(--green), rgba(38,162,105,0.7)); }
+    .perf-bar-fill.red { background: linear-gradient(90deg, var(--red), rgba(239,68,68,0.7)); }
+    .perf-bar-fill.gold { background: linear-gradient(90deg, var(--gold), rgba(201,168,76,0.7)); }
+    .perf-bar-fill span { font-size: 11px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .perf-bar-value { width: 70px; text-align: right; font-size: 13px; font-weight: 600; font-family: var(--mono); flex-shrink: 0; }
+    .perf-bar-value.green { color: var(--green); }
+    .perf-bar-value.red { color: var(--red); }
+    
+    /* Direction Comparison */
+    .perf-direction-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; animation: fadeSlideUp 0.5s ease-out 0.5s backwards; }
+    .perf-direction-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; overflow: hidden; }
+    .perf-direction-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .perf-direction-card.buy::before { background: var(--green); }
+    .perf-direction-card.sell::before { background: var(--red); }
+    .perf-direction-card .dir-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .perf-direction-card .dir-header svg { width: 20px; height: 20px; }
+    .perf-direction-card.buy .dir-header svg { stroke: var(--green); }
+    .perf-direction-card.sell .dir-header svg { stroke: var(--red); }
+    .perf-direction-card .dir-title { font-size: 14px; font-weight: 700; text-transform: uppercase; }
+    .perf-direction-card .dir-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .perf-direction-card .dir-stat-val { font-size: 20px; font-weight: 700; font-family: var(--mono); }
+    .perf-direction-card .dir-stat-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; }
+    
+    /* Animations */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes ringFill {
+      from { stroke-dasharray: 0 440; }
+    }
+    
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .perf-donut-container { flex-direction: column; gap: 20px; }
+      .perf-direction-compare { grid-template-columns: 1fr; }
+      .perf-hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .perf-hero-stat .stat-value { font-size: 24px; }
+    }
   </style>
   
   <!-- ACADEMY (Locked) -->
@@ -17769,80 +17856,177 @@ function renderPerformanceResults(report) {
     </div>
   `;
   
-  // Core metrics
-  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>Core Metrics</div>`;
-  html += `<div class="results-grid">`;
+  // ═══ HERO STATS (Animated) ═══
+  const netClass = core.net_result >= 0 ? 'green' : 'red';
+  const wrClass = core.win_rate >= 50 ? 'green' : 'red';
+  const pfClass = (cost.profit_factor || 0) >= 1 ? 'green' : 'red';
   
-  html += metricCard('Trades', core.trades, null, '', core.trades < 30 ? 'Not enough data' : null);
-  html += metricCard('Win Rate', core.win_rate + '%', core.win_rate >= 50 ? 'green' : 'red', '', `${core.wins} wins, ${core.losses} losses`);
-  html += metricCard('Expectancy', '$' + core.expectancy, core.expectancy >= 0 ? 'green' : 'red');
-  html += metricCard('Net Result', '$' + core.net_result, core.net_result >= 0 ? 'green' : 'red');
-  html += metricCard('Avg Win', '$' + core.avg_win, 'green');
-  html += metricCard('Avg Loss', '$' + core.avg_loss, 'red');
+  html += `
+    <div class="perf-hero-stats">
+      <div class="perf-hero-stat">
+        <div class="stat-value ${netClass}" data-count="${core.net_result}">$${core.net_result}</div>
+        <div class="stat-label">Net P&L</div>
+      </div>
+      <div class="perf-hero-stat">
+        <div class="stat-value" data-count="${core.trades}">${core.trades}</div>
+        <div class="stat-label">Trades</div>
+      </div>
+      <div class="perf-hero-stat">
+        <div class="stat-value ${wrClass}" data-count="${core.win_rate}">${core.win_rate}%</div>
+        <div class="stat-label">Win Rate</div>
+      </div>
+      <div class="perf-hero-stat">
+        <div class="stat-value ${pfClass}" data-count="${cost.profit_factor || 0}">${cost.profit_factor || '—'}</div>
+        <div class="stat-label">Profit Factor</div>
+      </div>
+    </div>
+  `;
+  
+  // ═══ WIN/LOSS DONUT CHART ═══
+  const winPct = core.trades > 0 ? (core.wins / core.trades) * 100 : 0;
+  const circumference = 2 * Math.PI * 60; // r=60
+  const winDash = (winPct / 100) * circumference;
+  
+  html += `
+    <div class="perf-donut-container">
+      <div class="perf-donut">
+        <svg viewBox="0 0 140 140">
+          <circle class="perf-donut-bg" cx="70" cy="70" r="60"/>
+          <circle class="perf-donut-fill green" cx="70" cy="70" r="60" 
+            style="stroke-dasharray: ${winDash} ${circumference}; animation: ringFill 1s ease-out;"/>
+        </svg>
+        <div class="perf-donut-center">
+          <div class="big ${wrClass}">${core.win_rate}%</div>
+          <div class="small">Win Rate</div>
+        </div>
+      </div>
+      <div class="perf-donut-legend">
+        <div class="perf-donut-legend-item">
+          <span class="dot green"></span>
+          <div class="info">
+            <span class="count">${core.wins}</span>
+            <span class="label">Winning trades • $${core.avg_win} avg</span>
+          </div>
+        </div>
+        <div class="perf-donut-legend-item">
+          <span class="dot red"></span>
+          <div class="info">
+            <span class="count">${core.losses}</span>
+            <span class="label">Losing trades • $${core.avg_loss} avg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // ═══ DIRECTION COMPARISON CARDS ═══
+  if (direction.buy || direction.sell) {
+    html += `<div class="perf-direction-compare">`;
+    
+    if (direction.buy) {
+      html += `
+        <div class="perf-direction-card buy">
+          <div class="dir-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+            <span class="dir-title">Buys</span>
+          </div>
+          <div class="dir-stats">
+            <div>
+              <div class="dir-stat-val">${direction.buy.trades}</div>
+              <div class="dir-stat-label">Trades</div>
+            </div>
+            <div>
+              <div class="dir-stat-val ${direction.buy.net >= 0 ? 'green' : 'red'}" style="color: var(--${direction.buy.net >= 0 ? 'green' : 'red'})">$${direction.buy.net}</div>
+              <div class="dir-stat-label">Net P&L</div>
+            </div>
+            <div>
+              <div class="dir-stat-val">${direction.buy.win_rate}%</div>
+              <div class="dir-stat-label">Win Rate</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    if (direction.sell) {
+      html += `
+        <div class="perf-direction-card sell">
+          <div class="dir-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+            <span class="dir-title">Sells</span>
+          </div>
+          <div class="dir-stats">
+            <div>
+              <div class="dir-stat-val">${direction.sell.trades}</div>
+              <div class="dir-stat-label">Trades</div>
+            </div>
+            <div>
+              <div class="dir-stat-val" style="color: var(--${direction.sell.net >= 0 ? 'green' : 'red'})">$${direction.sell.net}</div>
+              <div class="dir-stat-label">Net P&L</div>
+            </div>
+            <div>
+              <div class="dir-stat-val">${direction.sell.win_rate}%</div>
+              <div class="dir-stat-label">Win Rate</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    html += `</div>`;
+  }
+  
+  // ═══ SESSION BAR CHART ═══
+  const sessionEntries = Object.entries(sessions).sort((a, b) => {
+    if (a[0] === 'outside') return 1;
+    if (b[0] === 'outside') return -1;
+    return b[1].net - a[1].net; // Sort by P&L descending
+  });
+  
+  // Find max absolute value for scaling
+  const maxNet = Math.max(...sessionEntries.map(([_, d]) => Math.abs(d.net)), 1);
+  
+  html += `
+    <div class="perf-bars-section">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> Session Performance</h4>
+  `;
+  
+  sessionEntries.forEach(([session, data]) => {
+    const isPositive = data.net >= 0;
+    const barWidth = Math.min(Math.abs(data.net) / maxNet * 100, 100);
+    const colorClass = session === 'outside' ? 'gold' : (isPositive ? 'green' : 'red');
+    
+    html += `
+      <div class="perf-bar-row">
+        <div class="perf-bar-label">${session}</div>
+        <div class="perf-bar-track">
+          <div class="perf-bar-fill ${colorClass}" style="width: ${barWidth}%;">
+            <span>${data.trades} trades</span>
+          </div>
+        </div>
+        <div class="perf-bar-value ${isPositive ? 'green' : 'red'}">$${data.net}</div>
+      </div>
+    `;
+  });
   
   html += `</div>`;
   
-  // Cost metrics
-  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Cost Analysis</div>`;
-  html += `<div class="results-grid">`;
-  
-  html += metricCard('Profit Factor', cost.profit_factor || '—', cost.profit_factor >= 1 ? 'green' : 'red', '', 'Gross profit ÷ gross loss');
-  html += metricCard('Net PF', cost.net_profit_factor || '—', cost.net_profit_factor >= 1 ? 'green' : 'red', '', 'After costs');
-  html += metricCard('Commission', '$' + cost.commission_total, null, '', cost.commission_pct_of_gross + '% of gross profit');
-  html += metricCard('Swap', '$' + cost.swap_total, cost.swap_total >= 0 ? 'green' : 'red');
-  
-  html += `</div>`;
-  
-  // Risk metrics
-  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Risk Profile</div>`;
+  // ═══ RISK & COST METRICS ═══
+  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Risk & Cost Profile</div>`;
   html += `<div class="results-grid">`;
   
   html += metricCard('Stops Used', risk.pct_with_stop + '%', risk.pct_with_stop >= 90 ? 'green' : 'red', '', risk.trades_with_stop + ' of ' + risk.total_trades + ' trades');
   html += metricCard('Avg R', risk.avg_R, risk.avg_R >= 0 ? 'green' : 'red', '', 'Risk-adjusted return');
   html += metricCard('Best R', risk.best_R, 'green');
   html += metricCard('Worst R', risk.worst_R, 'red', risk.stop_blown_flag ? 'flagged' : '', risk.worst_R < -2 ? '⚠️ Stop did not hold!' : '');
-  html += metricCard('Avg Risk', risk.avg_risk_pips + ' pips', null);
-  html += metricCard('Drawdown', '$' + drawdown.closed_equity_drawdown, 'red', '', 'Closed equity only');
+  html += metricCard('Commission', '$' + cost.commission_total, null, '', cost.commission_pct_of_gross + '% of gross profit');
+  html += metricCard('Max DD', '$' + drawdown.closed_equity_drawdown, 'red', '', 'Closed equity only');
   
   html += `</div>`;
   
-  // Session breakdown
-  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Session Analysis</div>`;
-  html += `<table class="sessions-table"><thead><tr><th>Session</th><th>Trades</th><th>Net P&L</th><th>Win Rate</th></tr></thead><tbody>`;
-  
-  Object.entries(sessions).sort((a, b) => {
-    if (a[0] === 'outside') return 1;
-    if (b[0] === 'outside') return -1;
-    return a[0].localeCompare(b[0]);
-  }).forEach(([session, data]) => {
-    const isPositive = data.net >= 0;
-    const highlight = session !== 'outside' && isPositive ? 'highlight' : '';
-    html += `<tr class="${highlight}">
-      <td><strong>${session}</strong></td>
-      <td>${data.trades}</td>
-      <td style="color: var(--${isPositive ? 'green' : 'red'});">$${data.net}</td>
-      <td>${data.win_rate}%</td>
-    </tr>`;
-  });
-  
-  html += `</tbody></table>`;
-  
-  // Direction breakdown
-  html += `<div class="section-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>Direction</div>`;
-  html += `<div class="results-grid">`;
-  
-  if (direction.buy) {
-    html += metricCard('Buys', direction.buy.trades + ' trades', direction.buy.net >= 0 ? 'green' : 'red', '', 'Net: $' + direction.buy.net + ' | WR: ' + direction.buy.win_rate + '%');
-  }
-  if (direction.sell) {
-    html += metricCard('Sells', direction.sell.trades + ' trades', direction.sell.net >= 0 ? 'green' : 'red', '', 'Net: $' + direction.sell.net + ' | WR: ' + direction.sell.win_rate + '%');
-  }
-  
-  html += `</div>`;
-  
-  // Size analysis
+  // Size analysis warning
   if (size.largest_all_lost_flag) {
-    html += `<div style="background: rgba(242,54,69,0.1); border: 1px solid var(--red); border-radius: 8px; padding: 16px; margin: 24px 0;">
+    html += `<div style="background: rgba(242,54,69,0.1); border: 1px solid var(--red); border-radius: 8px; padding: 16px; margin: 24px 0; animation: fadeSlideUp 0.5s ease-out 0.6s backwards;">
       <strong style="color: var(--red);">⚠️ Size Pattern Detected:</strong> Your 3 largest positions all lost money.
       <span style="color: var(--text-2); font-size: 13px; display: block; margin-top: 4px;">This is common when traders increase size after a string of wins, then give it back.</span>
     </div>`;
@@ -17850,7 +18034,7 @@ function renderPerformanceResults(report) {
   
   // Intelligence CTA
   html += `
-    <div class="intel-summary">
+    <div class="intel-summary" style="animation: fadeSlideUp 0.5s ease-out 0.7s backwards;">
       <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg> QP Intelligence Analysis</h3>
       <div id="perf-intel-content">
         <p style="color: var(--text-2); margin-bottom: 16px;">Get a written interpretation of your data with specific, actionable insights.</p>
