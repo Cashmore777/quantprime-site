@@ -21,7 +21,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
     <image:image>
-      <image:loc>https://quantprime.uk/assets/og-manifesto.png</image:loc>
+      <image:loc>https://quantprime.uk/assets/og-image.png</image:loc>
       <image:title>The Quant Prime Manifesto - Introduction to Quantitative Trading</image:title>
     </image:image>
   </url>
@@ -58,29 +58,8 @@
     <priority>0.75</priority>
   </url>
   
-  <!-- Recoil Indicator Page -->
-  <url>
-    <loc>https://quantprime.uk/recoil</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <!-- Terminal/Meridian Page -->
-  <url>
-    <loc>https://quantprime.uk/terminal</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
-  
-  <!-- Full Suite Page -->
-  <url>
-    <loc>https://quantprime.uk/fullsuite</loc>
-    <lastmod>2026-08-31</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.75</priority>
-  </url>
+  <!-- Note: /recoil, /terminal, /fullsuite are redirect pages with noindex
+       They're excluded from sitemap but URLs still work for email links -->
   
   <!-- Ascension Program - Premium offering -->
   <url>
@@ -89,7 +68,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <image:image>
-      <image:loc>https://quantprime.uk/assets/og-ascension.png</image:loc>
+      <image:loc>https://quantprime.uk/assets/og-image.png</image:loc>
       <image:title>Ascension Program - 90-Day Trading Transformation</image:title>
     </image:image>
   </url>
