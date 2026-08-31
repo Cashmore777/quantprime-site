@@ -30,6 +30,8 @@
   --gold-glow: rgba(201,168,76,0.15);
   --cyan: #00abff;
   --cyan-glow: rgba(0,171,255,0.1);
+  --green: #16a34a;
+  --red: #dc2626;
   --bg: #fafafa;
   --surface: #ffffff;
   --surface-2: #f5f5f5;
@@ -111,6 +113,8 @@
   --text-1: #f2f4f7;
   --text-2: #a0a4ab;
   --text-3: #6b7078;
+  --green: #4ade80;
+  --red: #f87171;
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
@@ -8114,13 +8118,15 @@ button, .nav-item, .room, .video-item, .filter-chip {
     /* Tables row - Direction & Cycle side by side */
     .perf-tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
     
-    /* Equity curve - more visible */
-    .equity-line { stroke-width: 2.5; }
+    /* Equity curve - crisp hairline */
+    .equity-line { stroke-width: 1.5; }
     .equity-line.positive { stroke: var(--green); }
     .equity-line.negative { stroke: var(--red); }
     .equity-area.positive { fill: var(--green); opacity: 0.15; }
     .equity-area.negative { fill: var(--red); opacity: 0.15; }
-    .equity-zero { stroke: var(--text-2); stroke-width: 1; stroke-dasharray: 4 2; }
+    .equity-zero { stroke: var(--text-3); stroke-width: 0.5; stroke-dasharray: 4 2; }
+    .equity-axis { stroke: var(--border); stroke-width: 0.5; }
+    .equity-y-label { font-size: 2.5px; fill: var(--text-3); font-family: var(--mono); }
     .equity-marker { stroke: #fff; stroke-width: 2; }
     .equity-marker.peak { fill: var(--green); r: 5; }
     .equity-marker.trough { fill: var(--red); r: 5; }
@@ -18124,27 +18130,39 @@ function renderPerformanceResults(report) {
     const minVal = Math.min(...curve, 0);
     const maxVal = Math.max(...curve);
     const range = maxVal - minVal || 1;
-    const width = 100;
+    
+    // Chart area with left margin for Y-axis
+    const marginLeft = 12;
+    const chartWidth = 88;
     const height = 60;
-    const scaleX = (i) => (i / (curve.length - 1)) * width;
+    const scaleX = (i) => marginLeft + (i / (curve.length - 1)) * chartWidth;
     const scaleY = (v) => height - ((v - minVal) / range) * height;
     
     const pathD = curve.map((v, i) => `${i === 0 ? 'M' : 'L'}${scaleX(i).toFixed(2)},${scaleY(v).toFixed(2)}`).join(' ');
-    const areaD = pathD + ` L${width},${height} L0,${height} Z`;
+    const areaD = pathD + ` L${marginLeft + chartWidth},${height} L${marginLeft},${height} Z`;
     const finalColor = curve[curve.length - 1] >= 0 ? 'positive' : 'negative';
+    
+    // Y-axis tick values (max, zero, min)
+    const yTicks = [];
+    if (maxVal > 0) yTicks.push({ val: maxVal, y: scaleY(maxVal), label: `$${maxVal.toFixed(0)}` });
+    yTicks.push({ val: 0, y: scaleY(0), label: '$0' });
+    if (minVal < 0) yTicks.push({ val: minVal, y: scaleY(minVal), label: `$${minVal.toFixed(0)}` });
     
     html += `
       <div class="perf-chart">
         <h4>Equity Curve</h4>
         <div class="perf-chart-area" style="height:180px;">
-          <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" style="overflow:visible;">
+          <svg viewBox="0 0 100 ${height}" preserveAspectRatio="none" style="overflow:visible;">
+            <!-- Y-axis labels -->
+            ${yTicks.map(t => `<text x="10" y="${t.y + 1}" class="equity-y-label" text-anchor="end">${t.label}</text>`).join('')}
+            <!-- Y-axis line -->
+            <line x1="${marginLeft}" y1="0" x2="${marginLeft}" y2="${height}" class="equity-axis"/>
             <!-- Fill area -->
             <path d="${areaD}" class="equity-area ${finalColor}"/>
             <!-- Zero line -->
-            <line x1="0" y1="${scaleY(0)}" x2="${width}" y2="${scaleY(0)}" class="equity-zero"/>
+            <line x1="${marginLeft}" y1="${scaleY(0)}" x2="100" y2="${scaleY(0)}" class="equity-zero"/>
             <!-- Main line -->
             <path d="${pathD}" class="equity-line ${finalColor}" fill="none"/>
-<!-- Peak/trough shown in legend only -->
           </svg>
         </div>
         <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-3);margin-top:8px;">
