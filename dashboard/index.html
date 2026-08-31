@@ -77,7 +77,7 @@
 }
 
 /* Mobile breakpoint */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   :root {
     --sidebar-width: 0px;
     --header-height: 60px;
@@ -276,7 +276,7 @@
 }
 
 /* Show floating toggle on mobile where sidebar is hidden */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .theme-toggle {
     display: flex;
   }
@@ -294,7 +294,7 @@
 [data-theme="dark"] .theme-toggle .sun { display: block; }
 [data-theme="dark"] .theme-toggle .moon { display: none; }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .theme-toggle {
     display: none;
   }
@@ -320,7 +320,7 @@
 [data-theme="dark"] .theme-toggle-mobile .sun { display: block; }
 [data-theme="dark"] .theme-toggle-mobile .moon { display: none; }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .theme-toggle-mobile {
     display: flex;
   }
@@ -498,7 +498,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   opacity: 1;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   #mobile-header { display: flex; }
   
   #sidebar {
@@ -935,7 +935,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   color: var(--text-2);
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .tier-badge {
     bottom: calc(var(--nav-height) + 16px);
   }
@@ -980,7 +980,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   #main {
     margin-left: 0;
     padding-left: calc(var(--content-padding) + var(--safe-left));
@@ -1413,7 +1413,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   bottom: var(--nav-height, 0px);
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .intel-view {
     left: 0;
     top: var(--header-height);
@@ -1776,11 +1776,11 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 /* Image upload */
 .intel-image-btn {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: transparent;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1908,12 +1908,12 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .intel-input-wrapper {
   display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px 16px;
+  border-radius: 12px;
+  padding: 8px 12px;
   transition: border-color 0.2s;
 }
 
@@ -1942,11 +1942,11 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 .intel-send-btn {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   background: var(--gold);
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2114,7 +2114,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 }
 
 /* Mobile Intelligence */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .intel-sidebar {
     position: fixed;
     left: 0;
@@ -2689,7 +2689,7 @@ body {
 }
 
 /* Mobile Community */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   #view-community .view-header {
     margin-bottom: 16px;
   }
@@ -2782,7 +2782,7 @@ body {
   transform: rotate(180deg);
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .mobile-room-selector {
     display: block;
   }
@@ -2950,7 +2950,7 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .messages {
     padding: 16px;
     gap: 14px;
@@ -3278,7 +3278,7 @@ body {
 }
 
 /* Mobile: show search toggle, hide search input by default */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .search-toggle {
     display: flex;
   }
@@ -4952,7 +4952,7 @@ body {
   stroke: currentColor;
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   #mobile-nav { display: flex; }
 }
 
@@ -4970,7 +4970,7 @@ body {
   }
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .academy-layout { 
     grid-template-columns: 1fr;
     gap: 16px;
@@ -5778,7 +5778,7 @@ body {
   font-size: 16px; /* Prevent iOS zoom */
 }
 
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .form-row input,
   .form-row select {
     padding: 14px 16px;
@@ -5787,7 +5787,7 @@ body {
 }
 
 /* Touch-friendly buttons */
-@media (max-width: 820px) {
+@media (max-width: 650px) {
   .btn {
     min-height: 48px;
     padding: 14px 24px;
@@ -9041,11 +9041,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <div class="intel-input-wrapper">
             <input type="file" id="intel-image-input" accept="image/*" style="display:none" onchange="handleImageUpload(this.files[0])">
             <button class="intel-image-btn" onclick="document.getElementById('intel-image-input').click()" title="Attach image">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
             </button>
             <textarea id="intel-input" placeholder="Ask QP Intelligence..." rows="1" onkeydown="handleIntelKeydown(event)"></textarea>
             <button class="intel-send-btn" onclick="sendIntelMessage()" id="intel-send-btn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
             </button>
           </div>
           <div class="intel-input-footer">
