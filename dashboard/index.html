@@ -7806,9 +7806,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
     /* Intelligence Summary */
     .perf-section .intel-summary, #view-performance .intel-summary { background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.02)); border: 1px solid rgba(201,168,76,0.3); border-radius: 12px; padding: 24px; margin-top: 32px; }
     .perf-section .intel-summary h3, #view-performance .intel-summary h3 { font-size: 14px; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .perf-section .intel-findings, #view-performance .intel-findings { list-style: none; padding: 0; margin: 0 0 16px; }
-    .perf-section .intel-findings li, #view-performance .intel-findings li { padding: 12px 0; border-bottom: 1px solid rgba(201,168,76,0.2); font-size: 14px; line-height: 1.6; }
-    .perf-section .intel-findings li:last-child, #view-performance .intel-findings li:last-child { border-bottom: none; }
+    .perf-section .intel-findings, #view-performance .intel-findings { margin: 0 0 20px; }
+    .perf-section .intel-finding, #view-performance .intel-finding { display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(201,168,76,0.15); }
+    .perf-section .intel-finding:last-child, #view-performance .intel-finding:last-child { border-bottom: none; }
+    .perf-section .finding-number, #view-performance .finding-number { width: 28px; height: 28px; background: var(--gold); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+    .perf-section .intel-finding p, #view-performance .intel-finding p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--text-1); }
     .perf-section .intel-summary-text, #view-performance .intel-summary-text { font-size: 14px; line-height: 1.7; color: var(--text-1); }
     .perf-section .intel-cta, #view-performance .intel-cta { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(201,168,76,0.2); }
     .perf-section .intel-cta span, #view-performance .intel-cta span { font-size: 12px; color: var(--text-2); }
@@ -17884,14 +17886,19 @@ function renderPerformanceResults(report) {
   
   // ═══ WIN/LOSS DONUT CHART ═══
   const winPct = core.trades > 0 ? (core.wins / core.trades) * 100 : 0;
+  const lossPct = 100 - winPct;
   const circumference = 2 * Math.PI * 60; // r=60
   const winDash = (winPct / 100) * circumference;
+  const lossDash = (lossPct / 100) * circumference;
   
   html += `
     <div class="perf-donut-container">
       <div class="perf-donut">
         <svg viewBox="0 0 140 140">
-          <circle class="perf-donut-bg" cx="70" cy="70" r="60"/>
+          <!-- Red (losses) - full ring as background -->
+          <circle class="perf-donut-fill red" cx="70" cy="70" r="60" 
+            style="stroke-dasharray: ${circumference} ${circumference};"/>
+          <!-- Green (wins) - overlay on top -->
           <circle class="perf-donut-fill green" cx="70" cy="70" r="60" 
             style="stroke-dasharray: ${winDash} ${circumference}; animation: ringFill 1s ease-out;"/>
         </svg>
@@ -17905,14 +17912,14 @@ function renderPerformanceResults(report) {
           <span class="dot green"></span>
           <div class="info">
             <span class="count">${core.wins}</span>
-            <span class="label">Winning trades • $${core.avg_win} avg</span>
+            <span class="label">Winners • $${core.avg_win} avg</span>
           </div>
         </div>
         <div class="perf-donut-legend-item">
           <span class="dot red"></span>
           <div class="info">
             <span class="count">${core.losses}</span>
-            <span class="label">Losing trades • $${core.avg_loss} avg</span>
+            <span class="label">Losers • $${core.avg_loss} avg</span>
           </div>
         </div>
       </div>
@@ -17976,35 +17983,55 @@ function renderPerformanceResults(report) {
     html += `</div>`;
   }
   
-  // ═══ SESSION BAR CHART ═══
+  // ═══ SESSION/CYCLE PERFORMANCE ═══
+  // Format session names for display
+  const formatSessionName = (name) => {
+    if (name === 'outside') return 'Out of Cycle';
+    // If it's a window like "W1 07-09", make it cleaner
+    if (name.match(/^W\d/)) {
+      const match = name.match(/^(W\d)\s*(\d{1,2})-(\d{1,2})$/);
+      if (match) {
+        return `Cycle ${match[1].replace('W', '')} (${match[2]}:00–${match[3]}:00)`;
+      }
+    }
+    return name;
+  };
+  
   const sessionEntries = Object.entries(sessions).sort((a, b) => {
     if (a[0] === 'outside') return 1;
     if (b[0] === 'outside') return -1;
     return b[1].net - a[1].net; // Sort by P&L descending
   });
   
-  // Find max absolute value for scaling
-  const maxNet = Math.max(...sessionEntries.map(([_, d]) => Math.abs(d.net)), 1);
+  // Find max trades for scaling (not net, so bars show relative activity)
+  const maxTrades = Math.max(...sessionEntries.map(([_, d]) => d.trades), 1);
   
   html += `
     <div class="perf-bars-section">
-      <h4><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> Session Performance</h4>
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg> Cycle Performance</h4>
   `;
   
   sessionEntries.forEach(([session, data]) => {
     const isPositive = data.net >= 0;
-    const barWidth = Math.min(Math.abs(data.net) / maxNet * 100, 100);
-    const colorClass = session === 'outside' ? 'gold' : (isPositive ? 'green' : 'red');
+    const isOutside = session === 'outside';
+    const barWidth = Math.min((data.trades / maxTrades) * 100, 100);
+    const colorClass = isOutside ? (isPositive ? 'gold' : 'red') : (isPositive ? 'green' : 'red');
+    const displayName = formatSessionName(session);
     
     html += `
-      <div class="perf-bar-row">
-        <div class="perf-bar-label">${session}</div>
-        <div class="perf-bar-track">
-          <div class="perf-bar-fill ${colorClass}" style="width: ${barWidth}%;">
-            <span>${data.trades} trades</span>
+      <div class="perf-bar-row" style="margin-bottom: 16px;">
+        <div class="perf-bar-label" style="width: 140px; font-size: 13px;">${displayName}</div>
+        <div style="flex: 1;">
+          <div class="perf-bar-track">
+            <div class="perf-bar-fill ${colorClass}" style="width: ${barWidth}%;">
+              <span>${data.trades} trades</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 11px; color: var(--text-3);">
+            <span>Win rate: ${data.win_rate}%</span>
+            <span style="color: var(--${isPositive ? 'green' : 'red'}); font-weight: 600;">$${data.net}</span>
           </div>
         </div>
-        <div class="perf-bar-value ${isPositive ? 'green' : 'red'}">$${data.net}</div>
       </div>
     `;
   });
@@ -18107,11 +18134,16 @@ function renderPerfInterpretation(interp) {
   
   // Key findings
   if (interp.key_findings?.length) {
-    html += `<ul class="intel-findings">`;
+    html += `<div class="intel-findings">`;
     interp.key_findings.forEach((finding, i) => {
-      html += `<li><strong>${i + 1}.</strong> ${finding}</li>`;
+      // Clean up any "Finding X -" prefix the AI might still include
+      const cleanFinding = finding.replace(/^Finding\s*\d+\s*[-:]\s*/i, '');
+      html += `<div class="intel-finding">
+        <span class="finding-number">${i + 1}</span>
+        <p>${cleanFinding}</p>
+      </div>`;
     });
-    html += `</ul>`;
+    html += `</div>`;
   }
   
   // Summary
