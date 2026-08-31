@@ -12194,6 +12194,11 @@ function switchView(viewId) {
     b.classList.toggle('active', b.dataset.view === viewId);
   });
   
+  // Update URL to persist view on refresh (without page reload)
+  const url = new URL(window.location);
+  url.searchParams.set('view', viewId);
+  history.replaceState(null, '', url);
+  
   // Hide support widget on Intelligence view
   const supportWidget = document.getElementById('qp-support-widget');
   if (supportWidget) {
