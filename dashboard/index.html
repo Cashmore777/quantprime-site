@@ -6773,6 +6773,72 @@ button, .nav-item, .room, .video-item, .filter-chip {
   margin-top: 12px;
 }
 
+/* Guide Tables */
+.guide-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+}
+
+.guide-section table th,
+.guide-section table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-section table th {
+  font-weight: 600;
+  color: var(--text-1);
+  background: var(--surface-raised);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.guide-section table td {
+  color: var(--text-2);
+}
+
+.guide-section table tr:hover td {
+  background: var(--surface-raised);
+}
+
+.guide-section h5 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold);
+  margin: 24px 0 12px;
+}
+
+.guide-section strong {
+  color: var(--text-1);
+}
+
+.guide-section em {
+  color: var(--text-2);
+  font-style: normal;
+}
+
+.guide-related {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+.guide-disclaimer {
+  margin-top: 24px;
+  padding: 12px;
+  background: var(--surface-raised);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-3);
+  line-height: 1.6;
+}
+
 .guide-footer {
   padding: 16px 24px;
   border-top: 1px solid var(--border);
@@ -16770,171 +16836,225 @@ async function saveTvUsername(indicator) {
 const guideContent = {
   recoil: {
     title: "Recoil — Operator's Guide",
-    sections: [
-      {
-        step: 1,
-        title: "Add to TradingView",
-        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Recoil" and click to add it to your chart.</p>
-        <div class="callout">Make sure you're logged into the TradingView account matching your username above.</div>`
-      },
-      {
-        step: 2,
-        title: "Choose Your Preset",
-        content: `<p>Recoil comes with 3 backtested presets:</p>
-        <ul>
-          <li><strong>Scalping (3M)</strong> — For 3-minute EURUSD. TP 100% body, SL wick+3.0 ATR.</li>
-          <li><strong>Intra-Day (21M)</strong> — For 21-minute charts. TP 50% body, SL wick+1.0 ATR.</li>
-          <li><strong>Swing (4H)</strong> — For 4-hour charts. TP 100% body, SL wick+1.0 ATR.</li>
-        </ul>
-        <p>Select "Custom" to configure your own parameters.</p>`
-      },
-      {
-        step: 3,
-        title: "Understanding Volatility Bands",
-        content: `<p>Recoil uses 8 volatility bands based on ATR ratios:</p>
-        <ul>
-          <li><strong>Bands 1-5 (Grey)</strong> — Normal volatility. No action.</li>
-          <li><strong>Band 6 (Amber)</strong> — Elevated volatility. 1× risk trigger.</li>
-          <li><strong>Band 7 (Gold)</strong> — High volatility. 2× risk trigger.</li>
-          <li><strong>Band 8 (Red)</strong> — Extreme volatility. 5× risk trigger.</li>
-        </ul>
-        <p>The indicator colors candles by their volatility band for quick visual reference.</p>`
-      },
-      {
-        step: 4,
-        title: "Reading Trade Signals",
-        content: `<p>When a candle closes in bands 6/7/8, Recoil generates a fade signal:</p>
-        <ul>
-          <li><strong>Bearish close</strong> → LONG signal (expect snap back up)</li>
-          <li><strong>Bullish close</strong> → SHORT signal (expect snap back down)</li>
-        </ul>
-        <p>The EMA stack (8/26/80/233) determines trend context and scales position risk accordingly.</p>`
-      },
-      {
-        step: 5,
-        title: "Exit Management",
-        content: `<p>Exits are calculated based on your preset or custom settings:</p>
-        <ul>
-          <li><strong>Take Profit</strong> — Based on candle body percentage</li>
-          <li><strong>Stop Loss</strong> — Wick + ATR buffer</li>
-          <li><strong>FVG Mode</strong> — Optional stop placement at Fair Value Gap boundaries</li>
-        </ul>`
-      }
-    ]
+    subtitle: "A volatility fade instrument",
+    content: `
+      <p><em>Read once, then use the settings reference at the bottom.</em></p>
+      
+      <h5>What it measures</h5>
+      <p>Every candle's true range is divided by the average true range of the last eight candles. That ratio answers one question: how big is this candle compared to a normal recent candle? A ratio of 1.0 is exactly average. 3.0 is three times the recent norm.</p>
+      
+      <p>The ratio places the candle in one of eight bands:</p>
+      <table>
+        <tr><th>Band</th><th>Name</th><th>Ratio</th><th>Colour</th></tr>
+        <tr><td>1</td><td>Extremely Low</td><td>under 0.30</td><td>pale blue</td></tr>
+        <tr><td>2</td><td>Very Low</td><td>0.30 – 0.75</td><td>light blue</td></tr>
+        <tr><td>3</td><td>Low</td><td>0.75 – 1.20</td><td>blue</td></tr>
+        <tr><td>4</td><td>Lower Medium</td><td>1.20 – 1.65</td><td>mid blue</td></tr>
+        <tr><td>5</td><td>Medium</td><td>1.65 – 2.10</td><td>deep blue</td></tr>
+        <tr><td>6</td><td>High Medium</td><td>2.10 – 2.55</td><td>yellow — trigger 1×</td></tr>
+        <tr><td>7</td><td>High</td><td>2.55 – 3.00</td><td>orange — trigger 2×</td></tr>
+        <tr><td>8</td><td>Very High</td><td>3.00 and above</td><td>red — trigger 5×</td></tr>
+      </table>
+      <p>Bands 6, 7 and 8 are the trigger bands. Everything below them is context.</p>
+      
+      <h5>What it does with that</h5>
+      <p>When a candle closes in band 6, 7 or 8, Recoil marks a fade. A bearish exceptional candle marks a long. A bullish one marks a short. The premise is that overextended candles snap back.</p>
+      <p>That is the entire engine. One measurement, one response. No pattern recognition, no prediction, no stack of indicators agreeing with each other.</p>
+      <p><strong>Recoil marks conditions. You decide.</strong> Nothing here is a signal to follow blindly, and the instrument has no opinion about whether now is a sensible time to be trading at all.</p>
+      
+      <h5>Setup</h5>
+      <p><strong>1 · Add it to TradingView</strong><br>
+      Indicators, then Invite-only scripts. Find Quant Prime — Recoil and add it to your chart. You must be logged into the TradingView account matching the username on your dashboard. Access is granted manually and can take a few hours after purchase.</p>
+      
+      <p><strong>2 · Leave the settings alone</strong><br>
+      The panel ships on Custom, and every value in it is already the configuration actually traded. Custom does not mean unconfigured. It means the individual settings below are live rather than being overridden by a preset. Change nothing for the first session.</p>
+      
+      <p><strong>3 · Watch before you act</strong><br>
+      Put it on a 3M EURUSD chart and watch one session without touching anything. You are looking for two things: how often a coloured candle appears, and what price does in the twenty minutes afterwards.</p>
+      
+      <h5>The settings that matter</h5>
+      <p><strong>Time windows — 07:00–09:00, 13:00–14:00, 19:00–20:00 UTC</strong><br>
+      All three enabled. Conditions only resolve inside these hours. These are not windows where expansion is more likely. They are windows where the same expansion is worth more in pips while the spread stays the same.</p>
+      
+      <p><strong>ATR Length — 8</strong><br>
+      The memory of the baseline. Shorter (around 5) and the baseline adapts fast. Longer (around 21) and a volatility burst keeps reading as extreme for longer.</p>
+      
+      <p><strong>Band risk multipliers — 1× / 2× / 5×</strong><br>
+      Band 6 at 1× your base unit, band 7 at 2×, band 8 at 5×. The uncomfortable part: band 8 candles are not profitable on their own. They stay because their winners subsidise the losses across bands 6 and 7.</p>
+      
+      <p><strong>Trend alignment — 2× with, 0.5× against, 1× consolidation</strong><br>
+      The EMA stack classifies trend state and scales risk by it. Set "against trend" to 0 to block counter-trend fades entirely.</p>
+      
+      <p><strong>Take profit — % of body, 100%</strong><br>
+      The target is a percentage of the trigger candle's body. At 100%, a fade of a bearish candle targets the price that candle opened at.</p>
+      
+      <p><strong>Stop loss — wick plus 3.0 ATR</strong><br>
+      The stop sits this many ATRs beyond the trigger candle's extreme. It is wider than feels comfortable, deliberately. Narrowing this is the most common change people make and the most common reason their results get worse.</p>
+      
+      <h5>Where Recoil fails</h5>
+      <ul>
+        <li><strong>Strong sustained trends</strong> — An exceptional candle is often the start of something rather than an overreaction</li>
+        <li><strong>It does not tell you when to stay out</strong> — Check the Regime Tracker before acting on a trigger</li>
+        <li><strong>It is one idea</strong> — There are whole weeks where the conditions it needs never appear</li>
+      </ul>
+      
+      <h5>When it looks wrong</h5>
+      <table>
+        <tr><th>What you see</th><th>Usually</th></tr>
+        <tr><td>No coloured candles at all</td><td>ATR length too long, or thresholds too high</td></tr>
+        <tr><td>Coloured candles constantly</td><td>ATR length too short, or minimum body size at 0</td></tr>
+        <tr><td>Coloured candles but nothing marked</td><td>Outside the three time windows</td></tr>
+        <tr><td>Stop distance looks enormous</td><td>Correct, and intentional</td></tr>
+        <tr><td>Fades keep failing same direction</td><td>Trending market — check Regime Tracker</td></tr>
+      </table>
+      
+      <div class="guide-related">Related papers: 01 The Friction Threshold · 02 The Subsidised Signal · 03 The Timeframe Ceiling · 05 The Stop Is Not a Number · 06 The Comfort Trade · 09 Three Windows</div>
+      <div class="guide-disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</div>
+    `
   },
   meridian: {
     title: "Meridian — Operator's Guide",
-    sections: [
-      {
-        step: 1,
-        title: "Add to TradingView",
-        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Meridian" and click to add it to your chart.</p>
-        <div class="callout">Make sure you're logged into the TradingView account matching your username above.</div>`
-      },
-      {
-        step: 2,
-        title: "Understanding AMD Cycles",
-        content: `<p>Meridian tracks Accumulation-Manipulation-Distribution cycles:</p>
-        <ul>
-          <li><strong>12H Cycle (Gold lines)</strong> — Major session structure</li>
-          <li><strong>6H Cycle (Cyan lines)</strong> — Intermediate structure</li>
-          <li><strong>3H Cycle (Grey lines)</strong> — Minor structure (optional)</li>
-        </ul>
-        <p>A-lines mark the accumulation highs/lows of each cycle.</p>`
-      },
-      {
-        step: 3,
-        title: "Reading Gold Signals",
-        content: `<p>Gold signals fire when price sweeps an A-line:</p>
-        <ul>
-          <li><strong>Sweep above A-line</strong> → Bearish bias set</li>
-          <li><strong>Sweep below A-line</strong> → Bullish bias set</li>
-        </ul>
-        <p>Vortex price levels then confirm the entry direction.</p>`
-      },
-      {
-        step: 4,
-        title: "Position Stacking",
-        content: `<p>Meridian allows positions to stack in the direction of bias:</p>
-        <ul>
-          <li>Each vortex tap adds to the position</li>
-          <li>An opposite gold signal closes all positions and flips direction</li>
-          <li>Tight SL mode adds individual stop losses per entry</li>
-        </ul>`
-      },
-      {
-        step: 5,
-        title: "Exit Modes",
-        content: `<p>Choose your exit strategy in settings:</p>
-        <ul>
-          <li><strong>Opposite Gold Only</strong> — Positions close only on opposite gold signal</li>
-          <li><strong>Opposite Gold + Tight SL</strong> — Individual ATR-buffered stops per entry</li>
-        </ul>`
-      }
-    ]
+    subtitle: "A reversal instrument",
+    content: `
+      <p><em>Read once, then use the settings reference at the bottom.</em></p>
+      
+      <h5>What it measures</h5>
+      <p>The market moves through repeating phases. A period of accumulation where price ranges and positions get built. A manipulation phase where it pushes through an obvious level to take out the orders resting there. Then distribution, where it actually moves.</p>
+      
+      <p>Meridian tracks that rhythm on three cycle lengths: 12 hour, 6 hour and 3 hour. Only the 12 hour cycle is enabled by default.</p>
+      
+      <p>Each cycle leaves behind A-lines, which mark the highs and lows of its accumulation phase. Those are the levels the instrument watches, because they are where the obvious stops sit.</p>
+      
+      <p>A condition resolves when two things happen in order. An A-line gets swept, which sets the directional bias. Then price taps a vortex level, which marks the entry. The sweep decides the direction. The tap decides the moment.</p>
+      
+      <p><strong>Meridian marks conditions. You decide.</strong> Nothing here is a signal to follow blindly.</p>
+      
+      <h5>Why the cycles are anchored, not rolling</h5>
+      <p>The cycles anchor to a timestamp origin at midnight in the chosen timezone, not to a window that rolls with the current bar. A rolling window puts the phase boundaries wherever you happen to be looking. An anchored one puts them where everybody else's are too.</p>
+      
+      <h5>Setup</h5>
+      <p><strong>1 · Add it to TradingView</strong><br>
+      Indicators, then Invite-only scripts. Find Quant Prime — Meridian and add it to your chart.</p>
+      
+      <p><strong>2 · Understand the two timezone settings</strong><br>
+      Timezone (cycle anchor) defaults to UTC+1 and decides where AMD cycles start counting. Timezone (windows) defaults to UTC and only applies to trading windows. They are deliberately different.</p>
+      
+      <p><strong>3 · Leave the defaults alone</strong><br>
+      These are the configuration actually traded. Change nothing for the first two weeks.</p>
+      
+      <h5>The settings that matter</h5>
+      <p><strong>Timezone, cycle anchor — UTC+1</strong><br>
+      The single most consequential setting. Every phase boundary moves with it. Check it first if Meridian appears not to work on your pair.</p>
+      
+      <p><strong>Cycles — 12H on, 6H and 3H off</strong><br>
+      All three can run at once. Only the 12 hour is enabled by default because it produced the tested results.</p>
+      
+      <p><strong>Time windows — 00:00–02:00, 04:00–06:00, 19:00–20:00 UTC</strong><br>
+      Conditions only resolve inside these hours. These are not Recoil's windows and they should not be.</p>
+      
+      <p><strong>Exit mode — Opposite Prime Only</strong><br>
+      Positions close when an opposite condition appears, and the whole position flips. This is a bias decision rather than a stop-loss decision.</p>
+      
+      <h5>Stacking</h5>
+      <p>Meridian stacks. Same-direction conditions mark additional positions rather than being ignored. Size each entry so the full stack sits within what you would have risked on one trade, not each position within it.</p>
+      
+      <h5>Where Meridian fails</h5>
+      <ul>
+        <li><strong>Above the 15 minute chart</strong> — Not degrades. Stops. The cycles need bars of structure that do not exist on higher timeframes.</li>
+        <li><strong>Its drawdown is roughly seven times Recoil's</strong> — Maximum drawdown 11.59% against Recoil's 1.57%. Worth sitting with.</li>
+        <li><strong>It triggers infrequently</strong> — Needs a sweep, a tap and the right window. Your sample builds slowly.</li>
+      </ul>
+      
+      <h5>When it looks wrong</h5>
+      <table>
+        <tr><th>What you see</th><th>Usually</th></tr>
+        <tr><td>Almost nothing marked</td><td>Cycle anchor timezone — check it first</td></tr>
+        <tr><td>Phases offset from the session</td><td>Cycle anchor again</td></tr>
+        <tr><td>A-lines but no conditions</td><td>Prime signals disabled, or outside time windows</td></tr>
+        <tr><td>Position larger than expected</td><td>The stack — several entries are open</td></tr>
+        <tr><td>Everything closed and reversed at once</td><td>Working as designed</td></tr>
+      </table>
+      
+      <div class="guide-related">Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 09 Three Windows · 10 Return Per Unit of Pain</div>
+      <div class="guide-disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</div>
+    `
   },
   cockpit: {
     title: "Cockpit — Operator's Guide",
-    sections: [
-      {
-        step: 1,
-        title: "Add to TradingView",
-        content: `<p>Open TradingView and go to <strong>Indicators</strong> → <strong>Invite-only scripts</strong>. Find "Quant Prime — Cockpit" and click to add it to your chart.</p>
-        <div class="callout">Cockpit is an analysis-only overlay. It generates no trade signals — pure market-state awareness.</div>`
-      },
-      {
-        step: 2,
-        title: "EMA Stack",
-        content: `<p>The 4-layer EMA stack (8/26/80/233) shows trend structure:</p>
-        <ul>
-          <li><strong>All ascending</strong> → Bullish trend</li>
-          <li><strong>All descending</strong> → Bearish trend</li>
-          <li><strong>Mixed</strong> → Consolidation / transition</li>
-        </ul>
-        <p>Colors run from light cyan (fast) to dark cyan (anchor).</p>`
-      },
-      {
-        step: 3,
-        title: "Liquidity Pool Levels",
-        content: `<p>LP levels mark fractal highs/lows across 3 configurable timeframes:</p>
-        <ul>
-          <li>These are where stop hunts and reversals tend to occur</li>
-          <li>Watch for price to sweep these levels before reversing</li>
-          <li>Configure the lookback periods in settings</li>
-        </ul>`
-      },
-      {
-        step: 4,
-        title: "Fair Value Gaps",
-        content: `<p>FVGs highlight unfilled imbalances in price:</p>
-        <ul>
-          <li>Bullish FVGs are potential support zones</li>
-          <li>Bearish FVGs are potential resistance zones</li>
-          <li>Price often returns to fill these gaps</li>
-        </ul>`
-      },
-      {
-        step: 5,
-        title: "AMD Phase Shading",
-        content: `<p>Background shading shows the current AMD cycle phase:</p>
-        <ul>
-          <li>Helps identify where you are within session structure</li>
-          <li>12H and 6H cycles shown in different colors</li>
-          <li>Use with Meridian for cycle-based entries</li>
-        </ul>`
-      },
-      {
-        step: 6,
-        title: "Fractal Dashboard",
-        content: `<p>The on-chart dashboard shows multi-timeframe regime status:</p>
-        <ul>
-          <li><strong>Regime</strong> — Current volatility state</li>
-          <li><strong>Trend</strong> — EMA alignment direction</li>
-          <li><strong>Bias</strong> — Overall directional lean</li>
-        </ul>
-        <p>Use this to confirm alignment before taking Recoil or Meridian signals.</p>`
-      }
-    ]
+    subtitle: "An analytical instrument",
+    content: `
+      <p><em>Read once, then use the settings reference at the bottom.</em></p>
+      
+      <h5>What it is for</h5>
+      <p>Recoil and Meridian both trigger when their own conditions appear. Neither has an opinion about whether the wider market suits them, because neither is looking at it.</p>
+      
+      <p>That gap is where most losses come from in a system that genuinely works. Recoil faded in a strong trend. Meridian traded in a session with no clean liquidity. The instrument did exactly what it was built to do, in conditions it was not built for.</p>
+      
+      <p>Cockpit is the wider picture. <strong>It does not tell you which instrument to run, and it never will.</strong> It tells you what kind of market you are in, and you decide what that means.</p>
+      
+      <p>Judged as a trading instrument, Cockpit fails immediately. It makes no money on its own. The correct test is whether it stops you giving money back in weeks you should not have been trading.</p>
+      
+      <h5>The regime score</h5>
+      <p>The number the whole instrument is built around. It grades market quality out of 90, per timeframe, from two components:</p>
+      <ul>
+        <li><strong>Stability, 0 to 40</strong> — Current ATR measured against its own 50 period average. Scores 40 when they sit close together.</li>
+        <li><strong>Trend, 0 to 50</strong> — ADX, capped at 50.</li>
+      </ul>
+      
+      <table>
+        <tr><th>Grade</th><th>Score</th><th>Reading</th></tr>
+        <tr><td>PRIME</td><td>above 70</td><td>Conditions match what the systems were measured against</td></tr>
+        <tr><td>FAVORABLE</td><td>above 55</td><td>Workable</td></tr>
+        <tr><td>MARGINAL</td><td>above 40</td><td>Something is off. Reduce, or wait.</td></tr>
+        <tr><td>DEGRADED</td><td>40 or below</td><td>Wrong conditions entirely</td></tr>
+      </table>
+      
+      <p>A Recoil fade taken at 74 is a different trade from the identical fade at 41, even though the candle looks the same.</p>
+      
+      <h5>Reading the dashboard</h5>
+      <p>Five rows, five columns, top right by default. Rows are timeframes: 1 day, 3 hours, 30 minutes, your current chart, and 3 minutes.</p>
+      
+      <p>The useful reading is not any single row. It is whether they agree.</p>
+      <ul>
+        <li><strong>Five rows pointing the same way</strong> — A market doing one thing at every scale. Trend following works and fading is expensive.</li>
+        <li><strong>Rows disagreeing</strong> — A market doing different things at different scales. Reversal methods find setups and trend following gets chopped.</li>
+      </ul>
+      
+      <h5>Setup</h5>
+      <p><strong>1 · Add it to TradingView</strong><br>
+      Indicators, then Invite-only scripts. Find Quant Prime — Cockpit and add it to your chart.</p>
+      
+      <p><strong>2 · Look at the dashboard only</strong><br>
+      For the first few days, ignore everything Cockpit draws on the chart. Read the five rows and nothing else.</p>
+      
+      <p><strong>3 · Then turn most of it off</strong><br>
+      Add layers back one at a time and keep only the ones that change a decision.</p>
+      
+      <h5>The layers</h5>
+      <ul>
+        <li><strong>EMAs</strong> — 8/26/80/233. The trend classification behind the dashboard.</li>
+        <li><strong>Liquidity pool levels</strong> — Fractal pivot highs and lows across three timeframes.</li>
+        <li><strong>Fair value gaps</strong> — Three candle gaps with full lifecycle. The busiest layer.</li>
+        <li><strong>Volatility candle colours</strong> — Same eight band system Recoil uses.</li>
+        <li><strong>AMD phase shading</strong> — Shows the manipulation phase of each cycle.</li>
+        <li><strong>Higher timeframe candles</strong> — Current 30M and 3H candles to the right of your chart.</li>
+      </ul>
+      
+      <h5>What Cockpit does not do</h5>
+      <ul>
+        <li><strong>It does not tell you which instrument to use</strong> — It reports conditions. You apply them.</li>
+        <li><strong>It does not produce entries</strong> — No signals, no alerts on setups.</li>
+        <li><strong>It does not make money</strong> — Its value is in the trades you do not take.</li>
+      </ul>
+      
+      <h5>Using it with the other instruments</h5>
+      <p>The order that works: <strong>Cockpit first, then instrument, then build.</strong></p>
+      <p>Cockpit tells you what kind of market this is. That informs whether Recoil or Meridian is the appropriate engine, or whether neither is and you sit out. Only then does the build matter.</p>
+      <p>If reading the week is the part you are unsure about, ask QP Intelligence. It knows all three engines and how they relate.</p>
+      
+      <div class="guide-related">Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 10 Return Per Unit of Pain</div>
+      <div class="guide-disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</div>
+    `
   }
 };
 
@@ -16946,19 +17066,30 @@ function openGuide(indicator) {
   const titleEl = document.getElementById('guide-title');
   const contentEl = document.getElementById('guide-body');
   
-  titleEl.textContent = guide.title;
+  // Support both old sections format and new content format
+  if (guide.subtitle) {
+    titleEl.innerHTML = guide.title + '<div style="font-size: 13px; color: var(--text-2); font-weight: 400; margin-top: 4px;">' + guide.subtitle + '</div>';
+  } else {
+    titleEl.textContent = guide.title;
+  }
   
-  let html = '';
-  guide.sections.forEach(section => {
-    html += `
-      <div class="guide-section">
-        <h4><span class="step-num">${section.step}</span> ${section.title}</h4>
-        ${section.content}
-      </div>
-    `;
-  });
+  if (guide.content) {
+    // New format: single HTML content
+    contentEl.innerHTML = '<div class="guide-section">' + guide.content + '</div>';
+  } else if (guide.sections) {
+    // Legacy format: sections array
+    let html = '';
+    guide.sections.forEach(section => {
+      html += `
+        <div class="guide-section">
+          <h4><span class="step-num">${section.step}</span> ${section.title}</h4>
+          ${section.content}
+        </div>
+      `;
+    });
+    contentEl.innerHTML = html;
+  }
   
-  contentEl.innerHTML = html;
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
