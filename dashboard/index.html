@@ -7816,7 +7816,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-cockpit">
     <div class="view-header">
       <div class="eyebrow">Suite Tier</div>
-      <h2>Full Suite — <em>Complete framework</em></h2>
+      <h2>Suite — <em>Complete framework</em></h2>
     </div>
     
     <!-- Suite Sub-Navigation -->
@@ -9646,7 +9646,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center;">
           <div style="font-size: 32px; font-weight: 700; color: var(--gold); margin-bottom: 8px;">50%</div>
           <div style="font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 4px;">Monthly Recurring</div>
-          <div style="font-size: 12px; color: var(--text-3);">Research · Recoil · Terminal · Full Suite</div>
+          <div style="font-size: 12px; color: var(--text-3);">Research · Recoil · Terminal · Suite</div>
           <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-2);">
             You earn 50% of every monthly payment, <strong>forever</strong>.
           </div>
@@ -10588,7 +10588,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <div class="promo-page">
       <div class="promo-hero suite">
         <div class="promo-badge gold">UPGRADE TO</div>
-        <h1>Full Suite</h1>
+        <h1>Suite</h1>
         <p class="promo-tagline">Every instrument. Full context.</p>
         <div class="promo-price">
           <span class="price">£88</span>
@@ -10616,14 +10616,14 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
       
       <div class="promo-cta">
-        <a href="https://billing.stripe.com/p/login/8x228jcD0fMg1lb3BI4F200" target="_blank" class="btn gold large">Upgrade to Full Suite — £88/mo</a>
+        <a href="https://billing.stripe.com/p/login/8x228jcD0fMg1lb3BI4F200" target="_blank" class="btn gold large">Upgrade to Suite — £88/mo</a>
         <p class="promo-note">Opens Stripe to upgrade your subscription. Cancel anytime.</p>
       </div>
       
       <div class="promo-compare">
         <h3>The complete package</h3>
         <table class="compare-table">
-          <tr><th>Feature</th><th>Terminal</th><th>Full Suite</th></tr>
+          <tr><th>Feature</th><th>Terminal</th><th>Suite</th></tr>
           <tr><td>Research + Recoil + Meridian (765 combos)</td><td>✓</td><td>✓</td></tr>
           <tr><td>All Instruments + Chat Rooms</td><td>✓</td><td>✓</td></tr>
           <tr><td>Market Intelligence</td><td>✓</td><td>✓</td></tr>
@@ -12021,7 +12021,7 @@ function updateDashboardData() {
       'research': 'Research',
       'recoil': 'Recoil', 
       'terminal': 'Terminal',
-      'suite': 'Full Suite',
+      'suite': 'Suite',
       'ascension': 'Ascension'
     };
     // Map tier to its promo view (or external page for Ascension)
@@ -12279,7 +12279,7 @@ function showLockedModal(view, requiredTier) {
       value: 'Part of the Ascension program — application required.'
     },
     'cockpit': {
-      title: 'Full Suite',
+      title: 'Suite',
       tier: 'suite',
       price: '£88',
       description: 'The complete framework: Cockpit indicator, Performance Reports, and full access to all three build menus (1,020 combinations).',
@@ -12327,7 +12327,7 @@ function showLockedModal(view, requiredTier) {
     'research': 'Research',
     'recoil': 'Recoil',
     'terminal': 'Terminal',
-    'suite': 'Full Suite',
+    'suite': 'Suite',
     'ascension': 'Ascension'
   };
   
@@ -14319,7 +14319,7 @@ function getRoomTierName(roomId) {
     'research': 'Research',
     'recoil': 'Recoil',
     'meridian': 'Terminal',
-    'cockpit': 'Full Suite',
+    'cockpit': 'Suite',
     'ascension': 'Ascension'
   };
   const tier = ROOM_TIER_MAP[roomId];
@@ -15358,7 +15358,7 @@ function getUpgradeTierName(tier) {
     'research': 'Research',
     'recoil': 'Recoil',
     'meridian': 'Terminal',
-    'cockpit': 'Full Suite',
+    'cockpit': 'Suite',
     'ascension': 'Ascension'
   };
   return names[tier] || tier;
@@ -16819,7 +16819,7 @@ const AFFILIATE_PRODUCTS = [
   { id: 'research', name: 'Research', price: 8, path: '/checkout?plan=research' },
   { id: 'recoil', name: 'Recoil', price: 28, path: '/checkout?plan=recoil' },
   { id: 'terminal', name: 'Terminal', price: 58, path: '/checkout?plan=terminal' },
-  { id: 'suite', name: 'Full Suite', price: 88, path: '/checkout?plan=suite' },
+  { id: 'suite', name: 'Suite', price: 88, path: '/checkout?plan=suite' },
   { id: 'ascension', name: 'Ascension', price: 3497, path: '/ascension-apply', isAscension: true }
 ];
 

@@ -85,7 +85,7 @@
       options: [
         { id: 'recoil', label: 'Recoil (£28/mo)', action: 'link', url: '/recoil' },
         { id: 'terminal', label: 'Terminal (£58/mo)', action: 'link', url: '/terminal' },
-        { id: 'suite', label: 'Full Suite (£88/mo)', action: 'link', url: '/fullsuite' },
+        { id: 'suite', label: 'Suite (£88/mo)', action: 'link', url: '/fullsuite' },
         { id: 'ascension', label: 'Ascension (£3,497)', action: 'link', url: '/ascension' }
       ]
     },

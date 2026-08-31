@@ -647,7 +647,7 @@ const tiers = {
     ]
   },
   suite: {
-    name: 'Full Suite',
+    name: 'Suite',
     monthly: 88,
     annual: 880,
     priceId: 'price_1TxkdT15x1S5u1oiqElyXsjn',
@@ -785,7 +785,7 @@ function applyPromoCode() {
     promoTier = validCodes[code].tier;
     input.setAttribute('readonly', true);
     
-    const tierNames = { research: 'Research', recoil: 'Recoil', terminal: 'Terminal', suite: 'Full Suite' };
+    const tierNames = { research: 'Research', recoil: 'Recoil', terminal: 'Terminal', suite: 'Suite' };
     result.innerHTML = `<span class="promo-success">🎉 ${tierNames[promoTier]} access unlocked!</span>`;
     
     document.getElementById('priceAmount').textContent = '£0';
