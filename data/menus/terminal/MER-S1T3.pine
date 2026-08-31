@@ -1,0 +1,539 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S1T3
+//    S1  AMD Phases
+//    T3  Session Report
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S1T3", shorttitle = "QPS1T3", overlay = true, max_lines_count = 500, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 1 · AMD PHASES
+// ───────────────────────────────────────────────────────────────
+//  The market moves through a repeating rhythm. A stretch where
+//  price ranges and positions are built. A stretch where it
+//  pushes through an obvious level and takes out the orders
+//  resting there. Then a stretch where it actually moves.
+//
+//  Accumulation, manipulation, distribution. This shades all
+//  three, on three cycle lengths at once.
+//
+//  The cycles are anchored to midnight in the chosen timezone
+//  rather than rolling with the current bar. That matters: a
+//  rolling window puts the boundaries wherever you happen to be
+//  looking, while an anchored one puts them where everybody
+//  else's are too. The phases are only useful if they are the
+//  same phases other people are trading around.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+s1_gTz = "Timezone"
+
+s1_tz = input.string("UTC+0", "Cycle anchor", group = s1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Midnight in this timezone is where every cycle starts counting. Change it to match the session that actually drives your instrument -- this matters more than any other setting here.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+s1_gCyc = "Cycles"
+
+s1_c24 = input.bool(true, "24 hour", group = s1_gCyc, inline = "c1")
+s1_c12 = input.bool(true, "12 hour", group = s1_gCyc, inline = "c1")
+s1_c6  = input.bool(true, "6 hour",  group = s1_gCyc, inline = "c1",
+     tooltip = "All three run at once and overlap. The 24 hour cycle gives the day's shape; the 6 hour one gives the session's.")
+
+s1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle accumulation gives way to manipulation. Default 50%.")
+
+s1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle manipulation gives way to distribution. Default 75%.")
+
+// ─── SHADING ──────────────────────────────────────────────────
+s1_gShade = "Shading"
+
+s1_shadeA = input.bool(false, "Shade accumulation", group = s1_gShade, inline = "sh")
+s1_shadeM = input.bool(true,  "Shade manipulation", group = s1_gShade, inline = "sh")
+s1_shadeD = input.bool(false, "Shade distribution", group = s1_gShade, inline = "sh",
+     tooltip = "Manipulation only, by default. Shading all three on all three cycles turns the chart into soup.")
+
+s1_colA = input.color(#5b9cf6, "Accumulation", group = s1_gShade, inline = "cc")
+s1_colM = input.color(#2962ff, "Manipulation", group = s1_gShade, inline = "cc")
+s1_colD = input.color(#c9a84c, "Distribution", group = s1_gShade, inline = "cc")
+
+s1_fade = input.int(95, "Transparency", minval = 80, maxval = 99, group = s1_gShade)
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_gBound = "Boundaries"
+
+s1_showLine = input.bool(true, "Mark phase starts", group = s1_gBound,
+     tooltip = "A vertical line where each phase begins, on each enabled cycle.")
+
+s1_showLbl = input.bool(true, "Label phase starts", group = s1_gBound)
+
+s1_lineCol = input.color(#ffffff, "Line and label", group = s1_gBound)
+s1_lineFade = input.int(60, "Line transparency", minval = 0, maxval = 95, group = s1_gBound)
+s1_lblSize  = input.string("Small", "Label size", options = ["Tiny", "Small", "Normal"], group = s1_gBound)
+
+s1_lookback = input.int(300, "Draw on the last N bars", minval = 20, maxval = 1000, group = s1_gBound,
+     tooltip = "Boundary lines and labels are limited to recent bars so older history stays readable. Shading is unaffected.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so half hour cycles resolve correctly.
+s1_hr = hour(time, s1_tz) + minute(time, s1_tz) / 60.0
+
+// Position within a cycle, as a percentage of that cycle.
+s1_posIn(float _cyc) =>
+    float _idx = math.floor(s1_hr / _cyc)
+    float _pos = s1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 = accumulation, 1 = manipulation, 2 = distribution
+s1_phaseOf(float _cyc) =>
+    float _p = s1_posIn(_cyc)
+    _p < s1_split1 ? 0 : _p < s1_split2 ? 1 : 2
+
+s1_p24 = s1_phaseOf(24.0)
+s1_p12 = s1_phaseOf(12.0)
+s1_p6  = s1_phaseOf(6.0)
+
+s1_colOf(int _ph) =>
+    _ph == 0 ? s1_colA : _ph == 1 ? s1_colM : s1_colD
+
+s1_nameOf(int _ph) =>
+    _ph == 0 ? "A" : _ph == 1 ? "M" : "D"
+
+s1_shadeOn(int _ph) =>
+    _ph == 0 ? s1_shadeA : _ph == 1 ? s1_shadeM : s1_shadeD
+
+// ─── SHADING ──────────────────────────────────────────────────
+color s1_bg24 = s1_c24 and s1_shadeOn(s1_p24) ? color.new(s1_colOf(s1_p24), s1_fade) : na
+color s1_bg12 = s1_c12 and s1_shadeOn(s1_p12) ? color.new(s1_colOf(s1_p12), s1_fade) : na
+color s1_bg6  = s1_c6  and s1_shadeOn(s1_p6)  ? color.new(s1_colOf(s1_p6),  s1_fade) : na
+
+bgcolor(s1_bg24, title = "24H phase")
+bgcolor(s1_bg12, title = "12H phase")
+bgcolor(s1_bg6,  title = "6H phase")
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+// Stacked vertical text, so several cycles marking the same bar
+// stay readable side by side.
+s1_stack(string _cyc, string _ph) =>
+    string _out = ""
+    for i = 0 to str.length(_cyc) - 1
+        _out := _out + str.substring(_cyc, i, i + 1) + "\n"
+    _out + "\n" + _ph
+
+s1_mark(bool _on, float _cyc, int _ph, int _phPrev, string _label) =>
+    if _on and _ph != _phPrev and bar_index >= last_bar_index - s1_lookback
+        if s1_showLine
+            line.new(bar_index, low, bar_index, high,
+                 extend = extend.both,
+                 color  = color.new(s1_lineCol, s1_lineFade),
+                 style  = line.style_dotted,
+                 width  = 1)
+        if s1_showLbl
+            label.new(bar_index, high, s1_stack(_label, s1_nameOf(_ph)),
+                 style     = label.style_none,
+                 textcolor = color.new(s1_lineCol, 30),
+                 size      = s1_sizeOf(s1_lblSize),
+                 yloc      = yloc.abovebar,
+                 textalign = text.align_center)
+    true
+
+if barstate.isconfirmed
+    s1_mark(s1_c24, 24.0, s1_p24, s1_p24[1], "24H")
+    s1_mark(s1_c12, 12.0, s1_p12, s1_p12[1], "12H")
+    s1_mark(s1_c6,   6.0, s1_p6,  s1_p6[1],  "6H")
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_p24 != s1_p24[1], "24H phase changed",
+     "The 24 hour cycle has moved into a new phase.")
+
+alertcondition(s1_p12 == 1 and s1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(s1_p6 == 1 and s1_p6[1] != 1, "6H manipulation started",
+     "The 6 hour cycle has entered its manipulation phase.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  DESSERT 3 · SESSION REPORT
+// ───────────────────────────────────────────────────────────────
+//  Are the windows right for your instrument.
+//
+//  Meridian only resolves conditions inside three trading windows.
+//  Those windows were chosen on one instrument. Whether they are
+//  the right hours for yours is a question this answers, and the
+//  honest answer is sometimes no.
+//
+//  Every hour of the day, measured across your history:
+//
+//    BARS     how much data that hour has
+//    RANGE    average high to low, in ATR
+//    BREAKS   levels taken per hundred bars
+//    REV %    of those breaks, how many came back through
+//
+//  The three configured windows are marked. If the hours inside
+//  them do not look different to the hours outside, the windows
+//  are not earning their place and you should either move them or
+//  switch them off.
+//
+//  The last column is the one that matters most. A window full of
+//  activity is worth nothing if the levels taken in it run on
+//  rather than reverse, because that is the opposite of what the
+//  instrument trades.
+//
+//  Hours below the minimum sample are left ungraded.
+//
+//  Draws one table. Namespaced t3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── WINDOWS ──────────────────────────────────────────────────
+t3_gWin = "Windows"
+
+t3_tz = input.string("UTC", "Timezone", group = t3_gWin,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Meridian's windows are in plain UTC. Separate setting from the AMD cycle anchor.")
+
+t3_w1From = input.int(0,  "W1 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w1")
+t3_w1To   = input.int(2,  "to",      minval = 1, maxval = 24, group = t3_gWin, inline = "w1")
+t3_w2From = input.int(4,  "W2 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w2")
+t3_w2To   = input.int(6,  "to",      minval = 1, maxval = 24, group = t3_gWin, inline = "w2")
+t3_w3From = input.int(19, "W3 from", minval = 0, maxval = 23, group = t3_gWin, inline = "w3")
+t3_w3To   = input.int(20, "to",      minval = 1, maxval = 24, group = t3_gWin, inline = "w3",
+     tooltip = "Defaults are Meridian's shipped windows.")
+
+// ─── LEVELS ───────────────────────────────────────────────────
+t3_gLv = "Levels"
+
+t3_lvTf = input.timeframe("30", "Level timeframe", group = t3_gLv)
+t3_pvL  = input.int(4, "L", minval = 1, maxval = 20, group = t3_gLv, inline = "p")
+t3_pvR  = input.int(2, "R", minval = 1, maxval = 20, group = t3_gLv, inline = "p")
+
+t3_mode = input.string("Close beyond", "A break is", options = ["Close beyond", "Wick through"], group = t3_gLv,
+     tooltip = "Close beyond requires a candle to finish past the level. Wick through counts any touch, which on most instruments means a one tick poke grades as a reversal the moment it closes back inside, and every hour reads 80% or higher. Close beyond is the default here for that reason.")
+
+t3_minOver = input.float(0.15, "Minimum overshoot to count (x ATR)", minval = 0.0, step = 0.05, group = t3_gLv,
+     tooltip = "How far past the level price must go before the break counts at all. Without this, a break of half a pip is graded the same as a real one. Set to 0 to disable.")
+
+t3_window = input.int(20, "Grade the break over N bars", minval = 3, maxval = 200, group = t3_gLv)
+t3_revPct = input.float(50.0, "Reversal needs % of overshoot back", minval = 10.0, maxval = 100.0, step = 5.0, group = t3_gLv)
+
+// ─── TEST ─────────────────────────────────────────────────────
+t3_gTest = "Test"
+
+t3_atrLen    = input.int(14, "ATR length", minval = 1, group = t3_gTest)
+t3_minBars   = input.int(50, "Minimum bars per hour", minval = 10, maxval = 1000, group = t3_gTest)
+t3_minBreaks = input.int(10, "Minimum breaks to grade REV %", minval = 3, maxval = 100, group = t3_gTest,
+     tooltip = "Breaks are far rarer than bars, so this threshold is lower than the usual thirty. Treat any graded hour with fewer than thirty as indicative rather than settled.")
+
+// ─── TABLE ────────────────────────────────────────────────────
+t3_gTbl = "Table"
+
+t3_legend  = input.bool(true, "Show the plain english summary", group = t3_gTbl)
+t3_scope = input.string("Windows and neighbours", "Hours to show",
+     options = ["Windows and neighbours", "Windows only", "All hours"], group = t3_gTbl,
+     tooltip = "Twenty four rows is a lot of table. Windows and neighbours shows your three windows plus the hour either side of each, which is enough to see whether a window is sitting in the right place.")
+t3_tblPos  = input.string("Bottom Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = t3_gTbl)
+t3_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = t3_gTbl)
+
+t3_inCol   = input.color(#ffb74d, "In a window", group = t3_gTbl, inline = "c")
+t3_goodCol = input.color(#2f6b41, "Reverses",    group = t3_gTbl, inline = "c")
+t3_badCol  = input.color(#b4342a, "Runs on",     group = t3_gTbl, inline = "c")
+t3_thinCol = input.color(#9a9da3, "Thin",        group = t3_gTbl, inline = "c")
+
+// ─── STATE ────────────────────────────────────────────────────
+var int[]   t3_bars  = array.new_int(24, 0)
+var float[] t3_range = array.new_float(24, 0.0)
+var int[]   t3_brks  = array.new_int(24, 0)
+var int[]   t3_rev   = array.new_int(24, 0)
+var int[]   t3_ran   = array.new_int(24, 0)
+
+//  outcome: 0 pending · 1 reversed · 2 ran on · 3 unresolved
+type T3Lv
+    float px
+    bool  isHigh
+    bool  broken
+    int   brokeBar
+    int   brokeHour
+    float extreme
+    int   outcome
+
+var T3Lv[] t3_lv = array.new<T3Lv>()
+
+t3_atr = ta.atr(t3_atrLen)
+t3_hour = hour(time, t3_tz)
+
+t3_inWin(int _h) =>
+    bool _r = false
+    if t3_w1To > t3_w1From
+        _r := _r or (_h >= t3_w1From and _h < t3_w1To)
+    else
+        _r := _r or (_h >= t3_w1From or _h < t3_w1To)
+    if t3_w2To > t3_w2From
+        _r := _r or (_h >= t3_w2From and _h < t3_w2To)
+    else
+        _r := _r or (_h >= t3_w2From or _h < t3_w2To)
+    if t3_w3To > t3_w3From
+        _r := _r or (_h >= t3_w3From and _h < t3_w3To)
+    else
+        _r := _r or (_h >= t3_w3From or _h < t3_w3To)
+    _r
+
+// Is this hour worth a row, given the chosen scope.
+t3_inScope(int _h) =>
+    bool _r = true
+    if t3_scope == "Windows only"
+        _r := t3_inWin(_h)
+    else if t3_scope == "Windows and neighbours"
+        _r := t3_inWin(_h) or t3_inWin((_h + 1) % 24) or t3_inWin((_h + 23) % 24)
+    _r
+
+t3_known(float _px) =>
+    bool _f = false
+    int _n = array.size(t3_lv)
+    if _n > 0
+        for i = 0 to _n - 1
+            T3Lv _l = array.get(t3_lv, i)
+            if not _l.broken and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+t3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+t3_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.bottom_right
+
+t3_pad(int _h) =>
+    str.format("{0,number,00}", _h)
+
+// ─── PIVOT FEED ───────────────────────────────────────────────
+[t3_ph, t3_pl] = request.security(syminfo.tickerid, t3_lvTf,
+     [ta.pivothigh(high, t3_pvL, t3_pvR), ta.pivotlow(low, t3_pvL, t3_pvR)], lookahead = barmerge.lookahead_off)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+if barstate.isconfirmed and t3_atr > 0
+    int _h = t3_hour
+
+    array.set(t3_bars,  _h, array.get(t3_bars, _h) + 1)
+    array.set(t3_range, _h, array.get(t3_range, _h) + (high - low) / t3_atr)
+
+    if not na(t3_ph) and not t3_known(t3_ph)
+        array.push(t3_lv, T3Lv.new(t3_ph, true, false, na, na, na, 0))
+    if not na(t3_pl) and not t3_known(t3_pl)
+        array.push(t3_lv, T3Lv.new(t3_pl, false, false, na, na, na, 0))
+    while array.size(t3_lv) > 400
+        array.shift(t3_lv)
+
+    int _n = array.size(t3_lv)
+    if _n > 0
+        for i = 0 to _n - 1
+            T3Lv _l = array.get(t3_lv, i)
+
+            if not _l.broken
+                bool _hit = t3_mode == "Close beyond" ?
+                     (_l.isHigh ? close > _l.px : close < _l.px) :
+                     (_l.isHigh ? high >= _l.px : low <= _l.px)
+
+                // a break that barely clears the level is not a break
+                float _clear = _l.isHigh ? (high - _l.px) : (_l.px - low)
+                bool _enough = t3_minOver <= 0 or _clear >= t3_atr * t3_minOver
+
+                if _hit and _enough
+                    _l.broken    := true
+                    _l.brokeBar  := bar_index
+                    _l.brokeHour := _h
+                    _l.extreme   := _l.isHigh ? high : low
+                    array.set(t3_brks, _h, array.get(t3_brks, _h) + 1)
+
+            else if _l.outcome == 0
+                _l.extreme := _l.isHigh ? math.max(_l.extreme, high) : math.min(_l.extreme, low)
+
+                float _over = math.abs(_l.extreme - _l.px)
+                float _need = _l.px + (_l.isHigh ? -1 : 1) * _over * (t3_revPct / 100.0)
+
+                bool _rev = _over > 0 and (_l.isHigh ? close <= _need : close >= _need)
+                bool _exp = bar_index - _l.brokeBar >= t3_window
+
+                if _rev
+                    _l.outcome := 1
+                    array.set(t3_rev, _l.brokeHour, array.get(t3_rev, _l.brokeHour) + 1)
+                else if _exp
+                    if _l.isHigh ? close > _l.px : close < _l.px
+                        _l.outcome := 2
+                        array.set(t3_ran, _l.brokeHour, array.get(t3_ran, _l.brokeHour) + 1)
+                    else
+                        _l.outcome := 3
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table t3_tbl = na
+
+if barstate.islast
+    // count hours to show
+    int _shown = 0
+    for h = 0 to 23
+        if t3_inScope(h) and array.get(t3_bars, h) > 0
+            _shown += 1
+
+    int _rows = 1 + _shown + 2 + (t3_legend ? 2 : 0)
+
+    if na(t3_tbl)
+        t3_tbl := table.new(t3_posOf(t3_tblPos), 5, _rows,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = t3_tblSize
+
+    table.cell(t3_tbl, 0, 0, "HR",   text_color = _hdr, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 1, 0, "BARS", text_color = _hdr, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 2, 0, "RNG",  text_color = _hdr, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 3, 0, "BRK",  text_color = _hdr, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 4, 0, "REV",  text_color = _hdr, text_size = t3_sizeOf(_sz))
+
+    int _row = 1
+
+    // running totals, split by whether the hour is inside a window
+    int _inBars = 0
+    int _inRev  = 0
+    int _inRan  = 0
+    int _ouBars = 0
+    int _ouRev  = 0
+    int _ouRan  = 0
+    float _inRange = 0.0
+    float _ouRange = 0.0
+
+    for h = 0 to 23
+        int _b = array.get(t3_bars, h)
+        if _b == 0
+            continue
+
+        bool _in = t3_inWin(h)
+        bool _draw = t3_inScope(h)
+        int _rv = array.get(t3_rev, h)
+        int _rn = array.get(t3_ran, h)
+        int _g  = _rv + _rn
+
+        if _in
+            _inBars += _b
+            _inRev  += _rv
+            _inRan  += _rn
+            _inRange += array.get(t3_range, h)
+        else
+            _ouBars += _b
+            _ouRev  += _rv
+            _ouRan  += _rn
+            _ouRange += array.get(t3_range, h)
+
+        if not _draw
+            continue
+
+        color _hCol = _in ? t3_inCol : color.white
+
+        table.cell(t3_tbl, 0, _row, t3_pad(h) + (_in ? "●" : ""),
+             text_color = _hCol, text_size = t3_sizeOf(_sz))
+        table.cell(t3_tbl, 1, _row, str.tostring(_b),
+             text_color = _b < t3_minBars ? t3_thinCol : color.white, text_size = t3_sizeOf(_sz))
+
+        if _b < t3_minBars
+            table.cell(t3_tbl, 2, _row, "thin", text_color = t3_thinCol, text_size = t3_sizeOf(_sz))
+        else
+            table.cell(t3_tbl, 2, _row, str.tostring(math.round(array.get(t3_range, h) / _b, 2)) + "x",
+                 text_color = color.white, text_size = t3_sizeOf(_sz))
+
+        table.cell(t3_tbl, 3, _row,
+             _b < t3_minBars ? "—" : str.tostring(math.round(array.get(t3_brks, h) / _b * 100.0, 1)),
+             text_color = _b < t3_minBars ? t3_thinCol : color.white, text_size = t3_sizeOf(_sz))
+
+        if _g < t3_minBreaks
+            table.cell(t3_tbl, 4, _row, "thin", text_color = t3_thinCol, text_size = t3_sizeOf(_sz))
+        else
+            float _p = _rv / _g * 100.0
+            table.cell(t3_tbl, 4, _row, str.tostring(math.round(_p)) + "%",
+                 text_color = _p >= 55 ? t3_goodCol : _p <= 45 ? t3_badCol : t3_thinCol,
+                 text_size = t3_sizeOf(_sz))
+
+        _row += 1
+
+    // in-window and out-of-window summary
+    int _inG = _inRev + _inRan
+    int _ouG = _ouRev + _ouRan
+
+    table.cell(t3_tbl, 0, _row, "IN●", text_color = t3_inCol, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 1, _row, str.tostring(_inBars), text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 2, _row, _inBars > 0 ? str.tostring(math.round(_inRange / _inBars, 2)) + "x" : "—",
+         text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 3, _row, str.tostring(_inG), text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 4, _row, _inG < t3_minBreaks ? "thin" :
+         str.tostring(math.round(_inRev / _inG * 100.0)) + "%",
+         text_color = _inG < t3_minBreaks ? t3_thinCol :
+              _inRev / _inG >= 0.55 ? t3_goodCol : _inRev / _inG <= 0.45 ? t3_badCol : t3_thinCol,
+         text_size = t3_sizeOf(_sz))
+    _row += 1
+
+    table.cell(t3_tbl, 0, _row, "OUT", text_color = _hdr, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 1, _row, str.tostring(_ouBars), text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 2, _row, _ouBars > 0 ? str.tostring(math.round(_ouRange / _ouBars, 2)) + "x" : "—",
+         text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 3, _row, str.tostring(_ouG), text_color = color.white, text_size = t3_sizeOf(_sz))
+    table.cell(t3_tbl, 4, _row, _ouG < t3_minBreaks ? "thin" :
+         str.tostring(math.round(_ouRev / _ouG * 100.0)) + "%",
+         text_color = _ouG < t3_minBreaks ? t3_thinCol :
+              _ouRev / _ouG >= 0.55 ? t3_goodCol : _ouRev / _ouG <= 0.45 ? t3_badCol : t3_thinCol,
+         text_size = t3_sizeOf(_sz))
+    _row += 1
+
+    // ─── PLAIN ENGLISH ────────────────────────────────────────
+    if t3_legend
+        int _lr = _rows - 2
+
+        string _v = ""
+        color  _vc = t3_thinCol
+
+        if _inG < t3_minBreaks or _ouG < t3_minBreaks
+            _v := "Not enough breaks yet — use more history"
+        else
+            float _pIn = _inRev / _inG * 100.0
+            float _pOu = _ouRev / _ouG * 100.0
+            float _gap = _pIn - _pOu
+
+            if _gap >= 5
+                _vc := t3_goodCol
+                _v := "Windows are the better hours — " +
+                     str.tostring(math.round(_pIn)) + "% in vs " +
+                     str.tostring(math.round(_pOu)) + "% out"
+            else if _gap <= -5
+                _vc := t3_badCol
+                _v := "Windows are the worse hours — " +
+                     str.tostring(math.round(_pIn)) + "% in vs " +
+                     str.tostring(math.round(_pOu)) + "% out"
+            else
+                _v := "Windows look no different to the rest of the day"
+
+        table.cell(t3_tbl, 0, _lr, _v, text_color = _vc,
+             text_size = t3_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t3_tbl, c, _lr, "", text_size = t3_sizeOf(_sz))
+        table.merge_cells(t3_tbl, 0, _lr, 4, _lr)
+
+        table.cell(t3_tbl, 0, _rows - 1,
+             "● in a window · BRK per 100 bars · REV = broken levels that came back",
+             text_color = t3_thinCol, text_size = t3_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t3_tbl, c, _rows - 1, "", text_size = t3_sizeOf(_sz))
+        table.merge_cells(t3_tbl, 0, _rows - 1, 4, _rows - 1)

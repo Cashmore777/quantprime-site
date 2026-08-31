@@ -1,0 +1,212 @@
+{
+  "tier": "terminal",
+  "prefix": "MER",
+  "version": "1.0",
+  "generatedAt": "2026-08-31",
+  "courses": {
+    "starter": {
+      "name": "Starter",
+      "question": "What's the context?",
+      "description": "Chart context. None of these draw a table, so a starter never competes for space with anything else.",
+      "position": 0,
+      "dishes": {
+        "1": {
+          "id": "amd-phases",
+          "name": "AMD Phases",
+          "description": "The market moves through a rhythm: a stretch where price ranges, a stretch where it pushes through an obvious level to take the orders resting there, then a stretch where it actually moves. This shades all three phases on three cycle lengths at once, anchored to midnight in your chosen timezone rather than rolling with the current bar. That matters, because anchored boundaries are the ones everybody else is looking at.",
+          "shortDesc": "The 12, 6 and 3 hour cycles shaded on your chart.",
+          "tip": "Only the 12 hour cycle is on by default. Turning all three on at once is a lot of shading."
+        },
+        "2": {
+          "id": "liquidity-levels",
+          "name": "Liquidity Levels",
+          "description": "A swing high is where somebody's stop is sitting, and so is a swing low. This finds those levels on three timeframes, extends each one right, and freezes it the moment price reaches through. What is left running is the liquidity nobody has taken yet.",
+          "shortDesc": "Pivot highs and lows across three timeframes, frozen when swept.",
+          "tip": "If the chart is busy, turn off the fastest timeframe first. Most people lose nothing they were actually using."
+        },
+        "3": {
+          "id": "fair-value-gaps",
+          "name": "Fair Value Gaps",
+          "description": "Three candles where the first and third do not overlap leave a band of price nobody traded through properly. Each gap here carries a state: fresh, tapped at the midpoint, filled, or inverted. An inverted gap is not a dead one, which is why the state is tracked rather than the gap simply being deleted.",
+          "shortDesc": "Gaps tracked through their full lifecycle, not just drawn once.",
+          "tip": "The busiest piece in the Starter course. Try one timeframe before two."
+        }
+      }
+    },
+    "main": {
+      "name": "Main",
+      "question": "What's the engine?",
+      "description": "The working engine. One table, top right.",
+      "position": 1,
+      "dishes": {
+        "1": {
+          "id": "sweep-tracker",
+          "name": "Sweep Tracker",
+          "description": "A level getting taken is not the event. What price does in the twenty minutes afterwards is the event. This watches levels on three timeframes, marks each sweep, and then grades it: came back through, kept going, or neither. It also tracks which direction the last sweep set and how long that bias has been live.",
+          "shortDesc": "Marks every level as it gets taken, then grades what happened next.",
+          "tip": "The bias row is the part to watch. A bias set forty bars ago is a different thing to one set on the last candle."
+        },
+        "2": {
+          "id": "liquidity-map",
+          "name": "Liquidity Map",
+          "description": "The forward looking counterpart to the Sweep Tracker. That one grades levels already taken; this lists the ones that have not been. Nearest on each side is highlighted, and the table reads top to bottom the same way the chart does. The resting row shows the imbalance, which is a statement about where the obvious stops are rather than a prediction.",
+          "shortDesc": "Every unswept level above and below, sorted by distance.",
+          "tip": "Liquidity sitting above price is not a reason to be long. It is a statement about what the market has left to collect."
+        },
+        "3": {
+          "id": "trend-stack",
+          "name": "Trend Stack",
+          "description": "A real trend needs fast above medium, medium above slow, slow above anchor, in that order and without exception. Anything else is consolidation. The definition is deliberately strict, which means this spends most of its time saying CONSOLIDATION. That is correct, and it is the reason it works as a filter.",
+          "shortDesc": "The 8/26/80/233 stack, and whether it is genuinely in order.",
+          "tip": "Both instruments compute this stack internally with plotting off. This is the visible version."
+        }
+      }
+    },
+    "side": {
+      "name": "Side",
+      "question": "What do I need to know?",
+      "description": "Utilities. One table, bottom left.",
+      "position": 2,
+      "dishes": {
+        "1": {
+          "id": "phase-clock",
+          "name": "Phase Clock",
+          "description": "The AMD Phases piece shades the cycles. This answers the other question: how much time is left. A condition resolving four minutes before a phase boundary has almost no room to work; one resolving with two hours to run has the rest of the phase.",
+          "shortDesc": "How far through the current phase you are, and when the next starts.",
+          "tip": "The timezone here must match the cycle anchor in your Meridian settings, or it is counting down to boundaries the instrument is not using."
+        },
+        "2": {
+          "id": "stack-monitor",
+          "name": "Stack Monitor",
+          "description": "Meridian does not use a stop. It stacks in one direction and exits when an opposite condition appears, closing the whole position and reversing. So the useful questions are what the bias is, how old it is, and where the flip is likely to come from. The nearest unswept level on the opposite side is the closest thing this instrument has to a risk figure.",
+          "shortDesc": "The bias, the level that would close everything, and your exposure.",
+          "tip": "It cannot know your actual entries, because the tap that opens each one lives in the indicator. Log them yourself and it will show your average and what the flip costs from there."
+        },
+        "3": {
+          "id": "session-clock",
+          "name": "Session Clock",
+          "description": "Meridian only resolves conditions inside its three trading windows. Outside them the engine still sees sweeps and rejections and does nothing with them, which is the single most common reason somebody concludes the instrument is broken. This says plainly whether a window is live and when the next one opens.",
+          "shortDesc": "Is a trading window open, and how long has it got.",
+          "tip": "The timezone here is separate from the AMD cycle anchor. Both are shown in the table so you can see if they have drifted apart."
+        }
+      }
+    },
+    "dessert": {
+      "name": "Dessert",
+      "question": "What does the data say?",
+      "description": "Reports that test the instrument's assumptions on your own pair. One table, bottom right.",
+      "position": 3,
+      "dishes": {
+        "1": {
+          "id": "sweep-report",
+          "name": "Sweep Report",
+          "description": "Meridian's whole premise is that when a level gets taken, the move beyond it tends to fail rather than continue. That was measured on one instrument. This runs the same test on yours, split by timeframe and by whether it was a high or a low that got taken. A reversal rate meaningfully above 50% supports the premise. Below it means the opposite is true on your pair.",
+          "shortDesc": "Do broken levels reverse on your pair, or do they run on?",
+          "tip": "Use a lot of history. Levels get taken far less often than candles fire, so this table fills slowly."
+        },
+        "2": {
+          "id": "phase-report",
+          "name": "Phase Report",
+          "description": "If the phases are real, they should look different from each other in the data. Manipulation should produce more levels being taken; distribution should produce the largest moves. This measures range, movement and level breaks per phase, and the spread row says how different the three actually are. If they look alike, the cycle is adding nothing on your pair.",
+          "shortDesc": "Does the AMD cycle actually describe your instrument?",
+          "tip": "The breaks column is the real test. Manipulation is supposed to be where levels get taken."
+        },
+        "3": {
+          "id": "session-report",
+          "name": "Session Report",
+          "description": "Every hour of the day, measured across your history: how active it is, how many levels get broken, and crucially how many of those breaks came back through. The three configured windows are marked, and the IN and OUT rows compare them against the rest of the day. An hour full of activity is worth nothing if the levels taken in it run on rather than reverse.",
+          "shortDesc": "Are the trading windows the right hours for your instrument?",
+          "tip": "Defaults to showing your windows plus the hour either side. Switch to all hours if you want to find a better window somewhere else entirely."
+        }
+      }
+    }
+  },
+  "validBuilds": [
+    "MER-S1", "MER-S2", "MER-S3",
+    "MER-M1", "MER-M2", "MER-M3",
+    "MER-D1", "MER-D2", "MER-D3",
+    "MER-T1", "MER-T2", "MER-T3",
+    "MER-S1M1", "MER-S1M2", "MER-S1M3",
+    "MER-S1D1", "MER-S1D2", "MER-S1D3",
+    "MER-S1T1", "MER-S1T2", "MER-S1T3",
+    "MER-S2M1", "MER-S2M2", "MER-S2M3",
+    "MER-S2D1", "MER-S2D2", "MER-S2D3",
+    "MER-S2T1", "MER-S2T2", "MER-S2T3",
+    "MER-S3M1", "MER-S3M2", "MER-S3M3",
+    "MER-S3D1", "MER-S3D2", "MER-S3D3",
+    "MER-S3T1", "MER-S3T2", "MER-S3T3",
+    "MER-M1D1", "MER-M1D2", "MER-M1D3",
+    "MER-M1T1", "MER-M1T2", "MER-M1T3",
+    "MER-M2D1", "MER-M2D2", "MER-M2D3",
+    "MER-M2T1", "MER-M2T2", "MER-M2T3",
+    "MER-M3D1", "MER-M3D2", "MER-M3D3",
+    "MER-M3T1", "MER-M3T2", "MER-M3T3",
+    "MER-D1T1", "MER-D1T2", "MER-D1T3",
+    "MER-D2T1", "MER-D2T2", "MER-D2T3",
+    "MER-D3T1", "MER-D3T2", "MER-D3T3",
+    "MER-S1M1D1", "MER-S1M1D2", "MER-S1M1D3",
+    "MER-S1M1T1", "MER-S1M1T2", "MER-S1M1T3",
+    "MER-S1M2D1", "MER-S1M2D2", "MER-S1M2D3",
+    "MER-S1M2T1", "MER-S1M2T2", "MER-S1M2T3",
+    "MER-S1M3D1", "MER-S1M3D2", "MER-S1M3D3",
+    "MER-S1M3T1", "MER-S1M3T2", "MER-S1M3T3",
+    "MER-S1D1T1", "MER-S1D1T2", "MER-S1D1T3",
+    "MER-S1D2T1", "MER-S1D2T2", "MER-S1D2T3",
+    "MER-S1D3T1", "MER-S1D3T2", "MER-S1D3T3",
+    "MER-S2M1D1", "MER-S2M1D2", "MER-S2M1D3",
+    "MER-S2M1T1", "MER-S2M1T2", "MER-S2M1T3",
+    "MER-S2M2D1", "MER-S2M2D2", "MER-S2M2D3",
+    "MER-S2M2T1", "MER-S2M2T2", "MER-S2M2T3",
+    "MER-S2M3D1", "MER-S2M3D2", "MER-S2M3D3",
+    "MER-S2M3T1", "MER-S2M3T2", "MER-S2M3T3",
+    "MER-S2D1T1", "MER-S2D1T2", "MER-S2D1T3",
+    "MER-S2D2T1", "MER-S2D2T2", "MER-S2D2T3",
+    "MER-S2D3T1", "MER-S2D3T2", "MER-S2D3T3",
+    "MER-S3M1D1", "MER-S3M1D2", "MER-S3M1D3",
+    "MER-S3M1T1", "MER-S3M1T2", "MER-S3M1T3",
+    "MER-S3M2D1", "MER-S3M2D2", "MER-S3M2D3",
+    "MER-S3M2T1", "MER-S3M2T2", "MER-S3M2T3",
+    "MER-S3M3D1", "MER-S3M3D2", "MER-S3M3D3",
+    "MER-S3M3T1", "MER-S3M3T2", "MER-S3M3T3",
+    "MER-S3D1T1", "MER-S3D1T2", "MER-S3D1T3",
+    "MER-S3D2T1", "MER-S3D2T2", "MER-S3D2T3",
+    "MER-S3D3T1", "MER-S3D3T2", "MER-S3D3T3",
+    "MER-M1D1T1", "MER-M1D1T2", "MER-M1D1T3",
+    "MER-M1D2T1", "MER-M1D2T2", "MER-M1D2T3",
+    "MER-M1D3T1", "MER-M1D3T2", "MER-M1D3T3",
+    "MER-M2D1T1", "MER-M2D1T2", "MER-M2D1T3",
+    "MER-M2D2T1", "MER-M2D2T2", "MER-M2D2T3",
+    "MER-M2D3T1", "MER-M2D3T2", "MER-M2D3T3",
+    "MER-M3D1T1", "MER-M3D1T2", "MER-M3D1T3",
+    "MER-M3D2T1", "MER-M3D2T2", "MER-M3D2T3",
+    "MER-M3D3T1", "MER-M3D3T2", "MER-M3D3T3",
+    "MER-S1M1D1T1", "MER-S1M1D1T2", "MER-S1M1D1T3",
+    "MER-S1M1D2T1", "MER-S1M1D2T2", "MER-S1M1D2T3",
+    "MER-S1M1D3T1", "MER-S1M1D3T2", "MER-S1M1D3T3",
+    "MER-S1M2D1T1", "MER-S1M2D1T2", "MER-S1M2D1T3",
+    "MER-S1M2D2T1", "MER-S1M2D2T2", "MER-S1M2D2T3",
+    "MER-S1M2D3T1", "MER-S1M2D3T2", "MER-S1M2D3T3",
+    "MER-S1M3D1T1", "MER-S1M3D1T2", "MER-S1M3D1T3",
+    "MER-S1M3D2T1", "MER-S1M3D2T2", "MER-S1M3D2T3",
+    "MER-S1M3D3T1", "MER-S1M3D3T2", "MER-S1M3D3T3",
+    "MER-S2M1D1T1", "MER-S2M1D1T2", "MER-S2M1D1T3",
+    "MER-S2M1D2T1", "MER-S2M1D2T2", "MER-S2M1D2T3",
+    "MER-S2M1D3T1", "MER-S2M1D3T2", "MER-S2M1D3T3",
+    "MER-S2M2D1T1", "MER-S2M2D1T2", "MER-S2M2D1T3",
+    "MER-S2M2D2T1", "MER-S2M2D2T2", "MER-S2M2D2T3",
+    "MER-S2M2D3T1", "MER-S2M2D3T2", "MER-S2M2D3T3",
+    "MER-S2M3D1T1", "MER-S2M3D1T2", "MER-S2M3D1T3",
+    "MER-S2M3D2T1", "MER-S2M3D2T2", "MER-S2M3D2T3",
+    "MER-S2M3D3T1", "MER-S2M3D3T2", "MER-S2M3D3T3",
+    "MER-S3M1D1T1", "MER-S3M1D1T2", "MER-S3M1D1T3",
+    "MER-S3M1D2T1", "MER-S3M1D2T2", "MER-S3M1D2T3",
+    "MER-S3M1D3T1", "MER-S3M1D3T2", "MER-S3M1D3T3",
+    "MER-S3M2D1T1", "MER-S3M2D1T2", "MER-S3M2D1T3",
+    "MER-S3M2D2T1", "MER-S3M2D2T2", "MER-S3M2D2T3",
+    "MER-S3M2D3T1", "MER-S3M2D3T2", "MER-S3M2D3T3",
+    "MER-S3M3D1T1", "MER-S3M3D1T2", "MER-S3M3D1T3",
+    "MER-S3M3D2T1", "MER-S3M3D2T2", "MER-S3M3D2T3",
+    "MER-S3M3D3T1", "MER-S3M3D3T2", "MER-S3M3D3T3"
+  ],
+  "buildCount": 255
+}

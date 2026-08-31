@@ -1,0 +1,164 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S1
+//    S1  AMD Phases
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S1", shorttitle = "QPS1", overlay = true, max_lines_count = 500, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 1 · AMD PHASES
+// ───────────────────────────────────────────────────────────────
+//  The market moves through a repeating rhythm. A stretch where
+//  price ranges and positions are built. A stretch where it
+//  pushes through an obvious level and takes out the orders
+//  resting there. Then a stretch where it actually moves.
+//
+//  Accumulation, manipulation, distribution. This shades all
+//  three, on three cycle lengths at once.
+//
+//  The cycles are anchored to midnight in the chosen timezone
+//  rather than rolling with the current bar. That matters: a
+//  rolling window puts the boundaries wherever you happen to be
+//  looking, while an anchored one puts them where everybody
+//  else's are too. The phases are only useful if they are the
+//  same phases other people are trading around.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+s1_gTz = "Timezone"
+
+s1_tz = input.string("UTC+0", "Cycle anchor", group = s1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Midnight in this timezone is where every cycle starts counting. Change it to match the session that actually drives your instrument -- this matters more than any other setting here.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+s1_gCyc = "Cycles"
+
+s1_c24 = input.bool(true, "24 hour", group = s1_gCyc, inline = "c1")
+s1_c12 = input.bool(true, "12 hour", group = s1_gCyc, inline = "c1")
+s1_c6  = input.bool(true, "6 hour",  group = s1_gCyc, inline = "c1",
+     tooltip = "All three run at once and overlap. The 24 hour cycle gives the day's shape; the 6 hour one gives the session's.")
+
+s1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle accumulation gives way to manipulation. Default 50%.")
+
+s1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle manipulation gives way to distribution. Default 75%.")
+
+// ─── SHADING ──────────────────────────────────────────────────
+s1_gShade = "Shading"
+
+s1_shadeA = input.bool(false, "Shade accumulation", group = s1_gShade, inline = "sh")
+s1_shadeM = input.bool(true,  "Shade manipulation", group = s1_gShade, inline = "sh")
+s1_shadeD = input.bool(false, "Shade distribution", group = s1_gShade, inline = "sh",
+     tooltip = "Manipulation only, by default. Shading all three on all three cycles turns the chart into soup.")
+
+s1_colA = input.color(#5b9cf6, "Accumulation", group = s1_gShade, inline = "cc")
+s1_colM = input.color(#2962ff, "Manipulation", group = s1_gShade, inline = "cc")
+s1_colD = input.color(#c9a84c, "Distribution", group = s1_gShade, inline = "cc")
+
+s1_fade = input.int(95, "Transparency", minval = 80, maxval = 99, group = s1_gShade)
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_gBound = "Boundaries"
+
+s1_showLine = input.bool(true, "Mark phase starts", group = s1_gBound,
+     tooltip = "A vertical line where each phase begins, on each enabled cycle.")
+
+s1_showLbl = input.bool(true, "Label phase starts", group = s1_gBound)
+
+s1_lineCol = input.color(#ffffff, "Line and label", group = s1_gBound)
+s1_lineFade = input.int(60, "Line transparency", minval = 0, maxval = 95, group = s1_gBound)
+s1_lblSize  = input.string("Small", "Label size", options = ["Tiny", "Small", "Normal"], group = s1_gBound)
+
+s1_lookback = input.int(300, "Draw on the last N bars", minval = 20, maxval = 1000, group = s1_gBound,
+     tooltip = "Boundary lines and labels are limited to recent bars so older history stays readable. Shading is unaffected.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so half hour cycles resolve correctly.
+s1_hr = hour(time, s1_tz) + minute(time, s1_tz) / 60.0
+
+// Position within a cycle, as a percentage of that cycle.
+s1_posIn(float _cyc) =>
+    float _idx = math.floor(s1_hr / _cyc)
+    float _pos = s1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 = accumulation, 1 = manipulation, 2 = distribution
+s1_phaseOf(float _cyc) =>
+    float _p = s1_posIn(_cyc)
+    _p < s1_split1 ? 0 : _p < s1_split2 ? 1 : 2
+
+s1_p24 = s1_phaseOf(24.0)
+s1_p12 = s1_phaseOf(12.0)
+s1_p6  = s1_phaseOf(6.0)
+
+s1_colOf(int _ph) =>
+    _ph == 0 ? s1_colA : _ph == 1 ? s1_colM : s1_colD
+
+s1_nameOf(int _ph) =>
+    _ph == 0 ? "A" : _ph == 1 ? "M" : "D"
+
+s1_shadeOn(int _ph) =>
+    _ph == 0 ? s1_shadeA : _ph == 1 ? s1_shadeM : s1_shadeD
+
+// ─── SHADING ──────────────────────────────────────────────────
+color s1_bg24 = s1_c24 and s1_shadeOn(s1_p24) ? color.new(s1_colOf(s1_p24), s1_fade) : na
+color s1_bg12 = s1_c12 and s1_shadeOn(s1_p12) ? color.new(s1_colOf(s1_p12), s1_fade) : na
+color s1_bg6  = s1_c6  and s1_shadeOn(s1_p6)  ? color.new(s1_colOf(s1_p6),  s1_fade) : na
+
+bgcolor(s1_bg24, title = "24H phase")
+bgcolor(s1_bg12, title = "12H phase")
+bgcolor(s1_bg6,  title = "6H phase")
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+// Stacked vertical text, so several cycles marking the same bar
+// stay readable side by side.
+s1_stack(string _cyc, string _ph) =>
+    string _out = ""
+    for i = 0 to str.length(_cyc) - 1
+        _out := _out + str.substring(_cyc, i, i + 1) + "\n"
+    _out + "\n" + _ph
+
+s1_mark(bool _on, float _cyc, int _ph, int _phPrev, string _label) =>
+    if _on and _ph != _phPrev and bar_index >= last_bar_index - s1_lookback
+        if s1_showLine
+            line.new(bar_index, low, bar_index, high,
+                 extend = extend.both,
+                 color  = color.new(s1_lineCol, s1_lineFade),
+                 style  = line.style_dotted,
+                 width  = 1)
+        if s1_showLbl
+            label.new(bar_index, high, s1_stack(_label, s1_nameOf(_ph)),
+                 style     = label.style_none,
+                 textcolor = color.new(s1_lineCol, 30),
+                 size      = s1_sizeOf(s1_lblSize),
+                 yloc      = yloc.abovebar,
+                 textalign = text.align_center)
+    true
+
+if barstate.isconfirmed
+    s1_mark(s1_c24, 24.0, s1_p24, s1_p24[1], "24H")
+    s1_mark(s1_c12, 12.0, s1_p12, s1_p12[1], "12H")
+    s1_mark(s1_c6,   6.0, s1_p6,  s1_p6[1],  "6H")
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_p24 != s1_p24[1], "24H phase changed",
+     "The 24 hour cycle has moved into a new phase.")
+
+alertcondition(s1_p12 == 1 and s1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(s1_p6 == 1 and s1_p6[1] != 1, "6H manipulation started",
+     "The 6 hour cycle has entered its manipulation phase.")

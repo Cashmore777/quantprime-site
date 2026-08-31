@@ -15719,6 +15719,12 @@ const dishNames = {
     main: { 1: 'ATR Stops', 2: 'Volatility Zones', 3: 'Regime Tracker' },
     side: { 1: 'Candle Clock', 2: 'Position Sizer', 3: 'Trade Planner' },
     dessert: { 1: 'Band Report', 2: 'Zone Report', 3: 'Session Report' }
+  },
+  terminal: {
+    starter: { 1: 'AMD Phases', 2: 'Liquidity Levels', 3: 'Fair Value Gaps' },
+    main: { 1: 'Sweep Tracker', 2: 'Liquidity Map', 3: 'Trend Stack' },
+    side: { 1: 'Phase Clock', 2: 'Stack Monitor', 3: 'Session Clock' },
+    dessert: { 1: 'Sweep Report', 2: 'Phase Report', 3: 'Session Report' }
   }
 };
 
@@ -15733,6 +15739,12 @@ const courseQuestions = {
   recoil: {
     starter: 'How volatile is it?',
     main: 'Where do I act?',
+    side: 'What do I need to know?',
+    dessert: 'What does the data say?'
+  },
+  terminal: {
+    starter: 'What\'s the context?',
+    main: 'What\'s the engine?',
     side: 'What do I need to know?',
     dessert: 'What does the data say?'
   }
@@ -15903,6 +15915,88 @@ const dishInfo = {
         outputs: 'session_rank, expansion_freq, session_bias'
       }
     }
+  },
+  terminal: {
+    starter: {
+      1: {
+        name: 'AMD Phases',
+        ingredients: '12h cycle · 6h cycle · 3h cycle · timezone anchor',
+        description: 'The market moves through a rhythm: a stretch where price ranges, a stretch where it pushes through an obvious level to take the orders resting there, then a stretch where it actually moves. This shades all three phases on three cycle lengths at once, anchored to midnight in your chosen timezone rather than rolling with the current bar.',
+        outputs: 'phase_12h, phase_6h, phase_3h, current_phase'
+      },
+      2: {
+        name: 'Liquidity Levels',
+        ingredients: 'swing highs · swing lows · three timeframes · sweep detection',
+        description: 'A swing high is where somebody\'s stop is sitting, and so is a swing low. This finds those levels on three timeframes, extends each one right, and freezes it the moment price reaches through. What is left running is the liquidity nobody has taken yet.',
+        outputs: 'liq_highs, liq_lows, swept_levels, active_levels'
+      },
+      3: {
+        name: 'Fair Value Gaps',
+        ingredients: 'gap detection · state tracking · midpoint · inversion',
+        description: 'Three candles where the first and third do not overlap leave a band of price nobody traded through properly. Each gap here carries a state: fresh, tapped at the midpoint, filled, or inverted. An inverted gap is not a dead one, which is why the state is tracked rather than the gap simply being deleted.',
+        outputs: 'gap_high, gap_low, gap_state, gap_mid'
+      }
+    },
+    main: {
+      1: {
+        name: 'Sweep Tracker',
+        ingredients: 'level breaks · 20-min grading · bias direction · bias age',
+        description: 'A level getting taken is not the event. What price does in the twenty minutes afterwards is the event. This watches levels on three timeframes, marks each sweep, and then grades it: came back through, kept going, or neither. It also tracks which direction the last sweep set and how long that bias has been live.',
+        outputs: 'sweep_grade, bias_direction, bias_bars, last_sweep'
+      },
+      2: {
+        name: 'Liquidity Map',
+        ingredients: 'unswept levels · distance sorting · imbalance · nearest targets',
+        description: 'The forward looking counterpart to the Sweep Tracker. That one grades levels already taken; this lists the ones that have not been. Nearest on each side is highlighted, and the table reads top to bottom the same way the chart does. The resting row shows the imbalance, which is a statement about where the obvious stops are rather than a prediction.',
+        outputs: 'levels_above, levels_below, nearest_high, nearest_low'
+      },
+      3: {
+        name: 'Trend Stack',
+        ingredients: '8/26/80/233 EMAs · stack order · consolidation filter',
+        description: 'A real trend needs fast above medium, medium above slow, slow above anchor, in that order and without exception. Anything else is consolidation. The definition is deliberately strict, which means this spends most of its time saying CONSOLIDATION. That is correct, and it is the reason it works as a filter.',
+        outputs: 'stack_state, is_trending, trend_direction'
+      }
+    },
+    side: {
+      1: {
+        name: 'Phase Clock',
+        ingredients: 'phase progress · time remaining · next boundary',
+        description: 'The AMD Phases piece shades the cycles. This answers the other question: how much time is left. A condition resolving four minutes before a phase boundary has almost no room to work; one resolving with two hours to run has the rest of the phase.',
+        outputs: 'phase_pct, time_remaining, next_phase_time'
+      },
+      2: {
+        name: 'Stack Monitor',
+        ingredients: 'bias · flip level · exposure · nearest opposite',
+        description: 'Meridian does not use a stop. It stacks in one direction and exits when an opposite condition appears, closing the whole position and reversing. So the useful questions are what the bias is, how old it is, and where the flip is likely to come from. The nearest unswept level on the opposite side is the closest thing this instrument has to a risk figure.',
+        outputs: 'current_bias, flip_level, exposure_pips, bias_age'
+      },
+      3: {
+        name: 'Session Clock',
+        ingredients: 'window status · time remaining · next window',
+        description: 'Meridian only resolves conditions inside its three trading windows. Outside them the engine still sees sweeps and rejections and does nothing with them, which is the single most common reason somebody concludes the instrument is broken. This says plainly whether a window is live and when the next one opens.',
+        outputs: 'window_active, window_remaining, next_window'
+      }
+    },
+    dessert: {
+      1: {
+        name: 'Sweep Report',
+        ingredients: 'reversal rate · timeframe split · high/low split',
+        description: 'Meridian\'s whole premise is that when a level gets taken, the move beyond it tends to fail rather than continue. That was measured on one instrument. This runs the same test on yours, split by timeframe and by whether it was a high or a low that got taken. A reversal rate meaningfully above 50% supports the premise.',
+        outputs: 'reversal_rate, high_reversals, low_reversals'
+      },
+      2: {
+        name: 'Phase Report',
+        ingredients: 'range per phase · breaks per phase · spread score',
+        description: 'If the phases are real, they should look different from each other in the data. Manipulation should produce more levels being taken; distribution should produce the largest moves. This measures range, movement and level breaks per phase, and the spread row says how different the three actually are.',
+        outputs: 'phase_ranges, phase_breaks, spread_score'
+      },
+      3: {
+        name: 'Session Report',
+        ingredients: 'hourly activity · break frequency · reversal quality',
+        description: 'Every hour of the day, measured across your history: how active it is, how many levels get broken, and crucially how many of those breaks came back through. The three configured windows are marked, and the IN and OUT rows compare them against the rest of the day.',
+        outputs: 'hour_activity, hour_breaks, hour_reversals'
+      }
+    }
   }
 };
 
@@ -15982,7 +16076,7 @@ function switchMenuTier(tier) {
   const menuLayout = document.getElementById('menu-layout');
   const comingSoon = document.getElementById('menu-coming-soon');
   
-  if (tier === 'research' || tier === 'recoil') {
+  if (tier === 'research' || tier === 'recoil' || tier === 'terminal') {
     menuLayout.style.display = 'grid';
     comingSoon.style.display = 'none';
     // Reset selections and update dish cards when switching tiers
@@ -16055,11 +16149,29 @@ function updateOrderSummary() {
 
 // Update build ID display
 function updateBuildId() {
-  const prefix = menuState.currentTier === 'research' ? 'RES' : 
-                 menuState.currentTier === 'recoil' ? 'REC' :
-                 menuState.currentTier === 'terminal' ? 'TRM' : 'SUI';
+  let buildId;
   
-  const buildId = `${prefix}-${menuState.selections.starter}${menuState.selections.main}${menuState.selections.side}${menuState.selections.dessert}`;
+  if (menuState.currentTier === 'terminal') {
+    // Terminal uses piece codes: MER-S1M2D3T1 format
+    const s = menuState.selections.starter;
+    const m = menuState.selections.main;
+    const d = menuState.selections.side;
+    const t = menuState.selections.dessert;
+    
+    let pieces = [];
+    if (s > 0) pieces.push(`S${s}`);
+    if (m > 0) pieces.push(`M${m}`);
+    if (d > 0) pieces.push(`D${d}`);
+    if (t > 0) pieces.push(`T${t}`);
+    
+    buildId = pieces.length > 0 ? `MER-${pieces.join('')}` : 'MER-';
+  } else {
+    // Research and Recoil use numeric codes: REC-1230 format
+    const prefix = menuState.currentTier === 'research' ? 'RES' : 
+                   menuState.currentTier === 'recoil' ? 'REC' : 'SUI';
+    buildId = `${prefix}-${menuState.selections.starter}${menuState.selections.main}${menuState.selections.side}${menuState.selections.dessert}`;
+  }
+  
   document.getElementById('order-build-id').textContent = buildId;
   return buildId;
 }
@@ -16125,8 +16237,8 @@ function resetMenuSelections() {
 async function generateInstrument() {
   const buildId = updateBuildId();
   
-  // Validate
-  if (buildId.endsWith('-0000')) {
+  // Validate - no selections made
+  if (buildId.endsWith('-0000') || buildId === 'MER-') {
     return;
   }
   

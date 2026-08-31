@@ -1,0 +1,992 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S2M1D1T2
+//    S2  Liquidity Levels
+//    M1  Sweep Tracker
+//    D1  Phase Clock
+//    T2  Phase Report
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S2M1D1T2", shorttitle = "QPS2M1D1T2", overlay = true, max_lines_count = 500, max_labels_count = 500, max_boxes_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 2 · LIQUIDITY LEVELS
+// ───────────────────────────────────────────────────────────────
+//  A swing high is where somebody's stop is sitting. So is a
+//  swing low. Those orders are the only thing on a chart that is
+//  guaranteed to exist, and price has a persistent habit of going
+//  to collect them before it does anything else.
+//
+//  This finds those levels across three timeframes using fractal
+//  pivots, extends each one right, and freezes it the moment
+//  price reaches through it. What is left running is the
+//  liquidity that has not been taken yet.
+//
+//  A frozen level is not finished. Where price went afterwards is
+//  the whole question, and the Sweep Tracker in the Main course
+//  answers it.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s2_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+s2_gTf = "Timeframes"
+
+s2_t1On   = input.bool(true, "TF1", group = s2_gTf, inline = "t1")
+s2_t1     = input.timeframe("3", "", group = s2_gTf, inline = "t1")
+s2_t1L    = input.int(4, "L", minval = 1, maxval = 20, group = s2_gTf, inline = "t1")
+s2_t1R    = input.int(2, "R", minval = 1, maxval = 20, group = s2_gTf, inline = "t1")
+s2_t1Col  = input.color(#2962ff, "", group = s2_gTf, inline = "t1")
+
+s2_t2On   = input.bool(true, "TF2", group = s2_gTf, inline = "t2")
+s2_t2     = input.timeframe("30", "", group = s2_gTf, inline = "t2")
+s2_t2L    = input.int(4, "L", minval = 1, maxval = 20, group = s2_gTf, inline = "t2")
+s2_t2R    = input.int(2, "R", minval = 1, maxval = 20, group = s2_gTf, inline = "t2")
+s2_t2Col  = input.color(#2962ff, "", group = s2_gTf, inline = "t2")
+
+s2_t3On   = input.bool(true, "TF3", group = s2_gTf, inline = "t3")
+s2_t3     = input.timeframe("180", "", group = s2_gTf, inline = "t3")
+s2_t3L    = input.int(4, "L", minval = 1, maxval = 20, group = s2_gTf, inline = "t3")
+s2_t3R    = input.int(2, "R", minval = 1, maxval = 20, group = s2_gTf, inline = "t3")
+s2_t3Col  = input.color(#ffffff, "", group = s2_gTf, inline = "t3",
+     tooltip = "L and R are how many bars either side a pivot needs to qualify. Higher values find fewer, more significant levels. R also delays confirmation by that many bars.")
+
+// ─── LIFECYCLE ────────────────────────────────────────────────
+s2_gLife = "Lifecycle"
+
+s2_sweepMode = input.string("Wick through", "A level is swept by", options = ["Wick through", "Close beyond"], group = s2_gLife,
+     tooltip = "Wick through freezes a level as soon as price reaches it, which is what taking liquidity actually looks like. Close beyond waits for a candle to finish past it, which finds fewer and larger events.")
+
+s2_keepSwept = input.bool(true, "Keep swept levels visible", group = s2_gLife,
+     tooltip = "On: a swept level stops extending and stays as a faded line. Off: it is removed. Keeping them shows you where liquidity has already been taken, which is often where price will not return.")
+
+s2_sweptFade = input.int(65, "Swept level fade", minval = 0, maxval = 95, group = s2_gLife)
+
+s2_maxLevels = input.int(200, "Maximum levels tracked", minval = 20, maxval = 500, group = s2_gLife,
+     tooltip = "Three timeframes generate levels quickly. Once this is reached the oldest are removed.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+s2_gDisp = "Display"
+
+s2_showHighs = input.bool(true, "Highs", group = s2_gDisp, inline = "hl")
+s2_showLows  = input.bool(true, "Lows",  group = s2_gDisp, inline = "hl")
+
+s2_width = input.int(1, "Line width", minval = 1, maxval = 4, group = s2_gDisp)
+
+s2_showTf = input.bool(false, "Label levels with their timeframe", group = s2_gDisp)
+s2_lblSize = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = s2_gDisp)
+
+// ─── STORE ────────────────────────────────────────────────────
+type S2Level
+    float px
+    bool  isHigh
+    bool  swept
+    color col
+    line  ln
+    label lb
+
+var S2Level[] s2_levels = array.new<S2Level>()
+
+s2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+s2_tfLabel(string _tf) =>
+    string _out = _tf
+    float  _n   = str.tonumber(_tf)
+    if not na(_n)
+        int _m = int(_n)
+        _out := _m >= 1440 and _m % 1440 == 0 ? str.tostring(_m / 1440) + "D" :
+             _m >= 60 and _m % 60 == 0 ? str.tostring(_m / 60) + "H" :
+             str.tostring(_m) + "M"
+    _out
+
+// Higher timeframe pivots repeat across several chart bars, so
+// anything at effectively the same price is treated as already
+// known rather than drawn twice.
+s2_exists(float _px) =>
+    bool _found = false
+    int  _sz = array.size(s2_levels)
+    if _sz > 0
+        for i = 0 to _sz - 1
+            S2Level _l = array.get(s2_levels, i)
+            if not _l.swept and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _found := true
+    _found
+
+s2_add(float _px, bool _isHigh, color _col, int _right, string _tf) =>
+    if not na(_px) and not s2_exists(_px) and (_isHigh ? s2_showHighs : s2_showLows)
+        // Anchor to the pivot candle itself, not to the bar that
+        // confirmed it R bars later.
+        int _x1 = bar_index - _right
+        line _ln = line.new(_x1, _px, bar_index + 1, _px,
+             extend = extend.none, color = _col, width = s2_width)
+        label _lb = na
+        if s2_showTf
+            _lb := label.new(bar_index + 1, _px, s2_tfLabel(_tf),
+                 style = label.style_label_left, color = color.new(color.black, 100),
+                 textcolor = _col, size = s2_sizeOf(s2_lblSize))
+        array.push(s2_levels, S2Level.new(_px, _isHigh, false, _col, _ln, _lb))
+        while array.size(s2_levels) > s2_maxLevels
+            S2Level _old = array.shift(s2_levels)
+            line.delete(_old.ln)
+            label.delete(_old.lb)
+
+// ─── PIVOT FEED ───────────────────────────────────────────────
+[s2_h1, s2_l1] = request.security(syminfo.tickerid, s2_t1,
+     [ta.pivothigh(high, s2_t1L, s2_t1R), ta.pivotlow(low, s2_t1L, s2_t1R)], lookahead = barmerge.lookahead_off)
+[s2_h2, s2_l2] = request.security(syminfo.tickerid, s2_t2,
+     [ta.pivothigh(high, s2_t2L, s2_t2R), ta.pivotlow(low, s2_t2L, s2_t2R)], lookahead = barmerge.lookahead_off)
+[s2_h3, s2_l3] = request.security(syminfo.tickerid, s2_t3,
+     [ta.pivothigh(high, s2_t3L, s2_t3R), ta.pivotlow(low, s2_t3L, s2_t3R)], lookahead = barmerge.lookahead_off)
+
+if barstate.isconfirmed
+    if s2_t1On
+        s2_add(s2_h1, true,  s2_t1Col, s2_t1R, s2_t1)
+        s2_add(s2_l1, false, s2_t1Col, s2_t1R, s2_t1)
+    if s2_t2On
+        s2_add(s2_h2, true,  s2_t2Col, s2_t2R, s2_t2)
+        s2_add(s2_l2, false, s2_t2Col, s2_t2R, s2_t2)
+    if s2_t3On
+        s2_add(s2_h3, true,  s2_t3Col, s2_t3R, s2_t3)
+        s2_add(s2_l3, false, s2_t3Col, s2_t3R, s2_t3)
+
+    // --- extend live levels, freeze the ones price has taken ---
+    int s2_n = array.size(s2_levels)
+    if s2_n > 0
+        for i = 0 to s2_n - 1
+            S2Level _l = array.get(s2_levels, i)
+            if not _l.swept and not na(_l.ln)
+                bool _hit = s2_sweepMode == "Wick through" ?
+                     (_l.isHigh ? high >= _l.px : low <= _l.px) :
+                     (_l.isHigh ? close > _l.px : close < _l.px)
+                if _hit
+                    _l.swept := true
+                    if s2_keepSwept
+                        line.set_x2(_l.ln, bar_index)
+                        line.set_style(_l.ln, line.style_dotted)
+                        line.set_color(_l.ln, color.new(_l.col, s2_sweptFade))
+                        label.delete(_l.lb)
+                        _l.lb := na
+                    else
+                        line.delete(_l.ln)
+                        label.delete(_l.lb)
+                        _l.ln := na
+                        _l.lb := na
+                else
+                    line.set_x2(_l.ln, bar_index + 1)
+                    if not na(_l.lb)
+                        label.set_x(_l.lb, bar_index + 1)
+
+// ─── ALERTS ───────────────────────────────────────────────────
+// Fires when any tracked level is taken on this bar.
+s2_sweptThisBar = false
+if barstate.isconfirmed
+    int _n2 = array.size(s2_levels)
+    if _n2 > 0
+        for i = 0 to _n2 - 1
+            S2Level _l = array.get(s2_levels, i)
+            if _l.swept and not na(_l.ln) and line.get_x2(_l.ln) == bar_index
+                s2_sweptThisBar := true
+
+alertcondition(s2_sweptThisBar, "Liquidity swept",
+     "A tracked liquidity level has been taken.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MAIN 1 · SWEEP TRACKER
+// ───────────────────────────────────────────────────────────────
+//  A level getting taken is not the event. What price does in the
+//  twenty minutes afterwards is the event.
+//
+//  This watches liquidity levels across three timeframes, marks
+//  each one the moment it is swept, and then keeps watching. After
+//  a set number of bars it grades the outcome:
+//
+//    REJECTED     price came back through the level
+//    CONTINUED    price stayed beyond it and kept going
+//    UNRESOLVED   neither, within the window
+//
+//  It also tracks which direction the most recent sweep set, and
+//  how long that bias has been live, because a bias set forty bars
+//  ago is a different thing to one set on the last candle.
+//
+//  What it does not do is tell you when to enter. A swept level
+//  with a rejection is a condition, not a signal, and what happens
+//  between that condition and an entry is the instrument's job.
+//
+//  Draws one table. All identifiers namespaced m1_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+m1_gTf = "Levels"
+
+m1_t1On  = input.bool(true, "TF1", group = m1_gTf, inline = "t1")
+m1_t1    = input.timeframe("3", "", group = m1_gTf, inline = "t1")
+m1_t1L   = input.int(4, "L", minval = 1, maxval = 20, group = m1_gTf, inline = "t1")
+m1_t1R   = input.int(2, "R", minval = 1, maxval = 20, group = m1_gTf, inline = "t1")
+
+m1_t2On  = input.bool(true, "TF2", group = m1_gTf, inline = "t2")
+m1_t2    = input.timeframe("30", "", group = m1_gTf, inline = "t2")
+m1_t2L   = input.int(4, "L", minval = 1, maxval = 20, group = m1_gTf, inline = "t2")
+m1_t2R   = input.int(2, "R", minval = 1, maxval = 20, group = m1_gTf, inline = "t2")
+
+m1_t3On  = input.bool(true, "TF3", group = m1_gTf, inline = "t3")
+m1_t3    = input.timeframe("180", "", group = m1_gTf, inline = "t3")
+m1_t3L   = input.int(4, "L", minval = 1, maxval = 20, group = m1_gTf, inline = "t3")
+m1_t3R   = input.int(2, "R", minval = 1, maxval = 20, group = m1_gTf, inline = "t3",
+     tooltip = "L and R are how many bars either side a pivot needs to qualify. Higher finds fewer, more significant levels.")
+
+// ─── SWEEP DEFINITION ─────────────────────────────────────────
+m1_gSweep = "What counts as a sweep"
+
+m1_mode = input.string("Wick through", "Sweep trigger", options = ["Wick through", "Close beyond"], group = m1_gSweep,
+     tooltip = "Wick through fires as soon as price reaches the level, which is what taking liquidity looks like. Close beyond waits for a candle to finish past it and finds fewer, larger events.")
+
+m1_window = input.int(20, "Bars to grade the outcome over", minval = 3, maxval = 200, group = m1_gSweep,
+     tooltip = "After a sweep, how many bars to watch before deciding whether price rejected or continued. Shorter is more decisive and less forgiving.")
+
+m1_rejPct = input.float(50.0, "Rejection needs price back through by %", minval = 10.0, maxval = 100.0, step = 5.0, group = m1_gSweep,
+     tooltip = "How far back through the level price must come for the sweep to grade REJECTED, as a percentage of how far beyond it went. 50% means it gave back half the overshoot.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+m1_gDisp = "Display"
+
+m1_showLines  = input.bool(true, "Draw levels", group = m1_gDisp)
+m1_showMarks  = input.bool(true, "Mark sweeps on the chart", group = m1_gDisp)
+m1_showBias   = input.bool(true, "Shade the current bias", group = m1_gDisp,
+     tooltip = "Faint background tint in the direction the last sweep set.")
+
+m1_liveCol   = input.color(#2962ff, "Unswept", group = m1_gDisp, inline = "c1")
+m1_rejCol    = input.color(#2f6b41, "Rejected", group = m1_gDisp, inline = "c1")
+m1_contCol   = input.color(#b4342a, "Continued", group = m1_gDisp, inline = "c1")
+m1_unresCol  = input.color(#9a9da3, "Unresolved", group = m1_gDisp, inline = "c1")
+
+m1_maxLv = input.int(150, "Maximum levels tracked", minval = 20, maxval = 500, group = m1_gDisp)
+
+// ─── TABLE ────────────────────────────────────────────────────
+m1_gTbl = "Table"
+
+m1_tblOn  = input.bool(true, "Show table", group = m1_gTbl)
+m1_tblPos = input.string("Top Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = m1_gTbl)
+m1_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = m1_gTbl)
+
+// ─── STATE ────────────────────────────────────────────────────
+//  outcome: 0 live · 1 rejected · 2 continued · 3 unresolved
+type M1Level
+    float px
+    bool  isHigh
+    string tf
+    bool  swept
+    int   sweptBar
+    float extreme
+    int   outcome
+    line  ln
+    label lb
+
+var M1Level[] m1_levels = array.new<M1Level>()
+
+// running tallies, by timeframe index 0/1/2
+var int[] m1_nRej  = array.from(0, 0, 0)
+var int[] m1_nCont = array.from(0, 0, 0)
+var int[] m1_nUnr  = array.from(0, 0, 0)
+
+var int   m1_bias     = 0        // 1 bullish, -1 bearish, 0 none
+var int   m1_biasBar  = na
+var float m1_biasFrom = na
+
+m1_tfIndex(string _tf) =>
+    _tf == m1_t1 ? 0 : _tf == m1_t2 ? 1 : 2
+
+m1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m1_posOf(_p) =>
+    _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.top_right
+
+m1_tfLabel(string _tf) =>
+    string _out = _tf
+    float  _n   = str.tonumber(_tf)
+    if not na(_n)
+        int _m = int(_n)
+        _out := _m >= 1440 and _m % 1440 == 0 ? str.tostring(_m / 1440) + "D" :
+             _m >= 60 and _m % 60 == 0 ? str.tostring(_m / 60) + "H" :
+             str.tostring(_m) + "M"
+    _out
+
+m1_colOf(int _o) =>
+    _o == 0 ? m1_liveCol : _o == 1 ? m1_rejCol : _o == 2 ? m1_contCol : m1_unresCol
+
+// Higher timeframe pivots repeat across chart bars, so anything at
+// effectively the same price is treated as already known.
+m1_known(float _px) =>
+    bool _f = false
+    int _n = array.size(m1_levels)
+    if _n > 0
+        for i = 0 to _n - 1
+            M1Level _l = array.get(m1_levels, i)
+            if not _l.swept and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+m1_add(float _px, bool _isHigh, string _tf, int _right) =>
+    if not na(_px) and not m1_known(_px)
+        line _ln = na
+        if m1_showLines
+            _ln := line.new(bar_index - _right, _px, bar_index + 1, _px,
+                 color = m1_liveCol, width = 1)
+        array.push(m1_levels, M1Level.new(_px, _isHigh, _tf, false, na, na, 0, _ln, na))
+        while array.size(m1_levels) > m1_maxLv
+            M1Level _old = array.shift(m1_levels)
+            line.delete(_old.ln)
+            label.delete(_old.lb)
+
+// ─── PIVOT FEED ───────────────────────────────────────────────
+[m1_h1, m1_l1] = request.security(syminfo.tickerid, m1_t1,
+     [ta.pivothigh(high, m1_t1L, m1_t1R), ta.pivotlow(low, m1_t1L, m1_t1R)], lookahead = barmerge.lookahead_off)
+[m1_h2, m1_l2] = request.security(syminfo.tickerid, m1_t2,
+     [ta.pivothigh(high, m1_t2L, m1_t2R), ta.pivotlow(low, m1_t2L, m1_t2R)], lookahead = barmerge.lookahead_off)
+[m1_h3, m1_l3] = request.security(syminfo.tickerid, m1_t3,
+     [ta.pivothigh(high, m1_t3L, m1_t3R), ta.pivotlow(low, m1_t3L, m1_t3R)], lookahead = barmerge.lookahead_off)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+var bool m1_sweptThisBar = false
+var bool m1_gradedThisBar = false
+
+if barstate.isconfirmed
+    m1_sweptThisBar  := false
+    m1_gradedThisBar := false
+
+    if m1_t1On
+        m1_add(m1_h1, true,  m1_t1, m1_t1R)
+        m1_add(m1_l1, false, m1_t1, m1_t1R)
+    if m1_t2On
+        m1_add(m1_h2, true,  m1_t2, m1_t2R)
+        m1_add(m1_l2, false, m1_t2, m1_t2R)
+    if m1_t3On
+        m1_add(m1_h3, true,  m1_t3, m1_t3R)
+        m1_add(m1_l3, false, m1_t3, m1_t3R)
+
+    int m1_n = array.size(m1_levels)
+    if m1_n > 0
+        for i = 0 to m1_n - 1
+            M1Level _l = array.get(m1_levels, i)
+
+            // --- still live: extend, and check for the sweep ---
+            if not _l.swept
+                if not na(_l.ln)
+                    line.set_x2(_l.ln, bar_index + 1)
+
+                bool _hit = m1_mode == "Wick through" ?
+                     (_l.isHigh ? high >= _l.px : low <= _l.px) :
+                     (_l.isHigh ? close > _l.px : close < _l.px)
+
+                if _hit
+                    _l.swept    := true
+                    _l.sweptBar := bar_index
+                    _l.extreme  := _l.isHigh ? high : low
+                    m1_sweptThisBar := true
+
+                    // A high taken sets bearish bias, a low taken sets bullish.
+                    // The premise is that the move beyond fails, not that it runs.
+                    m1_bias     := _l.isHigh ? -1 : 1
+                    m1_biasBar  := bar_index
+                    m1_biasFrom := _l.px
+
+                    if not na(_l.ln)
+                        line.set_x2(_l.ln, bar_index)
+                        line.set_style(_l.ln, line.style_dotted)
+
+                    if m1_showMarks
+                        _l.lb := label.new(bar_index, _l.isHigh ? high : low,
+                             m1_tfLabel(_l.tf),
+                             style     = _l.isHigh ? label.style_label_down : label.style_label_up,
+                             color     = color.new(color.black, 100),
+                             textcolor = m1_liveCol,
+                             size      = size.tiny)
+
+            // --- swept and still being graded ---
+            else if _l.outcome == 0
+                // track how far beyond the level price has gone
+                if _l.isHigh
+                    _l.extreme := math.max(_l.extreme, high)
+                else
+                    _l.extreme := math.min(_l.extreme, low)
+
+                float _over = math.abs(_l.extreme - _l.px)
+                float _need = _l.px + (_l.isHigh ? -1 : 1) * _over * (m1_rejPct / 100.0)
+
+                bool _rejected = _over > 0 and (_l.isHigh ? close <= _need : close >= _need)
+                bool _expired  = bar_index - _l.sweptBar >= m1_window
+
+                if _rejected
+                    _l.outcome := 1
+                else if _expired
+                    // beyond the level at the end of the window is a continuation
+                    bool _beyond = _l.isHigh ? close > _l.px : close < _l.px
+                    _l.outcome := _beyond ? 2 : 3
+
+                if _l.outcome != 0
+                    m1_gradedThisBar := true
+                    int _tfi = m1_tfIndex(_l.tf)
+                    if _l.outcome == 1
+                        array.set(m1_nRej, _tfi, array.get(m1_nRej, _tfi) + 1)
+                    else if _l.outcome == 2
+                        array.set(m1_nCont, _tfi, array.get(m1_nCont, _tfi) + 1)
+                    else
+                        array.set(m1_nUnr, _tfi, array.get(m1_nUnr, _tfi) + 1)
+
+                    if not na(_l.ln)
+                        line.set_color(_l.ln, color.new(m1_colOf(_l.outcome), 40))
+                    if not na(_l.lb)
+                        label.set_textcolor(_l.lb, m1_colOf(_l.outcome))
+
+// ─── BIAS SHADING ─────────────────────────────────────────────
+bgcolor(m1_showBias and m1_bias ==  1 ? color.new(m1_rejCol, 96) : na, title = "Bullish bias")
+bgcolor(m1_showBias and m1_bias == -1 ? color.new(m1_contCol, 96) : na, title = "Bearish bias")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table m1_tbl = na
+
+if m1_tblOn and barstate.islast
+    if na(m1_tbl)
+        m1_tbl := table.new(m1_posOf(m1_tblPos), 5, 6,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    color _txt = color.white
+
+    table.cell(m1_tbl, 0, 0, "SWEEPS",    text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 1, 0, "REJ",       text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 2, 0, "CONT",      text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 3, 0, "UNRES",     text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 4, 0, "REJ %",     text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+
+    string[] _tfs = array.from(m1_t1, m1_t2, m1_t3)
+    bool[]   _ons = array.from(m1_t1On, m1_t2On, m1_t3On)
+
+    int _totR = 0
+    int _totC = 0
+    int _totU = 0
+
+    for i = 0 to 2
+        int _r = array.get(m1_nRej, i)
+        int _c = array.get(m1_nCont, i)
+        int _u = array.get(m1_nUnr, i)
+        int _graded = _r + _c
+        _totR += _r
+        _totC += _c
+        _totU += _u
+
+        string _pct = _graded < 30 ? "thin" :
+             str.tostring(math.round(_r / _graded * 100)) + "%"
+        color _pctCol = _graded < 30 ? m1_unresCol :
+             _r / _graded >= 0.5 ? m1_rejCol : m1_contCol
+
+        table.cell(m1_tbl, 0, i + 1, array.get(_ons, i) ? m1_tfLabel(array.get(_tfs, i)) : "—",
+             text_color = _txt, text_size = m1_sizeOf(m1_tblSize))
+        table.cell(m1_tbl, 1, i + 1, str.tostring(_r), text_color = _txt, text_size = m1_sizeOf(m1_tblSize))
+        table.cell(m1_tbl, 2, i + 1, str.tostring(_c), text_color = _txt, text_size = m1_sizeOf(m1_tblSize))
+        table.cell(m1_tbl, 3, i + 1, str.tostring(_u), text_color = m1_unresCol, text_size = m1_sizeOf(m1_tblSize))
+        table.cell(m1_tbl, 4, i + 1, _pct, text_color = _pctCol, text_size = m1_sizeOf(m1_tblSize))
+
+    // --- current bias row ---
+    string _bTxt = m1_bias == 0 ? "NONE" : m1_bias == 1 ? "BULL" : "BEAR"
+    color  _bCol = m1_bias == 0 ? m1_unresCol : m1_bias == 1 ? m1_rejCol : m1_contCol
+    string _age  = na(m1_biasBar) ? "—" : str.tostring(bar_index - m1_biasBar) + " bars"
+
+    table.cell(m1_tbl, 0, 4, "BIAS",  text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 1, 4, _bTxt,   text_color = _bCol, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 2, 4, _age,    text_color = _txt,  text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 3, 4, "",      text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 4, 4, "",      text_size = m1_sizeOf(m1_tblSize))
+
+    // --- unswept count ---
+    int _live = 0
+    int _ln = array.size(m1_levels)
+    if _ln > 0
+        for i = 0 to _ln - 1
+            if not array.get(m1_levels, i).swept
+                _live += 1
+
+    table.cell(m1_tbl, 0, 5, "UNSWEPT", text_color = _hdr, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 1, 5, str.tostring(_live), text_color = m1_liveCol, text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 2, 5, "", text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 3, 5, "", text_size = m1_sizeOf(m1_tblSize))
+    table.cell(m1_tbl, 4, 5, "", text_size = m1_sizeOf(m1_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m1_sweptThisBar, "Level swept",
+     "A tracked liquidity level has been taken.")
+
+alertcondition(m1_bias != m1_bias[1], "Bias changed",
+     "The most recent sweep has set a new directional bias.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  SIDE 1 · PHASE CLOCK
+// ───────────────────────────────────────────────────────────────
+//  How long is left.
+//
+//  The AMD Phases piece in the Starter course shades the cycles on
+//  your chart. This answers the other question: how far through
+//  the current phase are you, and when does the next one start.
+//
+//  That matters because a condition resolving four minutes before
+//  a phase boundary is a different proposition to one resolving
+//  with two hours of that phase still to run. The first has almost
+//  no time to work. The second has the rest of the phase.
+//
+//  Three cycles, 12 hour, 6 hour and 3 hour, matching the
+//  instrument. Only the 12 hour is enabled by default, same as
+//  Meridian ships.
+//
+//  Draws one table and no chart objects. Safe to combine with
+//  anything. All identifiers namespaced d1_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+d1_gTz = "Timezone"
+
+d1_tz = input.string("UTC+1", "Cycle anchor", group = d1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree, this clock will be counting down to boundaries the instrument is not using.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+d1_gCyc = "Cycles"
+
+d1_c12 = input.bool(true,  "12 hour", group = d1_gCyc, inline = "c")
+d1_c6  = input.bool(false, "6 hour",  group = d1_gCyc, inline = "c")
+d1_c3  = input.bool(false, "3 hour",  group = d1_gCyc, inline = "c",
+     tooltip = "Defaults match the instrument: 12 hour on, the other two off.")
+
+d1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = d1_gCyc)
+d1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = d1_gCyc,
+     tooltip = "Must match your Meridian settings or the countdown will be wrong.")
+
+// ─── WARNING ──────────────────────────────────────────────────
+d1_gWarn = "Warning"
+
+d1_warnOn  = input.bool(true, "Flag when a phase is nearly over", group = d1_gWarn)
+d1_warnMin = input.int(15, "Minutes remaining to flag at", minval = 1, maxval = 120, group = d1_gWarn,
+     tooltip = "A condition resolving in the last few minutes of a phase has very little time to work. This marks that.")
+
+// ─── TABLE ────────────────────────────────────────────────────
+d1_gTbl = "Table"
+
+d1_tblPos  = input.string("Bottom Left", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = d1_gTbl)
+d1_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = d1_gTbl)
+
+d1_aCol = input.color(#5b9cf6, "Accumulation", group = d1_gTbl, inline = "c")
+d1_mCol = input.color(#c9a84c, "Manipulation", group = d1_gTbl, inline = "c")
+d1_dCol = input.color(#2f6b41, "Distribution", group = d1_gTbl, inline = "c")
+d1_warnCol = input.color(#b4342a, "Warning", group = d1_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so sub-hour positions resolve.
+d1_hr = hour(time, d1_tz) + minute(time, d1_tz) / 60.0 + second(time, d1_tz) / 3600.0
+
+// Position within a cycle, as a percentage of that cycle.
+d1_posIn(float _cyc) =>
+    float _idx = math.floor(d1_hr / _cyc)
+    float _pos = d1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+d1_phaseOf(float _cyc) =>
+    float _p = d1_posIn(_cyc)
+    _p < d1_split1 ? 0 : _p < d1_split2 ? 1 : 2
+
+// Minutes until the current phase ends on a given cycle.
+d1_leftIn(float _cyc) =>
+    float _p    = d1_posIn(_cyc)
+    float _next = _p < d1_split1 ? d1_split1 : _p < d1_split2 ? d1_split2 : 100.0
+    (_next - _p) / 100.0 * _cyc * 60.0
+
+d1_nameOf(int _ph) =>
+    _ph == 0 ? "ACCUM" : _ph == 1 ? "MANIP" : "DISTR"
+
+d1_colOf(int _ph) =>
+    _ph == 0 ? d1_aCol : _ph == 1 ? d1_mCol : d1_dCol
+
+// Minutes rendered as h:mm, or just minutes under an hour.
+d1_clock(float _mins) =>
+    int _m = int(math.round(_mins))
+    _m >= 60 ? str.tostring(math.floor(_m / 60)) + "h " +
+         str.format("{0,number,00}", _m % 60) + "m" :
+         str.tostring(_m) + "m"
+
+// Progress bar, eight cells.
+d1_bar(float _pct) =>
+    int _filled = int(math.round(_pct / 100.0 * 8))
+    string _out = ""
+    for i = 0 to 7
+        _out := _out + (i < _filled ? "█" : "░")
+    _out
+
+d1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+d1_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Middle Right" ? position.middle_right : position.bottom_left
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table d1_tbl = na
+
+if barstate.islast
+    if na(d1_tbl)
+        d1_tbl := table.new(d1_posOf(d1_tblPos), 4, 4,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(d1_tbl, 0, 0, "CYCLE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 1, 0, "PHASE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 2, 0, "PROGRESS", text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 3, 0, "LEFT",     text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+
+    float[] _cycs  = array.from(12.0, 6.0, 3.0)
+    string[] _lbls = array.from("12H", "6H", "3H")
+    bool[]  _ons   = array.from(d1_c12, d1_c6, d1_c3)
+
+    for i = 0 to 2
+        int _row = i + 1
+        if array.get(_ons, i)
+            float _cyc  = array.get(_cycs, i)
+            int   _ph   = d1_phaseOf(_cyc)
+            float _pct  = d1_posIn(_cyc)
+            float _left = d1_leftIn(_cyc)
+
+            bool  _warn   = d1_warnOn and _left <= d1_warnMin
+            color _phCol  = _warn ? d1_warnCol : d1_colOf(_ph)
+
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.white, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, d1_nameOf(_ph),
+                 text_color = _phCol, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, d1_bar(_pct),
+                 text_color = color.new(d1_colOf(_ph), 30), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, d1_clock(_left),
+                 text_color = _warn ? d1_warnCol : color.white, text_size = d1_sizeOf(d1_tblSize))
+        else
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, "off",
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, "", text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, "", text_size = d1_sizeOf(d1_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+d1_p12 = d1_phaseOf(12.0)
+d1_p6  = d1_phaseOf(6.0)
+d1_p3  = d1_phaseOf(3.0)
+
+alertcondition(d1_c12 and d1_p12 != d1_p12[1], "12H phase changed",
+     "The 12 hour cycle has moved into a new phase.")
+
+alertcondition(d1_c12 and d1_p12 == 1 and d1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(d1_warnOn and d1_c12 and d1_leftIn(12.0) <= d1_warnMin and d1_leftIn(12.0)[1] > d1_warnMin,
+     "12H phase ending soon", "The current 12 hour phase is nearly over.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  DESSERT 2 · PHASE REPORT
+// ───────────────────────────────────────────────────────────────
+//  Does the cycle mean anything on your instrument.
+//
+//  Meridian divides every cycle into three phases. Accumulation,
+//  where price is supposed to range. Manipulation, where it pushes
+//  through a level to take the orders sitting there. Distribution,
+//  where it actually moves.
+//
+//  That is a claim about how your instrument behaves, and it is
+//  testable. If the phases are real, they should look different
+//  from each other in the data. Manipulation should produce more
+//  levels being taken. Distribution should produce the largest
+//  moves. Accumulation should produce the smallest.
+//
+//  If all three phases look the same, the cycle is not describing
+//  your instrument and the phase filter is adding nothing.
+//
+//  Four measurements per phase:
+//
+//    RANGE    average high to low, in ATR, so it compares
+//    BODY     how much of that range was directional
+//    BREAKS   levels taken per hundred bars in that phase
+//    MOVE     average absolute close to close
+//
+//  Rows below the minimum sample are left ungraded.
+//
+//  Draws one table. Namespaced t2_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CYCLE ────────────────────────────────────────────────────
+t2_gCyc = "Cycle"
+
+t2_tz = input.string("UTC+1", "Cycle anchor", group = t2_gCyc,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree the test is measuring phases the instrument is not using.")
+
+t2_cyc = input.string("12 hour", "Cycle length", options = ["12 hour", "6 hour", "3 hour"], group = t2_gCyc,
+     tooltip = "One cycle at a time, so each phase gets the full sample rather than three thin ones.")
+
+t2_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = t2_gCyc)
+t2_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = t2_gCyc,
+     tooltip = "Must match your Meridian settings.")
+
+// ─── BREAKS ───────────────────────────────────────────────────
+t2_gBrk = "Level breaks"
+
+t2_brkOn = input.bool(true, "Count levels taken per phase", group = t2_gBrk,
+     tooltip = "The manipulation phase is supposed to be where levels get taken. This tests that directly, and it is the single most informative column in the table.")
+
+t2_brkTf = input.timeframe("30", "Level timeframe", group = t2_gBrk)
+t2_pvL   = input.int(4, "L", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+t2_pvR   = input.int(2, "R", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+
+// ─── TEST ─────────────────────────────────────────────────────
+t2_gTest = "Test"
+
+t2_atrLen = input.int(14, "ATR length", minval = 1, group = t2_gTest,
+     tooltip = "Range and move are expressed as multiples of ATR so the numbers mean the same thing on any instrument.")
+
+t2_minSample = input.int(30, "Minimum bars per phase", minval = 10, maxval = 500, group = t2_gTest)
+
+// ─── TABLE ────────────────────────────────────────────────────
+t2_gTbl = "Table"
+
+t2_legend  = input.bool(true, "Show the plain english summary", group = t2_gTbl)
+t2_tblPos  = input.string("Bottom Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = t2_gTbl)
+t2_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = t2_gTbl)
+
+t2_hiCol   = input.color(#2f6b41, "Highest", group = t2_gTbl, inline = "c")
+t2_loCol   = input.color(#b4342a, "Lowest",  group = t2_gTbl, inline = "c")
+t2_thinCol = input.color(#9a9da3, "Thin",    group = t2_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+t2_cycHrs = t2_cyc == "12 hour" ? 12.0 : t2_cyc == "6 hour" ? 6.0 : 3.0
+
+t2_hr = hour(time, t2_tz) + minute(time, t2_tz) / 60.0
+
+t2_pos = (t2_hr - math.floor(t2_hr / t2_cycHrs) * t2_cycHrs) / t2_cycHrs * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+t2_phase = t2_pos < t2_split1 ? 0 : t2_pos < t2_split2 ? 1 : 2
+
+t2_atr = ta.atr(t2_atrLen)
+
+// ─── TALLIES ──────────────────────────────────────────────────
+var int[]   t2_bars  = array.from(0, 0, 0)
+var float[] t2_range = array.from(0.0, 0.0, 0.0)
+var float[] t2_body  = array.from(0.0, 0.0, 0.0)
+var float[] t2_move  = array.from(0.0, 0.0, 0.0)
+var int[]   t2_brks  = array.from(0, 0, 0)
+
+// levels awaiting a break
+type T2Lv
+    float px
+    bool  isHigh
+    bool  gone
+
+var T2Lv[] t2_lv = array.new<T2Lv>()
+
+[t2_ph, t2_pl] = request.security(syminfo.tickerid, t2_brkTf,
+     [ta.pivothigh(high, t2_pvL, t2_pvR), ta.pivotlow(low, t2_pvL, t2_pvR)], lookahead = barmerge.lookahead_off)
+
+t2_known(float _px) =>
+    bool _f = false
+    int _n = array.size(t2_lv)
+    if _n > 0
+        for i = 0 to _n - 1
+            T2Lv _l = array.get(t2_lv, i)
+            if not _l.gone and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+if barstate.isconfirmed and t2_atr > 0
+    int _p = t2_phase
+
+    array.set(t2_bars,  _p, array.get(t2_bars,  _p) + 1)
+    array.set(t2_range, _p, array.get(t2_range, _p) + (high - low) / t2_atr)
+    array.set(t2_body,  _p, array.get(t2_body,  _p) + math.abs(close - open) / t2_atr)
+    array.set(t2_move,  _p, array.get(t2_move,  _p) + math.abs(close - close[1]) / t2_atr)
+
+    if t2_brkOn
+        if not na(t2_ph) and not t2_known(t2_ph)
+            array.push(t2_lv, T2Lv.new(t2_ph, true, false))
+        if not na(t2_pl) and not t2_known(t2_pl)
+            array.push(t2_lv, T2Lv.new(t2_pl, false, false))
+        while array.size(t2_lv) > 300
+            array.shift(t2_lv)
+
+        int _n = array.size(t2_lv)
+        if _n > 0
+            for i = 0 to _n - 1
+                T2Lv _l = array.get(t2_lv, i)
+                if not _l.gone and (_l.isHigh ? high >= _l.px : low <= _l.px)
+                    _l.gone := true
+                    array.set(t2_brks, _p, array.get(t2_brks, _p) + 1)
+
+// ─── TABLE ────────────────────────────────────────────────────
+// Which phase leads or trails a column. Only phases with enough
+// bars are eligible, so a thin phase cannot win by accident.
+// Declared at top level because Pine does not permit function
+// declarations inside an if block.
+t2_lead(array<float> _a) =>
+    int _best = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _best == -1 or array.get(_a, i) > array.get(_a, _best)
+                _best := i
+    _best
+
+t2_trail(array<float> _a) =>
+    int _worst = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _worst == -1 or array.get(_a, i) < array.get(_a, _worst)
+                _worst := i
+    _worst
+
+t2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+t2_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.bottom_right
+
+var table t2_tbl = na
+
+if barstate.islast
+    int _rows = 5 + (t2_legend ? 2 : 0)
+    if na(t2_tbl)
+        t2_tbl := table.new(t2_posOf(t2_tblPos), 5, _rows,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = t2_tblSize
+
+    table.cell(t2_tbl, 0, 0, "PHASE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 0, "BARS",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 0, "RANGE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 0, "MOVE",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 0, "BREAKS", text_color = _hdr, text_size = t2_sizeOf(_sz))
+
+    string[] _names = array.from("Accum", "Manip", "Distr")
+
+    // averages, and which phase leads each column
+    float[] _avgR = array.from(0.0, 0.0, 0.0)
+    float[] _avgM = array.from(0.0, 0.0, 0.0)
+    float[] _avgB = array.from(0.0, 0.0, 0.0)
+
+    for i = 0 to 2
+        int _n = array.get(t2_bars, i)
+        if _n > 0
+            array.set(_avgR, i, array.get(t2_range, i) / _n)
+            array.set(_avgM, i, array.get(t2_move, i) / _n)
+            array.set(_avgB, i, array.get(t2_brks, i) / _n * 100.0)
+
+    int _rHi = t2_lead(_avgR)
+    int _rLo = t2_trail(_avgR)
+    int _mHi = t2_lead(_avgM)
+    int _mLo = t2_trail(_avgM)
+    int _bHi = t2_lead(_avgB)
+
+    for i = 0 to 2
+        int _row = i + 1
+        int _n = array.get(t2_bars, i)
+        bool _thin = _n < t2_minSample
+
+        table.cell(t2_tbl, 0, _row, array.get(_names, i),
+             text_color = color.white, text_size = t2_sizeOf(_sz))
+        table.cell(t2_tbl, 1, _row, str.tostring(_n),
+             text_color = _thin ? t2_thinCol : color.white, text_size = t2_sizeOf(_sz))
+
+        if _thin
+            table.cell(t2_tbl, 2, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+        else
+            table.cell(t2_tbl, 2, _row, str.tostring(math.round(array.get(_avgR, i), 2)) + "x",
+                 text_color = i == _rHi ? t2_hiCol : i == _rLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, str.tostring(math.round(array.get(_avgM, i), 2)) + "x",
+                 text_color = i == _mHi ? t2_hiCol : i == _mLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, not t2_brkOn ? "off" :
+                 str.tostring(math.round(array.get(_avgB, i), 1)),
+                 text_color = not t2_brkOn ? t2_thinCol : i == _bHi ? t2_hiCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+
+    // spread across the three phases, as a check on whether the
+    // cycle is describing anything at all
+    float _spread = 0.0
+    bool  _enough = array.get(t2_bars, 0) >= t2_minSample and
+         array.get(t2_bars, 1) >= t2_minSample and array.get(t2_bars, 2) >= t2_minSample
+    if _enough
+        float _mx = math.max(array.get(_avgR, 0), math.max(array.get(_avgR, 1), array.get(_avgR, 2)))
+        float _mn = math.min(array.get(_avgR, 0), math.min(array.get(_avgR, 1), array.get(_avgR, 2)))
+        _spread := _mn > 0 ? (_mx - _mn) / _mn * 100.0 : 0.0
+
+    table.cell(t2_tbl, 0, 4, "SPREAD", text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 4, not _enough ? "thin" :
+         str.tostring(math.round(_spread)) + "%",
+         text_color = not _enough ? t2_thinCol : _spread >= 15 ? t2_hiCol : t2_loCol,
+         text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 4, "", text_size = t2_sizeOf(_sz))
+
+    // ─── PLAIN ENGLISH ────────────────────────────────────────
+    if t2_legend
+        int _lr = _rows - 2
+
+        string _v = ""
+        color  _vc = t2_thinCol
+
+        if not _enough
+            _v := "Not enough bars in every phase yet — use more history"
+        else if _spread < 15
+            _vc := t2_loCol
+            _v := "The three phases look alike — the cycle adds little here"
+        else
+            _vc := t2_hiCol
+            string _big = array.get(_names, _rHi)
+            string _brk = t2_brkOn and _bHi >= 0 ? array.get(_names, _bHi) : ""
+            _v := _brk == "" ?
+                 "Phases differ — " + _big + " produces the largest bars" :
+                 "Phases differ — " + _big + " moves most, " + _brk + " breaks most levels"
+
+        table.cell(t2_tbl, 0, _lr, _v, text_color = _vc,
+             text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _lr, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _lr, 4, _lr)
+
+        table.cell(t2_tbl, 0, _rows - 1,
+             "RANGE and MOVE in ATR   ·   BREAKS per 100 bars   ·   SPREAD = how different the phases are",
+             text_color = t2_thinCol, text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _rows - 1, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _rows - 1, 4, _rows - 1)

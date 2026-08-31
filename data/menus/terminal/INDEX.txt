@@ -1,0 +1,73 @@
+TERMINAL BUILD MENU
+255 combinations
+===================
+
+Twelve pieces, four courses, one piece from each course at most.
+Leave a course empty and you get a smaller build. Every possible
+combination is here.
+
+  STARTER          draws on the chart, no table
+    S1  AMD Phases         the 12/6/3 cycle shaded on your chart
+    S2  Liquidity Levels   pivot levels across three timeframes
+    S3  Fair Value Gaps    gaps with a four state lifecycle
+
+  MAIN             the working engine, table top right
+    M1  Sweep Tracker      levels taken, and what happened next
+    M2  Liquidity Map      what has not been taken yet, and how far
+    M3  Trend Stack        the 8/26/80/233 stack and its state
+
+  SIDE             utilities, table bottom left
+    D1  Phase Clock        time left in the current phase
+    D2  Stack Monitor      the bias, the flip level, your exposure
+    D3  Session Clock      is a trading window open
+
+  DESSERT          reports, table bottom right
+    T1  Sweep Report       do broken levels reverse on your pair
+    T2  Phase Report       does the AMD cycle mean anything here
+    T3  Session Report     are the windows the right hours
+
+
+NAMING
+------
+MER- followed by the piece codes in course order.
+
+  MER-S2M1D2T1     one from every course
+  MER-M2D2T2       no starter
+  MER-S1T1         starter and dessert only
+  MER-T3           a single piece
+
+The header comment inside each file lists which pieces it contains.
+
+
+FOLDERS
+-------
+  1 piece      12 builds
+  2 pieces     54 builds
+  3 pieces    108 builds
+  4 pieces     81 builds
+
+
+TABLE POSITIONS
+---------------
+Each course has its own default corner so no combination can ever
+put two tables in the same place:
+
+  Main      top right
+  Side      bottom left
+  Dessert   bottom right
+
+Starters draw no table. Every table can still be moved by the
+member, and Top Left is available as an option but is never a
+default.
+
+
+VERIFIED BEFORE PACKAGING
+-------------------------
+All 255 checked for: exactly one version line and one indicator
+line, no duplicate top level identifiers, no duplicate type
+declarations, no build over 40 security calls, every shorttitle
+inside the ten character limit, and no two builds sharing a
+shorttitle.
+
+A 21 build test set covering every cross course pair was compiled
+and run on a live chart before these were generated.

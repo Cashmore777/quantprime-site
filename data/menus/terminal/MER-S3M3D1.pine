@@ -1,0 +1,581 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S3M3D1
+//    S3  Fair Value Gaps
+//    M3  Trend Stack
+//    D1  Phase Clock
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S3M3D1", shorttitle = "QPS3M3D1", overlay = true, max_labels_count = 500, max_boxes_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 3 · FAIR VALUE GAPS
+// ───────────────────────────────────────────────────────────────
+//  Three candles where the first and third do not overlap leave a
+//  band of price that nobody traded through properly. Price moved
+//  so fast that a stretch of the chart has no two sided activity
+//  in it at all.
+//
+//  Those gaps get revisited. Not always, and not on any schedule,
+//  but often enough that knowing where they are is worth more
+//  than most things you can draw on a chart.
+//
+//  What matters more than finding them is tracking what happens
+//  to them, so each gap here carries a state:
+//
+//    FRESH      untouched since it formed
+//    TAPPED     price has reached its midpoint
+//    FILLED     price has traded fully through it
+//    INVERTED   filled, then approached again from the far side
+//
+//  An inverted gap is not a dead one. It frequently acts as
+//  support having previously been resistance, which is why the
+//  state is tracked rather than the gap simply being deleted.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s3_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+s3_gTf = "Timeframes"
+
+s3_t1On = input.bool(true, "TF1", group = s3_gTf, inline = "t1")
+s3_t1   = input.timeframe("3", "", group = s3_gTf, inline = "t1")
+
+s3_t2On = input.bool(true, "TF2", group = s3_gTf, inline = "t2")
+s3_t2   = input.timeframe("30", "", group = s3_gTf, inline = "t2")
+
+s3_t3On = input.bool(false, "TF3", group = s3_gTf, inline = "t3")
+s3_t3   = input.timeframe("180", "", group = s3_gTf, inline = "t3",
+     tooltip = "Three timeframes of gaps is a lot on one chart. TF3 is off by default -- turn it on when you want the higher timeframe picture and TF1 off.")
+
+// ─── FILTER ───────────────────────────────────────────────────
+s3_gFilter = "Filter"
+
+s3_minAtr = input.float(0.0, "Minimum gap size (x ATR)", minval = 0.0, step = 0.05, group = s3_gFilter,
+     tooltip = "Ignores gaps smaller than this. Most charts produce a great many tiny gaps that mean nothing. Try 0.25 if the chart is too busy.")
+
+s3_atrLen = input.int(14, "ATR length", minval = 1, group = s3_gFilter)
+
+s3_hideFilled = input.bool(false, "Hide gaps once filled", group = s3_gFilter,
+     tooltip = "On: a gap disappears when price trades fully through it. Off: it stays, faded, and can still invert.")
+
+s3_maxGaps = input.int(250, "Maximum gaps tracked", minval = 20, maxval = 500, group = s3_gFilter)
+
+// ─── APPEARANCE ───────────────────────────────────────────────
+s3_gApp = "Appearance"
+
+s3_bullCol = input.color(#2962ff, "Bullish gap", group = s3_gApp, inline = "c1")
+s3_bearCol = input.color(#b39ddb, "Bearish gap", group = s3_gApp, inline = "c1")
+
+s3_freshFade  = input.int(88, "Fresh",    minval = 60, maxval = 99, group = s3_gApp, inline = "f1")
+s3_tappedFade = input.int(93, "Tapped",   minval = 60, maxval = 99, group = s3_gApp, inline = "f1")
+s3_filledFade = input.int(96, "Filled",   minval = 60, maxval = 99, group = s3_gApp, inline = "f2")
+s3_invCol     = input.color(#c9a84c, "Inverted", group = s3_gApp, inline = "f2")
+
+s3_border = input.bool(false, "Show borders", group = s3_gApp)
+
+s3_showMid = input.bool(false, "Mark the midpoint", group = s3_gApp,
+     tooltip = "The 50% line is where a gap is considered tapped. Useful while you are learning to read them, noisy afterwards.")
+
+s3_showState = input.bool(false, "Label gap state", group = s3_gApp)
+s3_lblSize   = input.string("Tiny", "Label size", options = ["Tiny", "Small", "Normal"], group = s3_gApp)
+
+// ─── STORE ────────────────────────────────────────────────────
+//  state 0 fresh · 1 tapped · 2 filled · 3 inverted
+type S3Gap
+    float top
+    float bot
+    float mid
+    bool  isBull
+    int   state
+    box   bx
+    line  ln
+    label lb
+
+var S3Gap[] s3_gaps = array.new<S3Gap>()
+
+s3_atr = ta.atr(s3_atrLen)
+
+s3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+s3_stateName(int _s) =>
+    _s == 0 ? "fresh" : _s == 1 ? "tapped" : _s == 2 ? "filled" : "inverted"
+
+s3_gapCol(S3Gap _g) =>
+    _g.state == 3 ? s3_invCol : _g.isBull ? s3_bullCol : s3_bearCol
+
+s3_gapFade(S3Gap _g) =>
+    _g.state == 0 ? s3_freshFade : _g.state == 1 ? s3_tappedFade : s3_filledFade
+
+// Higher timeframe gaps repeat across chart bars, so anything at
+// effectively the same prices is treated as already known.
+s3_exists(float _t, float _b) =>
+    bool _found = false
+    int  _sz = array.size(s3_gaps)
+    if _sz > 0
+        int _from = math.max(0, _sz - 20)
+        for i = _from to _sz - 1
+            S3Gap _g = array.get(s3_gaps, i)
+            if math.abs(_g.top - _t) < syminfo.mintick * 2 and math.abs(_g.bot - _b) < syminfo.mintick * 2
+                _found := true
+    _found
+
+s3_add(float _t, float _b, bool _isBull) =>
+    if not na(_t) and not na(_b) and _t > _b and not s3_exists(_t, _b)
+        if s3_minAtr <= 0 or (_t - _b) >= s3_atr * s3_minAtr
+            float _mid = (_t + _b) / 2
+            color _c   = _isBull ? s3_bullCol : s3_bearCol
+            box _bx = box.new(time, _t, time, _b, xloc = xloc.bar_time,
+                 bgcolor      = color.new(_c, s3_freshFade),
+                 border_color = s3_border ? color.new(_c, 50) : color.new(_c, 100),
+                 border_width = s3_border ? 1 : 0)
+            line _ln = na
+            if s3_showMid
+                _ln := line.new(time, _mid, time, _mid, xloc = xloc.bar_time,
+                     color = color.new(_c, 50), style = line.style_dotted, width = 1)
+            label _lb = na
+            if s3_showState
+                _lb := label.new(time, _t, "fresh", xloc = xloc.bar_time,
+                     style = label.style_label_left, color = color.new(color.black, 100),
+                     textcolor = _c, size = s3_sizeOf(s3_lblSize))
+            array.push(s3_gaps, S3Gap.new(_t, _b, _mid, _isBull, 0, _bx, _ln, _lb))
+            while array.size(s3_gaps) > s3_maxGaps
+                S3Gap _old = array.shift(s3_gaps)
+                box.delete(_old.bx)
+                line.delete(_old.ln)
+                label.delete(_old.lb)
+
+// ─── DETECTION FEED ───────────────────────────────────────────
+// A bullish gap is the space between candle 3's high and candle
+// 1's low when the two do not overlap. Bearish is the mirror.
+s3_read() =>
+    [high[0], low[0], high[2], low[2]]
+
+[s3_h1a, s3_l1a, s3_h3a, s3_l3a] = request.security(syminfo.tickerid, s3_t1, s3_read(), lookahead = barmerge.lookahead_off)
+[s3_h1b, s3_l1b, s3_h3b, s3_l3b] = request.security(syminfo.tickerid, s3_t2, s3_read(), lookahead = barmerge.lookahead_off)
+[s3_h1c, s3_l1c, s3_h3c, s3_l3c] = request.security(syminfo.tickerid, s3_t3, s3_read(), lookahead = barmerge.lookahead_off)
+
+s3_detect(bool _on, float _h1, float _l1, float _h3, float _l3) =>
+    if _on and not na(_h1) and not na(_l1) and not na(_h3) and not na(_l3)
+        if _l1 > _h3
+            s3_add(_l1, _h3, true)
+        else if _h1 < _l3
+            s3_add(_l3, _h1, false)
+    true
+
+// ─── ENGINE ───────────────────────────────────────────────────
+if barstate.isconfirmed
+    s3_detect(s3_t1On, s3_h1a, s3_l1a, s3_h3a, s3_l3a)
+    s3_detect(s3_t2On, s3_h1b, s3_l1b, s3_h3b, s3_l3b)
+    s3_detect(s3_t3On, s3_h1c, s3_l1c, s3_h3c, s3_l3c)
+
+    int s3_n = array.size(s3_gaps)
+    if s3_n > 0
+        for i = 0 to s3_n - 1
+            S3Gap _g = array.get(s3_gaps, i)
+            if na(_g.bx)
+                continue
+
+            int _prev = _g.state
+
+            if _g.state == 0
+                // Reaching the midpoint counts as tapped.
+                if _g.isBull ? low <= _g.mid : high >= _g.mid
+                    _g.state := 1
+            else if _g.state == 1
+                // Trading fully through it counts as filled.
+                if _g.isBull ? close < _g.bot : close > _g.top
+                    _g.state := 2
+            else if _g.state == 2
+                // Coming back from the far side inverts it.
+                if _g.isBull ? high >= _g.mid : low <= _g.mid
+                    _g.state := 3
+
+            if _g.state == 2 and s3_hideFilled
+                box.delete(_g.bx)
+                line.delete(_g.ln)
+                label.delete(_g.lb)
+                _g.bx := na
+                _g.ln := na
+                _g.lb := na
+            else
+                box.set_right(_g.bx, time)
+                if not na(_g.ln)
+                    line.set_x2(_g.ln, time)
+                if _g.state != _prev
+                    box.set_bgcolor(_g.bx, color.new(s3_gapCol(_g), s3_gapFade(_g)))
+                    if s3_border
+                        box.set_border_color(_g.bx, color.new(s3_gapCol(_g), 50))
+                if not na(_g.lb)
+                    label.set_x(_g.lb, time)
+                    if _g.state != _prev
+                        label.set_text(_g.lb, s3_stateName(_g.state))
+                        label.set_textcolor(_g.lb, s3_gapCol(_g))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+s3_freshCount = 0
+if barstate.islast
+    int _n3 = array.size(s3_gaps)
+    if _n3 > 0
+        for i = 0 to _n3 - 1
+            if array.get(s3_gaps, i).state == 0
+                s3_freshCount += 1
+
+alertcondition(s3_freshCount > s3_freshCount[1], "New fair value gap",
+     "A new fair value gap has formed on a tracked timeframe.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MAIN 3 · TREND STACK
+// ───────────────────────────────────────────────────────────────
+//  Four averages, and one question: are they in order.
+//
+//  8, 26, 80 and 233. A genuine uptrend means fast above medium,
+//  medium above slow, slow above anchor, in that order and without
+//  exception. Anything else is consolidation.
+//
+//  That definition is deliberately strict. Most trend filters call
+//  anything above a moving average an uptrend, which means they
+//  call almost everything a trend and are therefore useless as a
+//  filter. This one spends most of its time saying CONSOLIDATION,
+//  which is both correct and the reason it is worth having.
+//
+//  It exists here because both instruments use this stack
+//  internally with plotting switched off. Meridian and Recoil both
+//  compute it; neither draws it. This is the visible version.
+//
+//  Draws one table. All identifiers namespaced m3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── LENGTHS ──────────────────────────────────────────────────
+m3_gLen = "Lengths"
+
+m3_fast   = input.int(8,   "Fast",   minval = 1, group = m3_gLen, inline = "a")
+m3_med    = input.int(26,  "Medium", minval = 1, group = m3_gLen, inline = "a")
+m3_slow   = input.int(80,  "Slow",   minval = 1, group = m3_gLen, inline = "b")
+m3_anchor = input.int(233, "Anchor", minval = 1, group = m3_gLen, inline = "b",
+     tooltip = "The defaults are what both instruments use internally. Changing them here changes what this piece reports, not what the instruments do.")
+
+m3_src = input.source(close, "Source", group = m3_gLen)
+
+// ─── CLASSIFIER ───────────────────────────────────────────────
+m3_gCls = "Classifier"
+
+m3_strict = input.bool(true, "Require the full stack in order", group = m3_gCls,
+     tooltip = "On: a trend needs fast > medium > slow > anchor, or the exact inverse. Off: only medium > slow > anchor is required, which finds more trends and weaker ones.")
+
+m3_useSep = input.bool(false, "Require minimum separation", group = m3_gCls,
+     tooltip = "Averages can be technically in order while sitting on top of each other, which is not a trend in any useful sense. This requires them to be meaningfully apart.")
+
+m3_sepAtr = input.float(0.5, "Separation, anchor to fast (x ATR)", minval = 0.1, step = 0.1, group = m3_gCls)
+m3_atrLen = input.int(14, "ATR length", minval = 1, group = m3_gCls)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+m3_gDisp = "Display"
+
+m3_plot   = input.bool(true, "Plot the averages", group = m3_gDisp)
+m3_fill   = input.bool(false, "Fill between fast and anchor", group = m3_gDisp,
+     tooltip = "Tinted by trend state. Readable on a clean chart, heavy on a busy one.")
+m3_shade  = input.bool(false, "Shade the background by state", group = m3_gDisp)
+
+m3_bullCol = input.color(#2f6b41, "Bullish",       group = m3_gDisp, inline = "c")
+m3_bearCol = input.color(#b4342a, "Bearish",       group = m3_gDisp, inline = "c")
+m3_consCol = input.color(#9a9da3, "Consolidation", group = m3_gDisp, inline = "c")
+
+m3_fastCol = input.color(#ffffff, "Fast",   group = m3_gDisp, inline = "e")
+m3_medCol  = input.color(#f5f0c8, "Medium", group = m3_gDisp, inline = "e")
+m3_slowCol = input.color(#ffeb3b, "Slow",   group = m3_gDisp, inline = "e")
+m3_anchCol = input.color(#ff9800, "Anchor", group = m3_gDisp, inline = "e")
+
+// ─── TABLE ────────────────────────────────────────────────────
+m3_gTbl = "Table"
+
+m3_tblOn   = input.bool(true, "Show table", group = m3_gTbl)
+m3_tblPos  = input.string("Top Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = m3_gTbl)
+m3_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = m3_gTbl)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m3_e1 = ta.ema(m3_src, m3_fast)
+m3_e2 = ta.ema(m3_src, m3_med)
+m3_e3 = ta.ema(m3_src, m3_slow)
+m3_e4 = ta.ema(m3_src, m3_anchor)
+
+m3_atr = ta.atr(m3_atrLen)
+
+// separation between the outermost two, as a multiple of ATR
+m3_sep = m3_atr > 0 ? math.abs(m3_e1 - m3_e4) / m3_atr : 0.0
+m3_sepOk = not m3_useSep or m3_sep >= m3_sepAtr
+
+// order tests
+m3_upFull = m3_e1 > m3_e2 and m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnFull = m3_e1 < m3_e2 and m3_e2 < m3_e3 and m3_e3 < m3_e4
+m3_upLoose = m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnLoose = m3_e2 < m3_e3 and m3_e3 < m3_e4
+
+m3_up = (m3_strict ? m3_upFull : m3_upLoose) and m3_sepOk
+m3_dn = (m3_strict ? m3_dnFull : m3_dnLoose) and m3_sepOk
+
+//  1 bullish · -1 bearish · 0 consolidation
+m3_state = m3_up ? 1 : m3_dn ? -1 : 0
+
+m3_stateCol = m3_state == 1 ? m3_bullCol : m3_state == -1 ? m3_bearCol : m3_consCol
+m3_stateTxt = m3_state == 1 ? "BULLISH" : m3_state == -1 ? "BEARISH" : "CONSOLIDATION"
+
+// how long the current state has been live
+var int m3_since = 0
+m3_since := m3_state == m3_state[1] ? m3_since + 1 : 0
+
+// where price sits relative to the stack
+m3_aboveAll = close > m3_e1 and close > m3_e2 and close > m3_e3 and close > m3_e4
+m3_belowAll = close < m3_e1 and close < m3_e2 and close < m3_e3 and close < m3_e4
+m3_posTxt = m3_aboveAll ? "ABOVE ALL" : m3_belowAll ? "BELOW ALL" : "INSIDE"
+m3_posCol = m3_aboveAll ? m3_bullCol : m3_belowAll ? m3_bearCol : m3_consCol
+
+// ─── PLOTS ────────────────────────────────────────────────────
+p1 = plot(m3_plot ? m3_e1 : na, "Fast",   color = m3_fastCol, linewidth = 1)
+p2 = plot(m3_plot ? m3_e2 : na, "Medium", color = m3_medCol,  linewidth = 1)
+p3 = plot(m3_plot ? m3_e3 : na, "Slow",   color = m3_slowCol, linewidth = 1)
+p4 = plot(m3_plot ? m3_e4 : na, "Anchor", color = m3_anchCol, linewidth = 2)
+
+fill(p1, p4, color = m3_fill and m3_plot ? color.new(m3_stateCol, 92) : na, title = "Stack fill")
+
+bgcolor(m3_shade and m3_state ==  1 ? color.new(m3_bullCol, 95) : na, title = "Bullish")
+bgcolor(m3_shade and m3_state == -1 ? color.new(m3_bearCol, 95) : na, title = "Bearish")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table m3_tbl = na
+
+m3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m3_posOf(_p) =>
+    _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.top_right
+
+if m3_tblOn and barstate.islast
+    if na(m3_tbl)
+        m3_tbl := table.new(m3_posOf(m3_tblPos), 3, 6,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(m3_tbl, 0, 0, "TREND", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 0, m3_stateTxt, text_color = m3_stateCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 0, str.tostring(m3_since) + " bars", text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+
+    // the four averages, in stack order, each marked against the one below it
+    string[] _names = array.from("FAST", "MED", "SLOW", "ANCHOR")
+    float[]  _vals  = array.from(m3_e1, m3_e2, m3_e3, m3_e4)
+    color[]  _cols  = array.from(m3_fastCol, m3_medCol, m3_slowCol, m3_anchCol)
+
+    for i = 0 to 3
+        float _v = array.get(_vals, i)
+        string _mark = ""
+        if i < 3
+            float _below = array.get(_vals, i + 1)
+            _mark := _v > _below ? "▲" : _v < _below ? "▼" : "—"
+        table.cell(m3_tbl, 0, i + 1, array.get(_names, i),
+             text_color = array.get(_cols, i), text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 1, i + 1, str.tostring(math.round_to_mintick(_v)),
+             text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 2, i + 1, _mark,
+             text_color = _mark == "▲" ? m3_bullCol : _mark == "▼" ? m3_bearCol : m3_consCol,
+             text_size = m3_sizeOf(m3_tblSize))
+
+    table.cell(m3_tbl, 0, 5, "PRICE", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 5, m3_posTxt, text_color = m3_posCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 5, m3_useSep ? str.tostring(math.round(m3_sep, 2)) + "x" : "",
+         text_color = m3_sepOk ? color.white : m3_consCol, text_size = m3_sizeOf(m3_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m3_state != m3_state[1], "Trend state changed",
+     "The EMA stack has moved into a new state.")
+
+alertcondition(m3_state == 1 and m3_state[1] != 1, "Bullish stack formed",
+     "The full EMA stack has come into bullish order.")
+
+alertcondition(m3_state == -1 and m3_state[1] != -1, "Bearish stack formed",
+     "The full EMA stack has come into bearish order.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  SIDE 1 · PHASE CLOCK
+// ───────────────────────────────────────────────────────────────
+//  How long is left.
+//
+//  The AMD Phases piece in the Starter course shades the cycles on
+//  your chart. This answers the other question: how far through
+//  the current phase are you, and when does the next one start.
+//
+//  That matters because a condition resolving four minutes before
+//  a phase boundary is a different proposition to one resolving
+//  with two hours of that phase still to run. The first has almost
+//  no time to work. The second has the rest of the phase.
+//
+//  Three cycles, 12 hour, 6 hour and 3 hour, matching the
+//  instrument. Only the 12 hour is enabled by default, same as
+//  Meridian ships.
+//
+//  Draws one table and no chart objects. Safe to combine with
+//  anything. All identifiers namespaced d1_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+d1_gTz = "Timezone"
+
+d1_tz = input.string("UTC+1", "Cycle anchor", group = d1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree, this clock will be counting down to boundaries the instrument is not using.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+d1_gCyc = "Cycles"
+
+d1_c12 = input.bool(true,  "12 hour", group = d1_gCyc, inline = "c")
+d1_c6  = input.bool(false, "6 hour",  group = d1_gCyc, inline = "c")
+d1_c3  = input.bool(false, "3 hour",  group = d1_gCyc, inline = "c",
+     tooltip = "Defaults match the instrument: 12 hour on, the other two off.")
+
+d1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = d1_gCyc)
+d1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = d1_gCyc,
+     tooltip = "Must match your Meridian settings or the countdown will be wrong.")
+
+// ─── WARNING ──────────────────────────────────────────────────
+d1_gWarn = "Warning"
+
+d1_warnOn  = input.bool(true, "Flag when a phase is nearly over", group = d1_gWarn)
+d1_warnMin = input.int(15, "Minutes remaining to flag at", minval = 1, maxval = 120, group = d1_gWarn,
+     tooltip = "A condition resolving in the last few minutes of a phase has very little time to work. This marks that.")
+
+// ─── TABLE ────────────────────────────────────────────────────
+d1_gTbl = "Table"
+
+d1_tblPos  = input.string("Bottom Left", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = d1_gTbl)
+d1_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = d1_gTbl)
+
+d1_aCol = input.color(#5b9cf6, "Accumulation", group = d1_gTbl, inline = "c")
+d1_mCol = input.color(#c9a84c, "Manipulation", group = d1_gTbl, inline = "c")
+d1_dCol = input.color(#2f6b41, "Distribution", group = d1_gTbl, inline = "c")
+d1_warnCol = input.color(#b4342a, "Warning", group = d1_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so sub-hour positions resolve.
+d1_hr = hour(time, d1_tz) + minute(time, d1_tz) / 60.0 + second(time, d1_tz) / 3600.0
+
+// Position within a cycle, as a percentage of that cycle.
+d1_posIn(float _cyc) =>
+    float _idx = math.floor(d1_hr / _cyc)
+    float _pos = d1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+d1_phaseOf(float _cyc) =>
+    float _p = d1_posIn(_cyc)
+    _p < d1_split1 ? 0 : _p < d1_split2 ? 1 : 2
+
+// Minutes until the current phase ends on a given cycle.
+d1_leftIn(float _cyc) =>
+    float _p    = d1_posIn(_cyc)
+    float _next = _p < d1_split1 ? d1_split1 : _p < d1_split2 ? d1_split2 : 100.0
+    (_next - _p) / 100.0 * _cyc * 60.0
+
+d1_nameOf(int _ph) =>
+    _ph == 0 ? "ACCUM" : _ph == 1 ? "MANIP" : "DISTR"
+
+d1_colOf(int _ph) =>
+    _ph == 0 ? d1_aCol : _ph == 1 ? d1_mCol : d1_dCol
+
+// Minutes rendered as h:mm, or just minutes under an hour.
+d1_clock(float _mins) =>
+    int _m = int(math.round(_mins))
+    _m >= 60 ? str.tostring(math.floor(_m / 60)) + "h " +
+         str.format("{0,number,00}", _m % 60) + "m" :
+         str.tostring(_m) + "m"
+
+// Progress bar, eight cells.
+d1_bar(float _pct) =>
+    int _filled = int(math.round(_pct / 100.0 * 8))
+    string _out = ""
+    for i = 0 to 7
+        _out := _out + (i < _filled ? "█" : "░")
+    _out
+
+d1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+d1_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Middle Right" ? position.middle_right : position.bottom_left
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table d1_tbl = na
+
+if barstate.islast
+    if na(d1_tbl)
+        d1_tbl := table.new(d1_posOf(d1_tblPos), 4, 4,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(d1_tbl, 0, 0, "CYCLE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 1, 0, "PHASE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 2, 0, "PROGRESS", text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 3, 0, "LEFT",     text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+
+    float[] _cycs  = array.from(12.0, 6.0, 3.0)
+    string[] _lbls = array.from("12H", "6H", "3H")
+    bool[]  _ons   = array.from(d1_c12, d1_c6, d1_c3)
+
+    for i = 0 to 2
+        int _row = i + 1
+        if array.get(_ons, i)
+            float _cyc  = array.get(_cycs, i)
+            int   _ph   = d1_phaseOf(_cyc)
+            float _pct  = d1_posIn(_cyc)
+            float _left = d1_leftIn(_cyc)
+
+            bool  _warn   = d1_warnOn and _left <= d1_warnMin
+            color _phCol  = _warn ? d1_warnCol : d1_colOf(_ph)
+
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.white, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, d1_nameOf(_ph),
+                 text_color = _phCol, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, d1_bar(_pct),
+                 text_color = color.new(d1_colOf(_ph), 30), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, d1_clock(_left),
+                 text_color = _warn ? d1_warnCol : color.white, text_size = d1_sizeOf(d1_tblSize))
+        else
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, "off",
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, "", text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, "", text_size = d1_sizeOf(d1_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+d1_p12 = d1_phaseOf(12.0)
+d1_p6  = d1_phaseOf(6.0)
+d1_p3  = d1_phaseOf(3.0)
+
+alertcondition(d1_c12 and d1_p12 != d1_p12[1], "12H phase changed",
+     "The 12 hour cycle has moved into a new phase.")
+
+alertcondition(d1_c12 and d1_p12 == 1 and d1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(d1_warnOn and d1_c12 and d1_leftIn(12.0) <= d1_warnMin and d1_leftIn(12.0)[1] > d1_warnMin,
+     "12H phase ending soon", "The current 12 hour phase is nearly over.")

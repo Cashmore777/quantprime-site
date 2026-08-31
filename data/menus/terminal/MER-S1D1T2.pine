@@ -1,0 +1,628 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S1D1T2
+//    S1  AMD Phases
+//    D1  Phase Clock
+//    T2  Phase Report
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S1D1T2", shorttitle = "QPS1D1T2", overlay = true, max_lines_count = 500, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 1 · AMD PHASES
+// ───────────────────────────────────────────────────────────────
+//  The market moves through a repeating rhythm. A stretch where
+//  price ranges and positions are built. A stretch where it
+//  pushes through an obvious level and takes out the orders
+//  resting there. Then a stretch where it actually moves.
+//
+//  Accumulation, manipulation, distribution. This shades all
+//  three, on three cycle lengths at once.
+//
+//  The cycles are anchored to midnight in the chosen timezone
+//  rather than rolling with the current bar. That matters: a
+//  rolling window puts the boundaries wherever you happen to be
+//  looking, while an anchored one puts them where everybody
+//  else's are too. The phases are only useful if they are the
+//  same phases other people are trading around.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+s1_gTz = "Timezone"
+
+s1_tz = input.string("UTC+0", "Cycle anchor", group = s1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Midnight in this timezone is where every cycle starts counting. Change it to match the session that actually drives your instrument -- this matters more than any other setting here.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+s1_gCyc = "Cycles"
+
+s1_c24 = input.bool(true, "24 hour", group = s1_gCyc, inline = "c1")
+s1_c12 = input.bool(true, "12 hour", group = s1_gCyc, inline = "c1")
+s1_c6  = input.bool(true, "6 hour",  group = s1_gCyc, inline = "c1",
+     tooltip = "All three run at once and overlap. The 24 hour cycle gives the day's shape; the 6 hour one gives the session's.")
+
+s1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle accumulation gives way to manipulation. Default 50%.")
+
+s1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle manipulation gives way to distribution. Default 75%.")
+
+// ─── SHADING ──────────────────────────────────────────────────
+s1_gShade = "Shading"
+
+s1_shadeA = input.bool(false, "Shade accumulation", group = s1_gShade, inline = "sh")
+s1_shadeM = input.bool(true,  "Shade manipulation", group = s1_gShade, inline = "sh")
+s1_shadeD = input.bool(false, "Shade distribution", group = s1_gShade, inline = "sh",
+     tooltip = "Manipulation only, by default. Shading all three on all three cycles turns the chart into soup.")
+
+s1_colA = input.color(#5b9cf6, "Accumulation", group = s1_gShade, inline = "cc")
+s1_colM = input.color(#2962ff, "Manipulation", group = s1_gShade, inline = "cc")
+s1_colD = input.color(#c9a84c, "Distribution", group = s1_gShade, inline = "cc")
+
+s1_fade = input.int(95, "Transparency", minval = 80, maxval = 99, group = s1_gShade)
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_gBound = "Boundaries"
+
+s1_showLine = input.bool(true, "Mark phase starts", group = s1_gBound,
+     tooltip = "A vertical line where each phase begins, on each enabled cycle.")
+
+s1_showLbl = input.bool(true, "Label phase starts", group = s1_gBound)
+
+s1_lineCol = input.color(#ffffff, "Line and label", group = s1_gBound)
+s1_lineFade = input.int(60, "Line transparency", minval = 0, maxval = 95, group = s1_gBound)
+s1_lblSize  = input.string("Small", "Label size", options = ["Tiny", "Small", "Normal"], group = s1_gBound)
+
+s1_lookback = input.int(300, "Draw on the last N bars", minval = 20, maxval = 1000, group = s1_gBound,
+     tooltip = "Boundary lines and labels are limited to recent bars so older history stays readable. Shading is unaffected.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so half hour cycles resolve correctly.
+s1_hr = hour(time, s1_tz) + minute(time, s1_tz) / 60.0
+
+// Position within a cycle, as a percentage of that cycle.
+s1_posIn(float _cyc) =>
+    float _idx = math.floor(s1_hr / _cyc)
+    float _pos = s1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 = accumulation, 1 = manipulation, 2 = distribution
+s1_phaseOf(float _cyc) =>
+    float _p = s1_posIn(_cyc)
+    _p < s1_split1 ? 0 : _p < s1_split2 ? 1 : 2
+
+s1_p24 = s1_phaseOf(24.0)
+s1_p12 = s1_phaseOf(12.0)
+s1_p6  = s1_phaseOf(6.0)
+
+s1_colOf(int _ph) =>
+    _ph == 0 ? s1_colA : _ph == 1 ? s1_colM : s1_colD
+
+s1_nameOf(int _ph) =>
+    _ph == 0 ? "A" : _ph == 1 ? "M" : "D"
+
+s1_shadeOn(int _ph) =>
+    _ph == 0 ? s1_shadeA : _ph == 1 ? s1_shadeM : s1_shadeD
+
+// ─── SHADING ──────────────────────────────────────────────────
+color s1_bg24 = s1_c24 and s1_shadeOn(s1_p24) ? color.new(s1_colOf(s1_p24), s1_fade) : na
+color s1_bg12 = s1_c12 and s1_shadeOn(s1_p12) ? color.new(s1_colOf(s1_p12), s1_fade) : na
+color s1_bg6  = s1_c6  and s1_shadeOn(s1_p6)  ? color.new(s1_colOf(s1_p6),  s1_fade) : na
+
+bgcolor(s1_bg24, title = "24H phase")
+bgcolor(s1_bg12, title = "12H phase")
+bgcolor(s1_bg6,  title = "6H phase")
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+// Stacked vertical text, so several cycles marking the same bar
+// stay readable side by side.
+s1_stack(string _cyc, string _ph) =>
+    string _out = ""
+    for i = 0 to str.length(_cyc) - 1
+        _out := _out + str.substring(_cyc, i, i + 1) + "\n"
+    _out + "\n" + _ph
+
+s1_mark(bool _on, float _cyc, int _ph, int _phPrev, string _label) =>
+    if _on and _ph != _phPrev and bar_index >= last_bar_index - s1_lookback
+        if s1_showLine
+            line.new(bar_index, low, bar_index, high,
+                 extend = extend.both,
+                 color  = color.new(s1_lineCol, s1_lineFade),
+                 style  = line.style_dotted,
+                 width  = 1)
+        if s1_showLbl
+            label.new(bar_index, high, s1_stack(_label, s1_nameOf(_ph)),
+                 style     = label.style_none,
+                 textcolor = color.new(s1_lineCol, 30),
+                 size      = s1_sizeOf(s1_lblSize),
+                 yloc      = yloc.abovebar,
+                 textalign = text.align_center)
+    true
+
+if barstate.isconfirmed
+    s1_mark(s1_c24, 24.0, s1_p24, s1_p24[1], "24H")
+    s1_mark(s1_c12, 12.0, s1_p12, s1_p12[1], "12H")
+    s1_mark(s1_c6,   6.0, s1_p6,  s1_p6[1],  "6H")
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_p24 != s1_p24[1], "24H phase changed",
+     "The 24 hour cycle has moved into a new phase.")
+
+alertcondition(s1_p12 == 1 and s1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(s1_p6 == 1 and s1_p6[1] != 1, "6H manipulation started",
+     "The 6 hour cycle has entered its manipulation phase.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  SIDE 1 · PHASE CLOCK
+// ───────────────────────────────────────────────────────────────
+//  How long is left.
+//
+//  The AMD Phases piece in the Starter course shades the cycles on
+//  your chart. This answers the other question: how far through
+//  the current phase are you, and when does the next one start.
+//
+//  That matters because a condition resolving four minutes before
+//  a phase boundary is a different proposition to one resolving
+//  with two hours of that phase still to run. The first has almost
+//  no time to work. The second has the rest of the phase.
+//
+//  Three cycles, 12 hour, 6 hour and 3 hour, matching the
+//  instrument. Only the 12 hour is enabled by default, same as
+//  Meridian ships.
+//
+//  Draws one table and no chart objects. Safe to combine with
+//  anything. All identifiers namespaced d1_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+d1_gTz = "Timezone"
+
+d1_tz = input.string("UTC+1", "Cycle anchor", group = d1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree, this clock will be counting down to boundaries the instrument is not using.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+d1_gCyc = "Cycles"
+
+d1_c12 = input.bool(true,  "12 hour", group = d1_gCyc, inline = "c")
+d1_c6  = input.bool(false, "6 hour",  group = d1_gCyc, inline = "c")
+d1_c3  = input.bool(false, "3 hour",  group = d1_gCyc, inline = "c",
+     tooltip = "Defaults match the instrument: 12 hour on, the other two off.")
+
+d1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = d1_gCyc)
+d1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = d1_gCyc,
+     tooltip = "Must match your Meridian settings or the countdown will be wrong.")
+
+// ─── WARNING ──────────────────────────────────────────────────
+d1_gWarn = "Warning"
+
+d1_warnOn  = input.bool(true, "Flag when a phase is nearly over", group = d1_gWarn)
+d1_warnMin = input.int(15, "Minutes remaining to flag at", minval = 1, maxval = 120, group = d1_gWarn,
+     tooltip = "A condition resolving in the last few minutes of a phase has very little time to work. This marks that.")
+
+// ─── TABLE ────────────────────────────────────────────────────
+d1_gTbl = "Table"
+
+d1_tblPos  = input.string("Bottom Left", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = d1_gTbl)
+d1_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = d1_gTbl)
+
+d1_aCol = input.color(#5b9cf6, "Accumulation", group = d1_gTbl, inline = "c")
+d1_mCol = input.color(#c9a84c, "Manipulation", group = d1_gTbl, inline = "c")
+d1_dCol = input.color(#2f6b41, "Distribution", group = d1_gTbl, inline = "c")
+d1_warnCol = input.color(#b4342a, "Warning", group = d1_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so sub-hour positions resolve.
+d1_hr = hour(time, d1_tz) + minute(time, d1_tz) / 60.0 + second(time, d1_tz) / 3600.0
+
+// Position within a cycle, as a percentage of that cycle.
+d1_posIn(float _cyc) =>
+    float _idx = math.floor(d1_hr / _cyc)
+    float _pos = d1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+d1_phaseOf(float _cyc) =>
+    float _p = d1_posIn(_cyc)
+    _p < d1_split1 ? 0 : _p < d1_split2 ? 1 : 2
+
+// Minutes until the current phase ends on a given cycle.
+d1_leftIn(float _cyc) =>
+    float _p    = d1_posIn(_cyc)
+    float _next = _p < d1_split1 ? d1_split1 : _p < d1_split2 ? d1_split2 : 100.0
+    (_next - _p) / 100.0 * _cyc * 60.0
+
+d1_nameOf(int _ph) =>
+    _ph == 0 ? "ACCUM" : _ph == 1 ? "MANIP" : "DISTR"
+
+d1_colOf(int _ph) =>
+    _ph == 0 ? d1_aCol : _ph == 1 ? d1_mCol : d1_dCol
+
+// Minutes rendered as h:mm, or just minutes under an hour.
+d1_clock(float _mins) =>
+    int _m = int(math.round(_mins))
+    _m >= 60 ? str.tostring(math.floor(_m / 60)) + "h " +
+         str.format("{0,number,00}", _m % 60) + "m" :
+         str.tostring(_m) + "m"
+
+// Progress bar, eight cells.
+d1_bar(float _pct) =>
+    int _filled = int(math.round(_pct / 100.0 * 8))
+    string _out = ""
+    for i = 0 to 7
+        _out := _out + (i < _filled ? "█" : "░")
+    _out
+
+d1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+d1_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Middle Right" ? position.middle_right : position.bottom_left
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table d1_tbl = na
+
+if barstate.islast
+    if na(d1_tbl)
+        d1_tbl := table.new(d1_posOf(d1_tblPos), 4, 4,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(d1_tbl, 0, 0, "CYCLE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 1, 0, "PHASE",    text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 2, 0, "PROGRESS", text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+    table.cell(d1_tbl, 3, 0, "LEFT",     text_color = _hdr, text_size = d1_sizeOf(d1_tblSize))
+
+    float[] _cycs  = array.from(12.0, 6.0, 3.0)
+    string[] _lbls = array.from("12H", "6H", "3H")
+    bool[]  _ons   = array.from(d1_c12, d1_c6, d1_c3)
+
+    for i = 0 to 2
+        int _row = i + 1
+        if array.get(_ons, i)
+            float _cyc  = array.get(_cycs, i)
+            int   _ph   = d1_phaseOf(_cyc)
+            float _pct  = d1_posIn(_cyc)
+            float _left = d1_leftIn(_cyc)
+
+            bool  _warn   = d1_warnOn and _left <= d1_warnMin
+            color _phCol  = _warn ? d1_warnCol : d1_colOf(_ph)
+
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.white, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, d1_nameOf(_ph),
+                 text_color = _phCol, text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, d1_bar(_pct),
+                 text_color = color.new(d1_colOf(_ph), 30), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, d1_clock(_left),
+                 text_color = _warn ? d1_warnCol : color.white, text_size = d1_sizeOf(d1_tblSize))
+        else
+            table.cell(d1_tbl, 0, _row, array.get(_lbls, i),
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 1, _row, "off",
+                 text_color = color.new(color.gray, 60), text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 2, _row, "", text_size = d1_sizeOf(d1_tblSize))
+            table.cell(d1_tbl, 3, _row, "", text_size = d1_sizeOf(d1_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+d1_p12 = d1_phaseOf(12.0)
+d1_p6  = d1_phaseOf(6.0)
+d1_p3  = d1_phaseOf(3.0)
+
+alertcondition(d1_c12 and d1_p12 != d1_p12[1], "12H phase changed",
+     "The 12 hour cycle has moved into a new phase.")
+
+alertcondition(d1_c12 and d1_p12 == 1 and d1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(d1_warnOn and d1_c12 and d1_leftIn(12.0) <= d1_warnMin and d1_leftIn(12.0)[1] > d1_warnMin,
+     "12H phase ending soon", "The current 12 hour phase is nearly over.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  DESSERT 2 · PHASE REPORT
+// ───────────────────────────────────────────────────────────────
+//  Does the cycle mean anything on your instrument.
+//
+//  Meridian divides every cycle into three phases. Accumulation,
+//  where price is supposed to range. Manipulation, where it pushes
+//  through a level to take the orders sitting there. Distribution,
+//  where it actually moves.
+//
+//  That is a claim about how your instrument behaves, and it is
+//  testable. If the phases are real, they should look different
+//  from each other in the data. Manipulation should produce more
+//  levels being taken. Distribution should produce the largest
+//  moves. Accumulation should produce the smallest.
+//
+//  If all three phases look the same, the cycle is not describing
+//  your instrument and the phase filter is adding nothing.
+//
+//  Four measurements per phase:
+//
+//    RANGE    average high to low, in ATR, so it compares
+//    BODY     how much of that range was directional
+//    BREAKS   levels taken per hundred bars in that phase
+//    MOVE     average absolute close to close
+//
+//  Rows below the minimum sample are left ungraded.
+//
+//  Draws one table. Namespaced t2_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CYCLE ────────────────────────────────────────────────────
+t2_gCyc = "Cycle"
+
+t2_tz = input.string("UTC+1", "Cycle anchor", group = t2_gCyc,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree the test is measuring phases the instrument is not using.")
+
+t2_cyc = input.string("12 hour", "Cycle length", options = ["12 hour", "6 hour", "3 hour"], group = t2_gCyc,
+     tooltip = "One cycle at a time, so each phase gets the full sample rather than three thin ones.")
+
+t2_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = t2_gCyc)
+t2_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = t2_gCyc,
+     tooltip = "Must match your Meridian settings.")
+
+// ─── BREAKS ───────────────────────────────────────────────────
+t2_gBrk = "Level breaks"
+
+t2_brkOn = input.bool(true, "Count levels taken per phase", group = t2_gBrk,
+     tooltip = "The manipulation phase is supposed to be where levels get taken. This tests that directly, and it is the single most informative column in the table.")
+
+t2_brkTf = input.timeframe("30", "Level timeframe", group = t2_gBrk)
+t2_pvL   = input.int(4, "L", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+t2_pvR   = input.int(2, "R", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+
+// ─── TEST ─────────────────────────────────────────────────────
+t2_gTest = "Test"
+
+t2_atrLen = input.int(14, "ATR length", minval = 1, group = t2_gTest,
+     tooltip = "Range and move are expressed as multiples of ATR so the numbers mean the same thing on any instrument.")
+
+t2_minSample = input.int(30, "Minimum bars per phase", minval = 10, maxval = 500, group = t2_gTest)
+
+// ─── TABLE ────────────────────────────────────────────────────
+t2_gTbl = "Table"
+
+t2_legend  = input.bool(true, "Show the plain english summary", group = t2_gTbl)
+t2_tblPos  = input.string("Bottom Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = t2_gTbl)
+t2_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = t2_gTbl)
+
+t2_hiCol   = input.color(#2f6b41, "Highest", group = t2_gTbl, inline = "c")
+t2_loCol   = input.color(#b4342a, "Lowest",  group = t2_gTbl, inline = "c")
+t2_thinCol = input.color(#9a9da3, "Thin",    group = t2_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+t2_cycHrs = t2_cyc == "12 hour" ? 12.0 : t2_cyc == "6 hour" ? 6.0 : 3.0
+
+t2_hr = hour(time, t2_tz) + minute(time, t2_tz) / 60.0
+
+t2_pos = (t2_hr - math.floor(t2_hr / t2_cycHrs) * t2_cycHrs) / t2_cycHrs * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+t2_phase = t2_pos < t2_split1 ? 0 : t2_pos < t2_split2 ? 1 : 2
+
+t2_atr = ta.atr(t2_atrLen)
+
+// ─── TALLIES ──────────────────────────────────────────────────
+var int[]   t2_bars  = array.from(0, 0, 0)
+var float[] t2_range = array.from(0.0, 0.0, 0.0)
+var float[] t2_body  = array.from(0.0, 0.0, 0.0)
+var float[] t2_move  = array.from(0.0, 0.0, 0.0)
+var int[]   t2_brks  = array.from(0, 0, 0)
+
+// levels awaiting a break
+type T2Lv
+    float px
+    bool  isHigh
+    bool  gone
+
+var T2Lv[] t2_lv = array.new<T2Lv>()
+
+[t2_ph, t2_pl] = request.security(syminfo.tickerid, t2_brkTf,
+     [ta.pivothigh(high, t2_pvL, t2_pvR), ta.pivotlow(low, t2_pvL, t2_pvR)], lookahead = barmerge.lookahead_off)
+
+t2_known(float _px) =>
+    bool _f = false
+    int _n = array.size(t2_lv)
+    if _n > 0
+        for i = 0 to _n - 1
+            T2Lv _l = array.get(t2_lv, i)
+            if not _l.gone and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+if barstate.isconfirmed and t2_atr > 0
+    int _p = t2_phase
+
+    array.set(t2_bars,  _p, array.get(t2_bars,  _p) + 1)
+    array.set(t2_range, _p, array.get(t2_range, _p) + (high - low) / t2_atr)
+    array.set(t2_body,  _p, array.get(t2_body,  _p) + math.abs(close - open) / t2_atr)
+    array.set(t2_move,  _p, array.get(t2_move,  _p) + math.abs(close - close[1]) / t2_atr)
+
+    if t2_brkOn
+        if not na(t2_ph) and not t2_known(t2_ph)
+            array.push(t2_lv, T2Lv.new(t2_ph, true, false))
+        if not na(t2_pl) and not t2_known(t2_pl)
+            array.push(t2_lv, T2Lv.new(t2_pl, false, false))
+        while array.size(t2_lv) > 300
+            array.shift(t2_lv)
+
+        int _n = array.size(t2_lv)
+        if _n > 0
+            for i = 0 to _n - 1
+                T2Lv _l = array.get(t2_lv, i)
+                if not _l.gone and (_l.isHigh ? high >= _l.px : low <= _l.px)
+                    _l.gone := true
+                    array.set(t2_brks, _p, array.get(t2_brks, _p) + 1)
+
+// ─── TABLE ────────────────────────────────────────────────────
+// Which phase leads or trails a column. Only phases with enough
+// bars are eligible, so a thin phase cannot win by accident.
+// Declared at top level because Pine does not permit function
+// declarations inside an if block.
+t2_lead(array<float> _a) =>
+    int _best = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _best == -1 or array.get(_a, i) > array.get(_a, _best)
+                _best := i
+    _best
+
+t2_trail(array<float> _a) =>
+    int _worst = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _worst == -1 or array.get(_a, i) < array.get(_a, _worst)
+                _worst := i
+    _worst
+
+t2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+t2_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.bottom_right
+
+var table t2_tbl = na
+
+if barstate.islast
+    int _rows = 5 + (t2_legend ? 2 : 0)
+    if na(t2_tbl)
+        t2_tbl := table.new(t2_posOf(t2_tblPos), 5, _rows,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = t2_tblSize
+
+    table.cell(t2_tbl, 0, 0, "PHASE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 0, "BARS",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 0, "RANGE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 0, "MOVE",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 0, "BREAKS", text_color = _hdr, text_size = t2_sizeOf(_sz))
+
+    string[] _names = array.from("Accum", "Manip", "Distr")
+
+    // averages, and which phase leads each column
+    float[] _avgR = array.from(0.0, 0.0, 0.0)
+    float[] _avgM = array.from(0.0, 0.0, 0.0)
+    float[] _avgB = array.from(0.0, 0.0, 0.0)
+
+    for i = 0 to 2
+        int _n = array.get(t2_bars, i)
+        if _n > 0
+            array.set(_avgR, i, array.get(t2_range, i) / _n)
+            array.set(_avgM, i, array.get(t2_move, i) / _n)
+            array.set(_avgB, i, array.get(t2_brks, i) / _n * 100.0)
+
+    int _rHi = t2_lead(_avgR)
+    int _rLo = t2_trail(_avgR)
+    int _mHi = t2_lead(_avgM)
+    int _mLo = t2_trail(_avgM)
+    int _bHi = t2_lead(_avgB)
+
+    for i = 0 to 2
+        int _row = i + 1
+        int _n = array.get(t2_bars, i)
+        bool _thin = _n < t2_minSample
+
+        table.cell(t2_tbl, 0, _row, array.get(_names, i),
+             text_color = color.white, text_size = t2_sizeOf(_sz))
+        table.cell(t2_tbl, 1, _row, str.tostring(_n),
+             text_color = _thin ? t2_thinCol : color.white, text_size = t2_sizeOf(_sz))
+
+        if _thin
+            table.cell(t2_tbl, 2, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+        else
+            table.cell(t2_tbl, 2, _row, str.tostring(math.round(array.get(_avgR, i), 2)) + "x",
+                 text_color = i == _rHi ? t2_hiCol : i == _rLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, str.tostring(math.round(array.get(_avgM, i), 2)) + "x",
+                 text_color = i == _mHi ? t2_hiCol : i == _mLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, not t2_brkOn ? "off" :
+                 str.tostring(math.round(array.get(_avgB, i), 1)),
+                 text_color = not t2_brkOn ? t2_thinCol : i == _bHi ? t2_hiCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+
+    // spread across the three phases, as a check on whether the
+    // cycle is describing anything at all
+    float _spread = 0.0
+    bool  _enough = array.get(t2_bars, 0) >= t2_minSample and
+         array.get(t2_bars, 1) >= t2_minSample and array.get(t2_bars, 2) >= t2_minSample
+    if _enough
+        float _mx = math.max(array.get(_avgR, 0), math.max(array.get(_avgR, 1), array.get(_avgR, 2)))
+        float _mn = math.min(array.get(_avgR, 0), math.min(array.get(_avgR, 1), array.get(_avgR, 2)))
+        _spread := _mn > 0 ? (_mx - _mn) / _mn * 100.0 : 0.0
+
+    table.cell(t2_tbl, 0, 4, "SPREAD", text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 4, not _enough ? "thin" :
+         str.tostring(math.round(_spread)) + "%",
+         text_color = not _enough ? t2_thinCol : _spread >= 15 ? t2_hiCol : t2_loCol,
+         text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 4, "", text_size = t2_sizeOf(_sz))
+
+    // ─── PLAIN ENGLISH ────────────────────────────────────────
+    if t2_legend
+        int _lr = _rows - 2
+
+        string _v = ""
+        color  _vc = t2_thinCol
+
+        if not _enough
+            _v := "Not enough bars in every phase yet — use more history"
+        else if _spread < 15
+            _vc := t2_loCol
+            _v := "The three phases look alike — the cycle adds little here"
+        else
+            _vc := t2_hiCol
+            string _big = array.get(_names, _rHi)
+            string _brk = t2_brkOn and _bHi >= 0 ? array.get(_names, _bHi) : ""
+            _v := _brk == "" ?
+                 "Phases differ — " + _big + " produces the largest bars" :
+                 "Phases differ — " + _big + " moves most, " + _brk + " breaks most levels"
+
+        table.cell(t2_tbl, 0, _lr, _v, text_color = _vc,
+             text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _lr, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _lr, 4, _lr)
+
+        table.cell(t2_tbl, 0, _rows - 1,
+             "RANGE and MOVE in ATR   ·   BREAKS per 100 bars   ·   SPREAD = how different the phases are",
+             text_color = t2_thinCol, text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _rows - 1, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _rows - 1, 4, _rows - 1)

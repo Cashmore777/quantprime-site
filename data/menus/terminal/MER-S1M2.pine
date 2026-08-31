@@ -1,0 +1,497 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S1M2
+//    S1  AMD Phases
+//    M2  Liquidity Map
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S1M2", shorttitle = "QPS1M2", overlay = true, max_lines_count = 500, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 1 · AMD PHASES
+// ───────────────────────────────────────────────────────────────
+//  The market moves through a repeating rhythm. A stretch where
+//  price ranges and positions are built. A stretch where it
+//  pushes through an obvious level and takes out the orders
+//  resting there. Then a stretch where it actually moves.
+//
+//  Accumulation, manipulation, distribution. This shades all
+//  three, on three cycle lengths at once.
+//
+//  The cycles are anchored to midnight in the chosen timezone
+//  rather than rolling with the current bar. That matters: a
+//  rolling window puts the boundaries wherever you happen to be
+//  looking, while an anchored one puts them where everybody
+//  else's are too. The phases are only useful if they are the
+//  same phases other people are trading around.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+s1_gTz = "Timezone"
+
+s1_tz = input.string("UTC+0", "Cycle anchor", group = s1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Midnight in this timezone is where every cycle starts counting. Change it to match the session that actually drives your instrument -- this matters more than any other setting here.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+s1_gCyc = "Cycles"
+
+s1_c24 = input.bool(true, "24 hour", group = s1_gCyc, inline = "c1")
+s1_c12 = input.bool(true, "12 hour", group = s1_gCyc, inline = "c1")
+s1_c6  = input.bool(true, "6 hour",  group = s1_gCyc, inline = "c1",
+     tooltip = "All three run at once and overlap. The 24 hour cycle gives the day's shape; the 6 hour one gives the session's.")
+
+s1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle accumulation gives way to manipulation. Default 50%.")
+
+s1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle manipulation gives way to distribution. Default 75%.")
+
+// ─── SHADING ──────────────────────────────────────────────────
+s1_gShade = "Shading"
+
+s1_shadeA = input.bool(false, "Shade accumulation", group = s1_gShade, inline = "sh")
+s1_shadeM = input.bool(true,  "Shade manipulation", group = s1_gShade, inline = "sh")
+s1_shadeD = input.bool(false, "Shade distribution", group = s1_gShade, inline = "sh",
+     tooltip = "Manipulation only, by default. Shading all three on all three cycles turns the chart into soup.")
+
+s1_colA = input.color(#5b9cf6, "Accumulation", group = s1_gShade, inline = "cc")
+s1_colM = input.color(#2962ff, "Manipulation", group = s1_gShade, inline = "cc")
+s1_colD = input.color(#c9a84c, "Distribution", group = s1_gShade, inline = "cc")
+
+s1_fade = input.int(95, "Transparency", minval = 80, maxval = 99, group = s1_gShade)
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_gBound = "Boundaries"
+
+s1_showLine = input.bool(true, "Mark phase starts", group = s1_gBound,
+     tooltip = "A vertical line where each phase begins, on each enabled cycle.")
+
+s1_showLbl = input.bool(true, "Label phase starts", group = s1_gBound)
+
+s1_lineCol = input.color(#ffffff, "Line and label", group = s1_gBound)
+s1_lineFade = input.int(60, "Line transparency", minval = 0, maxval = 95, group = s1_gBound)
+s1_lblSize  = input.string("Small", "Label size", options = ["Tiny", "Small", "Normal"], group = s1_gBound)
+
+s1_lookback = input.int(300, "Draw on the last N bars", minval = 20, maxval = 1000, group = s1_gBound,
+     tooltip = "Boundary lines and labels are limited to recent bars so older history stays readable. Shading is unaffected.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so half hour cycles resolve correctly.
+s1_hr = hour(time, s1_tz) + minute(time, s1_tz) / 60.0
+
+// Position within a cycle, as a percentage of that cycle.
+s1_posIn(float _cyc) =>
+    float _idx = math.floor(s1_hr / _cyc)
+    float _pos = s1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 = accumulation, 1 = manipulation, 2 = distribution
+s1_phaseOf(float _cyc) =>
+    float _p = s1_posIn(_cyc)
+    _p < s1_split1 ? 0 : _p < s1_split2 ? 1 : 2
+
+s1_p24 = s1_phaseOf(24.0)
+s1_p12 = s1_phaseOf(12.0)
+s1_p6  = s1_phaseOf(6.0)
+
+s1_colOf(int _ph) =>
+    _ph == 0 ? s1_colA : _ph == 1 ? s1_colM : s1_colD
+
+s1_nameOf(int _ph) =>
+    _ph == 0 ? "A" : _ph == 1 ? "M" : "D"
+
+s1_shadeOn(int _ph) =>
+    _ph == 0 ? s1_shadeA : _ph == 1 ? s1_shadeM : s1_shadeD
+
+// ─── SHADING ──────────────────────────────────────────────────
+color s1_bg24 = s1_c24 and s1_shadeOn(s1_p24) ? color.new(s1_colOf(s1_p24), s1_fade) : na
+color s1_bg12 = s1_c12 and s1_shadeOn(s1_p12) ? color.new(s1_colOf(s1_p12), s1_fade) : na
+color s1_bg6  = s1_c6  and s1_shadeOn(s1_p6)  ? color.new(s1_colOf(s1_p6),  s1_fade) : na
+
+bgcolor(s1_bg24, title = "24H phase")
+bgcolor(s1_bg12, title = "12H phase")
+bgcolor(s1_bg6,  title = "6H phase")
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+// Stacked vertical text, so several cycles marking the same bar
+// stay readable side by side.
+s1_stack(string _cyc, string _ph) =>
+    string _out = ""
+    for i = 0 to str.length(_cyc) - 1
+        _out := _out + str.substring(_cyc, i, i + 1) + "\n"
+    _out + "\n" + _ph
+
+s1_mark(bool _on, float _cyc, int _ph, int _phPrev, string _label) =>
+    if _on and _ph != _phPrev and bar_index >= last_bar_index - s1_lookback
+        if s1_showLine
+            line.new(bar_index, low, bar_index, high,
+                 extend = extend.both,
+                 color  = color.new(s1_lineCol, s1_lineFade),
+                 style  = line.style_dotted,
+                 width  = 1)
+        if s1_showLbl
+            label.new(bar_index, high, s1_stack(_label, s1_nameOf(_ph)),
+                 style     = label.style_none,
+                 textcolor = color.new(s1_lineCol, 30),
+                 size      = s1_sizeOf(s1_lblSize),
+                 yloc      = yloc.abovebar,
+                 textalign = text.align_center)
+    true
+
+if barstate.isconfirmed
+    s1_mark(s1_c24, 24.0, s1_p24, s1_p24[1], "24H")
+    s1_mark(s1_c12, 12.0, s1_p12, s1_p12[1], "12H")
+    s1_mark(s1_c6,   6.0, s1_p6,  s1_p6[1],  "6H")
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_p24 != s1_p24[1], "24H phase changed",
+     "The 24 hour cycle has moved into a new phase.")
+
+alertcondition(s1_p12 == 1 and s1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(s1_p6 == 1 and s1_p6[1] != 1, "6H manipulation started",
+     "The 6 hour cycle has entered its manipulation phase.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MAIN 2 · LIQUIDITY MAP
+// ───────────────────────────────────────────────────────────────
+//  Where is price actually going.
+//
+//  The Sweep Tracker looks backwards at levels that have already
+//  been taken. This looks forwards at the ones that have not.
+//
+//  Every unswept level above and below current price, sorted by
+//  distance, with the nearest on each side highlighted. Then a
+//  simple imbalance reading: if there are nine unswept levels
+//  above and two below, the resting orders are mostly overhead,
+//  and price has more to collect in that direction.
+//
+//  That is not a prediction. Liquidity sitting above price is not
+//  a reason to be long. It is a statement about where the obvious
+//  stops are, and what the market has left to do if it goes
+//  looking for them.
+//
+//  Draws one table. All identifiers namespaced m2_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEFRAMES ───────────────────────────────────────────────
+m2_gTf = "Levels"
+
+m2_t1On = input.bool(true, "TF1", group = m2_gTf, inline = "t1")
+m2_t1   = input.timeframe("3", "", group = m2_gTf, inline = "t1")
+m2_t1L  = input.int(4, "L", minval = 1, maxval = 20, group = m2_gTf, inline = "t1")
+m2_t1R  = input.int(2, "R", minval = 1, maxval = 20, group = m2_gTf, inline = "t1")
+
+m2_t2On = input.bool(true, "TF2", group = m2_gTf, inline = "t2")
+m2_t2   = input.timeframe("30", "", group = m2_gTf, inline = "t2")
+m2_t2L  = input.int(4, "L", minval = 1, maxval = 20, group = m2_gTf, inline = "t2")
+m2_t2R  = input.int(2, "R", minval = 1, maxval = 20, group = m2_gTf, inline = "t2")
+
+m2_t3On = input.bool(true, "TF3", group = m2_gTf, inline = "t3")
+m2_t3   = input.timeframe("180", "", group = m2_gTf, inline = "t3")
+m2_t3L  = input.int(4, "L", minval = 1, maxval = 20, group = m2_gTf, inline = "t3")
+m2_t3R  = input.int(2, "R", minval = 1, maxval = 20, group = m2_gTf, inline = "t3",
+     tooltip = "Higher L and R finds fewer, more significant levels. A 3H level matters considerably more than a 3M one.")
+
+// ─── MAP ──────────────────────────────────────────────────────
+m2_gMap = "Map"
+
+m2_show = input.int(4, "Levels to list each side", minval = 1, maxval = 8, group = m2_gMap,
+     tooltip = "How many unswept levels above and below to list in the table, nearest first.")
+
+m2_range = input.float(0.0, "Ignore levels beyond N x ATR", minval = 0.0, step = 0.5, group = m2_gMap,
+     tooltip = "Levels further away than this are excluded from the map and the imbalance count. 0 disables the filter. Useful on instruments with a long history of far-away pivots that will not be reached today.")
+
+m2_atrLen = input.int(14, "ATR length", minval = 1, group = m2_gMap)
+
+m2_unit = input.string("Pips", "Distance shown in", options = ["Pips", "ATR", "Price"], group = m2_gMap)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+m2_gDisp = "Display"
+
+m2_showLines = input.bool(true, "Draw unswept levels", group = m2_gDisp)
+m2_markNear  = input.bool(true, "Highlight the nearest each side", group = m2_gDisp)
+
+m2_aboveCol = input.color(#b4342a, "Above", group = m2_gDisp, inline = "c")
+m2_belowCol = input.color(#2f6b41, "Below", group = m2_gDisp, inline = "c")
+m2_nearCol  = input.color(#c9a84c, "Nearest", group = m2_gDisp, inline = "c")
+
+m2_width  = input.int(1, "Line width", minval = 1, maxval = 3, group = m2_gDisp)
+m2_maxLv  = input.int(150, "Maximum levels tracked", minval = 20, maxval = 500, group = m2_gDisp)
+
+// ─── TABLE ────────────────────────────────────────────────────
+m2_gTbl = "Table"
+
+m2_tblOn   = input.bool(true, "Show table", group = m2_gTbl)
+m2_tblPos  = input.string("Top Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = m2_gTbl)
+m2_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = m2_gTbl)
+
+// ─── STATE ────────────────────────────────────────────────────
+type M2Level
+    float px
+    bool  isHigh
+    string tf
+    bool  swept
+    line  ln
+
+var M2Level[] m2_levels = array.new<M2Level>()
+
+m2_atr = ta.atr(m2_atrLen)
+
+m2_pipMult() =>
+    str.contains(syminfo.ticker, "JPY") ? 100.0 :
+     str.contains(syminfo.ticker, "XAU") or str.contains(syminfo.ticker, "XAG") ? 10.0 :
+     syminfo.type == "forex" ? 10000.0 : 1.0
+
+m2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m2_posOf(_p) =>
+    _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.top_right
+
+m2_tfLabel(string _tf) =>
+    string _out = _tf
+    float  _n   = str.tonumber(_tf)
+    if not na(_n)
+        int _m = int(_n)
+        _out := _m >= 1440 and _m % 1440 == 0 ? str.tostring(_m / 1440) + "D" :
+             _m >= 60 and _m % 60 == 0 ? str.tostring(_m / 60) + "H" :
+             str.tostring(_m) + "M"
+    _out
+
+m2_dist(float _px) =>
+    float _d = math.abs(_px - close)
+    m2_unit == "Pips" ? _d * m2_pipMult() :
+     m2_unit == "ATR" ? (m2_atr > 0 ? _d / m2_atr : 0.0) : _d
+
+m2_distStr(float _px) =>
+    float _v = m2_dist(_px)
+    m2_unit == "Pips" ? str.tostring(math.round(_v, 1)) :
+     m2_unit == "ATR" ? str.tostring(math.round(_v, 2)) + "x" :
+     str.tostring(math.round_to_mintick(_v))
+
+m2_known(float _px) =>
+    bool _f = false
+    int _n = array.size(m2_levels)
+    if _n > 0
+        for i = 0 to _n - 1
+            M2Level _l = array.get(m2_levels, i)
+            if not _l.swept and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+m2_add(float _px, bool _isHigh, string _tf, int _right) =>
+    if not na(_px) and not m2_known(_px)
+        line _ln = na
+        if m2_showLines
+            _ln := line.new(bar_index - _right, _px, bar_index + 1, _px,
+                 color = _isHigh ? m2_aboveCol : m2_belowCol, width = m2_width)
+        array.push(m2_levels, M2Level.new(_px, _isHigh, _tf, false, _ln))
+        while array.size(m2_levels) > m2_maxLv
+            M2Level _old = array.shift(m2_levels)
+            line.delete(_old.ln)
+
+// ─── PIVOT FEED ───────────────────────────────────────────────
+[m2_h1, m2_l1] = request.security(syminfo.tickerid, m2_t1,
+     [ta.pivothigh(high, m2_t1L, m2_t1R), ta.pivotlow(low, m2_t1L, m2_t1R)], lookahead = barmerge.lookahead_off)
+[m2_h2, m2_l2] = request.security(syminfo.tickerid, m2_t2,
+     [ta.pivothigh(high, m2_t2L, m2_t2R), ta.pivotlow(low, m2_t2L, m2_t2R)], lookahead = barmerge.lookahead_off)
+[m2_h3, m2_l3] = request.security(syminfo.tickerid, m2_t3,
+     [ta.pivothigh(high, m2_t3L, m2_t3R), ta.pivotlow(low, m2_t3L, m2_t3R)], lookahead = barmerge.lookahead_off)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+if barstate.isconfirmed
+    if m2_t1On
+        m2_add(m2_h1, true,  m2_t1, m2_t1R)
+        m2_add(m2_l1, false, m2_t1, m2_t1R)
+    if m2_t2On
+        m2_add(m2_h2, true,  m2_t2, m2_t2R)
+        m2_add(m2_l2, false, m2_t2, m2_t2R)
+    if m2_t3On
+        m2_add(m2_h3, true,  m2_t3, m2_t3R)
+        m2_add(m2_l3, false, m2_t3, m2_t3R)
+
+    int m2_n = array.size(m2_levels)
+    if m2_n > 0
+        for i = 0 to m2_n - 1
+            M2Level _l = array.get(m2_levels, i)
+            if not _l.swept
+                // once taken, a level leaves the map entirely
+                if _l.isHigh ? high >= _l.px : low <= _l.px
+                    _l.swept := true
+                    line.delete(_l.ln)
+                    _l.ln := na
+                else if not na(_l.ln)
+                    line.set_x2(_l.ln, bar_index + 1)
+
+// ─── BUILD THE MAP ────────────────────────────────────────────
+//  Collected fresh each bar: unswept, within range, sorted by
+//  distance from price.
+var float[] m2_upPx  = array.new_float()
+var float[] m2_dnPx  = array.new_float()
+var string[] m2_upTf = array.new_string()
+var string[] m2_dnTf = array.new_string()
+
+if barstate.islast
+    array.clear(m2_upPx)
+    array.clear(m2_dnPx)
+    array.clear(m2_upTf)
+    array.clear(m2_dnTf)
+
+    int _n = array.size(m2_levels)
+    if _n > 0
+        for i = 0 to _n - 1
+            M2Level _l = array.get(m2_levels, i)
+            if not _l.swept
+                bool _inRange = m2_range <= 0 or m2_atr <= 0 or
+                     math.abs(_l.px - close) <= m2_atr * m2_range
+                if _inRange
+                    if _l.px > close
+                        array.push(m2_upPx, _l.px)
+                        array.push(m2_upTf, _l.tf)
+                    else if _l.px < close
+                        array.push(m2_dnPx, _l.px)
+                        array.push(m2_dnTf, _l.tf)
+
+    // insertion sort: above ascending, below descending. Both put
+    // the nearest to current price first.
+    int _un = array.size(m2_upPx)
+    if _un > 1
+        for i = 1 to _un - 1
+            float _p = array.get(m2_upPx, i)
+            string _t = array.get(m2_upTf, i)
+            int j = i - 1
+            while j >= 0 and array.get(m2_upPx, j) > _p
+                array.set(m2_upPx, j + 1, array.get(m2_upPx, j))
+                array.set(m2_upTf, j + 1, array.get(m2_upTf, j))
+                j -= 1
+            array.set(m2_upPx, j + 1, _p)
+            array.set(m2_upTf, j + 1, _t)
+
+    int _dn = array.size(m2_dnPx)
+    if _dn > 1
+        for i = 1 to _dn - 1
+            float _p = array.get(m2_dnPx, i)
+            string _t = array.get(m2_dnTf, i)
+            int j = i - 1
+            while j >= 0 and array.get(m2_dnPx, j) < _p
+                array.set(m2_dnPx, j + 1, array.get(m2_dnPx, j))
+                array.set(m2_dnTf, j + 1, array.get(m2_dnTf, j))
+                j -= 1
+            array.set(m2_dnPx, j + 1, _p)
+            array.set(m2_dnTf, j + 1, _t)
+
+// ─── HIGHLIGHT NEAREST ────────────────────────────────────────
+if m2_markNear and barstate.islast
+    int _n2 = array.size(m2_levels)
+    float _nearUp = array.size(m2_upPx) > 0 ? array.get(m2_upPx, 0) : na
+    float _nearDn = array.size(m2_dnPx) > 0 ? array.get(m2_dnPx, 0) : na
+    if _n2 > 0
+        for i = 0 to _n2 - 1
+            M2Level _l = array.get(m2_levels, i)
+            if not _l.swept and not na(_l.ln)
+                bool _isNear = (not na(_nearUp) and _l.px == _nearUp) or
+                     (not na(_nearDn) and _l.px == _nearDn)
+                line.set_color(_l.ln, _isNear ? m2_nearCol :
+                     _l.isHigh ? m2_aboveCol : m2_belowCol)
+                line.set_width(_l.ln, _isNear ? m2_width + 1 : m2_width)
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table m2_tbl = na
+
+if m2_tblOn and barstate.islast
+    int _rows = m2_show * 2 + 3
+    if na(m2_tbl)
+        m2_tbl := table.new(m2_posOf(m2_tblPos), 3, _rows,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _uLbl = m2_unit == "Pips" ? "PIPS" : m2_unit == "ATR" ? "ATR" : "DIST"
+
+    table.cell(m2_tbl, 0, 0, "MAP",  text_color = _hdr, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 1, 0, "TF",   text_color = _hdr, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 2, 0, _uLbl,  text_color = _hdr, text_size = m2_sizeOf(m2_tblSize))
+
+    int _r = 1
+    int _nUp = array.size(m2_upPx)
+
+    // above, furthest first so the list reads top down like a chart
+    for i = 0 to m2_show - 1
+        int _idx = m2_show - 1 - i
+        if _idx < _nUp
+            float _px = array.get(m2_upPx, _idx)
+            bool _isNear = _idx == 0
+            table.cell(m2_tbl, 0, _r, str.tostring(math.round_to_mintick(_px)),
+                 text_color = _isNear ? m2_nearCol : m2_aboveCol, text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 1, _r, m2_tfLabel(array.get(m2_upTf, _idx)),
+                 text_color = color.new(color.gray, 20), text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 2, _r, m2_distStr(_px),
+                 text_color = _isNear ? m2_nearCol : m2_aboveCol, text_size = m2_sizeOf(m2_tblSize))
+        else
+            table.cell(m2_tbl, 0, _r, "—", text_color = color.new(color.gray, 50), text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 1, _r, "",  text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 2, _r, "",  text_size = m2_sizeOf(m2_tblSize))
+        _r += 1
+
+    // price row
+    table.cell(m2_tbl, 0, _r, str.tostring(math.round_to_mintick(close)),
+         text_color = color.white, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 1, _r, "NOW", text_color = color.white, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 2, _r, "", text_size = m2_sizeOf(m2_tblSize))
+    _r += 1
+
+    // below, nearest first
+    int _nDn = array.size(m2_dnPx)
+    for i = 0 to m2_show - 1
+        if i < _nDn
+            float _px = array.get(m2_dnPx, i)
+            bool _isNear = i == 0
+            table.cell(m2_tbl, 0, _r, str.tostring(math.round_to_mintick(_px)),
+                 text_color = _isNear ? m2_nearCol : m2_belowCol, text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 1, _r, m2_tfLabel(array.get(m2_dnTf, i)),
+                 text_color = color.new(color.gray, 20), text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 2, _r, m2_distStr(_px),
+                 text_color = _isNear ? m2_nearCol : m2_belowCol, text_size = m2_sizeOf(m2_tblSize))
+        else
+            table.cell(m2_tbl, 0, _r, "—", text_color = color.new(color.gray, 50), text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 1, _r, "",  text_size = m2_sizeOf(m2_tblSize))
+            table.cell(m2_tbl, 2, _r, "",  text_size = m2_sizeOf(m2_tblSize))
+        _r += 1
+
+    // imbalance row
+    string _imb = _nUp + _nDn == 0 ? "—" :
+         str.tostring(_nUp) + " up / " + str.tostring(_nDn) + " dn"
+    color _imbCol = _nUp == _nDn ? color.new(color.gray, 20) :
+         _nUp > _nDn ? m2_aboveCol : m2_belowCol
+
+    table.cell(m2_tbl, 0, _r, "RESTING", text_color = _hdr, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 1, _r, _imb, text_color = _imbCol, text_size = m2_sizeOf(m2_tblSize))
+    table.cell(m2_tbl, 2, _r, "", text_size = m2_sizeOf(m2_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+m2_nearUpNow = array.size(m2_upPx) > 0 ? array.get(m2_upPx, 0) : na
+m2_nearDnNow = array.size(m2_dnPx) > 0 ? array.get(m2_dnPx, 0) : na
+
+alertcondition(not na(m2_nearUpNow) and m2_atr > 0 and (m2_nearUpNow - close) <= m2_atr * 0.25,
+     "Approaching liquidity above", "Price is within a quarter ATR of the nearest unswept level above.")
+
+alertcondition(not na(m2_nearDnNow) and m2_atr > 0 and (close - m2_nearDnNow) <= m2_atr * 0.25,
+     "Approaching liquidity below", "Price is within a quarter ATR of the nearest unswept level below.")

@@ -1,0 +1,385 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-S1D3
+//    S1  AMD Phases
+//    D3  Session Clock
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · S1D3", shorttitle = "QPS1D3", overlay = true, max_lines_count = 500, max_labels_count = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  STARTER 1 · AMD PHASES
+// ───────────────────────────────────────────────────────────────
+//  The market moves through a repeating rhythm. A stretch where
+//  price ranges and positions are built. A stretch where it
+//  pushes through an obvious level and takes out the orders
+//  resting there. Then a stretch where it actually moves.
+//
+//  Accumulation, manipulation, distribution. This shades all
+//  three, on three cycle lengths at once.
+//
+//  The cycles are anchored to midnight in the chosen timezone
+//  rather than rolling with the current bar. That matters: a
+//  rolling window puts the boundaries wherever you happen to be
+//  looking, while an anchored one puts them where everybody
+//  else's are too. The phases are only useful if they are the
+//  same phases other people are trading around.
+//
+//  Draws no table. Safe to combine with any other Meridian piece.
+//  All identifiers namespaced s1_ to avoid collisions.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── TIMEZONE ─────────────────────────────────────────────────
+s1_gTz = "Timezone"
+
+s1_tz = input.string("UTC+0", "Cycle anchor", group = s1_gTz,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Midnight in this timezone is where every cycle starts counting. Change it to match the session that actually drives your instrument -- this matters more than any other setting here.")
+
+// ─── CYCLES ───────────────────────────────────────────────────
+s1_gCyc = "Cycles"
+
+s1_c24 = input.bool(true, "24 hour", group = s1_gCyc, inline = "c1")
+s1_c12 = input.bool(true, "12 hour", group = s1_gCyc, inline = "c1")
+s1_c6  = input.bool(true, "6 hour",  group = s1_gCyc, inline = "c1",
+     tooltip = "All three run at once and overlap. The 24 hour cycle gives the day's shape; the 6 hour one gives the session's.")
+
+s1_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle accumulation gives way to manipulation. Default 50%.")
+
+s1_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = s1_gCyc,
+     tooltip = "How far through a cycle manipulation gives way to distribution. Default 75%.")
+
+// ─── SHADING ──────────────────────────────────────────────────
+s1_gShade = "Shading"
+
+s1_shadeA = input.bool(false, "Shade accumulation", group = s1_gShade, inline = "sh")
+s1_shadeM = input.bool(true,  "Shade manipulation", group = s1_gShade, inline = "sh")
+s1_shadeD = input.bool(false, "Shade distribution", group = s1_gShade, inline = "sh",
+     tooltip = "Manipulation only, by default. Shading all three on all three cycles turns the chart into soup.")
+
+s1_colA = input.color(#5b9cf6, "Accumulation", group = s1_gShade, inline = "cc")
+s1_colM = input.color(#2962ff, "Manipulation", group = s1_gShade, inline = "cc")
+s1_colD = input.color(#c9a84c, "Distribution", group = s1_gShade, inline = "cc")
+
+s1_fade = input.int(95, "Transparency", minval = 80, maxval = 99, group = s1_gShade)
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_gBound = "Boundaries"
+
+s1_showLine = input.bool(true, "Mark phase starts", group = s1_gBound,
+     tooltip = "A vertical line where each phase begins, on each enabled cycle.")
+
+s1_showLbl = input.bool(true, "Label phase starts", group = s1_gBound)
+
+s1_lineCol = input.color(#ffffff, "Line and label", group = s1_gBound)
+s1_lineFade = input.int(60, "Line transparency", minval = 0, maxval = 95, group = s1_gBound)
+s1_lblSize  = input.string("Small", "Label size", options = ["Tiny", "Small", "Normal"], group = s1_gBound)
+
+s1_lookback = input.int(300, "Draw on the last N bars", minval = 20, maxval = 1000, group = s1_gBound,
+     tooltip = "Boundary lines and labels are limited to recent bars so older history stays readable. Shading is unaffected.")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Hours elapsed since midnight in the anchor timezone, as a
+// decimal so half hour cycles resolve correctly.
+s1_hr = hour(time, s1_tz) + minute(time, s1_tz) / 60.0
+
+// Position within a cycle, as a percentage of that cycle.
+s1_posIn(float _cyc) =>
+    float _idx = math.floor(s1_hr / _cyc)
+    float _pos = s1_hr - _idx * _cyc
+    _pos / _cyc * 100.0
+
+// 0 = accumulation, 1 = manipulation, 2 = distribution
+s1_phaseOf(float _cyc) =>
+    float _p = s1_posIn(_cyc)
+    _p < s1_split1 ? 0 : _p < s1_split2 ? 1 : 2
+
+s1_p24 = s1_phaseOf(24.0)
+s1_p12 = s1_phaseOf(12.0)
+s1_p6  = s1_phaseOf(6.0)
+
+s1_colOf(int _ph) =>
+    _ph == 0 ? s1_colA : _ph == 1 ? s1_colM : s1_colD
+
+s1_nameOf(int _ph) =>
+    _ph == 0 ? "A" : _ph == 1 ? "M" : "D"
+
+s1_shadeOn(int _ph) =>
+    _ph == 0 ? s1_shadeA : _ph == 1 ? s1_shadeM : s1_shadeD
+
+// ─── SHADING ──────────────────────────────────────────────────
+color s1_bg24 = s1_c24 and s1_shadeOn(s1_p24) ? color.new(s1_colOf(s1_p24), s1_fade) : na
+color s1_bg12 = s1_c12 and s1_shadeOn(s1_p12) ? color.new(s1_colOf(s1_p12), s1_fade) : na
+color s1_bg6  = s1_c6  and s1_shadeOn(s1_p6)  ? color.new(s1_colOf(s1_p6),  s1_fade) : na
+
+bgcolor(s1_bg24, title = "24H phase")
+bgcolor(s1_bg12, title = "12H phase")
+bgcolor(s1_bg6,  title = "6H phase")
+
+// ─── BOUNDARIES ───────────────────────────────────────────────
+s1_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+// Stacked vertical text, so several cycles marking the same bar
+// stay readable side by side.
+s1_stack(string _cyc, string _ph) =>
+    string _out = ""
+    for i = 0 to str.length(_cyc) - 1
+        _out := _out + str.substring(_cyc, i, i + 1) + "\n"
+    _out + "\n" + _ph
+
+s1_mark(bool _on, float _cyc, int _ph, int _phPrev, string _label) =>
+    if _on and _ph != _phPrev and bar_index >= last_bar_index - s1_lookback
+        if s1_showLine
+            line.new(bar_index, low, bar_index, high,
+                 extend = extend.both,
+                 color  = color.new(s1_lineCol, s1_lineFade),
+                 style  = line.style_dotted,
+                 width  = 1)
+        if s1_showLbl
+            label.new(bar_index, high, s1_stack(_label, s1_nameOf(_ph)),
+                 style     = label.style_none,
+                 textcolor = color.new(s1_lineCol, 30),
+                 size      = s1_sizeOf(s1_lblSize),
+                 yloc      = yloc.abovebar,
+                 textalign = text.align_center)
+    true
+
+if barstate.isconfirmed
+    s1_mark(s1_c24, 24.0, s1_p24, s1_p24[1], "24H")
+    s1_mark(s1_c12, 12.0, s1_p12, s1_p12[1], "12H")
+    s1_mark(s1_c6,   6.0, s1_p6,  s1_p6[1],  "6H")
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(s1_p24 != s1_p24[1], "24H phase changed",
+     "The 24 hour cycle has moved into a new phase.")
+
+alertcondition(s1_p12 == 1 and s1_p12[1] != 1, "12H manipulation started",
+     "The 12 hour cycle has entered its manipulation phase.")
+
+alertcondition(s1_p6 == 1 and s1_p6[1] != 1, "6H manipulation started",
+     "The 6 hour cycle has entered its manipulation phase.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  SIDE 3 · SESSION CLOCK
+// ───────────────────────────────────────────────────────────────
+//  Is a window open, and how long has it got.
+//
+//  Meridian only resolves conditions inside its trading windows.
+//  Outside them the engine still sees sweeps and rejections and
+//  does nothing with them, which is the single most common reason
+//  somebody concludes the instrument is broken.
+//
+//  This says plainly whether a window is live, how much of it is
+//  left, and how long until the next one opens.
+//
+//  It pairs with the Phase Clock. That one counts the AMD cycle
+//  in the anchor timezone; this counts the trading windows in
+//  UTC. Two different clocks, and the instrument runs on both.
+//
+//  The defaults are Meridian's own windows, in UTC. If you have
+//  changed them in the instrument, change them here too or this
+//  will be counting down to windows that do not exist.
+//
+//  Draws one table and optional shading. Namespaced d3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── WINDOWS ──────────────────────────────────────────────────
+d3_gWin = "Windows"
+
+d3_tz = input.string("UTC", "Timezone", group = d3_gWin,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Meridian's windows are expressed in plain UTC. This is a separate setting from the AMD cycle anchor, which defaults to UTC+1.")
+
+d3_w1On   = input.bool(true, "W1", group = d3_gWin, inline = "w1")
+d3_w1From = input.int(0, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w1")
+d3_w1To   = input.int(2, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w1")
+
+d3_w2On   = input.bool(true, "W2", group = d3_gWin, inline = "w2")
+d3_w2From = input.int(4, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w2")
+d3_w2To   = input.int(6, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w2")
+
+d3_w3On   = input.bool(true, "W3", group = d3_gWin, inline = "w3")
+d3_w3From = input.int(19, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w3")
+d3_w3To   = input.int(20, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w3",
+     tooltip = "Defaults are Meridian's shipped windows. Whether they hold on your instrument is a question the Session Report answers.")
+
+// ─── WARNING ──────────────────────────────────────────────────
+d3_gWarn = "Warning"
+
+d3_warnOn  = input.bool(true, "Flag when a window is nearly over", group = d3_gWarn)
+d3_warnMin = input.int(10, "Minutes remaining to flag at", minval = 1, maxval = 120, group = d3_gWarn,
+     tooltip = "A condition resolving in the last few minutes of a window leaves very little room for it to work.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+d3_gDisp = "Display"
+
+d3_shade = input.bool(true, "Shade the live window", group = d3_gDisp)
+d3_fade  = input.int(93, "Shading transparency", minval = 80, maxval = 99, group = d3_gDisp)
+
+d3_tblPos  = input.string("Bottom Left", "Table position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = d3_gDisp)
+d3_tblSize = input.string("Tiny", "Table size", options = ["Tiny", "Small", "Normal"], group = d3_gDisp)
+
+d3_openCol  = input.color(#ffb74d, "Open",    group = d3_gDisp, inline = "c")
+d3_shutCol  = input.color(#9a9da3, "Closed",  group = d3_gDisp, inline = "c")
+d3_warnCol  = input.color(#ffffff, "Warning", group = d3_gDisp, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Minutes elapsed since midnight in the chosen timezone.
+d3_now = hour(time, d3_tz) * 60.0 + minute(time, d3_tz) + second(time, d3_tz) / 60.0
+
+// Windows are half open: from inclusive, to exclusive. A window
+// whose "to" is less than its "from" wraps past midnight.
+d3_inWin(bool _on, int _f, int _t) =>
+    bool _r = false
+    if _on
+        float _fm = _f * 60.0
+        float _tm = _t * 60.0
+        _r := _tm > _fm ? (d3_now >= _fm and d3_now < _tm) :
+             (d3_now >= _fm or d3_now < _tm)
+    _r
+
+// Minutes until a window closes. Only meaningful while inside it.
+d3_leftIn(int _f, int _t) =>
+    float _tm = _t * 60.0
+    float _fm = _f * 60.0
+    float _r = 0.0
+    if _tm > _fm
+        _r := _tm - d3_now
+    else
+        _r := d3_now >= _fm ? (1440.0 - d3_now) + _tm : _tm - d3_now
+    _r
+
+// Minutes until a window opens. Only meaningful while outside it.
+d3_untilIn(int _f) =>
+    float _fm = _f * 60.0
+    _fm > d3_now ? _fm - d3_now : (1440.0 - d3_now) + _fm
+
+d3_clock(float _mins) =>
+    int _m = int(math.round(_mins))
+    _m >= 60 ? str.tostring(math.floor(_m / 60)) + "h " +
+         str.format("{0,number,00}", _m % 60) + "m" :
+         str.tostring(_m) + "m"
+
+d3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+d3_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Middle Right" ? position.middle_right : position.bottom_left
+
+d3_pad(int _h) =>
+    str.format("{0,number,00}", _h) + ":00"
+
+// ─── STATE ────────────────────────────────────────────────────
+d3_in1 = d3_inWin(d3_w1On, d3_w1From, d3_w1To)
+d3_in2 = d3_inWin(d3_w2On, d3_w2From, d3_w2To)
+d3_in3 = d3_inWin(d3_w3On, d3_w3From, d3_w3To)
+
+d3_anyOpen = d3_in1 or d3_in2 or d3_in3
+
+// minutes left on whichever window is live
+d3_liveLeft = d3_in1 ? d3_leftIn(d3_w1From, d3_w1To) :
+     d3_in2 ? d3_leftIn(d3_w2From, d3_w2To) :
+     d3_in3 ? d3_leftIn(d3_w3From, d3_w3To) : na
+
+d3_closingSoon = d3_warnOn and d3_anyOpen and not na(d3_liveLeft) and d3_liveLeft <= d3_warnMin
+
+// soonest window to open, when nothing is live
+float d3_nextIn = na
+int   d3_nextNo = 0
+if not d3_anyOpen
+    if d3_w1On
+        float _u = d3_untilIn(d3_w1From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 1
+    if d3_w2On
+        float _u = d3_untilIn(d3_w2From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 2
+    if d3_w3On
+        float _u = d3_untilIn(d3_w3From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 3
+
+// ─── SHADING ──────────────────────────────────────────────────
+bgcolor(d3_shade and d3_anyOpen ?
+     color.new(d3_closingSoon ? d3_warnCol : d3_openCol, d3_fade) : na,
+     title = "Live window")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table d3_tbl = na
+
+if barstate.islast
+    if na(d3_tbl)
+        d3_tbl := table.new(d3_posOf(d3_tblPos), 3, 5,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = d3_tblSize
+
+    // headline status
+    string _statTxt = d3_anyOpen ? "OPEN" : "CLOSED"
+    color  _statCol = d3_closingSoon ? d3_warnCol : d3_anyOpen ? d3_openCol : d3_shutCol
+    string _statRhs = d3_anyOpen ?
+         (na(d3_liveLeft) ? "" : d3_clock(d3_liveLeft) + " left") :
+         (na(d3_nextIn) ? "no windows on" : "W" + str.tostring(d3_nextNo) + " in " + d3_clock(d3_nextIn))
+
+    table.cell(d3_tbl, 0, 0, "WINDOW", text_color = _hdr, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 1, 0, _statTxt, text_color = _statCol, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 2, 0, _statRhs, text_color = _statCol, text_size = d3_sizeOf(_sz))
+
+    // the three windows
+    bool[] _ons  = array.from(d3_w1On, d3_w2On, d3_w3On)
+    int[]  _frs  = array.from(d3_w1From, d3_w2From, d3_w3From)
+    int[]  _tos  = array.from(d3_w1To, d3_w2To, d3_w3To)
+    bool[] _ins  = array.from(d3_in1, d3_in2, d3_in3)
+
+    for i = 0 to 2
+        int _row = i + 1
+        bool _on = array.get(_ons, i)
+        bool _live = array.get(_ins, i)
+
+        table.cell(d3_tbl, 0, _row, "W" + str.tostring(i + 1),
+             text_color = _on ? color.white : color.new(color.gray, 60), text_size = d3_sizeOf(_sz))
+
+        table.cell(d3_tbl, 1, _row, _on ?
+             d3_pad(array.get(_frs, i)) + "–" + d3_pad(array.get(_tos, i)) : "off",
+             text_color = _on ? (_live ? d3_openCol : color.white) : color.new(color.gray, 60),
+             text_size = d3_sizeOf(_sz))
+
+        string _rhs = not _on ? "" :
+             _live ? d3_clock(d3_leftIn(array.get(_frs, i), array.get(_tos, i))) + " left" :
+             "in " + d3_clock(d3_untilIn(array.get(_frs, i)))
+
+        table.cell(d3_tbl, 2, _row, _rhs,
+             text_color = _live ? (d3_closingSoon ? d3_warnCol : d3_openCol) : color.new(color.gray, 30),
+             text_size = d3_sizeOf(_sz))
+
+    // timezone reminder, because this is the thing that gets set wrong
+    table.cell(d3_tbl, 0, 4, "TZ", text_color = _hdr, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 1, 4, d3_tz, text_color = color.new(color.gray, 20), text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 2, 4, "", text_size = d3_sizeOf(_sz))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(d3_anyOpen and not d3_anyOpen[1], "Window opened",
+     "A Meridian trading window has opened.")
+
+alertcondition(not d3_anyOpen and d3_anyOpen[1], "Window closed",
+     "The Meridian trading window has closed. Conditions will not resolve until the next one.")
+
+alertcondition(d3_closingSoon and not d3_closingSoon[1], "Window closing soon",
+     "The live trading window is nearly over.")

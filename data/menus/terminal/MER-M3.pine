@@ -1,0 +1,185 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-M3
+//    M3  Trend Stack
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · M3", shorttitle = "QPM3", overlay = true)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MAIN 3 · TREND STACK
+// ───────────────────────────────────────────────────────────────
+//  Four averages, and one question: are they in order.
+//
+//  8, 26, 80 and 233. A genuine uptrend means fast above medium,
+//  medium above slow, slow above anchor, in that order and without
+//  exception. Anything else is consolidation.
+//
+//  That definition is deliberately strict. Most trend filters call
+//  anything above a moving average an uptrend, which means they
+//  call almost everything a trend and are therefore useless as a
+//  filter. This one spends most of its time saying CONSOLIDATION,
+//  which is both correct and the reason it is worth having.
+//
+//  It exists here because both instruments use this stack
+//  internally with plotting switched off. Meridian and Recoil both
+//  compute it; neither draws it. This is the visible version.
+//
+//  Draws one table. All identifiers namespaced m3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── LENGTHS ──────────────────────────────────────────────────
+m3_gLen = "Lengths"
+
+m3_fast   = input.int(8,   "Fast",   minval = 1, group = m3_gLen, inline = "a")
+m3_med    = input.int(26,  "Medium", minval = 1, group = m3_gLen, inline = "a")
+m3_slow   = input.int(80,  "Slow",   minval = 1, group = m3_gLen, inline = "b")
+m3_anchor = input.int(233, "Anchor", minval = 1, group = m3_gLen, inline = "b",
+     tooltip = "The defaults are what both instruments use internally. Changing them here changes what this piece reports, not what the instruments do.")
+
+m3_src = input.source(close, "Source", group = m3_gLen)
+
+// ─── CLASSIFIER ───────────────────────────────────────────────
+m3_gCls = "Classifier"
+
+m3_strict = input.bool(true, "Require the full stack in order", group = m3_gCls,
+     tooltip = "On: a trend needs fast > medium > slow > anchor, or the exact inverse. Off: only medium > slow > anchor is required, which finds more trends and weaker ones.")
+
+m3_useSep = input.bool(false, "Require minimum separation", group = m3_gCls,
+     tooltip = "Averages can be technically in order while sitting on top of each other, which is not a trend in any useful sense. This requires them to be meaningfully apart.")
+
+m3_sepAtr = input.float(0.5, "Separation, anchor to fast (x ATR)", minval = 0.1, step = 0.1, group = m3_gCls)
+m3_atrLen = input.int(14, "ATR length", minval = 1, group = m3_gCls)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+m3_gDisp = "Display"
+
+m3_plot   = input.bool(true, "Plot the averages", group = m3_gDisp)
+m3_fill   = input.bool(false, "Fill between fast and anchor", group = m3_gDisp,
+     tooltip = "Tinted by trend state. Readable on a clean chart, heavy on a busy one.")
+m3_shade  = input.bool(false, "Shade the background by state", group = m3_gDisp)
+
+m3_bullCol = input.color(#2f6b41, "Bullish",       group = m3_gDisp, inline = "c")
+m3_bearCol = input.color(#b4342a, "Bearish",       group = m3_gDisp, inline = "c")
+m3_consCol = input.color(#9a9da3, "Consolidation", group = m3_gDisp, inline = "c")
+
+m3_fastCol = input.color(#ffffff, "Fast",   group = m3_gDisp, inline = "e")
+m3_medCol  = input.color(#f5f0c8, "Medium", group = m3_gDisp, inline = "e")
+m3_slowCol = input.color(#ffeb3b, "Slow",   group = m3_gDisp, inline = "e")
+m3_anchCol = input.color(#ff9800, "Anchor", group = m3_gDisp, inline = "e")
+
+// ─── TABLE ────────────────────────────────────────────────────
+m3_gTbl = "Table"
+
+m3_tblOn   = input.bool(true, "Show table", group = m3_gTbl)
+m3_tblPos  = input.string("Top Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = m3_gTbl)
+m3_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = m3_gTbl)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m3_e1 = ta.ema(m3_src, m3_fast)
+m3_e2 = ta.ema(m3_src, m3_med)
+m3_e3 = ta.ema(m3_src, m3_slow)
+m3_e4 = ta.ema(m3_src, m3_anchor)
+
+m3_atr = ta.atr(m3_atrLen)
+
+// separation between the outermost two, as a multiple of ATR
+m3_sep = m3_atr > 0 ? math.abs(m3_e1 - m3_e4) / m3_atr : 0.0
+m3_sepOk = not m3_useSep or m3_sep >= m3_sepAtr
+
+// order tests
+m3_upFull = m3_e1 > m3_e2 and m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnFull = m3_e1 < m3_e2 and m3_e2 < m3_e3 and m3_e3 < m3_e4
+m3_upLoose = m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnLoose = m3_e2 < m3_e3 and m3_e3 < m3_e4
+
+m3_up = (m3_strict ? m3_upFull : m3_upLoose) and m3_sepOk
+m3_dn = (m3_strict ? m3_dnFull : m3_dnLoose) and m3_sepOk
+
+//  1 bullish · -1 bearish · 0 consolidation
+m3_state = m3_up ? 1 : m3_dn ? -1 : 0
+
+m3_stateCol = m3_state == 1 ? m3_bullCol : m3_state == -1 ? m3_bearCol : m3_consCol
+m3_stateTxt = m3_state == 1 ? "BULLISH" : m3_state == -1 ? "BEARISH" : "CONSOLIDATION"
+
+// how long the current state has been live
+var int m3_since = 0
+m3_since := m3_state == m3_state[1] ? m3_since + 1 : 0
+
+// where price sits relative to the stack
+m3_aboveAll = close > m3_e1 and close > m3_e2 and close > m3_e3 and close > m3_e4
+m3_belowAll = close < m3_e1 and close < m3_e2 and close < m3_e3 and close < m3_e4
+m3_posTxt = m3_aboveAll ? "ABOVE ALL" : m3_belowAll ? "BELOW ALL" : "INSIDE"
+m3_posCol = m3_aboveAll ? m3_bullCol : m3_belowAll ? m3_bearCol : m3_consCol
+
+// ─── PLOTS ────────────────────────────────────────────────────
+p1 = plot(m3_plot ? m3_e1 : na, "Fast",   color = m3_fastCol, linewidth = 1)
+p2 = plot(m3_plot ? m3_e2 : na, "Medium", color = m3_medCol,  linewidth = 1)
+p3 = plot(m3_plot ? m3_e3 : na, "Slow",   color = m3_slowCol, linewidth = 1)
+p4 = plot(m3_plot ? m3_e4 : na, "Anchor", color = m3_anchCol, linewidth = 2)
+
+fill(p1, p4, color = m3_fill and m3_plot ? color.new(m3_stateCol, 92) : na, title = "Stack fill")
+
+bgcolor(m3_shade and m3_state ==  1 ? color.new(m3_bullCol, 95) : na, title = "Bullish")
+bgcolor(m3_shade and m3_state == -1 ? color.new(m3_bearCol, 95) : na, title = "Bearish")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table m3_tbl = na
+
+m3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m3_posOf(_p) =>
+    _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.top_right
+
+if m3_tblOn and barstate.islast
+    if na(m3_tbl)
+        m3_tbl := table.new(m3_posOf(m3_tblPos), 3, 6,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(m3_tbl, 0, 0, "TREND", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 0, m3_stateTxt, text_color = m3_stateCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 0, str.tostring(m3_since) + " bars", text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+
+    // the four averages, in stack order, each marked against the one below it
+    string[] _names = array.from("FAST", "MED", "SLOW", "ANCHOR")
+    float[]  _vals  = array.from(m3_e1, m3_e2, m3_e3, m3_e4)
+    color[]  _cols  = array.from(m3_fastCol, m3_medCol, m3_slowCol, m3_anchCol)
+
+    for i = 0 to 3
+        float _v = array.get(_vals, i)
+        string _mark = ""
+        if i < 3
+            float _below = array.get(_vals, i + 1)
+            _mark := _v > _below ? "▲" : _v < _below ? "▼" : "—"
+        table.cell(m3_tbl, 0, i + 1, array.get(_names, i),
+             text_color = array.get(_cols, i), text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 1, i + 1, str.tostring(math.round_to_mintick(_v)),
+             text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 2, i + 1, _mark,
+             text_color = _mark == "▲" ? m3_bullCol : _mark == "▼" ? m3_bearCol : m3_consCol,
+             text_size = m3_sizeOf(m3_tblSize))
+
+    table.cell(m3_tbl, 0, 5, "PRICE", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 5, m3_posTxt, text_color = m3_posCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 5, m3_useSep ? str.tostring(math.round(m3_sep, 2)) + "x" : "",
+         text_color = m3_sepOk ? color.white : m3_consCol, text_size = m3_sizeOf(m3_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m3_state != m3_state[1], "Trend state changed",
+     "The EMA stack has moved into a new state.")
+
+alertcondition(m3_state == 1 and m3_state[1] != 1, "Bullish stack formed",
+     "The full EMA stack has come into bullish order.")
+
+alertcondition(m3_state == -1 and m3_state[1] != -1, "Bearish stack formed",
+     "The full EMA stack has come into bearish order.")

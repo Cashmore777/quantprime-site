@@ -1,0 +1,694 @@
+//@version=6
+// ═════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MER-M3D3T2
+//    M3  Trend Stack
+//    D3  Session Clock
+//    T2  Phase Report
+// ═════════════════════════════════════════════════════════════
+
+indicator("QP Terminal · M3D3T2", shorttitle = "QPM3D3T2", overlay = true)
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  MAIN 3 · TREND STACK
+// ───────────────────────────────────────────────────────────────
+//  Four averages, and one question: are they in order.
+//
+//  8, 26, 80 and 233. A genuine uptrend means fast above medium,
+//  medium above slow, slow above anchor, in that order and without
+//  exception. Anything else is consolidation.
+//
+//  That definition is deliberately strict. Most trend filters call
+//  anything above a moving average an uptrend, which means they
+//  call almost everything a trend and are therefore useless as a
+//  filter. This one spends most of its time saying CONSOLIDATION,
+//  which is both correct and the reason it is worth having.
+//
+//  It exists here because both instruments use this stack
+//  internally with plotting switched off. Meridian and Recoil both
+//  compute it; neither draws it. This is the visible version.
+//
+//  Draws one table. All identifiers namespaced m3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── LENGTHS ──────────────────────────────────────────────────
+m3_gLen = "Lengths"
+
+m3_fast   = input.int(8,   "Fast",   minval = 1, group = m3_gLen, inline = "a")
+m3_med    = input.int(26,  "Medium", minval = 1, group = m3_gLen, inline = "a")
+m3_slow   = input.int(80,  "Slow",   minval = 1, group = m3_gLen, inline = "b")
+m3_anchor = input.int(233, "Anchor", minval = 1, group = m3_gLen, inline = "b",
+     tooltip = "The defaults are what both instruments use internally. Changing them here changes what this piece reports, not what the instruments do.")
+
+m3_src = input.source(close, "Source", group = m3_gLen)
+
+// ─── CLASSIFIER ───────────────────────────────────────────────
+m3_gCls = "Classifier"
+
+m3_strict = input.bool(true, "Require the full stack in order", group = m3_gCls,
+     tooltip = "On: a trend needs fast > medium > slow > anchor, or the exact inverse. Off: only medium > slow > anchor is required, which finds more trends and weaker ones.")
+
+m3_useSep = input.bool(false, "Require minimum separation", group = m3_gCls,
+     tooltip = "Averages can be technically in order while sitting on top of each other, which is not a trend in any useful sense. This requires them to be meaningfully apart.")
+
+m3_sepAtr = input.float(0.5, "Separation, anchor to fast (x ATR)", minval = 0.1, step = 0.1, group = m3_gCls)
+m3_atrLen = input.int(14, "ATR length", minval = 1, group = m3_gCls)
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+m3_gDisp = "Display"
+
+m3_plot   = input.bool(true, "Plot the averages", group = m3_gDisp)
+m3_fill   = input.bool(false, "Fill between fast and anchor", group = m3_gDisp,
+     tooltip = "Tinted by trend state. Readable on a clean chart, heavy on a busy one.")
+m3_shade  = input.bool(false, "Shade the background by state", group = m3_gDisp)
+
+m3_bullCol = input.color(#2f6b41, "Bullish",       group = m3_gDisp, inline = "c")
+m3_bearCol = input.color(#b4342a, "Bearish",       group = m3_gDisp, inline = "c")
+m3_consCol = input.color(#9a9da3, "Consolidation", group = m3_gDisp, inline = "c")
+
+m3_fastCol = input.color(#ffffff, "Fast",   group = m3_gDisp, inline = "e")
+m3_medCol  = input.color(#f5f0c8, "Medium", group = m3_gDisp, inline = "e")
+m3_slowCol = input.color(#ffeb3b, "Slow",   group = m3_gDisp, inline = "e")
+m3_anchCol = input.color(#ff9800, "Anchor", group = m3_gDisp, inline = "e")
+
+// ─── TABLE ────────────────────────────────────────────────────
+m3_gTbl = "Table"
+
+m3_tblOn   = input.bool(true, "Show table", group = m3_gTbl)
+m3_tblPos  = input.string("Top Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = m3_gTbl)
+m3_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = m3_gTbl)
+
+// ─── ENGINE ───────────────────────────────────────────────────
+m3_e1 = ta.ema(m3_src, m3_fast)
+m3_e2 = ta.ema(m3_src, m3_med)
+m3_e3 = ta.ema(m3_src, m3_slow)
+m3_e4 = ta.ema(m3_src, m3_anchor)
+
+m3_atr = ta.atr(m3_atrLen)
+
+// separation between the outermost two, as a multiple of ATR
+m3_sep = m3_atr > 0 ? math.abs(m3_e1 - m3_e4) / m3_atr : 0.0
+m3_sepOk = not m3_useSep or m3_sep >= m3_sepAtr
+
+// order tests
+m3_upFull = m3_e1 > m3_e2 and m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnFull = m3_e1 < m3_e2 and m3_e2 < m3_e3 and m3_e3 < m3_e4
+m3_upLoose = m3_e2 > m3_e3 and m3_e3 > m3_e4
+m3_dnLoose = m3_e2 < m3_e3 and m3_e3 < m3_e4
+
+m3_up = (m3_strict ? m3_upFull : m3_upLoose) and m3_sepOk
+m3_dn = (m3_strict ? m3_dnFull : m3_dnLoose) and m3_sepOk
+
+//  1 bullish · -1 bearish · 0 consolidation
+m3_state = m3_up ? 1 : m3_dn ? -1 : 0
+
+m3_stateCol = m3_state == 1 ? m3_bullCol : m3_state == -1 ? m3_bearCol : m3_consCol
+m3_stateTxt = m3_state == 1 ? "BULLISH" : m3_state == -1 ? "BEARISH" : "CONSOLIDATION"
+
+// how long the current state has been live
+var int m3_since = 0
+m3_since := m3_state == m3_state[1] ? m3_since + 1 : 0
+
+// where price sits relative to the stack
+m3_aboveAll = close > m3_e1 and close > m3_e2 and close > m3_e3 and close > m3_e4
+m3_belowAll = close < m3_e1 and close < m3_e2 and close < m3_e3 and close < m3_e4
+m3_posTxt = m3_aboveAll ? "ABOVE ALL" : m3_belowAll ? "BELOW ALL" : "INSIDE"
+m3_posCol = m3_aboveAll ? m3_bullCol : m3_belowAll ? m3_bearCol : m3_consCol
+
+// ─── PLOTS ────────────────────────────────────────────────────
+p1 = plot(m3_plot ? m3_e1 : na, "Fast",   color = m3_fastCol, linewidth = 1)
+p2 = plot(m3_plot ? m3_e2 : na, "Medium", color = m3_medCol,  linewidth = 1)
+p3 = plot(m3_plot ? m3_e3 : na, "Slow",   color = m3_slowCol, linewidth = 1)
+p4 = plot(m3_plot ? m3_e4 : na, "Anchor", color = m3_anchCol, linewidth = 2)
+
+fill(p1, p4, color = m3_fill and m3_plot ? color.new(m3_stateCol, 92) : na, title = "Stack fill")
+
+bgcolor(m3_shade and m3_state ==  1 ? color.new(m3_bullCol, 95) : na, title = "Bullish")
+bgcolor(m3_shade and m3_state == -1 ? color.new(m3_bearCol, 95) : na, title = "Bearish")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table m3_tbl = na
+
+m3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+m3_posOf(_p) =>
+    _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.top_right
+
+if m3_tblOn and barstate.islast
+    if na(m3_tbl)
+        m3_tbl := table.new(m3_posOf(m3_tblPos), 3, 6,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+
+    table.cell(m3_tbl, 0, 0, "TREND", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 0, m3_stateTxt, text_color = m3_stateCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 0, str.tostring(m3_since) + " bars", text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+
+    // the four averages, in stack order, each marked against the one below it
+    string[] _names = array.from("FAST", "MED", "SLOW", "ANCHOR")
+    float[]  _vals  = array.from(m3_e1, m3_e2, m3_e3, m3_e4)
+    color[]  _cols  = array.from(m3_fastCol, m3_medCol, m3_slowCol, m3_anchCol)
+
+    for i = 0 to 3
+        float _v = array.get(_vals, i)
+        string _mark = ""
+        if i < 3
+            float _below = array.get(_vals, i + 1)
+            _mark := _v > _below ? "▲" : _v < _below ? "▼" : "—"
+        table.cell(m3_tbl, 0, i + 1, array.get(_names, i),
+             text_color = array.get(_cols, i), text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 1, i + 1, str.tostring(math.round_to_mintick(_v)),
+             text_color = color.white, text_size = m3_sizeOf(m3_tblSize))
+        table.cell(m3_tbl, 2, i + 1, _mark,
+             text_color = _mark == "▲" ? m3_bullCol : _mark == "▼" ? m3_bearCol : m3_consCol,
+             text_size = m3_sizeOf(m3_tblSize))
+
+    table.cell(m3_tbl, 0, 5, "PRICE", text_color = _hdr, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 1, 5, m3_posTxt, text_color = m3_posCol, text_size = m3_sizeOf(m3_tblSize))
+    table.cell(m3_tbl, 2, 5, m3_useSep ? str.tostring(math.round(m3_sep, 2)) + "x" : "",
+         text_color = m3_sepOk ? color.white : m3_consCol, text_size = m3_sizeOf(m3_tblSize))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(m3_state != m3_state[1], "Trend state changed",
+     "The EMA stack has moved into a new state.")
+
+alertcondition(m3_state == 1 and m3_state[1] != 1, "Bullish stack formed",
+     "The full EMA stack has come into bullish order.")
+
+alertcondition(m3_state == -1 and m3_state[1] != -1, "Bearish stack formed",
+     "The full EMA stack has come into bearish order.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  SIDE 3 · SESSION CLOCK
+// ───────────────────────────────────────────────────────────────
+//  Is a window open, and how long has it got.
+//
+//  Meridian only resolves conditions inside its trading windows.
+//  Outside them the engine still sees sweeps and rejections and
+//  does nothing with them, which is the single most common reason
+//  somebody concludes the instrument is broken.
+//
+//  This says plainly whether a window is live, how much of it is
+//  left, and how long until the next one opens.
+//
+//  It pairs with the Phase Clock. That one counts the AMD cycle
+//  in the anchor timezone; this counts the trading windows in
+//  UTC. Two different clocks, and the instrument runs on both.
+//
+//  The defaults are Meridian's own windows, in UTC. If you have
+//  changed them in the instrument, change them here too or this
+//  will be counting down to windows that do not exist.
+//
+//  Draws one table and optional shading. Namespaced d3_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── WINDOWS ──────────────────────────────────────────────────
+d3_gWin = "Windows"
+
+d3_tz = input.string("UTC", "Timezone", group = d3_gWin,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Meridian's windows are expressed in plain UTC. This is a separate setting from the AMD cycle anchor, which defaults to UTC+1.")
+
+d3_w1On   = input.bool(true, "W1", group = d3_gWin, inline = "w1")
+d3_w1From = input.int(0, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w1")
+d3_w1To   = input.int(2, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w1")
+
+d3_w2On   = input.bool(true, "W2", group = d3_gWin, inline = "w2")
+d3_w2From = input.int(4, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w2")
+d3_w2To   = input.int(6, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w2")
+
+d3_w3On   = input.bool(true, "W3", group = d3_gWin, inline = "w3")
+d3_w3From = input.int(19, "from", minval = 0, maxval = 23, group = d3_gWin, inline = "w3")
+d3_w3To   = input.int(20, "to",   minval = 1, maxval = 24, group = d3_gWin, inline = "w3",
+     tooltip = "Defaults are Meridian's shipped windows. Whether they hold on your instrument is a question the Session Report answers.")
+
+// ─── WARNING ──────────────────────────────────────────────────
+d3_gWarn = "Warning"
+
+d3_warnOn  = input.bool(true, "Flag when a window is nearly over", group = d3_gWarn)
+d3_warnMin = input.int(10, "Minutes remaining to flag at", minval = 1, maxval = 120, group = d3_gWarn,
+     tooltip = "A condition resolving in the last few minutes of a window leaves very little room for it to work.")
+
+// ─── DISPLAY ──────────────────────────────────────────────────
+d3_gDisp = "Display"
+
+d3_shade = input.bool(true, "Shade the live window", group = d3_gDisp)
+d3_fade  = input.int(93, "Shading transparency", minval = 80, maxval = 99, group = d3_gDisp)
+
+d3_tblPos  = input.string("Bottom Left", "Table position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = d3_gDisp)
+d3_tblSize = input.string("Tiny", "Table size", options = ["Tiny", "Small", "Normal"], group = d3_gDisp)
+
+d3_openCol  = input.color(#ffb74d, "Open",    group = d3_gDisp, inline = "c")
+d3_shutCol  = input.color(#9a9da3, "Closed",  group = d3_gDisp, inline = "c")
+d3_warnCol  = input.color(#ffffff, "Warning", group = d3_gDisp, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+// Minutes elapsed since midnight in the chosen timezone.
+d3_now = hour(time, d3_tz) * 60.0 + minute(time, d3_tz) + second(time, d3_tz) / 60.0
+
+// Windows are half open: from inclusive, to exclusive. A window
+// whose "to" is less than its "from" wraps past midnight.
+d3_inWin(bool _on, int _f, int _t) =>
+    bool _r = false
+    if _on
+        float _fm = _f * 60.0
+        float _tm = _t * 60.0
+        _r := _tm > _fm ? (d3_now >= _fm and d3_now < _tm) :
+             (d3_now >= _fm or d3_now < _tm)
+    _r
+
+// Minutes until a window closes. Only meaningful while inside it.
+d3_leftIn(int _f, int _t) =>
+    float _tm = _t * 60.0
+    float _fm = _f * 60.0
+    float _r = 0.0
+    if _tm > _fm
+        _r := _tm - d3_now
+    else
+        _r := d3_now >= _fm ? (1440.0 - d3_now) + _tm : _tm - d3_now
+    _r
+
+// Minutes until a window opens. Only meaningful while outside it.
+d3_untilIn(int _f) =>
+    float _fm = _f * 60.0
+    _fm > d3_now ? _fm - d3_now : (1440.0 - d3_now) + _fm
+
+d3_clock(float _mins) =>
+    int _m = int(math.round(_mins))
+    _m >= 60 ? str.tostring(math.floor(_m / 60)) + "h " +
+         str.format("{0,number,00}", _m % 60) + "m" :
+         str.tostring(_m) + "m"
+
+d3_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+d3_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Right" ? position.bottom_right :
+     _p == "Middle Right" ? position.middle_right : position.bottom_left
+
+d3_pad(int _h) =>
+    str.format("{0,number,00}", _h) + ":00"
+
+// ─── STATE ────────────────────────────────────────────────────
+d3_in1 = d3_inWin(d3_w1On, d3_w1From, d3_w1To)
+d3_in2 = d3_inWin(d3_w2On, d3_w2From, d3_w2To)
+d3_in3 = d3_inWin(d3_w3On, d3_w3From, d3_w3To)
+
+d3_anyOpen = d3_in1 or d3_in2 or d3_in3
+
+// minutes left on whichever window is live
+d3_liveLeft = d3_in1 ? d3_leftIn(d3_w1From, d3_w1To) :
+     d3_in2 ? d3_leftIn(d3_w2From, d3_w2To) :
+     d3_in3 ? d3_leftIn(d3_w3From, d3_w3To) : na
+
+d3_closingSoon = d3_warnOn and d3_anyOpen and not na(d3_liveLeft) and d3_liveLeft <= d3_warnMin
+
+// soonest window to open, when nothing is live
+float d3_nextIn = na
+int   d3_nextNo = 0
+if not d3_anyOpen
+    if d3_w1On
+        float _u = d3_untilIn(d3_w1From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 1
+    if d3_w2On
+        float _u = d3_untilIn(d3_w2From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 2
+    if d3_w3On
+        float _u = d3_untilIn(d3_w3From)
+        if na(d3_nextIn) or _u < d3_nextIn
+            d3_nextIn := _u
+            d3_nextNo := 3
+
+// ─── SHADING ──────────────────────────────────────────────────
+bgcolor(d3_shade and d3_anyOpen ?
+     color.new(d3_closingSoon ? d3_warnCol : d3_openCol, d3_fade) : na,
+     title = "Live window")
+
+// ─── TABLE ────────────────────────────────────────────────────
+var table d3_tbl = na
+
+if barstate.islast
+    if na(d3_tbl)
+        d3_tbl := table.new(d3_posOf(d3_tblPos), 3, 5,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = d3_tblSize
+
+    // headline status
+    string _statTxt = d3_anyOpen ? "OPEN" : "CLOSED"
+    color  _statCol = d3_closingSoon ? d3_warnCol : d3_anyOpen ? d3_openCol : d3_shutCol
+    string _statRhs = d3_anyOpen ?
+         (na(d3_liveLeft) ? "" : d3_clock(d3_liveLeft) + " left") :
+         (na(d3_nextIn) ? "no windows on" : "W" + str.tostring(d3_nextNo) + " in " + d3_clock(d3_nextIn))
+
+    table.cell(d3_tbl, 0, 0, "WINDOW", text_color = _hdr, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 1, 0, _statTxt, text_color = _statCol, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 2, 0, _statRhs, text_color = _statCol, text_size = d3_sizeOf(_sz))
+
+    // the three windows
+    bool[] _ons  = array.from(d3_w1On, d3_w2On, d3_w3On)
+    int[]  _frs  = array.from(d3_w1From, d3_w2From, d3_w3From)
+    int[]  _tos  = array.from(d3_w1To, d3_w2To, d3_w3To)
+    bool[] _ins  = array.from(d3_in1, d3_in2, d3_in3)
+
+    for i = 0 to 2
+        int _row = i + 1
+        bool _on = array.get(_ons, i)
+        bool _live = array.get(_ins, i)
+
+        table.cell(d3_tbl, 0, _row, "W" + str.tostring(i + 1),
+             text_color = _on ? color.white : color.new(color.gray, 60), text_size = d3_sizeOf(_sz))
+
+        table.cell(d3_tbl, 1, _row, _on ?
+             d3_pad(array.get(_frs, i)) + "–" + d3_pad(array.get(_tos, i)) : "off",
+             text_color = _on ? (_live ? d3_openCol : color.white) : color.new(color.gray, 60),
+             text_size = d3_sizeOf(_sz))
+
+        string _rhs = not _on ? "" :
+             _live ? d3_clock(d3_leftIn(array.get(_frs, i), array.get(_tos, i))) + " left" :
+             "in " + d3_clock(d3_untilIn(array.get(_frs, i)))
+
+        table.cell(d3_tbl, 2, _row, _rhs,
+             text_color = _live ? (d3_closingSoon ? d3_warnCol : d3_openCol) : color.new(color.gray, 30),
+             text_size = d3_sizeOf(_sz))
+
+    // timezone reminder, because this is the thing that gets set wrong
+    table.cell(d3_tbl, 0, 4, "TZ", text_color = _hdr, text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 1, 4, d3_tz, text_color = color.new(color.gray, 20), text_size = d3_sizeOf(_sz))
+    table.cell(d3_tbl, 2, 4, "", text_size = d3_sizeOf(_sz))
+
+// ─── ALERTS ───────────────────────────────────────────────────
+alertcondition(d3_anyOpen and not d3_anyOpen[1], "Window opened",
+     "A Meridian trading window has opened.")
+
+alertcondition(not d3_anyOpen and d3_anyOpen[1], "Window closed",
+     "The Meridian trading window has closed. Conditions will not resolve until the next one.")
+
+alertcondition(d3_closingSoon and not d3_closingSoon[1], "Window closing soon",
+     "The live trading window is nearly over.")
+
+// ═══════════════════════════════════════════════════════════════
+//  QUANT PRIME — BUILD MENU · TERMINAL TIER
+//  DESSERT 2 · PHASE REPORT
+// ───────────────────────────────────────────────────────────────
+//  Does the cycle mean anything on your instrument.
+//
+//  Meridian divides every cycle into three phases. Accumulation,
+//  where price is supposed to range. Manipulation, where it pushes
+//  through a level to take the orders sitting there. Distribution,
+//  where it actually moves.
+//
+//  That is a claim about how your instrument behaves, and it is
+//  testable. If the phases are real, they should look different
+//  from each other in the data. Manipulation should produce more
+//  levels being taken. Distribution should produce the largest
+//  moves. Accumulation should produce the smallest.
+//
+//  If all three phases look the same, the cycle is not describing
+//  your instrument and the phase filter is adding nothing.
+//
+//  Four measurements per phase:
+//
+//    RANGE    average high to low, in ATR, so it compares
+//    BODY     how much of that range was directional
+//    BREAKS   levels taken per hundred bars in that phase
+//    MOVE     average absolute close to close
+//
+//  Rows below the minimum sample are left ungraded.
+//
+//  Draws one table. Namespaced t2_.
+// ═══════════════════════════════════════════════════════════════
+
+// ─── CYCLE ────────────────────────────────────────────────────
+t2_gCyc = "Cycle"
+
+t2_tz = input.string("UTC+1", "Cycle anchor", group = t2_gCyc,
+     options = ["UTC-12","UTC-11","UTC-10","UTC-9","UTC-8","UTC-7","UTC-6","UTC-5","UTC-4","UTC-3","UTC-2","UTC-1",
+                "UTC+0","UTC+1","UTC+2","UTC+3","UTC+4","UTC+5","UTC+6","UTC+7","UTC+8","UTC+9","UTC+10","UTC+11","UTC+12"],
+     tooltip = "Must match the cycle anchor in your Meridian settings, which defaults to UTC+1. If these disagree the test is measuring phases the instrument is not using.")
+
+t2_cyc = input.string("12 hour", "Cycle length", options = ["12 hour", "6 hour", "3 hour"], group = t2_gCyc,
+     tooltip = "One cycle at a time, so each phase gets the full sample rather than three thin ones.")
+
+t2_split1 = input.float(50.0, "Accumulation ends at %", minval = 10.0, maxval = 90.0, step = 5.0, group = t2_gCyc)
+t2_split2 = input.float(75.0, "Manipulation ends at %", minval = 20.0, maxval = 95.0, step = 5.0, group = t2_gCyc,
+     tooltip = "Must match your Meridian settings.")
+
+// ─── BREAKS ───────────────────────────────────────────────────
+t2_gBrk = "Level breaks"
+
+t2_brkOn = input.bool(true, "Count levels taken per phase", group = t2_gBrk,
+     tooltip = "The manipulation phase is supposed to be where levels get taken. This tests that directly, and it is the single most informative column in the table.")
+
+t2_brkTf = input.timeframe("30", "Level timeframe", group = t2_gBrk)
+t2_pvL   = input.int(4, "L", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+t2_pvR   = input.int(2, "R", minval = 1, maxval = 20, group = t2_gBrk, inline = "p")
+
+// ─── TEST ─────────────────────────────────────────────────────
+t2_gTest = "Test"
+
+t2_atrLen = input.int(14, "ATR length", minval = 1, group = t2_gTest,
+     tooltip = "Range and move are expressed as multiples of ATR so the numbers mean the same thing on any instrument.")
+
+t2_minSample = input.int(30, "Minimum bars per phase", minval = 10, maxval = 500, group = t2_gTest)
+
+// ─── TABLE ────────────────────────────────────────────────────
+t2_gTbl = "Table"
+
+t2_legend  = input.bool(true, "Show the plain english summary", group = t2_gTbl)
+t2_tblPos  = input.string("Bottom Right", "Position", options = ["Top Right", "Top Left", "Bottom Right", "Bottom Left", "Middle Right"], group = t2_gTbl)
+t2_tblSize = input.string("Tiny", "Size", options = ["Tiny", "Small", "Normal"], group = t2_gTbl)
+
+t2_hiCol   = input.color(#2f6b41, "Highest", group = t2_gTbl, inline = "c")
+t2_loCol   = input.color(#b4342a, "Lowest",  group = t2_gTbl, inline = "c")
+t2_thinCol = input.color(#9a9da3, "Thin",    group = t2_gTbl, inline = "c")
+
+// ─── ENGINE ───────────────────────────────────────────────────
+t2_cycHrs = t2_cyc == "12 hour" ? 12.0 : t2_cyc == "6 hour" ? 6.0 : 3.0
+
+t2_hr = hour(time, t2_tz) + minute(time, t2_tz) / 60.0
+
+t2_pos = (t2_hr - math.floor(t2_hr / t2_cycHrs) * t2_cycHrs) / t2_cycHrs * 100.0
+
+// 0 accumulation · 1 manipulation · 2 distribution
+t2_phase = t2_pos < t2_split1 ? 0 : t2_pos < t2_split2 ? 1 : 2
+
+t2_atr = ta.atr(t2_atrLen)
+
+// ─── TALLIES ──────────────────────────────────────────────────
+var int[]   t2_bars  = array.from(0, 0, 0)
+var float[] t2_range = array.from(0.0, 0.0, 0.0)
+var float[] t2_body  = array.from(0.0, 0.0, 0.0)
+var float[] t2_move  = array.from(0.0, 0.0, 0.0)
+var int[]   t2_brks  = array.from(0, 0, 0)
+
+// levels awaiting a break
+type T2Lv
+    float px
+    bool  isHigh
+    bool  gone
+
+var T2Lv[] t2_lv = array.new<T2Lv>()
+
+[t2_ph, t2_pl] = request.security(syminfo.tickerid, t2_brkTf,
+     [ta.pivothigh(high, t2_pvL, t2_pvR), ta.pivotlow(low, t2_pvL, t2_pvR)], lookahead = barmerge.lookahead_off)
+
+t2_known(float _px) =>
+    bool _f = false
+    int _n = array.size(t2_lv)
+    if _n > 0
+        for i = 0 to _n - 1
+            T2Lv _l = array.get(t2_lv, i)
+            if not _l.gone and math.abs(_l.px - _px) < syminfo.mintick * 2
+                _f := true
+    _f
+
+if barstate.isconfirmed and t2_atr > 0
+    int _p = t2_phase
+
+    array.set(t2_bars,  _p, array.get(t2_bars,  _p) + 1)
+    array.set(t2_range, _p, array.get(t2_range, _p) + (high - low) / t2_atr)
+    array.set(t2_body,  _p, array.get(t2_body,  _p) + math.abs(close - open) / t2_atr)
+    array.set(t2_move,  _p, array.get(t2_move,  _p) + math.abs(close - close[1]) / t2_atr)
+
+    if t2_brkOn
+        if not na(t2_ph) and not t2_known(t2_ph)
+            array.push(t2_lv, T2Lv.new(t2_ph, true, false))
+        if not na(t2_pl) and not t2_known(t2_pl)
+            array.push(t2_lv, T2Lv.new(t2_pl, false, false))
+        while array.size(t2_lv) > 300
+            array.shift(t2_lv)
+
+        int _n = array.size(t2_lv)
+        if _n > 0
+            for i = 0 to _n - 1
+                T2Lv _l = array.get(t2_lv, i)
+                if not _l.gone and (_l.isHigh ? high >= _l.px : low <= _l.px)
+                    _l.gone := true
+                    array.set(t2_brks, _p, array.get(t2_brks, _p) + 1)
+
+// ─── TABLE ────────────────────────────────────────────────────
+// Which phase leads or trails a column. Only phases with enough
+// bars are eligible, so a thin phase cannot win by accident.
+// Declared at top level because Pine does not permit function
+// declarations inside an if block.
+t2_lead(array<float> _a) =>
+    int _best = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _best == -1 or array.get(_a, i) > array.get(_a, _best)
+                _best := i
+    _best
+
+t2_trail(array<float> _a) =>
+    int _worst = -1
+    for i = 0 to 2
+        if array.get(t2_bars, i) >= t2_minSample
+            if _worst == -1 or array.get(_a, i) < array.get(_a, _worst)
+                _worst := i
+    _worst
+
+t2_sizeOf(_s) =>
+    _s == "Tiny" ? size.tiny : _s == "Small" ? size.small : size.normal
+
+t2_posOf(_p) =>
+    _p == "Top Right" ? position.top_right :
+     _p == "Top Left" ? position.top_left :
+     _p == "Bottom Left" ? position.bottom_left :
+     _p == "Middle Right" ? position.middle_right : position.bottom_right
+
+var table t2_tbl = na
+
+if barstate.islast
+    int _rows = 5 + (t2_legend ? 2 : 0)
+    if na(t2_tbl)
+        t2_tbl := table.new(t2_posOf(t2_tblPos), 5, _rows,
+             bgcolor = color.new(color.black, 20),
+             border_color = color.new(color.gray, 60),
+             border_width = 1)
+
+    color _hdr = color.new(color.gray, 20)
+    string _sz = t2_tblSize
+
+    table.cell(t2_tbl, 0, 0, "PHASE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 0, "BARS",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 0, "RANGE",  text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 0, "MOVE",   text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 0, "BREAKS", text_color = _hdr, text_size = t2_sizeOf(_sz))
+
+    string[] _names = array.from("Accum", "Manip", "Distr")
+
+    // averages, and which phase leads each column
+    float[] _avgR = array.from(0.0, 0.0, 0.0)
+    float[] _avgM = array.from(0.0, 0.0, 0.0)
+    float[] _avgB = array.from(0.0, 0.0, 0.0)
+
+    for i = 0 to 2
+        int _n = array.get(t2_bars, i)
+        if _n > 0
+            array.set(_avgR, i, array.get(t2_range, i) / _n)
+            array.set(_avgM, i, array.get(t2_move, i) / _n)
+            array.set(_avgB, i, array.get(t2_brks, i) / _n * 100.0)
+
+    int _rHi = t2_lead(_avgR)
+    int _rLo = t2_trail(_avgR)
+    int _mHi = t2_lead(_avgM)
+    int _mLo = t2_trail(_avgM)
+    int _bHi = t2_lead(_avgB)
+
+    for i = 0 to 2
+        int _row = i + 1
+        int _n = array.get(t2_bars, i)
+        bool _thin = _n < t2_minSample
+
+        table.cell(t2_tbl, 0, _row, array.get(_names, i),
+             text_color = color.white, text_size = t2_sizeOf(_sz))
+        table.cell(t2_tbl, 1, _row, str.tostring(_n),
+             text_color = _thin ? t2_thinCol : color.white, text_size = t2_sizeOf(_sz))
+
+        if _thin
+            table.cell(t2_tbl, 2, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, "thin", text_color = t2_thinCol, text_size = t2_sizeOf(_sz))
+        else
+            table.cell(t2_tbl, 2, _row, str.tostring(math.round(array.get(_avgR, i), 2)) + "x",
+                 text_color = i == _rHi ? t2_hiCol : i == _rLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 3, _row, str.tostring(math.round(array.get(_avgM, i), 2)) + "x",
+                 text_color = i == _mHi ? t2_hiCol : i == _mLo ? t2_loCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+            table.cell(t2_tbl, 4, _row, not t2_brkOn ? "off" :
+                 str.tostring(math.round(array.get(_avgB, i), 1)),
+                 text_color = not t2_brkOn ? t2_thinCol : i == _bHi ? t2_hiCol : color.white,
+                 text_size = t2_sizeOf(_sz))
+
+    // spread across the three phases, as a check on whether the
+    // cycle is describing anything at all
+    float _spread = 0.0
+    bool  _enough = array.get(t2_bars, 0) >= t2_minSample and
+         array.get(t2_bars, 1) >= t2_minSample and array.get(t2_bars, 2) >= t2_minSample
+    if _enough
+        float _mx = math.max(array.get(_avgR, 0), math.max(array.get(_avgR, 1), array.get(_avgR, 2)))
+        float _mn = math.min(array.get(_avgR, 0), math.min(array.get(_avgR, 1), array.get(_avgR, 2)))
+        _spread := _mn > 0 ? (_mx - _mn) / _mn * 100.0 : 0.0
+
+    table.cell(t2_tbl, 0, 4, "SPREAD", text_color = _hdr, text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 1, 4, not _enough ? "thin" :
+         str.tostring(math.round(_spread)) + "%",
+         text_color = not _enough ? t2_thinCol : _spread >= 15 ? t2_hiCol : t2_loCol,
+         text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 2, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 3, 4, "", text_size = t2_sizeOf(_sz))
+    table.cell(t2_tbl, 4, 4, "", text_size = t2_sizeOf(_sz))
+
+    // ─── PLAIN ENGLISH ────────────────────────────────────────
+    if t2_legend
+        int _lr = _rows - 2
+
+        string _v = ""
+        color  _vc = t2_thinCol
+
+        if not _enough
+            _v := "Not enough bars in every phase yet — use more history"
+        else if _spread < 15
+            _vc := t2_loCol
+            _v := "The three phases look alike — the cycle adds little here"
+        else
+            _vc := t2_hiCol
+            string _big = array.get(_names, _rHi)
+            string _brk = t2_brkOn and _bHi >= 0 ? array.get(_names, _bHi) : ""
+            _v := _brk == "" ?
+                 "Phases differ — " + _big + " produces the largest bars" :
+                 "Phases differ — " + _big + " moves most, " + _brk + " breaks most levels"
+
+        table.cell(t2_tbl, 0, _lr, _v, text_color = _vc,
+             text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _lr, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _lr, 4, _lr)
+
+        table.cell(t2_tbl, 0, _rows - 1,
+             "RANGE and MOVE in ATR   ·   BREAKS per 100 bars   ·   SPREAD = how different the phases are",
+             text_color = t2_thinCol, text_size = t2_sizeOf(_sz), text_halign = text.align_center)
+        for c = 1 to 4
+            table.cell(t2_tbl, c, _rows - 1, "", text_size = t2_sizeOf(_sz))
+        table.merge_cells(t2_tbl, 0, _rows - 1, 4, _rows - 1)
