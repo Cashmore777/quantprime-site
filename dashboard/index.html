@@ -16708,7 +16708,7 @@ function quickEditUser(email) {
   document.getElementById('tier-update-email').scrollIntoView({ behavior: 'smooth' });
 }
 
-// Update user tier
+// Update user tier (via backend API - syncs Brevo lists properly)
 async function updateUserTier() {
   const email = document.getElementById('tier-update-email').value.trim();
   const newTier = document.getElementById('tier-update-tier').value;
@@ -16719,21 +16719,28 @@ async function updateUserTier() {
     return;
   }
   
+  resultEl.innerHTML = '<span style="color: var(--text-2);">Updating...</span>';
+  
   try {
-    const { data, error } = await supabaseClient
-      .from('profiles')
-      .update({ tier: newTier, updated_at: new Date().toISOString() })
-      .eq('email', email)
-      .select();
+    // Use backend API to ensure Brevo lists sync properly
+    const response = await fetch('https://dashboard.themoneyprinter.uk/api/admin/set-tier', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        email, 
+        newTier,
+        reason: 'dashboard_admin_update'
+      })
+    });
     
-    if (error) throw error;
+    const result = await response.json();
     
-    if (!data || data.length === 0) {
-      resultEl.innerHTML = '<span style="color: var(--danger);">User not found.</span>';
-      return;
+    if (!response.ok) {
+      throw new Error(result.error || 'Update failed');
     }
     
-    resultEl.innerHTML = `<span style="color: var(--success);">✓ Updated ${email} to ${newTier.toUpperCase()}</span>`;
+    resultEl.innerHTML = `<span style="color: var(--success);">✓ Updated ${email}: ${result.oldTier} → ${result.newTier}</span>
+      <br><span style="color: var(--text-3); font-size: 11px;">Brevo lists synced ✓</span>`;
     loadAdminStats();
   } catch (e) {
     resultEl.innerHTML = '<span style="color: var(--danger);">Error: ' + e.message + '</span>';
