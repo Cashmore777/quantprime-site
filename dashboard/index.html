@@ -17650,6 +17650,8 @@ async function submitPerformanceReport() {
   btn.textContent = 'Analyzing...';
   
   try {
+    console.log('[Perf] Starting upload, file:', perfSelectedFile.name, perfSelectedFile.size);
+    
     // Gather profile data
     const profile = {
       primary_strategy: document.getElementById('pq-strategy').value,
@@ -17668,11 +17670,22 @@ async function submitPerformanceReport() {
     formData.append('profile', JSON.stringify(profile));
     
     // Get auth token
-    const { data: { session } } = await supabaseClient.auth.getSession();
+    console.log('[Perf] Getting session...');
+    const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+    
+    if (sessionError) {
+      console.error('[Perf] Session error:', sessionError);
+      showToast('Session error: ' + sessionError.message, 'error');
+      return;
+    }
+    
     if (!session) {
+      console.error('[Perf] No session found');
       showToast('Please log in to upload reports', 'error');
       return;
     }
+    
+    console.log('[Perf] Session found, uploading to:', PERF_API_URL + '/upload');
     
     // Upload to API
     const response = await fetch(PERF_API_URL + '/upload', {
@@ -17683,12 +17696,16 @@ async function submitPerformanceReport() {
       body: formData
     });
     
+    console.log('[Perf] Response status:', response.status);
+    
     if (!response.ok) {
       const err = await response.json();
+      console.error('[Perf] API error:', err);
       throw new Error(err.detail || 'Upload failed');
     }
     
     const result = await response.json();
+    console.log('[Perf] Success:', result);
     perfCurrentReport = result;
     
     // Render results
