@@ -7002,7 +7002,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <div class="nav-section-label ascension-label">Ascension</div>
       <button class="nav-item locked" data-view="academy" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg></span>Academy<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
       <button class="nav-item locked" data-view="notebook" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>Journal<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
-      <button class="nav-item locked" data-view="mentorship" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>Mentorship<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
+      <button class="nav-item locked" data-view="mentorship" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Book Call<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
       <button class="nav-item locked" data-view="automation" data-locked="true"><span class="icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></span>Automation<span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span></button>
     </div>
     
@@ -7496,8 +7496,79 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- OPERATOR GUIDE PANEL -->
     <div class="instrument-panel" id="recoil-panel-guide">
-      <div class="panel" style="min-height: 600px;">
-        <iframe src="/docs/guides/recoil-operator-guide.html" style="width: 100%; height: 800px; border: none; border-radius: 8px;"></iframe>
+      <div class="guide-content">
+        <h1 class="gold">Recoil</h1>
+        <p class="subtitle">A volatility fade instrument. It measures when a candle is statistically exceptional, marks where the level sits, and reports what price has historically done afterwards. It does not tell you to buy or sell.</p>
+        <p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+        <h2>What it measures</h2>
+        <p>Every candle's true range is divided by the average true range of the last eight candles. That ratio answers one question: how big is this candle compared to a normal recent candle? A ratio of 1.0 is exactly average. 3.0 is three times the recent norm.</p>
+        <p>The ratio places the candle in one of eight bands:</p>
+        <table>
+          <thead><tr><th>Band</th><th>Name</th><th>Ratio</th><th>Colour</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Extremely Low</td><td class="mono">under 0.30</td><td><span class="tag blue">pale blue</span></td></tr>
+            <tr><td>2</td><td>Very Low</td><td class="mono">0.30 – 0.75</td><td><span class="tag blue">light blue</span></td></tr>
+            <tr><td>3</td><td>Low</td><td class="mono">0.75 – 1.20</td><td><span class="tag blue">blue</span></td></tr>
+            <tr><td>4</td><td>Lower Medium</td><td class="mono">1.20 – 1.65</td><td><span class="tag blue">mid blue</span></td></tr>
+            <tr><td>5</td><td>Medium</td><td class="mono">1.65 – 2.10</td><td><span class="tag blue">deep blue</span></td></tr>
+            <tr><td>6</td><td>High Medium</td><td class="mono">2.10 – 2.55</td><td><span class="tag yellow">yellow — trigger 1×</span></td></tr>
+            <tr><td>7</td><td>High</td><td class="mono">2.55 – 3.00</td><td><span class="tag orange">orange — trigger 2×</span></td></tr>
+            <tr><td>8</td><td>Very High</td><td class="mono">3.00 and above</td><td><span class="tag red">red — trigger 5×</span></td></tr>
+          </tbody>
+        </table>
+        <p>Bands 6, 7 and 8 are the trigger bands. Everything below them is context.</p>
+
+        <h2>What it does with that</h2>
+        <p>When a candle closes in band 6, 7 or 8, Recoil marks a fade. A bearish exceptional candle marks a long. A bullish one marks a short. The premise is that overextended candles snap back.</p>
+        <p>That is the entire engine. One measurement, one response. No pattern recognition, no prediction, no stack of indicators agreeing with each other.</p>
+        <div class="callout">Recoil marks conditions. You decide. Nothing here is a signal to follow blindly, and the instrument has no opinion about whether now is a sensible time to be trading at all.</div>
+
+        <h2>Setup</h2>
+        <h3>1 · Add it to TradingView</h3>
+        <p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Recoil</strong> and add it to your chart. You must be logged into the TradingView account matching the username on your dashboard.</p>
+        <h3>2 · Leave the settings alone</h3>
+        <p>The panel ships on Custom, and every value in it is already the configuration actually traded. Change nothing for the first session.</p>
+        <h3>3 · Watch before you act</h3>
+        <p>Put it on a 3M EURUSD chart and watch one session without touching anything. You are looking for two things: how often a coloured candle appears, and what price does in the twenty minutes afterwards.</p>
+
+        <h2>The settings that matter</h2>
+        <h3>Trading Style — Custom</h3>
+        <p>Two options. Custom uses the individual settings in the panel. Scalping (3M) overrides with the backtested configuration: TP at 100% of body, SL at wick plus 3.0 ATR.</p>
+        <h3>Time windows — 07:00–09:00, 13:00–14:00, 19:00–20:00 UTC</h3>
+        <p>Conditions only resolve inside these hours. These are windows where the same expansion is worth more in pips while the spread stays exactly the same.</p>
+        <h3>ATR Length — 8</h3>
+        <p>The memory of the baseline. Shorter and the baseline adapts fast. Longer and a volatility burst keeps reading as extreme for longer.</p>
+        <h3>Band risk multipliers — 1× / 2× / 5×</h3>
+        <p>Band 6 at 1×, band 7 at 2×, band 8 at 5×. Each band can also be switched off entirely.</p>
+        <div class="callout warning">Band 8 candles are not profitable on their own. They stay because at 5× they subsidise the losses across bands 6 and 7, and the three together outperform any two.</div>
+        <h3>Trend alignment — 2× with, 0.5× against, 1× consolidation</h3>
+        <p>Set "against trend" to 0 to block counter-trend fades entirely—the single most effective change if fading strong trends is costing you.</p>
+        <h3>Stop loss — wick plus 3.0 ATR</h3>
+        <p>Wider than feels comfortable, deliberately. Narrowing this is the most common change people make and the most common reason their results get worse.</p>
+
+        <h2>Where Recoil fails</h2>
+        <h3>It does not work in every condition</h3>
+        <p>In a strong sustained trend an exceptional candle is often the start of something rather than an overreaction.</p>
+        <h3>It does not tell you when to stay out</h3>
+        <p>Check the regime before acting on a trigger. That single habit does more for your results than any setting in the indicator.</p>
+
+        <h2>When it looks wrong</h2>
+        <table>
+          <thead><tr><th>What you see</th><th>Usually</th></tr></thead>
+          <tbody>
+            <tr><td>No coloured candles at all</td><td>ATR length too long, or thresholds too high</td></tr>
+            <tr><td>Coloured candles constantly</td><td>ATR length too short, or min body size set to 0</td></tr>
+            <tr><td>Coloured candles but nothing marked</td><td>Outside time windows, or band's fade toggle off</td></tr>
+            <tr><td>Stop distance looks enormous</td><td>Correct, and intentional</td></tr>
+            <tr><td>Fades keep failing in same direction</td><td>Trending market. Check the Regime Tracker</td></tr>
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <p>Related papers: 01 The Friction Threshold · 02 The Subsidised Signal · 03 The Timeframe Ceiling · 05 The Stop Is Not a Number · 06 The Comfort Trade · 09 Three Windows</p>
+          <p style="margin-top: 12px;">Backtested results are hypothetical. Quant Prime is not FCA authorised. Educational content only, not financial advice.</p>
+        </div>
       </div>
     </div>
     
@@ -7569,8 +7640,73 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- OPERATOR GUIDE PANEL -->
     <div class="instrument-panel" id="meridian-panel-guide">
-      <div class="panel" style="min-height: 600px;">
-        <iframe src="/docs/guides/meridian-operator-guide.html" style="width: 100%; height: 800px; border: none; border-radius: 8px;"></iframe>
+      <div class="guide-content">
+        <h1 class="cyan">Meridian</h1>
+        <p class="subtitle">A reversal instrument. It tracks the accumulation, manipulation and distribution rhythm underneath the session, and marks conditions when a level is swept and price rejects it. It does not tell you to buy or sell.</p>
+        <p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+        <h2>What it measures</h2>
+        <p>The market moves through repeating phases. A period of accumulation where price ranges. A manipulation phase where it pushes through an obvious level. Then distribution, where it actually moves.</p>
+        <p>Meridian tracks that rhythm on three cycle lengths: 12 hour, 6 hour and 3 hour. Only the 12 hour cycle is enabled by default.</p>
+        <p>Each cycle leaves behind <strong>A-lines</strong>, which mark the highs and lows of its accumulation phase. A condition resolves when:</p>
+        <ol>
+          <li>An A-line gets swept, which sets the directional bias</li>
+          <li>Then price taps a vortex level, which marks the entry</li>
+        </ol>
+        <div class="callout cyan">Meridian marks conditions. You decide. Nothing here is a signal to follow blindly.</div>
+
+        <h2>Why the cycles are anchored, not rolling</h2>
+        <p>The cycles anchor to midnight in the chosen timezone, not to a rolling window. An anchored cycle puts phase boundaries where everybody else's are too—where the liquidity actually sits.</p>
+
+        <h2>Setup</h2>
+        <h3>1 · Add it to TradingView</h3>
+        <p>Indicators → Invite-only scripts → <strong>Quant Prime — Meridian</strong>.</p>
+        <h3>2 · Two timezone settings</h3>
+        <p><strong>Timezone (cycle anchor)</strong> in AMD section defaults to UTC+1. <strong>Timezone</strong> in Time Windows defaults to UTC. They are deliberately different.</p>
+        <h3>3 · Leave the defaults alone</h3>
+        <p>These are the configuration actually traded. Change nothing for the first two weeks.</p>
+        <h3>4 · Run it alone first</h3>
+        <p>If you also have Recoil, take Recoil off to begin with. One instrument at a time until you know what each does on its own.</p>
+        <h3>5 · Learn to see the sweep manually</h3>
+        <p>Go back through a day and find a sweep yourself. Once you can spot it by eye, the instrument stops being a black box.</p>
+
+        <h2>The settings that matter</h2>
+        <h3>Timezone, cycle anchor — UTC+1</h3>
+        <p>The single most consequential setting. Every phase boundary and every A-line moves with it. Check this first if Meridian appears not to work.</p>
+        <h3>Cycles — 12H on, 6H and 3H off</h3>
+        <p>The 6H and 3H produce more conditions and finer structure. Turn them on one at a time, give each a fortnight.</p>
+        <h3>Vortex — how a level qualifies</h3>
+        <p>Once swept, the vortex layer decides which price levels count as a tap. It works on digits and changes every hour based on digit families (3,6,9 / 1,4,7 / 2,5,8).</p>
+        <h3>Time windows — 00:00–02:00, 04:00–06:00, 19:00–20:00 UTC</h3>
+        <p>Different from Recoil's windows—the two instruments trigger on different conditions at different times.</p>
+        <h3>Exit mode — Opposite Prime Only</h3>
+        <p>Positions close when an opposite condition appears and the whole position flips. This is a bias decision rather than a stop-loss decision.</p>
+        <h3>Stacking</h3>
+        <p>Meridian stacks. Size each entry so the full stack sits within what you would have risked on one trade.</p>
+
+        <h2>Where Meridian fails</h2>
+        <h3>It stops working above the 15 minute chart</h3>
+        <div class="callout warning">Not degrades. Stops. The cycles need bars of structure that don't exist on 15M and above. No setting fixes this.</div>
+        <h3>Its drawdown is roughly seven times Recoil's</h3>
+        <p>Max drawdown 11.59% vs Recoil's 1.57%. Profit factor is higher (1.995 vs 1.657), so it earns the risk, but the ride is not comparable.</p>
+        <h3>It triggers infrequently</h3>
+        <p>Meridian needs a sweep, a tap and the right window. Your sample builds slowly.</p>
+
+        <h2>When it looks wrong</h2>
+        <table>
+          <thead><tr><th>What you see</th><th>Usually</th></tr></thead>
+          <tbody>
+            <tr><td>Almost nothing marked</td><td>Cycle anchor timezone. Check it first.</td></tr>
+            <tr><td>A-lines but no conditions</td><td>Prime signals disabled, or outside time windows</td></tr>
+            <tr><td>Position larger than expected</td><td>The stack. Several same-direction entries are open.</td></tr>
+            <tr><td>Everything closed and reversed at once</td><td>Working as designed. Opposite condition flips the whole position.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="footer">
+          <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 09 Three Windows · 10 Return Per Unit of Pain</p>
+          <p style="margin-top: 12px;">Backtested results are hypothetical. Quant Prime is not FCA authorised. Educational content only, not financial advice.</p>
+        </div>
       </div>
     </div>
     
@@ -7879,12 +8015,113 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- OPERATOR GUIDE PANEL -->
     <div class="suite-panel" id="suite-panel-guide">
-      <div class="panel" style="min-height: 600px;">
-        <iframe src="/docs/guides/cockpit-operator-guide.html" style="width: 100%; height: 800px; border: none; border-radius: 8px;"></iframe>
+      <div class="guide-content">
+        <h1 class="red">Cockpit</h1>
+        <p class="subtitle">An analytical instrument. It takes no trades, has no entries and produces no signals. What it does is measure the conditions across five timeframes at once, so the decision about what to trade is made against a graded reading rather than a feeling.</p>
+        <p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+
+        <h2>What it is for</h2>
+        <p>Recoil and Meridian both trigger when their own conditions appear. Neither has an opinion about whether the wider market suits them.</p>
+        <p>That gap is where most losses come from in a system that genuinely works. Recoil faded in a strong trend. Meridian traded in a session with no clean liquidity. The instrument did exactly what it was built to do, in conditions it was not built for.</p>
+        <p>Cockpit is the wider picture. It tells you what kind of market you are in, and you decide what that means.</p>
+        <div class="callout warning">Judged as a trading instrument, Cockpit fails immediately. It makes no money on its own. The correct test is whether it stops you giving money back in weeks you should not have been trading.</div>
+
+        <h2>The regime score</h2>
+        <p>Grades market quality out of 90, per timeframe, from two components:</p>
+        <ul>
+          <li><strong>Stability, 0 to 40.</strong> Current ATR measured against its 50 period average. Scores 40 when close, 0 when they diverge.</li>
+          <li><strong>Trend, 0 to 50.</strong> ADX, capped at 50.</li>
+        </ul>
+        <p>Note: stability measures <em>consistency</em>, not size. Large candles push the score down.</p>
+        <table>
+          <thead><tr><th>Grade</th><th>Score</th><th>Reading</th></tr></thead>
+          <tbody>
+            <tr><td><span class="grade prime">PRIME</span></td><td class="mono">above 70</td><td>Conditions match what the systems were measured against</td></tr>
+            <tr><td><span class="grade favorable">FAVORABLE</span></td><td class="mono">above 55</td><td>Workable</td></tr>
+            <tr><td><span class="grade marginal">MARGINAL</span></td><td class="mono">above 40</td><td>Something is off. Reduce, or wait.</td></tr>
+            <tr><td><span class="grade degraded">DEGRADED</span></td><td class="mono">40 or below</td><td>Wrong conditions entirely</td></tr>
+          </tbody>
+        </table>
+        <p>A Recoil fade taken at 74 is a different trade from the identical fade at 41, even though the candle looks the same.</p>
+
+        <h2>Reading the dashboard</h2>
+        <p>Five rows (timeframes: 1 day, 3 hours, 30 minutes, your chart, 3 minutes). Five columns (regime, score, EMA bias, volatility band, trend).</p>
+        <p><strong>Five rows pointing the same way</strong> = market doing one thing at every scale. Trend following works, fading is expensive.</p>
+        <p><strong>Rows disagreeing</strong> = market doing different things at different scales. Reversals find setups, trend following gets chopped.</p>
+        <div class="callout">You need the habit of looking at the five rows before you act, and asking whether the instrument you are about to use suits what you are seeing.</div>
+
+        <h2>Setup</h2>
+        <h3>1 · Add it to TradingView</h3>
+        <p>Indicators → Invite-only scripts → <strong>Quant Prime — Cockpit</strong>.</p>
+        <h3>2 · Look at the dashboard only</h3>
+        <p>For the first few days, ignore everything Cockpit draws on the chart. Read the five rows and nothing else.</p>
+        <h3>3 · Then turn most of it off</h3>
+        <p>Add layers back one at a time and keep only the ones that change a decision.</p>
+
+        <h2>The layers</h2>
+        <h3>EMAs — 8 / 26 / 80 / 233</h3>
+        <p>The trend classification behind the dashboard. A genuine trend requires the full 26/80/233 stack in order.</p>
+        <h3>Liquidity pool levels — 3M / 30M / 3H</h3>
+        <p>Fractal pivot highs and lows. Scale matters: a 3H level getting taken is an event. This layer adds the most to Meridian.</p>
+        <h3>Fair value gaps — 3M and 30M</h3>
+        <p>Three-candle gaps tracked with a lifecycle: fresh, tapped, filled. The busiest layer—keep it off until you specifically need it.</p>
+        <h3>Volatility candle colours</h3>
+        <p>Same eight bands as Recoil. If running both, turn colouring off in one.</p>
+        <h3>AMD phase shading — 24H / 12H / 6H, UTC+0</h3>
+        <p>Different from Meridian's cycles (12/6/3H at UTC+1). They serve different purposes.</p>
+        <h3>Higher timeframe candles — 30M and 3H</h3>
+        <p>Shows current HTF candles to the right of your chart. Tells you how far through the candle you are.</p>
+
+        <h2>What Cockpit does not do</h2>
+        <p>It does not tell you which instrument to use. It does not produce entries. It does not make money. Its entire value is in the trades you do not take.</p>
+
+        <h2>Using it with the other instruments</h2>
+        <p><strong>Order that works: Cockpit first, then instrument, then build.</strong></p>
+        <p>Cockpit tells you what kind of market this is. That informs whether Recoil or Meridian is appropriate, or whether neither is and you sit out.</p>
+        <div class="callout">If reading the week is the part you are unsure about, ask QP Intelligence. It knows all three engines and how they relate.</div>
+
+        <div class="footer">
+          <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 10 Return Per Unit of Pain</p>
+          <p style="margin-top: 12px;">Backtested results are hypothetical. Quant Prime is not FCA authorised. Educational content only, not financial advice.</p>
+        </div>
       </div>
     </div>
     
   </div><!-- END view-cockpit -->
+
+  <!-- Operator Guide Content Styles -->
+  <style>
+    .guide-content { max-width: 800px; line-height: 1.7; }
+    .guide-content h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .guide-content h1.gold { color: var(--gold); }
+    .guide-content h1.cyan { color: #00abff; }
+    .guide-content h1.red { color: #ef4444; }
+    .guide-content .subtitle { font-size: 15px; color: var(--text-2); margin-bottom: 32px; }
+    .guide-content h2 { font-size: 18px; font-weight: 600; margin-top: 40px; margin-bottom: 16px; color: var(--text-1); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .guide-content h3 { font-size: 14px; font-weight: 600; margin-top: 24px; margin-bottom: 12px; color: var(--gold); }
+    .guide-content p { margin-bottom: 16px; color: var(--text-2); font-size: 14px; }
+    .guide-content table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+    .guide-content th, .guide-content td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .guide-content th { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+    .guide-content td { color: var(--text-2); }
+    .guide-content td:first-child { color: var(--text-1); font-weight: 500; }
+    .guide-content ul, .guide-content ol { margin: 16px 0; padding-left: 24px; color: var(--text-2); font-size: 14px; }
+    .guide-content li { margin-bottom: 8px; }
+    .guide-content .callout { background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 24px 0; font-size: 13px; color: var(--text-2); border-radius: 0 8px 8px 0; }
+    .guide-content .callout.warning { background: rgba(239,68,68,0.08); border-left-color: #ef4444; }
+    .guide-content .callout.cyan { background: rgba(0,171,255,0.08); border-left-color: #00abff; }
+    .guide-content .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+    .guide-content .tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .guide-content .tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
+    .guide-content .tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .guide-content .tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .guide-content .grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .guide-content .grade.prime { background: rgba(38,162,105,0.15); color: #26a269; }
+    .guide-content .grade.favorable { background: rgba(0,171,255,0.15); color: #00abff; }
+    .guide-content .grade.marginal { background: rgba(255,193,7,0.15); color: #ffc107; }
+    .guide-content .grade.degraded { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .guide-content .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-3); }
+  </style>
 
   <!-- Instrument Tab Styles (shared by Recoil, Terminal, Suite) -->
   <style>
@@ -9200,18 +9437,15 @@ button, .nav-item, .room, .video-item, .filter-chip {
   <div class="view" id="view-mentorship">
     <div class="view-header">
       <div class="eyebrow" style="color: #ffd700;">⭐ Ascension</div>
-      <h2>1-on-1 <em>mentorship</em>.</h2>
-      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Weekly calls with Cash. Review your progress. Refine your approach.</p>
+      <h2>Book Your <em>Call</em>.</h2>
+      <p style="color: var(--text-2); font-size: 14px; margin-top: 8px;">Weekly 30-minute 1-on-1 calls with Sean. Review your progress. Refine your approach.</p>
     </div>
     
-    <div style="display: grid; gap: 24px; max-width: 800px;">
-      <div class="panel" style="border: 1px solid rgba(255,215,0,0.2); background: linear-gradient(135deg, rgba(255,215,0,0.03) 0%, var(--surface) 50%);">
-        <h4 style="color: #ffd700; margin-bottom: 16px;">Book Your Weekly Call</h4>
-        <p style="color: var(--text-2); margin-bottom: 20px;">As an Ascension member, you get a 30-minute 1-on-1 call every week for 12 weeks. Use this time to review trades, discuss challenges, and refine your strategy.</p>
-        <a href="https://calendly.com/cash-themoneyprinter/30min" target="_blank" rel="noopener" class="btn gold" style="display: inline-flex; align-items: center; gap: 8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Book via Calendly
-        </a>
+    <div style="display: grid; gap: 24px; max-width: 900px;">
+      <!-- Calendly Inline Widget -->
+      <div class="panel" style="border: 1px solid rgba(255,215,0,0.2); padding: 0; overflow: hidden;">
+        <div class="calendly-inline-widget" data-url="https://calendly.com/cash-themoneyprinter/30min?hide_gdpr_banner=1&background_color=111117&text_color=f2f4f7&primary_color=c9a84c" style="min-width: 320px; height: 700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
       </div>
       
       <div class="panel">
