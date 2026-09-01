@@ -3708,19 +3708,31 @@ body {
   display: block;
 }
 
-/* Build view - fixed, no scrolling */
+/* Build view - fit to viewport */
 #view-marketplace {
   overflow: hidden;
-  max-height: calc(100vh - 120px);
+}
+
+#view-marketplace .view-header {
+  margin-bottom: 12px;
+}
+
+#view-marketplace .view-header h2 {
+  font-size: 24px;
+}
+
+#view-marketplace .view-header p {
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 /* ===== TIER LADDER (Build Page Redesign v6) ===== */
 .tier-ladder-label {
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 1.5px;
   color: var(--text-3);
   text-transform: uppercase;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   display: flex;
   justify-content: space-between;
 }
@@ -3729,8 +3741,8 @@ body {
 .tier-ladder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 6px;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 @media (max-width: 900px) {
@@ -3743,7 +3755,7 @@ body {
 .tier-card {
   position: relative;
   border-radius: 6px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   cursor: pointer;
@@ -3878,7 +3890,7 @@ body {
 .tier-rail {
   height: 2px;
   background: var(--border);
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   border-radius: 2px;
   position: relative;
 }
@@ -3972,12 +3984,11 @@ body {
   margin: 0 0 24px 0;
 }
 
-/* Restaurant-style menu layout - fixed height, no scroll */
+/* Restaurant-style menu layout - compact */
 .menu-layout {
   display: grid;
   grid-template-columns: 1fr 240px;
-  gap: 20px;
-  overflow: hidden;
+  gap: 16px;
 }
 
 @media (max-width: 1100px) {
@@ -3991,7 +4002,7 @@ body {
 .menu-courses {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 10px;
 }
 
 @media (max-width: 800px) {
@@ -4003,8 +4014,8 @@ body {
 .menu-course {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 14px;
+  border-radius: 10px;
+  padding: 10px 12px;
   transition: all 0.2s;
 }
 
@@ -4017,37 +4028,37 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
   border-bottom: 1px dashed var(--border);
 }
 
 .course-header h3 {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .course-header h3 .course-number {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   background: var(--gold);
   color: #000;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
 }
 
 .course-header .course-question {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-3);
   font-style: italic;
   font-weight: 400;
@@ -4057,21 +4068,21 @@ body {
 .course-dishes {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .dish-card {
   background: transparent;
   border: none;
-  border-radius: 6px;
-  padding: 8px 10px;
+  border-radius: 5px;
+  padding: 6px 8px;
   cursor: pointer;
   transition: all 0.15s;
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .dish-card:hover {
@@ -4095,13 +4106,13 @@ body {
 
 .dish-main {
   flex: 1;
-  padding-left: 14px;
+  padding-left: 10px;
 }
 
 .dish-card h4 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  margin: 0 0 2px 0;
+  margin: 0 0 1px 0;
   color: var(--text-1);
 }
 
@@ -4111,7 +4122,7 @@ body {
 }
 
 .dish-card .ingredients {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
   margin: 0;
   font-style: italic;
@@ -4125,13 +4136,13 @@ body {
 
 /* Info button */
 .dish-info {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   color: var(--text-3);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   font-style: italic;
   font-family: Georgia, serif;
