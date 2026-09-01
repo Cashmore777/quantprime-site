@@ -136,17 +136,18 @@ nav .container { display: flex; justify-content: space-between; align-items: cen
 .nav-cta {
   font-size: 0.8rem; font-weight: 600;
   padding: 0.65rem 1.8rem;
-  background: linear-gradient(135deg, var(--green), #22c55e);
+  background: var(--gold, #c9a84c);
   color: #fff;
   border: none; border-radius: 100px;
   text-decoration: none;
   transition: all 0.3s;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
 }
 .nav-cta:hover { 
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(22, 163, 74, 0.4);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+  background: #d4b85a;
 }
 
 /* ── HERO ── */

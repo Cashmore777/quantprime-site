@@ -7,8 +7,11 @@
 (function() {
   'use strict';
 
-  // Skip on dashboard - it has its own theme toggle
-  if (window.location.pathname.includes('/dashboard')) {
+  // Skip on main dashboard - it has its own theme toggle
+  // But allow on login/register/reset-password pages
+  if (window.location.pathname === '/dashboard/' || 
+      window.location.pathname === '/dashboard/index.html' ||
+      window.location.pathname.includes('/dashboard/billing')) {
     return;
   }
 

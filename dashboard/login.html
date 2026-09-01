@@ -25,6 +25,17 @@
   --sans: 'Inter', -apple-system, system-ui, sans-serif;
 }
 
+[data-theme="dark"] {
+  --bg: #0a0a0f;
+  --surface: #141419;
+  --surface-raised: #1c1c24;
+  --border: rgba(255,255,255,0.08);
+  --text-1: #fafafa;
+  --text-2: #a1a1aa;
+  --text-3: #6b6b6b;
+  --gold-glow: rgba(201,168,76,0.2);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; }
 
@@ -474,5 +485,7 @@ async function handleForgotPassword(e) {
 }
 </script>
 
+<script src="/assets/theme-toggle.js"></script>
+<script src="/assets/support-widget-v2.js"></script>
 </body>
 </html>
