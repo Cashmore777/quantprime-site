@@ -4083,21 +4083,14 @@ body {
 }
 
 .dish-card.selected::before {
-  content: '✓';
+  content: '';
   position: absolute;
-  left: -2px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  background: var(--gold);
-  color: #000;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 9px;
-  font-weight: 700;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--premium-gradient);
+  border-radius: 3px 0 0 3px;
 }
 
 .dish-main {
@@ -4329,8 +4322,8 @@ body {
 .generate-btn {
   width: 100%;
   padding: 14px 20px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  color: #000;
+  background: var(--premium-gradient);
+  color: #0a0a0a;
   border-radius: 10px;
   font-size: 14px;
   font-weight: 700;
@@ -4338,7 +4331,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 16px rgba(201,168,76,0.4);
+  box-shadow: 0 4px 16px rgba(201,168,76,0.35), 0 0 20px rgba(74,201,201,0.1);
   transition: all 0.2s;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -4346,7 +4339,7 @@ body {
 
 .generate-btn:hover:not(:disabled) {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(201,168,76,0.5);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.5), 0 0 30px rgba(74,201,201,0.15);
 }
 
 .generate-btn:disabled {
