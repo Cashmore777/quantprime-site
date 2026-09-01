@@ -204,9 +204,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   background: var(--surface);
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 100px;
   border: 1px solid var(--border);
   margin-bottom: 1.5rem;
@@ -215,22 +215,45 @@ body {
 }
 
 .platform-story .tier {
-  padding: 4px 10px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
+  padding: 6px 14px;
   border-radius: 6px;
-  font-weight: 500;
-  color: var(--text-primary);
+  font-weight: 600;
+  transition: all 0.3s;
 }
 
-.platform-story .tier.active {
-  background: var(--gold);
+/* Research - Green */
+.platform-story .tier:nth-child(1) {
+  background: var(--green);
   color: #fff;
+  border: 1px solid var(--green);
+}
+
+/* Recoil - White/silver outline */
+.platform-story .tier:nth-child(3) {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Terminal - Gold */
+.platform-story .tier:nth-child(5) {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+
+/* Suite - Gradient */
+.platform-story .tier:nth-child(7) {
+  background: linear-gradient(135deg, var(--gold), #00d4ff);
+  color: #000;
+  border: none;
+  font-weight: 700;
 }
 
 .platform-story .arrow {
   color: var(--gold);
   font-weight: 600;
+  font-size: 0.85rem;
 }
 
 /* Pricing Section */
