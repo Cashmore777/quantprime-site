@@ -1,0 +1,72 @@
+//@version=6
+indicator("Quant Prime — Suite [S3]", overlay=true)
+
+// ============================================================
+// S3 — Regime Change Marker
+// ============================================================
+
+// ============================================================
+// COC-S3 — Regime Change Marker
+// Suite Build menu · Starter course
+// Draws no tables (per QP Build convention for Starter pieces)
+// Uses the same regime-score formula as COC-S1 (kept standalone
+// here since each piece must compile independently)
+// ============================================================
+
+s3_grp1 = "[S3] Regime Score"
+s3_atrLen      = input.int(14, "ATR Length", group=s3_grp1)
+s3_atrBaseLen  = input.int(100, "ATR Baseline Length", group=s3_grp1)
+s3_adxLen      = input.int(14, "DMI Length", group=s3_grp1)
+s3_adxSmooth   = input.int(14, "ADX Smoothing", group=s3_grp1)
+
+s3_grp2 = "[S3] Grade Thresholds (0-90 scale)"
+s3_primeMin      = input.int(68, "PRIME minimum", group=s3_grp2)
+s3_favourableMin = input.int(45, "FAVOURABLE minimum", group=s3_grp2)
+s3_marginalMin   = input.int(23, "MARGINAL minimum", group=s3_grp2)
+
+s3_grp3 = "[S3] Marker"
+s3_labelSize = input.string(size.small, "Label Size", options=[size.tiny, size.small, size.normal], group=s3_grp3)
+
+s3_grp4 = "[S3] Regime Colours"
+s3_colPrime      = input.color(#c9a84c, "PRIME", group=s3_grp4)
+s3_colFavourable = input.color(#00abff, "FAVOURABLE", group=s3_grp4)
+s3_colMarginal   = input.color(#ff9800, "MARGINAL", group=s3_grp4)
+s3_colDegraded   = input.color(#f23645, "DEGRADED", group=s3_grp4)
+
+s3_grp5 = "[S3] Label Spacing"
+s3_offsetTiers = input.int(4, "Vertical Offset Tiers", minval=2, maxval=8, group=s3_grp5)
+s3_offsetStep  = input.float(0.6, "Offset Step (x ATR per s3_tier)", minval=0.1, group=s3_grp5)
+s3_baseOffset  = input.float(0.5, "Base Offset (x ATR)", minval=0.1, group=s3_grp5)
+
+// === Volatility component (0-45) ===
+s3_atrNow   = ta.atr(s3_atrLen)
+s3_atrBase  = ta.sma(s3_atrNow, s3_atrBaseLen)
+s3_volRatio = s3_atrBase == 0 ? 1.0 : s3_atrNow / s3_atrBase
+s3_volDeviation = math.abs(s3_volRatio - 1.0)
+s3_volScore = math.max(0.0, 45.0 - (s3_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[s3_diplus, s3_diminus, s3_adx] = ta.dmi(s3_adxLen, s3_adxSmooth)
+s3_adxScore = s3_adx <= 40 ? math.min(45.0, (s3_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((s3_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+s3_regimeScore = s3_volScore + s3_adxScore
+
+s3_grade = s3_regimeScore >= s3_primeMin ? "PRIME" : s3_regimeScore >= s3_favourableMin ? "FAVOURABLE" : s3_regimeScore >= s3_marginalMin ? "MARGINAL" : "DEGRADED"
+
+s3_gradeColor = s3_regimeScore >= s3_primeMin ? s3_colPrime : s3_regimeScore >= s3_favourableMin ? s3_colFavourable : s3_regimeScore >= s3_marginalMin ? s3_colMarginal : s3_colDegraded
+
+// === Marker on s3_grade shift only — vertical offset randomised per s3_tier,
+// excluding whichever s3_tier was just used, so adjacent labels never stack ===
+var string s3_prevGrade = na
+s3_gradeShifted = not na(s3_prevGrade) and s3_grade != s3_prevGrade
+
+var int s3_lastTier = -1
+if s3_gradeShifted
+    s3_randTier = int(math.random(0, s3_offsetTiers))
+    s3_tier = s3_randTier == s3_lastTier ? (s3_randTier + 1) % s3_offsetTiers : s3_randTier
+    s3_labelOffset = s3_baseOffset + (s3_tier * s3_offsetStep)
+    label.new(bar_index, high + (s3_atrNow * s3_labelOffset), s3_grade, style=label.style_label_down, color=color.new(s3_gradeColor, 20), textcolor=color.white, size=s3_labelSize)
+    s3_lastTier := s3_tier
+
+s3_prevGrade := s3_grade

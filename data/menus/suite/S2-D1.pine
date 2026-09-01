@@ -1,0 +1,143 @@
+//@version=6
+indicator("Quant Prime — Suite [S2+D1]", overlay=true)
+
+// ============================================================
+// S2 — HTF Bias Arrow
+// ============================================================
+
+// ============================================================
+// COC-S2 — HTF Bias Arrow
+// Suite Build menu · Starter course
+// Draws no tables (per QP Build convention for Starter pieces)
+// ============================================================
+
+s2_grp = "[S2] HTF Bias"
+s2_htf   = input.timeframe("240", "Higher Timeframe", group=s2_grp)
+s2_len1  = input.int(8, "EMA 1", group=s2_grp)
+s2_len2  = input.int(26, "EMA 2", group=s2_grp)
+s2_len3  = input.int(80, "EMA 3", group=s2_grp)
+s2_len4  = input.int(233, "EMA 4", group=s2_grp)
+s2_arrowSize = input.string(size.small, "Arrow Size", options=[size.tiny, size.small, size.normal, size.large], group=s2_grp)
+
+s2_grp2 = "[S2] Label"
+s2_labelOffsetBars = input.int(15, "Label Offset (bars ahead of price)", minval=1, maxval=200, group=s2_grp2)
+
+// === QP Brand Colours ===
+s2_colBull = color.new(#00abff, 0)  // cyan
+s2_colBear = color.new(#f23645, 0)  // red
+s2_colFlat = color.new(#787b86, 0)  // neutral grey
+
+// === HTF 4-EMA stack s2_bias (same 8/26/80/233 set used across Cockpit) ===
+s2_htfEma1 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len1), lookahead=barmerge.lookahead_off)
+s2_htfEma2 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len2), lookahead=barmerge.lookahead_off)
+s2_htfEma3 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len3), lookahead=barmerge.lookahead_off)
+s2_htfEma4 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len4), lookahead=barmerge.lookahead_off)
+
+// Bias only fires on a full, cleanly ordered stack — anything crossed/tangled reads as flat
+s2_bullStack = s2_htfEma1 > s2_htfEma2 and s2_htfEma2 > s2_htfEma3 and s2_htfEma3 > s2_htfEma4
+s2_bearStack = s2_htfEma1 < s2_htfEma2 and s2_htfEma2 < s2_htfEma3 and s2_htfEma3 < s2_htfEma4
+
+s2_bias        = s2_bullStack ? 1 : s2_bearStack ? -1 : 0
+s2_biasChanged = s2_bias != s2_bias[1]
+
+// === Arrow markers on s2_bias flip (size split into one call per option — plotshape's
+// size argument must be a const, so the input can only pick which call actually fires) ===
+s2_bullFlip = s2_biasChanged and s2_bias == 1
+s2_bearFlip = s2_biasChanged and s2_bias == -1
+
+plotshape(s2_bullFlip and s2_arrowSize == size.tiny, "Bullish HTF Bias (tiny)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.tiny)
+plotshape(s2_bullFlip and s2_arrowSize == size.small, "Bullish HTF Bias (small)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.small)
+plotshape(s2_bullFlip and s2_arrowSize == size.normal, "Bullish HTF Bias (normal)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.normal)
+plotshape(s2_bullFlip and s2_arrowSize == size.large, "Bullish HTF Bias (large)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.large)
+
+plotshape(s2_bearFlip and s2_arrowSize == size.tiny, "Bearish HTF Bias (tiny)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.tiny)
+plotshape(s2_bearFlip and s2_arrowSize == size.small, "Bearish HTF Bias (small)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.small)
+plotshape(s2_bearFlip and s2_arrowSize == size.normal, "Bearish HTF Bias (normal)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.normal)
+plotshape(s2_bearFlip and s2_arrowSize == size.large, "Bearish HTF Bias (large)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.large)
+
+// === Persistent current-s2_bias label (single label, redrawn on last bar only,
+// offset to the right into the empty space ahead of price) ===
+var label s2_biasLabel = na
+if barstate.islast
+    label.delete(s2_biasLabel)
+    s2_biasTxt = s2_bias == 1 ? "▲ HTF BULLISH" : s2_bias == -1 ? "▼ HTF BEARISH" : "— HTF FLAT"
+    s2_biasCol = s2_bias == 1 ? s2_colBull : s2_bias == -1 ? s2_colBear : s2_colFlat
+    s2_biasLabel := label.new(bar_index + s2_labelOffsetBars, close, s2_biasTxt, style=label.style_label_left, color=color.new(color.black, 0), textcolor=s2_biasCol, size=size.small)
+
+// ============================================================
+// D1 — Regime Clock
+// ============================================================
+
+// ============================================================
+// COC-D1 — Regime Clock
+// Suite Build menu · Side course
+// Draws one table, bottom-left (Side course convention)
+// Countdown to next regime recalculation — the regime score is
+// bar-based, so "next recalculation" is the next bar close
+// ============================================================
+
+d1_grp1 = "[D1] Regime Score"
+d1_atrLen      = input.int(14, "ATR Length", group=d1_grp1)
+d1_atrBaseLen  = input.int(100, "ATR Baseline Length", group=d1_grp1)
+d1_adxLen      = input.int(14, "DMI Length", group=d1_grp1)
+d1_adxSmooth   = input.int(14, "ADX Smoothing", group=d1_grp1)
+
+d1_grp2 = "[D1] Grade Thresholds (0-90 scale)"
+d1_primeMin      = input.int(68, "PRIME minimum", group=d1_grp2)
+d1_favourableMin = input.int(45, "FAVOURABLE minimum", group=d1_grp2)
+d1_marginalMin   = input.int(23, "MARGINAL minimum", group=d1_grp2)
+
+d1_grp3 = "[D1] Regime Colours"
+d1_colPrime      = input.color(#c9a84c, "PRIME", group=d1_grp3)
+d1_colFavourable = input.color(#00abff, "FAVOURABLE", group=d1_grp3)
+d1_colMarginal   = input.color(#ff9800, "MARGINAL", group=d1_grp3)
+d1_colDegraded   = input.color(#f23645, "DEGRADED", group=d1_grp3)
+
+d1_grp4 = "[D1] Table"
+d1_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=d1_grp4)
+
+// === Volatility component (0-45) ===
+d1_atrNow   = ta.atr(d1_atrLen)
+d1_atrBase  = ta.sma(d1_atrNow, d1_atrBaseLen)
+d1_volRatio = d1_atrBase == 0 ? 1.0 : d1_atrNow / d1_atrBase
+d1_volDeviation = math.abs(d1_volRatio - 1.0)
+d1_volScore = math.max(0.0, 45.0 - (d1_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[d1_diplus, d1_diminus, d1_adx] = ta.dmi(d1_adxLen, d1_adxSmooth)
+d1_adxScore = d1_adx <= 40 ? math.min(45.0, (d1_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((d1_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+d1_regimeScore = d1_volScore + d1_adxScore
+d1_grade      = d1_regimeScore >= d1_primeMin ? "PRIME" : d1_regimeScore >= d1_favourableMin ? "FAVOURABLE" : d1_regimeScore >= d1_marginalMin ? "MARGINAL" : "DEGRADED"
+d1_gradeColor = d1_regimeScore >= d1_primeMin ? d1_colPrime : d1_regimeScore >= d1_favourableMin ? d1_colFavourable : d1_regimeScore >= d1_marginalMin ? d1_colMarginal : d1_colDegraded
+
+// === Countdown to next bar close (next regime recalculation) ===
+d1_remainingSec = math.max(0, int((time_close - timenow) / 1000))
+
+d1_formatCountdown(_sec) =>
+    _h = int(_sec / 3600)
+    _m = int((_sec % 3600) / 60)
+    _s = int(_sec % 60)
+    _h > 0 ? str.tostring(_h) + "h " + str.tostring(_m) + "m" : _m > 0 ? str.tostring(_m) + "m " + str.tostring(_s) + "s" : str.tostring(_s) + "s"
+
+d1_countdownText = d1_formatCountdown(d1_remainingSec)
+
+// === QP dark/gold dashboard theme ===
+d1_bgHeader = color.new(#1a1a1a, 0)
+d1_bgRow    = color.new(#0d0d0d, 10)
+d1_txtMuted = color.new(color.white, 40)
+d1_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom left ===
+var table d1_clock = table.new(position.bottom_left, 2, 3, border_width=1)
+
+if barstate.islast
+    table.cell(d1_clock, 0, 0, "REGIME CLOCK", text_color=d1_txtGold, bgcolor=d1_bgHeader, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 0, "", bgcolor=d1_bgHeader, text_size=d1_tableSize)
+
+    table.cell(d1_clock, 0, 1, "Current Grade", text_color=d1_txtMuted, bgcolor=d1_bgRow, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 1, d1_grade, text_color=d1_gradeColor, bgcolor=d1_bgRow, text_size=d1_tableSize)
+
+    table.cell(d1_clock, 0, 2, "Next Recalc", text_color=d1_txtMuted, bgcolor=d1_bgRow, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 2, d1_countdownText, text_color=color.white, bgcolor=d1_bgRow, text_size=d1_tableSize)

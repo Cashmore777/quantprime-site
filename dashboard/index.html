@@ -15744,6 +15744,12 @@ const dishNames = {
     main: { 1: 'Sweep Tracker', 2: 'Liquidity Map', 3: 'Trend Stack' },
     side: { 1: 'Phase Clock', 2: 'Stack Monitor', 3: 'Session Clock' },
     dessert: { 1: 'Sweep Report', 2: 'Phase Report', 3: 'Session Report' }
+  },
+  suite: {
+    starter: { 1: 'Regime Score Ribbon', 2: 'HTF Bias Arrow', 3: 'Regime Change Marker' },
+    main: { 1: 'Regime Scanner Table', 2: 'Multi-TF Regime Aggregator', 3: 'Session Regime Tracker' },
+    side: { 1: 'Regime Clock', 2: 'Confidence Meter', 3: 'Regime Alert Panel' },
+    dessert: { 1: 'Regime Report', 2: 'Cross-TF Report', 3: 'Session Regime Report' }
   }
 };
 
@@ -15766,6 +15772,12 @@ const courseQuestions = {
     main: 'What\'s the engine?',
     side: 'What do I need to know?',
     dessert: 'What does the data say?'
+  },
+  suite: {
+    starter: 'What\'s the regime?',
+    main: 'What\'s the score?',
+    side: 'How confident?',
+    dessert: 'What does history say?'
   }
 };
 
@@ -16016,6 +16028,88 @@ const dishInfo = {
         outputs: 'hour_activity, hour_breaks, hour_reversals'
       }
     }
+  },
+  suite: {
+    starter: {
+      1: {
+        name: 'Regime Score Ribbon',
+        ingredients: 'regime score · colour grade · volatility + trend',
+        description: 'A colour-graded line plotted just below price, showing the current regime score (0-90) translated into PRIME/FAVOURABLE/MARGINAL/DEGRADED at a glance. Built from two components — how far current volatility sits from its own baseline, and how strong the underlying trend is — so the colour reflects genuine market conditions, not just price direction.',
+        outputs: 'regime_score, grade_color, vol_component, trend_component'
+      },
+      2: {
+        name: 'HTF Bias Arrow',
+        ingredients: '4-EMA stack · 8/26/80/233 · bias shift',
+        description: 'Flags a directional bias shift on a higher timeframe using a 4-EMA stack (8/26/80/233) — only fires when all four EMAs are cleanly aligned in one direction, not on a partial or crossed stack. A floating label sits ahead of price showing the current read, so you\'re not hunting for the last arrow.',
+        outputs: 'htf_bias, ema_aligned, bias_arrow'
+      },
+      3: {
+        name: 'Regime Change Marker',
+        ingredients: 'grade transitions · label spacing · shift direction',
+        description: 'Drops a label the moment the regime grade actually shifts — PRIME to FAVOURABLE, MARGINAL to DEGRADED, whichever direction — so you can see exactly when conditions changed, not just what they are right now. Labels are spaced to avoid stacking on top of each other during choppy, fast-changing stretches.',
+        outputs: 'grade_change, from_grade, to_grade, change_bar'
+      }
+    },
+    main: {
+      1: {
+        name: 'Regime Scanner Table',
+        ingredients: 'composite score · volatility sub-score · trend sub-score',
+        description: 'The core regime readout — current grade, composite score out of 90, and the volatility and trend sub-scores that make it up, all in one table. Shows you not just what the grade is, but why, so a PRIME reading built on strong volatility looks different from one built on strong trend.',
+        outputs: 'total_score, vol_score, trend_score, grade'
+      },
+      2: {
+        name: 'Multi-TF Regime Aggregator',
+        ingredients: 'three timeframes · grade agreement · tradeable count',
+        description: 'Runs the regime score independently on three timeframes at once and shows whether they agree. A grade that holds on the 15m, 1H, and 4H simultaneously is a far sturdier read than one that only shows up on a single chart — the "Tradeable" row tells you how many of the three are currently FAVOURABLE or better.',
+        outputs: 'tf1_grade, tf2_grade, tf3_grade, tradeable_count'
+      },
+      3: {
+        name: 'Session Regime Tracker',
+        ingredients: 'session start · best/worst grade · flip count',
+        description: 'Tracks how the grade has moved since the session opened — where it started, where it is now, the best and worst grade seen, and how many times it\'s flipped. A session that\'s held PRIME the whole way through is a more trustworthy read than one that\'s flickered between grades a dozen times, even if both show PRIME right now.',
+        outputs: 'start_grade, current_grade, best_grade, worst_grade, flip_count'
+      }
+    },
+    side: {
+      1: {
+        name: 'Regime Clock',
+        ingredients: 'bar countdown · recalculation timing · current grade',
+        description: 'A simple countdown to the next bar close — the point at which the regime score next recalculates — alongside the current grade, so you always know how fresh the reading in front of you actually is.',
+        outputs: 'time_to_close, current_grade, last_update'
+      },
+      2: {
+        name: 'Confidence Meter',
+        ingredients: 'component agreement · margin to flip · stability',
+        description: 'Checks whether the volatility and trend components underneath the grade actually agree with each other, and separately how much margin the score has before it would flip to a different grade. A PRIME reading with low agreement and a thin margin is a shakier signal than the headline grade alone would suggest.',
+        outputs: 'agreement_pct, margin_points, is_stable'
+      },
+      3: {
+        name: 'Regime Alert Panel',
+        ingredients: 'volatility state · trend state · extremes · changes',
+        description: 'A checklist of what\'s currently happening underneath the grade — volatility expanding or compressing, trend strengthening or weakening, extreme readings in either direction, and whether the grade just changed. State descriptions only, not trade signals.',
+        outputs: 'vol_state, trend_state, is_extreme, just_changed'
+      }
+    },
+    dessert: {
+      1: {
+        name: 'Regime Report',
+        ingredients: 'grade distribution · time in each · current streak',
+        description: 'A historical breakdown of how much time has actually been spent in each grade over a set lookback window, plus the current streak. Useful for sanity-checking whether PRIME conditions are common or rare on the instrument and timeframe you\'re trading.',
+        outputs: 'prime_pct, favourable_pct, marginal_pct, degraded_pct, streak'
+      },
+      2: {
+        name: 'Cross-TF Report',
+        ingredients: 'full agreement · partial · none · lookback',
+        description: 'Tracks how often your three chosen timeframes call the exact same regime grade at once, not just similar readings, over a bounded lookback window. Full Agreement means all three match; Partial means two of three; None means all three disagree — a running record of how often your setup is genuinely aligned across scales.',
+        outputs: 'full_agreement_pct, partial_pct, none_pct'
+      },
+      3: {
+        name: 'Session Regime Report',
+        ingredients: 'Asia · London · New York · tradeable rates',
+        description: 'Breaks down which of the three major trading sessions — Asia, London, New York — tends to produce which grade most often, plus each session\'s "tradeable" rate. Sessions are tracked independently and can overlap, same as real market hours.',
+        outputs: 'asia_tradeable, london_tradeable, ny_tradeable, best_session'
+      }
+    }
   }
 };
 
@@ -16170,13 +16264,13 @@ function updateOrderSummary() {
 function updateBuildId() {
   let buildId;
   
+  const s = menuState.selections.starter;
+  const m = menuState.selections.main;
+  const d = menuState.selections.side;
+  const t = menuState.selections.dessert;
+  
   if (menuState.currentTier === 'terminal') {
-    // Terminal uses piece codes: MER-S1M2D3T1 format
-    const s = menuState.selections.starter;
-    const m = menuState.selections.main;
-    const d = menuState.selections.side;
-    const t = menuState.selections.dessert;
-    
+    // Terminal uses piece codes: MER-S1M2D3T1 format (no dashes between pieces)
     let pieces = [];
     if (s > 0) pieces.push(`S${s}`);
     if (m > 0) pieces.push(`M${m}`);
@@ -16184,11 +16278,19 @@ function updateBuildId() {
     if (t > 0) pieces.push(`T${t}`);
     
     buildId = pieces.length > 0 ? `MER-${pieces.join('')}` : 'MER-';
+  } else if (menuState.currentTier === 'suite') {
+    // Suite uses piece codes with dashes: S1-M2-D3-T1 format (no prefix, filenames match directly)
+    let pieces = [];
+    if (s > 0) pieces.push(`S${s}`);
+    if (m > 0) pieces.push(`M${m}`);
+    if (d > 0) pieces.push(`D${d}`);
+    if (t > 0) pieces.push(`T${t}`);
+    
+    buildId = pieces.length > 0 ? pieces.join('-') : '';
   } else {
     // Research and Recoil use numeric codes: REC-1230 format
-    const prefix = menuState.currentTier === 'research' ? 'RES' : 
-                   menuState.currentTier === 'recoil' ? 'REC' : 'SUI';
-    buildId = `${prefix}-${menuState.selections.starter}${menuState.selections.main}${menuState.selections.side}${menuState.selections.dessert}`;
+    const prefix = menuState.currentTier === 'research' ? 'RES' : 'REC';
+    buildId = `${prefix}-${s}${m}${d}${t}`;
   }
   
   document.getElementById('order-build-id').textContent = buildId;
@@ -16257,7 +16359,7 @@ async function generateInstrument() {
   const buildId = updateBuildId();
   
   // Validate - no selections made
-  if (buildId.endsWith('-0000') || buildId === 'MER-') {
+  if (buildId.endsWith('-0000') || buildId === 'MER-' || buildId === '') {
     return;
   }
   

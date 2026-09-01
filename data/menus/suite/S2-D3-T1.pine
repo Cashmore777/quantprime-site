@@ -1,0 +1,320 @@
+//@version=6
+indicator("Quant Prime — Suite [S2+D3+T1]", overlay=true)
+
+// ============================================================
+// S2 — HTF Bias Arrow
+// ============================================================
+
+// ============================================================
+// COC-S2 — HTF Bias Arrow
+// Suite Build menu · Starter course
+// Draws no tables (per QP Build convention for Starter pieces)
+// ============================================================
+
+s2_grp = "[S2] HTF Bias"
+s2_htf   = input.timeframe("240", "Higher Timeframe", group=s2_grp)
+s2_len1  = input.int(8, "EMA 1", group=s2_grp)
+s2_len2  = input.int(26, "EMA 2", group=s2_grp)
+s2_len3  = input.int(80, "EMA 3", group=s2_grp)
+s2_len4  = input.int(233, "EMA 4", group=s2_grp)
+s2_arrowSize = input.string(size.small, "Arrow Size", options=[size.tiny, size.small, size.normal, size.large], group=s2_grp)
+
+s2_grp2 = "[S2] Label"
+s2_labelOffsetBars = input.int(15, "Label Offset (bars ahead of price)", minval=1, maxval=200, group=s2_grp2)
+
+// === QP Brand Colours ===
+s2_colBull = color.new(#00abff, 0)  // cyan
+s2_colBear = color.new(#f23645, 0)  // red
+s2_colFlat = color.new(#787b86, 0)  // neutral grey
+
+// === HTF 4-EMA stack s2_bias (same 8/26/80/233 set used across Cockpit) ===
+s2_htfEma1 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len1), lookahead=barmerge.lookahead_off)
+s2_htfEma2 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len2), lookahead=barmerge.lookahead_off)
+s2_htfEma3 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len3), lookahead=barmerge.lookahead_off)
+s2_htfEma4 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len4), lookahead=barmerge.lookahead_off)
+
+// Bias only fires on a full, cleanly ordered stack — anything crossed/tangled reads as flat
+s2_bullStack = s2_htfEma1 > s2_htfEma2 and s2_htfEma2 > s2_htfEma3 and s2_htfEma3 > s2_htfEma4
+s2_bearStack = s2_htfEma1 < s2_htfEma2 and s2_htfEma2 < s2_htfEma3 and s2_htfEma3 < s2_htfEma4
+
+s2_bias        = s2_bullStack ? 1 : s2_bearStack ? -1 : 0
+s2_biasChanged = s2_bias != s2_bias[1]
+
+// === Arrow markers on s2_bias flip (size split into one call per option — plotshape's
+// size argument must be a const, so the input can only pick which call actually fires) ===
+s2_bullFlip = s2_biasChanged and s2_bias == 1
+s2_bearFlip = s2_biasChanged and s2_bias == -1
+
+plotshape(s2_bullFlip and s2_arrowSize == size.tiny, "Bullish HTF Bias (tiny)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.tiny)
+plotshape(s2_bullFlip and s2_arrowSize == size.small, "Bullish HTF Bias (small)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.small)
+plotshape(s2_bullFlip and s2_arrowSize == size.normal, "Bullish HTF Bias (normal)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.normal)
+plotshape(s2_bullFlip and s2_arrowSize == size.large, "Bullish HTF Bias (large)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.large)
+
+plotshape(s2_bearFlip and s2_arrowSize == size.tiny, "Bearish HTF Bias (tiny)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.tiny)
+plotshape(s2_bearFlip and s2_arrowSize == size.small, "Bearish HTF Bias (small)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.small)
+plotshape(s2_bearFlip and s2_arrowSize == size.normal, "Bearish HTF Bias (normal)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.normal)
+plotshape(s2_bearFlip and s2_arrowSize == size.large, "Bearish HTF Bias (large)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.large)
+
+// === Persistent current-s2_bias label (single label, redrawn on last bar only,
+// offset to the right into the empty space ahead of price) ===
+var label s2_biasLabel = na
+if barstate.islast
+    label.delete(s2_biasLabel)
+    s2_biasTxt = s2_bias == 1 ? "▲ HTF BULLISH" : s2_bias == -1 ? "▼ HTF BEARISH" : "— HTF FLAT"
+    s2_biasCol = s2_bias == 1 ? s2_colBull : s2_bias == -1 ? s2_colBear : s2_colFlat
+    s2_biasLabel := label.new(bar_index + s2_labelOffsetBars, close, s2_biasTxt, style=label.style_label_left, color=color.new(color.black, 0), textcolor=s2_biasCol, size=size.small)
+
+// ============================================================
+// D3 — Regime Alert Panel
+// ============================================================
+
+// ============================================================
+// COC-D3 — Regime Alert Panel
+// Suite Build menu · Side course
+// Draws one table, bottom-left (Side course convention)
+// Lists currently-active regime CONDITIONS — analytical state
+// flags only. This is explicitly not an entry signal d3_panel:
+// nothing here fires an alert to buy or sell, only to describe
+// what the market is currently doing
+// ============================================================
+
+d3_grp1 = "[D3] Regime Score"
+d3_atrLen      = input.int(14, "ATR Length", group=d3_grp1)
+d3_atrBaseLen  = input.int(100, "ATR Baseline Length", group=d3_grp1)
+d3_adxLen      = input.int(14, "DMI Length", group=d3_grp1)
+d3_adxSmooth   = input.int(14, "ADX Smoothing", group=d3_grp1)
+
+d3_grp2 = "[D3] Grade Thresholds (0-90 scale)"
+d3_primeMin      = input.int(68, "PRIME minimum", group=d3_grp2)
+d3_favourableMin = input.int(45, "FAVOURABLE minimum", group=d3_grp2)
+d3_marginalMin   = input.int(23, "MARGINAL minimum", group=d3_grp2)
+
+d3_grp3 = "[D3] Regime Colours"
+d3_colPrime      = input.color(#c9a84c, "PRIME", group=d3_grp3)
+d3_colFavourable = input.color(#00abff, "FAVOURABLE", group=d3_grp3)
+d3_colMarginal   = input.color(#ff9800, "MARGINAL", group=d3_grp3)
+d3_colDegraded   = input.color(#f23645, "DEGRADED", group=d3_grp3)
+
+d3_grp4 = "[D3] Alert Conditions"
+d3_extremeVolRatio = input.float(2.0, "Extreme Volatility ratio (ATR / baseline ≥)", group=d3_grp4)
+d3_compressedVolRatio = input.float(0.5, "Extreme Compression ratio (ATR / baseline ≤)", group=d3_grp4)
+d3_recentChangeWindow = input.int(3, "Bars counted as \"Recently Changed\"", group=d3_grp4)
+
+d3_grp5 = "[D3] Table"
+d3_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=d3_grp5)
+
+// === Volatility component (0-45) ===
+d3_atrNow   = ta.atr(d3_atrLen)
+d3_atrBase  = ta.sma(d3_atrNow, d3_atrBaseLen)
+d3_volRatio = d3_atrBase == 0 ? 1.0 : d3_atrNow / d3_atrBase
+d3_volDeviation = math.abs(d3_volRatio - 1.0)
+d3_volScore = math.max(0.0, 45.0 - (d3_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[d3_diplus, d3_diminus, d3_adx] = ta.dmi(d3_adxLen, d3_adxSmooth)
+d3_adxScore = d3_adx <= 40 ? math.min(45.0, (d3_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((d3_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+d3_regimeScore = d3_volScore + d3_adxScore
+d3_grade      = d3_regimeScore >= d3_primeMin ? "PRIME" : d3_regimeScore >= d3_favourableMin ? "FAVOURABLE" : d3_regimeScore >= d3_marginalMin ? "MARGINAL" : "DEGRADED"
+d3_gradeColor = d3_regimeScore >= d3_primeMin ? d3_colPrime : d3_regimeScore >= d3_favourableMin ? d3_colFavourable : d3_regimeScore >= d3_marginalMin ? d3_colMarginal : d3_colDegraded
+
+// === Condition flags (state descriptions, not signals) ===
+d3_volExpanding   = d3_atrNow > d3_atrNow[1]
+d3_volCompressing = d3_atrNow < d3_atrNow[1]
+d3_trendStrengthening = d3_adx > d3_adx[1]
+d3_trendWeakening      = d3_adx < d3_adx[1]
+d3_extremeVol      = d3_volRatio >= d3_extremeVolRatio
+d3_extremeCompression = d3_volRatio <= d3_compressedVolRatio
+
+var string d3_prevGrade = na
+var int d3_barsSinceChange = 0
+d3_gradeChangedNow = not na(d3_prevGrade) and d3_grade != d3_prevGrade
+if d3_gradeChangedNow
+    d3_barsSinceChange := 0
+else
+    d3_barsSinceChange := d3_barsSinceChange + 1
+d3_prevGrade := d3_grade
+d3_recentlyChanged = d3_barsSinceChange <= d3_recentChangeWindow
+
+// === QP dark/gold dashboard theme ===
+d3_bgHeader = color.new(#1a1a1a, 0)
+d3_bgRow    = color.new(#0d0d0d, 10)
+d3_txtMuted = color.new(color.white, 40)
+d3_txtGold  = color.new(#c9a84c, 0)
+d3_colOn    = color.new(#c9a84c, 0)
+d3_colOff   = color.new(color.white, 55)
+
+d3_flagText(_active) => _active ? "ACTIVE" : "—"
+d3_flagColor(_active) => _active ? d3_colOn : d3_colOff
+
+// === Table — one table, bottom left ===
+var table d3_panel = table.new(position.bottom_left, 2, 9, border_width=1)
+
+if barstate.islast
+    table.cell(d3_panel, 0, 0, "REGIME ALERT PANEL", text_color=d3_txtGold, bgcolor=d3_bgHeader, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 0, "", bgcolor=d3_bgHeader, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 1, "Grade", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 1, d3_grade, text_color=d3_gradeColor, bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 2, "Volatility Expanding", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 2, d3_flagText(d3_volExpanding), text_color=d3_flagColor(d3_volExpanding), bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 3, "Volatility Compressing", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 3, d3_flagText(d3_volCompressing), text_color=d3_flagColor(d3_volCompressing), bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 4, "Trend Strengthening", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 4, d3_flagText(d3_trendStrengthening), text_color=d3_flagColor(d3_trendStrengthening), bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 5, "Trend Weakening", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 5, d3_flagText(d3_trendWeakening), text_color=d3_flagColor(d3_trendWeakening), bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 6, "Extreme Volatility", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 6, d3_flagText(d3_extremeVol), text_color=d3_extremeVol ? d3_colDegraded : d3_colOff, bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 7, "Extreme Compression", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 7, d3_flagText(d3_extremeCompression), text_color=d3_extremeCompression ? d3_colMarginal : d3_colOff, bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+    table.cell(d3_panel, 0, 8, "Grade Recently Changed", text_color=d3_txtMuted, bgcolor=d3_bgRow, text_size=d3_tableSize)
+    table.cell(d3_panel, 1, 8, d3_flagText(d3_recentlyChanged), text_color=d3_flagColor(d3_recentlyChanged), bgcolor=d3_bgRow, text_size=d3_tableSize)
+
+// ============================================================
+// T1 — Regime Report
+// ============================================================
+
+// ============================================================
+// COC-T1 — Regime Report
+// Suite Build menu · Dessert course
+// Draws one table, bottom-right (Dessert course convention)
+// Historical, cumulative — how much time has actually been
+// spent in each t1_grade since this was added to the chart, not
+// a live/current-state readout (that's Main/Side territory)
+// ============================================================
+
+t1_grp1 = "[T1] Regime Score"
+t1_atrLen      = input.int(14, "ATR Length", group=t1_grp1)
+t1_atrBaseLen  = input.int(100, "ATR Baseline Length", group=t1_grp1)
+t1_adxLen      = input.int(14, "DMI Length", group=t1_grp1)
+t1_adxSmooth   = input.int(14, "ADX Smoothing", group=t1_grp1)
+
+t1_grp2 = "[T1] Grade Thresholds (0-90 scale)"
+t1_primeMin      = input.int(68, "PRIME minimum", group=t1_grp2)
+t1_favourableMin = input.int(45, "FAVOURABLE minimum", group=t1_grp2)
+t1_marginalMin   = input.int(23, "MARGINAL minimum", group=t1_grp2)
+
+t1_grp3 = "[T1] Regime Colours"
+t1_colPrime      = input.color(#c9a84c, "PRIME", group=t1_grp3)
+t1_colFavourable = input.color(#00abff, "FAVOURABLE", group=t1_grp3)
+t1_colMarginal   = input.color(#ff9800, "MARGINAL", group=t1_grp3)
+t1_colDegraded   = input.color(#f23645, "DEGRADED", group=t1_grp3)
+
+t1_grp4 = "[T1] Lookback"
+t1_lookbackBars = input.int(480, "Lookback (bars) — 0 = all loaded history. Default 480 = one day of 3m candles", minval=0, group=t1_grp4)
+
+t1_grp5 = "[T1] Table"
+t1_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=t1_grp5)
+
+// === Volatility component (0-45) ===
+t1_atrNow   = ta.atr(t1_atrLen)
+t1_atrBase  = ta.sma(t1_atrNow, t1_atrBaseLen)
+t1_volRatio = t1_atrBase == 0 ? 1.0 : t1_atrNow / t1_atrBase
+t1_volDeviation = math.abs(t1_volRatio - 1.0)
+t1_volScore = math.max(0.0, 45.0 - (t1_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[t1_diplus, t1_diminus, t1_adx] = ta.dmi(t1_adxLen, t1_adxSmooth)
+t1_adxScore = t1_adx <= 40 ? math.min(45.0, (t1_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((t1_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+t1_regimeScore = t1_volScore + t1_adxScore
+t1_grade      = t1_regimeScore >= t1_primeMin ? "PRIME" : t1_regimeScore >= t1_favourableMin ? "FAVOURABLE" : t1_regimeScore >= t1_marginalMin ? "MARGINAL" : "DEGRADED"
+
+// === Cumulative bar counts per t1_grade — two modes:
+// bounded rolling window (ta.sma × length, recovers a rolling sum) when
+// t1_lookbackBars > 0, or unbounded since-chart-load counters when t1_lookbackBars = 0 ===
+t1_useLookback = t1_lookbackBars > 0
+t1_safeLen     = math.max(t1_lookbackBars, 1)
+
+t1_isPrime      = t1_grade == "PRIME" ? 1 : 0
+t1_isFavourable = t1_grade == "FAVOURABLE" ? 1 : 0
+t1_isMarginal   = t1_grade == "MARGINAL" ? 1 : 0
+t1_isDegraded   = t1_grade == "DEGRADED" ? 1 : 0
+
+t1_sumPrime      = ta.sma(t1_isPrime, t1_safeLen) * t1_safeLen
+t1_sumFavourable = ta.sma(t1_isFavourable, t1_safeLen) * t1_safeLen
+t1_sumMarginal   = ta.sma(t1_isMarginal, t1_safeLen) * t1_safeLen
+t1_sumDegraded   = ta.sma(t1_isDegraded, t1_safeLen) * t1_safeLen
+
+var int t1_cumPrime      = 0
+var int t1_cumFavourable = 0
+var int t1_cumMarginal   = 0
+var int t1_cumDegraded   = 0
+if t1_grade == "PRIME"
+    t1_cumPrime := t1_cumPrime + 1
+else if t1_grade == "FAVOURABLE"
+    t1_cumFavourable := t1_cumFavourable + 1
+else if t1_grade == "MARGINAL"
+    t1_cumMarginal := t1_cumMarginal + 1
+else
+    t1_cumDegraded := t1_cumDegraded + 1
+
+t1_primeBars      = t1_useLookback ? t1_sumPrime : t1_cumPrime
+t1_favourableBars = t1_useLookback ? t1_sumFavourable : t1_cumFavourable
+t1_marginalBars   = t1_useLookback ? t1_sumMarginal : t1_cumMarginal
+t1_degradedBars   = t1_useLookback ? t1_sumDegraded : t1_cumDegraded
+
+t1_totalBars = t1_primeBars + t1_favourableBars + t1_marginalBars + t1_degradedBars
+
+t1_pct(_count) => t1_totalBars == 0 ? 0.0 : (_count / t1_totalBars) * 100.0
+
+t1_headerLabel = t1_useLookback ? "REGIME REPORT (Last " + str.tostring(t1_lookbackBars) + ")" : "REGIME REPORT (All History)"
+
+// === Current streak — how long the t1_grade has held without changing ===
+var string t1_prevGrade = na
+var int t1_streakBars = 0
+if t1_grade == t1_prevGrade
+    t1_streakBars := t1_streakBars + 1
+else
+    t1_streakBars := 1
+t1_prevGrade := t1_grade
+
+t1_streakColor = t1_grade == "PRIME" ? t1_colPrime : t1_grade == "FAVOURABLE" ? t1_colFavourable : t1_grade == "MARGINAL" ? t1_colMarginal : t1_colDegraded
+
+// === QP dark/gold dashboard theme ===
+t1_bgHeader = color.new(#1a1a1a, 0)
+t1_bgRow    = color.new(#0d0d0d, 10)
+t1_txtMuted = color.new(color.white, 40)
+t1_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom right (Dessert course convention) ===
+var table t1_report = table.new(position.bottom_right, 3, 7, border_width=1)
+
+if barstate.islast
+    table.cell(t1_report, 0, 0, t1_headerLabel, text_color=t1_txtGold, bgcolor=t1_bgHeader, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 0, "", bgcolor=t1_bgHeader, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 0, "", bgcolor=t1_bgHeader, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 1, "PRIME", text_color=t1_colPrime, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 1, str.tostring(t1_primeBars, "#"), text_color=color.white, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 1, str.tostring(t1_pct(t1_primeBars), "#.#") + "%", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 2, "FAVOURABLE", text_color=t1_colFavourable, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 2, str.tostring(t1_favourableBars, "#"), text_color=color.white, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 2, str.tostring(t1_pct(t1_favourableBars), "#.#") + "%", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 3, "MARGINAL", text_color=t1_colMarginal, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 3, str.tostring(t1_marginalBars, "#"), text_color=color.white, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 3, str.tostring(t1_pct(t1_marginalBars), "#.#") + "%", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 4, "DEGRADED", text_color=t1_colDegraded, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 4, str.tostring(t1_degradedBars, "#"), text_color=color.white, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 4, str.tostring(t1_pct(t1_degradedBars), "#.#") + "%", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 5, "Total Bars", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 5, str.tostring(t1_totalBars, "#"), text_color=color.white, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 5, "", bgcolor=t1_bgRow, text_size=t1_tableSize)
+
+    table.cell(t1_report, 0, 6, "Current Streak", text_color=t1_txtMuted, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 1, 6, str.tostring(t1_streakBars) + " bars", text_color=t1_streakColor, bgcolor=t1_bgRow, text_size=t1_tableSize)
+    table.cell(t1_report, 2, 6, "", bgcolor=t1_bgRow, text_size=t1_tableSize)

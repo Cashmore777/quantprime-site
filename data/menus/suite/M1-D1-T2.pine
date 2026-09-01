@@ -1,0 +1,302 @@
+//@version=6
+indicator("Quant Prime — Suite [M1+D1+T2]", overlay=true)
+
+// ============================================================
+// M1 — Regime Scanner Table
+// ============================================================
+
+// ============================================================
+// COC-M1 — Regime Scanner Table
+// Suite Build menu · Main course
+// Draws one table, top-right (Main course convention — matches
+// the corner assigned to Main across the other Build menus so
+// no combination of pieces can collide)
+// ============================================================
+
+m1_grp1 = "[M1] Regime Score"
+m1_atrLen      = input.int(14, "ATR Length", group=m1_grp1)
+m1_atrBaseLen  = input.int(100, "ATR Baseline Length", group=m1_grp1)
+m1_adxLen      = input.int(14, "DMI Length", group=m1_grp1)
+m1_adxSmooth   = input.int(14, "ADX Smoothing", group=m1_grp1)
+
+m1_grp2 = "[M1] Grade Thresholds (0-90 scale)"
+m1_primeMin      = input.int(68, "PRIME minimum", group=m1_grp2)
+m1_favourableMin = input.int(45, "FAVOURABLE minimum", group=m1_grp2)
+m1_marginalMin   = input.int(23, "MARGINAL minimum", group=m1_grp2)
+
+m1_grp3 = "[M1] Regime Colours"
+m1_colPrime      = input.color(#c9a84c, "PRIME", group=m1_grp3)
+m1_colFavourable = input.color(#00abff, "FAVOURABLE", group=m1_grp3)
+m1_colMarginal   = input.color(#ff9800, "MARGINAL", group=m1_grp3)
+m1_colDegraded   = input.color(#f23645, "DEGRADED", group=m1_grp3)
+
+m1_grp4 = "[M1] Table"
+m1_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=m1_grp4)
+
+// === Volatility component (0-45) ===
+m1_atrNow   = ta.atr(m1_atrLen)
+m1_atrBase  = ta.sma(m1_atrNow, m1_atrBaseLen)
+m1_volRatio = m1_atrBase == 0 ? 1.0 : m1_atrNow / m1_atrBase
+m1_volDeviation = math.abs(m1_volRatio - 1.0)
+m1_volScore = math.max(0.0, 45.0 - (m1_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[m1_diplus, m1_diminus, m1_adx] = ta.dmi(m1_adxLen, m1_adxSmooth)
+m1_adxScore = m1_adx <= 40 ? math.min(45.0, (m1_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((m1_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+m1_regimeScore = m1_volScore + m1_adxScore
+
+m1_grade      = m1_regimeScore >= m1_primeMin ? "PRIME" : m1_regimeScore >= m1_favourableMin ? "FAVOURABLE" : m1_regimeScore >= m1_marginalMin ? "MARGINAL" : "DEGRADED"
+m1_gradeColor = m1_regimeScore >= m1_primeMin ? m1_colPrime : m1_regimeScore >= m1_favourableMin ? m1_colFavourable : m1_regimeScore >= m1_marginalMin ? m1_colMarginal : m1_colDegraded
+
+// === QP dark/gold dashboard theme (unified across Recoil/Meridian/Cockpit) ===
+m1_bgHeader = color.new(#1a1a1a, 0)
+m1_bgRow    = color.new(#0d0d0d, 10)
+m1_txtMuted = color.new(color.white, 40)
+m1_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, top right ===
+var table m1_scanner = table.new(position.top_right, 2, 7, border_width=1)
+
+if barstate.islast
+    // Header bar — two cells sharing one background since Pine tables have no merge function
+    table.cell(m1_scanner, 0, 0, "REGIME SCANNER", text_color=m1_txtGold, bgcolor=m1_bgHeader, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 0, "", text_color=m1_txtGold, bgcolor=m1_bgHeader, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 1, "Grade", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 1, m1_grade, text_color=m1_gradeColor, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 2, "Score", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 2, str.tostring(m1_regimeScore, "#.#") + " / 90", text_color=color.white, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 3, "Volatility", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 3, str.tostring(m1_volScore, "#.#") + " / 45", text_color=color.white, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 4, "Trend (ADX)", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 4, str.tostring(m1_adxScore, "#.#") + " / 45", text_color=color.white, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 5, "ATR / Baseline", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 5, str.tostring(m1_volRatio, "#.##") + "x", text_color=color.white, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+    table.cell(m1_scanner, 0, 6, "ADX", text_color=m1_txtMuted, bgcolor=m1_bgRow, text_size=m1_tableSize)
+    table.cell(m1_scanner, 1, 6, str.tostring(m1_adx, "#.#"), text_color=color.white, bgcolor=m1_bgRow, text_size=m1_tableSize)
+
+// ============================================================
+// D1 — Regime Clock
+// ============================================================
+
+// ============================================================
+// COC-D1 — Regime Clock
+// Suite Build menu · Side course
+// Draws one table, bottom-left (Side course convention)
+// Countdown to next regime recalculation — the regime score is
+// bar-based, so "next recalculation" is the next bar close
+// ============================================================
+
+d1_grp1 = "[D1] Regime Score"
+d1_atrLen      = input.int(14, "ATR Length", group=d1_grp1)
+d1_atrBaseLen  = input.int(100, "ATR Baseline Length", group=d1_grp1)
+d1_adxLen      = input.int(14, "DMI Length", group=d1_grp1)
+d1_adxSmooth   = input.int(14, "ADX Smoothing", group=d1_grp1)
+
+d1_grp2 = "[D1] Grade Thresholds (0-90 scale)"
+d1_primeMin      = input.int(68, "PRIME minimum", group=d1_grp2)
+d1_favourableMin = input.int(45, "FAVOURABLE minimum", group=d1_grp2)
+d1_marginalMin   = input.int(23, "MARGINAL minimum", group=d1_grp2)
+
+d1_grp3 = "[D1] Regime Colours"
+d1_colPrime      = input.color(#c9a84c, "PRIME", group=d1_grp3)
+d1_colFavourable = input.color(#00abff, "FAVOURABLE", group=d1_grp3)
+d1_colMarginal   = input.color(#ff9800, "MARGINAL", group=d1_grp3)
+d1_colDegraded   = input.color(#f23645, "DEGRADED", group=d1_grp3)
+
+d1_grp4 = "[D1] Table"
+d1_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=d1_grp4)
+
+// === Volatility component (0-45) ===
+d1_atrNow   = ta.atr(d1_atrLen)
+d1_atrBase  = ta.sma(d1_atrNow, d1_atrBaseLen)
+d1_volRatio = d1_atrBase == 0 ? 1.0 : d1_atrNow / d1_atrBase
+d1_volDeviation = math.abs(d1_volRatio - 1.0)
+d1_volScore = math.max(0.0, 45.0 - (d1_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[d1_diplus, d1_diminus, d1_adx] = ta.dmi(d1_adxLen, d1_adxSmooth)
+d1_adxScore = d1_adx <= 40 ? math.min(45.0, (d1_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((d1_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+d1_regimeScore = d1_volScore + d1_adxScore
+d1_grade      = d1_regimeScore >= d1_primeMin ? "PRIME" : d1_regimeScore >= d1_favourableMin ? "FAVOURABLE" : d1_regimeScore >= d1_marginalMin ? "MARGINAL" : "DEGRADED"
+d1_gradeColor = d1_regimeScore >= d1_primeMin ? d1_colPrime : d1_regimeScore >= d1_favourableMin ? d1_colFavourable : d1_regimeScore >= d1_marginalMin ? d1_colMarginal : d1_colDegraded
+
+// === Countdown to next bar close (next regime recalculation) ===
+d1_remainingSec = math.max(0, int((time_close - timenow) / 1000))
+
+d1_formatCountdown(_sec) =>
+    _h = int(_sec / 3600)
+    _m = int((_sec % 3600) / 60)
+    _s = int(_sec % 60)
+    _h > 0 ? str.tostring(_h) + "h " + str.tostring(_m) + "m" : _m > 0 ? str.tostring(_m) + "m " + str.tostring(_s) + "s" : str.tostring(_s) + "s"
+
+d1_countdownText = d1_formatCountdown(d1_remainingSec)
+
+// === QP dark/gold dashboard theme ===
+d1_bgHeader = color.new(#1a1a1a, 0)
+d1_bgRow    = color.new(#0d0d0d, 10)
+d1_txtMuted = color.new(color.white, 40)
+d1_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom left ===
+var table d1_clock = table.new(position.bottom_left, 2, 3, border_width=1)
+
+if barstate.islast
+    table.cell(d1_clock, 0, 0, "REGIME CLOCK", text_color=d1_txtGold, bgcolor=d1_bgHeader, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 0, "", bgcolor=d1_bgHeader, text_size=d1_tableSize)
+
+    table.cell(d1_clock, 0, 1, "Current Grade", text_color=d1_txtMuted, bgcolor=d1_bgRow, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 1, d1_grade, text_color=d1_gradeColor, bgcolor=d1_bgRow, text_size=d1_tableSize)
+
+    table.cell(d1_clock, 0, 2, "Next Recalc", text_color=d1_txtMuted, bgcolor=d1_bgRow, text_size=d1_tableSize)
+    table.cell(d1_clock, 1, 2, d1_countdownText, text_color=color.white, bgcolor=d1_bgRow, text_size=d1_tableSize)
+
+// ============================================================
+// T2 — Cross-TF Report
+// ============================================================
+
+// ============================================================
+// COC-T2 — Cross-TF Report
+// Suite Build menu · Dessert course
+// Draws one table, bottom-right (Dessert course convention)
+// Historical, bounded lookback — how often the three tracked
+// timeframes have actually agreed vs conflicted, not a live
+// current-state readout (that's M2's job)
+// ============================================================
+
+t2_grp1 = "[T2] Regime Score"
+t2_atrLen      = input.int(14, "ATR Length", group=t2_grp1)
+t2_atrBaseLen  = input.int(100, "ATR Baseline Length", group=t2_grp1)
+t2_adxLen      = input.int(14, "DMI Length", group=t2_grp1)
+t2_adxSmooth   = input.int(14, "ADX Smoothing", group=t2_grp1)
+
+t2_grp2 = "[T2] Grade Thresholds (0-90 scale)"
+t2_primeMin      = input.int(68, "PRIME minimum", group=t2_grp2)
+t2_favourableMin = input.int(45, "FAVOURABLE minimum", group=t2_grp2)
+t2_marginalMin   = input.int(23, "MARGINAL minimum", group=t2_grp2)
+
+t2_grp3 = "[T2] Timeframes"
+t2_tf1 = input.timeframe("", "Timeframe 1 (defaults to chart TF)", group=t2_grp3)
+t2_tf2 = input.timeframe("60", "Timeframe 2", group=t2_grp3)
+t2_tf3 = input.timeframe("240", "Timeframe 3", group=t2_grp3)
+
+t2_grp4 = "[T2] Lookback"
+t2_lookbackBars = input.int(480, "Lookback (bars) — 0 = all loaded history. Default 480 = one day of 3m candles", minval=0, group=t2_grp4)
+
+t2_grp5 = "[T2] Regime Colours"
+t2_colPrime      = input.color(#c9a84c, "PRIME", group=t2_grp5)
+t2_colFavourable = input.color(#00abff, "FAVOURABLE", group=t2_grp5)
+t2_colMarginal   = input.color(#ff9800, "MARGINAL", group=t2_grp5)
+t2_colDegraded   = input.color(#f23645, "DEGRADED", group=t2_grp5)
+
+t2_grp6 = "[T2] Table"
+t2_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=t2_grp6)
+
+// === Regime score, computed natively on whichever timeframe calls it ===
+t2_regimeScoreCalc(_atrLen, _atrBaseLen, _adxLen, _adxSmooth) =>
+    _atrNow = ta.atr(_atrLen)
+    _atrBase = ta.sma(_atrNow, _atrBaseLen)
+    _volRatio = _atrBase == 0 ? 1.0 : _atrNow / _atrBase
+    _volDeviation = math.abs(_volRatio - 1.0)
+    _volScore = math.max(0.0, 45.0 - (_volDeviation * 90.0))
+    [_diplus, _diminus, _adx] = ta.dmi(_adxLen, _adxSmooth)
+    _adxScore = _adx <= 40 ? math.min(45.0, (_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((_adx - 40.0) * 1.5))
+    _volScore + _adxScore
+
+t2_score1 = request.security(syminfo.tickerid, t2_tf1, t2_regimeScoreCalc(t2_atrLen, t2_atrBaseLen, t2_adxLen, t2_adxSmooth), lookahead=barmerge.lookahead_off)
+t2_score2 = request.security(syminfo.tickerid, t2_tf2, t2_regimeScoreCalc(t2_atrLen, t2_atrBaseLen, t2_adxLen, t2_adxSmooth), lookahead=barmerge.lookahead_off)
+t2_score3 = request.security(syminfo.tickerid, t2_tf3, t2_regimeScoreCalc(t2_atrLen, t2_atrBaseLen, t2_adxLen, t2_adxSmooth), lookahead=barmerge.lookahead_off)
+
+t2_gradeOf(_score) =>
+    _score >= t2_primeMin ? "PRIME" : _score >= t2_favourableMin ? "FAVOURABLE" : _score >= t2_marginalMin ? "MARGINAL" : "DEGRADED"
+
+t2_grade1 = t2_gradeOf(t2_score1)
+t2_grade2 = t2_gradeOf(t2_score2)
+t2_grade3 = t2_gradeOf(t2_score3)
+
+// === Per-bar agreement classification ===
+t2_allMatch = t2_grade1 == t2_grade2 and t2_grade2 == t2_grade3
+t2_twoMatch = not t2_allMatch and (t2_grade1 == t2_grade2 or t2_grade1 == t2_grade3 or t2_grade2 == t2_grade3)
+t2_noMatch  = not t2_allMatch and not t2_twoMatch
+
+t2_isFull    = t2_allMatch ? 1 : 0
+t2_isPartial = t2_twoMatch ? 1 : 0
+t2_isNone    = t2_noMatch ? 1 : 0
+
+// === Bounded rolling counts (ta.sma × length recovers a rolling sum — no ta.sum in Pine v6) ===
+t2_useLookback = t2_lookbackBars > 0
+t2_safeLen     = math.max(t2_lookbackBars, 1)
+
+t2_sumFull    = ta.sma(t2_isFull, t2_safeLen) * t2_safeLen
+t2_sumPartial = ta.sma(t2_isPartial, t2_safeLen) * t2_safeLen
+t2_sumNone    = ta.sma(t2_isNone, t2_safeLen) * t2_safeLen
+
+var int t2_cumFull    = 0
+var int t2_cumPartial = 0
+var int t2_cumNone    = 0
+if t2_allMatch
+    t2_cumFull := t2_cumFull + 1
+else if t2_twoMatch
+    t2_cumPartial := t2_cumPartial + 1
+else
+    t2_cumNone := t2_cumNone + 1
+
+t2_fullBars    = t2_useLookback ? t2_sumFull : t2_cumFull
+t2_partialBars = t2_useLookback ? t2_sumPartial : t2_cumPartial
+t2_noneBars    = t2_useLookback ? t2_sumNone : t2_cumNone
+t2_totalBars   = t2_fullBars + t2_partialBars + t2_noneBars
+
+t2_pct(_count) => t2_totalBars == 0 ? 0.0 : (_count / t2_totalBars) * 100.0
+
+t2_headerLabel = t2_useLookback ? "CROSS-TF REPORT (Last " + str.tostring(t2_lookbackBars) + ")" : "CROSS-TF REPORT (All History)"
+
+// === Live current state, for immediate context alongside the historical stats ===
+t2_currentStateText  = t2_allMatch ? "FULL (3/3)" : t2_twoMatch ? "PARTIAL (2/3)" : "NONE (0/3)"
+t2_currentStateColor = t2_allMatch ? t2_colPrime : t2_twoMatch ? t2_colMarginal : t2_colDegraded
+
+// === QP dark/gold dashboard theme ===
+t2_bgHeader = color.new(#1a1a1a, 0)
+t2_bgRow    = color.new(#0d0d0d, 10)
+t2_txtMuted = color.new(color.white, 40)
+t2_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom right (Dessert course convention) ===
+var table t2_report = table.new(position.bottom_right, 3, 7, border_width=1)
+
+if barstate.islast
+    table.cell(t2_report, 0, 0, t2_headerLabel, text_color=t2_txtGold, bgcolor=t2_bgHeader, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 0, "", bgcolor=t2_bgHeader, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 0, "", bgcolor=t2_bgHeader, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 1, "Match = same grade name, not same score", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=size.tiny)
+    table.cell(t2_report, 1, 1, "", bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 1, "", bgcolor=t2_bgRow, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 2, "Full Agreement (3/3)", text_color=t2_colPrime, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 2, str.tostring(t2_fullBars, "#"), text_color=color.white, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 2, str.tostring(t2_pct(t2_fullBars), "#.#") + "%", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 3, "Partial (2/3)", text_color=t2_colMarginal, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 3, str.tostring(t2_partialBars, "#"), text_color=color.white, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 3, str.tostring(t2_pct(t2_partialBars), "#.#") + "%", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 4, "No Agreement (0/3)", text_color=t2_colDegraded, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 4, str.tostring(t2_noneBars, "#"), text_color=color.white, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 4, str.tostring(t2_pct(t2_noneBars), "#.#") + "%", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 5, "Total Bars", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 5, str.tostring(t2_totalBars, "#"), text_color=color.white, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 5, "", bgcolor=t2_bgRow, text_size=t2_tableSize)
+
+    table.cell(t2_report, 0, 6, "Current State", text_color=t2_txtMuted, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 1, 6, t2_currentStateText, text_color=t2_currentStateColor, bgcolor=t2_bgRow, text_size=t2_tableSize)
+    table.cell(t2_report, 2, 6, "", bgcolor=t2_bgRow, text_size=t2_tableSize)

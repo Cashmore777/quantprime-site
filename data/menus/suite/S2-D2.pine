@@ -1,0 +1,194 @@
+//@version=6
+indicator("Quant Prime — Suite [S2+D2]", overlay=true)
+
+// ============================================================
+// S2 — HTF Bias Arrow
+// ============================================================
+
+// ============================================================
+// COC-S2 — HTF Bias Arrow
+// Suite Build menu · Starter course
+// Draws no tables (per QP Build convention for Starter pieces)
+// ============================================================
+
+s2_grp = "[S2] HTF Bias"
+s2_htf   = input.timeframe("240", "Higher Timeframe", group=s2_grp)
+s2_len1  = input.int(8, "EMA 1", group=s2_grp)
+s2_len2  = input.int(26, "EMA 2", group=s2_grp)
+s2_len3  = input.int(80, "EMA 3", group=s2_grp)
+s2_len4  = input.int(233, "EMA 4", group=s2_grp)
+s2_arrowSize = input.string(size.small, "Arrow Size", options=[size.tiny, size.small, size.normal, size.large], group=s2_grp)
+
+s2_grp2 = "[S2] Label"
+s2_labelOffsetBars = input.int(15, "Label Offset (bars ahead of price)", minval=1, maxval=200, group=s2_grp2)
+
+// === QP Brand Colours ===
+s2_colBull = color.new(#00abff, 0)  // cyan
+s2_colBear = color.new(#f23645, 0)  // red
+s2_colFlat = color.new(#787b86, 0)  // neutral grey
+
+// === HTF 4-EMA stack s2_bias (same 8/26/80/233 set used across Cockpit) ===
+s2_htfEma1 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len1), lookahead=barmerge.lookahead_off)
+s2_htfEma2 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len2), lookahead=barmerge.lookahead_off)
+s2_htfEma3 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len3), lookahead=barmerge.lookahead_off)
+s2_htfEma4 = request.security(syminfo.tickerid, s2_htf, ta.ema(close, s2_len4), lookahead=barmerge.lookahead_off)
+
+// Bias only fires on a full, cleanly ordered stack — anything crossed/tangled reads as flat
+s2_bullStack = s2_htfEma1 > s2_htfEma2 and s2_htfEma2 > s2_htfEma3 and s2_htfEma3 > s2_htfEma4
+s2_bearStack = s2_htfEma1 < s2_htfEma2 and s2_htfEma2 < s2_htfEma3 and s2_htfEma3 < s2_htfEma4
+
+s2_bias        = s2_bullStack ? 1 : s2_bearStack ? -1 : 0
+s2_biasChanged = s2_bias != s2_bias[1]
+
+// === Arrow markers on s2_bias flip (size split into one call per option — plotshape's
+// size argument must be a const, so the input can only pick which call actually fires) ===
+s2_bullFlip = s2_biasChanged and s2_bias == 1
+s2_bearFlip = s2_biasChanged and s2_bias == -1
+
+plotshape(s2_bullFlip and s2_arrowSize == size.tiny, "Bullish HTF Bias (tiny)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.tiny)
+plotshape(s2_bullFlip and s2_arrowSize == size.small, "Bullish HTF Bias (small)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.small)
+plotshape(s2_bullFlip and s2_arrowSize == size.normal, "Bullish HTF Bias (normal)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.normal)
+plotshape(s2_bullFlip and s2_arrowSize == size.large, "Bullish HTF Bias (large)", style=shape.triangleup, location=location.belowbar, color=s2_colBull, size=size.large)
+
+plotshape(s2_bearFlip and s2_arrowSize == size.tiny, "Bearish HTF Bias (tiny)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.tiny)
+plotshape(s2_bearFlip and s2_arrowSize == size.small, "Bearish HTF Bias (small)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.small)
+plotshape(s2_bearFlip and s2_arrowSize == size.normal, "Bearish HTF Bias (normal)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.normal)
+plotshape(s2_bearFlip and s2_arrowSize == size.large, "Bearish HTF Bias (large)", style=shape.triangledown, location=location.abovebar, color=s2_colBear, size=size.large)
+
+// === Persistent current-s2_bias label (single label, redrawn on last bar only,
+// offset to the right into the empty space ahead of price) ===
+var label s2_biasLabel = na
+if barstate.islast
+    label.delete(s2_biasLabel)
+    s2_biasTxt = s2_bias == 1 ? "▲ HTF BULLISH" : s2_bias == -1 ? "▼ HTF BEARISH" : "— HTF FLAT"
+    s2_biasCol = s2_bias == 1 ? s2_colBull : s2_bias == -1 ? s2_colBear : s2_colFlat
+    s2_biasLabel := label.new(bar_index + s2_labelOffsetBars, close, s2_biasTxt, style=label.style_label_left, color=color.new(color.black, 0), textcolor=s2_biasCol, size=size.small)
+
+// ============================================================
+// D2 — Confidence Meter
+// ============================================================
+
+// ============================================================
+// COC-D2 — Confidence Meter
+// Suite Build menu · Side course
+// Draws one table, bottom-left (Side course convention)
+// How many of the underlying regime components currently agree
+// with the overall d2_grade, not just the d2_grade itself
+// ============================================================
+
+d2_grp1 = "[D2] Regime Score"
+d2_atrLen      = input.int(14, "ATR Length", group=d2_grp1)
+d2_atrBaseLen  = input.int(100, "ATR Baseline Length", group=d2_grp1)
+d2_adxLen      = input.int(14, "DMI Length", group=d2_grp1)
+d2_adxSmooth   = input.int(14, "ADX Smoothing", group=d2_grp1)
+
+d2_grp2 = "[D2] Grade Thresholds (0-90 scale)"
+d2_primeMin      = input.int(68, "PRIME minimum", group=d2_grp2)
+d2_favourableMin = input.int(45, "FAVOURABLE minimum", group=d2_grp2)
+d2_marginalMin   = input.int(23, "MARGINAL minimum", group=d2_grp2)
+
+d2_grp3 = "[D2] Regime Colours"
+d2_colPrime      = input.color(#c9a84c, "PRIME", group=d2_grp3)
+d2_colFavourable = input.color(#00abff, "FAVOURABLE", group=d2_grp3)
+d2_colMarginal   = input.color(#ff9800, "MARGINAL", group=d2_grp3)
+d2_colDegraded   = input.color(#f23645, "DEGRADED", group=d2_grp3)
+
+d2_grp4 = "[D2] Table"
+d2_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=d2_grp4)
+
+d2_grp5 = "[D2] Stability Thresholds"
+d2_stableMargin   = input.float(10.0, "STABLE if d2_margin ≥", group=d2_grp5)
+d2_borderlineMargin = input.float(3.0, "BORDERLINE if d2_margin <", group=d2_grp5)
+
+// === Volatility component (0-45) ===
+d2_atrNow   = ta.atr(d2_atrLen)
+d2_atrBase  = ta.sma(d2_atrNow, d2_atrBaseLen)
+d2_volRatio = d2_atrBase == 0 ? 1.0 : d2_atrNow / d2_atrBase
+d2_volDeviation = math.abs(d2_volRatio - 1.0)
+d2_volScore = math.max(0.0, 45.0 - (d2_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[d2_diplus, d2_diminus, d2_adx] = ta.dmi(d2_adxLen, d2_adxSmooth)
+d2_adxScore = d2_adx <= 40 ? math.min(45.0, (d2_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((d2_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+d2_regimeScore = d2_volScore + d2_adxScore
+d2_grade      = d2_regimeScore >= d2_primeMin ? "PRIME" : d2_regimeScore >= d2_favourableMin ? "FAVOURABLE" : d2_regimeScore >= d2_marginalMin ? "MARGINAL" : "DEGRADED"
+d2_gradeColor = d2_regimeScore >= d2_primeMin ? d2_colPrime : d2_regimeScore >= d2_favourableMin ? d2_colFavourable : d2_regimeScore >= d2_marginalMin ? d2_colMarginal : d2_colDegraded
+
+// === Metric 1: AGREEMENT — do the two components independently support the
+// same tier as the overall d2_grade, or is the composite propped up by one side ===
+d2_compPrimeMin      = d2_primeMin / 2.0
+d2_compFavourableMin = d2_favourableMin / 2.0
+d2_compMarginalMin   = d2_marginalMin / 2.0
+
+d2_tierOf(_score, _pMin, _fMin, _mMin) =>
+    _score >= _pMin ? 3 : _score >= _fMin ? 2 : _score >= _mMin ? 1 : 0
+
+d2_overallTier = d2_tierOf(d2_regimeScore, d2_primeMin, d2_favourableMin, d2_marginalMin)
+d2_volTier     = d2_tierOf(d2_volScore, d2_compPrimeMin, d2_compFavourableMin, d2_compMarginalMin)
+d2_adxTier     = d2_tierOf(d2_adxScore, d2_compPrimeMin, d2_compFavourableMin, d2_compMarginalMin)
+
+d2_volAgrees = d2_volTier == d2_overallTier
+d2_adxAgrees = d2_adxTier == d2_overallTier
+
+d2_agreeCount = (d2_volAgrees ? 1 : 0) + (d2_adxAgrees ? 1 : 0)
+d2_agreementText  = d2_agreeCount == 2 ? "HIGH" : d2_agreeCount == 1 ? "MIXED" : "LOW"
+d2_agreementColor = d2_agreeCount == 2 ? d2_colPrime : d2_agreeCount == 1 ? d2_colMarginal : d2_colDegraded
+
+// === Metric 2: STABILITY — how close the score sits to the nearest boundary
+// that would actually flip the d2_grade (independent of whether components agree) ===
+d2_marginToBoundary(_score, _pMin, _fMin, _mMin) =>
+    float _lower = na
+    float _upper = na
+    if _score >= _pMin
+        _lower := _pMin
+    else if _score >= _fMin
+        _lower := _fMin
+        _upper := _pMin
+    else if _score >= _mMin
+        _lower := _mMin
+        _upper := _fMin
+    else
+        _upper := _mMin
+    distDown = na(_lower) ? na : _score - _lower
+    distUp   = na(_upper) ? na : _upper - _score
+    na(distDown) ? distUp : na(distUp) ? distDown : math.min(distDown, distUp)
+
+d2_margin = d2_marginToBoundary(d2_regimeScore, d2_primeMin, d2_favourableMin, d2_marginalMin)
+d2_stabilityText  = d2_margin >= d2_stableMargin ? "STABLE" : d2_margin >= d2_borderlineMargin ? "MODERATE" : "BORDERLINE"
+d2_stabilityColor = d2_margin >= d2_stableMargin ? d2_colPrime : d2_margin >= d2_borderlineMargin ? d2_colMarginal : d2_colDegraded
+
+// === QP dark/gold dashboard theme ===
+d2_bgHeader = color.new(#1a1a1a, 0)
+d2_bgRow    = color.new(#0d0d0d, 10)
+d2_txtMuted = color.new(color.white, 40)
+d2_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom left ===
+var table d2_meter = table.new(position.bottom_left, 2, 8, border_width=1)
+
+if barstate.islast
+    table.cell(d2_meter, 0, 0, "CONFIDENCE METER", text_color=d2_txtGold, bgcolor=d2_bgHeader, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 0, "", bgcolor=d2_bgHeader, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 1, "Grade", text_color=d2_txtMuted, bgcolor=d2_bgRow, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 1, d2_grade, text_color=d2_gradeColor, bgcolor=d2_bgRow, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 2, "— Agreement —", text_color=d2_txtMuted, bgcolor=d2_bgHeader, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 2, "", bgcolor=d2_bgHeader, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 3, "Volatility Agrees", text_color=d2_txtMuted, bgcolor=d2_bgRow, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 3, d2_volAgrees ? "Yes" : "No", text_color=d2_volAgrees ? d2_colPrime : d2_colDegraded, bgcolor=d2_bgRow, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 4, "Trend Agrees", text_color=d2_txtMuted, bgcolor=d2_bgRow, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 4, d2_adxAgrees ? "Yes" : "No", text_color=d2_adxAgrees ? d2_colPrime : d2_colDegraded, bgcolor=d2_bgRow, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 5, "Agreement", text_color=d2_txtMuted, bgcolor=d2_bgRow, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 5, d2_agreementText, text_color=d2_agreementColor, bgcolor=d2_bgRow, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 6, "— Stability —", text_color=d2_txtMuted, bgcolor=d2_bgHeader, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 6, "", bgcolor=d2_bgHeader, text_size=d2_tableSize)
+
+    table.cell(d2_meter, 0, 7, "Margin / Stability", text_color=d2_txtMuted, bgcolor=d2_bgRow, text_size=d2_tableSize)
+    table.cell(d2_meter, 1, 7, str.tostring(d2_margin, "#.#") + " pts — " + d2_stabilityText, text_color=d2_stabilityColor, bgcolor=d2_bgRow, text_size=d2_tableSize)

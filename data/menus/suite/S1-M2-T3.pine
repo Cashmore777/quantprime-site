@@ -1,0 +1,323 @@
+//@version=6
+indicator("Quant Prime — Suite [S1+M2+T3]", overlay=true)
+
+// ============================================================
+// S1 — Regime Score Ribbon
+// ============================================================
+
+// ============================================================
+// COC-S1 — Regime Score Ribbon
+// Suite Build menu · Starter course
+// Draws no tables (per QP Build convention for Starter pieces)
+// ============================================================
+
+// === Regime Score Inputs ===
+s1_grp1 = "[S1] Regime Score"
+s1_atrLen      = input.int(14, "ATR Length", group=s1_grp1)
+s1_atrBaseLen  = input.int(100, "ATR Baseline Length", group=s1_grp1)
+s1_adxLen      = input.int(14, "DMI Length", group=s1_grp1)
+s1_adxSmooth   = input.int(14, "ADX Smoothing", group=s1_grp1)
+
+s1_grp2 = "[S1] Grade Thresholds (0-90 scale)"
+s1_primeMin      = input.int(68, "PRIME minimum", group=s1_grp2)
+s1_favourableMin = input.int(45, "FAVOURABLE minimum", group=s1_grp2)
+s1_marginalMin   = input.int(23, "MARGINAL minimum", group=s1_grp2)
+
+s1_grp3 = "[S1] Ribbon"
+s1_ribbonOffsetATR = input.float(1.5, "Ribbon Offset (x ATR below low)", minval=0.1, group=s1_grp3)
+s1_ribbonWidth     = input.int(3, "Ribbon Thickness", minval=1, maxval=10, group=s1_grp3)
+
+s1_grp4 = "[S1] Regime Colours"
+s1_colPrime      = input.color(#c9a84c, "PRIME", group=s1_grp4)
+s1_colFavourable = input.color(#00abff, "FAVOURABLE", group=s1_grp4)
+s1_colMarginal   = input.color(#ff9800, "MARGINAL", group=s1_grp4)
+s1_colDegraded   = input.color(#f23645, "DEGRADED", group=s1_grp4)
+
+// === Volatility component (0-45): penalises deviation from baseline in either direction ===
+s1_atrNow   = ta.atr(s1_atrLen)
+s1_atrBase  = ta.sma(s1_atrNow, s1_atrBaseLen)
+s1_volRatio = s1_atrBase == 0 ? 1.0 : s1_atrNow / s1_atrBase
+s1_volDeviation = math.abs(s1_volRatio - 1.0)
+s1_volScore = math.max(0.0, 45.0 - (s1_volDeviation * 90.0))
+
+// === Trend-strength component (0-45): moderate ADX scores highest, extreme ADX decays ===
+[s1_diplus, s1_diminus, s1_adx] = ta.dmi(s1_adxLen, s1_adxSmooth)
+s1_adxScore = s1_adx <= 40 ? math.min(45.0, (s1_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((s1_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) ===
+s1_regimeScore = s1_volScore + s1_adxScore
+
+s1_gradeColor = s1_regimeScore >= s1_primeMin ? s1_colPrime : s1_regimeScore >= s1_favourableMin ? s1_colFavourable : s1_regimeScore >= s1_marginalMin ? s1_colMarginal : s1_colDegraded
+
+// === Ribbon plot — offset below current low, colour-graded by regime ===
+s1_ribbonY = low - (s1_atrNow * s1_ribbonOffsetATR)
+plot(s1_ribbonY, "Regime Ribbon", color=s1_gradeColor, linewidth=s1_ribbonWidth, style=plot.style_line)
+
+// ============================================================
+// M2 — Multi-TF Regime Aggregator
+// ============================================================
+
+// ============================================================
+// COC-M2 — Multi-TF Regime Aggregator
+// Suite Build menu · Main course
+// Draws one table, top-right (Main course convention — only one
+// Main-course piece is ever active in a given Build combination,
+// so M1/M2/M3 can safely share the same corner)
+// ============================================================
+
+m2_grp1 = "[M2] Regime Score"
+m2_atrLen      = input.int(14, "ATR Length", group=m2_grp1)
+m2_atrBaseLen  = input.int(100, "ATR Baseline Length", group=m2_grp1)
+m2_adxLen      = input.int(14, "DMI Length", group=m2_grp1)
+m2_adxSmooth   = input.int(14, "ADX Smoothing", group=m2_grp1)
+
+m2_grp2 = "[M2] Grade Thresholds (0-90 scale)"
+m2_primeMin      = input.int(68, "PRIME minimum", group=m2_grp2)
+m2_favourableMin = input.int(45, "FAVOURABLE minimum", group=m2_grp2)
+m2_marginalMin   = input.int(23, "MARGINAL minimum", group=m2_grp2)
+
+m2_grp3 = "[M2] Timeframes"
+m2_tf1 = input.timeframe("", "Timeframe 1 (defaults to chart TF)", group=m2_grp3)
+m2_tf2 = input.timeframe("60", "Timeframe 2", group=m2_grp3)
+m2_tf3 = input.timeframe("240", "Timeframe 3", group=m2_grp3)
+
+m2_grp4 = "[M2] Regime Colours"
+m2_colPrime      = input.color(#c9a84c, "PRIME", group=m2_grp4)
+m2_colFavourable = input.color(#00abff, "FAVOURABLE", group=m2_grp4)
+m2_colMarginal   = input.color(#ff9800, "MARGINAL", group=m2_grp4)
+m2_colDegraded   = input.color(#f23645, "DEGRADED", group=m2_grp4)
+
+m2_grp5 = "[M2] Table"
+m2_tableSize = input.string(size.small, "Table Text Size", options=[size.tiny, size.small, size.normal], group=m2_grp5)
+
+// === Regime score, computed natively on whichever timeframe calls it ===
+m2_regimeScoreCalc(_atrLen, _atrBaseLen, _adxLen, _adxSmooth) =>
+    _atrNow = ta.atr(_atrLen)
+    _atrBase = ta.sma(_atrNow, _atrBaseLen)
+    _volRatio = _atrBase == 0 ? 1.0 : _atrNow / _atrBase
+    _volDeviation = math.abs(_volRatio - 1.0)
+    _volScore = math.max(0.0, 45.0 - (_volDeviation * 90.0))
+    [_diplus, _diminus, _adx] = ta.dmi(_adxLen, _adxSmooth)
+    _adxScore = _adx <= 40 ? math.min(45.0, (_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((_adx - 40.0) * 1.5))
+    _volScore + _adxScore
+
+m2_score1 = request.security(syminfo.tickerid, m2_tf1, m2_regimeScoreCalc(m2_atrLen, m2_atrBaseLen, m2_adxLen, m2_adxSmooth), lookahead=barmerge.lookahead_off)
+m2_score2 = request.security(syminfo.tickerid, m2_tf2, m2_regimeScoreCalc(m2_atrLen, m2_atrBaseLen, m2_adxLen, m2_adxSmooth), lookahead=barmerge.lookahead_off)
+m2_score3 = request.security(syminfo.tickerid, m2_tf3, m2_regimeScoreCalc(m2_atrLen, m2_atrBaseLen, m2_adxLen, m2_adxSmooth), lookahead=barmerge.lookahead_off)
+
+m2_gradeOf(_score) =>
+    _score >= m2_primeMin ? "PRIME" : _score >= m2_favourableMin ? "FAVOURABLE" : _score >= m2_marginalMin ? "MARGINAL" : "DEGRADED"
+
+m2_colorOf(_score) =>
+    _score >= m2_primeMin ? m2_colPrime : _score >= m2_favourableMin ? m2_colFavourable : _score >= m2_marginalMin ? m2_colMarginal : m2_colDegraded
+
+m2_grade1 = m2_gradeOf(m2_score1)
+m2_grade2 = m2_gradeOf(m2_score2)
+m2_grade3 = m2_gradeOf(m2_score3)
+m2_color1 = m2_colorOf(m2_score1)
+m2_color2 = m2_colorOf(m2_score2)
+m2_color3 = m2_colorOf(m2_score3)
+
+// Tradeable = FAVOURABLE or better, per the manifesto's own sizing guidance
+m2_tradeableCount = (m2_score1 >= m2_favourableMin ? 1 : 0) + (m2_score2 >= m2_favourableMin ? 1 : 0) + (m2_score3 >= m2_favourableMin ? 1 : 0)
+
+// === Readable timeframe labels for the header row ===
+m2_tfLabel(_tf) =>
+    _mins = timeframe.in_seconds(_tf) / 60
+    _mins < 60 ? str.tostring(_mins, "#") + "m" : _mins < 1440 ? str.tostring(_mins / 60, "#") + "H" : str.tostring(_mins / 1440, "#") + "D"
+
+m2_label1 = m2_tfLabel(m2_tf1)
+m2_label2 = m2_tfLabel(m2_tf2)
+m2_label3 = m2_tfLabel(m2_tf3)
+
+// === QP dark/gold dashboard theme ===
+m2_bgHeader = color.new(#1a1a1a, 0)
+m2_bgRow    = color.new(#0d0d0d, 10)
+m2_txtMuted = color.new(color.white, 40)
+m2_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, top right, 4 columns (label + 3 timeframes) ===
+var table m2_agg = table.new(position.top_right, 4, 5, border_width=1)
+
+if barstate.islast
+    table.cell(m2_agg, 0, 0, "REGIME AGGREGATOR", text_color=m2_txtGold, bgcolor=m2_bgHeader, text_size=m2_tableSize)
+    table.cell(m2_agg, 1, 0, "", bgcolor=m2_bgHeader, text_size=m2_tableSize)
+    table.cell(m2_agg, 2, 0, "", bgcolor=m2_bgHeader, text_size=m2_tableSize)
+    table.cell(m2_agg, 3, 0, "", bgcolor=m2_bgHeader, text_size=m2_tableSize)
+
+    table.cell(m2_agg, 0, 1, "", text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 1, 1, m2_label1, text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 2, 1, m2_label2, text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 3, 1, m2_label3, text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+
+    table.cell(m2_agg, 0, 2, "Grade", text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 1, 2, m2_grade1, text_color=m2_color1, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 2, 2, m2_grade2, text_color=m2_color2, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 3, 2, m2_grade3, text_color=m2_color3, bgcolor=m2_bgRow, text_size=m2_tableSize)
+
+    table.cell(m2_agg, 0, 3, "Score", text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 1, 3, str.tostring(m2_score1, "#.#"), text_color=color.white, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 2, 3, str.tostring(m2_score2, "#.#"), text_color=color.white, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 3, 3, str.tostring(m2_score3, "#.#"), text_color=color.white, bgcolor=m2_bgRow, text_size=m2_tableSize)
+
+    table.cell(m2_agg, 0, 4, "Tradeable", text_color=m2_txtMuted, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 1, 4, str.tostring(m2_tradeableCount) + " / 3", text_color=m2_txtGold, bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 2, 4, "", bgcolor=m2_bgRow, text_size=m2_tableSize)
+    table.cell(m2_agg, 3, 4, "", bgcolor=m2_bgRow, text_size=m2_tableSize)
+
+// ============================================================
+// T3 — Session Regime Report
+// ============================================================
+
+// ============================================================
+// COC-T3 — Session Regime Report
+// Suite Build menu · Dessert course
+// Draws one table, bottom-right (Dessert course convention)
+// Historical, bounded lookback — which of the three named
+// sessions tends to produce which t3_grade most often. Last of
+// the 12 Suite pieces.
+// ============================================================
+
+t3_grp1 = "[T3] Regime Score"
+t3_atrLen      = input.int(14, "ATR Length", group=t3_grp1)
+t3_atrBaseLen  = input.int(100, "ATR Baseline Length", group=t3_grp1)
+t3_adxLen      = input.int(14, "DMI Length", group=t3_grp1)
+t3_adxSmooth   = input.int(14, "ADX Smoothing", group=t3_grp1)
+
+t3_grp2 = "[T3] Grade Thresholds (0-90 scale)"
+t3_primeMin      = input.int(68, "PRIME minimum", group=t3_grp2)
+t3_favourableMin = input.int(45, "FAVOURABLE minimum", group=t3_grp2)
+t3_marginalMin   = input.int(23, "MARGINAL minimum", group=t3_grp2)
+
+t3_grp3 = "[T3] Sessions (UTC)"
+t3_asiaSession   = input.session("1900-0600", "Asia", group=t3_grp3)
+t3_londonSession = input.session("0700-1200", "London", group=t3_grp3)
+t3_nySession     = input.session("1200-1700", "New York", group=t3_grp3)
+
+t3_grp4 = "[T3] Lookback"
+t3_lookbackBars = input.int(0, "Lookback (bars) — 0 = all loaded history. Set 480 for one day of 3m candles", minval=0, group=t3_grp4)
+
+t3_grp5 = "[T3] Regime Colours"
+t3_colPrime      = input.color(#c9a84c, "PRIME", group=t3_grp5)
+t3_colFavourable = input.color(#00abff, "FAVOURABLE", group=t3_grp5)
+t3_colMarginal   = input.color(#ff9800, "MARGINAL", group=t3_grp5)
+t3_colDegraded   = input.color(#f23645, "DEGRADED", group=t3_grp5)
+
+t3_grp6 = "[T3] Table"
+t3_tableSize = input.string(size.normal, "Table Text Size", options=[size.tiny, size.small, size.normal], group=t3_grp6)
+
+// === Volatility component (0-45) ===
+t3_atrNow   = ta.atr(t3_atrLen)
+t3_atrBase  = ta.sma(t3_atrNow, t3_atrBaseLen)
+t3_volRatio = t3_atrBase == 0 ? 1.0 : t3_atrNow / t3_atrBase
+t3_volDeviation = math.abs(t3_volRatio - 1.0)
+t3_volScore = math.max(0.0, 45.0 - (t3_volDeviation * 90.0))
+
+// === Trend-strength component (0-45) ===
+[t3_diplus, t3_diminus, t3_adx] = ta.dmi(t3_adxLen, t3_adxSmooth)
+t3_adxScore = t3_adx <= 40 ? math.min(45.0, (t3_adx / 40.0) * 45.0) : math.max(0.0, 45.0 - ((t3_adx - 40.0) * 1.5))
+
+// === Composite Regime Score (0-90) + Grade ===
+t3_regimeScore = t3_volScore + t3_adxScore
+t3_grade = t3_regimeScore >= t3_primeMin ? "PRIME" : t3_regimeScore >= t3_favourableMin ? "FAVOURABLE" : t3_regimeScore >= t3_marginalMin ? "MARGINAL" : "DEGRADED"
+
+// === Session membership (independent — sessions may overlap, e.g. London/NY) ===
+t3_inAsia   = not na(time(timeframe.period, t3_asiaSession, "UTC"))
+t3_inLondon = not na(time(timeframe.period, t3_londonSession, "UTC"))
+t3_inNY     = not na(time(timeframe.period, t3_nySession, "UTC"))
+
+// === Per-session, per-t3_grade bar masks ===
+t3_sessionGradeMasks(_inSession, _grade) =>
+    _p = _inSession and _grade == "PRIME" ? 1 : 0
+    _f = _inSession and _grade == "FAVOURABLE" ? 1 : 0
+    _m = _inSession and _grade == "MARGINAL" ? 1 : 0
+    _d = _inSession and _grade == "DEGRADED" ? 1 : 0
+    [_p, _f, _m, _d]
+
+[t3_asiaP, t3_asiaF, t3_asiaM, t3_asiaD]       = t3_sessionGradeMasks(t3_inAsia, t3_grade)
+[t3_londonP, t3_londonF, t3_londonM, t3_londonD] = t3_sessionGradeMasks(t3_inLondon, t3_grade)
+[t3_nyP, t3_nyF, t3_nyM, t3_nyD]               = t3_sessionGradeMasks(t3_inNY, t3_grade)
+
+// === Bounded rolling counts (ta.sma × length recovers a rolling sum — no ta.sum in Pine v6) ===
+t3_useLookback = t3_lookbackBars > 0
+t3_safeLen     = math.max(t3_lookbackBars, 1)
+
+t3_rollSum(_src) => ta.sma(_src, t3_safeLen) * t3_safeLen
+
+t3_asiaPCount = t3_rollSum(t3_asiaP)
+t3_asiaFCount = t3_rollSum(t3_asiaF)
+t3_asiaMCount = t3_rollSum(t3_asiaM)
+t3_asiaDCount = t3_rollSum(t3_asiaD)
+
+t3_londonPCount = t3_rollSum(t3_londonP)
+t3_londonFCount = t3_rollSum(t3_londonF)
+t3_londonMCount = t3_rollSum(t3_londonM)
+t3_londonDCount = t3_rollSum(t3_londonD)
+
+t3_nyPCount = t3_rollSum(t3_nyP)
+t3_nyFCount = t3_rollSum(t3_nyF)
+t3_nyMCount = t3_rollSum(t3_nyM)
+t3_nyDCount = t3_rollSum(t3_nyD)
+
+// === Dominant t3_grade + tradeable % (PRIME+FAVOURABLE share) per session ===
+t3_dominant(_p, _f, _m, _d) =>
+    _total = _p + _f + _m + _d
+    _max = math.max(_p, math.max(_f, math.max(_m, _d)))
+    _grade = _total == 0 ? "—" : _max == _p ? "PRIME" : _max == _f ? "FAVOURABLE" : _max == _m ? "MARGINAL" : "DEGRADED"
+    _tradeablePct = _total == 0 ? 0.0 : ((_p + _f) / _total) * 100.0
+    [_grade, _tradeablePct, _total]
+
+[t3_asiaDominant, t3_asiaTradeable, t3_asiaTotal]     = t3_dominant(t3_asiaPCount, t3_asiaFCount, t3_asiaMCount, t3_asiaDCount)
+[t3_londonDominant, t3_londonTradeable, t3_londonTotal] = t3_dominant(t3_londonPCount, t3_londonFCount, t3_londonMCount, t3_londonDCount)
+[t3_nyDominant, t3_nyTradeable, t3_nyTotal]           = t3_dominant(t3_nyPCount, t3_nyFCount, t3_nyMCount, t3_nyDCount)
+
+t3_gradeColorOf(_g) => _g == "PRIME" ? t3_colPrime : _g == "FAVOURABLE" ? t3_colFavourable : _g == "MARGINAL" ? t3_colMarginal : _g == "DEGRADED" ? t3_colDegraded : color.white
+
+t3_headerLabel = t3_useLookback ? "SESSION REGIME REPORT (Last " + str.tostring(t3_lookbackBars) + ")" : "SESSION REGIME REPORT (All History)"
+
+t3_currentSessionText = t3_inLondon and t3_inNY ? "London + NY" : t3_inLondon ? "London" : t3_inNY ? "New York" : t3_inAsia ? "Asia" : "None Active"
+
+// === QP dark/gold dashboard theme ===
+t3_bgHeader = color.new(#1a1a1a, 0)
+t3_bgRow    = color.new(#0d0d0d, 10)
+t3_txtMuted = color.new(color.white, 40)
+t3_txtGold  = color.new(#c9a84c, 0)
+
+// === Table — one table, bottom right (Dessert course convention) ===
+var table t3_report = table.new(position.bottom_right, 4, 7, border_width=1)
+
+if barstate.islast
+    table.cell(t3_report, 0, 0, t3_headerLabel, text_color=t3_txtGold, bgcolor=t3_bgHeader, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 0, "", bgcolor=t3_bgHeader, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 0, "", bgcolor=t3_bgHeader, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 0, "", bgcolor=t3_bgHeader, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 1, "Dominant t3_grade per session. London/NY can overlap.", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=size.tiny, width=0.16)
+    table.cell(t3_report, 1, 1, "", bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 1, "", bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 1, "", bgcolor=t3_bgRow, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 2, "Session", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 2, "Bars", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 2, "Dominant", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 2, "Tradeable%", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 3, "Asia", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 3, str.tostring(t3_asiaTotal, "#"), text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 3, t3_asiaDominant, text_color=t3_gradeColorOf(t3_asiaDominant), bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 3, str.tostring(t3_asiaTradeable, "#.#") + "%", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 4, "London", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 4, str.tostring(t3_londonTotal, "#"), text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 4, t3_londonDominant, text_color=t3_gradeColorOf(t3_londonDominant), bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 4, str.tostring(t3_londonTradeable, "#.#") + "%", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 5, "New York", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 5, str.tostring(t3_nyTotal, "#"), text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 5, t3_nyDominant, text_color=t3_gradeColorOf(t3_nyDominant), bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 5, str.tostring(t3_nyTradeable, "#.#") + "%", text_color=color.white, bgcolor=t3_bgRow, text_size=t3_tableSize)
+
+    table.cell(t3_report, 0, 6, "Current Session", text_color=t3_txtMuted, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 1, 6, t3_currentSessionText, text_color=t3_txtGold, bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 2, 6, "", bgcolor=t3_bgRow, text_size=t3_tableSize)
+    table.cell(t3_report, 3, 6, "", bgcolor=t3_bgRow, text_size=t3_tableSize)
