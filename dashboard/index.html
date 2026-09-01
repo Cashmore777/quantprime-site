@@ -3715,6 +3715,18 @@ body {
   height: calc(100vh - 100px);
 }
 
+/* Recoil & Terminal views - no scroll on indicator tab, scroll on guide tab */
+#view-recoil.active,
+#view-meridian.active {
+  height: calc(100vh - 100px);
+  overflow: hidden;
+}
+
+#view-recoil.active.scrollable,
+#view-meridian.active.scrollable {
+  overflow: auto;
+}
+
 #view-marketplace .view-header {
   margin-bottom: 8px;
   flex-shrink: 0;
@@ -12556,6 +12568,13 @@ function switchInstrumentTab(instrument, panel) {
   
   if (tab) tab.classList.add('active');
   if (panelEl) panelEl.classList.add('active');
+  
+  // Enable scrolling only on Operator Guide tab
+  if (panel === 'guide') {
+    view.classList.add('scrollable');
+  } else {
+    view.classList.remove('scrollable');
+  }
 }
 
 function showLockedModal(view, requiredTier) {
