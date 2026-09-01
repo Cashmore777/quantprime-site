@@ -239,13 +239,19 @@ body {
   position: relative;
 }
 
+/* Premium Gradient Variable */
+:root {
+  --premium-gradient: linear-gradient(180deg, #c9a84c, #00d4ff);
+}
+
 /* Tier Cards Container */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  max-width: 1400px;
+  gap: 24px;
+  max-width: 1440px;
   margin: 0 auto;
+  align-items: stretch;
 }
 
 @media (max-width: 1200px) {
@@ -254,126 +260,230 @@ body {
   }
 }
 
-/* Individual Tier Card - PANEL STYLE */
+/* Individual Tier Card - Progressive Value Styling */
 .tier-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 32px;
+  border-radius: 20px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+/* Premium gradient bar - intensity increases with tier */
+.tier-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .tier-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
 }
 
-.tier-card.featured {
-  border: 2px solid var(--gold);
-  box-shadow: 0 8px 32px rgba(201,168,76,0.15);
+.tier-card:hover::before {
+  opacity: 1;
 }
 
-.tier-card.featured:hover {
+/* RESEARCH - Entry level, subtle green accent */
+.tier-card[data-tier="research"] {
+  border: 2px solid var(--green);
+  box-shadow: 0 8px 32px rgba(22, 163, 74, 0.12);
+}
+.tier-card[data-tier="research"]::before {
+  background: linear-gradient(180deg, var(--green), var(--green));
+  opacity: 1;
+}
+.tier-card[data-tier="research"]:hover {
+  box-shadow: 0 16px 48px rgba(22, 163, 74, 0.2);
+}
+
+/* RECOIL - Growing value, gold accent */
+.tier-card[data-tier="recoil"]::before {
+  background: var(--gold);
+}
+.tier-card[data-tier="recoil"]:hover {
+  border-color: var(--gold);
+  box-shadow: 0 16px 48px rgba(201,168,76,0.15);
+}
+
+/* TERMINAL - Serious value, gradient begins */
+.tier-card[data-tier="terminal"]::before {
+  background: linear-gradient(180deg, var(--gold), #00d4ff);
+}
+.tier-card[data-tier="terminal"]:hover {
+  border-color: var(--gold);
   box-shadow: 0 16px 48px rgba(201,168,76,0.2);
+}
+
+/* SUITE - Maximum value, full premium treatment */
+.tier-card[data-tier="suite"] {
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(180deg, var(--gold), #00d4ff) border-box;
+  box-shadow: 0 8px 40px rgba(201,168,76,0.2), 0 0 0 1px rgba(0,212,255,0.1);
+}
+.tier-card[data-tier="suite"]::before {
+  background: var(--premium-gradient);
+  opacity: 1;
+  width: 5px;
+}
+.tier-card[data-tier="suite"]:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 24px 64px rgba(201,168,76,0.25), 0 0 60px rgba(0,212,255,0.1);
+}
+
+/* Suite inner glow effect */
+.tier-card[data-tier="suite"]::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: 20px 20px 0 0;
 }
 
 /* Badge */
 .tier-badge {
   position: absolute;
-  top: -12px;
-  left: 24px;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: 100px;
   white-space: nowrap;
+  z-index: 2;
 }
 
 .tier-badge.trial {
   background: linear-gradient(135deg, #e65100, #ff6d00);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(230, 81, 0, 0.4);
 }
 
 .tier-badge.start-here {
-  background: var(--green);
+  background: linear-gradient(135deg, var(--green), #22c55e);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.4);
 }
 
 .tier-badge.popular {
-  background: var(--gold);
+  background: linear-gradient(135deg, var(--gold), #00d4ff);
   color: #000;
-  box-shadow: 0 4px 12px rgba(201,168,76,0.35);
+  box-shadow: 0 4px 20px rgba(201,168,76,0.5), 0 0 30px rgba(0,212,255,0.2);
+  animation: badge-glow 3s ease-in-out infinite;
+}
+
+@keyframes badge-glow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(201,168,76,0.5), 0 0 30px rgba(0,212,255,0.2); }
+  50% { box-shadow: 0 4px 24px rgba(201,168,76,0.7), 0 0 40px rgba(0,212,255,0.35); }
 }
 
 .tier-badge.premium {
-  background: #1a1a1a;
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
   color: var(--gold);
+  border: 1px solid var(--gold);
 }
 
 /* Tier Header */
 .tier-header {
   margin-bottom: 24px;
-  padding-top: 8px;
-  min-height: 220px;
+  padding-top: 12px;
+  min-height: 200px;
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 .tier-name {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   letter-spacing: -0.02em;
 }
 
+/* Progressive tier name styling */
+.tier-card[data-tier="research"] .tier-name { color: var(--green); }
+.tier-card[data-tier="recoil"] .tier-name { color: var(--text-primary); }
+.tier-card[data-tier="terminal"] .tier-name { color: var(--gold); }
+.tier-card[data-tier="suite"] .tier-name {
+  background: linear-gradient(135deg, var(--gold), #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .tier-tagline {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
-  margin-bottom: 20px;
-  line-height: 1.5;
+  margin-bottom: 24px;
+  line-height: 1.55;
+  flex: 1;
 }
 
 .tier-price {
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 4px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .tier-price .currency {
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--text-secondary);
+  align-self: flex-start;
+  margin-top: 8px;
 }
 
 .tier-price .amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1;
+}
+
+/* Suite gets gradient price */
+.tier-card[data-tier="suite"] .tier-price .amount {
+  background: linear-gradient(135deg, var(--gold), #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .tier-price .period {
   font-size: 1rem;
   font-weight: 400;
   color: var(--text-muted);
+  margin-left: 2px;
 }
 
 /* Strikethrough price */
 .tier-price .old-price {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--text-muted);
   text-decoration: line-through;
   text-decoration-color: var(--red);
@@ -386,8 +496,9 @@ body {
 }
 
 .tier-billing {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
+  text-align: center;
 }
 
 .tier-billing strong {
@@ -399,26 +510,71 @@ body {
   display: block;
   width: 100%;
   padding: 16px 24px;
-  margin-top: 20px;
+  margin-top: 24px;
   font-size: 0.95rem;
   font-weight: 700;
   text-align: center;
   text-decoration: none;
   border-radius: 12px;
-  transition: all 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: none;
 }
 
-.tier-cta.primary {
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+/* Research - Green CTA */
+.tier-card[data-tier="research"] .tier-cta {
+  background: linear-gradient(135deg, var(--green), #22c55e);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.35);
+}
+.tier-card[data-tier="research"] .tier-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.45);
+}
+
+/* Recoil - Dark CTA */
+.tier-card[data-tier="recoil"] .tier-cta {
+  background: var(--text-primary);
+  color: var(--bg);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.tier-card[data-tier="recoil"] .tier-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+/* Terminal - Gold CTA */
+.tier-card[data-tier="terminal"] .tier-cta {
+  background: linear-gradient(135deg, var(--gold), #d4b85a);
   color: #000;
-  box-shadow: 0 4px 16px rgba(201,168,76,0.3);
+  box-shadow: 0 4px 16px rgba(201,168,76,0.35);
+}
+.tier-card[data-tier="terminal"] .tier-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.45);
+}
+
+/* Suite - Premium Gradient CTA */
+.tier-card[data-tier="suite"] .tier-cta {
+  background: linear-gradient(135deg, var(--gold), #00d4ff);
+  color: #000;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.4), 0 0 30px rgba(0,212,255,0.15);
+  font-size: 1rem;
+}
+.tier-card[data-tier="suite"] .tier-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(201,168,76,0.5), 0 0 40px rgba(0,212,255,0.25);
+}
+
+.tier-cta.primary {
+  background: linear-gradient(135deg, var(--green), #22c55e);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(22, 163, 74, 0.35);
 }
 
 .tier-cta.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(201,168,76,0.4);
+  box-shadow: 0 8px 24px rgba(22, 163, 74, 0.45);
 }
 
 .tier-cta.secondary {
@@ -427,7 +583,7 @@ body {
 }
 
 .tier-cta.secondary:hover {
-  opacity: 0.85;
+  opacity: 0.9;
   transform: translateY(-2px);
 }
 
@@ -435,7 +591,7 @@ body {
   font-size: 0.75rem;
   color: var(--text-muted);
   text-align: center;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .tier-guarantee strong {
@@ -445,21 +601,32 @@ body {
 /* Features List */
 .tier-features {
   flex: 1;
-  margin-top: 24px;
+  margin-top: 28px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
 .feature-section-label {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 16px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+}
+
+/* Progressive label color */
+.tier-card[data-tier="research"] .feature-section-label { color: var(--green); }
+.tier-card[data-tier="recoil"] .feature-section-label { color: var(--text-secondary); }
+.tier-card[data-tier="terminal"] .feature-section-label { color: var(--gold); }
+.tier-card[data-tier="suite"] .feature-section-label {
+  background: linear-gradient(90deg, var(--gold), #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .feature-section-label::after {
@@ -472,24 +639,44 @@ body {
 .feature {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  padding: 10px 0;
-  font-size: 0.9rem;
+  gap: 14px;
+  padding: 12px 0;
+  font-size: 0.88rem;
   color: var(--text-primary);
   line-height: 1.5;
 }
 
 .feature-icon {
   flex-shrink: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(22, 163, 74, 0.1);
   border-radius: 50%;
-  margin-top: 2px;
+  margin-top: 1px;
 }
+
+/* Progressive icon styling */
+.tier-card[data-tier="research"] .feature-icon {
+  background: rgba(22, 163, 74, 0.12);
+}
+.tier-card[data-tier="research"] .feature-icon svg { stroke: var(--green); }
+
+.tier-card[data-tier="recoil"] .feature-icon {
+  background: rgba(255, 255, 255, 0.08);
+}
+.tier-card[data-tier="recoil"] .feature-icon svg { stroke: var(--text-primary); }
+
+.tier-card[data-tier="terminal"] .feature-icon {
+  background: rgba(201, 168, 76, 0.12);
+}
+.tier-card[data-tier="terminal"] .feature-icon svg { stroke: var(--gold); }
+
+.tier-card[data-tier="suite"] .feature-icon {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2), rgba(0, 212, 255, 0.15));
+}
+.tier-card[data-tier="suite"] .feature-icon svg { stroke: var(--gold); }
 
 .feature-icon svg {
   width: 12px;
@@ -498,14 +685,25 @@ body {
   stroke-width: 2.5;
 }
 
+.feature-text {
+  flex: 1;
+}
+
 .feature-text strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Progressive feature title styling */
+.tier-card[data-tier="suite"] .feature-text strong {
   color: var(--gold);
 }
 
 .feature-desc {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: 3px;
+  line-height: 1.45;
 }
 
 /* Responsive */
