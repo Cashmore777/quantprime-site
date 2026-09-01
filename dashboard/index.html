@@ -3708,22 +3708,31 @@ body {
   display: block;
 }
 
-/* Build view - fit to viewport */
+/* Build view - optimized layout */
 #view-marketplace {
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px);
 }
 
 #view-marketplace .view-header {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
 }
 
 #view-marketplace .view-header h2 {
-  font-size: 24px;
+  font-size: 22px;
 }
 
 #view-marketplace .view-header p {
-  font-size: 12px;
-  margin-top: 4px;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+#menu-mode {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===== TIER LADDER (Build Page Redesign v6) ===== */
@@ -3741,7 +3750,7 @@ body {
 .tier-ladder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 4px;
 }
 
@@ -3890,7 +3899,7 @@ body {
 .tier-rail {
   height: 2px;
   background: var(--border);
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   border-radius: 2px;
   position: relative;
 }
@@ -3984,11 +3993,12 @@ body {
   margin: 0 0 24px 0;
 }
 
-/* Restaurant-style menu layout - compact */
+/* Restaurant-style menu layout - order panel aligned with tier cards */
 .menu-layout {
   display: grid;
-  grid-template-columns: 1fr 240px;
-  gap: 16px;
+  grid-template-columns: 3fr 1fr;
+  gap: 10px;
+  flex: 1;
 }
 
 @media (max-width: 1100px) {
@@ -3998,11 +4008,13 @@ body {
   }
 }
 
-/* Course sections - compact 2x2 grid */
+/* Course sections - 2x2 grid, fill height */
 .menu-courses {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr 1fr;
   gap: 10px;
+  height: 100%;
 }
 
 @media (max-width: 800px) {
@@ -4017,6 +4029,8 @@ body {
   border-radius: 10px;
   padding: 10px 12px;
   transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
 }
 
 .menu-course.has-selection {
@@ -4068,7 +4082,9 @@ body {
 .course-dishes {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  flex: 1;
+  justify-content: space-around;
 }
 
 .dish-card {
@@ -4242,18 +4258,22 @@ body {
   font-size: 12px;
 }
 
-/* Order summary - compact sidebar */
+/* Order summary - sidebar aligned with tier card */
 .order-summary {
-  position: sticky;
-  top: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .order-summary-card {
   background: var(--surface);
   border: 2px solid var(--gold);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 14px;
   box-shadow: 0 4px 20px var(--gold-glow);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .order-summary-card h3 {
