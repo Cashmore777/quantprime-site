@@ -3718,13 +3718,14 @@ body {
 /* Recoil & Terminal views - no scroll on indicator tab, scroll on guide tab */
 #view-recoil.active,
 #view-meridian.active {
-  height: calc(100vh - 100px);
   overflow: hidden;
+  max-height: calc(100vh - 80px);
 }
 
 #view-recoil.active.scrollable,
 #view-meridian.active.scrollable {
   overflow: auto;
+  max-height: none;
 }
 
 #view-marketplace .view-header {
