@@ -3708,6 +3708,12 @@ body {
   display: block;
 }
 
+/* Build view - fixed, no scrolling */
+#view-marketplace {
+  overflow: hidden;
+  max-height: calc(100vh - 120px);
+}
+
 /* ===== TIER LADDER (Build Page Redesign v6) ===== */
 .tier-ladder-label {
   font-size: 10px;
@@ -3966,12 +3972,12 @@ body {
   margin: 0 0 24px 0;
 }
 
-/* Restaurant-style menu layout - narrower order panel */
+/* Restaurant-style menu layout - fixed height, no scroll */
 .menu-layout {
   display: grid;
-  grid-template-columns: 1fr 200px;
+  grid-template-columns: 1fr 240px;
   gap: 20px;
-  max-height: calc(100vh - 280px);
+  overflow: hidden;
 }
 
 @media (max-width: 1100px) {
@@ -16501,41 +16507,55 @@ function updateOrderSummary() {
   updateBuildId();
 }
 
-// Update build ID display
+// Update build ID display (user-facing)
 function updateBuildId() {
-  let buildId;
+  const s = menuState.selections.starter;
+  const m = menuState.selections.main;
+  const d = menuState.selections.side;
+  const t = menuState.selections.dessert;
   
+  // All tiers use consistent display format: PREFIX-XXXX (numeric codes)
+  const prefixes = {
+    'research': 'RES',
+    'recoil': 'REC',
+    'terminal': 'TER',
+    'suite': 'SUI'
+  };
+  const prefix = prefixes[menuState.currentTier] || 'RES';
+  const displayId = `${prefix}-${s}${m}${d}${t}`;
+  
+  document.getElementById('order-build-id').textContent = displayId;
+  return displayId;
+}
+
+// Get file ID for fetching (may differ from display ID)
+function getFileId() {
   const s = menuState.selections.starter;
   const m = menuState.selections.main;
   const d = menuState.selections.side;
   const t = menuState.selections.dessert;
   
   if (menuState.currentTier === 'terminal') {
-    // Terminal uses piece codes: MER-S1M2D3T1 format (no dashes between pieces)
+    // Terminal files: MER-S1M2D3T1.pine format
     let pieces = [];
     if (s > 0) pieces.push(`S${s}`);
     if (m > 0) pieces.push(`M${m}`);
     if (d > 0) pieces.push(`D${d}`);
     if (t > 0) pieces.push(`T${t}`);
-    
-    buildId = pieces.length > 0 ? `MER-${pieces.join('')}` : 'MER-';
+    return pieces.length > 0 ? `MER-${pieces.join('')}` : '';
   } else if (menuState.currentTier === 'suite') {
-    // Suite uses piece codes with dashes: S1-M2-D3-T1 format (no prefix, filenames match directly)
+    // Suite files: S1-M2-D3-T1.pine format (no prefix)
     let pieces = [];
     if (s > 0) pieces.push(`S${s}`);
     if (m > 0) pieces.push(`M${m}`);
     if (d > 0) pieces.push(`D${d}`);
     if (t > 0) pieces.push(`T${t}`);
-    
-    buildId = pieces.length > 0 ? pieces.join('-') : '';
+    return pieces.length > 0 ? pieces.join('-') : '';
   } else {
-    // Research and Recoil use numeric codes: REC-1230 format
+    // Research/Recoil files: RES-1234.txt / REC-1234.pine
     const prefix = menuState.currentTier === 'research' ? 'RES' : 'REC';
-    buildId = `${prefix}-${s}${m}${d}${t}`;
+    return `${prefix}-${s}${m}${d}${t}`;
   }
-  
-  document.getElementById('order-build-id').textContent = buildId;
-  return buildId;
 }
 
 // Update generate button state
@@ -16597,15 +16617,16 @@ function resetMenuSelections() {
 
 // Generate instrument with code-based dopamine animation
 async function generateInstrument() {
-  const buildId = updateBuildId();
+  const displayId = updateBuildId();
+  const fileId = getFileId();
   
   // Validate - no selections made
-  if (buildId.endsWith('-0000') || buildId === 'MER-' || buildId === '') {
+  if (displayId.endsWith('-0000') || fileId === '') {
     return;
   }
   
   // Track generation start
-  trackMenuEvent('generate_started', { buildId, tier: menuState.currentTier });
+  trackMenuEvent('generate_started', { buildId: displayId, tier: menuState.currentTier });
   
   // Get elements
   const overlay = document.getElementById('generation-overlay');
@@ -16644,9 +16665,9 @@ async function generateInstrument() {
   // Show overlay
   overlay.classList.add('active');
   
-  // Fetch the code in parallel
+  // Fetch the code in parallel (using fileId which matches actual filenames)
   const ext = menuState.currentTier === 'research' ? 'txt' : 'pine';
-  const codePromise = fetch(`/data/menus/${menuState.currentTier}/${buildId}.${ext}`).then(r => {
+  const codePromise = fetch(`/data/menus/${menuState.currentTier}/${fileId}.${ext}`).then(r => {
     if (!r.ok) throw new Error('Build not found');
     return r.text();
   });
@@ -16704,14 +16725,14 @@ async function generateInstrument() {
     
     // Set the instrument name and build code
     document.getElementById('gen-instrument-name').textContent = instrumentName;
-    document.getElementById('gen-build-code').textContent = buildId;
+    document.getElementById('gen-build-code').textContent = displayId;
     resultCard.classList.add('reveal');
     
     // Get the code (should be ready by now)
     const code = await codePromise;
     
     // Store code for copy/download
-    document.getElementById('result-modal').dataset.buildId = buildId;
+    document.getElementById('result-modal').dataset.buildId = displayId;
     document.getElementById('result-modal').dataset.code = code;
     document.getElementById('result-modal').dataset.instrumentName = instrumentName;
     
@@ -16725,10 +16746,10 @@ async function generateInstrument() {
     });
     document.getElementById('result-dishes').innerHTML = dishTagsHtml;
     document.getElementById('result-code').textContent = code;
-    document.getElementById('result-build-id').textContent = buildId;
+    document.getElementById('result-build-id').textContent = displayId;
     
     // Track generation complete
-    trackMenuEvent('generate_completed', { buildId, tier: menuState.currentTier });
+    trackMenuEvent('generate_completed', { buildId: displayId, tier: menuState.currentTier });
     
   } catch (error) {
     console.error('Failed to load build:', error);
