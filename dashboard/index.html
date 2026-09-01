@@ -3708,8 +3708,8 @@ body {
   display: block;
 }
 
-/* Build view - optimized layout */
-#view-marketplace {
+/* Build view - optimized layout (only when active!) */
+#view-marketplace.active {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 100px);
@@ -3729,7 +3729,7 @@ body {
   margin-top: 2px;
 }
 
-#menu-mode {
+#view-marketplace.active #menu-mode {
   flex: 1;
   display: flex;
   flex-direction: column;
