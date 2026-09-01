@@ -228,11 +228,11 @@ body {
   border: 1px solid var(--green);
 }
 
-/* Recoil - White/silver outline */
+/* Recoil - Gray outline (works in light & dark) */
 .platform-story .tier:nth-child(3) {
   background: transparent;
   color: var(--text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid var(--border);
 }
 
 /* Terminal - Gold */
@@ -314,13 +314,13 @@ body {
   box-shadow: 0 16px 48px rgba(22, 163, 74, 0.2);
 }
 
-/* RECOIL - White/silver border */
+/* RECOIL - Neutral border (works in light & dark) */
 .tier-card[data-tier="recoil"] {
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid var(--border);
 }
 .tier-card[data-tier="recoil"]:hover {
-  border-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 16px 48px rgba(255,255,255,0.08);
+  border-color: var(--text-secondary);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.1);
 }
 
 /* TERMINAL - Solid gold border */
@@ -818,7 +818,7 @@ footer p { color: var(--text-secondary); }
         <a href="/dashboard/login.html">Member Login</a>
       </div>
     </div>
-    <a href="/checkout?tier=research" class="nav-cta">Start Free</a>
+    <a href="/checkout?tier=research" class="nav-cta" style="background: linear-gradient(135deg, #16a34a, #22c55e); color: #fff; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">Start Free</a>
   </div>
 </nav>
 
