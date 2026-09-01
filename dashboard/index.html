@@ -20267,7 +20267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==========================================
-// RECOIL ANIMATION - Premium Candlestick Visualization
+// RECOIL ANIMATION - Clean Candlestick Visualization
 // ==========================================
 (function() {
   const canvas = document.getElementById('recoil-animation');
@@ -20277,65 +20277,48 @@ document.addEventListener('DOMContentLoaded', function() {
   const W = canvas.width;
   const H = canvas.height;
   
-  // Colors
+  // Colors - clean, minimal
   const colors = {
     bg: '#0d0d12',
-    grid: 'rgba(255,255,255,0.03)',
-    gridLine: 'rgba(255,255,255,0.06)',
-    band1: '#2d4a3d', // Normal green
-    band2: '#3d5a4d',
-    band3: '#4d6a5d',
-    band4: '#5d7a6d',
-    band5: '#6d8a7d',
-    band6: '#c9984c', // Gold start
-    band7: '#d4a84c',
-    band8: '#e6c876', // Bright gold
-    bandRed1: '#4a2d2d',
-    bandRed2: '#5a3d3d',
-    bandRed3: '#6a4d4d',
-    bandRed4: '#7a5d5d',
-    bandRed5: '#8a6d6d',
-    bandRed6: '#c97a4c',
-    bandRed7: '#d48a4c',
-    bandRed8: '#e6a876',
-    wick: 'rgba(255,255,255,0.4)',
-    text: 'rgba(255,255,255,0.5)',
-    gold: '#c9a84c',
-    cyan: '#4ac9c9'
+    gridLine: 'rgba(255,255,255,0.04)',
+    // Normal candles - muted
+    normal: '#3a5a4a',
+    normalRed: '#5a3a3a',
+    // Extreme candles - gold
+    extreme: '#c9a84c',
+    extremeBright: '#e6c876',
+    wick: 'rgba(255,255,255,0.3)',
+    gold: '#c9a84c'
   };
   
-  // Candle data - simulated price action with ATR bands
+  // Candle data - price action showing extreme moves and snap-backs
   const candleData = [
-    { o: 150, h: 158, l: 147, c: 155, band: 2 },
-    { o: 155, h: 162, l: 153, c: 160, band: 3 },
-    { o: 160, h: 165, l: 158, c: 163, band: 2 },
-    { o: 163, h: 168, l: 160, c: 165, band: 2 },
-    { o: 165, h: 172, l: 163, c: 170, band: 3 },
-    { o: 170, h: 175, l: 168, c: 172, band: 2 },
-    { o: 172, h: 178, l: 170, c: 176, band: 3 },
-    { o: 176, h: 195, l: 174, c: 192, band: 7 }, // EXTREME UP
-    { o: 192, h: 194, l: 178, c: 180, band: 6 }, // Snap back starts
-    { o: 180, h: 185, l: 175, c: 177, band: 4 },
-    { o: 177, h: 182, l: 174, c: 179, band: 3 },
-    { o: 179, h: 184, l: 177, c: 182, band: 2 },
-    { o: 182, h: 186, l: 180, c: 184, band: 2 },
+    { o: 150, h: 156, l: 148, c: 154, band: 2 },
+    { o: 154, h: 160, l: 152, c: 158, band: 2 },
+    { o: 158, h: 163, l: 156, c: 161, band: 2 },
+    { o: 161, h: 167, l: 159, c: 165, band: 3 },
+    { o: 165, h: 170, l: 163, c: 168, band: 2 },
+    { o: 168, h: 173, l: 166, c: 171, band: 2 },
+    { o: 171, h: 192, l: 169, c: 190, band: 7 }, // EXTREME UP - big gold candle
+    { o: 190, h: 191, l: 175, c: 178, band: 5 }, // Snap back down
+    { o: 178, h: 183, l: 176, c: 181, band: 3 },
+    { o: 181, h: 186, l: 179, c: 184, band: 2 },
     { o: 184, h: 188, l: 182, c: 186, band: 2 },
-    { o: 186, h: 168, l: 165, c: 168, band: 8 }, // EXTREME DOWN
-    { o: 168, h: 178, l: 166, c: 176, band: 6 }, // Snap back
-    { o: 176, h: 182, l: 174, c: 180, band: 4 },
-    { o: 180, h: 185, l: 178, c: 183, band: 3 },
-    { o: 183, h: 188, l: 181, c: 186, band: 2 },
     { o: 186, h: 190, l: 184, c: 188, band: 2 },
+    { o: 188, h: 191, l: 186, c: 189, band: 2 },
+    { o: 189, h: 168, l: 166, c: 169, band: 8 }, // EXTREME DOWN - big gold candle
+    { o: 169, h: 182, l: 168, c: 180, band: 5 }, // Snap back up
+    { o: 180, h: 186, l: 178, c: 184, band: 3 },
+    { o: 184, h: 189, l: 182, c: 187, band: 2 },
+    { o: 187, h: 192, l: 185, c: 190, band: 2 },
   ];
   
   let animationFrame = 0;
-  let visibleCandles = 0;
-  const totalFrames = 400;
-  const candleWidth = 22;
-  const candleGap = 6;
-  const startX = 40;
-  const chartTop = 40;
-  const chartBottom = H - 50;
+  const candleWidth = 24;
+  const candleGap = 8;
+  const startX = 30;
+  const chartTop = 30;
+  const chartBottom = H - 30;
   const chartHeight = chartBottom - chartTop;
   
   // Price range
@@ -20347,35 +20330,17 @@ document.addEventListener('DOMContentLoaded', function() {
     return chartBottom - ((price - minPrice) / priceRange) * chartHeight;
   }
   
-  function getBandColor(band, bullish) {
-    if (bullish) {
-      return colors['band' + band] || colors.band1;
-    } else {
-      return colors['bandRed' + band] || colors.bandRed1;
-    }
-  }
-  
   function drawGrid() {
     ctx.strokeStyle = colors.gridLine;
     ctx.lineWidth = 1;
     
-    // Horizontal lines
-    for (let i = 0; i <= 5; i++) {
-      const y = chartTop + (chartHeight / 5) * i;
+    // Subtle horizontal lines
+    for (let i = 0; i <= 4; i++) {
+      const y = chartTop + (chartHeight / 4) * i;
       ctx.beginPath();
-      ctx.moveTo(30, y);
-      ctx.lineTo(W - 20, y);
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
       ctx.stroke();
-    }
-    
-    // Price labels
-    ctx.fillStyle = colors.text;
-    ctx.font = '10px Inter, sans-serif';
-    ctx.textAlign = 'right';
-    for (let i = 0; i <= 5; i++) {
-      const price = maxPrice - (priceRange / 5) * i;
-      const y = chartTop + (chartHeight / 5) * i;
-      ctx.fillText(price.toFixed(0), 28, y + 3);
     }
   }
   
@@ -20386,114 +20351,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const bodyBottom = priceToY(Math.min(candle.o, candle.c));
     const bodyHeight = Math.max(bodyBottom - bodyTop, 2);
     
-    const color = getBandColor(candle.band, bullish);
+    const isExtreme = candle.band >= 6;
     
-    // Glow effect for bands 6-8
-    if (candle.band >= 6) {
+    ctx.globalAlpha = alpha;
+    
+    // Glow for extreme candles
+    if (isExtreme) {
       ctx.shadowColor = colors.gold;
-      ctx.shadowBlur = 15 + Math.sin(animationFrame * 0.1) * 5;
+      ctx.shadowBlur = 20 + Math.sin(animationFrame * 0.08) * 8;
     } else {
       ctx.shadowBlur = 0;
     }
     
     // Wick
-    ctx.strokeStyle = colors.wick;
-    ctx.lineWidth = 1;
-    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = isExtreme ? colors.gold : colors.wick;
+    ctx.lineWidth = isExtreme ? 2 : 1;
     ctx.beginPath();
     ctx.moveTo(x + candleWidth / 2, priceToY(candle.h));
     ctx.lineTo(x + candleWidth / 2, priceToY(candle.l));
     ctx.stroke();
     
     // Body
-    ctx.fillStyle = color;
-    ctx.fillRect(x, bodyTop, candleWidth, bodyHeight);
-    
-    // Border for definition
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    ctx.lineWidth = 0.5;
-    ctx.strokeRect(x, bodyTop, candleWidth, bodyHeight);
-    
-    // Band label for extreme candles
-    if (candle.band >= 6 && alpha > 0.8) {
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = colors.gold;
-      ctx.font = 'bold 9px JetBrains Mono, monospace';
-      ctx.textAlign = 'center';
-      ctx.fillText('B' + candle.band, x + candleWidth / 2, bodyTop - 8);
+    if (isExtreme) {
+      ctx.fillStyle = colors.extremeBright;
+    } else {
+      ctx.fillStyle = bullish ? colors.normal : colors.normalRed;
     }
+    ctx.fillRect(x, bodyTop, candleWidth, bodyHeight);
     
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
-  }
-  
-  function drawLegend() {
-    const legendY = H - 25;
-    ctx.font = '9px Inter, sans-serif';
-    ctx.textAlign = 'left';
-    
-    // Band scale
-    ctx.fillStyle = colors.text;
-    ctx.fillText('ATR BAND:', 40, legendY);
-    
-    for (let i = 1; i <= 8; i++) {
-      const x = 105 + (i - 1) * 28;
-      const color = i >= 6 ? colors['band' + i] : colors['band' + i];
-      
-      ctx.fillStyle = color;
-      ctx.fillRect(x, legendY - 8, 20, 10);
-      
-      ctx.fillStyle = i >= 6 ? '#fff' : colors.text;
-      ctx.font = i >= 6 ? 'bold 8px JetBrains Mono' : '8px JetBrains Mono';
-      ctx.textAlign = 'center';
-      ctx.fillText(i.toString(), x + 10, legendY);
-    }
-    
-    // Extreme label
-    ctx.fillStyle = colors.gold;
-    ctx.font = '9px Inter';
-    ctx.textAlign = 'left';
-    ctx.fillText('← EXTREME', 340, legendY);
-  }
-  
-  function drawInfoPanel() {
-    // Info box in top right
-    const boxW = 140;
-    const boxH = 85;
-    const boxX = W - boxW - 15;
-    const boxY = 15;
-    
-    ctx.fillStyle = 'rgba(13,13,18,0.9)';
-    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.roundRect(boxX, boxY, boxW, boxH, 6);
-    ctx.fill();
-    ctx.stroke();
-    
-    ctx.fillStyle = colors.gold;
-    ctx.font = 'bold 10px JetBrains Mono';
-    ctx.textAlign = 'left';
-    ctx.fillText('QUANT PRIME — RECOIL', boxX + 8, boxY + 16);
-    
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '9px Inter';
-    ctx.fillText('VOLATILITY', boxX + 8, boxY + 34);
-    ctx.fillText('TREND', boxX + 8, boxY + 50);
-    ctx.fillText('EMA BIAS', boxX + 8, boxY + 66);
-    
-    // Dynamic values
-    const currentBand = candleData[Math.min(visibleCandles, candleData.length - 1)]?.band || 1;
-    ctx.fillStyle = currentBand >= 6 ? colors.gold : '#fff';
-    ctx.font = '9px JetBrains Mono';
-    ctx.textAlign = 'right';
-    ctx.fillText('VOL: ' + (0.5 + currentBand * 0.3).toFixed(2) + 'x · B' + currentBand, boxX + boxW - 8, boxY + 34);
-    
-    ctx.fillStyle = '#4ade80';
-    ctx.fillText('EXPANSION', boxX + boxW - 8, boxY + 50);
-    
-    ctx.fillStyle = '#4ac9c9';
-    ctx.fillText('LONG', boxX + boxW - 8, boxY + 66);
   }
   
   function animate() {
@@ -20504,39 +20391,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Draw grid
     drawGrid();
     
-    // Calculate visible candles based on frame
-    const candlesPerCycle = candleData.length;
-    const framesPerCandle = 15;
-    const cycleLength = candlesPerCycle * framesPerCandle + 60; // Extra pause at end
+    // Calculate visible candles
+    const framesPerCandle = 12;
+    const cycleLength = candleData.length * framesPerCandle + 80;
     const cycleFrame = animationFrame % cycleLength;
-    
-    visibleCandles = Math.min(Math.floor(cycleFrame / framesPerCandle), candleData.length);
+    const visibleCandles = Math.min(Math.floor(cycleFrame / framesPerCandle), candleData.length);
     
     // Draw candles
     for (let i = 0; i < visibleCandles; i++) {
-      const candleFrame = cycleFrame - (i * framesPerCandle);
-      const fadeIn = Math.min(candleFrame / 10, 1);
-      drawCandle(i, candleData[i], fadeIn);
+      drawCandle(i, candleData[i], 1);
     }
     
-    // Currently appearing candle
+    // Fade in current candle
     if (visibleCandles < candleData.length) {
-      const appearFrame = cycleFrame % framesPerCandle;
-      const alpha = appearFrame / framesPerCandle;
-      if (alpha > 0.1) {
-        drawCandle(visibleCandles, candleData[visibleCandles], alpha * 0.7);
+      const progress = (cycleFrame % framesPerCandle) / framesPerCandle;
+      if (progress > 0.1) {
+        drawCandle(visibleCandles, candleData[visibleCandles], progress);
       }
     }
-    
-    // Draw legend and info
-    drawLegend();
-    drawInfoPanel();
     
     animationFrame++;
     requestAnimationFrame(animate);
   }
   
-  // Start animation
   animate();
 })();
 </script>
