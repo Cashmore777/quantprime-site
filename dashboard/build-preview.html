@@ -3,25 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Build Page Redesign — Preview v3</title>
+<title>Build Page Redesign — Preview v4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* Match dashboard colors */
   --bg: #0a0a0f;
   --surface: #111117;
   --surface-2: #16161d;
-  --surface-3: #1a1a22;
   --gold: #c9a84c;
   --gold-bright: #e6c876;
   --gold-dim: #7a6530;
   --bronze: #5c4a28;
   --text: #f0ece0;
-  --text-2: #8a8578;
-  --text-3: #5a5750;
+  --text-2: #a09a8c;
+  --text-3: #6a6560;
   --border: #252525;
-  --border-2: #1a1a1f;
+  --border-2: #1e1e24;
   --cyan: #4ac9c9;
   --premium-gradient: linear-gradient(180deg, var(--gold), var(--cyan));
 }
@@ -31,202 +29,50 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, "Helvetica Neue", Arial, sans-serif;
-  min-height: 100vh;
-  display: flex;
-}
-
-/* ===== SIDEBAR ===== */
-.sidebar {
-  width: 260px;
-  background: var(--surface);
-  border-right: 1px solid var(--border-2);
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  overflow-y: auto;
-}
-
-.sidebar-logo {
-  padding: 0 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sidebar-logo .logo-text {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.sidebar-logo .logo-text span:first-child { color: var(--text); }
-.sidebar-logo .logo-text span:last-child { color: var(--gold); }
-
-.sidebar-logo .settings-btn {
-  margin-left: auto;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--surface-2);
-  border: 1px solid var(--border-2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.sidebar-logo .settings-btn svg {
-  width: 16px;
-  height: 16px;
-  color: var(--text-2);
-}
-
-.sidebar-section {
-  padding: 0 12px;
-  margin-bottom: 8px;
-}
-
-.sidebar-section-title {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  color: var(--text-3);
-  padding: 16px 8px 8px;
-  text-transform: uppercase;
-}
-
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: var(--text-2);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.15s;
-  cursor: pointer;
-  position: relative;
-}
-
-.sidebar-item:hover {
-  background: var(--surface-2);
-  color: var(--text);
-}
-
-.sidebar-item.active {
-  background: var(--surface-2);
-  color: var(--text);
-  border-left: 3px solid var(--gold);
-  margin-left: -3px;
-  padding-left: 15px;
-}
-
-.sidebar-item svg {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.sidebar-item .pip {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #26a269;
-  margin-left: auto;
-}
-
-.sidebar-footer {
-  margin-top: auto;
-  padding: 16px;
-  border-top: 1px solid var(--border-2);
-}
-
-.tier-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: var(--surface-2);
-  border-radius: 8px;
-  font-size: 12px;
-}
-
-.tier-badge .tier-label {
-  color: var(--text-2);
-}
-
-.tier-badge .tier-name {
-  color: var(--gold);
-  font-weight: 600;
-}
-
-.tier-badge .tier-id {
-  margin-left: auto;
-  font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
-  color: var(--text-3);
-}
-
-.tier-badge .user-email {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 4px;
-  display: block;
-}
-
-/* ===== MAIN CONTENT ===== */
-.main-content {
-  flex: 1;
-  margin-left: 260px;
-  padding: 40px;
-  background: 
-    radial-gradient(ellipse 900px 500px at 30% 0%, rgba(201,168,76,0.04), transparent),
-    var(--bg);
+  font-family: 'Inter', -apple-system, sans-serif;
+  padding: 24px 32px;
   min-height: 100vh;
 }
 
-.content-wrap { max-width: 1100px; }
+.wrap { max-width: 1100px; margin: 0 auto; }
 
-/* Header */
-.eyebrow {
-  font-size: 11px;
-  letter-spacing: 2.5px;
+/* Header - compact */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.header-left .eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
   color: var(--gold-dim);
   text-transform: uppercase;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
-h1 {
-  font-size: 36px;
+.header-left h1 {
+  font-size: 28px;
   font-weight: 600;
   letter-spacing: -0.5px;
-  line-height: 1.1;
-  margin-bottom: 8px;
 }
 
-h1 span { color: var(--gold); }
+.header-left h1 span { color: var(--gold); }
 
-.sub {
-  color: var(--text-2);
-  font-size: 14px;
-  margin-bottom: 36px;
-}
-
-/* ===== TIER LADDER ===== */
-.ladder-label {
+.header-right {
   font-size: 11px;
-  letter-spacing: 2px;
   color: var(--text-2);
+}
+
+/* ===== TIER LADDER - COMPACT ===== */
+.ladder-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-3);
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -236,18 +82,14 @@ h1 span { color: var(--gold); }
 .ladder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
-@media (max-width: 1100px) {
-  .ladder { grid-template-columns: repeat(2, 1fr); }
+  gap: 10px;
+  margin-bottom: 6px;
 }
 
 .tier {
   position: relative;
-  border-radius: 8px;
-  padding: 16px 14px 14px;
+  border-radius: 6px;
+  padding: 12px 14px;
   background: var(--surface);
   border: 1px solid var(--border-2);
   cursor: pointer;
@@ -256,59 +98,40 @@ h1 span { color: var(--gold); }
   text-align: left;
 }
 
-.tier::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  background: radial-gradient(120px 80px at 50% 0%, rgba(201,168,76,0.12), transparent);
-  pointer-events: none;
-}
-
 .tier:hover:not(.locked) {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   border-color: var(--bronze);
 }
 
-.tier:hover:not(.locked)::before { opacity: 1; }
-
 .tier .num {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
   letter-spacing: 1px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   display: block;
 }
 
-.tier .icon {
-  width: 18px;
-  height: 18px;
-  margin-bottom: 10px;
-  opacity: 0.7;
-}
-
 .tier .name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  color: var(--text);
 }
 
 .tier .desc {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-2);
-  margin-bottom: 12px;
-  line-height: 1.4;
+  margin-bottom: 10px;
 }
 
 .tier .price {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
   border-top: 1px solid var(--border-2);
-  padding-top: 10px;
+  padding-top: 8px;
   display: flex;
   justify-content: space-between;
 }
@@ -316,40 +139,43 @@ h1 span { color: var(--gold); }
 /* Escalating intensity */
 .tier.t1 { border-color: var(--border-2); }
 .tier.t2 { border-color: #2a2620; }
-.tier.t3 { border-color: #302a22; background: linear-gradient(180deg, var(--surface), #0e0e12); }
-.tier.t4 { border-color: #3a3428; background: linear-gradient(180deg, #131318, #0e0e12); }
+.tier.t3 { border-color: #302a22; }
+.tier.t4 { border-color: #3a3428; }
 
 /* ACTIVE */
 .tier.active {
   border-color: var(--gold);
   box-shadow: 
     0 0 0 1px var(--gold),
-    0 0 20px rgba(201,168,76,0.2),
-    inset 0 0 16px rgba(201,168,76,0.04);
+    0 0 16px rgba(201,168,76,0.2);
 }
 
-.tier.active::before { opacity: 1; }
 .tier.active .name { color: var(--gold-bright); }
 .tier.active .num { color: var(--gold); }
+.tier.active .desc { color: var(--text); }
 .tier.active .price { color: var(--gold); border-top-color: var(--gold-dim); }
-.tier.active .icon { opacity: 1; filter: drop-shadow(0 0 3px rgba(201,168,76,0.4)); }
+
+/* UNLOCKED but not active - ensure visible */
+.tier:not(.active):not(.locked) .name { color: var(--text); }
+.tier:not(.active):not(.locked) .desc { color: var(--text-2); }
+.tier:not(.active):not(.locked) .num { color: var(--text-3); }
 
 /* LOCKED */
-.tier.locked { opacity: 0.5; cursor: not-allowed; }
+.tier.locked { opacity: 0.45; cursor: not-allowed; }
 .tier.locked:hover { transform: none; border-color: #3a1414; }
 .tier.locked .name { color: var(--text-2); }
 .tier.locked .lock-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 10px;
+  gap: 5px;
+  font-size: 9px;
   color: #a06a3a;
   border-top: 1px solid var(--border-2);
-  padding-top: 10px;
+  padding-top: 8px;
   letter-spacing: 0.3px;
   font-family: "JetBrains Mono", monospace;
 }
-.tier.locked .lock-row svg { width: 10px; height: 10px; flex-shrink: 0; }
+.tier.locked .lock-row svg { width: 9px; height: 9px; flex-shrink: 0; }
 .tier.locked .price { display: none; }
 
 /* Shake */
@@ -367,7 +193,7 @@ h1 span { color: var(--gold); }
   top: 0;
   right: 0;
   border-style: solid;
-  border-width: 0 22px 22px 0;
+  border-width: 0 18px 18px 0;
   border-color: transparent var(--bronze) transparent transparent;
   opacity: 0.5;
 }
@@ -378,7 +204,7 @@ h1 span { color: var(--gold); }
 .rail {
   height: 2px;
   background: var(--border-2);
-  margin: 0 0 32px;
+  margin: 0 0 24px;
   border-radius: 2px;
   position: relative;
 }
@@ -391,55 +217,46 @@ h1 span { color: var(--gold); }
   background: var(--premium-gradient);
   border-radius: 2px;
   transition: width 0.3s ease;
-  box-shadow: 0 0 8px rgba(201,168,76,0.5);
+  box-shadow: 0 0 6px rgba(201,168,76,0.5);
 }
 
 /* ===== BUILD LAYOUT ===== */
 .build-layout {
   display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 24px;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
   align-items: start;
 }
 
-@media (max-width: 900px) {
-  .build-layout { grid-template-columns: 1fr; }
-}
-
-/* Course cards */
+/* Course cards - compact */
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-@media (max-width: 700px) {
-  .courses-grid { grid-template-columns: 1fr; }
+  gap: 12px;
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border-2);
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
 .card-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 8px;
+  padding: 10px 12px;
   border-bottom: 1px dashed var(--border);
-  background: linear-gradient(180deg, rgba(201,168,76,0.02), transparent);
 }
 
 .card-head .badge {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: var(--gold);
   color: #1a1305;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -448,7 +265,7 @@ h1 span { color: var(--gold); }
 }
 
 .card-head .title {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -456,7 +273,7 @@ h1 span { color: var(--gold); }
 
 .card-head .q {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 10px;
   font-style: italic;
   color: var(--text-2);
 }
@@ -465,7 +282,7 @@ h1 span { color: var(--gold); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 10px 12px;
   border-bottom: 1px dashed var(--border);
   cursor: pointer;
   transition: background 0.15s;
@@ -477,7 +294,7 @@ h1 span { color: var(--gold); }
 
 .dish.selected {
   background: rgba(201,168,76,0.05);
-  padding-left: 13px;
+  padding-left: 10px;
 }
 
 .dish.selected::before {
@@ -486,39 +303,36 @@ h1 span { color: var(--gold); }
   left: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
+  width: 3px;
   background: var(--premium-gradient);
-  border-radius: 0 2px 2px 0;
 }
 
 .dish-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .dish.selected .dish-name { color: var(--gold-bright); }
 
 .dish-meta {
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-2);
   font-family: "JetBrains Mono", monospace;
-  letter-spacing: 0.2px;
 }
 
 .dish-info {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 9px;
   color: var(--text-2);
   cursor: pointer;
-  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -527,63 +341,63 @@ h1 span { color: var(--gold); }
   color: var(--gold);
 }
 
-/* Order panel */
+/* Order panel - compact */
 .order-panel {
   background: var(--surface);
   border: 1px solid var(--border-2);
-  border-radius: 10px;
-  padding: 18px;
+  border-radius: 8px;
+  padding: 14px;
   position: sticky;
-  top: 40px;
+  top: 24px;
 }
 
 .order-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border-2);
 }
 
 .order-head h3 {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .order-head h3 svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   color: var(--gold);
 }
 
 .order-build-id {
   font-family: "JetBrains Mono", monospace;
-  font-size: 11px;
+  font-size: 10px;
   color: var(--gold);
   background: rgba(201,168,76,0.1);
-  padding: 3px 8px;
-  border-radius: 4px;
+  padding: 2px 6px;
+  border-radius: 3px;
 }
 
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 5px;
+  margin-bottom: 14px;
 }
 
 .order-item {
-  font-size: 11px;
-  padding: 8px 12px;
+  font-size: 10px;
+  padding: 7px 10px;
   background: var(--surface-2);
   border: 1px solid var(--border-2);
-  border-radius: 6px;
+  border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -591,14 +405,14 @@ h1 span { color: var(--gold); }
 
 .order-item .course-label {
   font-family: "JetBrains Mono", monospace;
-  font-size: 9px;
+  font-size: 8px;
   letter-spacing: 0.5px;
   color: var(--text-3);
 }
 
 .order-item .dish-label {
   color: var(--text-2);
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .order-item.filled {
@@ -610,11 +424,11 @@ h1 span { color: var(--gold); }
 
 .generate-btn {
   width: 100%;
-  padding: 14px;
+  padding: 12px;
   background: var(--premium-gradient);
   border: none;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 600;
   color: #0a0a0a;
   cursor: pointer;
@@ -624,12 +438,12 @@ h1 span { color: var(--gold); }
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .generate-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
 }
 
 .generate-btn:hover {
@@ -646,153 +460,79 @@ h1 span { color: var(--gold); }
 
 .piece-count {
   text-align: center;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
-  margin-top: 10px;
+  margin-top: 8px;
   font-family: "JetBrains Mono", monospace;
 }
 
 .piece-count b { color: var(--gold); }
+
+/* Note */
+.note {
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--text-3);
+  padding: 12px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+}
+.note b { color: var(--gold); }
 </style>
 </head>
 <body>
-
-<!-- Sidebar -->
-<aside class="sidebar">
-  <div class="sidebar-logo">
-    <span class="logo-text"><span>QUANT</span><span>PRIME</span></span>
-    <button class="settings-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      </svg>
-    </button>
+<div class="wrap">
+  <div class="header">
+    <div class="header-left">
+      <div class="eyebrow">Instrument Builder</div>
+      <h1>Build your <span>indicator.</span></h1>
+    </div>
+    <div class="header-right">Select one dish from each course</div>
   </div>
 
-  <nav class="sidebar-section">
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
-      Home
-    </a>
-  </nav>
+  <div class="ladder-label">
+    <span>Choose your tier</span>
+    <b id="unlockCount">2 of 4 unlocked</b>
+  </div>
+  
+  <div class="ladder" id="tierLadder"></div>
+  <div class="rail"><div class="rail-fill" id="railFill"></div></div>
 
-  <nav class="sidebar-section">
-    <div class="sidebar-section-title">Instruments</div>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
-      Research
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-      Recoil
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      Terminal
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Suite
-      <span class="pip"></span>
-    </a>
-  </nav>
+  <div class="build-layout">
+    <div class="courses-grid" id="coursesGrid"></div>
 
-  <nav class="sidebar-section">
-    <div class="sidebar-section-title">Connect</div>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      Community
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item active" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
-      Build
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-      Intelligence
-      <span class="pip"></span>
-    </a>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-      Affiliates
-      <span class="pip"></span>
-    </a>
-  </nav>
-
-  <nav class="sidebar-section">
-    <div class="sidebar-section-title">★ Ascension</div>
-    <a class="sidebar-item" href="#">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-      Academy
-      <span class="pip"></span>
-    </a>
-  </nav>
-
-  <div class="sidebar-footer">
-    <div class="tier-badge">
-      <div>
-        <span class="tier-label">TIER </span>
-        <span class="tier-name">ADMIN</span>
-        <span class="user-email">cash@themoneyprinter.uk</span>
+    <div class="order-panel">
+      <div class="order-head">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Your Order
+        </h3>
+        <span class="order-build-id" id="orderBuildId">RES-0000</span>
       </div>
-      <span class="tier-id">ID: 611F5165</span>
+      <div class="order-items" id="orderItems"></div>
+      <button class="generate-btn" id="generateBtn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Generate Instrument
+      </button>
+      <div class="piece-count"><b id="pieceCount">0</b> pieces selected</div>
     </div>
   </div>
-</aside>
 
-<!-- Main Content -->
-<main class="main-content">
-  <div class="content-wrap">
-    <div class="eyebrow">Instrument Builder</div>
-    <h1>Build your <span>indicator.</span></h1>
-    <div class="sub">Select one dish from each course to generate your custom Pine Script.</div>
-
-    <div class="ladder-label">
-      <span>Choose your tier</span>
-      <b id="unlockCount">2 of 4 unlocked</b>
-    </div>
-    
-    <div class="ladder" id="tierLadder"></div>
-    <div class="rail"><div class="rail-fill" id="railFill"></div></div>
-
-    <div class="build-layout">
-      <div class="courses-grid" id="coursesGrid"></div>
-
-      <div class="order-panel">
-        <div class="order-head">
-          <h3>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            Your Order
-          </h3>
-          <span class="order-build-id" id="orderBuildId">RES-0000</span>
-        </div>
-        <div class="order-items" id="orderItems"></div>
-        <button class="generate-btn" id="generateBtn" disabled>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-          Generate Instrument
-        </button>
-        <div class="piece-count"><b id="pieceCount">0</b> pieces selected</div>
-      </div>
-    </div>
+  <div class="note">
+    <b>Preview v4.</b> No icons on tiers. Compact layout fits on one screen. 
+    This preview shows the content area only — when integrated, it will use the real dashboard sidebar.
   </div>
-</main>
+</div>
 
 <script>
 let currentUserTier = 'recoil';
 
 const tierData = [
-  { id: 'research', num: '01', name: 'RESEARCH', desc: 'Where it starts', price: '£8/mo', rank: 1,
-    icon: '<path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/>' },
-  { id: 'recoil', num: '02', name: 'RECOIL', desc: 'Volatility, sized', price: '£28/mo', rank: 2,
-    icon: '<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>' },
-  { id: 'terminal', num: '03', name: 'TERMINAL', desc: 'The full desk', price: '£58/mo', rank: 3,
-    icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3-3 3"/>' },
-  { id: 'suite', num: '04', name: 'SUITE', desc: 'Everything, at once', price: '£88/mo', rank: 4,
-    icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>' }
+  { id: 'research', num: '01', name: 'RESEARCH', desc: 'Where it starts', price: '£8/mo' },
+  { id: 'recoil', num: '02', name: 'RECOIL', desc: 'Volatility, sized', price: '£28/mo' },
+  { id: 'terminal', num: '03', name: 'TERMINAL', desc: 'The full desk', price: '£58/mo' },
+  { id: 'suite', num: '04', name: 'SUITE', desc: 'Everything, at once', price: '£88/mo' }
 ];
 
 const tierRanks = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4, 'admin': 99 };
@@ -838,7 +578,6 @@ function renderTierLadder() {
       : `<div class="price"><span>${t.price}</span><span>UNLOCKED</span></div>`;
     return `<button class="tier t${i+1}${isLocked ? ' locked' : ''}${isActive ? ' active' : ''}" data-tier="${t.id}" onclick="selectTier('${t.id}')">
       <span class="num">TIER ${t.num}</span>
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">${t.icon}</svg>
       <div class="name">${t.name}</div>
       <div class="desc">${t.desc}</div>
       ${footer}
@@ -881,17 +620,15 @@ function renderCourses() {
         <div class="title">${labels[c]}</div>
         <div class="q">${questions[c]}</div>
       </div>
-      <div class="dishes">
-        ${[1,2,3].map(d => `
-          <div class="dish${selections[c] === d ? ' selected' : ''}" onclick="selectDish('${c}', ${d})">
-            <div>
-              <div class="dish-name">${dishes[c][d]}</div>
-              <div class="dish-meta">${meta[c][d]}</div>
-            </div>
-            <button class="dish-info" onclick="event.stopPropagation()">i</button>
+      ${[1,2,3].map(d => `
+        <div class="dish${selections[c] === d ? ' selected' : ''}" onclick="selectDish('${c}', ${d})">
+          <div>
+            <div class="dish-name">${dishes[c][d]}</div>
+            <div class="dish-meta">${meta[c][d]}</div>
           </div>
-        `).join('')}
-      </div>
+          <button class="dish-info" onclick="event.stopPropagation()">i</button>
+        </div>
+      `).join('')}
     </div>
   `).join('');
 }
