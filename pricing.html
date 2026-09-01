@@ -252,6 +252,7 @@ body {
   max-width: 1440px;
   margin: 0 auto;
   align-items: stretch;
+  padding-top: 20px; /* Room for badges */
 }
 
 @media (max-width: 1200px) {
@@ -263,15 +264,16 @@ body {
 /* Individual Tier Card - Progressive Value Styling */
 .tier-card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
   border-radius: 20px;
   padding: 32px 28px;
+  padding-top: 28px;
   display: flex;
   flex-direction: column;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 24px rgba(0,0,0,0.04);
-  overflow: hidden;
+  overflow: visible; /* Allow badges to show */
 }
 
 /* Premium gradient bar - intensity increases with tier */
@@ -308,21 +310,29 @@ body {
   box-shadow: 0 16px 48px rgba(22, 163, 74, 0.2);
 }
 
-/* RECOIL - Growing value, gold accent */
+/* RECOIL - White border */
+.tier-card[data-tier="recoil"] {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
 .tier-card[data-tier="recoil"]::before {
-  background: var(--gold);
+  background: rgba(255, 255, 255, 0.8);
+  opacity: 1;
 }
 .tier-card[data-tier="recoil"]:hover {
-  border-color: var(--gold);
-  box-shadow: 0 16px 48px rgba(201,168,76,0.15);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 48px rgba(255,255,255,0.08);
 }
 
-/* TERMINAL - Serious value, gradient begins */
+/* TERMINAL - Gold border */
+.tier-card[data-tier="terminal"] {
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 32px rgba(201,168,76,0.12);
+}
 .tier-card[data-tier="terminal"]::before {
   background: linear-gradient(180deg, var(--gold), #00d4ff);
+  opacity: 1;
 }
 .tier-card[data-tier="terminal"]:hover {
-  border-color: var(--gold);
   box-shadow: 0 16px 48px rgba(201,168,76,0.2);
 }
 
@@ -360,7 +370,7 @@ body {
 /* Badge */
 .tier-badge {
   position: absolute;
-  top: -14px;
+  top: -16px;
   left: 50%;
   transform: translateX(-50%);
   font-family: 'JetBrains Mono', monospace;
@@ -371,7 +381,7 @@ body {
   padding: 8px 18px;
   border-radius: 100px;
   white-space: nowrap;
-  z-index: 2;
+  z-index: 10;
 }
 
 .tier-badge.trial {
@@ -404,22 +414,23 @@ body {
   border: 1px solid var(--gold);
 }
 
-/* Tier Header */
+/* Tier Header - Fixed height sections for alignment */
 .tier-header {
-  margin-bottom: 24px;
-  padding-top: 12px;
-  min-height: 200px;
+  margin-bottom: 0;
+  padding-top: 8px;
   display: flex;
   flex-direction: column;
   text-align: center;
+  min-height: 280px; /* Fixed height for all headers */
 }
 
 .tier-name {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   letter-spacing: -0.02em;
+  height: 36px; /* Fixed */
 }
 
 /* Progressive tier name styling */
@@ -438,7 +449,17 @@ body {
   color: var(--text-secondary);
   margin-bottom: 24px;
   line-height: 1.55;
-  flex: 1;
+  height: 70px; /* Fixed height for alignment */
+  overflow: hidden;
+}
+
+/* Price row - fixed height for alignment */
+.tier-price-row {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .tier-price {
@@ -499,6 +520,8 @@ body {
   font-size: 0.82rem;
   color: var(--text-muted);
   text-align: center;
+  height: 20px; /* Fixed */
+  margin-top: auto; /* Push to bottom of header */
 }
 
 .tier-billing strong {
@@ -585,6 +608,14 @@ body {
 .tier-cta.secondary:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+}
+
+/* CTA wrapper for alignment */
+.tier-cta-section {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .tier-guarantee {
