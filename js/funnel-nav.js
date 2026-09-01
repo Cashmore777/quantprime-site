@@ -70,8 +70,8 @@ const QP_FUNNEL = {
         #qpFunnelFloat {
           position: fixed;
           bottom: 24px;
-          right: 24px;
-          z-index: 100;
+          right: 90px; /* Offset to avoid support widget */
+          z-index: 99; /* Below support widget */
           opacity: 0;
           transform: translateY(20px);
           transition: all 0.3s ease;
@@ -124,13 +124,9 @@ const QP_FUNNEL = {
         }
         @media (max-width: 600px) {
           #qpFunnelFloat {
-            bottom: 16px;
+            bottom: 90px; /* Above support widget on mobile */
             right: 16px;
-            left: 16px;
-          }
-          .qp-funnel-btn {
-            width: 100%;
-            justify-content: center;
+            left: auto;
           }
         }
       </style>

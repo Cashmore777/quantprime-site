@@ -57,19 +57,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css">
 <style>
-/* Light Theme Results Page - Force override dark theme */
+/* Results Page Theme Support */
 .results-page {
-  --bg: #fafafa !important;
-  --bg-card: #fff !important;
-  --text: #1a1a1a !important;
-  --text-muted: #555 !important;
-  --border: rgba(0,0,0,0.08) !important;
-  background: #fafafa !important;
-  min-height: 100vh;
-  color: #1a1a1a !important;
-}
-
-.results-page * {
   --bg-light: #fafafa;
   --bg-white: #fff;
   --border-light: rgba(0,0,0,0.08);
@@ -79,40 +68,58 @@
   --green: #16a34a;
   --red: #dc2626;
   --gold: #c9a84c;
+  --cyan: #00b4d8;
+  background: var(--bg-light);
+  min-height: 100vh;
+  color: var(--text-dark);
 }
 
-/* Force nav to light */
+/* Dark theme support */
+[data-theme="dark"] .results-page {
+  --bg-light: #0a0a0f;
+  --bg-white: #141419;
+  --border-light: rgba(255,255,255,0.08);
+  --text-dark: #fafafa;
+  --text-mid: #a1a1aa;
+  --text-light: #6b6b6b;
+  --green: #22c55e;
+  --red: #ef4444;
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+/* Nav - Light */
 .results-page nav {
-  background: #fff !important;
-  border-bottom: 1px solid rgba(0,0,0,0.08) !important;
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border-light);
 }
 
 .results-page nav .nav-logo,
 .results-page nav a {
-  color: #1a1a1a !important;
+  color: var(--text-dark);
 }
 
 .results-page nav .nav-logo span {
-  color: #c9a84c !important;
+  color: var(--gold);
 }
 
 .results-page .nav-cta {
-  background: #c9a84c !important;
-  color: #fff !important;
+  background: var(--gold);
+  color: #fff;
 }
 
 .results-page .nav-dropdown {
-  background: #fff !important;
-  border: 1px solid rgba(0,0,0,0.08) !important;
+  background: var(--bg-white);
+  border: 1px solid var(--border-light);
 }
 
 .results-page .nav-dropdown a {
-  color: #555 !important;
+  color: var(--text-mid);
 }
 
 .results-page .nav-dropdown a:hover {
-  background: #f5f5f5 !important;
-  color: #1a1a1a !important;
+  background: var(--bg-light);
+  color: var(--text-dark);
 }
 
 .results-page .page-header {
@@ -157,10 +164,14 @@
   z-index: 90;
   padding: 0.75rem 2rem;
   margin: 0;
-  background: rgba(255,255,255,0.97);
+  background: var(--bg-white);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+  border-bottom: 1px solid var(--border-light);
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .risk-control.sticky {
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
 }
 
 .risk-control.sticky .container-inner {
@@ -202,8 +213,12 @@
 }
 
 .risk-btn:hover {
-  border-color: rgba(0,0,0,0.15);
-  background: #f5f5f5;
+  border-color: var(--border-light);
+  background: var(--bg-light);
+}
+
+[data-theme="dark"] .risk-btn:hover {
+  border-color: rgba(255,255,255,0.15);
 }
 
 .risk-btn.active {
@@ -321,7 +336,7 @@
 .trades-table th {
   position: sticky;
   top: 0;
-  background: #f8f8f8;
+  background: var(--bg-light);
   padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 500;
@@ -334,14 +349,14 @@
 
 .trades-table td {
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid var(--border-light);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
   color: var(--text-mid);
 }
 
 .trades-table tr:hover td {
-  background: rgba(0,0,0,0.02);
+  background: var(--bg-light);
 }
 
 .trades-table .long { color: var(--green); }
@@ -354,7 +369,7 @@
   font-size: 0.7rem;
   color: var(--text-light);
   border-top: 1px solid var(--border-light);
-  background: #f8f8f8;
+  background: var(--bg-light);
 }
 
 .methodology {
@@ -452,10 +467,10 @@
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home Page</a>
         <a href="/framework">The Framework</a>
-        
         <a href="/results">Our Results</a>
         <a href="/compounding">Compounding</a>
-        <a href="/pricing">Get Access</a>
+        <a href="/manifesto">The Manifesto</a>
+        <a href="/pricing">Our Pricing</a>
         <a href="/dashboard/login.html">Member Login</a>
       </div>
     </div>
