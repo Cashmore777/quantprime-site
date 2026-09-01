@@ -3715,17 +3715,28 @@ body {
   height: calc(100vh - 100px);
 }
 
-/* Recoil & Terminal views - no scroll on indicator tab, scroll on guide tab */
-#view-recoil.active,
-#view-meridian.active {
-  overflow: hidden;
-  max-height: calc(100vh - 80px);
+/* Recoil & Terminal indicator panels - compact to fit viewport */
+#view-recoil #recoil-panel-indicator .instrument-hero,
+#view-meridian #meridian-panel-indicator .instrument-hero {
+  margin-bottom: 16px !important;
 }
 
-#view-recoil.active.scrollable,
-#view-meridian.active.scrollable {
-  overflow: auto;
-  max-height: none;
+#view-recoil #recoil-panel-indicator .panel,
+#view-meridian #meridian-panel-indicator .panel {
+  padding: 14px 16px;
+}
+
+#view-recoil #recoil-panel-indicator .panel h4,
+#view-meridian #meridian-panel-indicator .panel h4 {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+#view-recoil #recoil-panel-indicator .callout,
+#view-meridian #meridian-panel-indicator .callout {
+  font-size: 11px;
+  padding: 10px 12px;
+  margin-top: 10px;
 }
 
 #view-marketplace .view-header {
