@@ -74,29 +74,18 @@
   color: var(--text-dark);
 }
 
-/* Dark theme support */
+/* Dark theme support - darker colors to match rest of site */
 [data-theme="dark"] .results-page,
-.results-page.dark {
-  --bg-light: #0a0a0f;
-  --bg-white: #141419;
-  --border-light: rgba(255,255,255,0.08);
-  --text-dark: #fafafa;
-  --text-mid: #a1a1aa;
-  --text-light: #6b6b6b;
-  --green: #22c55e;
-  --red: #ef4444;
-  background: #0a0a0f;
-  color: #fafafa;
-}
-
-/* Also apply to html level for proper cascade */
+.results-page.dark,
 html[data-theme="dark"] body.results-page {
   --bg-light: #0a0a0f;
-  --bg-white: #141419;
-  --border-light: rgba(255,255,255,0.08);
+  --bg-white: #0f0f14;
+  --border-light: rgba(255,255,255,0.06);
   --text-dark: #fafafa;
   --text-mid: #a1a1aa;
-  --text-light: #6b6b6b;
+  --text-light: #71717a;
+  --green: #22c55e;
+  --red: #ef4444;
   background: #0a0a0f;
   color: #fafafa;
 }
