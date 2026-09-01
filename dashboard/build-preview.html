@@ -1,24 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Build Page Redesign — Preview v2</title>
+<title>Build Page Redesign — Preview v3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #08080a;
-  --bg-raised: #111114;
-  --bg-card: #0d0d10;
+  /* Match dashboard colors */
+  --bg: #0a0a0f;
+  --surface: #111117;
+  --surface-2: #16161d;
+  --surface-3: #1a1a22;
   --gold: #c9a84c;
   --gold-bright: #e6c876;
   --gold-dim: #7a6530;
   --bronze: #5c4a28;
-  --ink: #f0ece0;
-  --ink-dim: #8a8578;
-  --line: #252420;
-  --border: #1a1a17;
+  --text: #f0ece0;
+  --text-2: #8a8578;
+  --text-3: #5a5750;
+  --border: #252525;
+  --border-2: #1a1a1f;
   --cyan: #4ac9c9;
   --premium-gradient: linear-gradient(180deg, var(--gold), var(--cyan));
 }
@@ -26,17 +29,170 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: 
-    radial-gradient(ellipse 900px 500px at 20% -10%, rgba(201,168,76,0.06), transparent),
-    radial-gradient(ellipse 700px 500px at 100% 20%, rgba(201,168,76,0.04), transparent),
-    var(--bg);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: 'Inter', -apple-system, "Helvetica Neue", Arial, sans-serif;
-  padding: 40px 24px 60px;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 260px;
+  background: var(--surface);
+  border-right: 1px solid var(--border-2);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo .logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.sidebar-logo .logo-text span:first-child { color: var(--text); }
+.sidebar-logo .logo-text span:last-child { color: var(--gold); }
+
+.sidebar-logo .settings-btn {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.sidebar-logo .settings-btn svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-2);
+}
+
+.sidebar-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: var(--text-3);
+  padding: 16px 8px 8px;
+  text-transform: uppercase;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.15s;
+  cursor: pointer;
+  position: relative;
+}
+
+.sidebar-item:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.sidebar-item.active {
+  background: var(--surface-2);
+  color: var(--text);
+  border-left: 3px solid var(--gold);
+  margin-left: -3px;
+  padding-left: 15px;
+}
+
+.sidebar-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.sidebar-item .pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #26a269;
+  margin-left: auto;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--border-2);
+}
+
+.tier-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface-2);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.tier-badge .tier-label {
+  color: var(--text-2);
+}
+
+.tier-badge .tier-name {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.tier-badge .tier-id {
+  margin-left: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.tier-badge .user-email {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 4px;
+  display: block;
+}
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 40px;
+  background: 
+    radial-gradient(ellipse 900px 500px at 30% 0%, rgba(201,168,76,0.04), transparent),
+    var(--bg);
   min-height: 100vh;
 }
 
-.wrap { max-width: 1200px; margin: 0 auto; }
+.content-wrap { max-width: 1100px; }
 
 /* Header */
 .eyebrow {
@@ -45,11 +201,11 @@ body {
   color: var(--gold-dim);
   text-transform: uppercase;
   font-weight: 600;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 h1 {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: 600;
   letter-spacing: -0.5px;
   line-height: 1.1;
@@ -59,16 +215,16 @@ h1 {
 h1 span { color: var(--gold); }
 
 .sub {
-  color: var(--ink-dim);
+  color: var(--text-2);
   font-size: 14px;
-  margin-bottom: 40px;
+  margin-bottom: 36px;
 }
 
 /* ===== TIER LADDER ===== */
 .ladder-label {
   font-size: 11px;
   letter-spacing: 2px;
-  color: var(--ink-dim);
+  color: var(--text-2);
   text-transform: uppercase;
   margin-bottom: 14px;
   display: flex;
@@ -80,25 +236,20 @@ h1 span { color: var(--gold); }
 .ladder {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  gap: 12px;
   margin-bottom: 8px;
-  position: relative;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .ladder { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 500px) {
-  .ladder { grid-template-columns: 1fr; }
 }
 
 .tier {
   position: relative;
   border-radius: 8px;
-  padding: 18px 16px 16px;
-  background: linear-gradient(180deg, var(--bg-raised), #0c0c0e);
-  border: 1px solid var(--line);
+  padding: 16px 14px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
   cursor: pointer;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.25s ease;
   overflow: hidden;
@@ -111,7 +262,7 @@ h1 span { color: var(--gold); }
   inset: 0;
   opacity: 0;
   transition: opacity 0.25s ease;
-  background: radial-gradient(120px 80px at 50% 0%, rgba(201,168,76,0.15), transparent);
+  background: radial-gradient(120px 80px at 50% 0%, rgba(201,168,76,0.12), transparent);
   pointer-events: none;
 }
 
@@ -123,139 +274,114 @@ h1 span { color: var(--gold); }
 .tier:hover:not(.locked)::before { opacity: 1; }
 
 .tier .num {
-  font-family: "JetBrains Mono", "SF Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  color: var(--ink-dim);
+  color: var(--text-3);
   letter-spacing: 1px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: block;
 }
 
 .tier .icon {
-  width: 20px;
-  height: 20px;
-  margin-bottom: 12px;
-  opacity: 0.75;
+  width: 18px;
+  height: 18px;
+  margin-bottom: 10px;
+  opacity: 0.7;
 }
 
 .tier .name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .tier .desc {
-  font-size: 11.5px;
-  color: var(--ink-dim);
-  margin-bottom: 14px;
+  font-size: 11px;
+  color: var(--text-2);
+  margin-bottom: 12px;
   line-height: 1.4;
 }
 
 .tier .price {
-  font-family: "JetBrains Mono", "SF Mono", monospace;
-  font-size: 11px;
-  color: var(--gold-dim);
-  border-top: 1px solid var(--line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  border-top: 1px solid var(--border-2);
   padding-top: 10px;
   display: flex;
   justify-content: space-between;
 }
 
-/* Escalating intensity per tier */
-.tier.t1 { border-color: var(--line); }
+/* Escalating intensity */
+.tier.t1 { border-color: var(--border-2); }
 .tier.t2 { border-color: #2a2620; }
-.tier.t3 { border-color: #302a22; background: linear-gradient(180deg, #101012, #0a0a0b); }
-.tier.t4 { border-color: #3a3428; background: linear-gradient(180deg, #121210, #0a0a0b); }
+.tier.t3 { border-color: #302a22; background: linear-gradient(180deg, var(--surface), #0e0e12); }
+.tier.t4 { border-color: #3a3428; background: linear-gradient(180deg, #131318, #0e0e12); }
 
-/* ACTIVE state */
+/* ACTIVE */
 .tier.active {
   border-color: var(--gold);
   box-shadow: 
     0 0 0 1px var(--gold),
-    0 0 24px rgba(201,168,76,0.25),
-    inset 0 0 20px rgba(201,168,76,0.05);
+    0 0 20px rgba(201,168,76,0.2),
+    inset 0 0 16px rgba(201,168,76,0.04);
 }
 
 .tier.active::before { opacity: 1; }
 .tier.active .name { color: var(--gold-bright); }
 .tier.active .num { color: var(--gold); }
 .tier.active .price { color: var(--gold); border-top-color: var(--gold-dim); }
-.tier.active .icon { opacity: 1; filter: drop-shadow(0 0 4px rgba(201,168,76,0.5)); }
+.tier.active .icon { opacity: 1; filter: drop-shadow(0 0 3px rgba(201,168,76,0.4)); }
 
-/* LOCKED state */
-.tier.locked {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.tier.locked:hover {
-  transform: none;
-  border-color: #3a1414;
-}
-
-.tier.locked .name { color: var(--ink-dim); }
-
+/* LOCKED */
+.tier.locked { opacity: 0.5; cursor: not-allowed; }
+.tier.locked:hover { transform: none; border-color: #3a1414; }
+.tier.locked .name { color: var(--text-2); }
 .tier.locked .lock-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 10.5px;
+  font-size: 10px;
   color: #a06a3a;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border-2);
   padding-top: 10px;
   letter-spacing: 0.3px;
-  font-family: "JetBrains Mono", "SF Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
 }
-
-.tier.locked .lock-row svg {
-  width: 11px;
-  height: 11px;
-  flex-shrink: 0;
-}
-
+.tier.locked .lock-row svg { width: 10px; height: 10px; flex-shrink: 0; }
 .tier.locked .price { display: none; }
 
-/* Shake animation */
-.tier.shake {
-  animation: shake 0.32s ease;
-  border-color: #7a2b2b !important;
-}
-
+/* Shake */
+.tier.shake { animation: shake 0.32s ease; border-color: #7a2b2b !important; }
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-4px); }
   75% { transform: translateX(4px); }
 }
 
-/* Suite = top tier, extra ornament */
+/* Suite ornament */
 .tier.t4::after {
   content: "";
   position: absolute;
   top: 0;
   right: 0;
-  width: 0;
-  height: 0;
   border-style: solid;
-  border-width: 0 24px 24px 0;
+  border-width: 0 22px 22px 0;
   border-color: transparent var(--bronze) transparent transparent;
-  opacity: 0.6;
-  transition: opacity 0.2s;
+  opacity: 0.5;
 }
-
-.tier.t4:hover:not(.locked)::after { opacity: 1; }
-.tier.t4.active::after { border-color: transparent var(--gold) transparent transparent; opacity: 0.8; }
+.tier.t4.active::after { border-color: transparent var(--gold) transparent transparent; opacity: 0.7; }
 .tier.t4.locked::after { border-color: transparent #3a1414 transparent transparent; }
 
 /* Progress rail */
 .rail {
-  position: relative;
   height: 2px;
-  background: var(--line);
-  margin: 0 0 40px;
+  background: var(--border-2);
+  margin: 0 0 32px;
   border-radius: 2px;
+  position: relative;
 }
-
 .rail-fill {
   position: absolute;
   left: 0;
@@ -265,37 +391,26 @@ h1 span { color: var(--gold); }
   background: var(--premium-gradient);
   border-radius: 2px;
   transition: width 0.3s ease;
-  box-shadow: 0 0 8px rgba(201,168,76,0.6);
+  box-shadow: 0 0 8px rgba(201,168,76,0.5);
 }
 
-/* ===== MAIN LAYOUT: Courses + Order Panel ===== */
+/* ===== BUILD LAYOUT ===== */
 .build-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 30px;
+  grid-template-columns: 1fr 280px;
+  gap: 24px;
   align-items: start;
 }
 
 @media (max-width: 900px) {
-  .build-layout {
-    grid-template-columns: 1fr;
-  }
-  .order-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: 16px 16px 0 0;
-    z-index: 100;
-    box-shadow: 0 -4px 30px rgba(0,0,0,0.5);
-  }
+  .build-layout { grid-template-columns: 1fr; }
 }
 
-/* ===== COURSE CARDS ===== */
+/* Course cards */
 .courses-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 16px;
 }
 
 @media (max-width: 700px) {
@@ -303,29 +418,28 @@ h1 span { color: var(--gold); }
 }
 
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
   border-radius: 10px;
-  padding: 0;
   overflow: hidden;
 }
 
 .card-head {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 18px;
-  border-bottom: 1px dashed var(--line);
-  background: linear-gradient(180deg, rgba(201,168,76,0.03), transparent);
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(201,168,76,0.02), transparent);
 }
 
 .card-head .badge {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--gold);
   color: #1a1305;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -334,7 +448,7 @@ h1 span { color: var(--gold); }
 }
 
 .card-head .title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -342,31 +456,28 @@ h1 span { color: var(--gold); }
 
 .card-head .q {
   margin-left: auto;
-  font-size: 12px;
+  font-size: 11px;
   font-style: italic;
-  color: var(--ink-dim);
+  color: var(--text-2);
 }
-
-.dishes { padding: 0; }
 
 .dish {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px dashed var(--line);
+  padding: 12px 16px;
+  border-bottom: 1px dashed var(--border);
   cursor: pointer;
   transition: background 0.15s;
   position: relative;
 }
 
 .dish:last-child { border-bottom: none; }
-.dish:hover { background: rgba(201,168,76,0.03); }
+.dish:hover { background: rgba(201,168,76,0.02); }
 
-/* Selected dish with gradient border */
 .dish.selected {
-  background: rgba(201,168,76,0.06);
-  padding-left: 15px;
+  background: rgba(201,168,76,0.05);
+  padding-left: 13px;
 }
 
 .dish.selected::before {
@@ -381,31 +492,31 @@ h1 span { color: var(--gold); }
 }
 
 .dish-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .dish.selected .dish-name { color: var(--gold-bright); }
 
 .dish-meta {
-  font-size: 11px;
-  color: var(--ink-dim);
-  font-family: "JetBrains Mono", "SF Mono", monospace;
-  letter-spacing: 0.3px;
+  font-size: 10px;
+  color: var(--text-2);
+  font-family: "JetBrains Mono", monospace;
+  letter-spacing: 0.2px;
 }
 
 .dish-info {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  color: var(--ink-dim);
+  font-size: 9px;
+  color: var(--text-2);
   cursor: pointer;
   transition: all 0.15s;
   flex-shrink: 0;
@@ -416,12 +527,12 @@ h1 span { color: var(--gold); }
   color: var(--gold);
 }
 
-/* ===== ORDER PANEL (Persistent Side) ===== */
+/* Order panel */
 .order-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: var(--surface);
+  border: 1px solid var(--border-2);
   border-radius: 10px;
-  padding: 20px;
+  padding: 18px;
   position: sticky;
   top: 40px;
 }
@@ -430,41 +541,49 @@ h1 span { color: var(--gold); }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-2);
 }
 
 .order-head h3 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.order-head h3 svg {
+  width: 14px;
+  height: 14px;
+  color: var(--gold);
 }
 
 .order-build-id {
-  font-family: "JetBrains Mono", "SF Mono", monospace;
-  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
   color: var(--gold);
   background: rgba(201,168,76,0.1);
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: 4px;
 }
 
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+  margin-bottom: 16px;
 }
 
 .order-item {
-  font-size: 12px;
-  padding: 10px 14px;
-  background: var(--bg-raised);
-  border: 1px solid var(--line);
+  font-size: 11px;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-2);
   border-radius: 6px;
-  color: var(--ink-dim);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -472,243 +591,224 @@ h1 span { color: var(--gold); }
 
 .order-item .course-label {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 0.5px;
-  color: var(--ink-dim);
+  color: var(--text-3);
 }
 
 .order-item .dish-label {
-  color: var(--ink-dim);
-  font-size: 12px;
+  color: var(--text-2);
+  font-size: 11px;
 }
 
 .order-item.filled {
   border-color: var(--gold-dim);
-  background: rgba(201,168,76,0.05);
+  background: rgba(201,168,76,0.04);
 }
 
-.order-item.filled .dish-label {
-  color: var(--ink);
-}
+.order-item.filled .dish-label { color: var(--text); }
 
-/* Generate button with premium gradient */
 .generate-btn {
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   background: var(--premium-gradient);
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: #0a0a0a;
   cursor: pointer;
   transition: all 0.2s;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  position: relative;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.generate-btn::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.generate-btn:hover::before {
-  opacity: 1;
+.generate-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 .generate-btn:hover {
-  box-shadow: 
-    0 4px 20px rgba(201,168,76,0.4),
-    0 0 40px rgba(74,201,201,0.15);
+  box-shadow: 0 4px 16px rgba(201,168,76,0.35), 0 0 30px rgba(74,201,201,0.12);
   transform: translateY(-1px);
 }
 
 .generate-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.25;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
-.generate-btn:disabled::before {
-  display: none;
-}
-
-/* Piece count indicator */
 .piece-count {
   text-align: center;
-  font-size: 11px;
-  color: var(--ink-dim);
-  margin-top: 12px;
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 10px;
   font-family: "JetBrains Mono", monospace;
 }
 
-.piece-count b {
-  color: var(--gold);
-}
-
-/* Note */
-.note {
-  font-size: 12px;
-  color: var(--ink-dim);
-  line-height: 1.6;
-  margin-top: 40px;
-  padding: 16px;
-  background: var(--bg-raised);
-  border: 1px dashed var(--line);
-  border-radius: 6px;
-}
-
-.note b { color: var(--gold); }
+.piece-count b { color: var(--gold); }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="eyebrow">Instrument Builder</div>
-  <h1>Build your <span>indicator.</span></h1>
-  <div class="sub">Select one dish from each course to generate your custom Pine Script.</div>
 
-  <div class="ladder-label">
-    <span>Choose your tier</span>
-    <b id="unlockCount">2 of 4 unlocked</b>
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-text"><span>QUANT</span><span>PRIME</span></span>
+    <button class="settings-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
   </div>
-  
-  <div class="ladder" id="tierLadder">
-    <!-- Tiers injected by JS -->
-  </div>
-  
-  <div class="rail"><div class="rail-fill" id="railFill"></div></div>
 
-  <div class="build-layout">
-    <div class="courses-grid" id="coursesGrid">
-      <!-- Course cards injected by JS -->
-    </div>
+  <nav class="sidebar-section">
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </a>
+  </nav>
 
-    <div class="order-panel">
-      <div class="order-head">
-        <h3>Your Order</h3>
-        <span class="order-build-id" id="orderBuildId">RES-0000</span>
+  <nav class="sidebar-section">
+    <div class="sidebar-section-title">Instruments</div>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+      Research
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      Recoil
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Terminal
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Suite
+      <span class="pip"></span>
+    </a>
+  </nav>
+
+  <nav class="sidebar-section">
+    <div class="sidebar-section-title">Connect</div>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Community
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item active" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+      Build
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Intelligence
+      <span class="pip"></span>
+    </a>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+      Affiliates
+      <span class="pip"></span>
+    </a>
+  </nav>
+
+  <nav class="sidebar-section">
+    <div class="sidebar-section-title">★ Ascension</div>
+    <a class="sidebar-item" href="#">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Academy
+      <span class="pip"></span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="tier-badge">
+      <div>
+        <span class="tier-label">TIER </span>
+        <span class="tier-name">ADMIN</span>
+        <span class="user-email">cash@themoneyprinter.uk</span>
       </div>
-      <div class="order-items" id="orderItems">
-        <!-- Order items injected by JS -->
-      </div>
-      <button class="generate-btn" id="generateBtn" disabled>Generate Pine Script</button>
-      <div class="piece-count"><b id="pieceCount">0</b> pieces selected</div>
+      <span class="tier-id">ID: 611F5165</span>
     </div>
   </div>
+</aside>
 
-  <div class="note">
-    <b>Preview build v2.</b> Fixed: Order panel now persistent on side (always visible while selecting). 
-    Generate button uses premium gold→cyan gradient. Selected dishes have gradient left border.
-    Locked tiers shake on click.
+<!-- Main Content -->
+<main class="main-content">
+  <div class="content-wrap">
+    <div class="eyebrow">Instrument Builder</div>
+    <h1>Build your <span>indicator.</span></h1>
+    <div class="sub">Select one dish from each course to generate your custom Pine Script.</div>
+
+    <div class="ladder-label">
+      <span>Choose your tier</span>
+      <b id="unlockCount">2 of 4 unlocked</b>
+    </div>
+    
+    <div class="ladder" id="tierLadder"></div>
+    <div class="rail"><div class="rail-fill" id="railFill"></div></div>
+
+    <div class="build-layout">
+      <div class="courses-grid" id="coursesGrid"></div>
+
+      <div class="order-panel">
+        <div class="order-head">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Your Order
+          </h3>
+          <span class="order-build-id" id="orderBuildId">RES-0000</span>
+        </div>
+        <div class="order-items" id="orderItems"></div>
+        <button class="generate-btn" id="generateBtn" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Generate Instrument
+        </button>
+        <div class="piece-count"><b id="pieceCount">0</b> pieces selected</div>
+      </div>
+    </div>
   </div>
-</div>
+</main>
 
 <script>
-// Simulated user tier (in real page, comes from window.userTier)
-let currentUserTier = 'recoil'; // Options: 'free', 'research', 'recoil', 'terminal', 'suite', 'admin'
+let currentUserTier = 'recoil';
 
-// Tier definitions
 const tierData = [
-  { 
-    id: 'research', 
-    num: '01', 
-    name: 'RESEARCH', 
-    desc: 'Where it starts',
-    price: '£8/mo',
-    rank: 1,
-    icon: '<path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/>'
-  },
-  { 
-    id: 'recoil', 
-    num: '02', 
-    name: 'RECOIL', 
-    desc: 'Volatility, sized',
-    price: '£28/mo',
-    rank: 2,
-    icon: '<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>'
-  },
-  { 
-    id: 'terminal', 
-    num: '03', 
-    name: 'TERMINAL', 
-    desc: 'The full desk',
-    price: '£58/mo',
-    rank: 3,
-    icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3-3 3"/>'
-  },
-  { 
-    id: 'suite', 
-    num: '04', 
-    name: 'SUITE', 
-    desc: 'Everything, at once',
-    price: '£88/mo',
-    rank: 4,
-    icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>'
-  }
+  { id: 'research', num: '01', name: 'RESEARCH', desc: 'Where it starts', price: '£8/mo', rank: 1,
+    icon: '<path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/>' },
+  { id: 'recoil', num: '02', name: 'RECOIL', desc: 'Volatility, sized', price: '£28/mo', rank: 2,
+    icon: '<path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>' },
+  { id: 'terminal', num: '03', name: 'TERMINAL', desc: 'The full desk', price: '£58/mo', rank: 3,
+    icon: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3-3 3"/>' },
+  { id: 'suite', num: '04', name: 'SUITE', desc: 'Everything, at once', price: '£88/mo', rank: 4,
+    icon: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>' }
 ];
 
 const tierRanks = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4, 'admin': 99 };
 
-// Real dish data (from dashboard)
 const dishNames = {
-  research: {
-    starter: { 1: 'Previous Day Levels', 2: 'Weekly Open', 3: 'Prior Week Range' },
-    main: { 1: 'EMA Ribbon', 2: 'Volatility State', 3: 'Range Analysis' },
-    side: { 1: 'Candle Countdown', 2: 'Session Zones', 3: 'Hourly Profile' },
-    dessert: { 1: 'Weekly Summary Table', 2: 'Volatility Report', 3: 'Pair Statistics' }
-  },
-  recoil: {
-    starter: { 1: 'Volatility Bands', 2: 'ATR Envelope', 3: 'Volatility Levels' },
-    main: { 1: 'ATR Stops', 2: 'Volatility Zones', 3: 'Regime Tracker' },
-    side: { 1: 'Candle Clock', 2: 'Position Sizer', 3: 'Trade Planner' },
-    dessert: { 1: 'Band Report', 2: 'Zone Report', 3: 'Session Report' }
-  },
-  terminal: {
-    starter: { 1: 'AMD Phases', 2: 'Liquidity Levels', 3: 'Fair Value Gaps' },
-    main: { 1: 'Sweep Tracker', 2: 'Liquidity Map', 3: 'Trend Stack' },
-    side: { 1: 'Phase Clock', 2: 'Stack Monitor', 3: 'Session Clock' },
-    dessert: { 1: 'Sweep Report', 2: 'Phase Report', 3: 'Session Report' }
-  },
-  suite: {
-    starter: { 1: 'Regime Score Ribbon', 2: 'HTF Bias Arrow', 3: 'Regime Change Marker' },
-    main: { 1: 'Regime Scanner Table', 2: 'Multi-TF Regime Aggregator', 3: 'Session Regime Tracker' },
-    side: { 1: 'Regime Clock', 2: 'Confidence Meter', 3: 'Regime Alert Panel' },
-    dessert: { 1: 'Regime Report', 2: 'Cross-TF Report', 3: 'Session Regime Report' }
-  }
+  research: { starter: { 1: 'Previous Day Levels', 2: 'Weekly Open', 3: 'Prior Week Range' }, main: { 1: 'EMA Ribbon', 2: 'Volatility State', 3: 'Range Analysis' }, side: { 1: 'Candle Countdown', 2: 'Session Zones', 3: 'Hourly Profile' }, dessert: { 1: 'Weekly Summary Table', 2: 'Volatility Report', 3: 'Pair Statistics' } },
+  recoil: { starter: { 1: 'Volatility Bands', 2: 'ATR Envelope', 3: 'Volatility Levels' }, main: { 1: 'ATR Stops', 2: 'Volatility Zones', 3: 'Regime Tracker' }, side: { 1: 'Candle Clock', 2: 'Position Sizer', 3: 'Trade Planner' }, dessert: { 1: 'Band Report', 2: 'Zone Report', 3: 'Session Report' } },
+  terminal: { starter: { 1: 'AMD Phases', 2: 'Liquidity Levels', 3: 'Fair Value Gaps' }, main: { 1: 'Sweep Tracker', 2: 'Liquidity Map', 3: 'Trend Stack' }, side: { 1: 'Phase Clock', 2: 'Stack Monitor', 3: 'Session Clock' }, dessert: { 1: 'Sweep Report', 2: 'Phase Report', 3: 'Session Report' } },
+  suite: { starter: { 1: 'Regime Score Ribbon', 2: 'HTF Bias Arrow', 3: 'Regime Change Marker' }, main: { 1: 'Regime Scanner Table', 2: 'Multi-TF Regime Aggregator', 3: 'Session Regime Tracker' }, side: { 1: 'Regime Clock', 2: 'Confidence Meter', 3: 'Regime Alert Panel' }, dessert: { 1: 'Regime Report', 2: 'Cross-TF Report', 3: 'Session Regime Report' } }
 };
 
 const dishMeta = {
-  research: {
-    starter: { 1: 'high · low · close', 2: 'opening price · weekly bias', 3: 'weekly high · weekly low · close' },
-    main: { 1: '8 · 26 · 80 · 233 alignment', 2: 'ATR ratio · expansion · contraction', 3: 'daily range · average · percentile' },
-    side: { 1: 'time remaining · close alert', 2: 'london · new york · tokyo · sydney', 3: 'hour activity · optimal windows' },
-    dessert: { 1: 'performance · win rate · P&L', 2: 'ATR analysis · compression · expansion', 3: 'instrument metrics · range data' }
-  },
-  recoil: {
-    starter: { 1: 'candle size · 8-band scale', 2: 'ATR distance · anchor · rails', 3: 'high-vol candles · OHLC rails' },
-    main: { 1: 'wick padding · ATR multiple · pips', 2: 'HTF expansion · quarter marks', 3: 'QP score · stability · trend' },
-    side: { 1: 'candle progress · range spent', 2: 'account size · risk % · stop', 3: 'entry · stop · targets · breakeven' },
-    dessert: { 1: 'band frequency · follow-through', 2: 'zone hit rate · time to hit', 3: 'session comparison · expansion' }
-  },
-  terminal: {
-    starter: { 1: '12h · 6h · 3h cycles', 2: 'swing highs · swing lows · sweeps', 3: 'gap detection · state · midpoint' },
-    main: { 1: 'level breaks · 20-min grading', 2: 'multi-TF · confluence scoring', 3: '4-EMA · clean alignment' },
-    side: { 1: 'phase countdown · transition', 2: 'stack state · alignment quality', 3: 'session progress · activity' },
-    dessert: { 1: 'reversal rate · TF split', 2: 'range per phase · spread score', 3: 'hourly activity · break frequency' }
-  },
-  suite: {
-    starter: { 1: 'regime score · colour grade', 2: '4-EMA stack · bias shift', 3: 'grade transitions · shift direction' },
-    main: { 1: 'composite score · sub-scores', 2: 'three timeframes · agreement', 3: 'session start · best/worst grade' },
-    side: { 1: 'bar countdown · recalculation', 2: 'component agreement · margin', 3: 'volatility state · trend state' },
-    dessert: { 1: 'grade distribution · streak', 2: 'full agreement · partial · none', 3: 'Asia · London · New York rates' }
-  }
+  research: { starter: { 1: 'high · low · close', 2: 'opening price · weekly bias', 3: 'weekly high · weekly low · close' }, main: { 1: '8 · 26 · 80 · 233 alignment', 2: 'ATR ratio · expansion · contraction', 3: 'daily range · average · percentile' }, side: { 1: 'time remaining · close alert', 2: 'london · new york · tokyo · sydney', 3: 'hour activity · optimal windows' }, dessert: { 1: 'performance · win rate · P&L', 2: 'ATR analysis · compression', 3: 'instrument metrics · range data' } },
+  recoil: { starter: { 1: 'candle size · 8-band scale', 2: 'ATR distance · anchor · rails', 3: 'high-vol candles · OHLC rails' }, main: { 1: 'wick padding · ATR multiple · pips', 2: 'HTF expansion · quarter marks', 3: 'QP score · stability · trend' }, side: { 1: 'candle progress · range spent', 2: 'account size · risk % · stop', 3: 'entry · stop · targets · breakeven' }, dessert: { 1: 'band frequency · follow-through', 2: 'zone hit rate · time to hit', 3: 'session comparison · expansion' } },
+  terminal: { starter: { 1: '12h · 6h · 3h cycles', 2: 'swing highs · swing lows · sweeps', 3: 'gap detection · state · midpoint' }, main: { 1: 'level breaks · 20-min grading', 2: 'multi-TF · confluence scoring', 3: '4-EMA · clean alignment' }, side: { 1: 'phase countdown · transition', 2: 'stack state · alignment quality', 3: 'session progress · activity' }, dessert: { 1: 'reversal rate · TF split', 2: 'range per phase · spread score', 3: 'hourly activity · break frequency' } },
+  suite: { starter: { 1: 'regime score · colour grade', 2: '4-EMA stack · bias shift', 3: 'grade transitions · shift direction' }, main: { 1: 'composite score · sub-scores', 2: 'three timeframes · agreement', 3: 'session start · best/worst grade' }, side: { 1: 'bar countdown · recalculation', 2: 'component agreement · margin', 3: 'volatility state · trend state' }, dessert: { 1: 'grade distribution · streak', 2: 'full agreement · partial · none', 3: 'Asia · London · New York rates' } }
 };
 
 const courseQuestions = {
@@ -718,187 +818,121 @@ const courseQuestions = {
   suite: { starter: 'What\'s the regime?', main: 'What\'s the score?', side: 'How confident?', dessert: 'What does history say?' }
 };
 
-// State
 let activeTier = 'research';
 let selections = { starter: 0, main: 0, side: 0, dessert: 0 };
 
-// Check if tier is unlocked
 function isTierUnlocked(tierId) {
-  const userRank = tierRanks[currentUserTier] || 0;
-  const tierRank = tierRanks[tierId] || 0;
-  return userRank >= tierRank;
+  return (tierRanks[currentUserTier] || 0) >= (tierRanks[tierId] || 0);
 }
 
-// Render tier ladder
 function renderTierLadder() {
   const container = document.getElementById('tierLadder');
-  const userRank = tierRanks[currentUserTier] || 0;
-  
-  let unlockedCount = 0;
-  tierData.forEach(t => { if (isTierUnlocked(t.id)) unlockedCount++; });
+  let unlockedCount = tierData.filter(t => isTierUnlocked(t.id)).length;
   document.getElementById('unlockCount').textContent = `${unlockedCount} of 4 unlocked`;
   
   container.innerHTML = tierData.map((t, i) => {
     const isLocked = !isTierUnlocked(t.id);
     const isActive = activeTier === t.id;
-    const tierClass = `tier t${i+1}${isLocked ? ' locked' : ''}${isActive ? ' active' : ''}`;
-    
     const footer = isLocked 
-      ? `<div class="lock-row">
-           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-             <rect x="4" y="10" width="16" height="10" rx="1"/>
-             <path d="M8 10V7a4 4 0 018 0v3"/>
-           </svg>
-           UNLOCKS AT ${t.price.toUpperCase()}
-         </div>`
+      ? `<div class="lock-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>UNLOCKS AT ${t.price.toUpperCase()}</div>`
       : `<div class="price"><span>${t.price}</span><span>UNLOCKED</span></div>`;
-    
-    return `
-      <button class="${tierClass}" data-tier="${t.id}" onclick="selectTier('${t.id}')">
-        <span class="num">TIER ${t.num}</span>
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">${t.icon}</svg>
-        <div class="name">${t.name}</div>
-        <div class="desc">${t.desc}</div>
-        ${footer}
-      </button>
-    `;
+    return `<button class="tier t${i+1}${isLocked ? ' locked' : ''}${isActive ? ' active' : ''}" data-tier="${t.id}" onclick="selectTier('${t.id}')">
+      <span class="num">TIER ${t.num}</span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">${t.icon}</svg>
+      <div class="name">${t.name}</div>
+      <div class="desc">${t.desc}</div>
+      ${footer}
+    </button>`;
   }).join('');
-  
   updateRailFill();
 }
 
-// Select tier
 function selectTier(tierId) {
   const tier = document.querySelector(`[data-tier="${tierId}"]`);
-  
   if (!isTierUnlocked(tierId)) {
-    // Shake animation
     tier.classList.remove('shake');
-    void tier.offsetWidth; // Force reflow
+    void tier.offsetWidth;
     tier.classList.add('shake');
     return;
   }
-  
   activeTier = tierId;
   selections = { starter: 0, main: 0, side: 0, dessert: 0 };
-  
   renderTierLadder();
   renderCourses();
   updateOrderPanel();
 }
 
-// Update rail fill
 function updateRailFill() {
-  const tierIndex = tierData.findIndex(t => t.id === activeTier);
-  const fill = document.getElementById('railFill');
-  fill.style.width = `${(tierIndex + 1) * 25}%`;
+  const idx = tierData.findIndex(t => t.id === activeTier);
+  document.getElementById('railFill').style.width = `${(idx + 1) * 25}%`;
 }
 
-// Render course cards
 function renderCourses() {
-  const container = document.getElementById('coursesGrid');
   const dishes = dishNames[activeTier];
   const meta = dishMeta[activeTier];
   const questions = courseQuestions[activeTier];
-  
   const courseOrder = ['starter', 'main', 'side', 'dessert'];
-  const courseLabels = { starter: 'Starter', main: 'Main', side: 'Side', dessert: 'Dessert' };
+  const labels = { starter: 'Starter', main: 'Main', side: 'Side', dessert: 'Dessert' };
   
-  container.innerHTML = courseOrder.map((course, idx) => {
-    const courseDishes = dishes[course];
-    const courseMeta = meta[course];
-    
-    return `
-      <div class="card" data-course="${course}">
-        <div class="card-head">
-          <div class="badge">${idx + 1}</div>
-          <div class="title">${courseLabels[course]}</div>
-          <div class="q">${questions[course]}</div>
-        </div>
-        <div class="dishes">
-          ${[1, 2, 3].map(d => `
-            <div class="dish${selections[course] === d ? ' selected' : ''}" 
-                 data-course="${course}" 
-                 data-dish="${d}" 
-                 onclick="selectDish('${course}', ${d})">
-              <div>
-                <div class="dish-name">${courseDishes[d]}</div>
-                <div class="dish-meta">${courseMeta[d]}</div>
-              </div>
-              <button class="dish-info" onclick="event.stopPropagation()">i</button>
-            </div>
-          `).join('')}
-        </div>
+  document.getElementById('coursesGrid').innerHTML = courseOrder.map((c, i) => `
+    <div class="card">
+      <div class="card-head">
+        <div class="badge">${i + 1}</div>
+        <div class="title">${labels[c]}</div>
+        <div class="q">${questions[c]}</div>
       </div>
-    `;
-  }).join('');
+      <div class="dishes">
+        ${[1,2,3].map(d => `
+          <div class="dish${selections[c] === d ? ' selected' : ''}" onclick="selectDish('${c}', ${d})">
+            <div>
+              <div class="dish-name">${dishes[c][d]}</div>
+              <div class="dish-meta">${meta[c][d]}</div>
+            </div>
+            <button class="dish-info" onclick="event.stopPropagation()">i</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
 }
 
-// Select dish
 function selectDish(course, dish) {
-  if (selections[course] === dish) {
-    selections[course] = 0; // Deselect
-  } else {
-    selections[course] = dish;
-  }
-  
+  selections[course] = selections[course] === dish ? 0 : dish;
   renderCourses();
   updateOrderPanel();
 }
 
-// Update order panel
 function updateOrderPanel() {
   const dishes = dishNames[activeTier];
-  const items = document.getElementById('orderItems');
-  const courseLabels = { starter: 'STARTER', main: 'MAIN', side: 'SIDE', dessert: 'DESSERT' };
+  const labels = { starter: 'STARTER', main: 'MAIN', side: 'SIDE', dessert: 'DESSERT' };
   
-  items.innerHTML = ['starter', 'main', 'side', 'dessert'].map(course => {
-    const sel = selections[course];
+  document.getElementById('orderItems').innerHTML = ['starter', 'main', 'side', 'dessert'].map(c => {
+    const sel = selections[c];
     const filled = sel > 0;
-    const name = filled ? dishes[course][sel] : '—';
-    return `
-      <div class="order-item${filled ? ' filled' : ''}">
-        <span class="course-label">${courseLabels[course]}</span>
-        <span class="dish-label">${name}</span>
-      </div>
-    `;
+    return `<div class="order-item${filled ? ' filled' : ''}">
+      <span class="course-label">${labels[c]}</span>
+      <span class="dish-label">${filled ? dishes[c][sel] : '—'}</span>
+    </div>`;
   }).join('');
   
-  // Update build ID
-  const prefix = activeTier === 'research' ? 'RES' : 
-                 activeTier === 'recoil' ? 'REC' : 
-                 activeTier === 'terminal' ? 'MER' : 'COC';
-  
+  const prefix = { research: 'RES', recoil: 'REC', terminal: 'MER', suite: 'COC' }[activeTier];
   let buildId;
   if (activeTier === 'terminal') {
-    let pieces = [];
-    if (selections.starter > 0) pieces.push(`S${selections.starter}`);
-    if (selections.main > 0) pieces.push(`M${selections.main}`);
-    if (selections.side > 0) pieces.push(`D${selections.side}`);
-    if (selections.dessert > 0) pieces.push(`T${selections.dessert}`);
-    buildId = pieces.length > 0 ? `MER-${pieces.join('')}` : 'MER-0000';
+    let p = []; if (selections.starter > 0) p.push(`S${selections.starter}`); if (selections.main > 0) p.push(`M${selections.main}`); if (selections.side > 0) p.push(`D${selections.side}`); if (selections.dessert > 0) p.push(`T${selections.dessert}`);
+    buildId = p.length > 0 ? `MER-${p.join('')}` : 'MER-0000';
   } else if (activeTier === 'suite') {
-    let pieces = [];
-    if (selections.starter > 0) pieces.push(`S${selections.starter}`);
-    if (selections.main > 0) pieces.push(`M${selections.main}`);
-    if (selections.side > 0) pieces.push(`D${selections.side}`);
-    if (selections.dessert > 0) pieces.push(`T${selections.dessert}`);
-    buildId = pieces.length > 0 ? pieces.join('-') : 'COC-0000';
+    let p = []; if (selections.starter > 0) p.push(`S${selections.starter}`); if (selections.main > 0) p.push(`M${selections.main}`); if (selections.side > 0) p.push(`D${selections.side}`); if (selections.dessert > 0) p.push(`T${selections.dessert}`);
+    buildId = p.length > 0 ? p.join('-') : 'COC-0000';
   } else {
     buildId = `${prefix}-${selections.starter}${selections.main}${selections.side}${selections.dessert}`;
   }
-  
   document.getElementById('orderBuildId').textContent = buildId;
   
-  // Update piece count
-  const pieceCount = Object.values(selections).filter(v => v > 0).length;
-  document.getElementById('pieceCount').textContent = pieceCount;
-  
-  // Enable/disable generate button
-  document.getElementById('generateBtn').disabled = pieceCount === 0;
+  const count = Object.values(selections).filter(v => v > 0).length;
+  document.getElementById('pieceCount').textContent = count;
+  document.getElementById('generateBtn').disabled = count === 0;
 }
 
-// Initialize
 document.addEventListener('DOMContentLoaded', () => {
   renderTierLadder();
   renderCourses();
