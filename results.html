@@ -55,7 +55,7 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/main.css?v=20260901a">
 <style>
 /* Results Page Theme Support */
 .results-page {
@@ -75,7 +75,8 @@
 }
 
 /* Dark theme support */
-[data-theme="dark"] .results-page {
+[data-theme="dark"] .results-page,
+.results-page.dark {
   --bg-light: #0a0a0f;
   --bg-white: #141419;
   --border-light: rgba(255,255,255,0.08);
@@ -84,8 +85,20 @@
   --text-light: #6b6b6b;
   --green: #22c55e;
   --red: #ef4444;
-  background: var(--bg-light);
-  color: var(--text-dark);
+  background: #0a0a0f;
+  color: #fafafa;
+}
+
+/* Also apply to html level for proper cascade */
+html[data-theme="dark"] body.results-page {
+  --bg-light: #0a0a0f;
+  --bg-white: #141419;
+  --border-light: rgba(255,255,255,0.08);
+  --text-dark: #fafafa;
+  --text-mid: #a1a1aa;
+  --text-light: #6b6b6b;
+  background: #0a0a0f;
+  color: #fafafa;
 }
 
 /* Nav - Light */
