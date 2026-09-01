@@ -3708,12 +3708,189 @@ body {
   display: block;
 }
 
-/* Menu tier tabs - wrap properly */
-.menu-tier-tabs {
+/* ===== TIER LADDER (Build Page Redesign v6) ===== */
+.tier-ladder-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  margin-bottom: 10px;
   display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.tier-ladder-label b { color: var(--gold); }
+
+.tier-ladder {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .tier-ladder { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .tier-ladder { grid-template-columns: 1fr; }
+}
+
+.tier-card {
+  position: relative;
+  border-radius: 6px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.tier-card:hover:not(.locked) {
+  transform: translateY(-1px);
+  border-color: rgba(201,168,76,0.4);
+}
+
+.tier-card-content { flex: 1; min-width: 0; }
+
+.tier-card .tier-num {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.tier-card .tier-name {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+  color: var(--text-1);
+}
+
+.tier-card .tier-desc {
+  font-size: 10px;
+  color: var(--text-2);
+  margin-bottom: 10px;
+}
+
+.tier-card .tier-price {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-3);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tier-card-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.tier-card-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--text-3);
+  transition: stroke 0.2s ease;
+}
+
+/* Tier card escalating borders */
+.tier-card[data-tier="research"] { border-color: var(--border); }
+.tier-card[data-tier="recoil"] { border-color: rgba(201,168,76,0.15); }
+.tier-card[data-tier="terminal"] { border-color: rgba(201,168,76,0.2); }
+.tier-card[data-tier="suite"] { border-color: rgba(201,168,76,0.25); }
+
+/* Tier card ACTIVE state */
+.tier-card.active {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 16px rgba(201,168,76,0.2);
+}
+.tier-card.active .tier-name { color: var(--gold-light); }
+.tier-card.active .tier-num { color: var(--gold); }
+.tier-card.active .tier-desc { color: var(--text-1); }
+.tier-card.active .tier-price { color: var(--gold); border-top-color: rgba(201,168,76,0.3); }
+.tier-card.active .tier-card-icon svg { stroke: var(--gold); }
+
+/* Tier card UNLOCKED (not active) */
+.tier-card:not(.active):not(.locked) .tier-card-icon svg { stroke: var(--text-2); }
+
+/* Tier card LOCKED state */
+.tier-card.locked { opacity: 0.45; cursor: not-allowed; }
+.tier-card.locked:hover { transform: none; border-color: rgba(180,80,80,0.3); }
+.tier-card.locked .tier-name { color: var(--text-2); }
+.tier-card.locked .tier-card-icon svg { stroke: rgba(120,90,90,0.6); }
+
+.tier-card .tier-lock-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: rgba(180,120,80,0.9);
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  letter-spacing: 0.3px;
+  font-family: var(--mono);
+}
+.tier-card .tier-lock-row svg { width: 9px; height: 9px; flex-shrink: 0; }
+.tier-card.locked .tier-price { display: none; }
+
+/* Tier card shake animation */
+.tier-card.shake { animation: tierShake 0.32s ease; border-color: rgba(140,60,60,0.6) !important; }
+@keyframes tierShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Suite tier ornament */
+.tier-card[data-tier="suite"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-style: solid;
+  border-width: 0 18px 18px 0;
+  border-color: transparent rgba(201,168,76,0.3) transparent transparent;
+  opacity: 0.5;
+}
+.tier-card[data-tier="suite"].active::after { border-color: transparent var(--gold) transparent transparent; opacity: 0.7; }
+.tier-card[data-tier="suite"].locked::after { border-color: transparent rgba(100,50,50,0.4) transparent transparent; }
+
+/* Progress rail */
+.tier-rail {
+  height: 2px;
+  background: var(--border);
+  margin: 0 0 20px;
+  border-radius: 2px;
+  position: relative;
+}
+.tier-rail-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 25%;
+  background: var(--premium-gradient);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 6px rgba(201,168,76,0.5);
+}
+
+/* Legacy menu tier tabs (hidden, kept for fallback) */
+.menu-tier-tabs {
+  display: none;
 }
 
 .menu-tier-tab {
@@ -3789,10 +3966,10 @@ body {
   margin: 0 0 24px 0;
 }
 
-/* Restaurant-style menu layout */
+/* Restaurant-style menu layout - narrower order panel */
 .menu-layout {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: 1fr 200px;
   gap: 20px;
   max-height: calc(100vh - 280px);
 }
@@ -9028,28 +9205,74 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- MENU MODE (Build Instrument) -->
     <div id="menu-mode" class="marketplace-mode active">
-      <!-- Tier tabs -->
-      <div class="menu-tier-tabs" id="menu-tier-tabs">
-        <button class="menu-tier-tab active" data-tier="research" onclick="switchMenuTier('research')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
-          Research
+      <!-- Tier Ladder (v6 redesign) -->
+      <div class="tier-ladder-label">
+        <span>Choose your tier</span>
+        <b id="tier-unlock-count">1 of 4 unlocked</b>
+      </div>
+      <div class="tier-ladder" id="tier-ladder">
+        <!-- Research -->
+        <button class="tier-card active" data-tier="research" onclick="switchMenuTier('research')">
+          <div class="tier-card-content">
+            <span class="tier-num">TIER 01</span>
+            <div class="tier-name">RESEARCH</div>
+            <div class="tier-desc">Where it starts</div>
+            <div class="tier-price"><span>£8/mo</span><span>UNLOCKED</span></div>
+          </div>
+          <div class="tier-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+          </div>
         </button>
-        <button class="menu-tier-tab locked" data-tier="recoil" onclick="switchMenuTier('recoil')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-          Recoil
-          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <!-- Recoil -->
+        <button class="tier-card locked" data-tier="recoil" onclick="switchMenuTier('recoil')">
+          <div class="tier-card-content">
+            <span class="tier-num">TIER 02</span>
+            <div class="tier-name">RECOIL</div>
+            <div class="tier-desc">Volatility, sized</div>
+            <div class="tier-lock-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+              UNLOCKS AT £28/MO
+            </div>
+            <div class="tier-price"><span>£28/mo</span><span>UNLOCKED</span></div>
+          </div>
+          <div class="tier-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          </div>
         </button>
-        <button class="menu-tier-tab locked" data-tier="terminal" onclick="switchMenuTier('terminal')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 10l3 3-3 3"/></svg>
-          Terminal
-          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <!-- Terminal -->
+        <button class="tier-card locked" data-tier="terminal" onclick="switchMenuTier('terminal')">
+          <div class="tier-card-content">
+            <span class="tier-num">TIER 03</span>
+            <div class="tier-name">TERMINAL</div>
+            <div class="tier-desc">The full desk</div>
+            <div class="tier-lock-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+              UNLOCKS AT £58/MO
+            </div>
+            <div class="tier-price"><span>£58/mo</span><span>UNLOCKED</span></div>
+          </div>
+          <div class="tier-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+          </div>
         </button>
-        <button class="menu-tier-tab locked" data-tier="suite" onclick="switchMenuTier('suite')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          Suite
-          <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <!-- Suite -->
+        <button class="tier-card locked" data-tier="suite" onclick="switchMenuTier('suite')">
+          <div class="tier-card-content">
+            <span class="tier-num">TIER 04</span>
+            <div class="tier-name">SUITE</div>
+            <div class="tier-desc">Everything, at once</div>
+            <div class="tier-lock-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+              UNLOCKS AT £88/MO
+            </div>
+            <div class="tier-price"><span>£88/mo</span><span>UNLOCKED</span></div>
+          </div>
+          <div class="tier-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          </div>
         </button>
       </div>
+      <div class="tier-rail"><div class="tier-rail-fill" id="tier-rail-fill"></div></div>
       
       <!-- Menu Coming Soon (for locked tiers) -->
       <div class="menu-coming-soon" id="menu-coming-soon" style="display: none;">
@@ -16173,19 +16396,37 @@ function switchMenuTier(tier) {
   const requiredRank = tierRank[tier] || 0;
   
   if (userRank < requiredRank && window.userTier !== 'admin') {
+    // Shake the locked card
+    const card = document.querySelector(`.tier-card[data-tier="${tier}"]`);
+    if (card) {
+      card.classList.remove('shake');
+      void card.offsetWidth;
+      card.classList.add('shake');
+    }
     promptUpgrade(tier);
     return;
   }
   
   menuState.currentTier = tier;
   
-  // Update tab UI
+  // Update tier card UI (new v6 ladder)
+  document.querySelectorAll('.tier-card').forEach(card => {
+    card.classList.remove('active');
+    if (card.dataset.tier === tier) card.classList.add('active');
+  });
+  
+  // Update progress rail
+  const tierIndex = { 'research': 0, 'recoil': 1, 'terminal': 2, 'suite': 3 }[tier] || 0;
+  const railFill = document.getElementById('tier-rail-fill');
+  if (railFill) railFill.style.width = `${(tierIndex + 1) * 25}%`;
+  
+  // Legacy: Update old tab UI (hidden, for backwards compat)
   document.querySelectorAll('.menu-tier-tab').forEach(tab => {
     tab.classList.remove('active');
     if (tab.dataset.tier === tier) tab.classList.add('active');
   });
   
-  // Show menu layout for Research and Recoil, coming soon for others
+  // Show menu layout for all tiers (menus are now available)
   const menuLayout = document.getElementById('menu-layout');
   const comingSoon = document.getElementById('menu-coming-soon');
   
@@ -16643,11 +16884,40 @@ async function trackMenuEvent(eventType, data) {
   }
 }
 
-// Update menu tier tabs based on user access
+// Update menu tier cards based on user access
 function updateMenuTierAccess() {
   const tierRank = { 'free': 0, 'research': 1, 'recoil': 2, 'terminal': 3, 'suite': 4, 'admin': 99 };
   const userRank = tierRank[window.userTier] || 0;
+  let unlockedCount = 0;
   
+  // Update tier cards (v6 ladder)
+  document.querySelectorAll('.tier-card').forEach(card => {
+    const cardTier = card.dataset.tier;
+    const requiredRank = tierRank[cardTier] || 0;
+    
+    if (userRank >= requiredRank) {
+      card.classList.remove('locked');
+      // Hide lock row, show price row
+      const lockRow = card.querySelector('.tier-lock-row');
+      const priceRow = card.querySelector('.tier-price');
+      if (lockRow) lockRow.style.display = 'none';
+      if (priceRow) priceRow.style.display = 'flex';
+      unlockedCount++;
+    } else {
+      card.classList.add('locked');
+      // Show lock row, hide price row
+      const lockRow = card.querySelector('.tier-lock-row');
+      const priceRow = card.querySelector('.tier-price');
+      if (lockRow) lockRow.style.display = 'flex';
+      if (priceRow) priceRow.style.display = 'none';
+    }
+  });
+  
+  // Update unlock count label
+  const unlockLabel = document.getElementById('tier-unlock-count');
+  if (unlockLabel) unlockLabel.textContent = `${unlockedCount} of 4 unlocked`;
+  
+  // Legacy: Update old tab UI (hidden)
   document.querySelectorAll('.menu-tier-tab').forEach(tab => {
     const tabTier = tab.dataset.tier;
     const requiredRank = tierRank[tabTier] || 0;

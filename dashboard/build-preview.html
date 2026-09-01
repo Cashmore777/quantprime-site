@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Build Page Redesign — Preview v4</title>
+<title>Build Page Redesign — Preview v6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -66,7 +66,7 @@ body {
   color: var(--text-2);
 }
 
-/* ===== TIER LADDER - COMPACT ===== */
+/* ===== TIER LADDER - ICONS ON RIGHT ===== */
 .ladder-label {
   font-size: 10px;
   letter-spacing: 1.5px;
@@ -95,12 +95,20 @@ body {
   cursor: pointer;
   transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.25s ease;
   overflow: hidden;
-  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .tier:hover:not(.locked) {
   transform: translateY(-1px);
   border-color: var(--bronze);
+}
+
+/* Left content */
+.tier-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .tier .num {
@@ -136,13 +144,31 @@ body {
   justify-content: space-between;
 }
 
+/* Right icon - larger, positioned right */
+.tier-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+}
+
+.tier-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--text-3);
+  transition: stroke 0.2s ease;
+}
+
 /* Escalating intensity */
 .tier.t1 { border-color: var(--border-2); }
 .tier.t2 { border-color: #2a2620; }
 .tier.t3 { border-color: #302a22; }
 .tier.t4 { border-color: #3a3428; }
 
-/* ACTIVE */
+/* ACTIVE - icon turns gold */
 .tier.active {
   border-color: var(--gold);
   box-shadow: 
@@ -154,16 +180,19 @@ body {
 .tier.active .num { color: var(--gold); }
 .tier.active .desc { color: var(--text); }
 .tier.active .price { color: var(--gold); border-top-color: var(--gold-dim); }
+.tier.active .tier-icon svg { stroke: var(--gold); }
 
-/* UNLOCKED but not active - ensure visible */
+/* UNLOCKED but not active */
 .tier:not(.active):not(.locked) .name { color: var(--text); }
 .tier:not(.active):not(.locked) .desc { color: var(--text-2); }
 .tier:not(.active):not(.locked) .num { color: var(--text-3); }
+.tier:not(.active):not(.locked) .tier-icon svg { stroke: var(--text-2); }
 
 /* LOCKED */
 .tier.locked { opacity: 0.45; cursor: not-allowed; }
 .tier.locked:hover { transform: none; border-color: #3a1414; }
 .tier.locked .name { color: var(--text-2); }
+.tier.locked .tier-icon svg { stroke: #5a4a4a; }
 .tier.locked .lock-row {
   display: flex;
   align-items: center;
@@ -220,10 +249,10 @@ body {
   box-shadow: 0 0 6px rgba(201,168,76,0.5);
 }
 
-/* ===== BUILD LAYOUT ===== */
+/* ===== BUILD LAYOUT - narrower order panel ===== */
 .build-layout {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: 1fr 200px;
   gap: 20px;
   align-items: start;
 }
@@ -341,12 +370,12 @@ body {
   color: var(--gold);
 }
 
-/* Order panel - compact */
+/* Order panel - narrower */
 .order-panel {
   background: var(--surface);
   border: 1px solid var(--border-2);
   border-radius: 8px;
-  padding: 14px;
+  padding: 12px;
   position: sticky;
   top: 24px;
 }
@@ -355,46 +384,46 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border-2);
 }
 
 .order-head h3 {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 1px;
   text-transform: uppercase;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .order-head h3 svg {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   color: var(--gold);
 }
 
 .order-build-id {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10px;
+  font-size: 9px;
   color: var(--gold);
   background: rgba(201,168,76,0.1);
-  padding: 2px 6px;
+  padding: 2px 5px;
   border-radius: 3px;
 }
 
 .order-items {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  margin-bottom: 14px;
+  gap: 4px;
+  margin-bottom: 12px;
 }
 
 .order-item {
-  font-size: 10px;
-  padding: 7px 10px;
+  font-size: 9px;
+  padding: 6px 8px;
   background: var(--surface-2);
   border: 1px solid var(--border-2);
   border-radius: 4px;
@@ -405,14 +434,19 @@ body {
 
 .order-item .course-label {
   font-family: "JetBrains Mono", monospace;
-  font-size: 8px;
+  font-size: 7px;
   letter-spacing: 0.5px;
   color: var(--text-3);
 }
 
 .order-item .dish-label {
   color: var(--text-2);
-  font-size: 10px;
+  font-size: 9px;
+  text-align: right;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .order-item.filled {
@@ -424,11 +458,11 @@ body {
 
 .generate-btn {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background: var(--premium-gradient);
   border: none;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: #0a0a0a;
   cursor: pointer;
@@ -438,12 +472,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .generate-btn svg {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
 }
 
 .generate-btn:hover {
@@ -460,9 +494,9 @@ body {
 
 .piece-count {
   text-align: center;
-  font-size: 9px;
+  font-size: 8px;
   color: var(--text-3);
-  margin-top: 8px;
+  margin-top: 6px;
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -513,20 +547,28 @@ body {
       <div class="order-items" id="orderItems"></div>
       <button class="generate-btn" id="generateBtn" disabled>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        Generate Instrument
+        Generate
       </button>
       <div class="piece-count"><b id="pieceCount">0</b> pieces selected</div>
     </div>
   </div>
 
   <div class="note">
-    <b>Preview v4.</b> No icons on tiers. Compact layout fits on one screen. 
-    This preview shows the content area only — when integrated, it will use the real dashboard sidebar.
+    <b>Preview v6.</b> Icons on right (larger, match sidebar), narrower order panel. 
+    Ready to ship to live dashboard.
   </div>
 </div>
 
 <script>
 let currentUserTier = 'recoil';
+
+// Exact SVG icons from sidebar nav (Research, Recoil, Terminal/Meridian, Suite/Cockpit)
+const tierIcons = {
+  research: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>',
+  recoil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>',
+  terminal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>',
+  suite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>'
+};
 
 const tierData = [
   { id: 'research', num: '01', name: 'RESEARCH', desc: 'Where it starts', price: '£8/mo' },
@@ -577,10 +619,13 @@ function renderTierLadder() {
       ? `<div class="lock-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="1"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>UNLOCKS AT ${t.price.toUpperCase()}</div>`
       : `<div class="price"><span>${t.price}</span><span>UNLOCKED</span></div>`;
     return `<button class="tier t${i+1}${isLocked ? ' locked' : ''}${isActive ? ' active' : ''}" data-tier="${t.id}" onclick="selectTier('${t.id}')">
-      <span class="num">TIER ${t.num}</span>
-      <div class="name">${t.name}</div>
-      <div class="desc">${t.desc}</div>
-      ${footer}
+      <div class="tier-content">
+        <span class="num">TIER ${t.num}</span>
+        <div class="name">${t.name}</div>
+        <div class="desc">${t.desc}</div>
+        ${footer}
+      </div>
+      <div class="tier-icon">${tierIcons[t.id]}</div>
     </button>`;
   }).join('');
   updateRailFill();
