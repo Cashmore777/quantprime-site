@@ -276,78 +276,46 @@ body {
   overflow: visible; /* Allow badges to show */
 }
 
-/* Premium gradient bar - intensity increases with tier */
-.tier-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
+/* Hover effects */
 .tier-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 48px rgba(0,0,0,0.12);
 }
 
-.tier-card:hover::before {
-  opacity: 1;
-}
-
-/* RESEARCH - Entry level, subtle green accent */
+/* RESEARCH - Green border */
 .tier-card[data-tier="research"] {
   border: 2px solid var(--green);
   box-shadow: 0 8px 32px rgba(22, 163, 74, 0.12);
-}
-.tier-card[data-tier="research"]::before {
-  background: linear-gradient(180deg, var(--green), var(--green));
-  opacity: 1;
 }
 .tier-card[data-tier="research"]:hover {
   box-shadow: 0 16px 48px rgba(22, 163, 74, 0.2);
 }
 
-/* RECOIL - White border */
+/* RECOIL - White/silver border */
 .tier-card[data-tier="recoil"] {
   border: 2px solid rgba(255, 255, 255, 0.5);
-}
-.tier-card[data-tier="recoil"]::before {
-  background: rgba(255, 255, 255, 0.8);
-  opacity: 1;
 }
 .tier-card[data-tier="recoil"]:hover {
   border-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 16px 48px rgba(255,255,255,0.08);
 }
 
-/* TERMINAL - Gold border */
+/* TERMINAL - Solid gold border */
 .tier-card[data-tier="terminal"] {
   border: 2px solid var(--gold);
   box-shadow: 0 8px 32px rgba(201,168,76,0.12);
-}
-.tier-card[data-tier="terminal"]::before {
-  background: linear-gradient(180deg, var(--gold), #00d4ff);
-  opacity: 1;
 }
 .tier-card[data-tier="terminal"]:hover {
   box-shadow: 0 16px 48px rgba(201,168,76,0.2);
 }
 
-/* SUITE - Maximum value, full premium treatment */
+/* SUITE - Premium gradient border */
 .tier-card[data-tier="suite"] {
   border: 2px solid transparent;
   background: 
     linear-gradient(var(--surface), var(--surface)) padding-box,
     linear-gradient(180deg, var(--gold), #00d4ff) border-box;
   box-shadow: 0 8px 40px rgba(201,168,76,0.2), 0 0 0 1px rgba(0,212,255,0.1);
-}
-.tier-card[data-tier="suite"]::before {
-  background: var(--premium-gradient);
-  opacity: 1;
-  width: 5px;
 }
 .tier-card[data-tier="suite"]:hover {
   transform: translateY(-8px) scale(1.01);
@@ -364,7 +332,7 @@ body {
   height: 120px;
   background: linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
   pointer-events: none;
-  border-radius: 20px 20px 0 0;
+  border-radius: 18px 18px 0 0;
 }
 
 /* Badge */
