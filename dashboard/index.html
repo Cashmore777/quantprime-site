@@ -3781,9 +3781,6 @@ body {
 @media (max-width: 900px) {
   .tier-ladder { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 500px) {
-  .tier-ladder { grid-template-columns: 1fr; }
-}
 
 .tier-card {
   position: relative;
@@ -6211,6 +6208,107 @@ button, .nav-item, .room, .video-item, .filter-chip {
   
   .view-header h2 {
     font-size: 20px;
+  }
+}
+
+/* =====================================================
+   MOBILE STREAMLINED - Clean, smooth, no distractions
+   ===================================================== */
+@media (max-width: 650px) {
+  /* HIDE BOTTOM NAV - use burger menu only */
+  #mobile-nav {
+    display: none !important;
+  }
+  
+  /* Remove bottom padding that was for the nav */
+  #main {
+    padding-bottom: 20px;
+  }
+  
+  /* RESEARCH PAGE - fit on one screen, no scroll */
+  #view-research {
+    height: calc(100vh - 80px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  #view-research .view-header {
+    margin-bottom: 12px;
+    flex-shrink: 0;
+  }
+  
+  #view-research .research-grid {
+    flex: 1;
+    overflow: hidden;
+    gap: 8px;
+  }
+  
+  #view-research .research-card {
+    padding: 12px;
+  }
+  
+  #view-research .research-card h4 {
+    font-size: 13px;
+  }
+  
+  #view-research .research-card p {
+    font-size: 11px;
+    -webkit-line-clamp: 2;
+  }
+  
+  /* SUITE TABS - narrower to fit "Performance Tracker" */
+  .suite-tabs {
+    gap: 2px !important;
+  }
+  
+  .suite-tab {
+    padding: 10px 10px !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+  
+  .suite-tab svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  /* BUILD PAGE - 2x2 grid for tier cards */
+  .tier-ladder {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+  
+  .tier-card {
+    padding: 8px 10px;
+  }
+  
+  .tier-card .tier-num {
+    font-size: 8px;
+    margin-bottom: 4px;
+  }
+  
+  .tier-card .tier-name {
+    font-size: 13px;
+  }
+  
+  .tier-card .tier-desc {
+    font-size: 10px;
+  }
+  
+  .tier-card-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .tier-card-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .tier-card .tier-lock-row {
+    font-size: 7px;
+    padding: 3px 5px;
   }
 }
 
