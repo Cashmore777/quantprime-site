@@ -7970,7 +7970,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <h4>MERIDIAN</h4>
           <span class="status-badge active"><span class="status-dot"></span> ACTIVE</span>
         </div>
-        <p>AMD time cycles (12H/6H) mark market phases. A-line sweeps set directional bias. Vortex points (369) confirm entry. Gold signal fires when both align.</p>
+        <p>AMD time cycles (12H/6H) mark market phases. A-line sweeps set directional bias. Vortex points (147,258,369) confirm entry. Prime signal fires when both align.</p>
         <div class="hero-stats">
           <div><span class="stat-val cyan">68.5%</span><span class="stat-lbl">Win Rate</span></div>
           <div><span class="stat-val">279</span><span class="stat-lbl">Trades</span></div>
@@ -20440,9 +20440,11 @@ document.addEventListener('DOMContentLoaded', function() {
     signal: '#c9a84c',
     signalGlow: '#e6c876',
     bias: '#4ac9c9',
-    phaseA: 'rgba(74, 201, 201, 0.03)',
-    phaseM: 'rgba(220, 160, 50, 0.03)',
-    phaseD: 'rgba(80, 200, 120, 0.03)'
+    phaseA: 'rgba(74, 201, 201, 0.08)',
+    phaseM: 'rgba(220, 160, 50, 0.10)',
+    phaseD: 'rgba(80, 200, 120, 0.08)',
+    phaseLabel: 'rgba(255, 255, 255, 0.5)',
+    phaseBorder: 'rgba(255, 255, 255, 0.08)'
   };
   
   // Price data showing sweep and continuation
@@ -20516,6 +20518,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // Distribution
     ctx.fillStyle = colors.phaseD;
     ctx.fillRect(phaseWidth * 2, chartTop, phaseWidth, chartHeight);
+    
+    // Phase divider lines
+    ctx.strokeStyle = colors.phaseBorder;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(phaseWidth, chartTop);
+    ctx.lineTo(phaseWidth, chartBottom);
+    ctx.moveTo(phaseWidth * 2, chartTop);
+    ctx.lineTo(phaseWidth * 2, chartBottom);
+    ctx.stroke();
+    
+    // Phase labels at top
+    ctx.font = 'bold 11px JetBrains Mono';
+    ctx.textAlign = 'center';
+    
+    // A label
+    ctx.fillStyle = 'rgba(74, 201, 201, 0.7)';
+    ctx.fillText('A', phaseWidth / 2, chartTop + 16);
+    ctx.font = '9px JetBrains Mono';
+    ctx.fillStyle = colors.phaseLabel;
+    ctx.fillText('Accumulation', phaseWidth / 2, chartTop + 28);
+    
+    // M label
+    ctx.font = 'bold 11px JetBrains Mono';
+    ctx.fillStyle = 'rgba(220, 160, 50, 0.8)';
+    ctx.fillText('M', phaseWidth * 1.5, chartTop + 16);
+    ctx.font = '9px JetBrains Mono';
+    ctx.fillStyle = colors.phaseLabel;
+    ctx.fillText('Manipulation', phaseWidth * 1.5, chartTop + 28);
+    
+    // D label
+    ctx.font = 'bold 11px JetBrains Mono';
+    ctx.fillStyle = 'rgba(80, 200, 120, 0.7)';
+    ctx.fillText('D', phaseWidth * 2.5, chartTop + 16);
+    ctx.font = '9px JetBrains Mono';
+    ctx.fillStyle = colors.phaseLabel;
+    ctx.fillText('Distribution', phaseWidth * 2.5, chartTop + 28);
   }
   
   function drawLiquidityLevel(x) {
