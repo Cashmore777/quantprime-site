@@ -8102,90 +8102,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- Animated Hero -->
     <div class="instrument-hero cockpit-hero" style="margin-bottom: 24px;">
-      <div class="hero-visual">
-        <svg class="cockpit-animation" viewBox="0 0 400 160" preserveAspectRatio="xMidYMid meet">
-          <!-- AMD Phase shading -->
-          <rect x="0" y="30" width="120" height="90" fill="rgba(201,168,76,0.08)"/>
-          <rect x="120" y="30" width="120" height="90" fill="rgba(0,171,255,0.08)"/>
-          <rect x="240" y="30" width="160" height="90" fill="rgba(38,162,105,0.08)"/>
-          
-          <!-- EMA Stack (4 layers, cyan gradient) -->
-          <path d="M0,85 Q60,82 120,75 T240,65 T400,58" fill="none" stroke="#7fdbff" stroke-width="1" opacity="0.6"/>
-          <path d="M0,90 Q60,87 120,80 T240,70 T400,63" fill="none" stroke="#00abff" stroke-width="1" opacity="0.7"/>
-          <path d="M0,95 Q60,92 120,85 T240,75 T400,68" fill="none" stroke="#0085c7" stroke-width="1.5" opacity="0.8"/>
-          <path d="M0,100 Q60,97 120,92 T240,82 T400,75" fill="none" stroke="#005e8c" stroke-width="2"/>
-          
-          <!-- LP Levels (liquidity pools from 3 timeframes) -->
-          <line x1="0" y1="45" x2="180" y2="45" stroke="#005e8c" stroke-width="1" stroke-dasharray="4"/>
-          <text x="5" y="42" fill="#005e8c" font-size="6" font-family="var(--mono)">LP 3M</text>
-          <line x1="50" y1="55" x2="250" y2="55" stroke="#0085c7" stroke-width="1" stroke-dasharray="4"/>
-          <text x="55" y="52" fill="#0085c7" font-size="6" font-family="var(--mono)">LP 15M</text>
-          <line x1="100" y1="38" x2="320" y2="38" stroke="#00abff" stroke-width="1.5" stroke-dasharray="4"/>
-          <text x="105" y="35" fill="#00abff" font-size="6" font-family="var(--mono)">LP 30M</text>
-          
-          <!-- FVG (Fair Value Gap) box -->
-          <rect x="180" y="60" width="30" height="12" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="1"/>
-          <text x="195" y="68" fill="#00abff" font-size="5" font-family="var(--mono)" text-anchor="middle">FVG</text>
-          
-          <!-- Price candles -->
-          <g class="cockpit-candles">
-            <rect x="30" y="72" width="4" height="16" fill="#666"/>
-            <rect x="45" y="68" width="4" height="20" fill="#26a269"/>
-            <rect x="60" y="65" width="4" height="18" fill="#26a269"/>
-            <rect x="75" y="60" width="4" height="22" fill="#26a269"/>
-            <rect x="90" y="55" width="4" height="25" fill="#c9a84c"/>
-            <rect x="105" y="48" width="4" height="30" fill="#c9a84c"/>
-            <rect x="120" y="52" width="4" height="20" fill="#f23645"/>
-            <rect x="135" y="58" width="4" height="15" fill="#666"/>
-            <rect x="150" y="55" width="4" height="18" fill="#26a269"/>
-            <rect x="165" y="50" width="4" height="22" fill="#26a269"/>
-            <rect x="195" y="48" width="4" height="20" fill="#26a269"/>
-            <rect x="210" y="45" width="4" height="18" fill="#26a269"/>
-          </g>
-          
-          <!-- HTF Candle overlay (faded, larger) -->
-          <rect x="20" y="45" width="100" height="55" fill="none" stroke="rgba(102,102,102,0.3)" stroke-width="1" stroke-dasharray="2"/>
-          <text x="25" y="105" fill="var(--text-3)" font-size="6" font-family="var(--mono)" opacity="0.5">HTF 1H</text>
-          
-          <!-- Fractal Dashboard mini-panel -->
-          <g transform="translate(270, 30)">
-            <rect x="0" y="0" width="120" height="85" rx="4" fill="rgba(255,255,255,0.95)" stroke="var(--border)"/>
-            <text x="60" y="14" fill="var(--text-1)" font-size="8" font-family="var(--mono)" text-anchor="middle" font-weight="600">FRACTAL DASHBOARD</text>
-            <line x1="5" y1="20" x2="115" y2="20" stroke="var(--border)"/>
-            <!-- TF rows -->
-            <text x="8" y="32" fill="var(--text-3)" font-size="7">3M</text>
-            <rect x="28" y="26" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="33" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
-            <rect x="52" y="26" width="20" height="10" rx="2" fill="rgba(201,168,76,0.2)"/><text x="62" y="33" fill="var(--gold)" font-size="6" text-anchor="middle">HIGH</text>
-            <rect x="76" y="26" width="20" height="10" rx="2" fill="rgba(0,171,255,0.2)"/><text x="86" y="33" fill="#00abff" font-size="6" text-anchor="middle">BUY</text>
-            
-            <text x="8" y="46" fill="var(--text-3)" font-size="7">15M</text>
-            <rect x="28" y="40" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="47" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
-            <rect x="52" y="40" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="47" fill="var(--text-3)" font-size="6" text-anchor="middle">MED</text>
-            <rect x="76" y="40" width="20" height="10" rx="2" fill="rgba(0,171,255,0.2)"/><text x="86" y="47" fill="#00abff" font-size="6" text-anchor="middle">BUY</text>
-            
-            <text x="8" y="60" fill="var(--text-3)" font-size="7">1H</text>
-            <rect x="28" y="54" width="20" height="10" rx="2" fill="rgba(38,162,105,0.2)"/><text x="38" y="61" fill="#26a269" font-size="6" text-anchor="middle">BULL</text>
-            <rect x="52" y="54" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="61" fill="var(--text-3)" font-size="6" text-anchor="middle">LOW</text>
-            <rect x="76" y="54" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="86" y="61" fill="var(--text-3)" font-size="6" text-anchor="middle">—</text>
-            
-            <text x="8" y="74" fill="var(--text-3)" font-size="7">4H</text>
-            <rect x="28" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="38" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">FLAT</text>
-            <rect x="52" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.15)"/><text x="62" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">LOW</text>
-            <rect x="76" y="68" width="20" height="10" rx="2" fill="rgba(102,102,102,0.1)"/><text x="86" y="75" fill="var(--text-3)" font-size="6" text-anchor="middle">—</text>
-            
-            <!-- Column headers -->
-            <text x="38" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">TREND</text>
-            <text x="62" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">VOL</text>
-            <text x="86" y="22" fill="var(--text-3)" font-size="5" text-anchor="middle">BIAS</text>
-          </g>
-          
-          <!-- Legend -->
-          <g transform="translate(10, 125)">
-            <line x1="0" y1="5" x2="15" y2="5" stroke="#00abff" stroke-width="1.5"/><text x="20" y="8" fill="var(--text-3)" font-size="7">EMA Stack</text>
-            <line x1="75" y1="5" x2="90" y2="5" stroke="#0085c7" stroke-width="1" stroke-dasharray="3"/><text x="95" y="8" fill="var(--text-3)" font-size="7">LP Levels</text>
-            <rect x="150" y="1" width="10" height="8" fill="rgba(0,171,255,0.2)" stroke="#00abff" stroke-width="0.5"/><text x="165" y="8" fill="var(--text-3)" font-size="7">FVG</text>
-          </g>
-        </svg>
+      <div class="hero-visual" style="border-radius: 12px; overflow: hidden; background: #0a0a0f;">
+        <canvas id="cockpit-animation" width="560" height="320" style="width: 100%; height: auto; display: block;"></canvas>
       </div>
       <div class="hero-content">
         <div class="instrument-header">
@@ -20677,6 +20595,249 @@ document.addEventListener('DOMContentLoaded', function() {
     if (liquidityLevel) {
       drawLiquidityLevel(lastX);
     }
+    
+    time++;
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+})();
+
+// ==========================================
+// COCKPIT ANIMATION - Multi-timeframe Analytical Overlay
+// ==========================================
+(function() {
+  const canvas = document.getElementById('cockpit-animation');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  
+  const colors = {
+    bg: '#0a0a0f',
+    gridLine: 'rgba(255,255,255,0.03)',
+    candle: '#3a5a7c',
+    candleBull: '#26a269',
+    candleBear: '#c9a84c',
+    wick: 'rgba(255,255,255,0.2)',
+    ema1: 'rgba(127, 219, 255, 0.6)',
+    ema2: 'rgba(0, 171, 255, 0.7)',
+    ema3: 'rgba(0, 133, 199, 0.8)',
+    ema4: '#005e8c',
+    lpLevel: '#00abff',
+    fvg: 'rgba(0, 171, 255, 0.25)',
+    phaseLabel: 'rgba(255, 255, 255, 0.4)'
+  };
+  
+  // Price data - bullish trend with pullback
+  const priceData = [
+    { o: 145, h: 148, l: 143, c: 147 },
+    { o: 147, h: 150, l: 146, c: 149 },
+    { o: 149, h: 151, l: 147, c: 148 },
+    { o: 148, h: 152, l: 147, c: 151 },
+    { o: 151, h: 154, l: 150, c: 153 },
+    { o: 153, h: 156, l: 152, c: 155 },
+    { o: 155, h: 158, l: 154, c: 157 },
+    { o: 157, h: 161, l: 156, c: 160 },
+    // Pullback
+    { o: 160, h: 161, l: 156, c: 157 },
+    { o: 157, h: 159, l: 154, c: 155 },
+    { o: 155, h: 158, l: 154, c: 157 },
+    // Continue up
+    { o: 157, h: 162, l: 156, c: 161 },
+    { o: 161, h: 165, l: 160, c: 164 },
+    { o: 164, h: 168, l: 163, c: 167 },
+    { o: 167, h: 171, l: 166, c: 170 },
+    { o: 170, h: 174, l: 169, c: 173 },
+    // Small consolidation
+    { o: 173, h: 175, l: 171, c: 172 },
+    { o: 172, h: 176, l: 171, c: 175 },
+    { o: 175, h: 179, l: 174, c: 178 },
+    { o: 178, h: 182, l: 177, c: 181 },
+    { o: 181, h: 185, l: 180, c: 184 },
+    { o: 184, h: 187, l: 182, c: 183 },
+    { o: 183, h: 188, l: 182, c: 187 },
+    { o: 187, h: 190, l: 185, c: 189 },
+  ];
+  
+  let time = 0;
+  const candleWidth = 16;
+  const candleGap = 4;
+  const startX = 8;
+  const chartTop = 8;
+  const chartBottom = H - 8;
+  const chartHeight = chartBottom - chartTop;
+  const minPrice = 135;
+  const maxPrice = 200;
+  const priceRange = maxPrice - minPrice;
+  
+  function priceToY(price) {
+    return chartBottom - ((price - minPrice) / priceRange) * chartHeight;
+  }
+  
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
+  function drawGrid() {
+    ctx.strokeStyle = colors.gridLine;
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = chartTop + (chartHeight / 5) * i;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+  }
+  
+  function drawEMAStack(visibleCandles) {
+    if (visibleCandles < 3) return;
+    
+    const offsets = [0, 4, 8, 12];
+    const emaColors = [colors.ema1, colors.ema2, colors.ema3, colors.ema4];
+    const widths = [1, 1, 1.5, 2];
+    
+    for (let e = 0; e < 4; e++) {
+      ctx.strokeStyle = emaColors[e];
+      ctx.lineWidth = widths[e];
+      ctx.beginPath();
+      
+      let started = false;
+      for (let i = 0; i < Math.min(visibleCandles, priceData.length); i++) {
+        const x = startX + i * (candleWidth + candleGap) + candleWidth / 2;
+        const avgPrice = (priceData[i].h + priceData[i].l) / 2 - offsets[e];
+        const y = priceToY(avgPrice);
+        
+        if (!started) {
+          ctx.moveTo(x, y);
+          started = true;
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      ctx.stroke();
+    }
+  }
+  
+  function drawLPLevels() {
+    const levels = [
+      { price: 160, label: 'LP 15M', alpha: 0.5 },
+      { price: 175, label: 'LP 1H', alpha: 0.7 },
+    ];
+    
+    ctx.setLineDash([4, 4]);
+    levels.forEach(level => {
+      const y = priceToY(level.price);
+      ctx.strokeStyle = colors.lpLevel;
+      ctx.globalAlpha = level.alpha;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+      
+      ctx.font = '9px JetBrains Mono';
+      ctx.fillStyle = colors.lpLevel;
+      ctx.textAlign = 'left';
+      ctx.fillText(level.label, 10, y - 4);
+    });
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  }
+  
+  function drawFVG(visibleCandles) {
+    if (visibleCandles < 12) return;
+    
+    // FVG between candles 10 and 12
+    const x1 = startX + 10 * (candleWidth + candleGap);
+    const x2 = startX + 12 * (candleWidth + candleGap) + candleWidth;
+    const y1 = priceToY(162);
+    const y2 = priceToY(158);
+    
+    const alpha = Math.min(1, (visibleCandles - 11) / 2);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = colors.fvg;
+    ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    ctx.strokeStyle = colors.lpLevel;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+    
+    ctx.font = '8px JetBrains Mono';
+    ctx.fillStyle = colors.lpLevel;
+    ctx.textAlign = 'center';
+    ctx.fillText('FVG', (x1 + x2) / 2, (y1 + y2) / 2 + 3);
+    ctx.globalAlpha = 1;
+  }
+  
+  function drawCandle(index, candle, progress) {
+    const x = startX + index * (candleWidth + candleGap);
+    const bullish = candle.c >= candle.o;
+    const bodyTop = priceToY(Math.max(candle.o, candle.c));
+    const bodyBottom = priceToY(Math.min(candle.o, candle.c));
+    const bodyHeight = Math.max(bodyBottom - bodyTop, 3);
+    
+    const alpha = easeOutCubic(Math.min(progress, 1));
+    ctx.globalAlpha = alpha;
+    
+    // Wick
+    ctx.strokeStyle = colors.wick;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x + candleWidth / 2, priceToY(candle.h));
+    ctx.lineTo(x + candleWidth / 2, priceToY(candle.l));
+    ctx.stroke();
+    
+    // Body
+    ctx.fillStyle = bullish ? colors.candleBull : colors.candleBear;
+    ctx.beginPath();
+    ctx.roundRect(x, bodyTop, candleWidth, bodyHeight, 2);
+    ctx.fill();
+    
+    ctx.globalAlpha = 1;
+  }
+  
+  function drawTimeframeLabels() {
+    ctx.font = 'bold 14px JetBrains Mono';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(38, 162, 105, 0.5)';
+    ctx.fillText('3M', 12, chartBottom - 12);
+    
+    ctx.fillStyle = 'rgba(0, 171, 255, 0.5)';
+    ctx.fillText('15M', W / 3 + 12, chartBottom - 12);
+    
+    ctx.fillStyle = 'rgba(201, 168, 76, 0.5)';
+    ctx.fillText('1H', (W / 3) * 2 + 12, chartBottom - 12);
+  }
+  
+  function animate() {
+    ctx.fillStyle = colors.bg;
+    ctx.fillRect(0, 0, W, H);
+    
+    drawGrid();
+    drawLPLevels();
+    
+    const framesPerCandle = 14;
+    const pauseFrames = 120;
+    const cycleLength = priceData.length * framesPerCandle + pauseFrames;
+    const cycleTime = time % cycleLength;
+    
+    let visibleCandles = 0;
+    for (let i = 0; i < priceData.length; i++) {
+      const candleStart = i * framesPerCandle;
+      const elapsed = cycleTime - candleStart;
+      
+      if (elapsed > 0) {
+        const progress = elapsed / framesPerCandle;
+        drawCandle(i, priceData[i], progress);
+        if (progress > 0.5) visibleCandles = i + 1;
+      }
+    }
+    
+    drawEMAStack(visibleCandles);
+    drawFVG(visibleCandles);
+    drawTimeframeLabels();
     
     time++;
     requestAnimationFrame(animate);
