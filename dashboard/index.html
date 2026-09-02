@@ -6318,15 +6318,21 @@ button, .nav-item, .room, .video-item, .filter-chip {
   }
   
   .intel-input-area {
-    padding: 10px 16px 12px !important;
+    padding: 10px 16px 8px !important;
+    background: var(--bg);
   }
   
-  .intel-chat-panel {
-    padding-bottom: 0 !important;
+  #view-intelligence {
+    height: calc(100vh - 60px);
+    overflow: hidden;
   }
   
-  #view-intelligence .intel-content {
-    height: calc(100vh - 140px);
+  #view-intelligence .intel-layout {
+    height: 100%;
+  }
+  
+  #view-intelligence .intel-main {
+    height: 100%;
   }
   
   /* BUILD PAGE - 2x2 grid for tier cards */
@@ -11163,7 +11169,7 @@ const _viewMap = {
   'build': 'marketplace', 'marketplace': 'marketplace',
   'recoil': 'recoil', 'meridian': 'meridian', 'cockpit': 'cockpit',
   'suite': 'cockpit', 'performance': 'cockpit', 'report': 'cockpit',
-  'intelligence': 'intel', 'settings': 'settings', 'academy': 'academy',
+  'intelligence': 'intelligence', 'intel': 'intelligence', 'settings': 'settings', 'academy': 'academy',
   'notebook': 'notebook', 'journal': 'notebook', 'mentorship': 'mentorship',
   'automation': 'automation', 'admin': 'admin', 'affiliates': 'affiliates',
   // Promo/upgrade pages
