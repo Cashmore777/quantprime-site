@@ -6226,33 +6226,33 @@ button, .nav-item, .room, .video-item, .filter-chip {
   }
   
   /* RESEARCH PAGE - fit on one screen, no scroll */
-  #view-research {
+  #view-research.active {
     height: calc(100vh - 80px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
   
-  #view-research .view-header {
+  #view-research.active .view-header {
     margin-bottom: 12px;
     flex-shrink: 0;
   }
   
-  #view-research .research-grid {
+  #view-research.active .research-grid {
     flex: 1;
     overflow: hidden;
     gap: 8px;
   }
   
-  #view-research .research-card {
+  #view-research.active .research-card {
     padding: 12px;
   }
   
-  #view-research .research-card h4 {
+  #view-research.active .research-card h4 {
     font-size: 13px;
   }
   
-  #view-research .research-card p {
+  #view-research.active .research-card p {
     font-size: 11px;
     -webkit-line-clamp: 2;
   }
