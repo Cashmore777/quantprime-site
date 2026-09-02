@@ -20617,13 +20617,14 @@ document.addEventListener('DOMContentLoaded', function() {
   const colors = {
     bg: '#0a0a0f',
     gridLine: 'rgba(255,255,255,0.025)',
-    wickBull: 'rgba(38, 162, 105, 0.5)',
-    wickBear: 'rgba(201, 168, 76, 0.5)',
-    candleBull: '#26a269',
-    candleBear: '#c9a84c',
-    emaFast: '#4ac9c9',
-    emaMid: '#00abff',
-    emaSlow: '#c9a84c',
+    wickBull: 'rgba(74, 201, 201, 0.5)',
+    wickBear: 'rgba(0, 133, 199, 0.5)',
+    candleBull: '#4ac9c9',
+    candleBear: '#0085c7',
+    ema1: '#7fdbff',
+    ema2: '#4ac9c9',
+    ema3: '#00abff',
+    ema4: '#005e8c',
     fvgBull: 'rgba(74, 201, 201, 0.15)',
     fvgBear: 'rgba(201, 168, 76, 0.15)',
     dashBg: 'rgba(15, 15, 20, 0.9)',
@@ -20666,6 +20667,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const ema9 = calcEMA(priceData, 9);
   const ema21 = calcEMA(priceData, 21);
   const ema50 = calcEMA(priceData, 50);
+  const ema100 = calcEMA(priceData, 100);
   
   let time = 0;
   const candleWidth = 12;
@@ -20787,7 +20789,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Score
     const score = Math.min(85, 50 + Math.floor(visibleCount * 1.3));
     ctx.font = 'bold 22px JetBrains Mono';
-    ctx.fillStyle = score > 70 ? colors.candleBull : score > 50 ? colors.emaMid : colors.candleBear;
+    ctx.fillStyle = score > 70 ? colors.ema2 : score > 50 ? colors.ema3 : '#c9a84c';
     ctx.fillText(score, dX + dW/2, dY + 38);
     
     // Label
@@ -20806,11 +20808,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Bar fills
     const barY = dY + 70, barH = 4;
-    ctx.fillStyle = colors.candleBull;
+    ctx.fillStyle = colors.ema2;
     ctx.fillRect(dX + 8, barY, 20 * (score/100), barH);
-    ctx.fillStyle = colors.emaMid;
+    ctx.fillStyle = colors.ema3;
     ctx.fillRect(dX + 38, barY, 20 * ((score-10)/100), barH);
-    ctx.fillStyle = colors.candleBear;
+    ctx.fillStyle = colors.ema4;
     ctx.fillRect(dX + 68, barY, 20 * ((score+5)/100), barH);
   }
   
@@ -20844,11 +20846,12 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Draw EMAs on top
+    // Draw EMAs on top (slowest to fastest)
     ctx.globalAlpha = 0.8;
-    drawSmoothEMA(ema50, colors.emaSlow, 1.5, visibleCandles);
-    drawSmoothEMA(ema21, colors.emaMid, 1.5, visibleCandles);
-    drawSmoothEMA(ema9, colors.emaFast, 1.5, visibleCandles);
+    drawSmoothEMA(ema100, colors.ema4, 2, visibleCandles);
+    drawSmoothEMA(ema50, colors.ema3, 1.5, visibleCandles);
+    drawSmoothEMA(ema21, colors.ema2, 1.5, visibleCandles);
+    drawSmoothEMA(ema9, colors.ema1, 1, visibleCandles);
     ctx.globalAlpha = 1;
     
     drawRegimeDashboard(visibleCandles);
