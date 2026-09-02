@@ -20267,7 +20267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ==========================================
-// RECOIL ANIMATION - Clean Candlestick Visualization
+// RECOIL ANIMATION - ATR Band Candlesticks
 // ==========================================
 (function() {
   const canvas = document.getElementById('recoil-animation');
@@ -20277,52 +20277,59 @@ document.addEventListener('DOMContentLoaded', function() {
   const W = canvas.width;
   const H = canvas.height;
   
-  // Colors - clean, minimal
-  const colors = {
-    bg: '#0d0d12',
-    gridLine: 'rgba(255,255,255,0.04)',
-    // Normal candles - muted
-    normal: '#3a5a4a',
-    normalRed: '#5a3a3a',
-    // Extreme candles - gold
-    extreme: '#c9a84c',
-    extremeBright: '#e6c876',
-    wick: 'rgba(255,255,255,0.3)',
-    gold: '#c9a84c'
+  // Band colors: 1-5 blues, 6 yellow, 7 orange, 8 red
+  const bandColors = {
+    1: '#1a3a5c', // Dark blue
+    2: '#2a4a6c', // Blue
+    3: '#3a5a7c', // Medium blue
+    4: '#4a6a8c', // Light blue
+    5: '#5a7a9c', // Lighter blue
+    6: '#d4c84c', // Yellow
+    7: '#e8a033', // Orange
+    8: '#dc4040'  // Red
   };
   
-  // Candle data - price action showing extreme moves and snap-backs
+  const glowColors = {
+    6: '#d4c84c',
+    7: '#e8a033', 
+    8: '#dc4040'
+  };
+  
+  const colors = {
+    bg: '#0a0a0f',
+    gridLine: 'rgba(255,255,255,0.03)',
+    wick: 'rgba(255,255,255,0.25)'
+  };
+  
+  // Candle data with varied bands
   const candleData = [
-    { o: 150, h: 156, l: 148, c: 154, band: 2 },
-    { o: 154, h: 160, l: 152, c: 158, band: 2 },
-    { o: 158, h: 163, l: 156, c: 161, band: 2 },
-    { o: 161, h: 167, l: 159, c: 165, band: 3 },
-    { o: 165, h: 170, l: 163, c: 168, band: 2 },
-    { o: 168, h: 173, l: 166, c: 171, band: 2 },
-    { o: 171, h: 192, l: 169, c: 190, band: 7 }, // EXTREME UP - big gold candle
-    { o: 190, h: 191, l: 175, c: 178, band: 5 }, // Snap back down
-    { o: 178, h: 183, l: 176, c: 181, band: 3 },
-    { o: 181, h: 186, l: 179, c: 184, band: 2 },
-    { o: 184, h: 188, l: 182, c: 186, band: 2 },
-    { o: 186, h: 190, l: 184, c: 188, band: 2 },
-    { o: 188, h: 191, l: 186, c: 189, band: 2 },
-    { o: 189, h: 168, l: 166, c: 169, band: 8 }, // EXTREME DOWN - big gold candle
-    { o: 169, h: 182, l: 168, c: 180, band: 5 }, // Snap back up
-    { o: 180, h: 186, l: 178, c: 184, band: 3 },
-    { o: 184, h: 189, l: 182, c: 187, band: 2 },
-    { o: 187, h: 192, l: 185, c: 190, band: 2 },
+    { o: 152, h: 157, l: 150, c: 155, band: 1 },
+    { o: 155, h: 161, l: 153, c: 159, band: 2 },
+    { o: 159, h: 164, l: 157, c: 162, band: 2 },
+    { o: 162, h: 169, l: 160, c: 167, band: 3 },
+    { o: 167, h: 173, l: 165, c: 171, band: 2 },
+    { o: 171, h: 176, l: 169, c: 174, band: 2 },
+    { o: 174, h: 194, l: 172, c: 192, band: 7 }, // ORANGE - big up
+    { o: 192, h: 193, l: 176, c: 179, band: 4 }, // Snap back
+    { o: 179, h: 184, l: 177, c: 182, band: 2 },
+    { o: 182, h: 187, l: 180, c: 185, band: 2 },
+    { o: 185, h: 190, l: 183, c: 188, band: 2 },
+    { o: 188, h: 192, l: 186, c: 190, band: 1 },
+    { o: 190, h: 165, l: 162, c: 165, band: 8 }, // RED - big down
+    { o: 165, h: 180, l: 164, c: 178, band: 5 }, // Snap back
+    { o: 178, h: 184, l: 176, c: 182, band: 3 },
+    { o: 182, h: 188, l: 180, c: 186, band: 2 },
+    { o: 186, h: 191, l: 184, c: 189, band: 2 },
   ];
   
-  let animationFrame = 0;
-  const candleWidth = 24;
-  const candleGap = 8;
-  const startX = 30;
-  const chartTop = 30;
-  const chartBottom = H - 30;
+  let time = 0;
+  const candleWidth = 26;
+  const candleGap = 6;
+  const startX = 25;
+  const chartTop = 25;
+  const chartBottom = H - 25;
   const chartHeight = chartBottom - chartTop;
-  
-  // Price range
-  const minPrice = 145;
+  const minPrice = 150;
   const maxPrice = 200;
   const priceRange = maxPrice - minPrice;
   
@@ -20330,13 +20337,16 @@ document.addEventListener('DOMContentLoaded', function() {
     return chartBottom - ((price - minPrice) / priceRange) * chartHeight;
   }
   
+  // Smooth easing
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
   function drawGrid() {
     ctx.strokeStyle = colors.gridLine;
     ctx.lineWidth = 1;
-    
-    // Subtle horizontal lines
-    for (let i = 0; i <= 4; i++) {
-      const y = chartTop + (chartHeight / 4) * i;
+    for (let i = 0; i <= 5; i++) {
+      const y = chartTop + (chartHeight / 5) * i;
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(W, y);
@@ -20344,73 +20354,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  function drawCandle(index, candle, alpha) {
+  function drawCandle(index, candle, progress) {
     const x = startX + index * (candleWidth + candleGap);
-    const bullish = candle.c >= candle.o;
     const bodyTop = priceToY(Math.max(candle.o, candle.c));
     const bodyBottom = priceToY(Math.min(candle.o, candle.c));
-    const bodyHeight = Math.max(bodyBottom - bodyTop, 2);
-    
+    const bodyHeight = Math.max(bodyBottom - bodyTop, 3);
+    const color = bandColors[candle.band];
     const isExtreme = candle.band >= 6;
     
+    // Smooth alpha
+    const alpha = easeOutCubic(Math.min(progress, 1));
     ctx.globalAlpha = alpha;
     
-    // Glow for extreme candles
-    if (isExtreme) {
-      ctx.shadowColor = colors.gold;
-      ctx.shadowBlur = 20 + Math.sin(animationFrame * 0.08) * 8;
+    // Glow for extreme bands
+    if (isExtreme && alpha > 0.5) {
+      ctx.shadowColor = glowColors[candle.band];
+      ctx.shadowBlur = 12 + Math.sin(time * 0.05) * 6;
     } else {
       ctx.shadowBlur = 0;
     }
     
     // Wick
-    ctx.strokeStyle = isExtreme ? colors.gold : colors.wick;
+    ctx.strokeStyle = isExtreme ? color : colors.wick;
     ctx.lineWidth = isExtreme ? 2 : 1;
     ctx.beginPath();
     ctx.moveTo(x + candleWidth / 2, priceToY(candle.h));
     ctx.lineTo(x + candleWidth / 2, priceToY(candle.l));
     ctx.stroke();
     
-    // Body
-    if (isExtreme) {
-      ctx.fillStyle = colors.extremeBright;
-    } else {
-      ctx.fillStyle = bullish ? colors.normal : colors.normalRed;
-    }
-    ctx.fillRect(x, bodyTop, candleWidth, bodyHeight);
+    // Body with rounded corners
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(x, bodyTop, candleWidth, bodyHeight, 2);
+    ctx.fill();
     
     ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
   }
   
   function animate() {
-    // Clear
     ctx.fillStyle = colors.bg;
     ctx.fillRect(0, 0, W, H);
-    
-    // Draw grid
     drawGrid();
     
-    // Calculate visible candles
-    const framesPerCandle = 12;
-    const cycleLength = candleData.length * framesPerCandle + 80;
-    const cycleFrame = animationFrame % cycleLength;
-    const visibleCandles = Math.min(Math.floor(cycleFrame / framesPerCandle), candleData.length);
+    const framesPerCandle = 18;
+    const pauseFrames = 100;
+    const cycleLength = candleData.length * framesPerCandle + pauseFrames;
+    const cycleTime = time % cycleLength;
     
-    // Draw candles
-    for (let i = 0; i < visibleCandles; i++) {
-      drawCandle(i, candleData[i], 1);
-    }
-    
-    // Fade in current candle
-    if (visibleCandles < candleData.length) {
-      const progress = (cycleFrame % framesPerCandle) / framesPerCandle;
-      if (progress > 0.1) {
-        drawCandle(visibleCandles, candleData[visibleCandles], progress);
+    for (let i = 0; i < candleData.length; i++) {
+      const candleStart = i * framesPerCandle;
+      const elapsed = cycleTime - candleStart;
+      
+      if (elapsed > 0) {
+        const progress = elapsed / framesPerCandle;
+        drawCandle(i, candleData[i], progress);
       }
     }
     
-    animationFrame++;
+    time++;
     requestAnimationFrame(animate);
   }
   
