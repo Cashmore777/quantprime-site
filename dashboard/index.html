@@ -7962,10 +7962,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <!-- Animated Hero -->
     <div class="instrument-hero meridian-hero" style="margin-bottom: 24px;">
-      <div class="hero-visual">
-        <video class="meridian-video" autoplay loop muted playsinline>
-          <source src="../assets/meridian-preview.mp4" type="video/mp4">
-        </video>
+      <div class="hero-visual" style="border-radius: 12px; overflow: hidden; background: #0a0a0f;">
+        <canvas id="meridian-animation" width="560" height="320" style="width: 100%; height: auto; display: block;"></canvas>
       </div>
       <div class="hero-content">
         <div class="instrument-header">
@@ -20410,6 +20408,235 @@ document.addEventListener('DOMContentLoaded', function() {
         const progress = elapsed / framesPerCandle;
         drawCandle(i, candleData[i], progress);
       }
+    }
+    
+    time++;
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+})();
+
+// ==========================================
+// MERIDIAN ANIMATION - Liquidity Sweeps & Structure
+// ==========================================
+(function() {
+  const canvas = document.getElementById('meridian-animation');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width;
+  const H = canvas.height;
+  
+  const colors = {
+    bg: '#0a0a0f',
+    gridLine: 'rgba(255,255,255,0.03)',
+    candle: '#3a5a7c',
+    candleBear: '#5a4a6c',
+    wick: 'rgba(255,255,255,0.2)',
+    liquidity: 'rgba(220, 80, 80, 0.6)',
+    liquiditySwept: 'rgba(220, 80, 80, 0.2)',
+    sweep: '#dc5050',
+    signal: '#c9a84c',
+    signalGlow: '#e6c876',
+    bias: '#4ac9c9',
+    phaseA: 'rgba(74, 201, 201, 0.03)',
+    phaseM: 'rgba(220, 160, 50, 0.03)',
+    phaseD: 'rgba(80, 200, 120, 0.03)'
+  };
+  
+  // Price data showing sweep and continuation
+  const priceData = [
+    { o: 165, h: 170, l: 163, c: 168 },
+    { o: 168, h: 173, l: 166, c: 171 },
+    { o: 171, h: 175, l: 169, c: 173 },
+    { o: 173, h: 177, l: 171, c: 175 },
+    { o: 175, h: 178, l: 173, c: 176 },
+    { o: 176, h: 179, l: 174, c: 177 },
+    { o: 177, h: 180, l: 175, c: 178 }, // Building up to high
+    { o: 178, h: 184, l: 177, c: 183, isHigh: true }, // Liquidity high forms
+    { o: 183, h: 185, l: 180, c: 181 },
+    { o: 181, h: 183, l: 178, c: 179 },
+    { o: 179, h: 181, l: 176, c: 177 },
+    { o: 177, h: 179, l: 174, c: 175 },
+    { o: 175, h: 186, l: 174, c: 185, isSweep: true }, // SWEEP above high
+    { o: 185, h: 186, l: 170, c: 172, signal: true }, // Signal candle - reversal
+    { o: 172, h: 174, l: 168, c: 169 },
+    { o: 169, h: 171, l: 165, c: 166 },
+    { o: 166, h: 168, l: 162, c: 163 },
+    { o: 163, h: 165, l: 158, c: 159 }, // Continuation down
+  ];
+  
+  let time = 0;
+  const candleWidth = 24;
+  const candleGap = 7;
+  const startX = 30;
+  const chartTop = 30;
+  const chartBottom = H - 30;
+  const chartHeight = chartBottom - chartTop;
+  const minPrice = 150;
+  const maxPrice = 195;
+  const priceRange = maxPrice - minPrice;
+  
+  let liquidityLevel = null;
+  let swept = false;
+  let signalFired = false;
+  
+  function priceToY(price) {
+    return chartBottom - ((price - minPrice) / priceRange) * chartHeight;
+  }
+  
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+  
+  function drawGrid() {
+    ctx.strokeStyle = colors.gridLine;
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+      const y = chartTop + (chartHeight / 5) * i;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+  }
+  
+  function drawPhases() {
+    const phaseWidth = W / 3;
+    
+    // Accumulation
+    ctx.fillStyle = colors.phaseA;
+    ctx.fillRect(0, chartTop, phaseWidth, chartHeight);
+    
+    // Manipulation
+    ctx.fillStyle = colors.phaseM;
+    ctx.fillRect(phaseWidth, chartTop, phaseWidth, chartHeight);
+    
+    // Distribution
+    ctx.fillStyle = colors.phaseD;
+    ctx.fillRect(phaseWidth * 2, chartTop, phaseWidth, chartHeight);
+  }
+  
+  function drawLiquidityLevel(x) {
+    if (!liquidityLevel) return;
+    
+    const y = priceToY(liquidityLevel);
+    ctx.strokeStyle = swept ? colors.liquiditySwept : colors.liquidity;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x - 20, y);
+    ctx.lineTo(W - 20, y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Level label
+    if (!swept) {
+      ctx.fillStyle = colors.liquidity;
+      ctx.font = '9px JetBrains Mono';
+      ctx.textAlign = 'right';
+      ctx.fillText('LIQ', W - 25, y - 5);
+    }
+  }
+  
+  function drawCandle(index, candle, progress) {
+    const x = startX + index * (candleWidth + candleGap);
+    const bullish = candle.c >= candle.o;
+    const bodyTop = priceToY(Math.max(candle.o, candle.c));
+    const bodyBottom = priceToY(Math.min(candle.o, candle.c));
+    const bodyHeight = Math.max(bodyBottom - bodyTop, 3);
+    
+    const alpha = easeOutCubic(Math.min(progress, 1));
+    ctx.globalAlpha = alpha;
+    
+    // Signal candle glow
+    if (candle.signal && alpha > 0.5) {
+      ctx.shadowColor = colors.signalGlow;
+      ctx.shadowBlur = 15 + Math.sin(time * 0.06) * 8;
+    } else if (candle.isSweep && alpha > 0.5) {
+      ctx.shadowColor = colors.sweep;
+      ctx.shadowBlur = 10;
+    } else {
+      ctx.shadowBlur = 0;
+    }
+    
+    // Wick
+    ctx.strokeStyle = candle.signal ? colors.signal : colors.wick;
+    ctx.lineWidth = candle.signal ? 2 : 1;
+    ctx.beginPath();
+    ctx.moveTo(x + candleWidth / 2, priceToY(candle.h));
+    ctx.lineTo(x + candleWidth / 2, priceToY(candle.l));
+    ctx.stroke();
+    
+    // Body
+    if (candle.signal) {
+      ctx.fillStyle = colors.signal;
+    } else {
+      ctx.fillStyle = bullish ? colors.candle : colors.candleBear;
+    }
+    ctx.beginPath();
+    ctx.roundRect(x, bodyTop, candleWidth, bodyHeight, 2);
+    ctx.fill();
+    
+    // Mark the high that becomes liquidity
+    if (candle.isHigh && alpha > 0.8) {
+      liquidityLevel = candle.h;
+    }
+    
+    // Mark sweep
+    if (candle.isSweep && alpha > 0.5) {
+      swept = true;
+    }
+    
+    // Signal marker
+    if (candle.signal && alpha > 0.8) {
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = colors.signal;
+      ctx.font = 'bold 10px JetBrains Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('▼', x + candleWidth / 2, bodyTop - 12);
+    }
+    
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+    
+    return x;
+  }
+  
+  function animate() {
+    ctx.fillStyle = colors.bg;
+    ctx.fillRect(0, 0, W, H);
+    
+    drawGrid();
+    drawPhases();
+    
+    const framesPerCandle = 16;
+    const pauseFrames = 120;
+    const cycleLength = priceData.length * framesPerCandle + pauseFrames;
+    const cycleTime = time % cycleLength;
+    
+    // Reset state at cycle start
+    if (cycleTime < 5) {
+      liquidityLevel = null;
+      swept = false;
+      signalFired = false;
+    }
+    
+    let lastX = startX;
+    for (let i = 0; i < priceData.length; i++) {
+      const candleStart = i * framesPerCandle;
+      const elapsed = cycleTime - candleStart;
+      
+      if (elapsed > 0) {
+        const progress = elapsed / framesPerCandle;
+        lastX = drawCandle(i, priceData[i], progress);
+      }
+    }
+    
+    // Draw liquidity level
+    if (liquidityLevel) {
+      drawLiquidityLevel(lastX);
     }
     
     time++;
