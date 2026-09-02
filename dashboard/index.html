@@ -20447,34 +20447,43 @@ document.addEventListener('DOMContentLoaded', function() {
     phaseBorder: 'rgba(255, 255, 255, 0.08)'
   };
   
-  // Price data showing sweep and continuation
+  // Price data - Accumulation builds high, Manipulation sweeps & signals, Distribution continues
   const priceData = [
-    { o: 165, h: 170, l: 163, c: 168 },
-    { o: 168, h: 173, l: 166, c: 171 },
-    { o: 171, h: 175, l: 169, c: 173 },
-    { o: 173, h: 177, l: 171, c: 175 },
-    { o: 175, h: 178, l: 173, c: 176 },
-    { o: 176, h: 179, l: 174, c: 177 },
-    { o: 177, h: 180, l: 175, c: 178 }, // Building up to high
-    { o: 178, h: 184, l: 177, c: 183, isHigh: true }, // Liquidity high forms
-    { o: 183, h: 185, l: 180, c: 181 },
-    { o: 181, h: 183, l: 178, c: 179 },
-    { o: 179, h: 181, l: 176, c: 177 },
-    { o: 177, h: 179, l: 174, c: 175 },
-    { o: 175, h: 186, l: 174, c: 185, isSweep: true }, // SWEEP above high
-    { o: 185, h: 186, l: 170, c: 172, signal: true }, // Signal candle - reversal
-    { o: 172, h: 174, l: 168, c: 169 },
-    { o: 169, h: 171, l: 165, c: 166 },
-    { o: 166, h: 168, l: 162, c: 163 },
-    { o: 163, h: 165, l: 158, c: 159 }, // Continuation down
+    // ACCUMULATION - ranging, building the high
+    { o: 168, h: 170, l: 166, c: 169 },
+    { o: 169, h: 171, l: 167, c: 168 },
+    { o: 168, h: 172, l: 167, c: 171 },
+    { o: 171, h: 173, l: 169, c: 170 },
+    { o: 170, h: 172, l: 168, c: 171 },
+    { o: 171, h: 174, l: 170, c: 173 },
+    { o: 173, h: 176, l: 172, c: 175 },
+    { o: 175, h: 178, l: 174, c: 177, isHigh: true }, // Liquidity high forms
+    // MANIPULATION - sweep and entry signal
+    { o: 177, h: 179, l: 175, c: 176 },
+    { o: 176, h: 178, l: 174, c: 175 },
+    { o: 175, h: 180, l: 174, c: 179, isSweep: true }, // SWEEP above high
+    { o: 179, h: 180, l: 172, c: 173, signal: true }, // Signal candle - reversal in M phase
+    { o: 173, h: 175, l: 171, c: 172 },
+    { o: 172, h: 174, l: 170, c: 171 },
+    { o: 171, h: 173, l: 169, c: 170 },
+    { o: 170, h: 172, l: 168, c: 169 },
+    // DISTRIBUTION - continuation down
+    { o: 169, h: 171, l: 166, c: 167 },
+    { o: 167, h: 169, l: 164, c: 165 },
+    { o: 165, h: 167, l: 162, c: 163 },
+    { o: 163, h: 165, l: 160, c: 161 },
+    { o: 161, h: 163, l: 158, c: 159 },
+    { o: 159, h: 161, l: 156, c: 157 },
+    { o: 157, h: 159, l: 155, c: 156 },
+    { o: 156, h: 158, l: 154, c: 155 },
   ];
   
   let time = 0;
-  const candleWidth = 24;
-  const candleGap = 7;
-  const startX = 30;
-  const chartTop = 30;
-  const chartBottom = H - 30;
+  const candleWidth = 16;
+  const candleGap = 4;
+  const startX = 20;
+  const chartTop = 40;
+  const chartBottom = H - 20;
   const chartHeight = chartBottom - chartTop;
   const minPrice = 150;
   const maxPrice = 195;
@@ -20529,32 +20538,32 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.lineTo(phaseWidth * 2, chartBottom);
     ctx.stroke();
     
-    // Phase labels at top
-    ctx.font = 'bold 11px JetBrains Mono';
+    // Phase labels at top (above chart area)
+    ctx.font = 'bold 10px JetBrains Mono';
     ctx.textAlign = 'center';
     
     // A label
     ctx.fillStyle = 'rgba(74, 201, 201, 0.7)';
-    ctx.fillText('A', phaseWidth / 2, chartTop + 16);
-    ctx.font = '9px JetBrains Mono';
+    ctx.fillText('A', phaseWidth / 2, 14);
+    ctx.font = '8px JetBrains Mono';
     ctx.fillStyle = colors.phaseLabel;
-    ctx.fillText('Accumulation', phaseWidth / 2, chartTop + 28);
+    ctx.fillText('Accumulation', phaseWidth / 2, 26);
     
     // M label
-    ctx.font = 'bold 11px JetBrains Mono';
+    ctx.font = 'bold 10px JetBrains Mono';
     ctx.fillStyle = 'rgba(220, 160, 50, 0.8)';
-    ctx.fillText('M', phaseWidth * 1.5, chartTop + 16);
-    ctx.font = '9px JetBrains Mono';
+    ctx.fillText('M', phaseWidth * 1.5, 14);
+    ctx.font = '8px JetBrains Mono';
     ctx.fillStyle = colors.phaseLabel;
-    ctx.fillText('Manipulation', phaseWidth * 1.5, chartTop + 28);
+    ctx.fillText('Manipulation', phaseWidth * 1.5, 26);
     
     // D label
-    ctx.font = 'bold 11px JetBrains Mono';
+    ctx.font = 'bold 10px JetBrains Mono';
     ctx.fillStyle = 'rgba(80, 200, 120, 0.7)';
-    ctx.fillText('D', phaseWidth * 2.5, chartTop + 16);
-    ctx.font = '9px JetBrains Mono';
+    ctx.fillText('D', phaseWidth * 2.5, 14);
+    ctx.font = '8px JetBrains Mono';
     ctx.fillStyle = colors.phaseLabel;
-    ctx.fillText('Distribution', phaseWidth * 2.5, chartTop + 28);
+    ctx.fillText('Distribution', phaseWidth * 2.5, 26);
   }
   
   function drawLiquidityLevel(x) {
