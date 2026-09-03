@@ -757,8 +757,17 @@ const QPTour = (function() {
       return;
     }
     
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    await sleep(needsNavigation ? 150 : 200);
+    // Scroll element into view with room for callout above
+    const targetRect = target.getBoundingClientRect();
+    const calloutSpace = 280; // Approximate callout height + gap
+    const idealTop = calloutSpace + 20; // Where we want the element's top to be
+    
+    if (targetRect.top < idealTop || targetRect.bottom > window.innerHeight - 50) {
+      // Need to scroll - position element so callout fits above
+      const scrollTo = window.scrollY + targetRect.top - idealTop;
+      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    }
+    await sleep(needsNavigation ? 200 : 250);
     
     const rect = target.getBoundingClientRect();
     const pad = 8;
