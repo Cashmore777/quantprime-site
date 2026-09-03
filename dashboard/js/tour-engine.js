@@ -1,7 +1,13 @@
 /**
- * QP Dashboard Onboarding Tour Engine v32
+ * QP Dashboard Onboarding Tour Engine v33
  * 
  * Changelog:
+ * v33 - CALLOUT OVERLAP FIX
+ *   - Increased gap to 20px for more breathing room
+ *   - Added overlap safety check after clamping
+ *   - Callout now ALWAYS positioned outside spotlight bounds
+ *   - Fixed build menu sections (STARTER/MAIN/SIDE/DESSERT) overlap
+ * 
  * v32 - EMOJI REMOVAL + TRANSITION FIX
  *   - Removed all emoji icons from tour steps
  *   - Spotlight now hides before scroll, appears at new position
@@ -1365,7 +1371,7 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, spotlight) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 16; // MINIMUM gap - never less
+    const gap = 20; // Increased from 16 for more breathing room
     
     const isMobile = window.innerWidth <= 650;
     // Mobile: 85vw max, capped at 320px. 16px margins on each side.
@@ -1384,7 +1390,7 @@ const QPTour = (function() {
     const headerOffset = isMobile ? 60 : 0;
     const navOffset = isMobile ? 90 : 0;
     
-    // Available space (accounting for the 16px gap requirement)
+    // Available space (accounting for the gap requirement)
     const spaceAbove = spotlight.top - headerOffset - 20;
     const spaceBelow = vh - spotlight.bottom - navOffset - 20;
     const spaceLeft = spotlight.left - 20;
@@ -1494,6 +1500,49 @@ const QPTour = (function() {
         arrow.style.top = arrowTop + 'px';
         arrow.style.transform = 'translateY(-50%)';
       }
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // OVERLAP SAFETY CHECK - Ensure callout never overlaps spotlight
+    // This catches cases where clamping pushed callout into spotlight
+    // ═══════════════════════════════════════════════════════════════════
+    const calloutBottom = top + calloutHeight;
+    const calloutRight = left + calloutWidth;
+    
+    // Check for vertical overlap
+    const verticalOverlap = (top < spotlight.bottom) && (calloutBottom > spotlight.top);
+    // Check for horizontal overlap
+    const horizontalOverlap = (left < spotlight.right) && (calloutRight > spotlight.left);
+    
+    // If both overlap, we have a problem - force reposition
+    if (verticalOverlap && horizontalOverlap) {
+      console.log('QPTour: Overlap detected, repositioning callout');
+      
+      // Try to position below spotlight first
+      if (vh - spotlight.bottom - navOffset >= calloutHeight + gap) {
+        top = spotlight.bottom + gap;
+        position = 'bottom';
+        arrow.className = 'tour-arrow arrow-up';
+        arrow.style.cssText = 'top: -8px; left: 50%; transform: translateX(-50%);';
+      }
+      // If not enough space below, try above
+      else if (spotlight.top - headerOffset >= calloutHeight + gap) {
+        top = spotlight.top - calloutHeight - gap;
+        position = 'top';
+        arrow.className = 'tour-arrow arrow-down';
+        arrow.style.cssText = 'bottom: -8px; left: 50%; transform: translateX(-50%);';
+      }
+      // Last resort: position below anyway, user can scroll
+      else {
+        top = spotlight.bottom + gap;
+        position = 'bottom';
+        arrow.className = 'tour-arrow arrow-up';
+        arrow.style.cssText = 'top: -8px; left: 50%; transform: translateX(-50%);';
+      }
+      
+      // Re-center horizontally after repositioning
+      left = (vw - calloutWidth) / 2;
+      left = Math.max(16, Math.min(left, vw - calloutWidth - 16));
     }
     
     callout.style.left = left + 'px';
