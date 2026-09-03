@@ -1,7 +1,12 @@
 /**
- * QP Dashboard Onboarding Tour Engine v37
+ * QP Dashboard Onboarding Tour Engine v38
  * 
  * Changelog:
+ * v38 - USE TARGET BOUNDS FOR CALLOUT POSITIONING
+ *   - Use fresh target element bounds instead of spotlight bounds
+ *   - Spotlight bounds calculated from target + padding (more reliable)
+ *   - Reduced gap from 20px to 12px for tighter positioning
+ * 
  * v37 - SCROLL BEFORE SHOW, NOT AFTER
  *   - Check if callout will fit BEFORE showing spotlight/callout
  *   - If not enough room, scroll first to make space
@@ -1329,7 +1334,7 @@ const QPTour = (function() {
     const isMobile = window.innerWidth <= 650;
     const mobileNavHeight = isMobile ? 90 : 0;
     const calloutHeight = 280; // Approximate max callout height
-    const gap = 20;
+    const gap = 12;
     
     let targetRect = target.getBoundingClientRect();
     const neededBottom = targetRect.bottom + gap + calloutHeight + mobileNavHeight;
@@ -1356,21 +1361,27 @@ const QPTour = (function() {
     // 8. Wait for spotlight to appear
     await sleep(100);
     
-    // 9. Get FRESH spotlight bounds
-    const spotlightBounds = elements.spotlight.getBoundingClientRect();
+    // 9. Get FRESH TARGET bounds (more reliable than spotlight bounds)
+    // The spotlight is just target + 10px padding on each side
+    const freshTargetRect = target.getBoundingClientRect();
+    const pad = 10;
+    const spotlightBounds = {
+      left: freshTargetRect.left - pad,
+      top: freshTargetRect.top - pad,
+      right: freshTargetRect.right + pad,
+      bottom: freshTargetRect.bottom + pad,
+      width: freshTargetRect.width + pad * 2,
+      height: freshTargetRect.height + pad * 2
+    };
+    
+    console.log('QPTour: Target rect', freshTargetRect);
+    console.log('QPTour: Calculated spotlight bounds', spotlightBounds);
     
     // 10. Update callout content
     updateCalloutContent(step, index);
     
-    // 11. Position callout using fresh spotlight bounds
-    positionCallout(step.position, {
-      left: spotlightBounds.left,
-      top: spotlightBounds.top,
-      right: spotlightBounds.right,
-      bottom: spotlightBounds.bottom,
-      width: spotlightBounds.width,
-      height: spotlightBounds.height
-    });
+    // 11. Position callout
+    positionCallout(step.position, spotlightBounds);
     
     // 12. Show callout
     elements.callout.classList.add('visible');
@@ -1474,7 +1485,7 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, spotlight) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 20; // Increased from 16 for more breathing room
+    const gap = 12; // Increased from 16 for more breathing room
     
     const isMobile = window.innerWidth <= 650;
     // Mobile: 85vw max, capped at 320px. 16px margins on each side.
