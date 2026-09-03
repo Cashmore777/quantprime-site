@@ -1,16 +1,35 @@
 /**
- * QP Dashboard Onboarding Tour Engine v5
+ * QP Dashboard Onboarding Tour Engine v20
  * 
- * Fixed in v5:
- * - Theme detection: checks documentElement first (where dashboard sets it)
- * - Theme restoration: forces dark mode via documentElement
- * - Simplified gradient: clean progress bar, no glitchy pseudo-elements
- * - Blur overlay working correctly
+ * Changelog:
+ * v20 - PREMIUM TIER-AWARE BUILD MENU TOUR
+ *   - Tier-aware: Shows only build menus user hasn't toured
+ *   - Premium animations: Spring physics, spotlight glow morphing
+ *   - Mobile-first: Designed for 650px breakpoint then scaled up
+ *   - Progress celebration: Rewarding step completions
+ *   - Gradient borders: Gold→cyan signature look
+ *   - Micro-interactions: Buttons feel alive
+ *   - Smart positioning: Callouts never clip
+ *   - Punchy copy: Not boring tutorial text
+ * 
+ * Tour Sections (Tier-Based):
+ *   - research: Research view + Build menu (Research tier+)
+ *   - recoil: Recoil instrument + Build menu (Recoil tier+)
+ *   - terminal: Meridian instrument + Build menu (Terminal tier+)
+ *   - suite: Cockpit + Performance tracker + Build menu (Suite tier+)
+ * 
+ * Usage:
+ *   await QPTour.init(userTier);
+ *   QPTour.start();
  */
 
 const QPTour = (function() {
   'use strict';
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONFIGURATION
+  // ═══════════════════════════════════════════════════════════════════════
+  
   const SECTION_ORDER = ['research', 'recoil', 'terminal', 'suite'];
   
   const TIER_SECTIONS = {
@@ -34,84 +53,97 @@ const QPTour = (function() {
     'settings': '[data-view="settings"]'
   };
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // TOUR STEPS - Punchy, helpful copy
+  // ═══════════════════════════════════════════════════════════════════════
+  
   const TOUR_STEPS = {
     research: [
       {
         id: 'research-intel',
         page: 'research',
         selector: '#view-research .panel[onclick*="intel"]',
-        title: 'Your Intel Feed',
-        content: 'Daily market briefings drop here at 10pm UK. 30 instruments analyzed. Regime shifts, key levels, trade setups — all archived.',
+        title: 'Your Daily Edge',
+        content: 'Market intel drops at 10pm UK. 30 instruments. Regime shifts. Key levels. All archived.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '📊'
       },
       {
         id: 'research-papers-intro',
         page: 'research',
         selector: '#papers-carousel',
-        title: 'The Research Library',
-        content: '10 papers that changed how traders think. Real backtests, honest about what doesn\'t work.',
+        title: 'The Research Vault',
+        content: '10 papers that\'ll change how you think about trading. Real backtests. Real results.',
         position: 'top',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '📚'
       },
       {
         id: 'research-paper-example',
         page: 'research',
         selector: '.paper-slide[data-paper="1"]',
-        title: 'Start With This One',
-        content: '"The 81.5% Win Rate Paradox" — why most traders lose money despite winning trades. 3 min read.',
+        title: 'Start Here',
+        content: '"The 81.5% Win Rate Paradox" — why winners still lose money. 3 min read that\'ll save you months.',
         position: 'right',
-        emphasis: 'action'
+        emphasis: 'action',
+        icon: '⚡'
       },
       {
         id: 'research-paper-nav',
         page: 'research',
         selector: '#paper-dots',
-        title: 'Browse All Papers ↓',
-        content: 'Swipe or tap. Topics: position sizing, stop placement, session timing, the lot.',
-        position: 'top'
+        title: 'Browse Them All',
+        content: 'Position sizing, stop placement, session timing — it\'s all here. Swipe through.',
+        position: 'top',
+        icon: '👆'
       },
       {
         id: 'research-tier-card',
         page: 'marketplace',
         selector: '.tier-card[data-tier="research"]',
         title: 'The Build Menu',
-        content: 'This is where you build YOUR indicator. 255 combinations. Pick your ingredients below.',
+        content: 'This is where the magic happens. 255 combinations. Your indicator, your rules.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🛠️'
       },
       {
         id: 'research-starter',
         page: 'marketplace',
         selector: '.menu-course[data-course="starter"]',
-        title: 'Choose Your Foundation',
-        content: 'Starters set the base: trend filters, session logic, or volatility modes.',
-        position: 'right'
+        title: 'Pick Your Foundation',
+        content: 'Trend filters. Session logic. Volatility modes. This sets the base.',
+        position: 'right',
+        icon: '1️⃣'
       },
       {
         id: 'research-main',
         page: 'marketplace',
         selector: '.menu-course[data-course="main"]',
-        title: 'Add Core Logic',
-        content: 'Mains are your signal engine: reversals, breakouts, or momentum plays.',
-        position: 'right'
+        title: 'Add Your Signal',
+        content: 'The engine that finds your entries. Reversals, breakouts, or momentum.',
+        position: 'right',
+        icon: '2️⃣'
       },
       {
         id: 'research-side',
         page: 'marketplace',
         selector: '.menu-course[data-course="side"]',
-        title: 'Layer In Context',
-        content: 'Sides add confluence: higher timeframe bias, volume profile, or session overlap.',
-        position: 'right'
+        title: 'Layer Confluence',
+        content: 'HTF bias, volume profile, session overlap. Extra edge, fewer fakeouts.',
+        position: 'right',
+        icon: '3️⃣'
       },
       {
         id: 'research-dessert',
         page: 'marketplace',
         selector: '.menu-course[data-course="dessert"]',
         title: 'Finish & Generate',
-        content: 'Dessert is the final filter. Pick one, hit Generate, get your custom indicator.',
+        content: 'Final filter. Hit Generate. Get your custom indicator. That simple.',
         position: 'right',
-        emphasis: 'action'
+        emphasis: 'action',
+        icon: '✨'
       }
     ],
     
@@ -121,28 +153,31 @@ const QPTour = (function() {
         page: 'recoil',
         selector: '#recoil-animation',
         title: 'Meet Recoil',
-        content: 'Measures how far price stretches from equilibrium. Green bands = stretched low (long zone). Red bands = stretched high (short zone).',
+        content: 'Measures how far price stretches from equilibrium. Green = stretched low (long zone). Red = stretched high (short zone).',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🎯'
       },
       {
         id: 'recoil-tv',
         page: 'recoil',
         selector: '#tv-username-recoil',
-        title: 'Link Your TradingView',
-        content: 'Enter your username EXACTLY as it appears on TradingView. The indicator unlocks in your invite-only scripts within 60 seconds.',
+        title: 'Unlock It Now',
+        content: 'Enter your TradingView username exactly as shown. Indicator unlocks in 60 seconds.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action'
+        emphasis: 'action',
+        icon: '🔓'
       },
       {
         id: 'recoil-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="recoil"]',
         title: 'Recoil Menu Unlocked',
-        content: 'New ingredient tier available. 255 volatility-tuned combinations for mean reversion setups.',
+        content: '255 volatility-tuned combinations. Mean reversion setups that actually work.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🆕'
       }
     ],
     
@@ -152,28 +187,31 @@ const QPTour = (function() {
         page: 'meridian',
         selector: '#meridian-animation',
         title: 'Meet Meridian',
-        content: 'Tracks the AMD cycle in real-time. Accumulation → Manipulation → Distribution. Know which phase you\'re in.',
+        content: 'The AMD cycle in real-time. Accumulation → Manipulation → Distribution. Know your phase.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🔄'
       },
       {
         id: 'terminal-tv',
         page: 'meridian',
         selector: '#tv-username-meridian',
-        title: 'Link Your TradingView',
-        content: 'Same drill — enter your exact TradingView username. Meridian appears in your invite-only scripts.',
+        title: 'Unlock It Now',
+        content: 'Same drill. Your exact TradingView username. 60 seconds.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action'
+        emphasis: 'action',
+        icon: '🔓'
       },
       {
         id: 'terminal-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="terminal"]',
         title: 'Terminal Menu Unlocked',
-        content: 'AMD-focused combinations now available. 255 ways to trade the cycle.',
+        content: 'AMD-focused combinations. 255 ways to trade the smart money cycle.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🆕'
       }
     ],
     
@@ -183,52 +221,75 @@ const QPTour = (function() {
         page: 'cockpit',
         selector: '#cockpit-animation',
         title: 'Meet Cockpit',
-        content: 'The full picture. 4 EMAs, liquidity sweeps, FVGs, and a real-time regime score. Everything on one chart.',
+        content: 'The full picture. 4 EMAs, liquidity sweeps, FVGs, real-time regime score. Everything.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🚀'
       },
       {
         id: 'suite-tv',
         page: 'cockpit',
         selector: '#tv-username-cockpit',
-        title: 'Link Your TradingView',
-        content: 'Final unlock. Enter your username and Cockpit joins your toolkit.',
+        title: 'Final Unlock',
+        content: 'Your username one more time. Cockpit joins your arsenal.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action'
+        emphasis: 'action',
+        icon: '🔓'
       },
       {
         id: 'suite-performance',
         page: 'cockpit',
         selector: '.suite-tab[data-suite-panel="performance"]',
-        title: 'Performance Tracker',
-        content: 'Upload your MT5 trade history. AI analyzes your edge, finds leaks, suggests fixes. Real feedback, not fluff.',
+        title: 'AI Performance Coach',
+        content: 'Upload MT5 trades. AI finds your edge, your leaks, your fixes. Real feedback, no BS.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '🤖'
       },
       {
         id: 'suite-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="suite"]',
         title: 'Full Menu Unlocked',
-        content: 'Every ingredient. Every combination. 255 configs across all instruments. Build whatever you need.',
+        content: 'Every ingredient. Every combination. Build whatever you need. You\'ve earned it.',
         position: 'bottom',
-        emphasis: 'feature'
+        emphasis: 'feature',
+        icon: '👑'
       }
     ]
   };
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // TIMING - Premium easing curves
+  // ═══════════════════════════════════════════════════════════════════════
+  
   const TIMING = {
-    menuOpen: 250,
-    navHighlight: 350,
-    navClick: 150,
-    pageTransition: 300,
-    spotlightMove: 300,
+    menuOpen: 280,
+    navHighlight: 400,
+    navClick: 180,
+    pageTransition: 400,
+    spotlightMove: 350,
+    calloutEntrance: 450,
     calloutFade: 250,
-    initialDelay: 150
+    scrollSettle: 450,
+    initialDelay: 250,
+    celebrationDuration: 600
   };
 
-  // State
+  // Spring physics easing (approximated with CSS cubic-bezier)
+  const EASING = {
+    spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',      // Bouncy overshoot
+    smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',           // Material smooth
+    decel: 'cubic-bezier(0, 0, 0.2, 1)',              // Slow at end
+    accel: 'cubic-bezier(0.4, 0, 1, 1)',              // Slow at start
+    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'  // More bounce
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // STATE
+  // ═══════════════════════════════════════════════════════════════════════
+  
   let isActive = false;
   let currentSection = null;
   let currentStepIndex = 0;
@@ -238,22 +299,31 @@ const QPTour = (function() {
   let elements = {};
   let savedTheme = null;
   let themeObserver = null;
+  let scrollContainer = null;
+  let resizeObserver = null;
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // INITIALIZATION
+  // ═══════════════════════════════════════════════════════════════════════
 
   async function init(userTier, forceSequence = null) {
     completedSections = await loadProgress();
     
     if (forceSequence) {
+      // Dev tool: force specific sequence
       sectionsToPlay = forceSequence;
     } else {
+      // Normal: Get sections for this tier, filter out completed
       const tierSections = TIER_SECTIONS[userTier] || [];
       sectionsToPlay = tierSections.filter(s => !completedSections.includes(s));
     }
     
     if (sectionsToPlay.length === 0) {
-      console.log('QPTour: No sections to play');
+      console.log('QPTour: No sections to play (all completed)');
       return false;
     }
     
+    // Build step list from sections to play
     allSteps = [];
     sectionsToPlay.forEach(section => {
       (TOUR_STEPS[section] || []).forEach(step => {
@@ -261,63 +331,49 @@ const QPTour = (function() {
       });
     });
     
-    console.log(`QPTour: ${sectionsToPlay.length} sections, ${allSteps.length} steps`);
+    console.log(`QPTour v20: ${sectionsToPlay.length} sections, ${allSteps.length} steps`);
+    console.log('QPTour: Sections to tour:', sectionsToPlay.join(' → '));
     return true;
   }
 
-  /**
-   * Get current theme from documentElement (where dashboard sets it)
-   */
+  // ═══════════════════════════════════════════════════════════════════════
+  // THEME MANAGEMENT
+  // ═══════════════════════════════════════════════════════════════════════
+
+  function getScrollContainer() {
+    if (!scrollContainer) {
+      scrollContainer = document.getElementById('main');
+    }
+    return scrollContainer;
+  }
+
   function getCurrentTheme() {
     return document.documentElement.getAttribute('data-theme') || 
            document.body.getAttribute('data-theme') || 
            'dark';
   }
 
-  /**
-   * Save theme state - captures from documentElement first
-   */
   function saveThemeState() {
     savedTheme = getCurrentTheme();
     sessionStorage.setItem('qp_tour_theme', savedTheme);
-    console.log('QPTour: Saved theme:', savedTheme);
   }
 
-  /**
-   * Force theme to saved state - sets on documentElement (where dashboard reads it)
-   */
   function forceTheme() {
     if (!savedTheme) {
       savedTheme = sessionStorage.getItem('qp_tour_theme') || 'dark';
     }
-    
     const current = getCurrentTheme();
     if (current !== savedTheme) {
-      console.log('QPTour: Theme changed from', current, 'to', savedTheme, '- forcing back');
       document.documentElement.setAttribute('data-theme', savedTheme);
-      // Also update localStorage so it persists
       localStorage.setItem('qp-theme', savedTheme);
     }
   }
 
-  /**
-   * Watch for theme changes and force back to saved
-   */
   function startThemeObserver() {
     if (themeObserver) themeObserver.disconnect();
-    
-    themeObserver = new MutationObserver((mutations) => {
-      if (!isActive) return;
-      
-      for (const mutation of mutations) {
-        if (mutation.attributeName === 'data-theme') {
-          // Theme changed - force it back
-          forceTheme();
-        }
-      }
+    themeObserver = new MutationObserver(() => {
+      if (isActive) forceTheme();
     });
-    
-    // Watch documentElement (html) where dashboard sets theme
     themeObserver.observe(document.documentElement, { 
       attributes: true, 
       attributeFilter: ['data-theme'] 
@@ -331,23 +387,55 @@ const QPTour = (function() {
     }
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // TOUR START
+  // ═══════════════════════════════════════════════════════════════════════
+
   async function start() {
     if (allSteps.length === 0) return;
     
     isActive = true;
     currentStepIndex = 0;
     
-    // Lock theme FIRST before anything else
     saveThemeState();
     forceTheme();
     startThemeObserver();
-    
-    lockScroll();
     createUI();
+    
+    // Start resize observer for responsive positioning
+    startResizeObserver();
     
     await sleep(TIMING.initialDelay);
     await playStep(0);
   }
+
+  function startResizeObserver() {
+    if (resizeObserver) resizeObserver.disconnect();
+    resizeObserver = new ResizeObserver(() => {
+      if (isActive && elements.spotlight) {
+        // Recalculate position on resize
+        const step = allSteps[currentStepIndex];
+        if (step) {
+          const target = document.querySelector(step.selector);
+          if (target) {
+            repositionElements(target, step);
+          }
+        }
+      }
+    });
+    resizeObserver.observe(document.body);
+  }
+
+  function stopResizeObserver() {
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+      resizeObserver = null;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // KEYBOARD HANDLER
+  // ═══════════════════════════════════════════════════════════════════════
   
   function handleKeyboard(e) {
     if (!isActive) return;
@@ -366,15 +454,9 @@ const QPTour = (function() {
     }
   }
 
-  function lockScroll() {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-  }
-
-  function unlockScroll() {
-    document.body.style.overflow = '';
-    document.documentElement.style.overflow = '';
-  }
+  // ═══════════════════════════════════════════════════════════════════════
+  // UI CREATION - Premium Design
+  // ═══════════════════════════════════════════════════════════════════════
 
   function createUI() {
     destroyUI();
@@ -382,282 +464,653 @@ const QPTour = (function() {
     const container = document.createElement('div');
     container.id = 'qp-tour';
     container.innerHTML = `
-      <div class="tour-overlay"></div>
-      <div class="tour-spotlight"></div>
+      <div class="tour-backdrop"></div>
+      <div class="tour-spotlight">
+        <div class="tour-spotlight-glow"></div>
+      </div>
       <div class="tour-callout">
-        <div class="tour-arrow"></div>
-        <div class="tour-body">
-          <div class="tour-section-badge"></div>
-          <h4 class="tour-title"></h4>
-          <p class="tour-content"></p>
-          <div class="tour-progress-bar"><div class="tour-progress-fill"></div></div>
-          <div class="tour-footer">
-            <span class="tour-progress"></span>
-            <div class="tour-buttons">
-              <button class="tour-skip">Skip tour</button>
-              <button class="tour-next">Next →</button>
+        <div class="tour-callout-border">
+          <div class="tour-callout-inner">
+            <div class="tour-header">
+              <span class="tour-icon"></span>
+              <span class="tour-badge"></span>
+            </div>
+            <h3 class="tour-title"></h3>
+            <p class="tour-content"></p>
+            <div class="tour-progress-track">
+              <div class="tour-progress-fill"></div>
+              <div class="tour-progress-glow"></div>
+            </div>
+            <div class="tour-footer">
+              <span class="tour-step-count"></span>
+              <div class="tour-actions">
+                <button class="tour-skip">Skip</button>
+                <button class="tour-next">
+                  <span class="tour-next-text">Next</span>
+                  <span class="tour-next-icon">→</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+        <div class="tour-arrow">
+          <div class="tour-arrow-inner"></div>
+        </div>
+      </div>
+      <div class="tour-celebration">
+        <div class="tour-celebration-ring"></div>
+        <div class="tour-celebration-ring"></div>
+        <div class="tour-celebration-ring"></div>
       </div>
     `;
     
     const style = document.createElement('style');
     style.id = 'qp-tour-styles';
-    style.textContent = `
-      #qp-tour {
-        position: fixed;
-        inset: 0;
-        z-index: 100000;
-        pointer-events: none;
-      }
-      
-      /* Overlay - no blur (spotlight box-shadow handles dimming) */
-      .tour-overlay {
-        position: absolute;
-        inset: 0;
-        background: transparent;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-        pointer-events: none;
-      }
-      .tour-overlay.active { opacity: 1; }
-      
-      /* Spotlight with gold border */
-      .tour-spotlight {
-        position: absolute;
-        border-radius: 12px;
-        border: 2px solid #c9a84c;
-        background: transparent;
-        box-shadow: 
-          0 0 0 4000px rgba(10, 10, 15, 0.6),
-          0 0 30px rgba(201,168,76,0.3);
-        transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        pointer-events: none;
-        z-index: 1;
-      }
-      
-      /* Feature emphasis - gentle pulse */
-      .tour-spotlight.emphasis-feature {
-        animation: featurePulse 2s ease-in-out infinite;
-      }
-      @keyframes featurePulse {
-        0%, 100% { box-shadow: 0 0 0 4000px rgba(10,10,15,0.6), 0 0 30px rgba(201,168,76,0.3); }
-        50% { box-shadow: 0 0 0 4000px rgba(10,10,15,0.6), 0 0 50px rgba(201,168,76,0.5); }
-      }
-      
-      /* Action emphasis - border color pulse */
-      .tour-spotlight.emphasis-action {
-        animation: actionPulse 1.5s ease-in-out infinite;
-      }
-      @keyframes actionPulse {
-        0%, 100% { border-color: #c9a84c; }
-        50% { border-color: #00d4ff; }
-      }
-      
-      /* Callout with gradient border */
-      .tour-callout {
-        position: absolute;
-        background: linear-gradient(135deg, #c9a84c, #00d4ff);
-        padding: 2px;
-        border-radius: 14px;
-        width: 300px;
-        max-width: calc(100vw - 32px);
-        opacity: 0;
-        transform: translateY(10px);
-        transition: 
-          opacity ${TIMING.calloutFade}ms ease,
-          transform ${TIMING.calloutFade}ms ease;
-        pointer-events: auto;
-        box-shadow: 0 16px 48px rgba(0,0,0,0.5);
-        z-index: 2;
-      }
-      .tour-callout.active {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      
-      .tour-body {
-        padding: 20px;
-        position: relative;
-        background: rgba(20, 20, 25, 0.98);
-        border-radius: 12px;
-      }
-      
-      .tour-section-badge {
-        display: inline-block;
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #c9a84c;
-        background: rgba(201,168,76,0.12);
-        padding: 4px 10px;
-        border-radius: 100px;
-        margin-bottom: 12px;
-      }
-      
-      .tour-title {
-        font-size: 16px;
-        font-weight: 600;
-        color: #ffffff;
-        margin: 0 0 8px 0;
-        line-height: 1.3;
-      }
-      
-      .tour-content {
-        font-size: 13px;
-        line-height: 1.6;
-        color: rgba(255,255,255,0.7);
-        margin: 0 0 16px 0;
-      }
-      
-      /* Simple gradient progress bar */
-      .tour-progress-bar {
-        height: 3px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 3px;
-        margin-bottom: 16px;
-        overflow: hidden;
-      }
-      .tour-progress-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #c9a84c 0%, #00d4ff 100%);
-        border-radius: 3px;
-        transition: width 0.3s ease;
-      }
-      
-      .tour-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 12px;
-        border-top: 1px solid rgba(255,255,255,0.08);
-      }
-      
-      .tour-progress {
-        font-size: 11px;
-        color: rgba(255,255,255,0.4);
-        font-family: 'JetBrains Mono', monospace;
-      }
-      
-      .tour-buttons {
-        display: flex;
-        gap: 8px;
-      }
-      
-      .tour-buttons button {
-        padding: 10px 16px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-      
-      .tour-skip {
-        background: transparent;
-        border: 1px solid rgba(255,255,255,0.15);
-        color: rgba(255,255,255,0.5);
-      }
-      .tour-skip:hover {
-        border-color: rgba(255,255,255,0.3);
-        color: rgba(255,255,255,0.8);
-      }
-      
-      .tour-next {
-        background: linear-gradient(135deg, #c9a84c, #d4b85a);
-        border: none;
-        color: #000;
-      }
-      .tour-next:hover {
-        background: linear-gradient(135deg, #d4b85a, #e6c876);
-      }
-      
-      /* Arrow */
-      .tour-arrow {
-        position: absolute;
-        width: 14px;
-        height: 14px;
-        background: linear-gradient(135deg, #c9a84c, #00d4ff);
-        transform: rotate(45deg);
-        z-index: -1;
-      }
-      .tour-arrow::after {
-        content: '';
-        position: absolute;
-        inset: 2px;
-        background: rgba(20, 20, 25, 0.98);
-      }
-      .tour-arrow.top { top: -8px; left: 50%; margin-left: -7px; }
-      .tour-arrow.bottom { bottom: -8px; left: 50%; margin-left: -7px; }
-      .tour-arrow.left { left: -8px; top: 50%; margin-top: -7px; }
-      .tour-arrow.right { right: -8px; top: 50%; margin-top: -7px; }
-      
-      /* Nav highlight */
-      .tour-nav-highlight {
-        position: relative;
-        z-index: 100001;
-      }
-      .tour-nav-highlight::after {
-        content: '';
-        position: absolute;
-        inset: -6px;
-        border: 2px solid #c9a84c;
-        border-radius: 10px;
-        animation: navPulse 1s ease-in-out infinite;
-      }
-      @keyframes navPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.6; }
-      }
-      
-      /* Mobile */
-      @media (max-width: 650px) {
-        .tour-callout {
-          width: 280px;
-        }
-        .tour-body {
-          padding: 16px;
-        }
-        .tour-title { font-size: 15px; }
-        .tour-content { font-size: 12px; }
-        .tour-buttons button { padding: 9px 14px; font-size: 11px; }
-      }
-      
-      @media (prefers-reduced-motion: reduce) {
-        .tour-spotlight, .tour-callout, .tour-overlay {
-          transition-duration: 0.1s !important;
-          animation: none !important;
-        }
-      }
-    `;
+    style.textContent = getTourStyles();
     
     document.head.appendChild(style);
     document.body.appendChild(container);
     
     elements = {
       container,
-      overlay: container.querySelector('.tour-overlay'),
+      backdrop: container.querySelector('.tour-backdrop'),
       spotlight: container.querySelector('.tour-spotlight'),
+      spotlightGlow: container.querySelector('.tour-spotlight-glow'),
       callout: container.querySelector('.tour-callout'),
-      sectionBadge: container.querySelector('.tour-section-badge'),
+      calloutBorder: container.querySelector('.tour-callout-border'),
+      icon: container.querySelector('.tour-icon'),
+      badge: container.querySelector('.tour-badge'),
       title: container.querySelector('.tour-title'),
       content: container.querySelector('.tour-content'),
       progressFill: container.querySelector('.tour-progress-fill'),
-      progress: container.querySelector('.tour-progress'),
+      progressGlow: container.querySelector('.tour-progress-glow'),
+      stepCount: container.querySelector('.tour-step-count'),
       arrow: container.querySelector('.tour-arrow'),
       skipBtn: container.querySelector('.tour-skip'),
-      nextBtn: container.querySelector('.tour-next')
+      nextBtn: container.querySelector('.tour-next'),
+      nextText: container.querySelector('.tour-next-text'),
+      celebration: container.querySelector('.tour-celebration')
     };
     
     elements.skipBtn.onclick = exit;
     elements.nextBtn.onclick = next;
     document.addEventListener('keydown', handleKeyboard);
     
+    // Animate backdrop in
     requestAnimationFrame(() => {
-      elements.overlay.classList.add('active');
+      elements.backdrop.classList.add('active');
     });
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PREMIUM STYLES
+  // ═══════════════════════════════════════════════════════════════════════
+
+  function getTourStyles() {
+    return `
+      /* ═══════════════════════════════════════════════════════════════════
+         TOUR CONTAINER
+         ═══════════════════════════════════════════════════════════════════ */
+      #qp-tour {
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        pointer-events: none;
+        font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         BACKDROP - Subtle darkness
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-backdrop {
+        position: absolute;
+        inset: 0;
+        background: transparent;
+        opacity: 0;
+        transition: opacity 0.5s ${EASING.smooth};
+        pointer-events: none;
+      }
+      .tour-backdrop.active { opacity: 1; }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         SPOTLIGHT - With soft glow instead of blur
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-spotlight {
+        position: fixed;
+        border-radius: 16px;
+        background: transparent;
+        box-shadow: 0 0 0 9999px rgba(10, 10, 15, 0.82);
+        opacity: 0;
+        transition: 
+          top ${TIMING.spotlightMove}ms ${EASING.smooth},
+          left ${TIMING.spotlightMove}ms ${EASING.smooth},
+          width ${TIMING.spotlightMove}ms ${EASING.smooth},
+          height ${TIMING.spotlightMove}ms ${EASING.smooth},
+          opacity 250ms ease,
+          border-radius ${TIMING.spotlightMove}ms ${EASING.smooth};
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      .tour-spotlight.visible {
+        opacity: 1;
+      }
+      
+      /* Glow ring around spotlight */
+      .tour-spotlight-glow {
+        position: absolute;
+        inset: -4px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, #c9a84c, #00d4ff);
+        opacity: 0.6;
+        filter: blur(8px);
+        animation: glowPulse 2.5s ease-in-out infinite;
+      }
+      
+      @keyframes glowPulse {
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.02); }
+      }
+      
+      /* Feature emphasis - stronger glow */
+      .tour-spotlight.emphasis-feature .tour-spotlight-glow {
+        animation: featureGlow 2s ease-in-out infinite;
+      }
+      @keyframes featureGlow {
+        0%, 100% { opacity: 0.5; filter: blur(8px); }
+        50% { opacity: 0.85; filter: blur(12px); }
+      }
+      
+      /* Action emphasis - color shift */
+      .tour-spotlight.emphasis-action .tour-spotlight-glow {
+        animation: actionGlow 1.8s ease-in-out infinite;
+      }
+      @keyframes actionGlow {
+        0%, 100% { 
+          background: linear-gradient(135deg, #c9a84c, #00d4ff);
+          opacity: 0.6;
+        }
+        50% { 
+          background: linear-gradient(135deg, #00d4ff, #c9a84c);
+          opacity: 0.9;
+        }
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         CALLOUT - Premium gradient border
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-callout {
+        position: fixed;
+        width: 320px;
+        max-width: calc(100vw - 32px);
+        opacity: 0;
+        transform: translateY(12px) scale(0.96);
+        transition: 
+          opacity ${TIMING.calloutEntrance}ms ${EASING.spring},
+          transform ${TIMING.calloutEntrance}ms ${EASING.spring},
+          top ${TIMING.spotlightMove}ms ${EASING.smooth},
+          left ${TIMING.spotlightMove}ms ${EASING.smooth};
+        pointer-events: auto;
+        z-index: 2;
+      }
+      
+      .tour-callout.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      
+      /* Gradient border wrapper */
+      .tour-callout-border {
+        background: linear-gradient(135deg, #c9a84c, #00d4ff);
+        border-radius: 16px;
+        padding: 2px;
+        box-shadow: 
+          0 20px 50px rgba(0,0,0,0.5),
+          0 0 30px rgba(201,168,76,0.15);
+      }
+      
+      /* Inner content area */
+      .tour-callout-inner {
+        background: #14141a;
+        border-radius: 14px;
+        padding: 24px;
+        position: relative;
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         HEADER - Icon + Badge
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      
+      .tour-icon {
+        font-size: 20px;
+        line-height: 1;
+      }
+      
+      .tour-badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #c9a84c;
+        background: rgba(201,168,76,0.15);
+        padding: 5px 10px;
+        border-radius: 100px;
+        border: 1px solid rgba(201,168,76,0.2);
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         TYPOGRAPHY - Premium readability
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #ffffff;
+        margin: 0 0 10px 0;
+        line-height: 1.3;
+        letter-spacing: -0.01em;
+      }
+      
+      .tour-content {
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.72);
+        margin: 0 0 20px 0;
+        letter-spacing: 0.01em;
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         PROGRESS BAR - Animated gradient
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-progress-track {
+        height: 4px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 4px;
+        margin-bottom: 20px;
+        overflow: visible;
+        position: relative;
+      }
+      
+      .tour-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #c9a84c, #00d4ff);
+        border-radius: 4px;
+        transition: width 0.5s ${EASING.spring};
+        position: relative;
+      }
+      
+      .tour-progress-glow {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        background: #00d4ff;
+        border-radius: 50%;
+        filter: blur(6px);
+        opacity: 0.8;
+        transition: opacity 0.3s;
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         FOOTER - Step count + Actions
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+      }
+      
+      .tour-step-count {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        color: rgba(255,255,255,0.4);
+        letter-spacing: 0.05em;
+      }
+      
+      .tour-actions {
+        display: flex;
+        gap: 10px;
+      }
+      
+      /* Skip button - subtle */
+      .tour-skip {
+        padding: 10px 16px;
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        transition: all 0.25s ${EASING.smooth};
+      }
+      
+      .tour-skip:hover {
+        border-color: rgba(255,255,255,0.25);
+        color: rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.05);
+      }
+      
+      .tour-skip:active {
+        transform: scale(0.96);
+        transition-duration: 0.1s;
+      }
+      
+      /* Next button - premium gradient */
+      .tour-next {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #c9a84c, #d4b85a);
+        border: none;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #000;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ${EASING.spring};
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .tour-next::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+        transform: translateX(-100%);
+        transition: transform 0.5s ease;
+      }
+      
+      .tour-next:hover {
+        background: linear-gradient(135deg, #d4b85a, #e6c876);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(201,168,76,0.35);
+      }
+      
+      .tour-next:hover::before {
+        transform: translateX(100%);
+      }
+      
+      .tour-next:active {
+        transform: translateY(0) scale(0.97);
+        transition-duration: 0.1s;
+      }
+      
+      .tour-next-icon {
+        transition: transform 0.2s ease;
+      }
+      
+      .tour-next:hover .tour-next-icon {
+        transform: translateX(3px);
+      }
+      
+      /* Finish state */
+      .tour-next.finish {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+      }
+      
+      .tour-next.finish:hover {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        box-shadow: 0 6px 20px rgba(34,197,94,0.35);
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         ARROW - Points to spotlight
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-arrow {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        z-index: -1;
+      }
+      
+      .tour-arrow-inner {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #c9a84c, #00d4ff);
+        transform: rotate(45deg);
+        border-radius: 2px;
+      }
+      
+      .tour-arrow-inner::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: #14141a;
+        border-radius: 1px;
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         CELEBRATION - Step completion animation
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-celebration {
+        position: fixed;
+        pointer-events: none;
+        opacity: 0;
+        z-index: 3;
+      }
+      
+      .tour-celebration.active {
+        opacity: 1;
+      }
+      
+      .tour-celebration-ring {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border: 2px solid #c9a84c;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+      }
+      
+      .tour-celebration.active .tour-celebration-ring {
+        animation: celebrationRing ${TIMING.celebrationDuration}ms ${EASING.decel} forwards;
+      }
+      
+      .tour-celebration.active .tour-celebration-ring:nth-child(1) {
+        animation-delay: 0ms;
+        border-color: #c9a84c;
+      }
+      .tour-celebration.active .tour-celebration-ring:nth-child(2) {
+        animation-delay: 100ms;
+        border-color: #00d4ff;
+      }
+      .tour-celebration.active .tour-celebration-ring:nth-child(3) {
+        animation-delay: 200ms;
+        border-color: #c9a84c;
+      }
+      
+      @keyframes celebrationRing {
+        0% {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0.8;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(2);
+          opacity: 0;
+        }
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         NAV HIGHLIGHT - Pulsing indicator
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-nav-highlight {
+        position: relative;
+        z-index: 100001;
+      }
+      
+      .tour-nav-highlight::after {
+        content: '';
+        position: absolute;
+        inset: -8px;
+        border: 2px solid #c9a84c;
+        border-radius: 12px;
+        animation: navHighlight 1.2s ease-in-out infinite;
+        box-shadow: 0 0 15px rgba(201,168,76,0.4);
+      }
+      
+      @keyframes navHighlight {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.02); }
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         MOBILE STYLES - 650px breakpoint
+         ═══════════════════════════════════════════════════════════════════ */
+      @media (max-width: 650px) {
+        .tour-callout {
+          width: calc(100vw - 32px);
+          max-width: 340px;
+        }
+        
+        .tour-callout-inner {
+          padding: 20px;
+        }
+        
+        .tour-header {
+          margin-bottom: 12px;
+        }
+        
+        .tour-icon {
+          font-size: 18px;
+        }
+        
+        .tour-badge {
+          font-size: 9px;
+          padding: 4px 8px;
+        }
+        
+        .tour-title {
+          font-size: 16px;
+          margin-bottom: 8px;
+        }
+        
+        .tour-content {
+          font-size: 13px;
+          margin-bottom: 16px;
+          line-height: 1.55;
+        }
+        
+        .tour-progress-track {
+          margin-bottom: 16px;
+        }
+        
+        .tour-footer {
+          padding-top: 14px;
+        }
+        
+        .tour-step-count {
+          font-size: 10px;
+        }
+        
+        .tour-actions {
+          gap: 8px;
+        }
+        
+        .tour-skip {
+          padding: 10px 14px;
+          font-size: 12px;
+          min-height: 44px;
+        }
+        
+        .tour-next {
+          padding: 10px 18px;
+          font-size: 12px;
+          min-height: 44px;
+        }
+        
+        /* Spotlight adjustments */
+        .tour-spotlight {
+          border-radius: 12px;
+        }
+        
+        .tour-spotlight-glow {
+          inset: -3px;
+          filter: blur(6px);
+        }
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         REDUCED MOTION - Respect preferences
+         ═══════════════════════════════════════════════════════════════════ */
+      @media (prefers-reduced-motion: reduce) {
+        .tour-spotlight,
+        .tour-callout,
+        .tour-progress-fill,
+        .tour-next,
+        .tour-skip {
+          transition-duration: 0.1s !important;
+        }
+        
+        .tour-spotlight-glow,
+        .tour-celebration-ring {
+          animation: none !important;
+        }
+        
+        .tour-next::before {
+          display: none;
+        }
+      }
+      
+      /* ═══════════════════════════════════════════════════════════════════
+         DARK MODE ADJUSTMENTS
+         ═══════════════════════════════════════════════════════════════════ */
+      [data-theme="light"] .tour-callout-inner {
+        background: #ffffff;
+      }
+      
+      [data-theme="light"] .tour-title {
+        color: #1a1a1a;
+      }
+      
+      [data-theme="light"] .tour-content {
+        color: rgba(0,0,0,0.65);
+      }
+      
+      [data-theme="light"] .tour-progress-track {
+        background: rgba(0,0,0,0.06);
+      }
+      
+      [data-theme="light"] .tour-footer {
+        border-top-color: rgba(0,0,0,0.06);
+      }
+      
+      [data-theme="light"] .tour-step-count {
+        color: rgba(0,0,0,0.4);
+      }
+      
+      [data-theme="light"] .tour-skip {
+        border-color: rgba(0,0,0,0.12);
+        color: rgba(0,0,0,0.5);
+      }
+      
+      [data-theme="light"] .tour-skip:hover {
+        border-color: rgba(0,0,0,0.25);
+        color: rgba(0,0,0,0.8);
+        background: rgba(0,0,0,0.03);
+      }
+      
+      [data-theme="light"] .tour-arrow-inner::after {
+        background: #ffffff;
+      }
+      
+      [data-theme="light"] .tour-spotlight {
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+      }
+    `;
   }
 
   function destroyUI() {
@@ -667,6 +1120,10 @@ const QPTour = (function() {
     elements = {};
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // NAVIGATION
+  // ═══════════════════════════════════════════════════════════════════════
+
   async function navigateToPage(targetPage) {
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     if (targetPage === currentView) return;
@@ -674,13 +1131,13 @@ const QPTour = (function() {
     const isMobile = window.innerWidth <= 650;
     const navSelector = VIEW_NAV_SELECTOR[targetPage];
     
-    // Force theme before navigation
     forceTheme();
     
+    // Open mobile menu if needed
     if (isMobile) {
       const sidebar = document.getElementById('sidebar');
       if (sidebar && !sidebar.classList.contains('open')) {
-        const burgerBtn = document.querySelector('#mobile-header button, .burger-btn');
+        const burgerBtn = document.querySelector('#mobile-header button, .burger-btn, .menu-toggle');
         if (burgerBtn) {
           burgerBtn.click();
           await sleep(TIMING.menuOpen);
@@ -688,33 +1145,83 @@ const QPTour = (function() {
       }
     }
     
+    // Find and click nav item
     const navItem = document.querySelector(`#sidebar ${navSelector}, nav ${navSelector}`);
     if (navItem) {
       navItem.classList.add('tour-nav-highlight');
-      navItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
       await sleep(TIMING.navHighlight);
       
       navItem.click();
       navItem.classList.remove('tour-nav-highlight');
       await sleep(TIMING.navClick);
-    } else {
-      if (typeof switchView === 'function') {
-        switchView(targetPage);
-      }
+    } else if (typeof switchView === 'function') {
+      switchView(targetPage);
     }
     
+    // Close mobile menu
     if (isMobile) {
       const sidebar = document.getElementById('sidebar');
       if (sidebar?.classList.contains('open')) {
         sidebar.classList.remove('open');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (overlay) overlay.classList.remove('visible');
       }
     }
     
     await sleep(TIMING.pageTransition);
-    
-    // Force theme AFTER navigation (critical!)
     forceTheme();
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // SCROLLING
+  // ═══════════════════════════════════════════════════════════════════════
+
+  async function scrollToElement(element) {
+    if (!element) return;
+    
+    const main = getScrollContainer();
+    const isMobile = window.innerWidth <= 650;
+    const headerHeight = isMobile ? 60 : 0;
+    const navHeight = isMobile ? 90 : 0;
+    
+    // Native scroll into view
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+      inline: 'nearest'
+    });
+    
+    await sleep(350);
+    
+    // Check if element is in safe viewing area
+    let rect = element.getBoundingClientRect();
+    const safeTop = headerHeight + 120;
+    const safeBottom = window.innerHeight - navHeight - 120;
+    
+    // Secondary scroll if needed
+    if (rect.top < safeTop || rect.bottom > safeBottom) {
+      if (main) {
+        const safeCenterY = (safeTop + safeBottom) / 2;
+        const elemCenterY = rect.top + rect.height / 2;
+        const scrollAdjust = elemCenterY - safeCenterY;
+        
+        const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
+        
+        main.scrollTo({
+          top: newScroll,
+          behavior: 'smooth'
+        });
+        
+        await sleep(350);
+      }
+    }
+    
+    await sleep(100);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // STEP PLAYBACK
+  // ═══════════════════════════════════════════════════════════════════════
 
   async function playStep(index) {
     if (index >= allSteps.length) {
@@ -726,16 +1233,16 @@ const QPTour = (function() {
     currentStepIndex = index;
     currentSection = step.section;
     
-    elements.callout.classList.remove('active');
+    // Hide callout during transition
+    elements.callout.classList.remove('visible');
     
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     const needsNavigation = step.page !== currentView;
     
     if (needsNavigation) {
-      // Hide spotlight during navigation (instant, no animation)
-      elements.spotlight.style.opacity = '0';
-      elements.spotlight.style.transition = 'none';
+      elements.spotlight.classList.remove('visible');
       
+      // Save state for resume
       sessionStorage.setItem('qp_tour_state', JSON.stringify({
         sectionsToPlay,
         currentStepIndex: index,
@@ -746,9 +1253,9 @@ const QPTour = (function() {
       await navigateToPage(step.page);
     }
     
-    // Always force theme after any navigation
     forceTheme();
     
+    // Find target element
     const target = document.querySelector(step.selector);
     if (!target) {
       console.warn(`QPTour: Element not found: ${step.selector}`);
@@ -757,161 +1264,244 @@ const QPTour = (function() {
       return;
     }
     
-    // Simple scroll - center element in view
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    await sleep(350);
+    // Scroll to element
+    await scrollToElement(target);
     
+    // Position everything
+    repositionElements(target, step);
+    
+    // Show spotlight
+    elements.spotlight.classList.add('visible');
+    
+    // Wait for spotlight to settle
+    await sleep(needsNavigation ? 150 : TIMING.spotlightMove);
+    
+    // Update callout content
+    updateCalloutContent(step, index);
+    
+    // Show callout with entrance animation
+    elements.callout.classList.add('visible');
+  }
+
+  function repositionElements(target, step) {
     const rect = target.getBoundingClientRect();
-    const pad = 8;
+    const pad = 10;
     
-    // Position spotlight (instant if we navigated)
-    if (needsNavigation) {
-      // Set position instantly while hidden
-      Object.assign(elements.spotlight.style, {
-        left: (rect.left - pad) + 'px',
-        top: (rect.top - pad) + 'px',
-        width: (rect.width + pad * 2) + 'px',
-        height: (rect.height + pad * 2) + 'px'
-      });
-      // Re-enable transitions and fade in
-      await sleep(20); // Let position apply
-      elements.spotlight.style.transition = `all ${TIMING.spotlightMove}ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms ease`;
-      elements.spotlight.style.opacity = '1';
-    } else {
-      // Animate to new position
-      Object.assign(elements.spotlight.style, {
-        left: (rect.left - pad) + 'px',
-        top: (rect.top - pad) + 'px',
-        width: (rect.width + pad * 2) + 'px',
-        height: (rect.height + pad * 2) + 'px'
-      });
-    }
+    // Position spotlight
+    const spotlightLeft = rect.left - pad;
+    const spotlightTop = rect.top - pad;
+    const spotlightWidth = rect.width + pad * 2;
+    const spotlightHeight = rect.height + pad * 2;
     
-    elements.spotlight.className = 'tour-spotlight';
+    elements.spotlight.style.left = spotlightLeft + 'px';
+    elements.spotlight.style.top = spotlightTop + 'px';
+    elements.spotlight.style.width = spotlightWidth + 'px';
+    elements.spotlight.style.height = spotlightHeight + 'px';
+    
+    // Set emphasis class
+    elements.spotlight.className = 'tour-spotlight visible';
     if (step.emphasis) {
       elements.spotlight.classList.add(`emphasis-${step.emphasis}`);
     }
     
-    await sleep(needsNavigation ? 200 : TIMING.spotlightMove);
-    
+    // Position callout
+    positionCallout(step.position, {
+      left: spotlightLeft,
+      top: spotlightTop,
+      right: spotlightLeft + spotlightWidth,
+      bottom: spotlightTop + spotlightHeight,
+      width: spotlightWidth,
+      height: spotlightHeight
+    });
+  }
+
+  function updateCalloutContent(step, index) {
     const sectionLabels = {
-      research: 'Research Tier',
-      recoil: 'Recoil Tier',
-      terminal: 'Terminal Tier',
-      suite: 'Suite Tier'
+      research: 'Research',
+      recoil: 'Recoil',
+      terminal: 'Terminal',
+      suite: 'Suite'
     };
-    elements.sectionBadge.textContent = sectionLabels[step.section] || step.section;
+    
+    elements.icon.textContent = step.icon || '📍';
+    elements.badge.textContent = sectionLabels[step.section] || step.section;
     elements.title.textContent = step.title;
     elements.content.textContent = step.content;
-    elements.progress.textContent = `${index + 1} of ${allSteps.length}`;
-    elements.nextBtn.textContent = index === allSteps.length - 1 ? 'Finish ✓' : 'Next →';
+    elements.stepCount.textContent = `${index + 1} / ${allSteps.length}`;
     
+    // Update progress bar
     const progressPercent = ((index + 1) / allSteps.length) * 100;
     elements.progressFill.style.width = `${progressPercent}%`;
     
-    positionCallout(step.position, rect);
-    elements.callout.classList.add('active');
+    // Update next button
+    const isLast = index === allSteps.length - 1;
+    elements.nextText.textContent = isLast ? 'Finish' : 'Next';
+    elements.nextBtn.querySelector('.tour-next-icon').textContent = isLast ? '✓' : '→';
+    elements.nextBtn.classList.toggle('finish', isLast);
   }
 
-  function positionCallout(preferredPosition, targetRect) {
+  // ═══════════════════════════════════════════════════════════════════════
+  // CALLOUT POSITIONING - Smart, never clips
+  // ═══════════════════════════════════════════════════════════════════════
+
+  function positionCallout(preferredPosition, spotlight) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 6;
+    const gap = 12;
+    
     const isMobile = window.innerWidth <= 650;
-    const calloutWidth = isMobile ? 280 : 300;
-    const calloutHeight = callout.offsetHeight || 200;
+    const calloutWidth = isMobile ? Math.min(window.innerWidth - 32, 340) : 320;
     
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    // Get callout height
+    callout.style.visibility = 'hidden';
+    callout.style.display = 'block';
+    const calloutHeight = callout.offsetHeight || 220;
+    callout.style.visibility = '';
     
-    const spotlightPad = 8;
-    const spotlightRect = {
-      left: targetRect.left - spotlightPad,
-      top: targetRect.top - spotlightPad,
-      right: targetRect.right + spotlightPad,
-      bottom: targetRect.bottom + spotlightPad
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const headerOffset = isMobile ? 60 : 0;
+    const navOffset = isMobile ? 90 : 0;
+    
+    // Available space
+    const spaceAbove = spotlight.top - headerOffset - 20;
+    const spaceBelow = vh - spotlight.bottom - navOffset - 20;
+    const spaceLeft = spotlight.left - 20;
+    const spaceRight = vw - spotlight.right - 20;
+    
+    // Check what fits
+    const fits = {
+      top: spaceAbove >= calloutHeight + gap,
+      bottom: spaceBelow >= calloutHeight + gap,
+      left: spaceLeft >= calloutWidth + gap && !isMobile,
+      right: spaceRight >= calloutWidth + gap && !isMobile
     };
     
-    const spaceTop = spotlightRect.top - 16;
-    const spaceBottom = viewportHeight - spotlightRect.bottom - 16;
-    const spaceLeft = spotlightRect.left - 16;
-    const spaceRight = viewportWidth - spotlightRect.right - 16;
+    let position = preferredPosition;
     
-    const positions = [
-      { dir: 'bottom', space: spaceBottom, fits: spaceBottom >= calloutHeight + gap },
-      { dir: 'top', space: spaceTop, fits: spaceTop >= calloutHeight + gap },
-      { dir: 'right', space: spaceRight, fits: spaceRight >= calloutWidth + gap },
-      { dir: 'left', space: spaceLeft, fits: spaceLeft >= calloutWidth + gap }
-    ];
-    
-    positions.sort((a, b) => {
-      if (a.fits && !b.fits) return -1;
-      if (!a.fits && b.fits) return 1;
-      return b.space - a.space;
-    });
-    
-    let finalPosition = positions[0].dir;
-    const preferredFits = positions.find(p => p.dir === preferredPosition)?.fits;
-    if (preferredFits) {
-      finalPosition = preferredPosition;
+    // Mobile: always prefer top/bottom
+    if (!fits[position]) {
+      if (isMobile) {
+        position = fits.bottom ? 'bottom' : fits.top ? 'top' : 'bottom';
+      } else {
+        if (fits.bottom) position = 'bottom';
+        else if (fits.top) position = 'top';
+        else if (fits.right) position = 'right';
+        else if (fits.left) position = 'left';
+        else position = 'bottom';
+      }
     }
     
-    arrow.className = 'tour-arrow';
     let left, top;
     
-    switch (finalPosition) {
+    // Reset arrow
+    arrow.style.cssText = '';
+    
+    switch (position) {
       case 'top':
-        left = targetRect.left + (targetRect.width - calloutWidth) / 2;
-        top = spotlightRect.top - calloutHeight - gap;
-        arrow.classList.add('bottom');
+        left = spotlight.left + (spotlight.width - calloutWidth) / 2;
+        top = spotlight.top - calloutHeight - gap;
+        arrow.style.bottom = '-7px';
         arrow.style.left = '50%';
-        arrow.style.marginLeft = '-6px';
+        arrow.style.marginLeft = '-8px';
         break;
         
       case 'bottom':
-        left = targetRect.left + (targetRect.width - calloutWidth) / 2;
-        top = spotlightRect.bottom + gap;
-        arrow.classList.add('top');
+        left = spotlight.left + (spotlight.width - calloutWidth) / 2;
+        top = spotlight.bottom + gap;
+        arrow.style.top = '-7px';
         arrow.style.left = '50%';
-        arrow.style.marginLeft = '-6px';
+        arrow.style.marginLeft = '-8px';
         break;
         
       case 'left':
-        left = spotlightRect.left - calloutWidth - gap;
-        top = targetRect.top + (targetRect.height - calloutHeight) / 2;
-        arrow.classList.add('right');
+        left = spotlight.left - calloutWidth - gap;
+        top = spotlight.top + (spotlight.height - calloutHeight) / 2;
+        arrow.style.right = '-7px';
         arrow.style.top = '50%';
-        arrow.style.marginTop = '-6px';
+        arrow.style.marginTop = '-8px';
         break;
         
       case 'right':
-        left = spotlightRect.right + gap;
-        top = targetRect.top + (targetRect.height - calloutHeight) / 2;
-        arrow.classList.add('left');
+        left = spotlight.right + gap;
+        top = spotlight.top + (spotlight.height - calloutHeight) / 2;
+        arrow.style.left = '-7px';
         arrow.style.top = '50%';
-        arrow.style.marginTop = '-6px';
+        arrow.style.marginTop = '-8px';
         break;
     }
     
-    // Keep callout on screen horizontally
-    const maxLeft = viewportWidth - calloutWidth - 16;
-    left = Math.max(16, Math.min(left, maxLeft));
+    // Clamp to viewport
+    const minLeft = 16;
+    const maxLeft = vw - calloutWidth - 16;
+    const originalLeft = left;
+    left = Math.max(minLeft, Math.min(left, maxLeft));
     
-    // For vertical: allow callout to go slightly off-screen if needed to stay connected
-    // Only clamp if it would go way off screen
-    const minTop = -20; // Allow slight overflow at top
-    const maxTop = viewportHeight - calloutHeight + 20; // Allow slight overflow at bottom
+    const minTop = headerOffset + 16;
+    const maxTop = vh - calloutHeight - navOffset - 16;
+    const originalTop = top;
     top = Math.max(minTop, Math.min(top, maxTop));
+    
+    // Adjust arrow if callout was clamped
+    if (position === 'top' || position === 'bottom') {
+      const offset = originalLeft - left;
+      if (Math.abs(offset) > 10) {
+        const arrowLeft = Math.max(24, Math.min(calloutWidth - 24, (calloutWidth / 2) + offset));
+        arrow.style.left = arrowLeft + 'px';
+        arrow.style.marginLeft = '-8px';
+      }
+    }
+    
+    if (position === 'left' || position === 'right') {
+      const offset = originalTop - top;
+      if (Math.abs(offset) > 10) {
+        const arrowTop = Math.max(30, Math.min(calloutHeight - 30, (calloutHeight / 2) + offset));
+        arrow.style.top = arrowTop + 'px';
+        arrow.style.marginTop = '-8px';
+      }
+    }
     
     callout.style.left = left + 'px';
     callout.style.top = top + 'px';
+    callout.style.width = calloutWidth + 'px';
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CELEBRATION ANIMATION
+  // ═══════════════════════════════════════════════════════════════════════
+
+  function playCelebration(x, y) {
+    const celebration = elements.celebration;
+    celebration.style.left = x + 'px';
+    celebration.style.top = y + 'px';
+    
+    // Reset animation
+    celebration.classList.remove('active');
+    void celebration.offsetWidth; // Force reflow
+    celebration.classList.add('active');
+    
+    setTimeout(() => {
+      celebration.classList.remove('active');
+    }, TIMING.celebrationDuration + 300);
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // CONTROLS
+  // ═══════════════════════════════════════════════════════════════════════
 
   async function next() {
     try {
       const currentStep = allSteps[currentStepIndex];
       const nextStep = allSteps[currentStepIndex + 1];
       
+      // Celebration at spotlight center
+      const spotlight = elements.spotlight.getBoundingClientRect();
+      playCelebration(
+        spotlight.left + spotlight.width / 2,
+        spotlight.top + spotlight.height / 2
+      );
+      
+      // Mark section complete if moving to next section or finishing
       if (!nextStep || nextStep.section !== currentStep.section) {
         await markSectionComplete(currentStep.section);
       }
@@ -919,19 +1509,15 @@ const QPTour = (function() {
       await playStep(currentStepIndex + 1);
     } catch (e) {
       console.error('QPTour: Error in next()', e);
-      // Force finish on error
       finish();
     }
   }
 
   function exit() {
-    isActive = false;
-    stopThemeObserver();
-    savedTheme = null;
-    unlockScroll();
-    destroyUI();
-    sessionStorage.removeItem('qp_tour_state');
-    sessionStorage.removeItem('qp_tour_theme');
+    cleanup();
+    if (typeof showToast === 'function') {
+      showToast('Tour skipped — restart anytime from settings', 'info');
+    }
   }
 
   async function finish() {
@@ -939,45 +1525,86 @@ const QPTour = (function() {
       await markSectionComplete(currentSection);
     }
     
-    isActive = false;
-    stopThemeObserver();
-    savedTheme = null;
-    unlockScroll();
-    destroyUI();
-    sessionStorage.removeItem('qp_tour_state');
-    sessionStorage.removeItem('qp_tour_theme');
+    // Final celebration burst
+    const callout = elements.callout.getBoundingClientRect();
+    playCelebration(
+      callout.left + callout.width / 2,
+      callout.top + callout.height / 2
+    );
+    
+    await sleep(500);
+    
+    cleanup();
     
     if (typeof showToast === 'function') {
-      showToast('🎉 Tour complete!', 'success');
+      showToast('🎉 Tour complete! You\'re ready to build.', 'success');
     }
   }
 
+  function cleanup() {
+    isActive = false;
+    stopThemeObserver();
+    stopResizeObserver();
+    savedTheme = null;
+    scrollContainer = null;
+    destroyUI();
+    sessionStorage.removeItem('qp_tour_state');
+    sessionStorage.removeItem('qp_tour_theme');
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PERSISTENCE - Supabase integration
+  // ═══════════════════════════════════════════════════════════════════════
+
   async function loadProgress() {
     try {
+      if (typeof supabaseClient === 'undefined' || !authUser?.id) {
+        console.log('QPTour: No Supabase/auth, using local storage');
+        return JSON.parse(localStorage.getItem('qp_tour_progress') || '[]');
+      }
+      
       const { data, error } = await supabaseClient
         .from('tour_progress')
         .select('sections_completed')
-        .eq('user_id', authUser?.id)
+        .eq('user_id', authUser.id)
         .single();
       
       if (error && error.code !== 'PGRST116') {
         console.error('QPTour: Error loading progress', error);
-        return [];
+        return JSON.parse(localStorage.getItem('qp_tour_progress') || '[]');
       }
+      
       return data?.sections_completed || [];
     } catch (e) {
-      return [];
+      console.log('QPTour: Offline mode, using local storage');
+      return JSON.parse(localStorage.getItem('qp_tour_progress') || '[]');
     }
   }
 
   async function markSectionComplete(section) {
+    console.log('QPTour: Completing section:', section);
+    
+    // Always update local storage as backup
+    const localProgress = JSON.parse(localStorage.getItem('qp_tour_progress') || '[]');
+    if (!localProgress.includes(section)) {
+      localProgress.push(section);
+      localStorage.setItem('qp_tour_progress', JSON.stringify(localProgress));
+    }
+    
     try {
-      await supabaseClient.rpc('complete_tour_section', { section_name: section });
+      if (typeof supabaseClient !== 'undefined' && authUser?.id) {
+        await supabaseClient.rpc('complete_tour_section', { section_name: section });
+      }
       completedSections.push(section);
     } catch (e) {
-      console.error('QPTour: Error saving progress', e);
+      console.error('QPTour: Error saving progress (offline?)', e);
+      completedSections.push(section);
     }
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // RESUME - Continue after page navigation
+  // ═══════════════════════════════════════════════════════════════════════
 
   async function resumeIfActive() {
     const stored = sessionStorage.getItem('qp_tour_state');
@@ -999,10 +1626,10 @@ const QPTour = (function() {
       isActive = true;
       forceTheme();
       startThemeObserver();
-      lockScroll();
       createUI();
+      startResizeObserver();
       
-      await sleep(300);
+      await sleep(350);
       await playStep(state.currentStepIndex);
       return true;
     } catch (e) {
@@ -1010,6 +1637,10 @@ const QPTour = (function() {
       return false;
     }
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // AUTO-START CHECK
+  // ═══════════════════════════════════════════════════════════════════════
 
   async function shouldAutoStart(userTier) {
     const tierSections = TIER_SECTIONS[userTier] || [];
@@ -1019,9 +1650,39 @@ const QPTour = (function() {
     return tierSections.some(s => !completed.includes(s));
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // RESET - For testing
+  // ═══════════════════════════════════════════════════════════════════════
+
+  async function resetProgress() {
+    localStorage.removeItem('qp_tour_progress');
+    
+    try {
+      if (typeof supabaseClient !== 'undefined' && authUser?.id) {
+        await supabaseClient
+          .from('tour_progress')
+          .delete()
+          .eq('user_id', authUser.id);
+      }
+    } catch (e) {
+      console.error('QPTour: Error resetting progress', e);
+    }
+    
+    completedSections = [];
+    console.log('QPTour: Progress reset');
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // UTILITIES
+  // ═══════════════════════════════════════════════════════════════════════
+
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
   }
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // PUBLIC API
+  // ═══════════════════════════════════════════════════════════════════════
 
   return {
     init,
@@ -1030,10 +1691,16 @@ const QPTour = (function() {
     exit,
     resumeIfActive,
     shouldAutoStart,
-    isActive: () => isActive
+    resetProgress,
+    isActive: () => isActive,
+    
+    // Expose for dev tool
+    TIER_SECTIONS,
+    TOUR_STEPS
   };
 })();
 
+// Auto-resume on page load
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => QPTour.resumeIfActive(), 500);
+  setTimeout(() => QPTour.resumeIfActive(), 600);
 });
