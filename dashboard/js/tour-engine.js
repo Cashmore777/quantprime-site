@@ -892,41 +892,15 @@ const QPTour = (function() {
         break;
     }
     
+    // Keep callout on screen horizontally
     const maxLeft = viewportWidth - calloutWidth - 16;
-    const maxTop = viewportHeight - calloutHeight - 16;
     left = Math.max(16, Math.min(left, maxLeft));
-    top = Math.max(16, Math.min(top, maxTop));
     
-    // Final overlap check
-    const calloutRect = {
-      left, top,
-      right: left + calloutWidth,
-      bottom: top + calloutHeight
-    };
-    
-    const overlaps = !(calloutRect.right < spotlightRect.left || 
-                       calloutRect.left > spotlightRect.right || 
-                       calloutRect.bottom < spotlightRect.top || 
-                       calloutRect.top > spotlightRect.bottom);
-    
-    if (overlaps) {
-      const spotlightCenterY = (spotlightRect.top + spotlightRect.bottom) / 2;
-      
-      if (spotlightCenterY < viewportHeight / 2) {
-        top = Math.max(spotlightRect.bottom + gap, viewportHeight - calloutHeight - 32);
-        arrow.className = 'tour-arrow top';
-        arrow.style.left = '50%';
-        arrow.style.marginLeft = '-6px';
-      } else {
-        top = Math.min(spotlightRect.top - calloutHeight - gap, 32);
-        arrow.className = 'tour-arrow bottom';
-        arrow.style.left = '50%';
-        arrow.style.marginLeft = '-6px';
-      }
-      
-      left = Math.max(16, Math.min(left, maxLeft));
-      top = Math.max(16, Math.min(top, maxTop));
-    }
+    // For vertical: allow callout to go slightly off-screen if needed to stay connected
+    // Only clamp if it would go way off screen
+    const minTop = -20; // Allow slight overflow at top
+    const maxTop = viewportHeight - calloutHeight + 20; // Allow slight overflow at bottom
+    top = Math.max(minTop, Math.min(top, maxTop));
     
     callout.style.left = left + 'px';
     callout.style.top = top + 'px';
