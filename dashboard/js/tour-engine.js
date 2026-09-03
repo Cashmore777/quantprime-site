@@ -44,7 +44,7 @@ const QPTour = (function() {
       {
         id: 'research-intel',
         page: 'research',
-        selector: '#view-research > .panel:first-of-type',
+        selector: '#view-research .panel[onclick*="intel"]',
         title: 'Market Intelligence',
         content: 'Your vault. Daily and weekly briefings archived here. 30 instruments, updated 10pm UK.',
         position: 'bottom'
@@ -53,7 +53,7 @@ const QPTour = (function() {
       {
         id: 'research-papers-intro',
         page: 'research',
-        selector: '#view-research > .panel:nth-of-type(2)',
+        selector: '#papers-carousel',
         title: 'Research Papers',
         content: '10 papers on what actually works. Real data, honest caveats.',
         position: 'top'
@@ -69,7 +69,7 @@ const QPTour = (function() {
       {
         id: 'research-paper-nav',
         page: 'research',
-        selector: '.paper-dots',
+        selector: '#paper-dots',
         title: 'All 10 papers',
         content: 'Swipe or tap dots to browse. Each tackles a different edge killer.',
         position: 'top'
