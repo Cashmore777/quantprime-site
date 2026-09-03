@@ -412,13 +412,11 @@ const QPTour = (function() {
         pointer-events: none;
       }
       
-      /* Blur overlay */
+      /* Overlay - no blur (spotlight box-shadow handles dimming) */
       .tour-overlay {
         position: absolute;
         inset: 0;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        background: rgba(10, 10, 15, 0.4);
+        background: transparent;
         opacity: 0;
         transition: opacity 0.4s ease;
         pointer-events: none;
