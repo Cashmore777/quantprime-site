@@ -1,7 +1,12 @@
 /**
- * QP Dashboard Onboarding Tour Engine v31
+ * QP Dashboard Onboarding Tour Engine v32
  * 
  * Changelog:
+ * v32 - EMOJI REMOVAL + TRANSITION FIX
+ *   - Removed all emoji icons from tour steps
+ *   - Spotlight now hides before scroll, appears at new position
+ *   - No more "catching up" lag between scroll and spotlight
+ * 
  * v31 - MOBILE PERFECTION
  *   - Glow reduced to 0.2 opacity, gold-only, no pulse
  *   - Callout guaranteed 16px gap from spotlight
@@ -72,8 +77,7 @@ const QPTour = (function() {
         title: 'Your Daily Edge',
         content: 'Market intel drops at 10pm UK. 30 instruments. Regime shifts. Key levels. All archived.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '📊'
+        emphasis: 'feature'
       },
       {
         id: 'research-papers-intro',
@@ -82,8 +86,7 @@ const QPTour = (function() {
         title: 'The Research Vault',
         content: '10 papers that\'ll change how you think about trading. Real backtests. Real results.',
         position: 'top',
-        emphasis: 'feature',
-        icon: '📚'
+        emphasis: 'feature'
       },
       {
         id: 'research-paper-example',
@@ -92,8 +95,7 @@ const QPTour = (function() {
         title: 'Start Here',
         content: '"The 81.5% Win Rate Paradox" — why winners still lose money. 3 min read that\'ll save you months.',
         position: 'right',
-        emphasis: 'action',
-        icon: '⚡'
+        emphasis: 'action'
       },
       {
         id: 'research-paper-nav',
@@ -101,8 +103,7 @@ const QPTour = (function() {
         selector: '#paper-dots',
         title: 'Browse Them All',
         content: 'Position sizing, stop placement, session timing — it\'s all here. Swipe through.',
-        position: 'top',
-        icon: '👆'
+        position: 'top'
       },
       {
         id: 'research-tier-card',
@@ -111,8 +112,7 @@ const QPTour = (function() {
         title: 'The Build Menu',
         content: 'This is where the magic happens. 255 combinations. Your indicator, your rules.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🛠️'
+        emphasis: 'feature'
       },
       {
         id: 'research-starter',
@@ -120,8 +120,7 @@ const QPTour = (function() {
         selector: '.menu-course[data-course="starter"]',
         title: 'Pick Your Foundation',
         content: 'Trend filters. Session logic. Volatility modes. This sets the base.',
-        position: 'right',
-        icon: '1️⃣'
+        position: 'right'
       },
       {
         id: 'research-main',
@@ -129,8 +128,7 @@ const QPTour = (function() {
         selector: '.menu-course[data-course="main"]',
         title: 'Add Your Signal',
         content: 'The engine that finds your entries. Reversals, breakouts, or momentum.',
-        position: 'right',
-        icon: '2️⃣'
+        position: 'right'
       },
       {
         id: 'research-side',
@@ -138,8 +136,7 @@ const QPTour = (function() {
         selector: '.menu-course[data-course="side"]',
         title: 'Layer Confluence',
         content: 'HTF bias, volume profile, session overlap. Extra edge, fewer fakeouts.',
-        position: 'right',
-        icon: '3️⃣'
+        position: 'right'
       },
       {
         id: 'research-dessert',
@@ -148,8 +145,7 @@ const QPTour = (function() {
         title: 'Finish & Generate',
         content: 'Final filter. Hit Generate. Get your custom indicator. That simple.',
         position: 'right',
-        emphasis: 'action',
-        icon: '✨'
+        emphasis: 'action'
       }
     ],
     
@@ -161,8 +157,7 @@ const QPTour = (function() {
         title: 'Meet Recoil',
         content: 'Measures how far price stretches from equilibrium. Green = stretched low (long zone). Red = stretched high (short zone).',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🎯'
+        emphasis: 'feature'
       },
       {
         id: 'recoil-tv',
@@ -172,8 +167,7 @@ const QPTour = (function() {
         content: 'Enter your TradingView username exactly as shown. Indicator unlocks in 60 seconds.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action',
-        icon: '🔓'
+        emphasis: 'action'
       },
       {
         id: 'recoil-build',
@@ -182,8 +176,7 @@ const QPTour = (function() {
         title: 'Recoil Menu Unlocked',
         content: '255 volatility-tuned combinations. Mean reversion setups that actually work.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🆕'
+        emphasis: 'feature'
       }
     ],
     
@@ -195,8 +188,7 @@ const QPTour = (function() {
         title: 'Meet Meridian',
         content: 'The AMD cycle in real-time. Accumulation → Manipulation → Distribution. Know your phase.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🔄'
+        emphasis: 'feature'
       },
       {
         id: 'terminal-tv',
@@ -206,8 +198,7 @@ const QPTour = (function() {
         content: 'Same drill. Your exact TradingView username. 60 seconds.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action',
-        icon: '🔓'
+        emphasis: 'action'
       },
       {
         id: 'terminal-build',
@@ -216,8 +207,7 @@ const QPTour = (function() {
         title: 'Terminal Menu Unlocked',
         content: 'AMD-focused combinations. 255 ways to trade the smart money cycle.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🆕'
+        emphasis: 'feature'
       }
     ],
     
@@ -229,8 +219,7 @@ const QPTour = (function() {
         title: 'Meet Cockpit',
         content: 'The full picture. 4 EMAs, liquidity sweeps, FVGs, real-time regime score. Everything.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🚀'
+        emphasis: 'feature'
       },
       {
         id: 'suite-tv',
@@ -240,8 +229,7 @@ const QPTour = (function() {
         content: 'Your username one more time. Cockpit joins your arsenal.',
         position: 'bottom',
         interactive: true,
-        emphasis: 'action',
-        icon: '🔓'
+        emphasis: 'action'
       },
       {
         id: 'suite-performance',
@@ -250,8 +238,7 @@ const QPTour = (function() {
         title: 'AI Performance Coach',
         content: 'Upload MT5 trades. AI finds your edge, your leaks, your fixes. Real feedback, no BS.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '🤖'
+        emphasis: 'feature'
       },
       {
         id: 'suite-build',
@@ -260,8 +247,7 @@ const QPTour = (function() {
         title: 'Full Menu Unlocked',
         content: 'Every ingredient. Every combination. Build whatever you need. You\'ve earned it.',
         position: 'bottom',
-        emphasis: 'feature',
-        icon: '👑'
+        emphasis: 'feature'
       }
     ]
   };
@@ -1252,15 +1238,16 @@ const QPTour = (function() {
     currentStepIndex = index;
     currentSection = step.section;
     
-    // Hide callout during transition
+    // 1. Hide spotlight and callout IMMEDIATELY (no transition)
+    elements.spotlight.style.transition = 'none';
+    elements.spotlight.classList.remove('visible');
     elements.callout.classList.remove('visible');
     
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     const needsNavigation = step.page !== currentView;
     
+    // 2. Navigate if needed
     if (needsNavigation) {
-      elements.spotlight.classList.remove('visible');
-      
       // Save state for resume
       sessionStorage.setItem('qp_tour_state', JSON.stringify({
         sectionsToPlay,
@@ -1283,17 +1270,21 @@ const QPTour = (function() {
       return;
     }
     
-    // Scroll to element
+    // 3. Scroll to element (spotlight still hidden)
     await scrollToElement(target);
     
-    // Position everything
+    // 4. Position spotlight at NEW location (while still hidden)
     repositionElements(target, step);
     
-    // Show spotlight
+    // 5. Force reflow, then restore transitions
+    elements.spotlight.offsetHeight; // force reflow
+    elements.spotlight.style.transition = ''; // restore CSS transitions
+    
+    // 6. Show spotlight at new position (will fade in)
     elements.spotlight.classList.add('visible');
     
-    // Wait for spotlight to settle
-    await sleep(needsNavigation ? 150 : TIMING.spotlightMove);
+    // 7. Show callout after spotlight settles
+    await sleep(150);
     
     // Update callout content
     updateCalloutContent(step, index);
@@ -1342,7 +1333,15 @@ const QPTour = (function() {
       suite: 'Suite'
     };
     
-    elements.icon.textContent = step.icon || '📍';
+    // Hide icon element if no icon provided
+    if (step.icon) {
+      elements.icon.textContent = step.icon;
+      elements.icon.style.display = '';
+    } else {
+      elements.icon.textContent = '';
+      elements.icon.style.display = 'none';
+    }
+    
     elements.badge.textContent = sectionLabels[step.section] || step.section;
     elements.title.textContent = step.title;
     elements.content.textContent = step.content;
