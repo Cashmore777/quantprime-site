@@ -219,13 +219,13 @@ const QPTour = (function() {
   };
 
   const TIMING = {
-    menuOpen: 350,
-    navHighlight: 500,
-    navClick: 250,
-    pageTransition: 450,
-    spotlightMove: 400,
-    calloutFade: 300,
-    initialDelay: 200
+    menuOpen: 250,
+    navHighlight: 350,
+    navClick: 150,
+    pageTransition: 300,
+    spotlightMove: 300,
+    calloutFade: 250,
+    initialDelay: 150
   };
 
   // State
@@ -455,11 +455,11 @@ const QPTour = (function() {
         50% { border-color: #00d4ff; }
       }
       
-      /* Clean callout card */
+      /* Callout with gradient border */
       .tour-callout {
         position: absolute;
-        background: rgba(20, 20, 25, 0.98);
-        border: 1px solid rgba(201,168,76,0.3);
+        background: linear-gradient(135deg, #c9a84c, #00d4ff);
+        padding: 2px;
         border-radius: 14px;
         width: 300px;
         max-width: calc(100vw - 32px);
@@ -471,7 +471,6 @@ const QPTour = (function() {
         pointer-events: auto;
         box-shadow: 0 16px 48px rgba(0,0,0,0.5);
         z-index: 2;
-        overflow: hidden;
       }
       .tour-callout.active {
         opacity: 1;
@@ -481,28 +480,8 @@ const QPTour = (function() {
       .tour-body {
         padding: 20px;
         position: relative;
-      }
-      
-      /* Gold accent bar at top */
-      .tour-body::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #c9a84c 0%, #00d4ff 100%);
-      }
-      
-      /* Gold accent bar at bottom */
-      .tour-body::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #00d4ff 0%, #c9a84c 100%);
+        background: rgba(20, 20, 25, 0.98);
+        border-radius: 12px;
       }
       
       .tour-section-badge {
@@ -598,16 +577,22 @@ const QPTour = (function() {
       /* Arrow */
       .tour-arrow {
         position: absolute;
-        width: 12px;
-        height: 12px;
-        background: rgba(20, 20, 25, 0.98);
-        border: 1px solid rgba(201,168,76,0.3);
+        width: 14px;
+        height: 14px;
+        background: linear-gradient(135deg, #c9a84c, #00d4ff);
         transform: rotate(45deg);
+        z-index: -1;
       }
-      .tour-arrow.top { top: -7px; border-right: none; border-bottom: none; }
-      .tour-arrow.bottom { bottom: -7px; border-left: none; border-top: none; }
-      .tour-arrow.left { left: -7px; border-right: none; border-top: none; }
-      .tour-arrow.right { right: -7px; border-left: none; border-bottom: none; }
+      .tour-arrow::after {
+        content: '';
+        position: absolute;
+        inset: 2px;
+        background: rgba(20, 20, 25, 0.98);
+      }
+      .tour-arrow.top { top: -8px; left: 50%; margin-left: -7px; }
+      .tour-arrow.bottom { bottom: -8px; left: 50%; margin-left: -7px; }
+      .tour-arrow.left { left: -8px; top: 50%; margin-top: -7px; }
+      .tour-arrow.right { right: -8px; top: 50%; margin-top: -7px; }
       
       /* Nav highlight */
       .tour-nav-highlight {
@@ -925,14 +910,20 @@ const QPTour = (function() {
   }
 
   async function next() {
-    const currentStep = allSteps[currentStepIndex];
-    const nextStep = allSteps[currentStepIndex + 1];
-    
-    if (!nextStep || nextStep.section !== currentStep.section) {
-      await markSectionComplete(currentStep.section);
+    try {
+      const currentStep = allSteps[currentStepIndex];
+      const nextStep = allSteps[currentStepIndex + 1];
+      
+      if (!nextStep || nextStep.section !== currentStep.section) {
+        await markSectionComplete(currentStep.section);
+      }
+      
+      await playStep(currentStepIndex + 1);
+    } catch (e) {
+      console.error('QPTour: Error in next()', e);
+      // Force finish on error
+      finish();
     }
-    
-    await playStep(currentStepIndex + 1);
   }
 
   function exit() {
