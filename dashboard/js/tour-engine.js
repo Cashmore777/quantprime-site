@@ -176,9 +176,17 @@ const QPTour = (function() {
         id: 'research-dessert',
         page: 'marketplace',
         selector: '.menu-course[data-course="dessert"]',
-        title: 'Finish & Generate',
-        content: 'Final filter. Hit Generate. Get your custom indicator. That simple.',
-        position: 'right',
+        title: 'Track Your Results',
+        content: 'Performance tables, volatility reports, pair statistics. Know what\'s working.',
+        position: 'right'
+      },
+      {
+        id: 'research-generate',
+        page: 'marketplace',
+        selector: '#generate-btn',
+        title: 'Build Your Instrument',
+        content: 'One click. Your selections become a custom Pine Script indicator. Ready to trade.',
+        position: 'top',
         emphasis: 'action'
       }
     ],
