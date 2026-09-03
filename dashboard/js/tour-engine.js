@@ -67,7 +67,7 @@ const QPTour = (function() {
         id: 'research-paper-nav',
         page: 'research',
         selector: '#paper-dots',
-        title: '👆 Browse All Papers',
+        title: '↓ Browse All Papers',
         content: 'Swipe or tap. Topics: position sizing, stop placement, session timing, the lot.',
         position: 'top'
       },
@@ -84,7 +84,7 @@ const QPTour = (function() {
         id: 'research-starter',
         page: 'marketplace',
         selector: '.menu-course[data-course="starter"]',
-        title: '1️⃣ Choose Your Foundation',
+        title: 'Choose Your Foundation',
         content: 'Starters set the base: trend filters, session logic, or volatility modes.',
         position: 'bottom'
       },
@@ -92,7 +92,7 @@ const QPTour = (function() {
         id: 'research-main',
         page: 'marketplace',
         selector: '.menu-course[data-course="main"]',
-        title: '2️⃣ Add Core Logic',
+        title: 'Add Core Logic',
         content: 'Mains are your signal engine: reversals, breakouts, or momentum plays.',
         position: 'bottom'
       },
@@ -100,7 +100,7 @@ const QPTour = (function() {
         id: 'research-side',
         page: 'marketplace',
         selector: '.menu-course[data-course="side"]',
-        title: '3️⃣ Layer In Context',
+        title: 'Layer In Context',
         content: 'Sides add confluence: higher timeframe bias, volume profile, or session overlap.',
         position: 'bottom'
       },
@@ -108,7 +108,7 @@ const QPTour = (function() {
         id: 'research-dessert',
         page: 'marketplace',
         selector: '.menu-course[data-course="dessert"]',
-        title: '4️⃣ Finish & Generate',
+        title: 'Finish & Generate',
         content: 'Dessert is the final filter. Pick one, hit Generate, get your custom indicator.',
         position: 'top',
         emphasis: 'action'
@@ -471,6 +471,7 @@ const QPTour = (function() {
         pointer-events: auto;
         box-shadow: 0 16px 48px rgba(0,0,0,0.5);
         z-index: 2;
+        overflow: hidden;
       }
       .tour-callout.active {
         opacity: 1;
