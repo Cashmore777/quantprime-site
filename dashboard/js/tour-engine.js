@@ -757,23 +757,26 @@ const QPTour = (function() {
       return;
     }
     
-    // Scroll element into view - use #main container (dashboard's scroll container)
-    const mainContainer = document.getElementById('main');
-    const targetRect = target.getBoundingClientRect();
-    const calloutSpace = 280; // Approximate callout height + gap
-    const idealTop = calloutSpace + 20; // Where we want the element's top to be
+    // Scroll element into view with room for callout
+    // Use scrollIntoView with 'start' then offset for callout space
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    await sleep(300);
     
-    if (mainContainer) {
-      // Calculate scroll within the main container
-      const containerRect = mainContainer.getBoundingClientRect();
-      const scrollTo = mainContainer.scrollTop + (targetRect.top - containerRect.top) - idealTop;
-      mainContainer.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
-    } else {
-      // Fallback to window scroll
-      const scrollTo = window.scrollY + targetRect.top - idealTop;
-      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    // Now adjust scroll to leave room for callout (scroll up a bit)
+    const containers = [
+      document.getElementById('main'),
+      target.closest('.view'),
+      target.closest('[style*="overflow"]'),
+      document.documentElement
+    ].filter(Boolean);
+    
+    for (const container of containers) {
+      if (container.scrollHeight > container.clientHeight) {
+        container.scrollBy({ top: -260, behavior: 'smooth' });
+        break;
+      }
     }
-    await sleep(300); // Wait for scroll to complete
+    await sleep(200);
     
     const rect = target.getBoundingClientRect();
     const pad = 8;
