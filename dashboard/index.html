@@ -1273,7 +1273,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   border: 1px solid var(--border);
   border-radius: var(--card-radius);
   padding: var(--card-padding);
-  transition: all 0.25s;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -1288,6 +1288,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   width: 4px;
   height: 100%;
   background: var(--premium-gradient);
+  transition: width 0.3s ease;
 }
 
 .research-card::after {
@@ -1299,14 +1300,18 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   opacity: 0;
   color: var(--gold);
   font-size: 18px;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (hover: hover) {
   .research-card:hover {
     border-color: var(--gold);
-    box-shadow: var(--shadow-md), var(--shadow-glow);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-md), var(--shadow-glow), 0 0 30px -10px rgba(201,168,76,0.3);
+    transform: translateY(-4px);
+  }
+  
+  .research-card:hover::before {
+    width: 5px;
   }
   
   .research-card:hover::after {
@@ -1317,6 +1322,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 
 .research-card:active {
   transform: scale(0.99);
+  transition-duration: 0.1s;
 }
 
 /* Papers Carousel */
@@ -1361,7 +1367,7 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: all 0.2s;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -1382,8 +1388,9 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent 80%);
+  background: linear-gradient(90deg, transparent, var(--gold), #00d4ff, transparent 80%);
   opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
 .paper-slide::after {
@@ -1395,15 +1402,17 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   height: 150px;
   background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
   pointer-events: none;
+  transition: transform 0.4s ease;
 }
 
 .paper-slide:hover {
   border-color: var(--gold);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 30px -10px rgba(201,168,76,0.3);
 }
 
-.paper-slide:hover::before {
-  opacity: 1;
+.paper-slide:hover::after {
+  transform: scale(1.2);
 }
 
 .paper-number {
@@ -2766,14 +2775,19 @@ body {
   border: 1px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .room-card:hover {
   border-color: var(--gold);
   background: var(--gold-glow);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 20px -8px rgba(201,168,76,0.3);
+}
+
+.room-card:active {
+  transform: translateY(0) scale(0.99);
+  transition-duration: 0.1s;
 }
 
 .room-card.locked {
@@ -6254,26 +6268,37 @@ body {
   line-height: 1.6;
 }
 
-/* Generic Modal */
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL - Premium with smooth reveal
+   ═══════════════════════════════════════════════════════════════════════ */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
   z-index: 100;
   display: none;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  animation: modalBgIn 0.3s ease;
 }
+
+@keyframes modalBgIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .modal .modal-content {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: 18px;
   max-width: 460px;
   width: 100%;
-  box-shadow: var(--shadow-lg);
-  animation: modalIn 0.25s ease;
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 60px -20px rgba(201,168,76,0.2);
+  animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow: hidden;
 }
 .modal .modal-header {
@@ -6340,8 +6365,16 @@ body {
 }
 
 @keyframes modalIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from { 
+    opacity: 0; 
+    transform: scale(0.92) translateY(10px);
+    filter: blur(2px);
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
 }
 
 #modal .lock-icon {
