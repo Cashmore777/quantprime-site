@@ -248,6 +248,8 @@ const QPTour = (function() {
   let allSteps = [];
   let completedSections = [];
   let elements = {};
+  let savedTheme = null;
+  let themeObserver = null;
 
   /**
    * Initialize tour
@@ -280,6 +282,89 @@ const QPTour = (function() {
   }
 
   /**
+   * Save current theme state
+   */
+  function saveThemeState() {
+    // Check multiple possible theme indicators
+    savedTheme = {
+      bodyClass: document.body.className,
+      htmlClass: document.documentElement.className,
+      dataTheme: document.body.getAttribute('data-theme') || document.documentElement.getAttribute('data-theme'),
+      isDark: document.body.classList.contains('dark') || 
+              document.documentElement.classList.contains('dark') ||
+              document.body.getAttribute('data-theme') === 'dark'
+    };
+    console.log('QPTour: Saved theme state', savedTheme);
+  }
+
+  /**
+   * Restore theme state if changed
+   */
+  function restoreThemeState() {
+    if (!savedTheme) return;
+    
+    const currentIsDark = document.body.classList.contains('dark') || 
+                          document.documentElement.classList.contains('dark') ||
+                          document.body.getAttribute('data-theme') === 'dark';
+    
+    if (currentIsDark !== savedTheme.isDark) {
+      console.log('QPTour: Theme changed during tour, restoring...');
+      
+      // Restore data-theme attribute
+      if (savedTheme.dataTheme) {
+        document.body.setAttribute('data-theme', savedTheme.dataTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme.dataTheme);
+      }
+      
+      // Restore dark/light class
+      if (savedTheme.isDark) {
+        document.body.classList.add('dark');
+        document.documentElement.classList.add('dark');
+        document.body.classList.remove('light');
+        document.documentElement.classList.remove('light');
+      } else {
+        document.body.classList.remove('dark');
+        document.documentElement.classList.remove('dark');
+        document.body.classList.add('light');
+        document.documentElement.classList.add('light');
+      }
+    }
+  }
+
+  /**
+   * Start observing theme changes
+   */
+  function startThemeObserver() {
+    if (themeObserver) themeObserver.disconnect();
+    
+    themeObserver = new MutationObserver((mutations) => {
+      if (!isActive) return;
+      
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && 
+            (mutation.attributeName === 'class' || mutation.attributeName === 'data-theme')) {
+          // Theme might have changed, restore it
+          restoreThemeState();
+        }
+      }
+    });
+    
+    // Observe body and html for class/attribute changes
+    themeObserver.observe(document.body, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+  }
+
+  /**
+   * Stop observing theme changes
+   */
+  function stopThemeObserver() {
+    if (themeObserver) {
+      themeObserver.disconnect();
+      themeObserver = null;
+    }
+  }
+
+  /**
    * Start the tour
    */
   async function start() {
@@ -287,6 +372,10 @@ const QPTour = (function() {
     
     isActive = true;
     currentStepIndex = 0;
+    
+    // Preserve theme state before anything else
+    saveThemeState();
+    startThemeObserver();
     
     lockScroll();
     createUI();
@@ -385,58 +474,82 @@ const QPTour = (function() {
       }
       .tour-overlay.active { opacity: 1; }
       
-      /* Elegant spotlight with glow */
+      /* Elegant spotlight with gradient glow */
       .tour-spotlight {
         position: absolute;
         border-radius: 12px;
-        border: 2px solid var(--gold, #c9a84c);
+        border: 2px solid #c9a84c;
         background: transparent;
         box-shadow: 
-          0 0 0 4000px rgba(10, 10, 15, 0.5),
-          0 0 60px rgba(201,168,76,0.25),
-          0 0 30px rgba(201,168,76,0.15),
-          inset 0 0 20px rgba(201,168,76,0.05);
+          0 0 0 4000px rgba(10, 10, 15, 0.55),
+          0 0 80px rgba(201,168,76,0.35),
+          0 0 40px rgba(0,171,255,0.15),
+          0 0 20px rgba(201,168,76,0.25),
+          inset 0 0 25px rgba(201,168,76,0.08);
         transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.34, 1.56, 0.64, 1);
         pointer-events: none;
         z-index: 1;
       }
       
-      /* Feature emphasis - extra glow */
+      /* Feature emphasis - extra vibrant glow */
       .tour-spotlight.emphasis-feature {
         border-width: 2px;
+        border-color: #e6c876;
         box-shadow: 
-          0 0 0 4000px rgba(10, 10, 15, 0.5),
-          0 0 80px rgba(201,168,76,0.35),
-          0 0 40px rgba(201,168,76,0.25),
-          inset 0 0 30px rgba(201,168,76,0.08);
+          0 0 0 4000px rgba(10, 10, 15, 0.55),
+          0 0 100px rgba(201,168,76,0.45),
+          0 0 60px rgba(0,212,255,0.25),
+          0 0 30px rgba(201,168,76,0.35),
+          inset 0 0 35px rgba(201,168,76,0.1);
+        animation: featureGlow 2s ease-in-out infinite;
+      }
+      @keyframes featureGlow {
+        0%, 100% {
+          box-shadow: 
+            0 0 0 4000px rgba(10, 10, 15, 0.55),
+            0 0 100px rgba(201,168,76,0.45),
+            0 0 60px rgba(0,212,255,0.25),
+            0 0 30px rgba(201,168,76,0.35),
+            inset 0 0 35px rgba(201,168,76,0.1);
+        }
+        50% {
+          box-shadow: 
+            0 0 0 4000px rgba(10, 10, 15, 0.55),
+            0 0 120px rgba(230,200,118,0.5),
+            0 0 70px rgba(0,212,255,0.35),
+            0 0 40px rgba(230,200,118,0.4),
+            inset 0 0 40px rgba(230,200,118,0.12);
+        }
       }
       
-      /* Action emphasis - pulsing border */
+      /* Action emphasis - pulsing gold→cyan border */
       .tour-spotlight.emphasis-action {
-        animation: spotlightPulseAction 1.5s ease-in-out infinite;
+        animation: spotlightPulseAction 1.2s ease-in-out infinite;
       }
       @keyframes spotlightPulseAction {
         0%, 100% { 
           border-color: #c9a84c;
           box-shadow: 
-            0 0 0 4000px rgba(10, 10, 15, 0.5),
-            0 0 60px rgba(201,168,76,0.3),
-            0 0 30px rgba(201,168,76,0.2);
+            0 0 0 4000px rgba(10, 10, 15, 0.55),
+            0 0 70px rgba(201,168,76,0.4),
+            0 0 35px rgba(0,171,255,0.2),
+            0 0 20px rgba(201,168,76,0.3);
         }
         50% { 
-          border-color: #e6c876;
+          border-color: #00d4ff;
           box-shadow: 
-            0 0 0 4000px rgba(10, 10, 15, 0.5),
-            0 0 80px rgba(230,200,118,0.4),
-            0 0 40px rgba(230,200,118,0.3);
+            0 0 0 4000px rgba(10, 10, 15, 0.55),
+            0 0 90px rgba(0,212,255,0.45),
+            0 0 50px rgba(201,168,76,0.25),
+            0 0 25px rgba(0,212,255,0.35);
         }
       }
       
-      /* Premium callout card */
+      /* Premium callout card with gradient border glow */
       .tour-callout {
         position: absolute;
         background: linear-gradient(135deg, rgba(26,26,31,0.98), rgba(20,20,25,0.98));
-        border: 1px solid rgba(201,168,76,0.5);
+        border: 2px solid transparent;
         border-radius: 16px;
         width: 300px;
         max-width: calc(100vw - 32px);
@@ -448,20 +561,40 @@ const QPTour = (function() {
         pointer-events: auto;
         box-shadow: 
           0 20px 60px rgba(0,0,0,0.5),
-          0 0 40px rgba(201,168,76,0.1),
-          inset 0 1px 0 rgba(255,255,255,0.05);
+          0 0 50px rgba(201,168,76,0.2),
+          0 0 30px rgba(0,171,255,0.15),
+          inset 0 1px 0 rgba(255,255,255,0.08);
         z-index: 2;
-        overflow: hidden;
+        overflow: visible;
       }
+      /* Gradient border effect using pseudo-element */
       .tour-callout::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #c9a84c, #e6c876, #00d4ff, #00abff);
+        z-index: -1;
+        opacity: 0.8;
+      }
+      .tour-callout::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(26,26,31,0.98), rgba(20,20,25,0.98));
+        z-index: -1;
+      }
+      /* Top accent bar */
+      .tour-callout .tour-body::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, var(--gold, #c9a84c), var(--cyan, #00abff));
-        opacity: 0.8;
+        background: linear-gradient(90deg, #c9a84c 0%, #e6c876 40%, #00d4ff 60%, #00abff 100%);
+        border-radius: 14px 14px 0 0;
       }
       .tour-callout.active {
         opacity: 1;
@@ -470,6 +603,9 @@ const QPTour = (function() {
       
       .tour-body {
         padding: 20px;
+        position: relative;
+        border-radius: 14px;
+        overflow: hidden;
       }
       
       .tour-section-badge {
@@ -502,17 +638,34 @@ const QPTour = (function() {
       }
       
       .tour-progress-bar {
-        height: 3px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 2px;
+        height: 4px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 4px;
         margin-bottom: 16px;
         overflow: hidden;
+        position: relative;
       }
       .tour-progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, var(--gold, #c9a84c), var(--cyan, #00abff));
-        border-radius: 2px;
+        background: linear-gradient(90deg, #c9a84c 0%, #e6c876 30%, #00d4ff 70%, #00abff 100%);
+        border-radius: 4px;
         transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 0 12px rgba(201,168,76,0.6), 0 0 24px rgba(0,171,255,0.4);
+        position: relative;
+      }
+      .tour-progress-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: progressShimmer 2s ease-in-out infinite;
+      }
+      @keyframes progressShimmer {
+        0%, 100% { transform: translateX(-100%); }
+        50% { transform: translateX(100%); }
       }
       
       .tour-footer {
@@ -645,8 +798,11 @@ const QPTour = (function() {
           margin-bottom: 12px;
         }
         .tour-progress-bar {
-          height: 2px;
+          height: 3px;
           margin-bottom: 12px;
+        }
+        .tour-progress-fill {
+          box-shadow: 0 0 8px rgba(201,168,76,0.5), 0 0 16px rgba(0,171,255,0.3);
         }
         .tour-footer {
           padding-top: 10px;
@@ -789,14 +945,18 @@ const QPTour = (function() {
     // Navigate if needed
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     if (step.page !== currentView) {
-      // Save state for resume
+      // Save state for resume (including theme)
       sessionStorage.setItem('qp_tour_state', JSON.stringify({
         sectionsToPlay,
         currentStepIndex: index,
-        completedSections
+        completedSections,
+        savedTheme
       }));
       
       await navigateToPage(step.page);
+      
+      // Ensure theme is still correct after navigation
+      restoreThemeState();
     }
     
     // Find target
@@ -857,64 +1017,155 @@ const QPTour = (function() {
   }
 
   /**
-   * Position callout relative to target
+   * Position callout with smart placement - NEVER overlaps spotlight
    */
-  function positionCallout(position, targetRect) {
+  function positionCallout(preferredPosition, targetRect) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 14;
+    const gap = 20; // Increased gap for clarity
     const isMobile = window.innerWidth <= 650;
     const calloutWidth = isMobile ? 280 : 300;
+    const calloutHeight = callout.offsetHeight || 200; // Estimate if not yet rendered
+    
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Spotlight rect with padding (what we must NOT overlap)
+    const spotlightPad = 12;
+    const spotlightRect = {
+      left: targetRect.left - spotlightPad,
+      top: targetRect.top - spotlightPad,
+      right: targetRect.right + spotlightPad,
+      bottom: targetRect.bottom + spotlightPad,
+      width: targetRect.width + spotlightPad * 2,
+      height: targetRect.height + spotlightPad * 2
+    };
+    
+    // Calculate available space in each direction
+    const spaceTop = spotlightRect.top - 16; // 16px margin from edge
+    const spaceBottom = viewportHeight - spotlightRect.bottom - 16;
+    const spaceLeft = spotlightRect.left - 16;
+    const spaceRight = viewportWidth - spotlightRect.right - 16;
+    
+    // Determine best position - prioritize where there's most space
+    // and never overlap the spotlight
+    const positions = [
+      { dir: 'bottom', space: spaceBottom, fits: spaceBottom >= calloutHeight + gap },
+      { dir: 'top', space: spaceTop, fits: spaceTop >= calloutHeight + gap },
+      { dir: 'right', space: spaceRight, fits: spaceRight >= calloutWidth + gap },
+      { dir: 'left', space: spaceLeft, fits: spaceLeft >= calloutWidth + gap }
+    ];
+    
+    // Sort by: fits first, then by available space
+    positions.sort((a, b) => {
+      if (a.fits && !b.fits) return -1;
+      if (!a.fits && b.fits) return 1;
+      return b.space - a.space;
+    });
+    
+    // Use preferred position if it fits, otherwise pick best
+    let finalPosition = positions[0].dir;
+    const preferredFits = positions.find(p => p.dir === preferredPosition)?.fits;
+    if (preferredFits) {
+      finalPosition = preferredPosition;
+    }
     
     // Reset arrow classes
     arrow.className = 'tour-arrow';
     
     let left, top;
     
-    // Calculate position
-    switch (position) {
+    // Calculate position based on final direction
+    switch (finalPosition) {
       case 'top':
         left = targetRect.left + (targetRect.width - calloutWidth) / 2;
-        top = targetRect.top - callout.offsetHeight - gap;
+        top = spotlightRect.top - calloutHeight - gap;
         arrow.classList.add('bottom');
         arrow.style.left = '50%';
         arrow.style.marginLeft = '-5px';
         arrow.style.top = '';
+        arrow.style.right = '';
         break;
         
       case 'bottom':
         left = targetRect.left + (targetRect.width - calloutWidth) / 2;
-        top = targetRect.bottom + gap;
+        top = spotlightRect.bottom + gap;
         arrow.classList.add('top');
         arrow.style.left = '50%';
         arrow.style.marginLeft = '-5px';
         arrow.style.top = '';
+        arrow.style.right = '';
         break;
         
       case 'left':
-        left = targetRect.left - calloutWidth - gap;
-        top = targetRect.top + (targetRect.height - callout.offsetHeight) / 2;
+        left = spotlightRect.left - calloutWidth - gap;
+        top = targetRect.top + (targetRect.height - calloutHeight) / 2;
         arrow.classList.add('right');
         arrow.style.top = '50%';
         arrow.style.marginTop = '-5px';
         arrow.style.left = '';
+        arrow.style.right = '';
         break;
         
       case 'right':
-        left = targetRect.right + gap;
-        top = targetRect.top + (targetRect.height - callout.offsetHeight) / 2;
+        left = spotlightRect.right + gap;
+        top = targetRect.top + (targetRect.height - calloutHeight) / 2;
         arrow.classList.add('left');
         arrow.style.top = '50%';
         arrow.style.marginTop = '-5px';
         arrow.style.left = '';
+        arrow.style.right = '';
         break;
     }
     
-    // Keep on screen
-    const maxLeft = window.innerWidth - calloutWidth - 16;
-    const maxTop = window.innerHeight - callout.offsetHeight - 16;
+    // Keep callout on screen (with 16px margin)
+    const maxLeft = viewportWidth - calloutWidth - 16;
+    const maxTop = viewportHeight - calloutHeight - 16;
     left = Math.max(16, Math.min(left, maxLeft));
     top = Math.max(16, Math.min(top, maxTop));
+    
+    // CRITICAL: Final overlap check - if callout would still overlap spotlight,
+    // force it to the opposite side of the viewport
+    const calloutRect = {
+      left: left,
+      top: top,
+      right: left + calloutWidth,
+      bottom: top + calloutHeight
+    };
+    
+    const overlaps = !(calloutRect.right < spotlightRect.left || 
+                       calloutRect.left > spotlightRect.right || 
+                       calloutRect.bottom < spotlightRect.top || 
+                       calloutRect.top > spotlightRect.bottom);
+    
+    if (overlaps) {
+      // Emergency repositioning - put callout in opposite half of screen
+      const spotlightCenterY = (spotlightRect.top + spotlightRect.bottom) / 2;
+      const spotlightCenterX = (spotlightRect.left + spotlightRect.right) / 2;
+      
+      if (spotlightCenterY < viewportHeight / 2) {
+        // Spotlight in top half - put callout at bottom
+        top = Math.max(spotlightRect.bottom + gap, viewportHeight - calloutHeight - 32);
+        arrow.className = 'tour-arrow top';
+      } else {
+        // Spotlight in bottom half - put callout at top
+        top = Math.min(spotlightRect.top - calloutHeight - gap, 32);
+        arrow.className = 'tour-arrow bottom';
+      }
+      
+      // Also adjust horizontal if needed
+      if (spotlightCenterX < viewportWidth / 2) {
+        // Spotlight on left - push callout right
+        left = Math.max(spotlightRect.right + 16, viewportWidth / 2);
+      } else {
+        // Spotlight on right - push callout left
+        left = Math.min(spotlightRect.left - calloutWidth - 16, viewportWidth / 2 - calloutWidth);
+      }
+      
+      // Final bounds check
+      left = Math.max(16, Math.min(left, maxLeft));
+      top = Math.max(16, Math.min(top, maxTop));
+    }
     
     callout.style.left = left + 'px';
     callout.style.top = top + 'px';
@@ -940,6 +1191,8 @@ const QPTour = (function() {
    */
   function exit() {
     isActive = false;
+    stopThemeObserver();
+    savedTheme = null;
     unlockScroll();
     destroyUI();
     sessionStorage.removeItem('qp_tour_state');
@@ -954,6 +1207,8 @@ const QPTour = (function() {
     }
     
     isActive = false;
+    stopThemeObserver();
+    savedTheme = null;
     unlockScroll();
     destroyUI();
     sessionStorage.removeItem('qp_tour_state');
@@ -1016,6 +1271,16 @@ const QPTour = (function() {
       });
       
       isActive = true;
+      
+      // Restore theme state if saved, otherwise save current
+      if (state.savedTheme) {
+        savedTheme = state.savedTheme;
+        restoreThemeState();
+      } else {
+        saveThemeState();
+      }
+      startThemeObserver();
+      
       lockScroll();
       createUI();
       
