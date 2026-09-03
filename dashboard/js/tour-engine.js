@@ -37,138 +37,106 @@ const QPTour = (function() {
     'settings': '[data-view="settings"]'
   };
 
-  // Tour step definitions
+  // Tour step definitions - focus on INTERESTING, ACTIONABLE things
   const TOUR_STEPS = {
     research: [
       {
-        id: 'research-intro',
+        id: 'research-paper',
         page: 'research',
-        selector: '#view-research .view-header',
-        title: 'Research Hub',
-        content: 'Papers explaining the logic behind every indicator.',
+        selector: '.research-card:first-child',
+        title: 'Start here',
+        content: 'This paper explains why 83% win rates can still lose money. Read it first.',
+        position: 'right'
+      },
+      {
+        id: 'research-tier-card',
+        page: 'marketplace',
+        selector: '.tier-card[data-tier="research"]',
+        title: 'Your build menu',
+        content: 'Tap this to open 255 indicator combinations. Pick one from each course.',
         position: 'bottom'
       },
       {
-        id: 'research-papers',
-        page: 'research',
-        selector: '.research-grid',
-        title: 'Research Papers',
-        content: 'Each paper covers a specific concept—why it works, when it fails.',
-        position: 'top'
-      },
-      {
-        id: 'research-build-intro',
+        id: 'research-courses',
         page: 'marketplace',
-        selector: '#view-marketplace .view-header',
-        title: 'Build System',
-        content: 'Build custom indicators. Pick one dish from each course.',
-        position: 'bottom'
-      },
-      {
-        id: 'research-tier-ladder',
-        page: 'marketplace',
-        selector: '.tier-ladder',
-        title: 'Your Menu',
-        content: 'Research tier: 255 combinations available.',
-        position: 'bottom'
-      },
-      {
-        id: 'research-generate',
-        page: 'marketplace',
-        selector: '.order-panel',
-        title: 'Generate',
-        content: 'Select all courses, then generate your custom Pine Script.',
-        position: 'left'
+        selector: '.menu-course:first-child',
+        title: 'Pick a dish',
+        content: 'Each course has 3 options. Select one from each, then generate your indicator.',
+        position: 'right'
       }
     ],
     
     recoil: [
       {
-        id: 'recoil-intro',
+        id: 'recoil-animation',
         page: 'recoil',
-        selector: '.recoil-hero',
-        title: 'Recoil',
-        content: 'Volatility-based entries. Marks mean-reversion setups.',
+        selector: '#recoil-animation',
+        title: 'This is Recoil',
+        content: 'Spots when price stretches too far. Green = potential long, red = potential short.',
         position: 'bottom'
       },
       {
-        id: 'recoil-tv-access',
+        id: 'recoil-tv',
         page: 'recoil',
-        selector: '.tv-username-field',
-        title: 'TradingView Access',
-        content: 'Enter your exact TradingView username to unlock the indicator.',
+        selector: '#tv-username-recoil',
+        title: 'Unlock it now',
+        content: 'Type your TradingView username exactly. The indicator appears in your invite-only scripts.',
         position: 'bottom',
         interactive: true
-      },
-      {
-        id: 'recoil-guide',
-        page: 'recoil',
-        selector: '.instrument-tab[data-panel="recoil-guide"]',
-        title: 'Operator Guide',
-        content: 'Read this once. Every setting explained.',
-        position: 'bottom'
       },
       {
         id: 'recoil-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="recoil"]',
-        title: 'Recoil Menu',
-        content: '255 more combinations for volatility strategies.',
-        position: 'right'
+        title: 'Recoil menu unlocked',
+        content: '255 volatility-tuned combinations now available to build.',
+        position: 'bottom'
       }
     ],
     
     terminal: [
       {
-        id: 'terminal-intro',
+        id: 'terminal-animation',
         page: 'meridian',
-        selector: '.meridian-hero',
-        title: 'Meridian',
-        content: 'AMD cycle tracking. Accumulation, Manipulation, Distribution.',
+        selector: '#meridian-animation',
+        title: 'This is Meridian',
+        content: 'Tracks AMD cycles. A = accumulation, M = manipulation, D = distribution.',
         position: 'bottom'
       },
       {
-        id: 'terminal-tv-access',
+        id: 'terminal-tv',
         page: 'meridian',
-        selector: '.tv-username-field',
-        title: 'TradingView Access',
-        content: 'Enter your username to unlock Meridian.',
+        selector: '#tv-username-meridian',
+        title: 'Unlock it',
+        content: 'Same deal—enter your TradingView username to access Meridian.',
         position: 'bottom',
         interactive: true
-      },
-      {
-        id: 'terminal-guide',
-        page: 'meridian',
-        selector: '.instrument-tab[data-panel="meridian-guide"]',
-        title: 'Operator Guide',
-        content: 'Critical: Meridian fails above 15M charts.',
-        position: 'bottom'
       },
       {
         id: 'terminal-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="terminal"]',
-        title: 'Terminal Menu',
-        content: '255 AMD-focused combinations.',
-        position: 'right'
+        title: 'Terminal menu unlocked',
+        content: '255 AMD-focused combinations ready to build.',
+        position: 'bottom'
       }
     ],
     
     suite: [
       {
-        id: 'suite-intro',
+        id: 'suite-animation',
         page: 'cockpit',
-        selector: '.cockpit-hero',
-        title: 'Cockpit',
-        content: 'Multi-timeframe overlay. EMAs, liquidity, FVGs, regime score.',
+        selector: '#cockpit-animation',
+        title: 'This is Cockpit',
+        content: 'Multi-timeframe overlay. 4 EMAs, liquidity levels, FVGs, and regime scoring.',
         position: 'bottom'
       },
       {
-        id: 'suite-tv-access',
+        id: 'suite-tv',
         page: 'cockpit',
-        selector: '.tv-username-field',
-        title: 'TradingView Access',
-        content: 'Enter your username to unlock Cockpit.',
+        selector: '#tv-username-cockpit',
+        title: 'Unlock it',
+        content: 'Enter your TradingView username to access Cockpit.',
         position: 'bottom',
         interactive: true
       },
@@ -177,16 +145,16 @@ const QPTour = (function() {
         page: 'cockpit',
         selector: '.suite-tab[data-suite-panel="performance"]',
         title: 'Performance Tracker',
-        content: 'Suite-exclusive. AI analysis of your trading edge.',
+        content: 'Upload your MT5 history. AI grades your edge and tells you what to fix.',
         position: 'bottom'
       },
       {
         id: 'suite-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="suite"]',
-        title: 'Suite Menu',
-        content: 'The complete menu. All 255 combinations.',
-        position: 'right'
+        title: 'Full menu unlocked',
+        content: 'All 255 combinations from all instruments. Build anything.',
+        position: 'bottom'
       }
     ]
   };
@@ -311,7 +279,9 @@ const QPTour = (function() {
       .tour-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background: rgba(10,10,15,0.5);
         opacity: 0;
         transition: opacity 0.4s ease;
       }
@@ -319,8 +289,14 @@ const QPTour = (function() {
       
       .tour-spotlight {
         position: absolute;
-        border-radius: 8px;
-        box-shadow: 0 0 0 9999px rgba(0,0,0,0.8);
+        border-radius: 12px;
+        background: transparent;
+        box-shadow: 
+          0 0 0 4px rgba(201,168,76,0.6),
+          0 0 20px rgba(201,168,76,0.3),
+          0 0 0 9999px rgba(10,10,15,0.7);
+        backdrop-filter: blur(0);
+        -webkit-backdrop-filter: blur(0);
         transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
       }
