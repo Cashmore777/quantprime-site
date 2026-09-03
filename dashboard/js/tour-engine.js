@@ -757,14 +757,22 @@ const QPTour = (function() {
       return;
     }
     
-    // Always scroll to position element with room for callout above
+    // Scroll element into view - use #main container (dashboard's scroll container)
+    const mainContainer = document.getElementById('main');
     const targetRect = target.getBoundingClientRect();
     const calloutSpace = 280; // Approximate callout height + gap
     const idealTop = calloutSpace + 20; // Where we want the element's top to be
     
-    // Calculate where to scroll
-    const scrollTo = window.scrollY + targetRect.top - idealTop;
-    window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    if (mainContainer) {
+      // Calculate scroll within the main container
+      const containerRect = mainContainer.getBoundingClientRect();
+      const scrollTo = mainContainer.scrollTop + (targetRect.top - containerRect.top) - idealTop;
+      mainContainer.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    } else {
+      // Fallback to window scroll
+      const scrollTo = window.scrollY + targetRect.top - idealTop;
+      window.scrollTo({ top: Math.max(0, scrollTo), behavior: 'smooth' });
+    }
     await sleep(300); // Wait for scroll to complete
     
     const rect = target.getBoundingClientRect();
