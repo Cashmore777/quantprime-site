@@ -576,12 +576,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   justify-content: center;
   cursor: pointer;
   color: var(--text-2);
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-theme-toggle:hover {
   border-color: var(--gold);
   color: var(--gold);
+  background: var(--gold-glow);
+  transform: scale(1.05);
+}
+
+.sidebar-theme-toggle:active {
+  transform: scale(0.95);
+  transition-duration: 0.1s;
 }
 
 /* Show sun in dark mode, moon in light mode */
@@ -1337,13 +1344,20 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   justify-content: center;
   cursor: pointer;
   color: var(--text-2);
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-nav:hover {
   border-color: var(--gold);
   color: var(--gold);
   background: var(--gold-glow);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.2);
+}
+
+.carousel-nav:active {
+  transform: scale(0.95);
+  transition-duration: 0.1s;
 }
 
 .papers-carousel {
@@ -7725,13 +7739,27 @@ button, .nav-item, .room, .video-item, .filter-chip {
 }
 
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(20px) scale(0.95);
+    filter: blur(2px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
 }
 
 @keyframes toastOut {
-  from { opacity: 1; transform: translateX(-50%) translateY(0); }
-  to { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  from { 
+    opacity: 1; 
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  to { 
+    opacity: 0; 
+    transform: translateX(-50%) translateY(-10px) scale(0.95);
+  }
 }
 
 /* Action cards */
@@ -7741,18 +7769,40 @@ button, .nav-item, .room, .video-item, .filter-chip {
   border-radius: var(--card-radius);
   padding: 20px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle glow effect */
+.action-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(201,168,76,0.05) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .action-card:hover {
   border-color: var(--gold);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md), 0 0 30px -10px rgba(201,168,76,0.25);
+}
+
+.action-card:hover::after {
+  opacity: 1;
+}
+
+.action-card:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 0.1s;
 }
 
 .action-card .action-icon {
@@ -7762,11 +7812,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.25s ease;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .action-card:hover .action-icon {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .action-card h4 {
