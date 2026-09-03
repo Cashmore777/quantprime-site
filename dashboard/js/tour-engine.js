@@ -1,7 +1,13 @@
 /**
- * QP Dashboard Onboarding Tour Engine v20
+ * QP Dashboard Onboarding Tour Engine v31
  * 
  * Changelog:
+ * v31 - MOBILE PERFECTION
+ *   - Glow reduced to 0.2 opacity, gold-only, no pulse
+ *   - Callout guaranteed 16px gap from spotlight
+ *   - Arrow direction fixed for all positions
+ *   - Mobile width: 85vw max, 16px edge margins
+ * 
  * v20 - PREMIUM TIER-AWARE BUILD MENU TOUR
  *   - Tier-aware: Shows only build menus user hasn't toured
  *   - Premium animations: Spring physics, spotlight glow morphing
@@ -596,44 +602,41 @@ const QPTour = (function() {
         opacity: 1;
       }
       
-      /* Glow ring around spotlight */
+      /* Glow ring around spotlight - SUBTLE, gold-only */
       .tour-spotlight-glow {
         position: absolute;
-        inset: -4px;
+        inset: -2px;
         border-radius: inherit;
-        background: linear-gradient(135deg, #c9a84c, #00d4ff);
-        opacity: 0.6;
-        filter: blur(8px);
-        animation: glowPulse 2.5s ease-in-out infinite;
+        background: rgba(201, 168, 76, 0.25);
+        opacity: 0.2;
+        filter: blur(4px);
+        animation: subtleGlow 3s ease-in-out infinite;
       }
       
-      @keyframes glowPulse {
-        0%, 100% { opacity: 0.4; transform: scale(1); }
-        50% { opacity: 0.7; transform: scale(1.02); }
+      /* Very subtle breathe - barely perceptible */
+      @keyframes subtleGlow {
+        0%, 100% { opacity: 0.15; }
+        50% { opacity: 0.22; }
       }
       
-      /* Feature emphasis - stronger glow */
+      /* Feature emphasis - slightly stronger but still subtle */
       .tour-spotlight.emphasis-feature .tour-spotlight-glow {
-        animation: featureGlow 2s ease-in-out infinite;
+        background: rgba(201, 168, 76, 0.3);
+        animation: featureGlow 2.5s ease-in-out infinite;
       }
       @keyframes featureGlow {
-        0%, 100% { opacity: 0.5; filter: blur(8px); }
-        50% { opacity: 0.85; filter: blur(12px); }
+        0%, 100% { opacity: 0.18; }
+        50% { opacity: 0.28; }
       }
       
-      /* Action emphasis - color shift */
+      /* Action emphasis - gold with hint of cyan in border only */
       .tour-spotlight.emphasis-action .tour-spotlight-glow {
-        animation: actionGlow 1.8s ease-in-out infinite;
+        background: rgba(201, 168, 76, 0.3);
+        animation: actionGlow 2s ease-in-out infinite;
       }
       @keyframes actionGlow {
-        0%, 100% { 
-          background: linear-gradient(135deg, #c9a84c, #00d4ff);
-          opacity: 0.6;
-        }
-        50% { 
-          background: linear-gradient(135deg, #00d4ff, #c9a84c);
-          opacity: 0.9;
-        }
+        0%, 100% { opacity: 0.2; }
+        50% { opacity: 0.3; }
       }
       
       /* ═══════════════════════════════════════════════════════════════════
@@ -642,7 +645,7 @@ const QPTour = (function() {
       .tour-callout {
         position: fixed;
         width: 320px;
-        max-width: calc(100vw - 32px);
+        max-width: min(85vw, 320px);
         opacity: 0;
         transform: translateY(12px) scale(0.96);
         transition: 
@@ -868,6 +871,7 @@ const QPTour = (function() {
       
       /* ═══════════════════════════════════════════════════════════════════
          ARROW - Points to spotlight
+         Position-specific classes set rotation to point correctly
          ═══════════════════════════════════════════════════════════════════ */
       .tour-arrow {
         position: absolute;
@@ -890,6 +894,20 @@ const QPTour = (function() {
         inset: 2px;
         background: #14141a;
         border-radius: 1px;
+      }
+      
+      /* Arrow direction classes - applied via JS */
+      .tour-arrow.arrow-up .tour-arrow-inner {
+        transform: rotate(45deg);
+      }
+      .tour-arrow.arrow-down .tour-arrow-inner {
+        transform: rotate(225deg);
+      }
+      .tour-arrow.arrow-left .tour-arrow-inner {
+        transform: rotate(-45deg);
+      }
+      .tour-arrow.arrow-right .tour-arrow-inner {
+        transform: rotate(135deg);
       }
       
       /* ═══════════════════════════════════════════════════════════════════
@@ -972,8 +990,8 @@ const QPTour = (function() {
          ═══════════════════════════════════════════════════════════════════ */
       @media (max-width: 650px) {
         .tour-callout {
-          width: calc(100vw - 32px);
-          max-width: 340px;
+          width: 85vw;
+          max-width: 320px;
         }
         
         .tour-callout-inner {
@@ -1037,9 +1055,10 @@ const QPTour = (function() {
           border-radius: 12px;
         }
         
+        /* Keep glow subtle on mobile too */
         .tour-spotlight-glow {
-          inset: -3px;
-          filter: blur(6px);
+          inset: -2px;
+          filter: blur(4px);
         }
       }
       
@@ -1347,10 +1366,13 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, spotlight) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 12;
+    const gap = 16; // MINIMUM gap - never less
     
     const isMobile = window.innerWidth <= 650;
-    const calloutWidth = isMobile ? Math.min(window.innerWidth - 32, 340) : 320;
+    // Mobile: 85vw max, capped at 320px. 16px margins on each side.
+    const calloutWidth = isMobile 
+      ? Math.min(window.innerWidth * 0.85, 320) 
+      : 320;
     
     // Get callout height
     callout.style.visibility = 'hidden';
@@ -1363,13 +1385,13 @@ const QPTour = (function() {
     const headerOffset = isMobile ? 60 : 0;
     const navOffset = isMobile ? 90 : 0;
     
-    // Available space
+    // Available space (accounting for the 16px gap requirement)
     const spaceAbove = spotlight.top - headerOffset - 20;
     const spaceBelow = vh - spotlight.bottom - navOffset - 20;
     const spaceLeft = spotlight.left - 20;
     const spaceRight = vw - spotlight.right - 20;
     
-    // Check what fits
+    // Check what fits with the required gap
     const fits = {
       top: spaceAbove >= calloutHeight + gap,
       bottom: spaceBelow >= calloutHeight + gap,
@@ -1379,7 +1401,7 @@ const QPTour = (function() {
     
     let position = preferredPosition;
     
-    // Mobile: always prefer top/bottom
+    // Mobile: always prefer bottom (natural scroll direction), then top
     if (!fits[position]) {
       if (isMobile) {
         position = fits.bottom ? 'bottom' : fits.top ? 'top' : 'bottom';
@@ -1394,44 +1416,53 @@ const QPTour = (function() {
     
     let left, top;
     
-    // Reset arrow
+    // Reset arrow styles and classes
     arrow.style.cssText = '';
+    arrow.className = 'tour-arrow';
     
     switch (position) {
       case 'top':
+        // Callout ABOVE spotlight, arrow points DOWN (bottom of callout)
         left = spotlight.left + (spotlight.width - calloutWidth) / 2;
         top = spotlight.top - calloutHeight - gap;
-        arrow.style.bottom = '-7px';
+        arrow.classList.add('arrow-down');
+        arrow.style.bottom = '-8px';
         arrow.style.left = '50%';
-        arrow.style.marginLeft = '-8px';
+        arrow.style.transform = 'translateX(-50%)';
         break;
         
       case 'bottom':
+        // Callout BELOW spotlight, arrow points UP (top of callout)
         left = spotlight.left + (spotlight.width - calloutWidth) / 2;
         top = spotlight.bottom + gap;
-        arrow.style.top = '-7px';
+        arrow.classList.add('arrow-up');
+        arrow.style.top = '-8px';
         arrow.style.left = '50%';
-        arrow.style.marginLeft = '-8px';
+        arrow.style.transform = 'translateX(-50%)';
         break;
         
       case 'left':
+        // Callout LEFT of spotlight, arrow points RIGHT (right of callout)
         left = spotlight.left - calloutWidth - gap;
         top = spotlight.top + (spotlight.height - calloutHeight) / 2;
-        arrow.style.right = '-7px';
+        arrow.classList.add('arrow-right');
+        arrow.style.right = '-8px';
         arrow.style.top = '50%';
-        arrow.style.marginTop = '-8px';
+        arrow.style.transform = 'translateY(-50%)';
         break;
         
       case 'right':
+        // Callout RIGHT of spotlight, arrow points LEFT (left of callout)
         left = spotlight.right + gap;
         top = spotlight.top + (spotlight.height - calloutHeight) / 2;
-        arrow.style.left = '-7px';
+        arrow.classList.add('arrow-left');
+        arrow.style.left = '-8px';
         arrow.style.top = '50%';
-        arrow.style.marginTop = '-8px';
+        arrow.style.transform = 'translateY(-50%)';
         break;
     }
     
-    // Clamp to viewport
+    // Clamp to viewport with 16px edge margins
     const minLeft = 16;
     const maxLeft = vw - calloutWidth - 16;
     const originalLeft = left;
@@ -1442,22 +1473,27 @@ const QPTour = (function() {
     const originalTop = top;
     top = Math.max(minTop, Math.min(top, maxTop));
     
-    // Adjust arrow if callout was clamped
+    // Adjust arrow position if callout was clamped horizontally
     if (position === 'top' || position === 'bottom') {
       const offset = originalLeft - left;
       if (Math.abs(offset) > 10) {
-        const arrowLeft = Math.max(24, Math.min(calloutWidth - 24, (calloutWidth / 2) + offset));
+        // Move arrow to still point at spotlight center
+        const spotlightCenterX = spotlight.left + spotlight.width / 2;
+        const arrowLeft = Math.max(24, Math.min(calloutWidth - 24, spotlightCenterX - left));
         arrow.style.left = arrowLeft + 'px';
-        arrow.style.marginLeft = '-8px';
+        arrow.style.transform = 'translateX(-50%)';
       }
     }
     
+    // Adjust arrow position if callout was clamped vertically
     if (position === 'left' || position === 'right') {
       const offset = originalTop - top;
       if (Math.abs(offset) > 10) {
-        const arrowTop = Math.max(30, Math.min(calloutHeight - 30, (calloutHeight / 2) + offset));
+        // Move arrow to still point at spotlight center
+        const spotlightCenterY = spotlight.top + spotlight.height / 2;
+        const arrowTop = Math.max(30, Math.min(calloutHeight - 30, spotlightCenterY - top));
         arrow.style.top = arrowTop + 'px';
-        arrow.style.marginTop = '-8px';
+        arrow.style.transform = 'translateY(-50%)';
       }
     }
     
