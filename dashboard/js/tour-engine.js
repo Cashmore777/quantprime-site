@@ -757,26 +757,9 @@ const QPTour = (function() {
       return;
     }
     
-    // Scroll element into view with room for callout
-    // Use scrollIntoView with 'start' then offset for callout space
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    await sleep(300);
-    
-    // Now adjust scroll to leave room for callout (scroll up a bit)
-    const containers = [
-      document.getElementById('main'),
-      target.closest('.view'),
-      target.closest('[style*="overflow"]'),
-      document.documentElement
-    ].filter(Boolean);
-    
-    for (const container of containers) {
-      if (container.scrollHeight > container.clientHeight) {
-        container.scrollBy({ top: -260, behavior: 'smooth' });
-        break;
-      }
-    }
-    await sleep(200);
+    // Simple scroll - center element in view
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await sleep(350);
     
     const rect = target.getBoundingClientRect();
     const pad = 8;
