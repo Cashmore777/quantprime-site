@@ -16909,7 +16909,7 @@ function resetMenuSelections() {
   updateGenerateButton();
 }
 
-// Generate instrument with code-based dopamine animation
+// Generate instrument with premium minimal animation
 async function generateInstrument() {
   const displayId = updateBuildId();
   const fileId = getFileId();
@@ -16946,20 +16946,20 @@ async function generateInstrument() {
     }
   });
   
-  // Build code snippet cards
+  // Build code snippet cards - simplified styling
   let animHtml = '';
   selectedCourses.forEach(course => {
-    const snippet = codeSnippets[course][0]; // Get first line of code
+    const snippet = codeSnippets[course][0];
     animHtml += `<div class="gen-code-card phase-1"><code>${escapeHtml(snippet)}</code></div>`;
   });
   animContainer.innerHTML = animHtml;
   
   const codeCards = animContainer.querySelectorAll('.gen-code-card');
   
-  // Show overlay
+  // Show overlay with smooth fade
   overlay.classList.add('active');
   
-  // Fetch the code in parallel (using fileId which matches actual filenames)
+  // Fetch the code in parallel
   const ext = menuState.currentTier === 'research' ? 'txt' : 'pine';
   const codePromise = fetch(`/data/menus/${menuState.currentTier}/${fileId}.${ext}`).then(r => {
     if (!r.ok) throw new Error('Build not found');
@@ -16967,42 +16967,42 @@ async function generateInstrument() {
   });
   
   try {
-    // PHASE 1: Code cards appear scattered
-    await sleep(100);
+    // Brief pause for overlay to settle
+    await sleep(200);
     
-    // PHASE 2: Fly in to center
-    genText.textContent = 'Extracting code blocks...';
+    // PHASE 2: Cards appear with elegant stagger
+    genText.textContent = 'Analyzing components';
     genText.classList.add('show');
     codeCards.forEach((c, i) => {
       setTimeout(() => {
         c.classList.remove('phase-1');
         c.classList.add('phase-2');
-      }, i * 150);
+      }, i * 100);
     });
-    await sleep(600 + selectedCourses.length * 150);
+    await sleep(400 + selectedCourses.length * 100);
     
-    // PHASE 3: Suspense shake
-    genText.textContent = 'Merging syntax...';
+    // PHASE 3: Processing with scan effect
+    genText.textContent = 'Compiling instrument';
     codeCards.forEach(c => {
       c.classList.remove('phase-2');
       c.classList.add('phase-3');
     });
-    await sleep(800);
+    await sleep(1200);
     
-    // PHASE 4: Merge collision - cards shrink toward center
-    genText.textContent = 'Compiling...';
+    // PHASE 4: Converge and fade out
+    genText.textContent = 'Finalizing';
     codeCards.forEach(c => {
       c.classList.remove('phase-3');
       c.classList.add('phase-4');
     });
-    await sleep(400);
+    await sleep(500);
     
-    // PHASE 5: Explosion + rings + confetti
+    // PHASE 5: Subtle pulse + elegant sparkles
     mergeCenter.classList.add('explode');
     rings.forEach(r => r.classList.add('burst'));
-    spawnConfetti(confettiContainer, 60);
+    spawnSparkles(confettiContainer, 24);
     
-    await sleep(500);
+    await sleep(400);
     
     // PHASE 6: Reveal result card
     genText.classList.remove('show');
@@ -17064,36 +17064,42 @@ function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
 
-// Spawn confetti particles
-function spawnConfetti(container, count) {
-  const colors = ['#c9a84c', '#d4b85a', '#00abff', '#22c55e', '#ef4444', '#8b5cf6', '#f59e0b'];
-  const shapes = ['square', 'circle'];
+// Spawn elegant sparkle particles (gold→cyan gradient colors)
+function spawnSparkles(container, count) {
+  const colors = ['#c9a84c', '#d4b85a', '#00d4ff', '#00abff', 'rgba(201,168,76,0.8)', 'rgba(0,212,255,0.8)'];
   
   for (let i = 0; i < count; i++) {
-    const confetti = document.createElement('div');
-    confetti.className = 'confetti';
+    const sparkle = document.createElement('div');
+    sparkle.className = 'confetti';
     
-    // Random properties
+    // Premium sparkle - always circular, subtle
     const color = colors[Math.floor(Math.random() * colors.length)];
-    const shape = shapes[Math.floor(Math.random() * shapes.length)];
-    const size = 6 + Math.random() * 8;
+    const size = 2 + Math.random() * 4; // Smaller, more refined
     const angle = Math.random() * Math.PI * 2;
-    const velocity = 150 + Math.random() * 200;
+    const velocity = 80 + Math.random() * 120; // Slower, more elegant
     const tx = Math.cos(angle) * velocity;
-    const ty = Math.sin(angle) * velocity - 100; // Bias upward
+    const ty = Math.sin(angle) * velocity - 40;
     
-    confetti.style.cssText = `
+    sparkle.style.cssText = `
       width: ${size}px;
       height: ${size}px;
       background: ${color};
-      border-radius: ${shape === 'circle' ? '50%' : '2px'};
+      border-radius: 50%;
+      box-shadow: 0 0 ${size * 2}px ${color};
       --tx: ${tx}px;
       --ty: ${ty}px;
     `;
     
-    confetti.classList.add('pop');
-    container.appendChild(confetti);
+    // Stagger the animation start
+    sparkle.style.animationDelay = `${Math.random() * 0.2}s`;
+    sparkle.classList.add('pop');
+    container.appendChild(sparkle);
   }
+}
+
+// Keep old function name for backwards compatibility
+function spawnConfetti(container, count) {
+  spawnSparkles(container, count);
 }
 
 // Close generation overlay
