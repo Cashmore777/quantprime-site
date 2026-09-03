@@ -1,7 +1,13 @@
 /**
- * QP Dashboard Onboarding Tour Engine v36
+ * QP Dashboard Onboarding Tour Engine v37
  * 
  * Changelog:
+ * v37 - SCROLL BEFORE SHOW, NOT AFTER
+ *   - Check if callout will fit BEFORE showing spotlight/callout
+ *   - If not enough room, scroll first to make space
+ *   - Reposition spotlight after scroll, THEN show everything
+ *   - Eliminates the messy scroll-after-show repositioning
+ * 
  * v36 - FIXED SCROLL BREAKING SPOTLIGHT POSITION
  *   - After scroll-to-show-callout, reposition spotlight AND callout
  *   - Spotlight is position:fixed, so scrolling moves target but not spotlight
@@ -1318,22 +1324,45 @@ const QPTour = (function() {
     elements.spotlight.offsetHeight; // force reflow
     elements.spotlight.style.transition = ''; // restore CSS transitions
     
-    // 6. NOW add visible class (will fade in with transition)
+    // 6. Check if we need to scroll MORE to fit callout below spotlight
+    // Do this BEFORE showing anything, so we don't have to reposition after
+    const isMobile = window.innerWidth <= 650;
+    const mobileNavHeight = isMobile ? 90 : 0;
+    const calloutHeight = 280; // Approximate max callout height
+    const gap = 20;
+    
+    let targetRect = target.getBoundingClientRect();
+    const neededBottom = targetRect.bottom + gap + calloutHeight + mobileNavHeight;
+    
+    if (neededBottom > window.innerHeight) {
+      // Need more room - scroll target higher up on screen
+      const scrollNeeded = neededBottom - window.innerHeight + 20;
+      const main = document.getElementById('main');
+      if (main) {
+        main.scrollBy({ top: scrollNeeded, behavior: 'smooth' });
+        await sleep(400);
+        // Get fresh target position after scroll
+        targetRect = target.getBoundingClientRect();
+        // Reposition spotlight to follow target
+        positionSpotlight(target, step, false);
+      }
+    }
+    
+    // 7. NOW add visible class (will fade in with transition)
+    elements.spotlight.offsetHeight; // force reflow
+    elements.spotlight.style.transition = ''; // restore
     elements.spotlight.classList.add('visible');
     
-    console.log('QPTour: Spotlight visible class added', elements.spotlight.classList.contains('visible'));
-    
-    // 7. Wait for spotlight to appear, then position callout
+    // 8. Wait for spotlight to appear
     await sleep(100);
     
-    // 8. Get FRESH spotlight bounds AFTER it's positioned and visible
+    // 9. Get FRESH spotlight bounds
     const spotlightBounds = elements.spotlight.getBoundingClientRect();
-    console.log('QPTour: Fresh spotlight bounds', spotlightBounds);
     
-    // 9. Update callout content
+    // 10. Update callout content
     updateCalloutContent(step, index);
     
-    // 10. Position callout using fresh spotlight bounds
+    // 11. Position callout using fresh spotlight bounds
     positionCallout(step.position, {
       left: spotlightBounds.left,
       top: spotlightBounds.top,
@@ -1343,48 +1372,8 @@ const QPTour = (function() {
       height: spotlightBounds.height
     });
     
-    // 11. Show callout
+    // 12. Show callout
     elements.callout.classList.add('visible');
-    
-    // 12. After callout is visible, ensure it's fully in viewport
-    await sleep(100); // Let callout render
-    
-    const calloutRect = elements.callout.getBoundingClientRect();
-    const mobileNavHeight = 90; // Height of bottom nav bar
-    const viewportBottom = window.innerHeight - mobileNavHeight;
-    
-    console.log('QPTour: Callout rect', calloutRect, 'viewportBottom', viewportBottom);
-    
-    // If callout bottom is below visible area, scroll down
-    if (calloutRect.bottom > viewportBottom) {
-      const scrollNeeded = calloutRect.bottom - viewportBottom + 20; // +20 padding
-      const main = document.getElementById('main');
-      if (main) {
-        main.scrollBy({
-          top: scrollNeeded,
-          behavior: 'smooth'
-        });
-        
-        // CRITICAL: After scroll, reposition spotlight and callout!
-        // Spotlight is position:fixed, so scrolling the page moves the target
-        // but NOT the spotlight. We must reposition to follow the target.
-        await sleep(400); // Wait for scroll to complete
-        
-        // Reposition spotlight to where target NOW is
-        positionSpotlight(target, step, true);
-        
-        // Get fresh bounds and reposition callout
-        const newSpotlightBounds = elements.spotlight.getBoundingClientRect();
-        positionCallout(step.position, {
-          left: newSpotlightBounds.left,
-          top: newSpotlightBounds.top,
-          right: newSpotlightBounds.right,
-          bottom: newSpotlightBounds.bottom,
-          width: newSpotlightBounds.width,
-          height: newSpotlightBounds.height
-        });
-      }
-    }
   }
 
   /**
