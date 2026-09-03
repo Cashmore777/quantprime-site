@@ -21025,5 +21025,55 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script src="/assets/support-widget-v2.js"></script>
+
+<!-- Onboarding Tour System -->
+<script src="/dashboard/js/tour-engine.js"></script>
+<script src="/dashboard/js/tour-dev-tool.js"></script>
+<script>
+// Auto-trigger tour for new signups and upgrades
+(function() {
+  let lastKnownTier = null;
+  
+  // Hook into applyTierAccess to detect tier changes
+  const _origApplyTierAccess = applyTierAccess;
+  applyTierAccess = async function() {
+    const prevTier = lastKnownTier;
+    _origApplyTierAccess.apply(this, arguments);
+    
+    // Check if this is a tier upgrade or new signup
+    if (authUser && userTier && userTier !== 'free') {
+      // First time seeing this user's tier
+      if (prevTier === null) {
+        // Check if they need onboarding
+        const shouldStart = await QPTour.shouldAutoStart(userTier);
+        if (shouldStart) {
+          console.log('QPTour: Auto-starting tour for new user');
+          // Small delay to let UI settle
+          setTimeout(async () => {
+            await QPTour.init(userTier);
+            await QPTour.start();
+          }, 1500);
+        }
+      }
+      // Tier upgrade detected
+      else if (prevTier !== userTier) {
+        const shouldStart = await QPTour.shouldAutoStart(userTier);
+        if (shouldStart) {
+          console.log('QPTour: Auto-starting tour for upgrade', prevTier, '→', userTier);
+          setTimeout(async () => {
+            await QPTour.init(userTier);
+            await QPTour.start();
+          }, 1500);
+        }
+      }
+    }
+    
+    lastKnownTier = userTier;
+    
+    // Initialize dev tool (only renders for admin)
+    QPTourDevTool.init();
+  };
+})();
+</script>
 </body>
 </html>
