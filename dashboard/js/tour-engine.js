@@ -1,8 +1,11 @@
 /**
- * QP Dashboard Onboarding Tour Engine
+ * QP Dashboard Onboarding Tour Engine v2
  * 
- * Self-navigating tour system that moves users through dashboard sections.
- * Tracks completion per-section, not per-tier.
+ * Professional, seamless onboarding experience.
+ * - Visible navigation (opens menus, clicks items)
+ * - Smooth, deliberate pacing
+ * - Scroll-locked during tour
+ * - Mobile-responsive
  */
 
 const QPTour = (function() {
@@ -22,6 +25,18 @@ const QPTour = (function() {
     'admin': ['research', 'recoil', 'terminal', 'suite']
   };
 
+  // View to nav item mapping
+  const VIEW_NAV_SELECTOR = {
+    'research': '[data-view="research"]',
+    'recoil': '[data-view="recoil"]',
+    'meridian': '[data-view="meridian"]',
+    'cockpit': '[data-view="cockpit"]',
+    'marketplace': '[data-view="marketplace"]',
+    'community': '[data-view="community"]',
+    'intelligence': '[data-view="intelligence"]',
+    'settings': '[data-view="settings"]'
+  };
+
   // Tour step definitions
   const TOUR_STEPS = {
     research: [
@@ -29,8 +44,8 @@ const QPTour = (function() {
         id: 'research-intro',
         page: 'research',
         selector: '#view-research .view-header',
-        title: 'Welcome to Research',
-        content: 'This is your research hub. Here you\'ll find papers explaining the logic behind every indicator we build.',
+        title: 'Research Hub',
+        content: 'Papers explaining the logic behind every indicator.',
         position: 'bottom'
       },
       {
@@ -38,40 +53,32 @@ const QPTour = (function() {
         page: 'research',
         selector: '.research-grid',
         title: 'Research Papers',
-        content: 'Each paper dives deep into a specific concept—why it works, when it fails, and how we validated it.',
+        content: 'Each paper covers a specific concept—why it works, when it fails.',
         position: 'top'
       },
       {
         id: 'research-build-intro',
         page: 'marketplace',
         selector: '#view-marketplace .view-header',
-        title: 'The Build System',
-        content: 'This is where indicators are built. Think of it as a restaurant menu—you pick one dish from each course.',
+        title: 'Build System',
+        content: 'Build custom indicators. Pick one dish from each course.',
         position: 'bottom'
       },
       {
         id: 'research-tier-ladder',
         page: 'marketplace',
         selector: '.tier-ladder',
-        title: 'Your Tier Menu',
-        content: 'Each tier unlocks a different menu. You\'re on Research, so you can build from the Research menu with 255 possible combinations.',
+        title: 'Your Menu',
+        content: 'Research tier: 255 combinations available.',
         position: 'bottom'
-      },
-      {
-        id: 'research-courses',
-        page: 'marketplace',
-        selector: '.menu-courses',
-        title: 'Pick Your Dishes',
-        content: 'Four courses, three dishes each. Pick one from every course and we generate a custom Pine Script just for you.',
-        position: 'right'
       },
       {
         id: 'research-generate',
         page: 'marketplace',
-        selector: '.generate-btn',
-        title: 'Generate Your Indicator',
-        content: 'Once you\'ve selected all four dishes, hit Generate. Your custom indicator downloads instantly.',
-        position: 'top'
+        selector: '.order-panel',
+        title: 'Generate',
+        content: 'Select all courses, then generate your custom Pine Script.',
+        position: 'left'
       }
     ],
     
@@ -79,44 +86,35 @@ const QPTour = (function() {
       {
         id: 'recoil-intro',
         page: 'recoil',
-        selector: '#view-recoil .view-header',
-        title: 'Meet Recoil',
-        content: 'Recoil is a volatility-based instrument. It measures when price has stretched too far and marks potential mean-reversion entries.',
-        position: 'bottom'
-      },
-      {
-        id: 'recoil-animation',
-        page: 'recoil',
         selector: '.recoil-hero',
-        title: 'How It Works',
-        content: 'Watch the animation—Recoil tracks volatility expansion and flags the snap-back. Green signals mark potential longs, red marks shorts.',
+        title: 'Recoil',
+        content: 'Volatility-based entries. Marks mean-reversion setups.',
         position: 'bottom'
       },
       {
         id: 'recoil-tv-access',
         page: 'recoil',
-        selector: '#tv-username-recoil',
-        title: 'Connect TradingView',
-        content: 'Enter your exact TradingView username here. This grants you access to the live Recoil indicator on TradingView.',
+        selector: '.tv-username-field',
+        title: 'TradingView Access',
+        content: 'Enter your exact TradingView username to unlock the indicator.',
         position: 'bottom',
-        interactive: true,
-        inputId: 'tv-username-recoil'
-      },
-      {
-        id: 'recoil-build',
-        page: 'marketplace',
-        selector: '.tier-card[data-tier="recoil"]',
-        title: 'Recoil Build Menu',
-        content: 'Now you can also build from the Recoil menu—255 more combinations tuned for volatility strategies.',
-        position: 'bottom'
+        interactive: true
       },
       {
         id: 'recoil-guide',
         page: 'recoil',
         selector: '.instrument-tab[data-panel="recoil-guide"]',
         title: 'Operator Guide',
-        content: 'Read this once. It explains every setting, where Recoil fails, and how to avoid the common mistakes.',
+        content: 'Read this once. Every setting explained.',
         position: 'bottom'
+      },
+      {
+        id: 'recoil-build',
+        page: 'marketplace',
+        selector: '.tier-card[data-tier="recoil"]',
+        title: 'Recoil Menu',
+        content: '255 more combinations for volatility strategies.',
+        position: 'right'
       }
     ],
     
@@ -124,44 +122,35 @@ const QPTour = (function() {
       {
         id: 'terminal-intro',
         page: 'meridian',
-        selector: '#view-meridian .view-header',
-        title: 'Meet Meridian (Terminal)',
-        content: 'Meridian tracks the AMD cycle—Accumulation, Manipulation, Distribution. It marks conditions when a level is swept and price rejects.',
-        position: 'bottom'
-      },
-      {
-        id: 'terminal-animation',
-        page: 'meridian',
         selector: '.meridian-hero',
-        title: 'The AMD Cycle',
-        content: 'Watch the phases. A-lines form during accumulation, sweeps happen in manipulation, and distribution is where the move plays out.',
+        title: 'Meridian',
+        content: 'AMD cycle tracking. Accumulation, Manipulation, Distribution.',
         position: 'bottom'
       },
       {
         id: 'terminal-tv-access',
         page: 'meridian',
-        selector: '#tv-username-meridian',
-        title: 'Connect TradingView',
-        content: 'Enter your TradingView username to unlock Meridian on your charts.',
+        selector: '.tv-username-field',
+        title: 'TradingView Access',
+        content: 'Enter your username to unlock Meridian.',
         position: 'bottom',
-        interactive: true,
-        inputId: 'tv-username-meridian'
-      },
-      {
-        id: 'terminal-build',
-        page: 'marketplace',
-        selector: '.tier-card[data-tier="terminal"]',
-        title: 'Terminal Build Menu',
-        content: 'The Terminal menu unlocks 255 AMD-focused combinations. Same system, different logic.',
-        position: 'bottom'
+        interactive: true
       },
       {
         id: 'terminal-guide',
         page: 'meridian',
         selector: '.instrument-tab[data-panel="meridian-guide"]',
         title: 'Operator Guide',
-        content: 'Critical reading. Meridian has a hard failure mode above 15M charts—the guide explains why.',
+        content: 'Critical: Meridian fails above 15M charts.',
         position: 'bottom'
+      },
+      {
+        id: 'terminal-build',
+        page: 'marketplace',
+        selector: '.tier-card[data-tier="terminal"]',
+        title: 'Terminal Menu',
+        content: '255 AMD-focused combinations.',
+        position: 'right'
       }
     ],
     
@@ -169,54 +158,47 @@ const QPTour = (function() {
       {
         id: 'suite-intro',
         page: 'cockpit',
-        selector: '#view-cockpit .view-header',
-        title: 'Welcome to Suite',
-        content: 'Suite gives you everything. Cockpit is the multi-timeframe overlay—EMA stacks, liquidity levels, FVGs, and the fractal dashboard.',
-        position: 'bottom'
-      },
-      {
-        id: 'suite-animation',
-        page: 'cockpit',
         selector: '.cockpit-hero',
-        title: 'The Full Picture',
-        content: 'Four EMAs, three timeframes of LP levels, fair value gaps, and a regime score. Pure awareness—no signals, just context.',
+        title: 'Cockpit',
+        content: 'Multi-timeframe overlay. EMAs, liquidity, FVGs, regime score.',
         position: 'bottom'
       },
       {
         id: 'suite-tv-access',
         page: 'cockpit',
-        selector: '#tv-username-cockpit',
-        title: 'Connect TradingView',
-        content: 'Enter your TradingView username to unlock Cockpit.',
+        selector: '.tv-username-field',
+        title: 'TradingView Access',
+        content: 'Enter your username to unlock Cockpit.',
         position: 'bottom',
-        interactive: true,
-        inputId: 'tv-username-cockpit'
-      },
-      {
-        id: 'suite-build',
-        page: 'marketplace',
-        selector: '.tier-card[data-tier="suite"]',
-        title: 'Suite Build Menu',
-        content: 'The final menu. 255 combinations pulling from all three instruments plus Cockpit-specific pieces.',
-        position: 'bottom'
+        interactive: true
       },
       {
         id: 'suite-performance',
         page: 'cockpit',
         selector: '.suite-tab[data-suite-panel="performance"]',
         title: 'Performance Tracker',
-        content: 'Suite-exclusive. Upload your MT5 trade history and get AI-powered analysis of your edge.',
+        content: 'Suite-exclusive. AI analysis of your trading edge.',
         position: 'bottom'
       },
       {
-        id: 'suite-guide',
-        page: 'cockpit',
-        selector: '.suite-tab[data-suite-panel="guide"]',
-        title: 'Operator Guide',
-        content: 'The Cockpit guide covers how to read the fractal dashboard and what each layer tells you.',
-        position: 'bottom'
+        id: 'suite-build',
+        page: 'marketplace',
+        selector: '.tier-card[data-tier="suite"]',
+        title: 'Suite Menu',
+        content: 'The complete menu. All 255 combinations.',
+        position: 'right'
       }
     ]
+  };
+
+  // Timing constants (ms)
+  const TIMING = {
+    menuOpen: 400,
+    navHighlight: 600,
+    navClick: 300,
+    pageTransition: 500,
+    spotlightMove: 400,
+    calloutFade: 300
   };
 
   // State
@@ -226,22 +208,17 @@ const QPTour = (function() {
   let sectionsToPlay = [];
   let allSteps = [];
   let completedSections = [];
-  let overlay = null;
-  let spotlight = null;
-  let callout = null;
+  let elements = {};
 
   /**
-   * Initialize tour for a user based on their tier and completed sections
+   * Initialize tour
    */
   async function init(userTier, forceSequence = null) {
-    // Load completed sections from Supabase
     completedSections = await loadProgress();
     
     if (forceSequence) {
-      // Dev testing: force a specific sequence
       sectionsToPlay = forceSequence;
     } else {
-      // Normal flow: determine sections to play
       const tierSections = TIER_SECTIONS[userTier] || [];
       sectionsToPlay = tierSections.filter(s => !completedSections.includes(s));
     }
@@ -251,16 +228,15 @@ const QPTour = (function() {
       return false;
     }
     
-    // Build flat list of all steps
+    // Build flat step list
     allSteps = [];
     sectionsToPlay.forEach(section => {
-      const sectionSteps = TOUR_STEPS[section] || [];
-      sectionSteps.forEach(step => {
+      (TOUR_STEPS[section] || []).forEach(step => {
         allSteps.push({ ...step, section });
       });
     });
     
-    console.log(`QPTour: Will play ${sectionsToPlay.length} sections, ${allSteps.length} total steps`);
+    console.log(`QPTour: ${sectionsToPlay.length} sections, ${allSteps.length} steps`);
     return true;
   }
 
@@ -268,179 +244,329 @@ const QPTour = (function() {
    * Start the tour
    */
   async function start() {
-    if (allSteps.length === 0) {
-      console.warn('QPTour: No steps to play. Call init() first.');
-      return;
-    }
+    if (allSteps.length === 0) return;
     
     isActive = true;
     currentStepIndex = 0;
     
-    createOverlay();
+    lockScroll();
+    createUI();
     await playStep(0);
   }
 
   /**
-   * Load user's tour progress from Supabase
+   * Lock page scrolling
    */
-  async function loadProgress() {
-    try {
-      const { data, error } = await supabaseClient
-        .from('tour_progress')
-        .select('sections_completed')
-        .eq('user_id', authUser?.id)
-        .single();
-      
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows
-        console.error('QPTour: Error loading progress', error);
-        return [];
+  function lockScroll() {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  }
+
+  /**
+   * Unlock page scrolling
+   */
+  function unlockScroll() {
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+
+  /**
+   * Create tour UI elements
+   */
+  function createUI() {
+    destroyUI();
+    
+    const container = document.createElement('div');
+    container.id = 'qp-tour';
+    container.innerHTML = `
+      <div class="tour-overlay"></div>
+      <div class="tour-spotlight"></div>
+      <div class="tour-callout">
+        <div class="tour-arrow"></div>
+        <div class="tour-body">
+          <h4 class="tour-title"></h4>
+          <p class="tour-content"></p>
+          <div class="tour-footer">
+            <span class="tour-progress"></span>
+            <div class="tour-buttons">
+              <button class="tour-skip">Skip</button>
+              <button class="tour-next">Next →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add styles
+    const style = document.createElement('style');
+    style.id = 'qp-tour-styles';
+    style.textContent = `
+      #qp-tour {
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        pointer-events: none;
       }
       
-      return data?.sections_completed || [];
-    } catch (e) {
-      console.error('QPTour: Exception loading progress', e);
-      return [];
-    }
-  }
-
-  /**
-   * Save section completion to Supabase
-   */
-  async function markSectionComplete(section) {
-    try {
-      await supabaseClient.rpc('complete_tour_section', { section_name: section });
-      completedSections.push(section);
-    } catch (e) {
-      console.error('QPTour: Error saving progress', e);
-    }
-  }
-
-  /**
-   * Create the overlay elements
-   */
-  function createOverlay() {
-    // Remove existing if any
-    destroyOverlay();
-    
-    // Overlay backdrop
-    overlay = document.createElement('div');
-    overlay.id = 'tour-overlay';
-    overlay.innerHTML = `
-      <style>
-        #tour-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 10000;
-          pointer-events: none;
+      .tour-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.8);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      .tour-overlay.active { opacity: 1; }
+      
+      .tour-spotlight {
+        position: absolute;
+        border-radius: 8px;
+        box-shadow: 0 0 0 9999px rgba(0,0,0,0.8);
+        transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+      }
+      
+      .tour-callout {
+        position: absolute;
+        background: #1a1a1f;
+        border: 1px solid #c9a84c;
+        border-radius: 12px;
+        width: 280px;
+        max-width: calc(100vw - 32px);
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity ${TIMING.calloutFade}ms ease, transform ${TIMING.calloutFade}ms ease;
+        pointer-events: auto;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      }
+      .tour-callout.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      .tour-body {
+        padding: 16px;
+      }
+      
+      .tour-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #c9a84c;
+        margin: 0 0 6px 0;
+      }
+      
+      .tour-content {
+        font-size: 13px;
+        line-height: 1.5;
+        color: #a0a0a0;
+        margin: 0 0 14px 0;
+      }
+      
+      .tour-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .tour-progress {
+        font-size: 11px;
+        color: #666;
+        font-family: monospace;
+      }
+      
+      .tour-buttons {
+        display: flex;
+        gap: 8px;
+      }
+      
+      .tour-buttons button {
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      
+      .tour-skip {
+        background: transparent;
+        border: 1px solid #333;
+        color: #666;
+      }
+      .tour-skip:hover {
+        border-color: #888;
+        color: #888;
+      }
+      
+      .tour-next {
+        background: #c9a84c;
+        border: none;
+        color: #000;
+      }
+      .tour-next:hover {
+        background: #e6c876;
+      }
+      
+      .tour-arrow {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #1a1a1f;
+        border: 1px solid #c9a84c;
+        transform: rotate(45deg);
+      }
+      .tour-arrow.top {
+        top: -6px;
+        border-right: none;
+        border-bottom: none;
+      }
+      .tour-arrow.bottom {
+        bottom: -6px;
+        border-left: none;
+        border-top: none;
+      }
+      .tour-arrow.left {
+        left: -6px;
+        border-right: none;
+        border-top: none;
+      }
+      .tour-arrow.right {
+        right: -6px;
+        border-left: none;
+        border-bottom: none;
+      }
+      
+      /* Nav highlight animation */
+      .tour-nav-highlight {
+        position: relative;
+      }
+      .tour-nav-highlight::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border: 2px solid #c9a84c;
+        border-radius: 8px;
+        animation: tourPulse 0.8s ease-in-out infinite;
+      }
+      @keyframes tourPulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.02); }
+      }
+      
+      /* Mobile adjustments */
+      @media (max-width: 650px) {
+        .tour-callout {
+          width: 260px;
         }
-        #tour-spotlight {
-          position: absolute;
-          box-shadow: 0 0 0 9999px rgba(0,0,0,0.75);
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          pointer-events: none;
+        .tour-body {
+          padding: 14px;
         }
-        #tour-callout {
-          position: absolute;
-          background: var(--surface, #1a1a1f);
-          border: 1px solid var(--gold, #c9a84c);
-          border-radius: 12px;
-          padding: 20px;
-          max-width: 340px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-          pointer-events: auto;
-          z-index: 10001;
-        }
-        #tour-callout h4 {
-          font-size: 16px;
-          font-weight: 600;
-          margin: 0 0 8px 0;
-          color: var(--gold, #c9a84c);
-        }
-        #tour-callout p {
+        .tour-title {
           font-size: 14px;
-          line-height: 1.6;
-          color: var(--text-2, #a0a0a0);
-          margin: 0 0 16px 0;
         }
-        #tour-callout .tour-footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 12px;
-        }
-        #tour-callout .tour-progress {
+        .tour-content {
           font-size: 12px;
-          color: var(--text-3, #666);
-          font-family: var(--mono, monospace);
+          margin-bottom: 12px;
         }
-        #tour-callout .tour-buttons {
-          display: flex;
-          gap: 8px;
+        .tour-buttons button {
+          padding: 7px 12px;
+          font-size: 11px;
         }
-        #tour-callout button {
-          padding: 8px 16px;
-          border-radius: 6px;
-          font-size: 13px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        #tour-callout .tour-skip {
-          background: transparent;
-          border: 1px solid var(--border, #333);
-          color: var(--text-3, #666);
-        }
-        #tour-callout .tour-skip:hover {
-          border-color: var(--text-2, #888);
-          color: var(--text-2, #888);
-        }
-        #tour-callout .tour-next {
-          background: var(--gold, #c9a84c);
-          border: none;
-          color: #000;
-        }
-        #tour-callout .tour-next:hover {
-          background: var(--gold-bright, #e6c876);
-        }
-        #tour-callout .tour-arrow {
-          position: absolute;
-          width: 12px;
-          height: 12px;
-          background: var(--surface, #1a1a1f);
-          border: 1px solid var(--gold, #c9a84c);
-          transform: rotate(45deg);
-        }
-        #tour-callout .tour-arrow.top { top: -7px; border-right: none; border-bottom: none; }
-        #tour-callout .tour-arrow.bottom { bottom: -7px; border-left: none; border-top: none; }
-        #tour-callout .tour-arrow.left { left: -7px; border-right: none; border-top: none; }
-        #tour-callout .tour-arrow.right { right: -7px; border-left: none; border-bottom: none; }
-      </style>
-      <div id="tour-spotlight"></div>
+      }
     `;
-    document.body.appendChild(overlay);
     
-    spotlight = document.getElementById('tour-spotlight');
+    document.head.appendChild(style);
+    document.body.appendChild(container);
     
-    // Callout (separate for pointer-events)
-    callout = document.createElement('div');
-    callout.id = 'tour-callout';
-    document.body.appendChild(callout);
+    // Cache elements
+    elements = {
+      container,
+      overlay: container.querySelector('.tour-overlay'),
+      spotlight: container.querySelector('.tour-spotlight'),
+      callout: container.querySelector('.tour-callout'),
+      title: container.querySelector('.tour-title'),
+      content: container.querySelector('.tour-content'),
+      progress: container.querySelector('.tour-progress'),
+      arrow: container.querySelector('.tour-arrow'),
+      skipBtn: container.querySelector('.tour-skip'),
+      nextBtn: container.querySelector('.tour-next')
+    };
+    
+    // Bind events
+    elements.skipBtn.onclick = exit;
+    elements.nextBtn.onclick = next;
+    
+    // Activate overlay with slight delay
+    requestAnimationFrame(() => {
+      elements.overlay.classList.add('active');
+    });
   }
 
   /**
-   * Destroy overlay elements
+   * Destroy tour UI
    */
-  function destroyOverlay() {
-    document.getElementById('tour-overlay')?.remove();
-    document.getElementById('tour-callout')?.remove();
-    overlay = null;
-    spotlight = null;
-    callout = null;
+  function destroyUI() {
+    document.getElementById('qp-tour')?.remove();
+    document.getElementById('qp-tour-styles')?.remove();
+    elements = {};
   }
 
   /**
-   * Play a specific step
+   * Navigate to a page with visible UI interaction
+   */
+  async function navigateToPage(targetPage) {
+    const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
+    if (targetPage === currentView) return;
+    
+    const isMobile = window.innerWidth <= 650;
+    const navSelector = VIEW_NAV_SELECTOR[targetPage];
+    
+    if (isMobile) {
+      // Open sidebar/burger menu
+      const sidebar = document.getElementById('sidebar');
+      const menuBtn = document.querySelector('.mobile-menu-btn, #mobile-menu-btn, .intel-toggle-sidebar');
+      
+      if (sidebar && !sidebar.classList.contains('open')) {
+        // Find and click burger menu
+        const burgerBtn = document.querySelector('#mobile-header button, .burger-btn');
+        if (burgerBtn) {
+          burgerBtn.click();
+          await sleep(TIMING.menuOpen);
+        }
+      }
+    }
+    
+    // Find nav item
+    const navItem = document.querySelector(`#sidebar ${navSelector}, nav ${navSelector}`);
+    if (navItem) {
+      // Highlight nav item
+      navItem.classList.add('tour-nav-highlight');
+      navItem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await sleep(TIMING.navHighlight);
+      
+      // Click it
+      navItem.click();
+      navItem.classList.remove('tour-nav-highlight');
+      await sleep(TIMING.navClick);
+    } else {
+      // Fallback: direct switch
+      if (typeof switchView === 'function') {
+        switchView(targetPage);
+      }
+    }
+    
+    // Close sidebar on mobile
+    if (isMobile) {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar?.classList.contains('open')) {
+        sidebar.classList.remove('open');
+      }
+    }
+    
+    await sleep(TIMING.pageTransition);
+  }
+
+  /**
+   * Play a step
    */
   async function playStep(index) {
     if (index >= allSteps.length) {
@@ -452,118 +578,132 @@ const QPTour = (function() {
     currentStepIndex = index;
     currentSection = step.section;
     
-    // Navigate to correct page if needed
+    // Hide callout during navigation
+    elements.callout.classList.remove('active');
+    
+    // Navigate if needed
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     if (step.page !== currentView) {
-      // Store tour state before navigation
-      sessionStorage.setItem('qp_tour_active', JSON.stringify({
+      // Save state for resume
+      sessionStorage.setItem('qp_tour_state', JSON.stringify({
         sectionsToPlay,
         currentStepIndex: index,
         completedSections
       }));
       
-      // Navigate
-      switchView(step.page);
-      
-      // Wait for view to render
-      await new Promise(r => setTimeout(r, 300));
+      await navigateToPage(step.page);
     }
     
-    // Find target element
+    // Find target
     const target = document.querySelector(step.selector);
     if (!target) {
       console.warn(`QPTour: Element not found: ${step.selector}`);
-      // Skip to next step
+      await sleep(200);
       await playStep(index + 1);
       return;
     }
     
+    // Scroll target into view
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await sleep(300);
+    
     // Position spotlight
     const rect = target.getBoundingClientRect();
-    const padding = 8;
-    spotlight.style.left = (rect.left - padding) + 'px';
-    spotlight.style.top = (rect.top - padding) + 'px';
-    spotlight.style.width = (rect.width + padding * 2) + 'px';
-    spotlight.style.height = (rect.height + padding * 2) + 'px';
+    const pad = 6;
+    Object.assign(elements.spotlight.style, {
+      left: (rect.left - pad) + 'px',
+      top: (rect.top - pad) + 'px',
+      width: (rect.width + pad * 2) + 'px',
+      height: (rect.height + pad * 2) + 'px'
+    });
     
-    // Scroll element into view if needed
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    await sleep(TIMING.spotlightMove);
     
-    // Render callout
-    renderCallout(step, rect);
+    // Update callout content
+    elements.title.textContent = step.title;
+    elements.content.textContent = step.content;
+    elements.progress.textContent = `${index + 1} / ${allSteps.length}`;
+    elements.nextBtn.textContent = index === allSteps.length - 1 ? 'Finish' : 'Next →';
+    
+    // Position callout
+    positionCallout(step.position, rect);
+    
+    // Show callout
+    elements.callout.classList.add('active');
   }
 
   /**
-   * Render the callout for a step
+   * Position callout relative to target
    */
-  function renderCallout(step, targetRect) {
-    const isLastStep = currentStepIndex === allSteps.length - 1;
-    const isLastInSection = currentStepIndex === allSteps.length - 1 || 
-      allSteps[currentStepIndex + 1]?.section !== step.section;
+  function positionCallout(position, targetRect) {
+    const callout = elements.callout;
+    const arrow = elements.arrow;
+    const gap = 12;
+    const calloutWidth = 280;
+    const isMobile = window.innerWidth <= 650;
     
-    callout.innerHTML = `
-      <div class="tour-arrow ${step.position}"></div>
-      <h4>${step.title}</h4>
-      <p>${step.content}</p>
-      <div class="tour-footer">
-        <span class="tour-progress">${currentStepIndex + 1} of ${allSteps.length}</span>
-        <div class="tour-buttons">
-          <button class="tour-skip" onclick="QPTour.exit()">Skip Tour</button>
-          <button class="tour-next" onclick="QPTour.next()">
-            ${isLastStep ? 'Finish' : 'Next →'}
-          </button>
-        </div>
-      </div>
-    `;
+    // Reset arrow classes
+    arrow.className = 'tour-arrow';
     
-    // Position callout
-    const calloutRect = callout.getBoundingClientRect();
     let left, top;
-    const gap = 16;
     
-    switch (step.position) {
+    // Calculate position
+    switch (position) {
       case 'top':
-        left = targetRect.left + (targetRect.width - 340) / 2;
-        top = targetRect.top - calloutRect.height - gap;
+        left = targetRect.left + (targetRect.width - calloutWidth) / 2;
+        top = targetRect.top - callout.offsetHeight - gap;
+        arrow.classList.add('bottom');
+        arrow.style.left = '50%';
+        arrow.style.marginLeft = '-5px';
+        arrow.style.top = '';
         break;
+        
       case 'bottom':
-        left = targetRect.left + (targetRect.width - 340) / 2;
+        left = targetRect.left + (targetRect.width - calloutWidth) / 2;
         top = targetRect.bottom + gap;
+        arrow.classList.add('top');
+        arrow.style.left = '50%';
+        arrow.style.marginLeft = '-5px';
+        arrow.style.top = '';
         break;
+        
       case 'left':
-        left = targetRect.left - 340 - gap;
-        top = targetRect.top + (targetRect.height - calloutRect.height) / 2;
+        left = targetRect.left - calloutWidth - gap;
+        top = targetRect.top + (targetRect.height - callout.offsetHeight) / 2;
+        arrow.classList.add('right');
+        arrow.style.top = '50%';
+        arrow.style.marginTop = '-5px';
+        arrow.style.left = '';
         break;
+        
       case 'right':
         left = targetRect.right + gap;
-        top = targetRect.top + (targetRect.height - calloutRect.height) / 2;
+        top = targetRect.top + (targetRect.height - callout.offsetHeight) / 2;
+        arrow.classList.add('left');
+        arrow.style.top = '50%';
+        arrow.style.marginTop = '-5px';
+        arrow.style.left = '';
         break;
     }
     
     // Keep on screen
-    left = Math.max(16, Math.min(left, window.innerWidth - 356));
-    top = Math.max(16, Math.min(top, window.innerHeight - calloutRect.height - 16));
+    const maxLeft = window.innerWidth - calloutWidth - 16;
+    const maxTop = window.innerHeight - callout.offsetHeight - 16;
+    left = Math.max(16, Math.min(left, maxLeft));
+    top = Math.max(16, Math.min(top, maxTop));
     
     callout.style.left = left + 'px';
     callout.style.top = top + 'px';
-    
-    // Position arrow
-    const arrow = callout.querySelector('.tour-arrow');
-    if (step.position === 'top' || step.position === 'bottom') {
-      arrow.style.left = Math.min(160, Math.max(20, targetRect.left + targetRect.width / 2 - left)) + 'px';
-    } else {
-      arrow.style.top = Math.min(60, Math.max(20, targetRect.top + targetRect.height / 2 - top)) + 'px';
-    }
   }
 
   /**
-   * Move to next step
+   * Next step
    */
   async function next() {
     const currentStep = allSteps[currentStepIndex];
     const nextStep = allSteps[currentStepIndex + 1];
     
-    // If section is changing, mark current section complete
+    // Mark section complete if changing
     if (!nextStep || nextStep.section !== currentStep.section) {
       await markSectionComplete(currentStep.section);
     }
@@ -572,41 +712,71 @@ const QPTour = (function() {
   }
 
   /**
-   * Exit/skip tour
+   * Exit tour
    */
   function exit() {
     isActive = false;
-    destroyOverlay();
-    sessionStorage.removeItem('qp_tour_active');
-    console.log('QPTour: Exited');
+    unlockScroll();
+    destroyUI();
+    sessionStorage.removeItem('qp_tour_state');
   }
 
   /**
    * Finish tour
    */
   async function finish() {
-    // Mark final section complete
     if (currentSection && !completedSections.includes(currentSection)) {
       await markSectionComplete(currentSection);
     }
     
     isActive = false;
-    destroyOverlay();
-    sessionStorage.removeItem('qp_tour_active');
+    unlockScroll();
+    destroyUI();
+    sessionStorage.removeItem('qp_tour_state');
     
-    // Show completion toast
     if (typeof showToast === 'function') {
-      showToast('🎉 Tour complete! You\'re ready to go.', 'success');
+      showToast('🎉 Tour complete!', 'success');
     }
-    
-    console.log('QPTour: Finished');
   }
 
   /**
-   * Resume tour from session storage (after page navigation)
+   * Load progress from Supabase
+   */
+  async function loadProgress() {
+    try {
+      const { data, error } = await supabaseClient
+        .from('tour_progress')
+        .select('sections_completed')
+        .eq('user_id', authUser?.id)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('QPTour: Error loading progress', error);
+        return [];
+      }
+      return data?.sections_completed || [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /**
+   * Save section completion
+   */
+  async function markSectionComplete(section) {
+    try {
+      await supabaseClient.rpc('complete_tour_section', { section_name: section });
+      completedSections.push(section);
+    } catch (e) {
+      console.error('QPTour: Error saving progress', e);
+    }
+  }
+
+  /**
+   * Resume if navigated mid-tour
    */
   async function resumeIfActive() {
-    const stored = sessionStorage.getItem('qp_tour_active');
+    const stored = sessionStorage.getItem('qp_tour_state');
     if (!stored) return false;
     
     try {
@@ -614,44 +784,44 @@ const QPTour = (function() {
       sectionsToPlay = state.sectionsToPlay;
       completedSections = state.completedSections;
       
-      // Rebuild steps
       allSteps = [];
       sectionsToPlay.forEach(section => {
-        const sectionSteps = TOUR_STEPS[section] || [];
-        sectionSteps.forEach(step => {
+        (TOUR_STEPS[section] || []).forEach(step => {
           allSteps.push({ ...step, section });
         });
       });
       
       isActive = true;
-      createOverlay();
+      lockScroll();
+      createUI();
       
-      // Small delay for page to render
-      await new Promise(r => setTimeout(r, 200));
+      await sleep(300);
       await playStep(state.currentStepIndex);
-      
       return true;
     } catch (e) {
-      console.error('QPTour: Error resuming', e);
-      sessionStorage.removeItem('qp_tour_active');
+      sessionStorage.removeItem('qp_tour_state');
       return false;
     }
   }
 
   /**
-   * Check if user needs onboarding (for auto-triggering)
+   * Check if should auto-start
    */
   async function shouldAutoStart(userTier) {
     const tierSections = TIER_SECTIONS[userTier] || [];
     if (tierSections.length === 0) return false;
     
     const completed = await loadProgress();
-    const unseenSections = tierSections.filter(s => !completed.includes(s));
-    
-    return unseenSections.length > 0;
+    return tierSections.some(s => !completed.includes(s));
   }
 
-  // Public API
+  /**
+   * Helper: sleep
+   */
+  function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
   return {
     init,
     start,
@@ -659,16 +829,11 @@ const QPTour = (function() {
     exit,
     resumeIfActive,
     shouldAutoStart,
-    isActive: () => isActive,
-    
-    // Dev testing helpers
-    getSteps: () => TOUR_STEPS,
-    getSectionOrder: () => SECTION_ORDER,
-    getTierSections: () => TIER_SECTIONS
+    isActive: () => isActive
   };
 })();
 
-// Auto-resume if navigated mid-tour
+// Auto-resume
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => QPTour.resumeIfActive(), 500);
 });
