@@ -40,20 +40,47 @@ const QPTour = (function() {
   // Tour step definitions - focus on INTERESTING, ACTIONABLE things
   const TOUR_STEPS = {
     research: [
+      // Market Intelligence Section
       {
-        id: 'research-paper',
+        id: 'research-intel',
         page: 'research',
-        selector: '.research-card',
-        title: 'Start here',
-        content: 'This paper explains why 83% win rates can still lose money. Read it first.',
+        selector: '#view-research .panel:first-of-type',
+        title: 'Daily Market Intelligence',
+        content: '30 instruments analyzed every day at 10pm UK. Regime scoring and AI outlook.',
         position: 'bottom'
       },
+      // Research Papers Section
+      {
+        id: 'research-papers-intro',
+        page: 'research',
+        selector: '.papers-carousel',
+        title: 'Research Papers',
+        content: '10 papers explaining why things work — and where they fail. Real data, real caveats.',
+        position: 'top'
+      },
+      {
+        id: 'research-paper-example',
+        page: 'research',
+        selector: '.paper-slide[data-paper="1"]',
+        title: 'Start with this one',
+        content: 'Why an 81.5% win rate still lost money. The friction threshold explained.',
+        position: 'bottom'
+      },
+      {
+        id: 'research-paper-nav',
+        page: 'research',
+        selector: '.paper-dots',
+        title: 'Browse all 10',
+        content: 'Swipe or use the dots to explore. Each paper tackles a different edge killer.',
+        position: 'top'
+      },
+      // Build Menu Section
       {
         id: 'research-tier-card',
         page: 'marketplace',
         selector: '.tier-card[data-tier="research"]',
         title: 'Your build menu',
-        content: 'Tap this to open 255 indicator combinations.',
+        content: 'Now build your indicator. 255 combinations available.',
         position: 'bottom'
       },
       {
@@ -69,7 +96,7 @@ const QPTour = (function() {
         page: 'marketplace',
         selector: '.menu-course[data-course="main"]',
         title: '2. Pick a Main',
-        content: 'Select your Main dish. This is your core logic.',
+        content: 'Select your Main. This is your core logic.',
         position: 'bottom'
       },
       {
@@ -77,7 +104,7 @@ const QPTour = (function() {
         page: 'marketplace',
         selector: '.menu-course[data-course="side"]',
         title: '3. Pick a Side',
-        content: 'Add a Side for extra context.',
+        content: 'Add context with a Side dish.',
         position: 'bottom'
       },
       {
@@ -85,7 +112,7 @@ const QPTour = (function() {
         page: 'marketplace',
         selector: '.menu-course[data-course="dessert"]',
         title: '4. Pick Dessert',
-        content: 'Choose Dessert, then Generate.',
+        content: 'Choose Dessert, then hit Generate.',
         position: 'top'
       }
     ],
