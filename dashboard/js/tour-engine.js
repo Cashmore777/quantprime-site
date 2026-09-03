@@ -40,38 +40,38 @@ const QPTour = (function() {
   // Tour step definitions - focus on INTERESTING, ACTIONABLE things
   const TOUR_STEPS = {
     research: [
-      // Market Intelligence Section
+      // Market Intelligence Section FIRST
       {
         id: 'research-intel',
         page: 'research',
-        selector: '#view-research .panel:first-of-type',
-        title: 'Daily Market Intelligence',
-        content: '30 instruments analyzed every day at 10pm UK. Regime scoring and AI outlook.',
+        selector: '#view-research > .panel:first-of-type',
+        title: 'Market Intelligence',
+        content: 'Your vault. Daily and weekly briefings archived here. 30 instruments, updated 10pm UK.',
         position: 'bottom'
       },
       // Research Papers Section
       {
         id: 'research-papers-intro',
         page: 'research',
-        selector: '.papers-carousel',
+        selector: '#view-research > .panel:nth-of-type(2)',
         title: 'Research Papers',
-        content: '10 papers explaining why things work — and where they fail. Real data, real caveats.',
+        content: '10 papers on what actually works. Real data, honest caveats.',
         position: 'top'
       },
       {
         id: 'research-paper-example',
         page: 'research',
         selector: '.paper-slide[data-paper="1"]',
-        title: 'Start with this one',
-        content: 'Why an 81.5% win rate still lost money. The friction threshold explained.',
-        position: 'bottom'
+        title: 'Start here',
+        content: 'Why 81.5% win rate still lost money. Read this first.',
+        position: 'right'
       },
       {
         id: 'research-paper-nav',
         page: 'research',
         selector: '.paper-dots',
-        title: 'Browse all 10',
-        content: 'Swipe or use the dots to explore. Each paper tackles a different edge killer.',
+        title: 'All 10 papers',
+        content: 'Swipe or tap dots to browse. Each tackles a different edge killer.',
         position: 'top'
       },
       // Build Menu Section
@@ -340,7 +340,7 @@ const QPTour = (function() {
       .tour-spotlight {
         position: absolute;
         border-radius: 10px;
-        border: 2px solid #c9a84c;
+        border: 2px solid var(--gold, #c9a84c);
         box-shadow: 
           0 0 0 9999px rgba(0,0,0,0.5),
           0 0 30px rgba(201,168,76,0.4),
@@ -351,8 +351,8 @@ const QPTour = (function() {
       
       .tour-callout {
         position: absolute;
-        background: #1a1a1f;
-        border: 1px solid #c9a84c;
+        background: var(--surface, #1a1a1f);
+        border: 1px solid var(--gold, #c9a84c);
         border-radius: 12px;
         width: 280px;
         max-width: calc(100vw - 32px);
@@ -374,14 +374,14 @@ const QPTour = (function() {
       .tour-title {
         font-size: 15px;
         font-weight: 600;
-        color: #c9a84c;
+        color: var(--gold, #c9a84c);
         margin: 0 0 6px 0;
       }
       
       .tour-content {
         font-size: 13px;
         line-height: 1.5;
-        color: #a0a0a0;
+        color: var(--text-2, #a0a0a0);
         margin: 0 0 14px 0;
       }
       
@@ -393,7 +393,7 @@ const QPTour = (function() {
       
       .tour-progress {
         font-size: 11px;
-        color: #666;
+        color: var(--text-3, #666);
         font-family: monospace;
       }
       
@@ -413,29 +413,29 @@ const QPTour = (function() {
       
       .tour-skip {
         background: transparent;
-        border: 1px solid #333;
-        color: #666;
+        border: 1px solid var(--border, #333);
+        color: var(--text-3, #666);
       }
       .tour-skip:hover {
-        border-color: #888;
-        color: #888;
+        border-color: var(--text-2, #888);
+        color: var(--text-2, #888);
       }
       
       .tour-next {
-        background: #c9a84c;
+        background: var(--gold, #c9a84c);
         border: none;
         color: #000;
       }
       .tour-next:hover {
-        background: #e6c876;
+        background: var(--gold-bright, #e6c876);
       }
       
       .tour-arrow {
         position: absolute;
         width: 10px;
         height: 10px;
-        background: #1a1a1f;
-        border: 1px solid #c9a84c;
+        background: var(--surface, #1a1a1f);
+        border: 1px solid var(--gold, #c9a84c);
         transform: rotate(45deg);
       }
       .tour-arrow.top {
