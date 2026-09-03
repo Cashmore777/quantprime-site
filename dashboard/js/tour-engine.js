@@ -53,15 +53,39 @@ const QPTour = (function() {
         page: 'marketplace',
         selector: '.tier-card[data-tier="research"]',
         title: 'Your build menu',
-        content: 'Tap this to open 255 indicator combinations. Pick one from each course.',
+        content: 'Tap this to open 255 indicator combinations.',
         position: 'bottom'
       },
       {
-        id: 'research-courses',
+        id: 'research-starter',
         page: 'marketplace',
-        selector: '.menu-courses',
-        title: 'Pick a dish',
-        content: 'Each course has 3 options. Select one from each, then generate your indicator.',
+        selector: '.menu-course[data-course="starter"]',
+        title: '1. Pick a Starter',
+        content: 'Choose one dish. This sets your foundation.',
+        position: 'bottom'
+      },
+      {
+        id: 'research-main',
+        page: 'marketplace',
+        selector: '.menu-course[data-course="main"]',
+        title: '2. Pick a Main',
+        content: 'Select your Main dish. This is your core logic.',
+        position: 'bottom'
+      },
+      {
+        id: 'research-side',
+        page: 'marketplace',
+        selector: '.menu-course[data-course="side"]',
+        title: '3. Pick a Side',
+        content: 'Add a Side for extra context.',
+        position: 'bottom'
+      },
+      {
+        id: 'research-dessert',
+        page: 'marketplace',
+        selector: '.menu-course[data-course="dessert"]',
+        title: '4. Pick Dessert',
+        content: 'Choose Dessert, then Generate.',
         position: 'top'
       }
     ],
@@ -279,7 +303,7 @@ const QPTour = (function() {
       .tour-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0,0,0,0.75);
+        background: rgba(0,0,0,0.5);
         opacity: 0;
         transition: opacity 0.4s ease;
         pointer-events: none;
@@ -291,7 +315,7 @@ const QPTour = (function() {
         border-radius: 10px;
         border: 2px solid #c9a84c;
         box-shadow: 
-          0 0 0 9999px rgba(0,0,0,0.75),
+          0 0 0 9999px rgba(0,0,0,0.5),
           0 0 30px rgba(201,168,76,0.4),
           inset 0 0 0 1px rgba(201,168,76,0.2);
         transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.4, 0, 0.2, 1);
