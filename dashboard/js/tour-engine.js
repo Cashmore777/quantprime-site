@@ -83,7 +83,7 @@ const QPTour = (function() {
       {
         id: 'research-starter',
         page: 'marketplace',
-        selector: '.menu-course[data-course="starter"]',
+        selector: '.menu-course[data-course="starter"] .course-header',
         title: 'Choose Your Foundation',
         content: 'Starters set the base: trend filters, session logic, or volatility modes.',
         position: 'bottom'
@@ -91,7 +91,7 @@ const QPTour = (function() {
       {
         id: 'research-main',
         page: 'marketplace',
-        selector: '.menu-course[data-course="main"]',
+        selector: '.menu-course[data-course="main"] .course-header',
         title: 'Add Core Logic',
         content: 'Mains are your signal engine: reversals, breakouts, or momentum plays.',
         position: 'bottom'
@@ -99,7 +99,7 @@ const QPTour = (function() {
       {
         id: 'research-side',
         page: 'marketplace',
-        selector: '.menu-course[data-course="side"]',
+        selector: '.menu-course[data-course="side"] .course-header',
         title: 'Layer In Context',
         content: 'Sides add confluence: higher timeframe bias, volume profile, or session overlap.',
         position: 'bottom'
@@ -107,10 +107,10 @@ const QPTour = (function() {
       {
         id: 'research-dessert',
         page: 'marketplace',
-        selector: '.menu-course[data-course="dessert"]',
+        selector: '.menu-course[data-course="dessert"] .course-header',
         title: 'Finish & Generate',
         content: 'Dessert is the final filter. Pick one, hit Generate, get your custom indicator.',
-        position: 'top',
+        position: 'bottom',
         emphasis: 'action'
       }
     ],
