@@ -815,7 +815,7 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, targetRect) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 20;
+    const gap = 12;
     const isMobile = window.innerWidth <= 650;
     const calloutWidth = isMobile ? 280 : 300;
     const calloutHeight = callout.offsetHeight || 200;
@@ -823,7 +823,7 @@ const QPTour = (function() {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     
-    const spotlightPad = 12;
+    const spotlightPad = 8;
     const spotlightRect = {
       left: targetRect.left - spotlightPad,
       top: targetRect.top - spotlightPad,
