@@ -7157,6 +7157,351 @@ button, .nav-item, .room, .video-item, .filter-chip {
 }
 
 /* =====================================================
+   MOBILE POLISH PASS - Premium App-Like Quality
+   ===================================================== */
+@media (max-width: 650px) {
+  /* === TYPOGRAPHY - Comfortable Reading === */
+  .view-header h2 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+  
+  .eyebrow {
+    font-size: 9px;
+    margin-bottom: 6px;
+  }
+  
+  /* Panel headers - not too small */
+  .panel h4 {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  
+  /* Message text - readable */
+  .message p {
+    font-size: 14px;
+    line-height: 1.55;
+    padding: 11px 14px;
+  }
+  
+  /* === MODALS - Full Mobile Viewport === */
+  #research-modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+  
+  #research-modal .modal-content {
+    max-width: 100%;
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+    animation: slideUpModal 0.3s ease;
+  }
+  
+  @keyframes slideUpModal {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  
+  #research-modal .modal-header {
+    padding: 20px 20px 16px;
+  }
+  
+  #research-modal .modal-header h3 {
+    font-size: 18px;
+  }
+  
+  #research-modal .modal-body {
+    padding: 20px;
+  }
+  
+  #research-modal .modal-body p {
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  
+  #research-modal .close-btn {
+    width: 40px;
+    height: 40px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Generic modal styling */
+  #modal .modal-box {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px calc(24px + var(--safe-bottom));
+  }
+  
+  /* === INPUTS - Thumb-Friendly, No iOS Zoom === */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevent iOS zoom */
+    min-height: 48px;
+  }
+  
+  .form-row input,
+  .form-row textarea,
+  .form-row select {
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  
+  .chat-input input {
+    font-size: 16px;
+    padding: 12px 14px;
+    min-height: 48px;
+  }
+  
+  /* === BUTTONS - Touch Targets 48px+ === */
+  .btn {
+    min-height: 50px;
+    padding: 14px 24px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+  
+  .btn.sm {
+    min-height: 44px;
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+  
+  .send-btn {
+    min-height: 48px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  
+  /* Nav dropdown links */
+  .nav-dropdown a {
+    min-height: 48px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* === CARDS & PANELS - Comfortable Spacing === */
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .stat-card .label {
+    font-size: 9px;
+    margin-bottom: 4px;
+  }
+  
+  .stat-card .value {
+    font-size: 18px;
+  }
+  
+  .research-card {
+    padding: 16px;
+  }
+  
+  .research-card h4 {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  
+  .research-card p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  /* === STAT CARD GRID - 2 columns on mobile === */
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  /* === MARKETPLACE - Better Touch Targets === */
+  .marketplace-item {
+    padding: 18px 16px;
+    padding-top: 32px;
+  }
+  
+  .marketplace-item h4 {
+    font-size: 14px;
+  }
+  
+  .marketplace-item .description {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  .marketplace-item .buy-btn {
+    min-height: 46px;
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+  
+  .filter-chip {
+    min-height: 44px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  
+  /* === COMMUNITY CHAT - App-Like Feel === */
+  .room-card {
+    padding: 14px 16px;
+    min-height: 64px;
+  }
+  
+  .room-card-icon {
+    width: 42px;
+    height: 42px;
+  }
+  
+  .room-card-info h4 {
+    font-size: 14px;
+  }
+  
+  .room-card-info p {
+    font-size: 11px;
+  }
+  
+  .active-chat-view .chat-input {
+    padding: 12px 14px calc(12px + var(--safe-bottom));
+  }
+  
+  .active-chat-view .chat-input input {
+    min-height: 48px;
+    font-size: 16px;
+  }
+  
+  /* === HOME PAGE - Balanced Mobile Layout === */
+  .home-hero {
+    padding: 24px 20px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .home-hero-text h2 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  
+  .home-hero-text .subtitle {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .stat-card-premium {
+    padding: 18px;
+    border-radius: 14px;
+  }
+  
+  .stat-card-premium .value {
+    font-size: 22px;
+  }
+  
+  /* === ACADEMY - Compact Video Section === */
+  .video-section {
+    min-height: 350px;
+  }
+  
+  .video-item {
+    padding: 12px 14px;
+    min-height: 56px;
+  }
+  
+  .video-item .video-title {
+    font-size: 13px;
+  }
+  
+  /* === PERFORMANCE REPORT - Readable Tables === */
+  .perf-table {
+    font-size: 12px;
+  }
+  
+  .perf-table th,
+  .perf-table td {
+    padding: 10px 8px;
+    min-height: 44px;
+  }
+  
+  /* === INTELLIGENCE CHAT - Full Height App Feel === */
+  .intel-header {
+    padding: 12px 16px;
+  }
+  
+  .intel-title h2 {
+    font-size: 16px;
+  }
+  
+  .intel-message-content {
+    max-width: 88%;
+    padding: 12px 16px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  
+  .intel-input-wrapper {
+    border-radius: 14px;
+    padding: 8px 14px;
+  }
+  
+  #intel-input {
+    font-size: 16px;
+    min-height: 40px;
+  }
+  
+  .intel-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  
+  /* === SMOOTH SCROLLING & MOMENTUM === */
+  .messages,
+  .intel-messages,
+  .rooms-list,
+  .papers-track {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* === PREVENT OVERSCROLL BOUNCE ON iOS === */
+  body {
+    overscroll-behavior: none;
+  }
+  
+  #main {
+    overscroll-behavior: contain;
+  }
+}
+
+/* === SMALL MOBILE (400px) === */
+@media (max-width: 400px) {
+  .view-header h2 {
+    font-size: 1.3rem;
+  }
+  
+  .stat-card {
+    padding: 14px 12px;
+  }
+  
+  .stat-card .value {
+    font-size: 16px;
+  }
+  
+  .grid-4 {
+    gap: 8px;
+  }
+  
+  .home-hero {
+    padding: 20px 16px;
+  }
+  
+  .home-hero-text h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* =====================================================
    HOME PAGE BEDAZZLE - Make it HOLY SHIT AMAZING
    ===================================================== */
 

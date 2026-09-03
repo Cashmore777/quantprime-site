@@ -411,12 +411,114 @@ a { transition: color 0.2s ease, border-color 0.2s ease; }
   .instrument-grid { gap: 2rem; }
   section { padding: 4rem 0; }
 }
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .pricing-grid { grid-template-columns: 1fr; }
   .compound-grid { grid-template-columns: repeat(2, 1fr); }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .included-grid { grid-template-columns: 1fr; }
-  .container { padding: 0 1.2rem; }
+  .container { padding: 0 1rem; }
+  
+  /* Mobile Typography - comfortable reading */
+  h1 { font-size: 2rem; line-height: 1.2; }
+  h2 { font-size: 1.6rem; line-height: 1.25; }
+  h3 { font-size: 1.15rem; }
+  
+  /* Section spacing - not too cramped */
+  section { padding: 3rem 0; }
+  .page-header { padding-top: 7rem; padding-bottom: 2.5rem; }
+  
+  /* Hero mobile optimization */
+  .hero { min-height: auto; padding-top: 6rem; padding-bottom: 3rem; }
+  .hero-content { max-width: 100%; }
+  .hero-sub { font-size: 1rem; line-height: 1.65; margin-bottom: 2rem; }
+  .hero-label { margin-bottom: 1.5rem; }
+  
+  /* Touch-friendly buttons - minimum 44px */
+  .hero-cta, .btn-primary, .nav-cta {
+    padding: 0.9rem 1.8rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Nav mobile polish */
+  nav { padding: 0.75rem 0; }
+  nav .container { gap: 0.5rem; }
+  .nav-logo { font-size: 0.75rem; }
+  .nav-cta { 
+    padding: 0.6rem 1.2rem; 
+    font-size: 0.75rem;
+    min-height: 40px;
+  }
+  .nav-dropdown { 
+    min-width: 160px; 
+    left: 0;
+    right: auto;
+  }
+  .nav-dropdown a { 
+    padding: 0.9rem 1rem; 
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Philosophy cards - stack nicely */
+  .philosophy-grid { gap: 1.5rem; }
+  .philosophy-item { padding: 1.25rem 0; }
+  .philosophy-item h3 { font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .philosophy-item p { font-size: 0.9rem; }
+  
+  /* Stat cards */
+  .stat-item .stat-number { font-size: 2rem; }
+  .stat-item .stat-desc { font-size: 0.8rem; }
+  
+  /* Instrument cards mobile */
+  .instrument-card { padding: 1.5rem; }
+  .instrument-card h3 { font-size: 1.2rem; }
+  .instrument-card .instrument-desc { font-size: 0.9rem; }
+  
+  /* Included section */
+  .included-item { padding: 0.6rem 0; }
+  .included-item span { font-size: 0.88rem; }
+  
+  /* Footer */
+  footer { padding: 2rem 0; }
+  footer p { font-size: 0.72rem; line-height: 1.7; }
+  
+  /* Price cards - touch friendly */
+  .price-card { padding: 1.5rem; }
+  .price-btn { 
+    padding: 0.75rem; 
+    min-height: 48px; 
+    font-size: 0.85rem;
+  }
+  
+  /* Compound grid */
+  .compound-card { padding: 1.2rem 0.8rem; }
+  .compound-value { font-size: 1.2rem; }
+  .compound-explanation { padding: 1.5rem; }
+  
+  /* Results cards */
+  .result-card { padding: 1.5rem; }
+  
+  /* CTA buttons group */
+  .cta-buttons { 
+    flex-direction: column; 
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0 1rem;
+  }
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  /* Journey CTA section */
+  .journey-cta { padding: 4rem 0; }
+  .journey-content h2 { font-size: 1.5rem; }
 }
 
 /* ── DARK MODE OVERRIDES ── */

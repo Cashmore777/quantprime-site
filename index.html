@@ -229,7 +229,9 @@
 .hero-cta-secondary:hover { color: var(--gold); border-color: var(--gold); }
 
 .instruments-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-@media (max-width: 768px) { .instruments-grid { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { 
+  .instruments-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+}
 
 .instrument-card {
   background: var(--surface);
@@ -306,10 +308,111 @@
 
 .included-section { padding: 5rem 0; background: var(--surface); border-top: 1px solid var(--border-light); }
 .included-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 700px; margin: 0 auto; }
-@media (max-width: 600px) { .included-grid { grid-template-columns: 1fr; } }
+@media (max-width: 650px) { .included-grid { grid-template-columns: 1fr; } }
 .included-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0; }
 .included-check { color: var(--gold); font-weight: bold; }
 .included-item span { font-size: 0.9rem; color: var(--text-secondary); }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOBILE POLISH (650px)
+   ═══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 650px) {
+  /* Hero mobile optimization */
+  .hero-cta-group {
+    width: 100%;
+    gap: 0.75rem;
+  }
+  
+  .hero-cta-primary {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .hero-cta-secondary {
+    font-size: 0.9rem;
+    padding: 0.75rem 0;
+    align-self: center;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Instrument cards */
+  .instrument-card {
+    padding: 1.5rem;
+  }
+  
+  .instrument-card h3 {
+    font-size: 1.15rem;
+  }
+  
+  .instrument-card .desc {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin-bottom: 1.25rem;
+  }
+  
+  .instrument-card .meta {
+    font-size: 0.65rem;
+    gap: 0.75rem;
+  }
+  
+  .instrument-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  /* Section headers */
+  .instruments-preview .section-header { margin-bottom: 2rem; }
+  .included-section .section-header { margin-bottom: 1.75rem; }
+  .section-desc { font-size: 0.95rem; line-height: 1.55; }
+  
+  /* CTA section */
+  .cta-section { padding: 3.5rem 0; }
+  .cta-section h2 { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .cta-section .cta-desc { font-size: 0.95rem; margin-bottom: 1.5rem; }
+  
+  .cta-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0;
+  }
+  
+  .btn-outline, .btn-solid {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Included section */
+  .included-section { padding: 3rem 0; }
+  .included-item { padding: 0.5rem 0; }
+  .included-item span { font-size: 0.88rem; }
+  
+  /* Learn link */
+  .instruments-preview [style*="text-align: center"] {
+    margin-top: 1.75rem !important;
+  }
+  
+  .instruments-preview .btn-outline {
+    width: auto;
+    min-width: 200px;
+  }
+}
 </style>
 </head>
 <body>

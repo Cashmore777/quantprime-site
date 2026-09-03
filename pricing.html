@@ -755,18 +755,136 @@ body {
 }
 
 /* Responsive */
-@media (max-width: 800px) {
+@media (max-width: 650px) {
   .pricing-grid {
     grid-template-columns: 1fr;
-    max-width: 440px;
+    max-width: 100%;
+    padding: 0;
+    gap: 20px;
   }
   
   .tier-card {
-    padding: 28px 24px;
+    padding: 24px 20px;
+    border-radius: 16px;
   }
   
   .page-header {
-    padding: 6rem 0 3rem;
+    padding: 6.5rem 0 2rem;
+  }
+  
+  .page-header h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+  .page-header p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* Platform story bar - horizontal scroll on mobile */
+  .platform-story {
+    padding: 10px 16px;
+    font-size: 0.65rem;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    justify-content: flex-start;
+    max-width: 100%;
+  }
+  
+  .platform-story .tier {
+    padding: 5px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  
+  /* Tier header alignment */
+  .tier-header {
+    min-height: auto;
+    padding-top: 12px;
+  }
+  
+  .tier-name {
+    font-size: 1.35rem;
+    height: auto;
+  }
+  
+  .tier-tagline {
+    font-size: 0.85rem;
+    height: auto;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  
+  /* Price sizing */
+  .tier-price .amount {
+    font-size: 2.8rem;
+  }
+  
+  .tier-price .currency {
+    font-size: 1.3rem;
+  }
+  
+  .tier-price-row {
+    min-height: auto;
+  }
+  
+  /* CTA buttons - touch friendly 48px minimum */
+  .tier-cta {
+    padding: 16px 24px;
+    font-size: 1rem;
+    min-height: 52px;
+    border-radius: 14px;
+    margin-top: 20px;
+  }
+  
+  .tier-guarantee {
+    font-size: 0.72rem;
+    margin-top: 12px;
+  }
+  
+  /* Features list */
+  .tier-features {
+    margin-top: 24px;
+    padding-top: 20px;
+  }
+  
+  .feature {
+    padding: 10px 0;
+    gap: 12px;
+  }
+  
+  .feature-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .feature-text strong {
+    font-size: 0.9rem;
+  }
+  
+  .feature-desc {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+  
+  /* Badge positioning */
+  .tier-badge {
+    font-size: 0.6rem;
+    padding: 6px 14px;
+    top: -14px;
+  }
+  
+  /* Pricing section */
+  .pricing-section {
+    padding: 2rem 0 4rem;
+  }
+  
+  /* Container padding */
+  .container {
+    padding: 0 1rem;
   }
 }
 
@@ -791,8 +909,46 @@ body {
   margin: 0 auto;
 }
 
-@media (max-width: 700px) {
-  .faq-grid { grid-template-columns: 1fr; }
+@media (max-width: 650px) {
+  .faq-grid { 
+    grid-template-columns: 1fr; 
+    gap: 1rem;
+  }
+  
+  .faq-section {
+    padding: 3rem 0;
+  }
+  
+  .faq-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .faq-item {
+    padding: 20px;
+    border-radius: 14px;
+  }
+  
+  .faq-item h4 {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  .faq-item p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+  }
+  
+  /* Nav mobile */
+  nav .container {
+    padding: 0 1rem;
+  }
+  
+  .nav-cta {
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+    min-height: 38px;
+  }
 }
 
 .faq-item {
