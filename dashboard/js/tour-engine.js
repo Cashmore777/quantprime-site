@@ -1,11 +1,15 @@
 /**
- * QP Dashboard Onboarding Tour Engine v2
+ * QP Dashboard Onboarding Tour Engine v3
  * 
- * Professional, seamless onboarding experience.
+ * Premium onboarding experience with:
+ * - Blur overlay (not black) for engaged feel
+ * - Feature-focused callouts with emojis
+ * - Section badges & progress bar
+ * - Emphasis states (feature glow, action pulse)
  * - Visible navigation (opens menus, clicks items)
- * - Smooth, deliberate pacing
+ * - Keyboard shortcuts (→/Enter/Space = next, Esc = exit)
  * - Scroll-locked during tour
- * - Mobile-responsive
+ * - Mobile-responsive with reduced motion support
  */
 
 const QPTour = (function() {
@@ -37,83 +41,88 @@ const QPTour = (function() {
     'settings': '[data-view="settings"]'
   };
 
-  // Tour step definitions - focus on INTERESTING, ACTIONABLE things
+  // Tour step definitions - engaging, feature-focused callouts
   const TOUR_STEPS = {
     research: [
-      // Market Intelligence Section FIRST
+      // Market Intelligence - the star feature
       {
         id: 'research-intel',
         page: 'research',
         selector: '#view-research .panel[onclick*="intel"]',
-        title: 'Market Intelligence',
-        content: 'Your vault. Daily and weekly briefings archived here. 30 instruments, updated 10pm UK.',
-        position: 'bottom'
+        title: '📡 Your Intel Feed',
+        content: 'Daily market briefings drop here at 10pm UK. 30 instruments analyzed. Regime shifts, key levels, trade setups — all archived.',
+        position: 'bottom',
+        emphasis: 'feature'
       },
-      // Research Papers Section
+      // Research Papers - the education
       {
         id: 'research-papers-intro',
         page: 'research',
         selector: '#papers-carousel',
-        title: 'Research Papers',
-        content: '10 papers on what actually works. Real data, honest caveats.',
-        position: 'top'
+        title: '📚 The Research Library',
+        content: '10 papers that changed how traders think. Real backtests, honest about what doesn\'t work.',
+        position: 'top',
+        emphasis: 'feature'
       },
       {
         id: 'research-paper-example',
         page: 'research',
         selector: '.paper-slide[data-paper="1"]',
-        title: 'Start here',
-        content: 'Why 81.5% win rate still lost money. Read this first.',
-        position: 'right'
+        title: '⚡ Start With This One',
+        content: '"The 81.5% Win Rate Paradox" — why most traders lose money despite winning trades. 3 min read.',
+        position: 'right',
+        emphasis: 'action'
       },
       {
         id: 'research-paper-nav',
         page: 'research',
         selector: '#paper-dots',
-        title: 'All 10 papers',
-        content: 'Swipe or tap dots to browse. Each tackles a different edge killer.',
+        title: '👆 Browse All Papers',
+        content: 'Swipe or tap. Topics: position sizing, stop placement, session timing, the lot.',
         position: 'top'
       },
-      // Build Menu Section
+      // Build Menu - the configurator
       {
         id: 'research-tier-card',
         page: 'marketplace',
         selector: '.tier-card[data-tier="research"]',
-        title: 'Your build menu',
-        content: 'Now build your indicator. 255 combinations available.',
-        position: 'bottom'
+        title: '🛠️ The Build Menu',
+        content: 'This is where you build YOUR indicator. 255 combinations. Pick your ingredients below.',
+        position: 'bottom',
+        emphasis: 'feature'
       },
       {
         id: 'research-starter',
         page: 'marketplace',
         selector: '.menu-course[data-course="starter"]',
-        title: '1. Pick a Starter',
-        content: 'Choose one dish. This sets your foundation.',
+        title: '1️⃣ Choose Your Foundation',
+        content: 'Starters set the base: trend filters, session logic, or volatility modes.',
         position: 'bottom'
       },
       {
         id: 'research-main',
         page: 'marketplace',
         selector: '.menu-course[data-course="main"]',
-        title: '2. Pick a Main',
-        content: 'Select your Main. This is your core logic.',
+        title: '2️⃣ Add Core Logic',
+        content: 'Mains are your signal engine: reversals, breakouts, or momentum plays.',
         position: 'bottom'
       },
       {
         id: 'research-side',
         page: 'marketplace',
         selector: '.menu-course[data-course="side"]',
-        title: '3. Pick a Side',
-        content: 'Add context with a Side dish.',
+        title: '3️⃣ Layer In Context',
+        content: 'Sides add confluence: higher timeframe bias, volume profile, or session overlap.',
         position: 'bottom'
       },
       {
         id: 'research-dessert',
         page: 'marketplace',
         selector: '.menu-course[data-course="dessert"]',
-        title: '4. Pick Dessert',
-        content: 'Choose Dessert, then hit Generate.',
-        position: 'top'
+        title: '4️⃣ Finish & Generate',
+        content: 'Dessert is the final filter. Pick one, hit Generate, get your custom indicator.',
+        position: 'top',
+        emphasis: 'action'
       }
     ],
     
@@ -122,26 +131,29 @@ const QPTour = (function() {
         id: 'recoil-animation',
         page: 'recoil',
         selector: '#recoil-animation',
-        title: 'This is Recoil',
-        content: 'Spots when price stretches too far. Green = potential long, red = potential short.',
-        position: 'bottom'
+        title: '🎯 Meet Recoil',
+        content: 'Measures how far price stretches from equilibrium. Green bands = stretched low (long zone). Red bands = stretched high (short zone).',
+        position: 'bottom',
+        emphasis: 'feature'
       },
       {
         id: 'recoil-tv',
         page: 'recoil',
         selector: '#tv-username-recoil',
-        title: 'Unlock it now',
-        content: 'Type your TradingView username exactly. The indicator appears in your invite-only scripts.',
+        title: '🔐 Link Your TradingView',
+        content: 'Enter your username EXACTLY as it appears on TradingView. The indicator unlocks in your invite-only scripts within 60 seconds.',
         position: 'bottom',
-        interactive: true
+        interactive: true,
+        emphasis: 'action'
       },
       {
         id: 'recoil-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="recoil"]',
-        title: 'Recoil menu unlocked',
-        content: '255 volatility-tuned combinations now available to build.',
-        position: 'bottom'
+        title: '⚡ Recoil Menu Unlocked',
+        content: 'New ingredient tier available. 255 volatility-tuned combinations for mean reversion setups.',
+        position: 'bottom',
+        emphasis: 'feature'
       }
     ],
     
@@ -150,26 +162,29 @@ const QPTour = (function() {
         id: 'terminal-animation',
         page: 'meridian',
         selector: '#meridian-animation',
-        title: 'This is Meridian',
-        content: 'Tracks AMD cycles. A = accumulation, M = manipulation, D = distribution.',
-        position: 'bottom'
+        title: '🌐 Meet Meridian',
+        content: 'Tracks the AMD cycle in real-time. Accumulation → Manipulation → Distribution. Know which phase you\'re in.',
+        position: 'bottom',
+        emphasis: 'feature'
       },
       {
         id: 'terminal-tv',
         page: 'meridian',
         selector: '#tv-username-meridian',
-        title: 'Unlock it',
-        content: 'Same deal—enter your TradingView username to access Meridian.',
+        title: '🔐 Link Your TradingView',
+        content: 'Same drill — enter your exact TradingView username. Meridian appears in your invite-only scripts.',
         position: 'bottom',
-        interactive: true
+        interactive: true,
+        emphasis: 'action'
       },
       {
         id: 'terminal-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="terminal"]',
-        title: 'Terminal menu unlocked',
-        content: '255 AMD-focused combinations ready to build.',
-        position: 'bottom'
+        title: '⚡ Terminal Menu Unlocked',
+        content: 'AMD-focused combinations now available. 255 ways to trade the cycle.',
+        position: 'bottom',
+        emphasis: 'feature'
       }
     ],
     
@@ -178,46 +193,51 @@ const QPTour = (function() {
         id: 'suite-animation',
         page: 'cockpit',
         selector: '#cockpit-animation',
-        title: 'This is Cockpit',
-        content: 'Multi-timeframe overlay. 4 EMAs, liquidity levels, FVGs, and regime scoring.',
-        position: 'bottom'
+        title: '🚀 Meet Cockpit',
+        content: 'The full picture. 4 EMAs, liquidity sweeps, FVGs, and a real-time regime score. Everything on one chart.',
+        position: 'bottom',
+        emphasis: 'feature'
       },
       {
         id: 'suite-tv',
         page: 'cockpit',
         selector: '#tv-username-cockpit',
-        title: 'Unlock it',
-        content: 'Enter your TradingView username to access Cockpit.',
+        title: '🔐 Link Your TradingView',
+        content: 'Final unlock. Enter your username and Cockpit joins your toolkit.',
         position: 'bottom',
-        interactive: true
+        interactive: true,
+        emphasis: 'action'
       },
       {
         id: 'suite-performance',
         page: 'cockpit',
         selector: '.suite-tab[data-suite-panel="performance"]',
-        title: 'Performance Tracker',
-        content: 'Upload your MT5 history. AI grades your edge and tells you what to fix.',
-        position: 'bottom'
+        title: '📊 Performance Tracker',
+        content: 'Upload your MT5 trade history. AI analyzes your edge, finds leaks, suggests fixes. Real feedback, not fluff.',
+        position: 'bottom',
+        emphasis: 'feature'
       },
       {
         id: 'suite-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="suite"]',
-        title: 'Full menu unlocked',
-        content: 'All 255 combinations from all instruments. Build anything.',
-        position: 'bottom'
+        title: '👑 Full Menu Unlocked',
+        content: 'Every ingredient. Every combination. 255 configs across all instruments. Build whatever you need.',
+        position: 'bottom',
+        emphasis: 'feature'
       }
     ]
   };
 
-  // Timing constants (ms)
+  // Timing constants (ms) - tuned for premium feel
   const TIMING = {
-    menuOpen: 400,
-    navHighlight: 600,
-    navClick: 300,
-    pageTransition: 500,
-    spotlightMove: 400,
-    calloutFade: 300
+    menuOpen: 350,
+    navHighlight: 500,
+    navClick: 250,
+    pageTransition: 450,
+    spotlightMove: 450,
+    calloutFade: 350,
+    initialDelay: 200  // Delay before first step for smooth entry
   };
 
   // State
@@ -270,7 +290,30 @@ const QPTour = (function() {
     
     lockScroll();
     createUI();
+    
+    // Smooth entry - let overlay fade in first
+    await sleep(TIMING.initialDelay);
     await playStep(0);
+  }
+  
+  /**
+   * Keyboard handler for tour navigation
+   */
+  function handleKeyboard(e) {
+    if (!isActive) return;
+    
+    switch(e.key) {
+      case 'ArrowRight':
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        next();
+        break;
+      case 'Escape':
+        e.preventDefault();
+        exit();
+        break;
+    }
   }
 
   /**
@@ -303,12 +346,14 @@ const QPTour = (function() {
       <div class="tour-callout">
         <div class="tour-arrow"></div>
         <div class="tour-body">
+          <div class="tour-section-badge"></div>
           <h4 class="tour-title"></h4>
           <p class="tour-content"></p>
+          <div class="tour-progress-bar"><div class="tour-progress-fill"></div></div>
           <div class="tour-footer">
             <span class="tour-progress"></span>
             <div class="tour-buttons">
-              <button class="tour-skip">Skip</button>
+              <button class="tour-skip">Skip tour</button>
               <button class="tour-next">Next →</button>
             </div>
           </div>
@@ -327,74 +372,162 @@ const QPTour = (function() {
         pointer-events: none;
       }
       
+      /* Premium blur overlay instead of black */
       .tour-overlay {
         position: absolute;
         inset: 0;
-        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(8px) saturate(1.2);
+        -webkit-backdrop-filter: blur(8px) saturate(1.2);
+        background: rgba(10, 10, 15, 0.3);
         opacity: 0;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
       }
       .tour-overlay.active { opacity: 1; }
       
+      /* Elegant spotlight with glow */
       .tour-spotlight {
         position: absolute;
-        border-radius: 10px;
+        border-radius: 12px;
         border: 2px solid var(--gold, #c9a84c);
+        background: transparent;
         box-shadow: 
-          0 0 0 9999px rgba(0,0,0,0.5),
-          0 0 30px rgba(201,168,76,0.4),
-          inset 0 0 0 1px rgba(201,168,76,0.2);
-        transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.4, 0, 0.2, 1);
+          0 0 0 4000px rgba(10, 10, 15, 0.5),
+          0 0 60px rgba(201,168,76,0.25),
+          0 0 30px rgba(201,168,76,0.15),
+          inset 0 0 20px rgba(201,168,76,0.05);
+        transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.34, 1.56, 0.64, 1);
         pointer-events: none;
+        z-index: 1;
       }
       
+      /* Feature emphasis - extra glow */
+      .tour-spotlight.emphasis-feature {
+        border-width: 2px;
+        box-shadow: 
+          0 0 0 4000px rgba(10, 10, 15, 0.5),
+          0 0 80px rgba(201,168,76,0.35),
+          0 0 40px rgba(201,168,76,0.25),
+          inset 0 0 30px rgba(201,168,76,0.08);
+      }
+      
+      /* Action emphasis - pulsing border */
+      .tour-spotlight.emphasis-action {
+        animation: spotlightPulseAction 1.5s ease-in-out infinite;
+      }
+      @keyframes spotlightPulseAction {
+        0%, 100% { 
+          border-color: #c9a84c;
+          box-shadow: 
+            0 0 0 4000px rgba(10, 10, 15, 0.5),
+            0 0 60px rgba(201,168,76,0.3),
+            0 0 30px rgba(201,168,76,0.2);
+        }
+        50% { 
+          border-color: #e6c876;
+          box-shadow: 
+            0 0 0 4000px rgba(10, 10, 15, 0.5),
+            0 0 80px rgba(230,200,118,0.4),
+            0 0 40px rgba(230,200,118,0.3);
+        }
+      }
+      
+      /* Premium callout card */
       .tour-callout {
         position: absolute;
-        background: var(--surface, #1a1a1f);
-        border: 1px solid var(--gold, #c9a84c);
-        border-radius: 12px;
-        width: 280px;
+        background: linear-gradient(135deg, rgba(26,26,31,0.98), rgba(20,20,25,0.98));
+        border: 1px solid rgba(201,168,76,0.5);
+        border-radius: 16px;
+        width: 300px;
         max-width: calc(100vw - 32px);
         opacity: 0;
-        transform: translateY(8px);
-        transition: opacity ${TIMING.calloutFade}ms ease, transform ${TIMING.calloutFade}ms ease;
+        transform: translateY(12px) scale(0.96);
+        transition: 
+          opacity ${TIMING.calloutFade}ms cubic-bezier(0.4, 0, 0.2, 1),
+          transform ${TIMING.calloutFade}ms cubic-bezier(0.34, 1.56, 0.64, 1);
         pointer-events: auto;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        box-shadow: 
+          0 20px 60px rgba(0,0,0,0.5),
+          0 0 40px rgba(201,168,76,0.1),
+          inset 0 1px 0 rgba(255,255,255,0.05);
+        z-index: 2;
+        overflow: hidden;
+      }
+      .tour-callout::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold, #c9a84c), var(--cyan, #00abff));
+        opacity: 0.8;
       }
       .tour-callout.active {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
       
       .tour-body {
-        padding: 16px;
+        padding: 20px;
+      }
+      
+      .tour-section-badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold, #c9a84c);
+        background: rgba(201,168,76,0.12);
+        padding: 4px 10px;
+        border-radius: 100px;
+        margin-bottom: 12px;
       }
       
       .tour-title {
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 600;
-        color: var(--gold, #c9a84c);
-        margin: 0 0 6px 0;
+        color: #ffffff;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.01em;
+        line-height: 1.3;
       }
       
       .tour-content {
         font-size: 13px;
-        line-height: 1.5;
-        color: var(--text-2, #a0a0a0);
-        margin: 0 0 14px 0;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.7);
+        margin: 0 0 16px 0;
+      }
+      
+      .tour-progress-bar {
+        height: 3px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .tour-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--gold, #c9a84c), var(--cyan, #00abff));
+        border-radius: 2px;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
       
       .tour-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255,255,255,0.08);
       }
       
       .tour-progress {
         font-size: 11px;
-        color: var(--text-3, #666);
-        font-family: monospace;
+        color: rgba(255,255,255,0.4);
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: 0.05em;
       }
       
       .tour-buttons {
@@ -403,58 +536,63 @@ const QPTour = (function() {
       }
       
       .tour-buttons button {
-        padding: 8px 14px;
-        border-radius: 6px;
+        padding: 10px 16px;
+        border-radius: 8px;
         font-size: 12px;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
-        transition: all 0.15s;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       }
       
       .tour-skip {
         background: transparent;
-        border: 1px solid var(--border, #333);
-        color: var(--text-3, #666);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: rgba(255,255,255,0.5);
       }
       .tour-skip:hover {
-        border-color: var(--text-2, #888);
-        color: var(--text-2, #888);
+        border-color: rgba(255,255,255,0.3);
+        color: rgba(255,255,255,0.8);
+        background: rgba(255,255,255,0.05);
       }
       
       .tour-next {
-        background: var(--gold, #c9a84c);
+        background: linear-gradient(135deg, #c9a84c, #d4b85a);
         border: none;
         color: #000;
+        box-shadow: 0 4px 12px rgba(201,168,76,0.3);
       }
       .tour-next:hover {
-        background: var(--gold-bright, #e6c876);
+        background: linear-gradient(135deg, #d4b85a, #e6c876);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(201,168,76,0.4);
       }
       
+      /* Refined arrow */
       .tour-arrow {
         position: absolute;
-        width: 10px;
-        height: 10px;
-        background: var(--surface, #1a1a1f);
-        border: 1px solid var(--gold, #c9a84c);
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(135deg, rgba(26,26,31,0.98), rgba(20,20,25,0.98));
+        border: 1px solid rgba(201,168,76,0.5);
         transform: rotate(45deg);
       }
       .tour-arrow.top {
-        top: -6px;
+        top: -7px;
         border-right: none;
         border-bottom: none;
       }
       .tour-arrow.bottom {
-        bottom: -6px;
+        bottom: -7px;
         border-left: none;
         border-top: none;
       }
       .tour-arrow.left {
-        left: -6px;
+        left: -7px;
         border-right: none;
         border-top: none;
       }
       .tour-arrow.right {
-        right: -6px;
+        right: -7px;
         border-left: none;
         border-bottom: none;
       }
@@ -462,38 +600,74 @@ const QPTour = (function() {
       /* Nav highlight animation */
       .tour-nav-highlight {
         position: relative;
+        z-index: 100001;
       }
       .tour-nav-highlight::after {
         content: '';
         position: absolute;
-        inset: -4px;
+        inset: -6px;
         border: 2px solid #c9a84c;
-        border-radius: 8px;
-        animation: tourPulse 0.8s ease-in-out infinite;
+        border-radius: 10px;
+        animation: tourPulse 1s ease-in-out infinite;
+        box-shadow: 0 0 20px rgba(201,168,76,0.3);
       }
       @keyframes tourPulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.6; transform: scale(1.02); }
+        0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 20px rgba(201,168,76,0.3); }
+        50% { opacity: 0.7; transform: scale(1.03); box-shadow: 0 0 30px rgba(201,168,76,0.5); }
       }
       
       /* Mobile adjustments */
       @media (max-width: 650px) {
+        .tour-overlay {
+          backdrop-filter: blur(6px) saturate(1.1);
+          -webkit-backdrop-filter: blur(6px) saturate(1.1);
+        }
         .tour-callout {
-          width: 260px;
+          width: 280px;
+          border-radius: 14px;
+        }
+        .tour-callout::before {
+          height: 2px;
         }
         .tour-body {
-          padding: 14px;
+          padding: 16px;
+        }
+        .tour-section-badge {
+          font-size: 9px;
+          padding: 3px 8px;
+          margin-bottom: 10px;
         }
         .tour-title {
-          font-size: 14px;
+          font-size: 15px;
         }
         .tour-content {
           font-size: 12px;
           margin-bottom: 12px;
         }
+        .tour-progress-bar {
+          height: 2px;
+          margin-bottom: 12px;
+        }
+        .tour-footer {
+          padding-top: 10px;
+        }
         .tour-buttons button {
-          padding: 7px 12px;
+          padding: 9px 14px;
           font-size: 11px;
+        }
+        .tour-spotlight {
+          border-radius: 10px;
+        }
+      }
+      
+      /* Reduced motion preference */
+      @media (prefers-reduced-motion: reduce) {
+        .tour-spotlight,
+        .tour-callout,
+        .tour-overlay,
+        .tour-nav-highlight::after {
+          transition-duration: 0.1s !important;
+          animation: none !important;
         }
       }
     `;
@@ -507,8 +681,11 @@ const QPTour = (function() {
       overlay: container.querySelector('.tour-overlay'),
       spotlight: container.querySelector('.tour-spotlight'),
       callout: container.querySelector('.tour-callout'),
+      sectionBadge: container.querySelector('.tour-section-badge'),
       title: container.querySelector('.tour-title'),
       content: container.querySelector('.tour-content'),
+      progressBar: container.querySelector('.tour-progress-bar'),
+      progressFill: container.querySelector('.tour-progress-fill'),
       progress: container.querySelector('.tour-progress'),
       arrow: container.querySelector('.tour-arrow'),
       skipBtn: container.querySelector('.tour-skip'),
@@ -518,6 +695,9 @@ const QPTour = (function() {
     // Bind events
     elements.skipBtn.onclick = exit;
     elements.nextBtn.onclick = next;
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', handleKeyboard);
     
     // Activate overlay with slight delay
     requestAnimationFrame(() => {
@@ -529,6 +709,7 @@ const QPTour = (function() {
    * Destroy tour UI
    */
   function destroyUI() {
+    document.removeEventListener('keydown', handleKeyboard);
     document.getElementById('qp-tour')?.remove();
     document.getElementById('qp-tour-styles')?.remove();
     elements = {};
@@ -633,7 +814,7 @@ const QPTour = (function() {
     
     // Position spotlight
     const rect = target.getBoundingClientRect();
-    const pad = 6;
+    const pad = 8;
     Object.assign(elements.spotlight.style, {
       left: (rect.left - pad) + 'px',
       top: (rect.top - pad) + 'px',
@@ -641,13 +822,32 @@ const QPTour = (function() {
       height: (rect.height + pad * 2) + 'px'
     });
     
+    // Apply emphasis class if present
+    elements.spotlight.className = 'tour-spotlight';
+    if (step.emphasis) {
+      elements.spotlight.classList.add(`emphasis-${step.emphasis}`);
+    }
+    
     await sleep(TIMING.spotlightMove);
+    
+    // Update section badge
+    const sectionLabels = {
+      research: 'Research Tier',
+      recoil: 'Recoil Tier',
+      terminal: 'Terminal Tier',
+      suite: 'Suite Tier'
+    };
+    elements.sectionBadge.textContent = sectionLabels[step.section] || step.section;
     
     // Update callout content
     elements.title.textContent = step.title;
     elements.content.textContent = step.content;
-    elements.progress.textContent = `${index + 1} / ${allSteps.length}`;
-    elements.nextBtn.textContent = index === allSteps.length - 1 ? 'Finish' : 'Next →';
+    elements.progress.textContent = `${index + 1} of ${allSteps.length}`;
+    elements.nextBtn.textContent = index === allSteps.length - 1 ? 'Finish ✓' : 'Next →';
+    
+    // Update progress bar
+    const progressPercent = ((index + 1) / allSteps.length) * 100;
+    elements.progressFill.style.width = `${progressPercent}%`;
     
     // Position callout
     positionCallout(step.position, rect);
@@ -662,9 +862,9 @@ const QPTour = (function() {
   function positionCallout(position, targetRect) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 12;
-    const calloutWidth = 280;
+    const gap = 14;
     const isMobile = window.innerWidth <= 650;
+    const calloutWidth = isMobile ? 280 : 300;
     
     // Reset arrow classes
     arrow.className = 'tour-arrow';

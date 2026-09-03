@@ -1,7 +1,12 @@
 /**
- * QP Tour Dev Testing Tool v2
+ * QP Tour Dev Testing Tool v3
  * 
- * Admin-only. Mobile-responsive.
+ * Admin-only tool for testing tour sequences.
+ * Works with tour-engine v3.
+ * 
+ * Test paths:
+ * - New signups: Research, Recoil, Terminal, Suite
+ * - Upgrades: All tier transition combinations
  */
 
 const QPTourDevTool = (function() {
