@@ -815,7 +815,7 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, targetRect) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 12;
+    const gap = 6;
     const isMobile = window.innerWidth <= 650;
     const calloutWidth = isMobile ? 280 : 300;
     const calloutHeight = callout.offsetHeight || 200;
