@@ -618,10 +618,6 @@ const QPTour = (function() {
       
       /* Mobile */
       @media (max-width: 650px) {
-        .tour-overlay {
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
-        }
         .tour-callout {
           width: 280px;
         }
