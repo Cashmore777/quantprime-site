@@ -1,7 +1,12 @@
 /**
- * QP Dashboard Onboarding Tour Engine v35
+ * QP Dashboard Onboarding Tour Engine v36
  * 
  * Changelog:
+ * v36 - FIXED SCROLL BREAKING SPOTLIGHT POSITION
+ *   - After scroll-to-show-callout, reposition spotlight AND callout
+ *   - Spotlight is position:fixed, so scrolling moves target but not spotlight
+ *   - Now correctly follows target element after any scroll
+ * 
  * v35 - FULL AUDIT FIX - Spotlight visibility + callout positioning
  *   - Fixed repositionElements() prematurely adding 'visible' class
  *   - Separated spotlight positioning from visibility control
@@ -1358,6 +1363,25 @@ const QPTour = (function() {
         main.scrollBy({
           top: scrollNeeded,
           behavior: 'smooth'
+        });
+        
+        // CRITICAL: After scroll, reposition spotlight and callout!
+        // Spotlight is position:fixed, so scrolling the page moves the target
+        // but NOT the spotlight. We must reposition to follow the target.
+        await sleep(400); // Wait for scroll to complete
+        
+        // Reposition spotlight to where target NOW is
+        positionSpotlight(target, step, true);
+        
+        // Get fresh bounds and reposition callout
+        const newSpotlightBounds = elements.spotlight.getBoundingClientRect();
+        positionCallout(step.position, {
+          left: newSpotlightBounds.left,
+          top: newSpotlightBounds.top,
+          right: newSpotlightBounds.right,
+          bottom: newSpotlightBounds.bottom,
+          width: newSpotlightBounds.width,
+          height: newSpotlightBounds.height
         });
       }
     }
