@@ -123,15 +123,6 @@ const QPTour = (function() {
         emphasis: 'feature'
       },
       {
-        id: 'research-paper-example',
-        page: 'research',
-        selector: '.paper-slide[data-paper="1"]',
-        title: 'Start Here',
-        content: '"The 81.5% Win Rate Paradox" — why winners still lose money. 3 min read that\'ll save you months.',
-        position: 'right',
-        emphasis: 'action'
-      },
-      {
         id: 'research-paper-nav',
         page: 'research',
         selector: '#paper-dots',

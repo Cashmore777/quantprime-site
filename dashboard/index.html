@@ -1476,29 +1476,38 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
 .paper-dots {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   margin-top: 16px;
+  flex-wrap: wrap;
 }
 
 .paper-dot {
-  width: 8px;
-  height: 8px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: var(--border);
-  border: none;
+  background: var(--card);
+  border: 1px solid var(--border);
   cursor: pointer;
   transition: all 0.2s;
   padding: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .paper-dot:hover {
-  background: var(--text-3);
+  border-color: var(--text-3);
+  color: var(--text-2);
 }
 
 .paper-dot.active {
   background: var(--gold);
-  width: 24px;
-  border-radius: 4px;
+  border-color: var(--gold);
+  color: #000;
 }
 
 /* Papers Carousel - Mobile Polish */
@@ -1538,35 +1547,19 @@ button { font-family: var(--sans); cursor: pointer; border: none; background: no
   
   .paper-dots {
     margin-top: 12px;
-    gap: 6px;
+    gap: 3px;
   }
   
   .paper-dot {
-    width: 7px;
-    height: 7px;
-    min-height: 32px;
-    min-width: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  
-  .paper-dot::after {
-    content: '';
-    position: absolute;
-    width: 7px;
-    height: 7px;
-    background: inherit;
-    border-radius: inherit;
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+    min-height: 22px;
+    min-width: 22px;
   }
   
   .paper-dot.active {
-    width: 20px;
-  }
-  
-  .paper-dot.active::after {
-    width: 20px;
+    width: 22px;
   }
   
   /* Carousel nav buttons - touch friendly */
@@ -9082,16 +9075,16 @@ button, .nav-item, .room, .video-item, .filter-chip {
       
       <!-- Paper dots navigation -->
       <div class="paper-dots" id="paper-dots">
-        <button class="paper-dot active" onclick="goToPaper(0)"></button>
-        <button class="paper-dot" onclick="goToPaper(1)"></button>
-        <button class="paper-dot" onclick="goToPaper(2)"></button>
-        <button class="paper-dot" onclick="goToPaper(3)"></button>
-        <button class="paper-dot" onclick="goToPaper(4)"></button>
-        <button class="paper-dot" onclick="goToPaper(5)"></button>
-        <button class="paper-dot" onclick="goToPaper(6)"></button>
-        <button class="paper-dot" onclick="goToPaper(7)"></button>
-        <button class="paper-dot" onclick="goToPaper(8)"></button>
-        <button class="paper-dot" onclick="goToPaper(9)"></button>
+        <button class="paper-dot active" onclick="goToPaper(0)">1</button>
+        <button class="paper-dot" onclick="goToPaper(1)">2</button>
+        <button class="paper-dot" onclick="goToPaper(2)">3</button>
+        <button class="paper-dot" onclick="goToPaper(3)">4</button>
+        <button class="paper-dot" onclick="goToPaper(4)">5</button>
+        <button class="paper-dot" onclick="goToPaper(5)">6</button>
+        <button class="paper-dot" onclick="goToPaper(6)">7</button>
+        <button class="paper-dot" onclick="goToPaper(7)">8</button>
+        <button class="paper-dot" onclick="goToPaper(8)">9</button>
+        <button class="paper-dot" onclick="goToPaper(9)">10</button>
       </div>
     </div>
     
@@ -22295,7 +22288,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="/assets/support-widget-v2.js"></script>
 
 <!-- Onboarding Tour System -->
-<script src="/dashboard/js/tour-engine.js?v=40"></script>
+<script src="/dashboard/js/tour-engine.js?v=41"></script>
 <script src="/dashboard/js/tour-dev-tool.js?v=10"></script>
 <script>
 // Auto-trigger tour for new signups and upgrades
