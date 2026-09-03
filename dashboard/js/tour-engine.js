@@ -1,7 +1,12 @@
 /**
- * QP Dashboard Onboarding Tour Engine v33
+ * QP Dashboard Onboarding Tour Engine v34
  * 
  * Changelog:
+ * v34 - SCROLL TO SHOW FULL CALLOUT
+ *   - After positioning callout, check if bottom is cut off
+ *   - Scroll page down to bring full callout into view
+ *   - Account for 90px mobile nav height
+ * 
  * v33 - CALLOUT OVERLAP FIX
  *   - Increased gap to 20px for more breathing room
  *   - Added overlap safety check after clamping
@@ -1297,6 +1302,25 @@ const QPTour = (function() {
     
     // Show callout with entrance animation
     elements.callout.classList.add('visible');
+    
+    // After callout is visible, ensure it's fully in viewport
+    await sleep(50); // Let callout render
+    
+    const calloutRect = elements.callout.getBoundingClientRect();
+    const mobileNavHeight = 90; // Height of bottom nav bar
+    const viewportBottom = window.innerHeight - mobileNavHeight;
+    
+    // If callout bottom is below visible area, scroll down
+    if (calloutRect.bottom > viewportBottom) {
+      const scrollNeeded = calloutRect.bottom - viewportBottom + 20; // +20 padding
+      const main = document.getElementById('main');
+      if (main) {
+        main.scrollBy({
+          top: scrollNeeded,
+          behavior: 'smooth'
+        });
+      }
+    }
   }
 
   function repositionElements(target, step) {
