@@ -43,10 +43,10 @@ const QPTour = (function() {
       {
         id: 'research-paper',
         page: 'research',
-        selector: '.research-card:first-child',
+        selector: '.research-card',
         title: 'Start here',
         content: 'This paper explains why 83% win rates can still lose money. Read it first.',
-        position: 'right'
+        position: 'bottom'
       },
       {
         id: 'research-tier-card',
@@ -59,10 +59,10 @@ const QPTour = (function() {
       {
         id: 'research-courses',
         page: 'marketplace',
-        selector: '.menu-course:first-child',
+        selector: '.menu-courses',
         title: 'Pick a dish',
         content: 'Each course has 3 options. Select one from each, then generate your indicator.',
-        position: 'right'
+        position: 'top'
       }
     ],
     
@@ -279,24 +279,21 @@ const QPTour = (function() {
       .tour-overlay {
         position: absolute;
         inset: 0;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        background: rgba(10,10,15,0.5);
+        background: rgba(0,0,0,0.75);
         opacity: 0;
         transition: opacity 0.4s ease;
+        pointer-events: none;
       }
       .tour-overlay.active { opacity: 1; }
       
       .tour-spotlight {
         position: absolute;
-        border-radius: 12px;
-        background: transparent;
+        border-radius: 10px;
+        border: 2px solid #c9a84c;
         box-shadow: 
-          0 0 0 4px rgba(201,168,76,0.6),
-          0 0 20px rgba(201,168,76,0.3),
-          0 0 0 9999px rgba(10,10,15,0.7);
-        backdrop-filter: blur(0);
-        -webkit-backdrop-filter: blur(0);
+          0 0 0 9999px rgba(0,0,0,0.75),
+          0 0 30px rgba(201,168,76,0.4),
+          inset 0 0 0 1px rgba(201,168,76,0.2);
         transition: all ${TIMING.spotlightMove}ms cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
       }
