@@ -40,7 +40,7 @@ const QPTour = (function() {
         id: 'research-intel',
         page: 'research',
         selector: '#view-research .panel[onclick*="intel"]',
-        title: '📡 Your Intel Feed',
+        title: 'Your Intel Feed',
         content: 'Daily market briefings drop here at 10pm UK. 30 instruments analyzed. Regime shifts, key levels, trade setups — all archived.',
         position: 'bottom',
         emphasis: 'feature'
@@ -49,7 +49,7 @@ const QPTour = (function() {
         id: 'research-papers-intro',
         page: 'research',
         selector: '#papers-carousel',
-        title: '📚 The Research Library',
+        title: 'The Research Library',
         content: '10 papers that changed how traders think. Real backtests, honest about what doesn\'t work.',
         position: 'top',
         emphasis: 'feature'
@@ -58,7 +58,7 @@ const QPTour = (function() {
         id: 'research-paper-example',
         page: 'research',
         selector: '.paper-slide[data-paper="1"]',
-        title: '⚡ Start With This One',
+        title: 'Start With This One',
         content: '"The 81.5% Win Rate Paradox" — why most traders lose money despite winning trades. 3 min read.',
         position: 'right',
         emphasis: 'action'
@@ -67,7 +67,7 @@ const QPTour = (function() {
         id: 'research-paper-nav',
         page: 'research',
         selector: '#paper-dots',
-        title: '↓ Browse All Papers',
+        title: 'Browse All Papers ↓',
         content: 'Swipe or tap. Topics: position sizing, stop placement, session timing, the lot.',
         position: 'top'
       },
@@ -75,7 +75,7 @@ const QPTour = (function() {
         id: 'research-tier-card',
         page: 'marketplace',
         selector: '.tier-card[data-tier="research"]',
-        title: '🛠️ The Build Menu',
+        title: 'The Build Menu',
         content: 'This is where you build YOUR indicator. 255 combinations. Pick your ingredients below.',
         position: 'bottom',
         emphasis: 'feature'
@@ -120,7 +120,7 @@ const QPTour = (function() {
         id: 'recoil-animation',
         page: 'recoil',
         selector: '#recoil-animation',
-        title: '🎯 Meet Recoil',
+        title: 'Meet Recoil',
         content: 'Measures how far price stretches from equilibrium. Green bands = stretched low (long zone). Red bands = stretched high (short zone).',
         position: 'bottom',
         emphasis: 'feature'
@@ -129,7 +129,7 @@ const QPTour = (function() {
         id: 'recoil-tv',
         page: 'recoil',
         selector: '#tv-username-recoil',
-        title: '🔐 Link Your TradingView',
+        title: 'Link Your TradingView',
         content: 'Enter your username EXACTLY as it appears on TradingView. The indicator unlocks in your invite-only scripts within 60 seconds.',
         position: 'bottom',
         interactive: true,
@@ -139,7 +139,7 @@ const QPTour = (function() {
         id: 'recoil-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="recoil"]',
-        title: '⚡ Recoil Menu Unlocked',
+        title: 'Recoil Menu Unlocked',
         content: 'New ingredient tier available. 255 volatility-tuned combinations for mean reversion setups.',
         position: 'bottom',
         emphasis: 'feature'
@@ -151,7 +151,7 @@ const QPTour = (function() {
         id: 'terminal-animation',
         page: 'meridian',
         selector: '#meridian-animation',
-        title: '🌐 Meet Meridian',
+        title: 'Meet Meridian',
         content: 'Tracks the AMD cycle in real-time. Accumulation → Manipulation → Distribution. Know which phase you\'re in.',
         position: 'bottom',
         emphasis: 'feature'
@@ -160,7 +160,7 @@ const QPTour = (function() {
         id: 'terminal-tv',
         page: 'meridian',
         selector: '#tv-username-meridian',
-        title: '🔐 Link Your TradingView',
+        title: 'Link Your TradingView',
         content: 'Same drill — enter your exact TradingView username. Meridian appears in your invite-only scripts.',
         position: 'bottom',
         interactive: true,
@@ -170,7 +170,7 @@ const QPTour = (function() {
         id: 'terminal-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="terminal"]',
-        title: '⚡ Terminal Menu Unlocked',
+        title: 'Terminal Menu Unlocked',
         content: 'AMD-focused combinations now available. 255 ways to trade the cycle.',
         position: 'bottom',
         emphasis: 'feature'
@@ -182,7 +182,7 @@ const QPTour = (function() {
         id: 'suite-animation',
         page: 'cockpit',
         selector: '#cockpit-animation',
-        title: '🚀 Meet Cockpit',
+        title: 'Meet Cockpit',
         content: 'The full picture. 4 EMAs, liquidity sweeps, FVGs, and a real-time regime score. Everything on one chart.',
         position: 'bottom',
         emphasis: 'feature'
@@ -191,7 +191,7 @@ const QPTour = (function() {
         id: 'suite-tv',
         page: 'cockpit',
         selector: '#tv-username-cockpit',
-        title: '🔐 Link Your TradingView',
+        title: 'Link Your TradingView',
         content: 'Final unlock. Enter your username and Cockpit joins your toolkit.',
         position: 'bottom',
         interactive: true,
@@ -201,7 +201,7 @@ const QPTour = (function() {
         id: 'suite-performance',
         page: 'cockpit',
         selector: '.suite-tab[data-suite-panel="performance"]',
-        title: '📊 Performance Tracker',
+        title: 'Performance Tracker',
         content: 'Upload your MT5 trade history. AI analyzes your edge, finds leaks, suggests fixes. Real feedback, not fluff.',
         position: 'bottom',
         emphasis: 'feature'
@@ -210,7 +210,7 @@ const QPTour = (function() {
         id: 'suite-build',
         page: 'marketplace',
         selector: '.tier-card[data-tier="suite"]',
-        title: '👑 Full Menu Unlocked',
+        title: 'Full Menu Unlocked',
         content: 'Every ingredient. Every combination. 255 configs across all instruments. Build whatever you need.',
         position: 'bottom',
         emphasis: 'feature'
@@ -492,7 +492,17 @@ const QPTour = (function() {
         right: 0;
         height: 3px;
         background: linear-gradient(90deg, #c9a84c 0%, #00d4ff 100%);
-        border-radius: 14px 14px 0 0;
+      }
+      
+      /* Gold accent bar at bottom */
+      .tour-body::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00d4ff 0%, #c9a84c 100%);
       }
       
       .tour-section-badge {
