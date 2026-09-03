@@ -729,7 +729,13 @@ const QPTour = (function() {
     elements.callout.classList.remove('active');
     
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
-    if (step.page !== currentView) {
+    const needsNavigation = step.page !== currentView;
+    
+    if (needsNavigation) {
+      // Hide spotlight during navigation (instant, no animation)
+      elements.spotlight.style.opacity = '0';
+      elements.spotlight.style.transition = 'none';
+      
       sessionStorage.setItem('qp_tour_state', JSON.stringify({
         sectionsToPlay,
         currentStepIndex: index,
@@ -752,23 +758,40 @@ const QPTour = (function() {
     }
     
     target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    await sleep(300);
+    await sleep(needsNavigation ? 150 : 200);
     
     const rect = target.getBoundingClientRect();
     const pad = 8;
-    Object.assign(elements.spotlight.style, {
-      left: (rect.left - pad) + 'px',
-      top: (rect.top - pad) + 'px',
-      width: (rect.width + pad * 2) + 'px',
-      height: (rect.height + pad * 2) + 'px'
-    });
+    
+    // Position spotlight (instant if we navigated)
+    if (needsNavigation) {
+      // Set position instantly while hidden
+      Object.assign(elements.spotlight.style, {
+        left: (rect.left - pad) + 'px',
+        top: (rect.top - pad) + 'px',
+        width: (rect.width + pad * 2) + 'px',
+        height: (rect.height + pad * 2) + 'px'
+      });
+      // Re-enable transitions and fade in
+      await sleep(20); // Let position apply
+      elements.spotlight.style.transition = `all ${TIMING.spotlightMove}ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 200ms ease`;
+      elements.spotlight.style.opacity = '1';
+    } else {
+      // Animate to new position
+      Object.assign(elements.spotlight.style, {
+        left: (rect.left - pad) + 'px',
+        top: (rect.top - pad) + 'px',
+        width: (rect.width + pad * 2) + 'px',
+        height: (rect.height + pad * 2) + 'px'
+      });
+    }
     
     elements.spotlight.className = 'tour-spotlight';
     if (step.emphasis) {
       elements.spotlight.classList.add(`emphasis-${step.emphasis}`);
     }
     
-    await sleep(TIMING.spotlightMove);
+    await sleep(needsNavigation ? 200 : TIMING.spotlightMove);
     
     const sectionLabels = {
       research: 'Research Tier',
