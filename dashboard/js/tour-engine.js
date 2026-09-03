@@ -1,7 +1,14 @@
 /**
- * QP Dashboard Onboarding Tour Engine v34
+ * QP Dashboard Onboarding Tour Engine v35
  * 
  * Changelog:
+ * v35 - FULL AUDIT FIX - Spotlight visibility + callout positioning
+ *   - Fixed repositionElements() prematurely adding 'visible' class
+ *   - Separated spotlight positioning from visibility control
+ *   - positionCallout() now uses fresh getBoundingClientRect() bounds
+ *   - Added debug logging (remove for production)
+ *   - Simplified flow: position → show spotlight → position callout → show callout
+ * 
  * v34 - SCROLL TO SHOW FULL CALLOUT
  *   - After positioning callout, check if bottom is cut off
  *   - Scroll page down to bring full callout into view
@@ -1249,10 +1256,15 @@ const QPTour = (function() {
     currentStepIndex = index;
     currentSection = step.section;
     
+    console.log('QPTour: Playing step', index, step.id);
+    
     // 1. Hide spotlight and callout IMMEDIATELY (no transition)
     elements.spotlight.style.transition = 'none';
     elements.spotlight.classList.remove('visible');
     elements.callout.classList.remove('visible');
+    
+    // Force the hidden state to apply
+    elements.spotlight.offsetHeight;
     
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     const needsNavigation = step.page !== currentView;
@@ -1285,30 +1297,58 @@ const QPTour = (function() {
     await scrollToElement(target);
     
     // 4. Position spotlight at NEW location (while still hidden)
-    repositionElements(target, step);
+    // This ONLY positions, does NOT add 'visible' class
+    positionSpotlight(target, step);
+    
+    // Debug: log spotlight state
+    console.log('QPTour: Spotlight positioned', {
+      left: elements.spotlight.style.left,
+      top: elements.spotlight.style.top,
+      width: elements.spotlight.style.width,
+      height: elements.spotlight.style.height,
+      classes: elements.spotlight.className
+    });
     
     // 5. Force reflow, then restore transitions
     elements.spotlight.offsetHeight; // force reflow
     elements.spotlight.style.transition = ''; // restore CSS transitions
     
-    // 6. Show spotlight at new position (will fade in)
+    // 6. NOW add visible class (will fade in with transition)
     elements.spotlight.classList.add('visible');
     
-    // 7. Show callout after spotlight settles
-    await sleep(150);
+    console.log('QPTour: Spotlight visible class added', elements.spotlight.classList.contains('visible'));
     
-    // Update callout content
+    // 7. Wait for spotlight to appear, then position callout
+    await sleep(100);
+    
+    // 8. Get FRESH spotlight bounds AFTER it's positioned and visible
+    const spotlightBounds = elements.spotlight.getBoundingClientRect();
+    console.log('QPTour: Fresh spotlight bounds', spotlightBounds);
+    
+    // 9. Update callout content
     updateCalloutContent(step, index);
     
-    // Show callout with entrance animation
+    // 10. Position callout using fresh spotlight bounds
+    positionCallout(step.position, {
+      left: spotlightBounds.left,
+      top: spotlightBounds.top,
+      right: spotlightBounds.right,
+      bottom: spotlightBounds.bottom,
+      width: spotlightBounds.width,
+      height: spotlightBounds.height
+    });
+    
+    // 11. Show callout
     elements.callout.classList.add('visible');
     
-    // After callout is visible, ensure it's fully in viewport
-    await sleep(50); // Let callout render
+    // 12. After callout is visible, ensure it's fully in viewport
+    await sleep(100); // Let callout render
     
     const calloutRect = elements.callout.getBoundingClientRect();
     const mobileNavHeight = 90; // Height of bottom nav bar
     const viewportBottom = window.innerHeight - mobileNavHeight;
+    
+    console.log('QPTour: Callout rect', calloutRect, 'viewportBottom', viewportBottom);
     
     // If callout bottom is below visible area, scroll down
     if (calloutRect.bottom > viewportBottom) {
@@ -1323,35 +1363,61 @@ const QPTour = (function() {
     }
   }
 
-  function repositionElements(target, step) {
+  /**
+   * Position spotlight around target element.
+   * @param {boolean} preserveVisibility - If true, keeps 'visible' class (for resize)
+   */
+  function positionSpotlight(target, step, preserveVisibility = false) {
     const rect = target.getBoundingClientRect();
     const pad = 10;
     
-    // Position spotlight
+    console.log('QPTour: Target rect', rect);
+    
+    // Calculate spotlight position
     const spotlightLeft = rect.left - pad;
     const spotlightTop = rect.top - pad;
     const spotlightWidth = rect.width + pad * 2;
     const spotlightHeight = rect.height + pad * 2;
     
+    // Apply position styles
     elements.spotlight.style.left = spotlightLeft + 'px';
     elements.spotlight.style.top = spotlightTop + 'px';
     elements.spotlight.style.width = spotlightWidth + 'px';
     elements.spotlight.style.height = spotlightHeight + 'px';
     
-    // Set emphasis class
-    elements.spotlight.className = 'tour-spotlight visible';
+    // Preserve visibility state if needed (for resize operations)
+    const wasVisible = elements.spotlight.classList.contains('visible');
+    
+    // Reset class to base
+    elements.spotlight.className = 'tour-spotlight';
+    
+    // Add emphasis class if specified
     if (step.emphasis) {
       elements.spotlight.classList.add(`emphasis-${step.emphasis}`);
     }
     
-    // Position callout
-    positionCallout(step.position, {
-      left: spotlightLeft,
-      top: spotlightTop,
-      right: spotlightLeft + spotlightWidth,
-      bottom: spotlightTop + spotlightHeight,
-      width: spotlightWidth,
-      height: spotlightHeight
+    // Restore visibility if it was visible and we're preserving it
+    if (preserveVisibility && wasVisible) {
+      elements.spotlight.classList.add('visible');
+    }
+  }
+  
+  /**
+   * Reposition both spotlight and callout (used by resize observer).
+   * Preserves visibility state.
+   */
+  function repositionElements(target, step) {
+    positionSpotlight(target, step, true); // preserve visibility
+    
+    // Also reposition callout using fresh bounds
+    const spotlightBounds = elements.spotlight.getBoundingClientRect();
+    positionCallout(step.position || 'bottom', {
+      left: spotlightBounds.left,
+      top: spotlightBounds.top,
+      right: spotlightBounds.right,
+      bottom: spotlightBounds.bottom,
+      width: spotlightBounds.width,
+      height: spotlightBounds.height
     });
   }
 
