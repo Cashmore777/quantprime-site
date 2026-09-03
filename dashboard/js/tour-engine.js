@@ -1,5 +1,5 @@
 /**
- * QP Dashboard Onboarding Tour Engine v38
+ * QP Dashboard Onboarding Tour Engine v40
  * 
  * Changelog:
  * v38 - USE TARGET BOUNDS FOR CALLOUT POSITIONING
@@ -327,6 +327,7 @@ const QPTour = (function() {
   let isActive = false;
   let currentSection = null;
   let currentStepIndex = 0;
+  let currentTarget = null; // Track current target for class cleanup
   let sectionsToPlay = [];
   let allSteps = [];
   let completedSections = [];
@@ -582,6 +583,14 @@ const QPTour = (function() {
 
   function getTourStyles() {
     return `
+      /* ═══════════════════════════════════════════════════════════════════
+         TARGET ELEMENT - Elevate above overlay so it's fully visible
+         ═══════════════════════════════════════════════════════════════════ */
+      .tour-target-active {
+        position: relative !important;
+        z-index: 100001 !important;
+      }
+      
       /* ═══════════════════════════════════════════════════════════════════
          TOUR CONTAINER
          ═══════════════════════════════════════════════════════════════════ */
@@ -1317,6 +1326,15 @@ const QPTour = (function() {
       return;
     }
     
+    // Remove highlight class from previous target
+    if (currentTarget && currentTarget !== target) {
+      currentTarget.classList.remove('tour-target-active');
+    }
+    
+    // Add highlight class to current target - elevates it above overlay
+    target.classList.add('tour-target-active');
+    currentTarget = target;
+    
     // 3. Scroll to element (spotlight still hidden)
     await scrollToElement(target);
     
@@ -1753,6 +1771,13 @@ const QPTour = (function() {
     stopResizeObserver();
     savedTheme = null;
     scrollContainer = null;
+    
+    // Remove highlight class from target
+    if (currentTarget) {
+      currentTarget.classList.remove('tour-target-active');
+      currentTarget = null;
+    }
+    
     destroyUI();
     sessionStorage.removeItem('qp_tour_state');
     sessionStorage.removeItem('qp_tour_theme');
