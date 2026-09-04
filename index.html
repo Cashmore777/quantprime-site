@@ -444,7 +444,7 @@
   <div class="container">
     <div class="hero-content">
       <div class="label hero-label">QUANTITATIVE MARKET INSTRUMENTS</div>
-      <h1>The algorithm doesn't <em>predict</em>.<br>It <em>measures</em>.</h1>
+      <h1>The algorithm doesn't <em>predict</em>.<br>It <em class="gradient-text">measures</em>.</h1>
       <p class="hero-sub">Quant Prime instruments decode volatility compression, market structure, and liquidity alignment - measuring conditions the market reveals only to those who know where to look.</p>
       <div class="hero-cta-group">
         <a href="/manifesto" class="hero-cta-primary">Get The Manifesto – free</a>
@@ -464,8 +464,8 @@
       <p class="section-desc">Each indicator measures different market conditions. Together, they provide a complete picture.</p>
     </div>
     <div class="instruments-grid">
-      <div class="instrument-card reveal">
-        <div class="instrument-badge gold">⚡</div>
+      <div class="instrument-card reveal card-hover">
+        <div class="instrument-badge gold gradient-dot"></div>
         <h3>Recoil</h3>
         <p class="type">Volatility System</p>
         <p class="desc">Measures compression before expansion. Identifies when price is coiled and ready to move. 69% win rate across 121 trades.</p>
@@ -474,8 +474,8 @@
           <span>3-min TF</span>
         </div>
       </div>
-      <div class="instrument-card reveal">
-        <div class="instrument-badge cyan">◎</div>
+      <div class="instrument-card reveal card-hover">
+        <div class="instrument-badge cyan gradient-dot"></div>
         <h3>Meridian</h3>
         <p class="type">Structure Engine</p>
         <p class="desc">Maps market structure and liquidity zones. Finds where price must travel. 68% win rate across 279 trades.</p>
@@ -490,6 +490,8 @@
     </div>
   </div>
 </section>
+
+<hr class="section-divider">
 
 <!-- Philosophy -->
 <section class="philosophy">
@@ -575,8 +577,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
 <script>
-// Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
+// Scroll reveal (supports both .reveal and .fade-in classes)
+const reveals = document.querySelectorAll('.reveal, .fade-in');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
 }, { threshold: 0.15 });
