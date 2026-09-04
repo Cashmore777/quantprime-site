@@ -1,5 +1,5 @@
 /**
- * QP Dashboard Onboarding Tour Engine v49
+ * QP Dashboard Onboarding Tour Engine v40
  * 
  * Changelog:
  * v38 - USE TARGET BOUNDS FOR CALLOUT POSITIONING
@@ -177,7 +177,7 @@ const QPTour = (function() {
         selector: '#generate-btn',
         title: 'Build Your Instrument',
         content: 'One click. Your selections become a custom Pine Script indicator. Ready to trade.',
-        position: 'top',
+        position: 'bottom',
         emphasis: 'action'
       }
     ],
@@ -1242,57 +1242,28 @@ const QPTour = (function() {
   async function scrollToElement(element) {
     if (!element) return;
     
-    const rect = element.getBoundingClientRect();
-    const vh = window.innerHeight;
-    
-    // SIMPLE visibility check: if ANY part of element is on screen, DON'T scroll
-    // This prevents ALL micro-adjustments between nearby elements
-    // Critical for 8→9 transition where generate is visible when viewing dessert
-    const isOnScreen = rect.top < vh && rect.bottom > 0;
-    
-    if (isOnScreen) {
-      // Element is visible - NO SCROLL at all
-      await sleep(30);
-      return;
-    }
-    
-    // Only reach here if element is COMPLETELY off-screen
     const main = getScrollContainer();
-    if (!main) {
-      await sleep(50);
-      return;
-    }
-    
     const isMobile = window.innerWidth <= 650;
     const headerHeight = isMobile ? 60 : 0;
     const navHeight = isMobile ? 90 : 0;
     
-    const maxScroll = main.scrollHeight - main.clientHeight;
-    const currentScroll = main.scrollTop;
-    let targetScroll = currentScroll;
+    // Calculate target scroll position in ONE motion
+    const rect = element.getBoundingClientRect();
+    const safeTop = headerHeight + 100;
+    const safeBottom = window.innerHeight - navHeight - 100;
+    const safeCenterY = (safeTop + safeBottom) / 2;
+    const elemCenterY = rect.top + rect.height / 2;
+    const scrollAdjust = elemCenterY - safeCenterY;
     
-    const viewTop = headerHeight + 40;
-    const viewBottom = vh - navHeight - 40;
-    
-    if (rect.top >= vh) {
-      // Element completely below viewport - scroll down
-      const scrollNeeded = rect.top - viewTop + 80;
-      targetScroll = Math.min(currentScroll + scrollNeeded, maxScroll);
-    } else if (rect.bottom <= 0) {
-      // Element completely above viewport - scroll up
-      const scrollNeeded = viewTop - rect.bottom + 80;
-      targetScroll = Math.max(currentScroll - scrollNeeded, 0);
-    }
-    
-    // Only scroll if meaningful difference
-    if (Math.abs(targetScroll - currentScroll) > 30) {
+    if (main && Math.abs(scrollAdjust) > 20) {
+      const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
       main.scrollTo({
-        top: targetScroll,
+        top: newScroll,
         behavior: 'smooth'
       });
-      await sleep(350);
+      await sleep(400); // Single wait for scroll to complete
     } else {
-      await sleep(30);
+      await sleep(100);
     }
   }
 
@@ -1381,36 +1352,28 @@ const QPTour = (function() {
     elements.spotlight.offsetHeight; // force reflow
     elements.spotlight.style.transition = ''; // restore CSS transitions
     
-    // 6. Check if we need to scroll MORE to fit callout
-    // BUT: Skip this entirely if element is already on screen to prevent micro-adjustments
-    // The callout positioning will adapt (use 'top' position if no room below)
+    // 6. Check if we need to scroll MORE to fit callout below spotlight
+    // Do this BEFORE showing anything, so we don't have to reposition after
     const isMobile = window.innerWidth <= 650;
     const mobileNavHeight = isMobile ? 90 : 0;
     const calloutHeight = 280; // Approximate max callout height
     const gap = 12;
     
     let targetRect = target.getBoundingClientRect();
-    const vh = window.innerHeight;
-    
-    // Only scroll for callout room if:
-    // 1. Element is in the LOWER portion of screen (target.top > vh * 0.6)
-    // 2. AND we CAN actually scroll more (not at page bottom)
-    // 3. AND there's genuinely not enough room
-    const main = document.getElementById('main');
-    const canScrollMore = main && (main.scrollTop < main.scrollHeight - main.clientHeight - 10);
-    const elementInLowerScreen = targetRect.top > vh * 0.6;
     const neededBottom = targetRect.bottom + gap + calloutHeight + mobileNavHeight;
-    const needsMoreRoom = neededBottom > vh;
     
-    // Only scroll if ALL conditions are met - otherwise let callout adapt position
-    if (needsMoreRoom && canScrollMore && elementInLowerScreen) {
-      const scrollNeeded = Math.min(neededBottom - vh + 20, 150); // Cap at 150px
-      main.scrollBy({ top: scrollNeeded, behavior: 'smooth' });
-      await sleep(400);
-      // Get fresh target position after scroll
-      targetRect = target.getBoundingClientRect();
-      // Reposition spotlight to follow target
-      positionSpotlight(target, step, false);
+    if (neededBottom > window.innerHeight) {
+      // Need more room - scroll target higher up on screen
+      const scrollNeeded = neededBottom - window.innerHeight + 20;
+      const main = document.getElementById('main');
+      if (main) {
+        main.scrollBy({ top: scrollNeeded, behavior: 'smooth' });
+        await sleep(400);
+        // Get fresh target position after scroll
+        targetRect = target.getBoundingClientRect();
+        // Reposition spotlight to follow target
+        positionSpotlight(target, step, false);
+      }
     }
     
     // 7. Pause before showing spotlight at new position
