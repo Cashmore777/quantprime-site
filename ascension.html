@@ -629,8 +629,8 @@ section {
   margin: 0 auto;
 }
 
-@media (max-width: 700px) {
-  .fit-grid { grid-template-columns: 1fr; }
+@media (max-width: 650px) {
+  .fit-grid { grid-template-columns: 1fr; gap: 2rem; }
 }
 
 .fit-column h3 {
@@ -846,7 +846,25 @@ footer p {
 footer p a { color: var(--gold); }
 
 /* Mobile */
-@media (max-width: 600px) {
+@media (max-width: 650px) {
+  .hero-content h1 {
+    font-size: 1.75rem;
+  }
+  
+  .hero-content p {
+    font-size: 0.95rem;
+  }
+  
+  .hero-cta {
+    padding: 1rem 2rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+  }
+  
+  .section-header h2 {
+    font-size: 1.5rem;
+  }
+  
   .timeline::before {
     left: 15px;
   }
@@ -861,8 +879,43 @@ footer p a { color: var(--gold); }
     gap: 1rem;
   }
   
+  .timeline-content h3 {
+    font-size: 1rem;
+  }
+  
+  .included-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .included-card {
+    padding: 1.5rem;
+  }
+  
   .guarantee-box {
     padding: 2rem 1.5rem;
+  }
+  
+  .guarantee-box h3 {
+    font-size: 1.3rem;
+  }
+  
+  .final-cta h2 {
+    font-size: 1.5rem;
+  }
+  
+  .final-price .amount {
+    font-size: 2.5rem;
+  }
+  
+  .final-cta .hero-cta {
+    min-height: 52px;
+  }
+  
+  .fit-column li {
+    font-size: 0.9rem;
+    padding: 0.6rem 0;
+    padding-left: 1.75rem;
   }
 }
 </style>

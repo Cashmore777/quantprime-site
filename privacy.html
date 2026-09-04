@@ -50,7 +50,24 @@ body { background: #fafafa; }
 .nav-buttons a.secondary { background: #fff; color: #1a1a1a; border: 1px solid rgba(0,0,0,0.15); }
 .nav-buttons a.secondary:hover { border-color: var(--gold); color: var(--gold); }
 footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
-@media (max-width: 700px) { .terms-nav ul { grid-template-columns: 1fr; } .terms-header h1 { font-size: 2rem; } .data-table { font-size: 0.8rem; } }
+@media (max-width: 650px) { 
+  .terms-container { padding: 3rem 1rem 4rem; }
+  .terms-header { margin-bottom: 2rem; padding-bottom: 1.5rem; }
+  .terms-header h1 { font-size: 1.75rem; }
+  .terms-nav { padding: 1.25rem; margin-bottom: 2rem; }
+  .terms-nav ul { grid-template-columns: 1fr; }
+  .terms-nav a { padding: 0.75rem 0; min-height: 44px; display: flex; align-items: center; }
+  .terms-section { margin-bottom: 2rem; }
+  .terms-section h2 { font-size: 1.2rem; }
+  .terms-section h3 { font-size: 1rem; }
+  .terms-section p, .terms-section li { font-size: 0.9rem; }
+  .highlight-box { padding: 1rem 1.25rem; }
+  .contact-info { padding: 1.25rem; }
+  .data-table { font-size: 0.78rem; }
+  .data-table th, .data-table td { padding: 0.6rem 0.5rem; }
+  .nav-buttons { flex-direction: column; }
+  .nav-buttons a { justify-content: center; min-height: 48px; }
+}
 </style>
 </head>
 <body>

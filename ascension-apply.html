@@ -318,17 +318,37 @@ body {
   color: var(--text-2);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .form-grid {
     grid-template-columns: 1fr;
   }
   
   .container {
-    padding: 32px 16px;
+    padding: 24px 16px;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
   }
   
   .form-card {
-    padding: 24px 20px;
+    padding: 20px 16px;
+  }
+  
+  .form-section-title {
+    font-size: 0.7rem;
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 0.85rem 1rem;
+    font-size: 16px;
+    min-height: 48px;
   }
   
   .scale-option {
@@ -338,6 +358,24 @@ body {
   .scale-option label {
     padding: 10px 4px;
     font-size: 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .scale-options {
+    gap: 4px;
+  }
+  
+  .submit-btn {
+    padding: 1rem;
+    font-size: 0.95rem;
+    min-height: 52px;
+  }
+  
+  .hint {
+    font-size: 0.75rem;
   }
 }
 </style>

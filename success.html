@@ -323,14 +323,35 @@ body {
   margin: 0;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .success-card {
-    padding: 2rem 1.5rem;
+    padding: 2rem 1.25rem;
+    margin: 1rem;
+    border-radius: 16px;
+  }
+  
+  .success-card h1 {
+    font-size: 1.5rem;
+  }
+  
+  .success-card p {
+    font-size: 0.9rem;
+  }
+  
+  .next-steps h3 {
+    font-size: 0.9rem;
+  }
+  
+  .next-step {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+    min-height: 44px;
   }
   
   .modal {
     margin: 0.5rem;
     max-height: 90vh;
+    padding: 1.5rem;
   }
   
   .modal-body {
@@ -339,6 +360,16 @@ body {
   
   .modal-footer {
     flex-direction: column;
+  }
+  
+  .modal-footer .btn {
+    min-height: 48px;
+  }
+  
+  .btn-dashboard,
+  .btn-discord {
+    min-height: 48px;
+    font-size: 0.9rem;
   }
 }
 </style>

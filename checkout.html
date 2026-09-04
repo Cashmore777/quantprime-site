@@ -410,6 +410,108 @@ body {
 .promo-error { color: var(--danger); }
 
 .hidden { display: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE - 650px breakpoint
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 650px) {
+  .checkout-header {
+    padding: 1rem;
+  }
+  
+  .logo {
+    font-size: 0.75rem;
+  }
+  
+  .checkout-container {
+    padding: 1.5rem 1rem 3rem;
+  }
+  
+  .back-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .order-summary {
+    padding: 1.25rem;
+    border-radius: 12px;
+  }
+  
+  .summary-tier {
+    font-size: 1.1rem;
+  }
+  
+  .summary-badge {
+    font-size: 0.6rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .summary-feature {
+    font-size: 0.82rem;
+  }
+  
+  .summary-price-main .amount {
+    font-size: 2rem;
+  }
+  
+  .form-title {
+    font-size: 1rem;
+  }
+  
+  .form-row label {
+    font-size: 0.8rem;
+  }
+  
+  .form-row input,
+  .form-row select {
+    padding: 0.85rem 1rem;
+    font-size: 16px; /* Prevents iOS zoom */
+    min-height: 48px;
+  }
+  
+  .phone-input-wrapper select {
+    min-width: 90px;
+    padding: 0.85rem 0.5rem;
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .phone-input-wrapper input {
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .submit-btn {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+  }
+  
+  .guarantee-item {
+    font-size: 0.72rem;
+  }
+  
+  .terms-text {
+    font-size: 0.68rem;
+  }
+  
+  .promo-input-wrapper {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .promo-input-wrapper input {
+    font-size: 16px;
+    min-height: 48px;
+  }
+  
+  .promo-apply-btn {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    min-height: 48px;
+  }
+}
 </style>
 </head>
 <body>
