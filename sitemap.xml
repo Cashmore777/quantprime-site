@@ -5,7 +5,7 @@
   <!-- Homepage - Primary landing page -->
   <url>
     <loc>https://quantprime.uk/</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -17,7 +17,7 @@
   <!-- The Manifesto - Key content piece -->
   <url>
     <loc>https://quantprime.uk/manifesto</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.95</priority>
     <image:image>
@@ -29,7 +29,7 @@
   <!-- Pricing - High conversion page -->
   <url>
     <loc>https://quantprime.uk/pricing</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -37,7 +37,7 @@
   <!-- Results/Performance - Social proof -->
   <url>
     <loc>https://quantprime.uk/results</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
@@ -45,7 +45,7 @@
   <!-- Framework - Educational content -->
   <url>
     <loc>https://quantprime.uk/framework</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -53,7 +53,7 @@
   <!-- Compounding Calculator - Tool -->
   <url>
     <loc>https://quantprime.uk/compounding</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -64,7 +64,7 @@
   <!-- Ascension Program - Premium offering -->
   <url>
     <loc>https://quantprime.uk/ascension</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <image:image>
@@ -76,7 +76,7 @@
   <!-- Ascension Application -->
   <url>
     <loc>https://quantprime.uk/ascension-apply</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -84,7 +84,7 @@
   <!-- Links/Bio Page -->
   <url>
     <loc>https://quantprime.uk/links</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -92,14 +92,14 @@
   <!-- Legal Pages - Low priority but indexed -->
   <url>
     <loc>https://quantprime.uk/privacy</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://quantprime.uk/terms</loc>
-    <lastmod>2026-08-31</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
