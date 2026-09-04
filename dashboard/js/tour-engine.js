@@ -177,7 +177,7 @@ const QPTour = (function() {
         selector: '#generate-btn',
         title: 'Build Your Instrument',
         content: 'One click. Your selections become a custom Pine Script indicator. Ready to trade.',
-        position: 'bottom',
+        position: 'top',
         emphasis: 'action'
       }
     ],
@@ -1248,53 +1248,50 @@ const QPTour = (function() {
     const navHeight = isMobile ? 90 : 0;
     
     const rect = element.getBoundingClientRect();
-    const safeTop = headerHeight + 80;
-    const safeBottom = window.innerHeight - navHeight - 80;
     
-    // Check if element is already in a good visible position
-    const isVisible = rect.top >= safeTop && rect.bottom <= safeBottom;
+    // Very generous visibility check - if ANY part of element is reasonably visible, don't scroll
+    // This prevents jarring micro-adjustments between nearby elements
+    const viewTop = headerHeight + 20;
+    const viewBottom = window.innerHeight - navHeight - 20;
     
-    if (isVisible) {
-      // Element already visible - no scroll needed
-      await sleep(50);
+    // Element is "visible enough" if it's mostly on screen
+    const elementMostlyVisible = rect.top >= viewTop - 50 && rect.bottom <= viewBottom + 50;
+    
+    if (elementMostlyVisible) {
+      // Element already visible - NO scroll, just wait a tiny bit
+      await sleep(30);
       return;
     }
     
     if (!main) {
-      await sleep(100);
-      return;
-    }
-    
-    // Calculate how much we need to scroll
-    const maxScroll = main.scrollHeight - main.clientHeight;
-    const currentScroll = main.scrollTop;
-    
-    let targetScroll;
-    
-    // If element is below viewport, scroll down just enough to show it
-    if (rect.bottom > safeBottom) {
-      const scrollNeeded = rect.bottom - safeBottom + 40; // Extra padding
-      targetScroll = Math.min(currentScroll + scrollNeeded, maxScroll);
-    }
-    // If element is above viewport, scroll up
-    else if (rect.top < safeTop) {
-      const scrollNeeded = safeTop - rect.top + 40;
-      targetScroll = Math.max(currentScroll - scrollNeeded, 0);
-    }
-    else {
       await sleep(50);
       return;
     }
     
-    // Only scroll if there's actually somewhere to go
-    if (Math.abs(targetScroll - currentScroll) > 10) {
+    // Only scroll if element is significantly off-screen
+    const maxScroll = main.scrollHeight - main.clientHeight;
+    const currentScroll = main.scrollTop;
+    let targetScroll = currentScroll;
+    
+    if (rect.bottom > viewBottom + 50) {
+      // Element below viewport
+      const scrollNeeded = rect.bottom - viewBottom + 60;
+      targetScroll = Math.min(currentScroll + scrollNeeded, maxScroll);
+    } else if (rect.top < viewTop - 50) {
+      // Element above viewport
+      const scrollNeeded = viewTop - rect.top + 60;
+      targetScroll = Math.max(currentScroll - scrollNeeded, 0);
+    }
+    
+    // Only scroll if meaningful difference
+    if (Math.abs(targetScroll - currentScroll) > 30) {
       main.scrollTo({
         top: targetScroll,
         behavior: 'smooth'
       });
       await sleep(350);
     } else {
-      await sleep(50);
+      await sleep(30);
     }
   }
 
