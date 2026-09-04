@@ -1,5 +1,5 @@
-// ── SCROLL REVEAL ──
-const reveals = document.querySelectorAll('.reveal');
+// ── SCROLL REVEAL (supports both .reveal and .fade-in) ──
+const reveals = document.querySelectorAll('.reveal, .fade-in');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
 }, { threshold: 0.15 });
