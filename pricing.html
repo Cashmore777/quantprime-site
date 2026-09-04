@@ -5,113 +5,235 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO -->
-<title>Pricing — Quant Prime</title>
-<meta name="description" content="Quant Prime pricing. Research tier from £8/mo with 7-day free trial. Professional quantitative trading indicators and research.">
+<title>Pricing — Quant Prime Quantitative Trading Platform</title>
+<meta name="description" content="Quant Prime pricing from £8/mo. 7-day free trial. Research papers, professional TradingView indicators, daily market analysis, and systematic trading education.">
+<meta name="keywords" content="quant trading subscription, quantitative trading indicators, systematic trading tools, TradingView indicators price, forex indicators subscription">
 <link rel="canonical" href="https://quantprime.uk/pricing">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Pricing — Quant Prime">
-<meta property="og:description" content="Quantitative trading tools. From £8/mo.">
+<meta property="og:title" content="Pricing — Quant Prime Quantitative Trading">
+<meta property="og:description" content="Start free for 7 days. From £8/mo. Professional quant trading indicators and research.">
 <meta property="og:url" content="https://quantprime.uk/pricing">
+<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
+<meta property="og:site_name" content="Quant Prime">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quant Prime Pricing — From £8/mo">
+<meta name="twitter:description" content="7-day free trial. Research, indicators, automation.">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
+<!-- Structured Data - Products -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Quant Prime Pricing Tiers",
+  "description": "Quantitative trading subscriptions from research to full automation",
+  "itemListElement": [
+    {
+      "@type": "Product",
+      "position": 1,
+      "name": "Quant Prime Research",
+      "description": "Research papers, daily briefings, code snippets, private community",
+      "offers": {
+        "@type": "Offer",
+        "price": "8",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock",
+        "hasFreeTrialOption": true
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 2,
+      "name": "Quant Prime Recoil",
+      "description": "Volatility fade indicator with ATR-calibrated entries",
+      "offers": {
+        "@type": "Offer",
+        "price": "28",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 3,
+      "name": "Quant Prime Terminal",
+      "description": "Multi-timeframe structure scanner plus Recoil",
+      "offers": {
+        "@type": "Offer",
+        "price": "58",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 4,
+      "name": "Quant Prime Suite",
+      "description": "Full platform access with 1-on-1 calls and priority support",
+      "offers": {
+        "@type": "Offer",
+        "price": "88",
+        "priceCurrency": "GBP",
+        "priceValidUntil": "2027-12-31",
+        "availability": "https://schema.org/InStock"
+      }
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/main.css?v=20260904b">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css?v=20260904">
 <style>
 :root {
-  --gold: #b8a068;
-  --bg: #fafafa;
+  --gold: #a89264;
+  --gold-muted: #c4b896;
+  --bg: #fafaf9;
   --surface: #ffffff;
-  --border: #e8e8e8;
-  --border-hover: #d0d0d0;
-  --text-1: #1a1a1a;
-  --text-2: #666666;
-  --text-3: #999999;
-  --text-4: #bbbbbb;
+  --surface-elevated: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --border-light: rgba(0,0,0,0.04);
+  --text-primary: #1a1a1a;
+  --text-secondary: rgba(0,0,0,0.55);
+  --text-muted: rgba(0,0,0,0.35);
 }
 
 [data-theme="dark"] {
-  --gold: #c4a96a;
-  --bg: #0c0c0e;
-  --surface: #131316;
-  --border: #232328;
-  --border-hover: #333338;
-  --text-1: #f0f0f0;
-  --text-2: #a0a0a0;
-  --text-3: #707070;
-  --text-4: #505050;
+  --gold: #b8a472;
+  --gold-muted: #9a8d6e;
+  --bg: #0a0a0c;
+  --surface: #111113;
+  --surface-elevated: #18181b;
+  --border: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.04);
+  --text-primary: #fafafa;
+  --text-secondary: rgba(255,255,255,0.6);
+  --text-muted: rgba(255,255,255,0.35);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', -apple-system, system-ui, sans-serif;
   background: var(--bg);
-  color: var(--text-1);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
+  color: var(--text-primary);
+  overflow-x: hidden;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   HEADER
+   PAGE HEADER - Clean & Minimal
    ═══════════════════════════════════════════════════════════════ */
 .page-header {
-  padding: 120px 0 60px;
+  padding: 8rem 0 4rem;
   text-align: center;
+  position: relative;
+}
+
+.page-header .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  font-weight: 500;
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  margin-bottom: 12px;
-  color: var(--text-1);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
 }
 
 .page-header p {
-  font-size: 1.05rem;
-  color: var(--text-2);
-  max-width: 400px;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 420px;
   margin: 0 auto;
+  line-height: 1.6;
   font-weight: 400;
 }
 
+/* Tier Progression - Subtle, Clean */
+.tier-progression {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 3rem auto 0;
+  max-width: 480px;
+}
+
+.tier-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.tier-step-number {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition: all 0.3s;
+}
+
+.tier-step-name {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.tier-connector {
+  width: 48px;
+  height: 1px;
+  background: var(--border);
+}
+
 /* ═══════════════════════════════════════════════════════════════
-   PRICING GRID
+   PRICING GRID - Sophisticated Layout
    ═══════════════════════════════════════════════════════════════ */
 .pricing-section {
-  padding: 0 0 80px;
+  padding: 2rem 0 6rem;
 }
 
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
+  max-width: 1120px;
+  margin: 0 auto;
   background: var(--border);
   border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
-/* Tier Card */
+/* Tier Card Base - Uniform, Clean */
 .tier-card {
   background: var(--surface);
-  padding: 36px 28px;
+  padding: 32px 28px;
   display: flex;
   flex-direction: column;
-  transition: background 0.2s;
+  position: relative;
+  transition: background 0.2s ease;
 }
 
 .tier-card:hover {
-  background: var(--bg);
+  background: var(--surface-elevated);
 }
 
 /* Tier Header */
@@ -120,14 +242,21 @@ body {
 }
 
 .tier-name {
-  font-size: 0.72rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-3);
+  color: var(--text-primary);
   margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
+.tier-tagline {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  min-height: 44px;
+}
+
+/* Pricing - Clean Typography */
 .tier-price {
   display: flex;
   align-items: baseline;
@@ -136,89 +265,107 @@ body {
 }
 
 .tier-price .currency {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
-  color: var(--text-2);
+  color: var(--text-secondary);
 }
 
 .tier-price .amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 2.2rem;
+  font-size: 2.25rem;
   font-weight: 500;
-  color: var(--text-1);
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
 .tier-price .period {
-  font-size: 0.9rem;
-  color: var(--text-3);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-muted);
   margin-left: 2px;
 }
 
 .tier-billing {
-  font-size: 0.78rem;
-  color: var(--text-3);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
 }
 
-.tier-desc {
-  font-size: 0.88rem;
-  color: var(--text-2);
-  line-height: 1.5;
-  margin-top: 12px;
+/* Trial indicator - subtle */
+.tier-trial {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+  margin-bottom: 8px;
 }
 
-/* CTA Button - Subtle */
+/* CTA Buttons - Sophisticated */
 .tier-cta {
   display: block;
   width: 100%;
-  padding: 12px 16px;
-  margin-top: 24px;
+  padding: 12px 20px;
   font-size: 0.85rem;
   font-weight: 500;
   text-align: center;
   text-decoration: none;
   border-radius: 6px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
-/* Default: outlined */
-.tier-cta {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-1);
-}
-
-.tier-cta:hover {
-  border-color: var(--text-3);
-  background: var(--bg);
-}
-
-/* Primary CTA for Research (free trial) - slightly emphasized but not garish */
+/* Primary CTA (Research with trial) - Subtle gold outline */
 .tier-card[data-tier="research"] .tier-cta {
-  background: var(--text-1);
-  border-color: var(--text-1);
-  color: var(--bg);
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
 }
 
 .tier-card[data-tier="research"] .tier-cta:hover {
-  opacity: 0.85;
+  background: var(--gold);
+  color: #fff;
 }
 
-/* Features List */
+/* Secondary CTAs - Ghost buttons */
+.tier-card[data-tier="recoil"] .tier-cta,
+.tier-card[data-tier="terminal"] .tier-cta,
+.tier-card[data-tier="suite"] .tier-cta {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.tier-card[data-tier="recoil"] .tier-cta:hover,
+.tier-card[data-tier="terminal"] .tier-cta:hover,
+.tier-card[data-tier="suite"] .tier-cta:hover {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg);
+}
+
+.tier-guarantee {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Features List - Clean */
 .tier-features {
   flex: 1;
   margin-top: 28px;
   padding-top: 24px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-light);
 }
 
 .feature-label {
-  font-size: 0.68rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-4);
+  color: var(--text-muted);
   margin-bottom: 16px;
 }
 
@@ -226,9 +373,9 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 8px 0;
-  font-size: 0.85rem;
-  color: var(--text-2);
+  padding: 6px 0;
+  font-size: 0.82rem;
+  color: var(--text-primary);
   line-height: 1.45;
 }
 
@@ -240,110 +387,223 @@ body {
   align-items: center;
   justify-content: center;
   margin-top: 2px;
-  color: var(--text-3);
 }
 
 .feature-icon svg {
-  width: 12px;
-  height: 12px;
-  stroke: currentColor;
+  width: 10px;
+  height: 10px;
   stroke-width: 2;
+  stroke: var(--text-muted);
 }
 
 .feature strong {
   font-weight: 500;
-  color: var(--text-1);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
   .pricing-grid {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .page-header {
-    padding: 100px 0 40px;
+    padding: 6.5rem 0 2.5rem;
   }
   
   .page-header h1 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+    padding: 0 1rem;
   }
   
   .page-header p {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
+    padding: 0 1rem;
+  }
+  
+  .tier-progression {
+    display: none;
   }
   
   .pricing-section {
-    padding: 0 0 60px;
+    padding: 1.5rem 0 4rem;
   }
   
   .pricing-grid {
     grid-template-columns: 1fr;
-    border-radius: 10px;
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 0 1rem;
   }
   
   .tier-card {
     padding: 28px 24px;
   }
   
+  .tier-name {
+    font-size: 1rem;
+  }
+  
+  .tier-tagline {
+    min-height: auto;
+    margin-bottom: 4px;
+  }
+  
   .tier-price .amount {
-    font-size: 1.9rem;
+    font-size: 2rem;
   }
   
   .tier-cta {
-    padding: 14px 16px;
+    padding: 14px 20px;
+    font-size: 0.88rem;
+    min-height: 48px;
+  }
+  
+  .feature {
+    font-size: 0.8rem;
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FAQ
+   COMPARISON TABLE - Minimal
+   ═══════════════════════════════════════════════════════════════ */
+.comparison-section {
+  padding: 5rem 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.comparison-section h2 {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.comparison-table {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.comparison-table th {
+  text-align: center;
+  padding: 16px 12px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+.comparison-table th:first-child {
+  text-align: left;
+}
+
+.comparison-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.comparison-table td:first-child {
+  text-align: left;
+  color: var(--text-secondary);
+}
+
+.comparison-table .check {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.comparison-table .dash {
+  color: var(--border);
+}
+
+@media (max-width: 700px) {
+  .comparison-section {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FAQ - Simple
    ═══════════════════════════════════════════════════════════════ */
 .faq-section {
-  padding: 60px 0 80px;
+  padding: 5rem 0;
   border-top: 1px solid var(--border);
 }
 
 .faq-section h2 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 40px;
   text-align: center;
-  color: var(--text-1);
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
 }
 
 .faq-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 32px 48px;
+  gap: 1px;
   max-width: 800px;
   margin: 0 auto;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.faq-item {
+  background: var(--surface);
+  padding: 24px;
 }
 
 .faq-item h4 {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 500;
   margin-bottom: 8px;
-  color: var(--text-1);
+  color: var(--text-primary);
 }
 
 .faq-item p {
-  font-size: 0.85rem;
-  color: var(--text-2);
-  line-height: 1.6;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
 }
 
-@media (max-width: 600px) {
-  .faq-grid {
+@media (max-width: 650px) {
+  .faq-grid { 
     grid-template-columns: 1fr;
-    gap: 28px;
+    margin: 0 1rem;
   }
   
   .faq-section {
-    padding: 48px 0 60px;
+    padding: 3.5rem 0;
+  }
+  
+  .faq-section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+  }
+  
+  .faq-item {
+    padding: 20px;
+  }
+  
+  .faq-item h4 {
+    font-size: 0.85rem;
+  }
+  
+  .faq-item p {
+    font-size: 0.8rem;
   }
 }
 
@@ -351,49 +611,55 @@ body {
    FOOTER
    ═══════════════════════════════════════════════════════════════ */
 footer {
-  padding: 40px 0;
+  background: var(--surface);
   border-top: 1px solid var(--border);
+  padding: 3rem 0;
   text-align: center;
 }
 
-footer .logo {
+footer .nav-logo {
+  display: block;
+  margin-bottom: 1rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
   font-weight: 500;
+  font-size: 0.8rem;
   letter-spacing: 0.12em;
-  color: var(--text-1);
+  color: var(--text-primary);
   text-decoration: none;
-  display: inline-block;
-  margin-bottom: 16px;
 }
 
-footer .logo span {
-  color: var(--gold);
-}
+footer .nav-logo span { color: var(--gold); }
 
 footer p {
-  font-size: 0.72rem;
-  color: var(--text-3);
-  max-width: 500px;
-  margin: 0 auto 8px;
-  line-height: 1.6;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 auto 0.75rem;
+  line-height: 1.65;
 }
 
 footer a {
-  color: var(--text-2);
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
 footer a:hover {
-  color: var(--text-1);
+  color: var(--text-primary);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    DARK MODE
    ═══════════════════════════════════════════════════════════════ */
-[data-theme="dark"] .tier-card[data-tier="research"] .tier-cta {
-  background: var(--text-1);
-  color: var(--bg);
+[data-theme="dark"] .tier-card:hover {
+  background: var(--surface-elevated);
+}
+
+[data-theme="dark"] .comparison-section {
+  background: var(--surface);
+}
+
+[data-theme="dark"] footer {
+  background: var(--surface);
 }
 </style>
 </head>
@@ -410,20 +676,45 @@ footer a:hover {
       </button>
       <div class="nav-dropdown" id="navMenu">
         <a href="/">Home</a>
-        <a href="/framework">Framework</a>
+        <a href="/framework">The Framework</a>
         <a href="/results">Results</a>
+        <a href="/compounding">Compounding</a>
         <a href="/pricing">Pricing</a>
-        <a href="/dashboard/login.html">Login</a>
+        <a href="/dashboard/login.html">Member Login</a>
       </div>
     </div>
-    <a href="/checkout?tier=research" class="nav-cta">Start Trial</a>
+    <a href="/checkout?tier=research" class="nav-cta">Start Free Trial</a>
   </div>
 </nav>
 
 <section class="page-header">
   <div class="container">
-    <h1>Pricing</h1>
-    <p>Start with Research. Upgrade when you're ready.</p>
+    <div class="label">PRICING</div>
+    <h1>Choose your tier</h1>
+    <p>Start with Research. Upgrade when you're ready. Cancel anytime.</p>
+    
+    <!-- Tier Progression - Subtle -->
+    <div class="tier-progression">
+      <div class="tier-step">
+        <div class="tier-step-number">1</div>
+        <div class="tier-step-name">Research</div>
+      </div>
+      <div class="tier-connector"></div>
+      <div class="tier-step">
+        <div class="tier-step-number">2</div>
+        <div class="tier-step-name">Recoil</div>
+      </div>
+      <div class="tier-connector"></div>
+      <div class="tier-step">
+        <div class="tier-step-number">3</div>
+        <div class="tier-step-name">Terminal</div>
+      </div>
+      <div class="tier-connector"></div>
+      <div class="tier-step">
+        <div class="tier-step-number">4</div>
+        <div class="tier-step-name">Suite</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -431,161 +722,170 @@ footer a:hover {
   <div class="container">
     <div class="pricing-grid">
       
-      <!-- RESEARCH -->
+      <!-- TIER 1: RESEARCH -->
       <div class="tier-card" data-tier="research">
         <div class="tier-header">
+          <div class="tier-trial">7-DAY FREE TRIAL</div>
           <div class="tier-name">Research</div>
-          <div class="tier-price">
-            <span class="currency">£</span>
-            <span class="amount">8</span>
-            <span class="period">/mo</span>
-          </div>
-          <div class="tier-billing">7-day free trial</div>
-          <p class="tier-desc">Daily briefings, research papers, code snippets, and community access.</p>
+          <p class="tier-tagline">Learn the framework. Get daily intel. Join the community.</p>
         </div>
         
-        <a href="/checkout?tier=research" class="tier-cta">Start free trial</a>
+        <div class="tier-price">
+          <span class="currency">£</span>
+          <span class="amount">8</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="tier-billing">Free for 7 days, then billed monthly</div>
+        
+        <a href="/checkout?tier=research" class="tier-cta">Start Free Trial</a>
+        <p class="tier-guarantee">No card required</p>
         
         <div class="tier-features">
           <div class="feature-label">Includes</div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>Daily market briefings</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>10 research papers</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>12 Pine Script snippets</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>12 code snippets</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>Private Discord community</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Private community</span>
           </div>
         </div>
       </div>
       
-      <!-- RECOIL -->
+      <!-- TIER 2: RECOIL -->
       <div class="tier-card" data-tier="recoil">
         <div class="tier-header">
           <div class="tier-name">Recoil</div>
-          <div class="tier-price">
-            <span class="currency">£</span>
-            <span class="amount">28</span>
-            <span class="period">/mo</span>
-          </div>
-          <div class="tier-billing">or £280/year</div>
-          <p class="tier-desc">Volatility-calibrated indicator with real-time TradingView alerts.</p>
+          <p class="tier-tagline">Your first indicator. Volatility-calibrated entries.</p>
         </div>
         
-        <a href="/checkout?tier=recoil" class="tier-cta">Get access</a>
+        <div class="tier-price">
+          <span class="currency">£</span>
+          <span class="amount">28</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="tier-billing">or £280/year (save £56)</div>
+        
+        <a href="/checkout?tier=recoil" class="tier-cta">Get Recoil</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
         
         <div class="tier-features">
           <div class="feature-label">Everything in Research, plus</div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>Recoil indicator</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>Real-time alerts</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>Operator's guide</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Operator's Guide</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>+12 code snippets</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Recoil chat channel</span>
           </div>
         </div>
       </div>
       
-      <!-- TERMINAL -->
+      <!-- TIER 3: TERMINAL -->
       <div class="tier-card" data-tier="terminal">
         <div class="tier-header">
           <div class="tier-name">Terminal</div>
-          <div class="tier-price">
-            <span class="currency">£</span>
-            <span class="amount">58</span>
-            <span class="period">/mo</span>
-          </div>
-          <div class="tier-billing">or £580/year</div>
-          <p class="tier-desc">Multi-timeframe structure scanner for trend alignment.</p>
+          <p class="tier-tagline">Multi-timeframe structure. Know the trend before entry.</p>
         </div>
         
-        <a href="/checkout?tier=terminal" class="tier-cta">Get access</a>
+        <div class="tier-price">
+          <span class="currency">£</span>
+          <span class="amount">58</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="tier-billing">or £580/year (save £116)</div>
+        
+        <a href="/checkout?tier=terminal" class="tier-cta">Get Terminal</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
         
         <div class="tier-features">
           <div class="feature-label">Everything in Recoil, plus</div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>Meridian indicator</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>MTF sync signals</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Structure sync signals</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>Structure analysis guide</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Meridian Guide</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>+12 code snippets</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>Terminal chat channel</span>
           </div>
         </div>
       </div>
       
-      <!-- SUITE -->
+      <!-- TIER 4: SUITE -->
       <div class="tier-card" data-tier="suite">
         <div class="tier-header">
           <div class="tier-name">Suite</div>
-          <div class="tier-price">
-            <span class="currency">£</span>
-            <span class="amount">88</span>
-            <span class="period">/mo</span>
-          </div>
-          <div class="tier-billing">or £880/year</div>
-          <p class="tier-desc">Full platform access with 1-on-1 calls and priority support.</p>
+          <p class="tier-tagline">Everything we build. All indicators. 1-on-1 calls.</p>
         </div>
         
-        <a href="/checkout?tier=suite" class="tier-cta">Get access</a>
+        <div class="tier-price">
+          <span class="currency">£</span>
+          <span class="amount">88</span>
+          <span class="period">/mo</span>
+        </div>
+        <div class="tier-billing">or £880/year (save £176)</div>
+        
+        <a href="/checkout?tier=suite" class="tier-cta">Get Suite</a>
+        <p class="tier-guarantee">14-day money-back guarantee</p>
         
         <div class="tier-features">
           <div class="feature-label">Everything in Terminal, plus</div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>Cockpit dashboard</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>The Cockpit dashboard</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>All 48 code snippets</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
-            <span>Setup call (30 min)</span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span>30min setup call</span>
           </div>
           
           <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg></span>
+            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
             <span>Monthly 1-on-1 calls</span>
           </div>
         </div>
@@ -595,25 +895,108 @@ footer a:hover {
   </div>
 </section>
 
+<!-- Feature Comparison Table (Desktop) -->
+<section class="comparison-section">
+  <div class="container">
+    <h2>Compare tiers</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Research</th>
+          <th>Recoil</th>
+          <th>Terminal</th>
+          <th>Suite</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Daily briefings & research</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Private community access</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Recoil indicator</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Real-time alerts</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Meridian MTF scanner</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Structure sync signals</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>The Cockpit dashboard</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>1-on-1 calls</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Code snippets</td>
+          <td>12</td>
+          <td>24</td>
+          <td>36</td>
+          <td>48</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <section class="faq-section">
   <div class="container">
     <h2>Questions</h2>
     <div class="faq-grid">
       <div class="faq-item">
         <h4>How does the free trial work?</h4>
-        <p>Start Research free for 7 days with full access. Cancel anytime before the trial ends. After 7 days, you're charged £8/month.</p>
+        <p>Start Research free for 7 days. Full access to all Research features. After 7 days, you're charged £8/month. Cancel anytime before with one click.</p>
       </div>
       <div class="faq-item">
-        <h4>Can I change plans?</h4>
-        <p>Yes. Upgrades are prorated immediately. Downgrades take effect at your next billing cycle.</p>
+        <h4>Can I upgrade or downgrade?</h4>
+        <p>Yes, anytime. Upgrades are prorated—you only pay the difference. Downgrades take effect at your next billing cycle.</p>
       </div>
       <div class="faq-item">
-        <h4>How do indicators work?</h4>
-        <p>After purchase, provide your TradingView username. We grant access within 24 hours. Scripts appear in your invite-only section.</p>
+        <h4>How do the indicators work?</h4>
+        <p>After purchase, share your TradingView username. We grant access within 24 hours. They appear in your "Invite-only scripts" section.</p>
       </div>
       <div class="faq-item">
-        <h4>Refund policy?</h4>
-        <p>14-day money-back guarantee on all paid tiers. Email us within 14 days for a full refund.</p>
+        <h4>What's the refund policy?</h4>
+        <p>All paid tiers have a 14-day money-back guarantee. If it's not for you, email us within 14 days for a full refund.</p>
       </div>
     </div>
   </div>
@@ -621,25 +1004,39 @@ footer a:hover {
 
 <footer>
   <div class="container">
-    <a href="/" class="logo">QUANT<span>PRIME</span></a>
-    <p>Quantitative instruments and research for systematic traders. Past performance does not guarantee future results. Trading involves substantial risk.</p>
-    <p>© 2026 Quant Prime · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+    <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results. Trading involves substantial risk of loss.</p>
+    <p>© 2026 Quant Prime. All rights reserved. | <a href="/terms">Terms</a> | <a href="/privacy">Privacy</a></p>
   </div>
 </footer>
 
 <script src="/assets/theme-toggle.js"></script>
+<script src="/assets/support-widget-v2.js"></script>
 <script src="/js/main.js?v=3"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/js/site-auth.js"></script>
 
+<!-- Affiliate Tracking -->
 <script>
-// Affiliate tracking
 (function() {
-  const ref = new URLSearchParams(window.location.search).get('ref');
+  const urlParams = new URLSearchParams(window.location.search);
+  const ref = urlParams.get('ref');
+  
   if (ref) {
     localStorage.setItem('qp_affiliate_ref', ref.toUpperCase());
     localStorage.setItem('qp_affiliate_timestamp', Date.now());
+    
+    fetch('https://dashboard.themoneyprinter.uk/api/affiliate/track', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        affiliateId: ref,
+        eventType: 'click',
+        product: 'pricing_page'
+      })
+    }).catch(e => console.log('Affiliate tracking:', e.message));
   }
+  
   document.querySelectorAll('a[href*="/checkout"]').forEach(link => {
     const storedRef = localStorage.getItem('qp_affiliate_ref');
     if (storedRef) {
@@ -650,5 +1047,6 @@ footer a:hover {
   });
 })();
 </script>
+<script src="/js/funnel-tracking.js"></script>
 </body>
 </html>
