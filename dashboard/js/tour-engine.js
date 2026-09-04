@@ -177,7 +177,7 @@ const QPTour = (function() {
         selector: '#generate-btn',
         title: 'Build Your Instrument',
         content: 'One click. Your selections become a custom Pine Script indicator. Ready to trade.',
-        position: 'top',
+        position: 'bottom',
         emphasis: 'action'
       }
     ],
@@ -1296,7 +1296,10 @@ const QPTour = (function() {
     elements.spotlight.classList.remove('visible');
     elements.spotlight.offsetHeight; // Force reflow
     
-    // 2. Navigate if needed
+    // Brief pause to let everything settle before next step
+    await sleep(50);
+    
+    // 3. Navigate if needed
     if (needsNavigation) {
       // Save state for resume
       sessionStorage.setItem('qp_tour_state', JSON.stringify({
