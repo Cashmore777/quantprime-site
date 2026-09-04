@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Page Not Found - Quant Prime</title>
+<meta name="description" content="The page you're looking for doesn't exist. Return to Quant Prime homepage or explore our pricing.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css?v=20260904">
+
+<style>
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.error-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  padding-top: 6rem;
+}
+
+.error-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6rem, 15vw, 10rem);
+  font-weight: 700;
+  line-height: 1;
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.error-title {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.error-description {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 450px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.error-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.error-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  min-height: 52px;
+}
+
+.error-link.primary {
+  background: var(--gold);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(201, 168, 76, 0.35);
+}
+
+.error-link.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 168, 76, 0.45);
+}
+
+.error-link.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.error-link.secondary:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.error-link svg {
+  width: 18px;
+  height: 18px;
+}
+
+.error-suggestions {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.error-suggestions h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.suggestion-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.suggestion-link {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  background: var(--surface-dim);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.suggestion-link:hover {
+  color: var(--gold);
+  background: var(--gold-bg);
+}
+
+.error-decoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+footer {
+  background: var(--surface);
+}
+
+@media (max-width: 650px) {
+  .error-code {
+    font-size: 5rem;
+  }
+  
+  .error-title {
+    font-size: 1.25rem;
+  }
+  
+  .error-description {
+    font-size: 0.9rem;
+  }
+  
+  .error-links {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+  
+  .suggestion-links {
+    flex-direction: column;
+  }
+  
+  .suggestion-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="error-page">
+  <nav>
+    <div class="container">
+      <div class="nav-left">
+        <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+        <button class="nav-dropdown-btn" id="navDropdown" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 4.5L6 7.5L9 4.5"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown" id="navMenu">
+          <a href="/">Home</a>
+          <a href="/framework">The Framework</a>
+          <a href="/results">Results</a>
+          <a href="/compounding">Compounding</a>
+          <a href="/pricing">Pricing</a>
+          <a href="/dashboard/login.html">Member Login</a>
+        </div>
+      </div>
+      <a href="/checkout?tier=research" class="nav-cta">Start 30-Day Trial</a>
+    </div>
+  </nav>
+
+  <main class="error-content">
+    <div class="error-decoration"></div>
+    
+    <div class="error-code">404</div>
+    <h1 class="error-title">Page not found</h1>
+    <p class="error-description">
+      The page you're looking for doesn't exist or has been moved. 
+      Let's get you back on track.
+    </p>
+    
+    <div class="error-links">
+      <a href="/" class="error-link primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        Go to Homepage
+      </a>
+      
+      <a href="/pricing" class="error-link secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        View Pricing
+      </a>
+      
+      <a href="/dashboard/login.html" class="error-link secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Member Dashboard
+      </a>
+    </div>
+    
+    <div class="error-suggestions">
+      <h3>Popular pages</h3>
+      <div class="suggestion-links">
+        <a href="/manifesto" class="suggestion-link">The Manifesto</a>
+        <a href="/framework" class="suggestion-link">The Framework</a>
+        <a href="/results" class="suggestion-link">Results</a>
+        <a href="/compounding" class="suggestion-link">Compounding</a>
+        <a href="/ascension" class="suggestion-link">Ascension Program</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+      <p>Quant Prime is not authorised or regulated by the FCA. This website is for educational purposes only. Trading carries significant risk of loss. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Nav dropdown
+const navBtn = document.getElementById('navDropdown');
+const navMenu = document.getElementById('navMenu');
+navBtn?.addEventListener('click', () => {
+  navBtn.classList.toggle('active');
+  navMenu.classList.toggle('open');
+  navBtn.setAttribute('aria-expanded', navMenu.classList.contains('open'));
+});
+
+document.addEventListener('click', (e) => {
+  if (!navBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
+    navBtn?.classList.remove('active');
+    navMenu?.classList.remove('open');
+    navBtn?.setAttribute('aria-expanded', 'false');
+  }
+});
+
+// Theme detection
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+</script>
+
+</body>
+</html>
