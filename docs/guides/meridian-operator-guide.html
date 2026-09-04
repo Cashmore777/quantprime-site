@@ -1,263 +1,976 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meridian — Operator Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --surface: #111117;
-      --border: rgba(255,255,255,0.08);
-      --text-1: #f2f4f7;
-      --text-2: #a0a4ab;
-      --text-3: #6b7078;
-      --gold: #c9a84c;
-      --cyan: #00abff;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', -apple-system, system-ui, sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text-1);
-      line-height: 1.7;
-      padding: 40px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--cyan);
-    }
-    .subtitle {
-      font-size: 15px;
-      color: var(--text-2);
-      margin-bottom: 32px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-top: 40px;
-      margin-bottom: 16px;
-      color: var(--text-1);
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      color: var(--cyan);
-    }
-    p {
-      margin-bottom: 16px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0 24px;
-      font-size: 13px;
-    }
-    th, td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    th {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    td {
-      color: var(--text-2);
-    }
-    td:first-child {
-      color: var(--text-1);
-      font-weight: 500;
-    }
-    .mono {
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    .gold { color: var(--gold); }
-    .cyan { color: var(--cyan); }
-    ul, ol {
-      margin: 16px 0;
-      padding-left: 24px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    li {
-      margin-bottom: 8px;
-    }
-    .callout {
-      background: rgba(0,171,255,0.08);
-      border-left: 3px solid var(--cyan);
-      padding: 16px 20px;
-      margin: 24px 0;
-      font-size: 13px;
-      color: var(--text-2);
-    }
-    .warning {
-      background: rgba(239,68,68,0.08);
-      border-left: 3px solid #ef4444;
-    }
-    code {
-      font-family: var(--mono);
-      font-size: 12px;
-      background: var(--surface);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .footer {
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-3);
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Meridian Operator Guide | Quant Prime</title>
+<meta name="description" content="Complete operator guide for Meridian - Quant Prime's AMD structure indicator. Setup, configuration, usage patterns, and troubleshooting for systematic traders.">
+<meta name="keywords" content="Meridian indicator, AMD trading, liquidity sweep, market structure, TradingView indicator guide, systematic trading, Quant Prime">
+<link rel="canonical" href="https://quantprime.uk/docs/guides/meridian-operator-guide">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Meridian Operator Guide | Quant Prime">
+<meta property="og:description" content="Complete operator guide for Meridian - AMD structure indicator tracking accumulation, manipulation and distribution.">
+<meta property="og:url" content="https://quantprime.uk/docs/guides/meridian-operator-guide">
+<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
+<meta property="og:site_name" content="Quant Prime">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Meridian Operator Guide | Quant Prime">
+<meta name="twitter:description" content="Complete operator guide for Meridian - AMD structure indicator.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css?v=20260904">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   OPERATOR GUIDE STYLES - Meridian (Cyan Accent)
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --accent: #00abff;
+  --accent-soft: rgba(0, 171, 255, 0.12);
+  --accent-border: rgba(0, 171, 255, 0.25);
+}
+
+[data-theme="dark"] {
+  --accent: #22b8ff;
+  --accent-soft: rgba(34, 184, 255, 0.12);
+  --accent-border: rgba(34, 184, 255, 0.3);
+}
+
+/* Page Header */
+.guide-header {
+  padding: 8rem 0 3rem;
+  background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.guide-header .tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.guide-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.guide-header h1 span {
+  color: var(--accent);
+}
+
+.guide-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.guide-header .meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* Guide Navigation */
+.guide-nav {
+  position: sticky;
+  top: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  z-index: 50;
+}
+
+.guide-nav-inner {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.guide-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.guide-nav a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.guide-nav a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Main Content */
+.guide-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+/* Sections */
+.guide-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 140px;
+}
+
+.guide-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.guide-section h2 .section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.guide-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+.guide-section p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.guide-section strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Lists */
+.guide-section ul,
+.guide-section ol {
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.guide-section li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.guide-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-table td {
+  padding: 0.875rem 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.guide-table tr:last-child td {
+  border-bottom: none;
+}
+
+.guide-table td:first-child {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.guide-table .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+/* Tags/Badges */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
+.tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
+.tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.tag.green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tag.cyan { background: rgba(34,211,238,0.15); color: #22d3ee; }
+
+/* Callouts */
+.callout {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.callout.warning {
+  background: rgba(239,68,68,0.08);
+  border-left-color: #ef4444;
+}
+
+.callout.info {
+  background: rgba(59,130,246,0.08);
+  border-left-color: #3b82f6;
+}
+
+.callout-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Code */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  background: var(--surface-dim);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Step Cards */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.step:hover {
+  border-color: var(--accent-border);
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* Settings Card */
+.setting-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.setting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.setting-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.setting-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.setting-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Footer */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-papers {
+  margin-bottom: 1.5rem;
+}
+
+.related-papers h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+}
+
+.paper-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.paper-links a {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  background: var(--surface-dim);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.paper-links a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .guide-header {
+    padding: 7rem 1rem 2rem;
+  }
+  
+  .guide-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .guide-header .subtitle {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+  }
+  
+  .guide-nav {
+    top: 56px;
+  }
+  
+  .guide-nav-inner {
+    padding: 0 1rem;
+  }
+  
+  .guide-content {
+    padding: 2rem 1rem 4rem;
+  }
+  
+  .guide-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 120px;
+  }
+  
+  .guide-section h2 {
+    font-size: 1.25rem;
+  }
+  
+  .guide-section h3 {
+    font-size: 1rem;
+  }
+  
+  .step {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .setting-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .callout {
+    padding: 1rem 1.25rem;
+  }
+  
+  .paper-links {
+    flex-direction: column;
+  }
+  
+  .paper-links a {
+    text-align: center;
+  }
+}
+</style>
 </head>
 <body>
 
-<h1>Meridian</h1>
-<p class="subtitle">A reversal instrument. It tracks the accumulation, manipulation and distribution rhythm underneath the session, and marks conditions when a level is swept and price rejects it. It does not tell you to buy or sell.</p>
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+      <button class="nav-dropdown-btn" id="navDropdown">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4.5L6 7.5L9 4.5"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" id="navMenu">
+        <a href="/">Home</a>
+        <a href="/framework">The Framework</a>
+        <a href="/results">Results</a>
+        <a href="/compounding">Compounding</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/dashboard/login.html">Member Login</a>
+      </div>
+    </div>
+    <a href="/checkout?tier=terminal" class="nav-cta">Get Terminal</a>
+  </div>
+</nav>
 
-<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+<!-- Guide Header -->
+<header class="guide-header">
+  <div class="container">
+    <div class="tool-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      QP Tool · 2 of 3
+    </div>
+    <h1><span>Meridian</span> Operator Guide</h1>
+    <p class="subtitle">A reversal instrument. It tracks the accumulation, manipulation and distribution rhythm underneath the session, and marks conditions when a level is swept and price rejects it.</p>
+    <p class="meta">Part of 3 QP Tools · 4 Build Menus · 1020 Combinations</p>
+  </div>
+</header>
 
-<h2>What it measures</h2>
-<p>The market moves through repeating phases. A period of accumulation where price ranges and positions get built. A manipulation phase where it pushes through an obvious level to take out the orders resting there. Then distribution, where it actually moves.</p>
-
-<p>Meridian tracks that rhythm on three cycle lengths: 12 hour, 6 hour and 3 hour. Only the 12 hour cycle is enabled by default.</p>
-
-<p>Each cycle leaves behind <strong>A-lines</strong>, which mark the highs and lows of its accumulation phase. Those are the levels the instrument watches, because they are where the obvious stops sit.</p>
-
-<p>A condition resolves when two things happen in order:</p>
-<ol>
-  <li>An A-line gets swept, which sets the directional bias</li>
-  <li>Then price taps a vortex level, which marks the entry</li>
-</ol>
-<p>The sweep decides the direction. The tap decides the moment.</p>
-
-<div class="callout">
-  Meridian marks conditions. You decide. Nothing here is a signal to follow blindly.
+<!-- Guide Navigation -->
+<div class="guide-nav">
+  <div class="container">
+    <div class="guide-nav-inner">
+      <a href="#overview">Overview</a>
+      <a href="#setup">Setup</a>
+      <a href="#configuration">Configuration</a>
+      <a href="#usage">Usage</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </div>
+  </div>
 </div>
 
-<h2>Why the cycles are anchored, not rolling</h2>
-<p>The cycles anchor to a timestamp origin at midnight in the chosen timezone, not to a window that rolls with the current bar.</p>
-<p>That difference matters more than it sounds. A rolling window puts the phase boundaries wherever you happen to be looking. An anchored one puts them where everybody else's are too, and the entire point is to be positioned where the liquidity actually sits rather than where your own arbitrary window says it should.</p>
+<!-- Main Content -->
+<main class="guide-content">
+  
+  <a href="/dashboard/" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Back to Dashboard
+  </a>
 
-<h2>Setup</h2>
+  <!-- SECTION 1: OVERVIEW -->
+  <section id="overview" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+      </span>
+      Overview
+    </h2>
+    
+    <p><strong>Meridian tracks the AMD rhythm.</strong> It does not tell you to buy or sell. It marks conditions where a level has been swept and price rejects it, which historically precedes a reversal.</p>
+    
+    <h3>What It Measures</h3>
+    <p>The market moves through repeating phases:</p>
+    <ul>
+      <li><strong>Accumulation</strong> — price ranges and positions get built</li>
+      <li><strong>Manipulation</strong> — it pushes through an obvious level to take out the orders resting there</li>
+      <li><strong>Distribution</strong> — it actually moves</li>
+    </ul>
+    
+    <p>Meridian tracks that rhythm on three cycle lengths: <strong>12 hour, 6 hour and 3 hour</strong>. Only the 12 hour cycle is enabled by default.</p>
+    
+    <p>Each cycle leaves behind <strong>A-lines</strong>, which mark the highs and lows of its accumulation phase. Those are the levels the instrument watches, because they are where the obvious stops sit.</p>
+    
+    <h3>How Conditions Resolve</h3>
+    <p>A condition resolves when two things happen in order:</p>
+    <ol>
+      <li>An A-line gets swept, which sets the directional bias</li>
+      <li>Then price taps a vortex level, which marks the entry</li>
+    </ol>
+    <p><strong>The sweep decides the direction. The tap decides the moment.</strong></p>
+    
+    <h3>Why Cycles Are Anchored</h3>
+    <p>The cycles anchor to a timestamp origin at midnight in the chosen timezone, not to a window that rolls with the current bar.</p>
+    <p>That difference matters more than it sounds. A rolling window puts the phase boundaries wherever you happen to be looking. An anchored one puts them where everybody else's are too—and the entire point is to be positioned where the liquidity actually sits.</p>
+    
+    <div class="callout">
+      <p><strong>Meridian marks conditions. You decide.</strong> Nothing here is a signal to follow blindly.</p>
+    </div>
+  </section>
 
-<h3>1 · Add it to TradingView</h3>
-<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Meridian</strong> and add it to your chart.</p>
+  <!-- SECTION 2: SETUP -->
+  <section id="setup" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </span>
+      Setup
+    </h2>
+    
+    <div class="steps">
+      <div class="step">
+        <span class="step-number">1</span>
+        <div class="step-content">
+          <h4>Add to TradingView</h4>
+          <p>Open Indicators, then Invite-only scripts. Find <strong>Quant Prime — Meridian</strong> and add it to your chart.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <div class="step-content">
+          <h4>Understand the Two Timezone Settings</h4>
+          <p>This catches people out. <strong>Timezone (cycle anchor)</strong> in the AMD section defaults to UTC+1 and decides where the AMD cycles start counting. <strong>Timezone</strong> in the Time Windows section defaults to UTC and only applies to trading windows. They are deliberately different.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <div class="step-content">
+          <h4>Leave the Defaults Alone</h4>
+          <p>These are the configuration actually traded. Change nothing for the first two weeks.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">4</span>
+        <div class="step-content">
+          <h4>Run It Alone First</h4>
+          <p>If you also have Recoil, take Recoil off the chart to begin with. One instrument at a time until you know what each does on its own.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">5</span>
+        <div class="step-content">
+          <h4>Learn to See the Sweep Manually</h4>
+          <p>Before relying on the marks, go back through a day and find a sweep yourself. An A-line that price pushed through and came back from. Once you can spot it by eye, the instrument stops being a black box.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h3>2 · Understand that there are two timezone settings</h3>
-<p>This catches people out, so it is worth being explicit.</p>
-<ul>
-  <li><strong>Timezone (cycle anchor)</strong>, in the AMD section, defaults to UTC+1. It decides where the AMD cycles start counting.</li>
-  <li><strong>Timezone</strong>, in the Time Windows section, defaults to UTC. It only applies to the trading windows.</li>
-</ul>
-<p>They are deliberately different and they are not a mistake.</p>
+  <!-- SECTION 3: CONFIGURATION -->
+  <section id="configuration" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </span>
+      Configuration
+    </h2>
+    
+    <p>These are the settings that matter. Each is shown with the default value actually traded.</p>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">AMD Engine</span>
+        <span class="setting-value">On</span>
+      </div>
+      <p class="setting-desc">The whole cycle layer. Off, and there are no A-lines and no conditions.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Timezone (Cycle Anchor)</span>
+        <span class="setting-value">UTC+1</span>
+      </div>
+      <p class="setting-desc"><strong>The single most consequential setting in the instrument</strong>, and the first thing to check if Meridian appears not to work on your pair. Every phase boundary moves with it, which means every A-line and every condition moves with it.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Cycles</span>
+        <span class="setting-value">12H on, 6H and 3H off</span>
+      </div>
+      <p class="setting-desc">All three can run at once. Only the 12 hour is enabled by default because it produced the results the defaults are based on. The 6H and 3H cycles produce more conditions and finer structure. Turn them on one at a time, and give each a fortnight before deciding.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Vortex</span>
+        <span class="setting-value">Digit families rotating hourly</span>
+      </div>
+      <p class="setting-desc">Once an A-line has been swept and a bias is set, the vortex layer decides which price levels count as a tap. It works on digits, and it changes every hour.</p>
+    </div>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>Active Family</th>
+            <th>Hours (UTC)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">3, 6, 9</td>
+            <td>00, 03, 06, 09, 12, 15, 18, 21</td>
+          </tr>
+          <tr>
+            <td class="mono">1, 4, 7</td>
+            <td>01, 04, 07, 10, 13, 16, 19, 22</td>
+          </tr>
+          <tr>
+            <td class="mono">2, 5, 8</td>
+            <td>02, 05, 08, 11, 14, 17, 20, 23</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Time Windows</span>
+        <span class="setting-value">00:00–02:00, 04:00–06:00, 19:00–20:00 UTC</span>
+      </div>
+      <p class="setting-desc">Conditions only resolve inside these hours. These are <strong>not</strong> Recoil's windows and they should not be. The two instruments trigger on different conditions and those conditions cluster at different times.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Exit Mode</span>
+        <span class="setting-value">Opposite Prime Only</span>
+      </div>
+      <p class="setting-desc">Positions close when an opposite condition appears, and the whole position flips. This is a bias decision rather than a stop-loss decision.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Stacking</span>
+        <span class="setting-value">Enabled</span>
+      </div>
+      <p class="setting-desc">Meridian stacks. Same-direction conditions mark additional positions rather than being ignored, and there is no limit on how many. <strong>Size each entry so the full stack sits within what you would have risked on one trade</strong>, not each position within it.</p>
+    </div>
+  </section>
 
-<h3>3 · Leave the defaults alone</h3>
-<p>These are the configuration actually traded. Change nothing for the first two weeks.</p>
+  <!-- SECTION 4: USAGE -->
+  <section id="usage" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+        </svg>
+      </span>
+      Usage
+    </h2>
+    
+    <h3>Where Meridian Works</h3>
+    <p>Meridian identifies reversals at swept structure. It works best in:</p>
+    <ul>
+      <li><strong>Sessions with clean liquidity pools</strong> — obvious swing highs/lows that get taken</li>
+      <li><strong>High-liquidity pairs</strong> like EURUSD, GBPUSD, USDJPY</li>
+      <li><strong>Lower timeframes</strong> where the phase structure has enough bars to form</li>
+    </ul>
+    
+    <h3>Where Meridian Fails</h3>
+    
+    <div class="callout warning">
+      <p class="callout-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Critical Failure Mode
+      </p>
+      <p><strong>It stops working above the 15 minute chart.</strong> Not degrades. Stops. The cycles need a certain number of bars of structure inside each phase before a condition can resolve, and on 15M and above those bars do not exist. If you were planning to take it to 1H because the marks look cleaner up there, do not.</p>
+    </div>
+    
+    <ul>
+      <li><strong>Drawdown is roughly seven times Recoil's.</strong> Backtested over six months on EURUSD: maximum drawdown 11.59% against Recoil's 1.57%. Profit factor is higher (1.995 vs 1.657), so it earns the risk, but the ride is not comparable.</li>
+      <li><strong>It triggers infrequently.</strong> Recoil fires on a candle, so it happens often. Meridian needs a sweep, a tap and the right window, so it happens rarely. Your sample builds slowly.</li>
+    </ul>
+    
+    <h3>Test It on Your Own Instrument</h3>
+    <ul>
+      <li><strong>Sweep Report</strong> — how often a swept level produces a rejection rather than a continuation</li>
+      <li><strong>Phase Report</strong> — which AMD phase actually produces movement on your instrument</li>
+      <li><strong>Session Report</strong> — the three windows against every hour outside them</li>
+    </ul>
+    <p>Give these more history than you would give Recoil's. Meridian reaches statistical significance considerably more slowly.</p>
+  </section>
 
-<h3>4 · Run it alone first</h3>
-<p>If you also have Recoil, take Recoil off the chart to begin with. One instrument at a time until you know what each does on its own.</p>
+  <!-- SECTION 5: TROUBLESHOOTING -->
+  <section id="troubleshooting" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </span>
+      Troubleshooting
+    </h2>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>What You See</th>
+            <th>Usually Means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Almost nothing marked</td>
+            <td>Cycle anchor timezone. Check it before anything else.</td>
+          </tr>
+          <tr>
+            <td>Phases offset from the session</td>
+            <td>Cycle anchor again.</td>
+          </tr>
+          <tr>
+            <td>A-lines but no conditions</td>
+            <td>Prime signals disabled, or outside time windows</td>
+          </tr>
+          <tr>
+            <td>Position larger than expected</td>
+            <td>The stack. Several same-direction entries are open.</td>
+          </tr>
+          <tr>
+            <td>Everything closed and reversed at once</td>
+            <td>Working as designed. Opposite condition flips the whole position.</td>
+          </tr>
+          <tr>
+            <td>Indicator not appearing</td>
+            <td>TradingView username mismatch. Check your dashboard for the linked account.</td>
+          </tr>
+          <tr>
+            <td>Conditions resolving on 1H</td>
+            <td>Use 15M or below. The instrument does not work on higher timeframes.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="callout">
+      <p><strong>Still stuck?</strong> Ask QP Intelligence in your dashboard—it knows all three engines and how they relate. Or reach out in the private trading room.</p>
+    </div>
+  </section>
 
-<h3>5 · Learn to see the sweep manually</h3>
-<p>Before relying on the marks, go back through a day and find a sweep yourself. An A-line that price pushed through and came back from. Once you can spot it by eye, the instrument stops being a black box.</p>
+  <!-- Footer -->
+  <footer class="guide-footer">
+    <div class="related-papers">
+      <h4>Related Papers</h4>
+      <div class="paper-links">
+        <a href="/research/papers/paper-03-timeframe-ceiling.html">03 · The Timeframe Ceiling</a>
+        <a href="/research/papers/paper-04-midnight-modulus.html">04 · Midnight Is Not a Modulus</a>
+        <a href="/research/papers/paper-08-statistical-confidence.html">08 · What 1.99 Actually Means</a>
+        <a href="/research/papers/paper-09-three-windows.html">09 · Three Windows</a>
+        <a href="/research/papers/paper-10-return-per-pain.html">10 · Return Per Unit of Pain</a>
+      </div>
+    </div>
+    
+    <p class="disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+  </footer>
 
-<h2>The settings that matter</h2>
+</main>
 
-<h3>AMD engine — on</h3>
-<p>The whole cycle layer. Off, and there are no A-lines and no conditions.</p>
+<footer>
+  <div class="container">
+    <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+    <p>Quant Prime is not authorised or regulated by the FCA. This website is for educational purposes only. Trading carries significant risk of loss. Past performance is not indicative of future results. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+  </div>
+</footer>
 
-<h3>Timezone, cycle anchor — UTC+1</h3>
-<p>The single most consequential setting in the instrument, and the first thing to check if Meridian appears not to work on your pair. Every phase boundary moves with it, which means every A-line and every condition moves with it.</p>
+<script>
+// Nav dropdown
+const navBtn = document.getElementById('navDropdown');
+const navMenu = document.getElementById('navMenu');
+navBtn?.addEventListener('click', () => {
+  navBtn.classList.toggle('active');
+  navMenu.classList.toggle('open');
+});
 
-<h3>Cycles — 12H on, 6H and 3H off</h3>
-<p>All three can run at once. Only the 12 hour is enabled by default because it produced the results the defaults are based on.</p>
-<p>The 6H and 3H cycles produce more conditions and finer structure. Turn them on one at a time, and give each a fortnight before deciding.</p>
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!navBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
+    navBtn?.classList.remove('active');
+    navMenu?.classList.remove('open');
+  }
+});
 
-<h3>Vortex — how a level qualifies</h3>
-<p>Once an A-line has been swept and a bias is set, the vortex layer decides which price levels count as a tap. It works on digits, and it changes every hour.</p>
+// Active nav link on scroll
+const sections = document.querySelectorAll('.guide-section');
+const navLinks = document.querySelectorAll('.guide-nav a');
 
-<table>
-  <thead>
-    <tr><th>Active family</th><th>Hours</th></tr>
-  </thead>
-  <tbody>
-    <tr><td class="mono">3, 6, 9</td><td>00, 03, 06, 09, 12, 15, 18, 21</td></tr>
-    <tr><td class="mono">1, 4, 7</td><td>01, 04, 07, 10, 13, 16, 19, 22</td></tr>
-    <tr><td class="mono">2, 5, 8</td><td>02, 05, 08, 11, 14, 17, 20, 23</td></tr>
-  </tbody>
-</table>
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (scrollY >= sectionTop - 160) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
 
-<p>The price supplies the digit. A level qualifies when its digits reduce to one of the three in the active family.</p>
+// Smooth scroll for nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 
-<h3>Time windows — 00:00–02:00, 04:00–06:00, 19:00–20:00 UTC</h3>
-<p>Conditions only resolve inside these hours. These are not Recoil's windows and they should not be. The two instruments trigger on different conditions and those conditions cluster at different times.</p>
-
-<h3>Exit mode — Opposite Prime Only</h3>
-<p>Positions close when an opposite condition appears, and the whole position flips. This is a bias decision rather than a stop-loss decision.</p>
-
-<h3>Stacking</h3>
-<p>Meridian stacks. Same-direction conditions mark additional positions rather than being ignored, and there is no limit on how many.</p>
-<p>Size each entry so the full stack sits within what you would have risked on one trade, not each position within it.</p>
-
-<h2>Where Meridian fails</h2>
-
-<h3>It stops working above the 15 minute chart</h3>
-<p>Not degrades. Stops. The cycles need a certain number of bars of structure inside each phase before a condition can resolve, and on 15M and above those bars do not exist.</p>
-
-<div class="callout warning">
-  If you were planning to take it to 1H because the marks look cleaner up there, do not. This is a documented failure mode rather than a tuning problem and no setting fixes it.
-</div>
-
-<h3>Its drawdown is roughly seven times Recoil's</h3>
-<p>Backtested over six months on EURUSD: maximum drawdown 11.59% against Recoil's 1.57%. Profit factor is higher, 1.995 against 1.657, so it earns the risk, but the ride is not comparable.</p>
-
-<h3>It triggers infrequently</h3>
-<p>Recoil fires on a candle, so it happens often. Meridian needs a sweep, a tap and the right window, so it happens rarely. Your sample builds slowly and you need more history before concluding anything about your pair.</p>
-
-<h2>When it looks wrong</h2>
-<table>
-  <thead>
-    <tr><th>What you see</th><th>Usually</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Almost nothing marked</td><td>Cycle anchor timezone. Check it before anything else.</td></tr>
-    <tr><td>Phases offset from the session</td><td>Cycle anchor again.</td></tr>
-    <tr><td>A-lines but no conditions</td><td>Prime signals disabled, or outside time windows</td></tr>
-    <tr><td>Position larger than expected</td><td>The stack. Several same-direction entries are open.</td></tr>
-    <tr><td>Everything closed and reversed at once</td><td>Working as designed. Opposite condition flips the whole position.</td></tr>
-  </tbody>
-</table>
-
-<h2>Test it on your own instrument</h2>
-<ul>
-  <li><strong>Sweep Report</strong> — how often a swept level produces a rejection rather than a continuation</li>
-  <li><strong>Phase Report</strong> — which AMD phase actually produces movement on your instrument</li>
-  <li><strong>Session Report</strong> — the three windows against every hour outside them</li>
-</ul>
-<p>Give these more history than you would give Recoil's. Meridian reaches statistical significance considerably more slowly.</p>
-
-<div class="footer">
-  <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 09 Three Windows · 10 Return Per Unit of Pain</p>
-  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
-</div>
+// Theme detection
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+</script>
 
 </body>
 </html>

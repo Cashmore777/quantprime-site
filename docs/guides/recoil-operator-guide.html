@@ -1,265 +1,997 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recoil — Operator Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --surface: #111117;
-      --border: rgba(255,255,255,0.08);
-      --text-1: #f2f4f7;
-      --text-2: #a0a4ab;
-      --text-3: #6b7078;
-      --gold: #c9a84c;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', -apple-system, system-ui, sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text-1);
-      line-height: 1.7;
-      padding: 40px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--gold);
-    }
-    .subtitle {
-      font-size: 15px;
-      color: var(--text-2);
-      margin-bottom: 32px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-top: 40px;
-      margin-bottom: 16px;
-      color: var(--text-1);
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      color: var(--gold);
-    }
-    p {
-      margin-bottom: 16px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0 24px;
-      font-size: 13px;
-    }
-    th, td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    th {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    td {
-      color: var(--text-2);
-    }
-    td:first-child {
-      color: var(--text-1);
-      font-weight: 500;
-    }
-    .mono {
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    .gold { color: var(--gold); }
-    ul, ol {
-      margin: 16px 0;
-      padding-left: 24px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    li {
-      margin-bottom: 8px;
-    }
-    .callout {
-      background: rgba(201,168,76,0.08);
-      border-left: 3px solid var(--gold);
-      padding: 16px 20px;
-      margin: 24px 0;
-      font-size: 13px;
-      color: var(--text-2);
-    }
-    .warning {
-      background: rgba(239,68,68,0.08);
-      border-left: 3px solid #ef4444;
-    }
-    code {
-      font-family: var(--mono);
-      font-size: 12px;
-      background: var(--surface);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .footer {
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-3);
-    }
-    .tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-weight: 500;
-    }
-    .tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
-    .tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
-    .tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
-    .tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Recoil Operator Guide | Quant Prime</title>
+<meta name="description" content="Complete operator guide for Recoil - Quant Prime's volatility fade indicator. Setup, configuration, usage patterns, and troubleshooting for systematic traders.">
+<meta name="keywords" content="Recoil indicator, volatility trading, ATR indicator, TradingView indicator guide, systematic trading, Quant Prime">
+<link rel="canonical" href="https://quantprime.uk/docs/guides/recoil-operator-guide">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Recoil Operator Guide | Quant Prime">
+<meta property="og:description" content="Complete operator guide for Recoil - volatility fade indicator with ATR-calibrated entries and 255 build combinations.">
+<meta property="og:url" content="https://quantprime.uk/docs/guides/recoil-operator-guide">
+<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
+<meta property="og:site_name" content="Quant Prime">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Recoil Operator Guide | Quant Prime">
+<meta name="twitter:description" content="Complete operator guide for Recoil - volatility fade indicator.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css?v=20260904">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   OPERATOR GUIDE STYLES - Recoil (Gold Accent)
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --accent: #C9A84C;
+  --accent-soft: rgba(201, 168, 76, 0.12);
+  --accent-border: rgba(201, 168, 76, 0.25);
+}
+
+[data-theme="dark"] {
+  --accent: #d4b94e;
+  --accent-soft: rgba(212, 185, 78, 0.12);
+  --accent-border: rgba(212, 185, 78, 0.3);
+}
+
+/* Page Header */
+.guide-header {
+  padding: 8rem 0 3rem;
+  background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.guide-header .tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.guide-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.guide-header h1 span {
+  color: var(--accent);
+}
+
+.guide-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.guide-header .meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* Guide Navigation */
+.guide-nav {
+  position: sticky;
+  top: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  z-index: 50;
+}
+
+.guide-nav-inner {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.guide-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.guide-nav a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.guide-nav a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Main Content */
+.guide-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+/* Sections */
+.guide-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 140px;
+}
+
+.guide-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.guide-section h2 .section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.guide-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+.guide-section p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.guide-section strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Lists */
+.guide-section ul,
+.guide-section ol {
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.guide-section li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.guide-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-table td {
+  padding: 0.875rem 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.guide-table tr:last-child td {
+  border-bottom: none;
+}
+
+.guide-table td:first-child {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.guide-table .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+/* Tags/Badges */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
+.tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
+.tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.tag.green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tag.cyan { background: rgba(34,211,238,0.15); color: #22d3ee; }
+
+/* Callouts */
+.callout {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.callout.warning {
+  background: rgba(239,68,68,0.08);
+  border-left-color: #ef4444;
+}
+
+.callout.info {
+  background: rgba(59,130,246,0.08);
+  border-left-color: #3b82f6;
+}
+
+.callout-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Code */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  background: var(--surface-dim);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Step Cards */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.step:hover {
+  border-color: var(--accent-border);
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* Settings Card */
+.setting-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.setting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.setting-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.setting-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.setting-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Footer */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-papers {
+  margin-bottom: 1.5rem;
+}
+
+.related-papers h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+}
+
+.paper-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.paper-links a {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  background: var(--surface-dim);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.paper-links a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .guide-header {
+    padding: 7rem 1rem 2rem;
+  }
+  
+  .guide-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .guide-header .subtitle {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+  }
+  
+  .guide-nav {
+    top: 56px;
+  }
+  
+  .guide-nav-inner {
+    padding: 0 1rem;
+  }
+  
+  .guide-content {
+    padding: 2rem 1rem 4rem;
+  }
+  
+  .guide-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 120px;
+  }
+  
+  .guide-section h2 {
+    font-size: 1.25rem;
+  }
+  
+  .guide-section h3 {
+    font-size: 1rem;
+  }
+  
+  .step {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .setting-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .callout {
+    padding: 1rem 1.25rem;
+  }
+  
+  .paper-links {
+    flex-direction: column;
+  }
+  
+  .paper-links a {
+    text-align: center;
+  }
+}
+</style>
 </head>
 <body>
 
-<h1>Recoil</h1>
-<p class="subtitle">A volatility fade instrument. It measures when a candle is statistically exceptional, marks where the level sits, and reports what price has historically done afterwards. It does not tell you to buy or sell.</p>
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+      <button class="nav-dropdown-btn" id="navDropdown">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4.5L6 7.5L9 4.5"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" id="navMenu">
+        <a href="/">Home</a>
+        <a href="/framework">The Framework</a>
+        <a href="/results">Results</a>
+        <a href="/compounding">Compounding</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/dashboard/login.html">Member Login</a>
+      </div>
+    </div>
+    <a href="/checkout?tier=recoil" class="nav-cta">Get Recoil</a>
+  </div>
+</nav>
 
-<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+<!-- Guide Header -->
+<header class="guide-header">
+  <div class="container">
+    <div class="tool-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      QP Tool · 1 of 3
+    </div>
+    <h1><span>Recoil</span> Operator Guide</h1>
+    <p class="subtitle">A volatility fade instrument. It measures when a candle is statistically exceptional, marks where the level sits, and reports what price has historically done afterwards.</p>
+    <p class="meta">Part of 3 QP Tools · 4 Build Menus · 1020 Combinations</p>
+  </div>
+</header>
 
-<h2>What it measures</h2>
-<p>Every candle's true range is divided by the average true range of the last eight candles. That ratio answers one question: how big is this candle compared to a normal recent candle? A ratio of 1.0 is exactly average. 3.0 is three times the recent norm.</p>
-
-<p>The ratio places the candle in one of eight bands:</p>
-
-<table>
-  <thead>
-    <tr><th>Band</th><th>Name</th><th>Ratio</th><th>Colour</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>1</td><td>Extremely Low</td><td class="mono">under 0.30</td><td><span class="tag blue">pale blue</span></td></tr>
-    <tr><td>2</td><td>Very Low</td><td class="mono">0.30 – 0.75</td><td><span class="tag blue">light blue</span></td></tr>
-    <tr><td>3</td><td>Low</td><td class="mono">0.75 – 1.20</td><td><span class="tag blue">blue</span></td></tr>
-    <tr><td>4</td><td>Lower Medium</td><td class="mono">1.20 – 1.65</td><td><span class="tag blue">mid blue</span></td></tr>
-    <tr><td>5</td><td>Medium</td><td class="mono">1.65 – 2.10</td><td><span class="tag blue">deep blue</span></td></tr>
-    <tr><td>6</td><td>High Medium</td><td class="mono">2.10 – 2.55</td><td><span class="tag yellow">yellow — trigger 1×</span></td></tr>
-    <tr><td>7</td><td>High</td><td class="mono">2.55 – 3.00</td><td><span class="tag orange">orange — trigger 2×</span></td></tr>
-    <tr><td>8</td><td>Very High</td><td class="mono">3.00 and above</td><td><span class="tag red">red — trigger 5×</span></td></tr>
-  </tbody>
-</table>
-
-<p>Bands 6, 7 and 8 are the trigger bands. Everything below them is context.</p>
-
-<h2>What it does with that</h2>
-<p>When a candle closes in band 6, 7 or 8, Recoil marks a fade. A bearish exceptional candle marks a long. A bullish one marks a short. The premise is that overextended candles snap back.</p>
-
-<p>That is the entire engine. One measurement, one response. No pattern recognition, no prediction, no stack of indicators agreeing with each other.</p>
-
-<div class="callout">
-  Recoil marks conditions. You decide. Nothing here is a signal to follow blindly, and the instrument has no opinion about whether now is a sensible time to be trading at all.
+<!-- Guide Navigation -->
+<div class="guide-nav">
+  <div class="container">
+    <div class="guide-nav-inner">
+      <a href="#overview">Overview</a>
+      <a href="#setup">Setup</a>
+      <a href="#configuration">Configuration</a>
+      <a href="#usage">Usage</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </div>
+  </div>
 </div>
 
-<h2>Setup</h2>
+<!-- Main Content -->
+<main class="guide-content">
+  
+  <a href="/dashboard/" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Back to Dashboard
+  </a>
 
-<h3>1 · Add it to TradingView</h3>
-<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Recoil</strong> and add it to your chart.</p>
-<p>You must be logged into the TradingView account matching the username on your dashboard. Access is granted manually and can take a few hours after purchase.</p>
+  <!-- SECTION 1: OVERVIEW -->
+  <section id="overview" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+      </span>
+      Overview
+    </h2>
+    
+    <p><strong>Recoil measures volatility expansion.</strong> It does not tell you to buy or sell. It marks conditions where a candle has moved significantly more than recent candles, which historically precedes a snap-back.</p>
+    
+    <h3>What It Measures</h3>
+    <p>Every candle's true range is divided by the average true range of the last eight candles. That ratio answers one question: <strong>how big is this candle compared to a normal recent candle?</strong></p>
+    <p>A ratio of 1.0 is exactly average. 3.0 is three times the recent norm. The ratio places the candle in one of eight bands:</p>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>Band</th>
+            <th>Name</th>
+            <th>Ratio</th>
+            <th>Colour</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Extremely Low</td>
+            <td class="mono">under 0.30</td>
+            <td><span class="tag blue">pale blue</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Very Low</td>
+            <td class="mono">0.30 – 0.75</td>
+            <td><span class="tag blue">light blue</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Low</td>
+            <td class="mono">0.75 – 1.20</td>
+            <td><span class="tag blue">blue</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Lower Medium</td>
+            <td class="mono">1.20 – 1.65</td>
+            <td><span class="tag blue">mid blue</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Medium</td>
+            <td class="mono">1.65 – 2.10</td>
+            <td><span class="tag blue">deep blue</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>High Medium</td>
+            <td class="mono">2.10 – 2.55</td>
+            <td><span class="tag yellow">yellow — trigger 1×</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>High</td>
+            <td class="mono">2.55 – 3.00</td>
+            <td><span class="tag orange">orange — trigger 2×</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Very High</td>
+            <td class="mono">3.00 and above</td>
+            <td><span class="tag red">red — trigger 5×</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <p>Bands 6, 7 and 8 are the trigger bands. Everything below them is context.</p>
+    
+    <h3>What It Does With That</h3>
+    <p>When a candle closes in band 6, 7 or 8, Recoil marks a fade. A bearish exceptional candle marks a long. A bullish one marks a short. The premise: <strong>overextended candles snap back.</strong></p>
+    <p>That is the entire engine. One measurement, one response. No pattern recognition, no prediction, no stack of indicators agreeing with each other.</p>
+    
+    <div class="callout">
+      <p><strong>Recoil marks conditions. You decide.</strong> Nothing here is a signal to follow blindly, and the instrument has no opinion about whether now is a sensible time to be trading at all.</p>
+    </div>
+  </section>
 
-<h3>2 · Leave the settings alone</h3>
-<p>The panel ships on Custom, and every value in it is already the configuration actually traded. Custom does not mean unconfigured. It means the individual settings below are live rather than being overridden by a preset.</p>
-<p>Change nothing for the first session.</p>
+  <!-- SECTION 2: SETUP -->
+  <section id="setup" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </span>
+      Setup
+    </h2>
+    
+    <div class="steps">
+      <div class="step">
+        <span class="step-number">1</span>
+        <div class="step-content">
+          <h4>Add to TradingView</h4>
+          <p>Open Indicators, then Invite-only scripts. Find <strong>Quant Prime — Recoil</strong> and add it to your chart. You must be logged into the TradingView account matching the username on your dashboard. Access is granted manually and can take a few hours after purchase.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <div class="step-content">
+          <h4>Leave the Settings Alone</h4>
+          <p>The panel ships on Custom, and every value in it is already the configuration actually traded. Custom does not mean unconfigured—it means the individual settings below are live rather than being overridden by a preset. Change nothing for the first session.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <div class="step-content">
+          <h4>Watch Before You Act</h4>
+          <p>Put it on a 3M EURUSD chart and watch one session without touching anything. You are looking for two things: how often a coloured candle appears, and what price does in the twenty minutes afterwards. How often it triggers decides whether Recoil is a daily tool for you or a weekly one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<h3>3 · Watch before you act</h3>
-<p>Put it on a 3M EURUSD chart and watch one session without touching anything. You are looking for two things: how often a coloured candle appears, and what price does in the twenty minutes afterwards.</p>
-<p>How often it triggers on your instrument decides whether Recoil is a daily tool for you or a weekly one, and those are two different habits.</p>
+  <!-- SECTION 3: CONFIGURATION -->
+  <section id="configuration" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </span>
+      Configuration
+    </h2>
+    
+    <p>These are the settings that matter. Each is shown with the default value actually traded.</p>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Trading Style</span>
+        <span class="setting-value">Custom</span>
+      </div>
+      <p class="setting-desc">Two options. <strong>Custom</strong> uses the individual settings in the panel, which is how it ships. <strong>Scalping (3M)</strong> overrides the take profit and stop loss with the backtested three minute configuration: TP at 100% of body, SL at wick plus 3.0 ATR.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Time Windows</span>
+        <span class="setting-value">07:00–09:00, 13:00–14:00, 19:00–20:00 UTC</span>
+      </div>
+      <p class="setting-desc">All three enabled. Conditions only resolve inside these hours. Switching all three off runs the instrument around the clock. These are not windows where expansion is more likely—it is not. They are windows where the same expansion is <strong>worth more in pips</strong> while the spread stays exactly the same.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">ATR Length</span>
+        <span class="setting-value">8</span>
+      </div>
+      <p class="setting-desc">The memory of the baseline. It decides what "abnormal" is measured against. Shorter (around 5), and the baseline adapts fast. Longer (around 21), and a volatility burst keeps reading as extreme for longer because the baseline is slow to catch up.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Thresholds 1 to 7</span>
+        <span class="setting-value">0.30 / 0.75 / 1.20 / 1.65 / 2.10 / 2.55 / 3.00</span>
+      </div>
+      <p class="setting-desc">The seven boundaries between the eight bands, as ratios of true range to ATR. <strong>Threshold 5 is the one that matters most</strong>, because it is the gate into band 6 and therefore into trading at all. Raising it means fewer triggers, lowering it means more.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Band Risk Multipliers</span>
+        <span class="setting-value">1× / 2× / 5×</span>
+      </div>
+      <p class="setting-desc">Band 6 at 1× your base unit, band 7 at 2×, band 8 at 5×. Each band can also be switched off entirely.</p>
+    </div>
+    
+    <div class="callout warning">
+      <p class="callout-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        The Uncomfortable Part
+      </p>
+      <p>Band 8 candles are not profitable on their own. Tested in isolation, they lose. They stay because their winners are large enough that at 5× they subsidise the losses across bands 6 and 7, and the three together outperform any two. Removing the losing band makes the whole thing worse. Paper 02 is the full write-up.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Trend Alignment</span>
+        <span class="setting-value">2× with, 0.5× against, 1× consolidation</span>
+      </div>
+      <p class="setting-desc">The EMA stack classifies trend state and scales risk by it. It does not gate entries. A fade agreeing with a genuine trend runs at 2× the band foundation, one opposing it at 0.5×. Set "against trend" to 0 to block counter-trend fades entirely—the single most effective change if your results are being damaged by fading strong trends.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Take Profit</span>
+        <span class="setting-value">100% of body</span>
+      </div>
+      <p class="setting-desc">The target is a percentage of the trigger candle's body, not a fixed pip distance. At 100%, a fade of a bearish candle targets the price that candle opened at.</p>
+    </div>
+    
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Stop Loss</span>
+        <span class="setting-value">Wick plus 3.0 ATR</span>
+      </div>
+      <p class="setting-desc">The stop sits this many ATRs beyond the trigger candle's extreme. Below the low on a long, above the high on a short. It is wider than feels comfortable, deliberately. <strong>Narrowing this is the most common change people make and the most common reason their results get worse.</strong></p>
+    </div>
+  </section>
 
-<h2>The settings that matter</h2>
+  <!-- SECTION 4: USAGE -->
+  <section id="usage" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+        </svg>
+      </span>
+      Usage
+    </h2>
+    
+    <h3>Where Recoil Works</h3>
+    <p>Recoil fades expansion. It works best in:</p>
+    <ul>
+      <li><strong>Ranging markets</strong> where overextension genuinely snaps back</li>
+      <li><strong>High-liquidity pairs</strong> like EURUSD, GBPUSD, USDJPY</li>
+      <li><strong>Within the three time windows</strong> where pip value justifies the spread</li>
+    </ul>
+    
+    <h3>Where Recoil Fails</h3>
+    <p>This is the failure mode that costs money:</p>
+    <ul>
+      <li><strong>Strong sustained trends.</strong> In a genuine trend, an exceptional candle is often the start of something rather than an overreaction, and the fade is on the wrong side of it.</li>
+      <li><strong>News events.</strong> Volatility spikes during high-impact news are not statistical outliers—they are expected. Recoil cannot distinguish them.</li>
+    </ul>
+    
+    <div class="callout info">
+      <p><strong>Recoil does not tell you when to stay out.</strong> The Regime Tracker (Cockpit) will tell you market quality has degraded. Recoil itself keeps triggering regardless. Check the regime before acting on a trigger. That single habit does more for your results than any setting in the indicator.</p>
+    </div>
+    
+    <h3>Test It on Your Own Instrument</h3>
+    <p>Three reports in the Build menu exist to let you check rather than accept:</p>
+    <ul>
+      <li><strong>Band Report</strong> — how often each band appears on your instrument and what price did afterwards</li>
+      <li><strong>Zone Report</strong> — whether the volatility zones turn price or decorate the chart</li>
+      <li><strong>Session Report</strong> — whether the three windows are right for your pair</li>
+    </ul>
+    <p>Use a large sample. Five thousand candles, not five hundred. If the reports disagree with these defaults on your pair, believe the reports.</p>
+  </section>
 
-<h3>Trading Style — Custom</h3>
-<p>Two options. Custom uses the individual settings in the panel, which is how it ships. Scalping (3M) overrides the take profit and stop loss with the backtested three minute configuration: TP at 100% of body, SL at wick plus 3.0 ATR.</p>
+  <!-- SECTION 5: TROUBLESHOOTING -->
+  <section id="troubleshooting" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </span>
+      Troubleshooting
+    </h2>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>What You See</th>
+            <th>Usually Means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>No coloured candles at all</td>
+            <td>ATR length too long for your timeframe, or thresholds too high</td>
+          </tr>
+          <tr>
+            <td>Coloured candles constantly</td>
+            <td>ATR length too short, or minimum body size set to 0</td>
+          </tr>
+          <tr>
+            <td>Coloured candles but nothing marked</td>
+            <td>Price is outside the three time windows, or the band's fade toggle is off</td>
+          </tr>
+          <tr>
+            <td>Stop distance looks enormous</td>
+            <td>Correct and intentional. Check it in pips with the Position Sizer</td>
+          </tr>
+          <tr>
+            <td>Fades keep failing in the same direction</td>
+            <td>Likely a trending market. Check the Regime Tracker (Cockpit)</td>
+          </tr>
+          <tr>
+            <td>Indicator not appearing</td>
+            <td>TradingView username mismatch. Check your dashboard for the linked account.</td>
+          </tr>
+          <tr>
+            <td>Settings reset after refresh</td>
+            <td>Save your chart layout after configuring. TradingView doesn't auto-save indicator settings.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="callout">
+      <p><strong>Still stuck?</strong> Ask QP Intelligence in your dashboard—it knows all three engines and how they relate. Or reach out in the private trading room.</p>
+    </div>
+  </section>
 
-<h3>Time windows — 07:00–09:00, 13:00–14:00, 19:00–20:00 UTC</h3>
-<p>All three enabled. Conditions only resolve inside these hours, and switching all three off runs the instrument around the clock.</p>
-<p>These are not windows where expansion is more likely. It is not. They are windows where the same expansion is worth more in pips while the spread stays exactly the same.</p>
+  <!-- Footer -->
+  <footer class="guide-footer">
+    <div class="related-papers">
+      <h4>Related Papers</h4>
+      <div class="paper-links">
+        <a href="/research/papers/paper-01-friction-threshold.html">01 · The Friction Threshold</a>
+        <a href="/research/papers/paper-02-subsidised-signal.html">02 · The Subsidised Signal</a>
+        <a href="/research/papers/paper-03-timeframe-ceiling.html">03 · The Timeframe Ceiling</a>
+        <a href="/research/papers/paper-05-stop-placement.html">05 · The Stop Is Not a Number</a>
+        <a href="/research/papers/paper-06-comfort-trade.html">06 · The Comfort Trade</a>
+        <a href="/research/papers/paper-09-three-windows.html">09 · Three Windows</a>
+      </div>
+    </div>
+    
+    <p class="disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+  </footer>
 
-<h3>ATR Length — 8</h3>
-<p>The memory of the baseline. It decides what "abnormal" is measured against.</p>
-<p>Shorter, around 5, and the baseline adapts fast. Longer, around 21, and a volatility burst keeps reading as extreme for longer because the baseline is slow to catch up.</p>
+</main>
 
-<h3>Thresholds 1 to 7</h3>
-<p>The seven boundaries between the eight bands, as ratios of true range to ATR.</p>
-<p>Threshold 5 is the one that matters most, because it is the gate into band 6 and therefore into trading at all. Raising it means fewer triggers, lowering it means more.</p>
+<footer>
+  <div class="container">
+    <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+    <p>Quant Prime is not authorised or regulated by the FCA. This website is for educational purposes only. Trading carries significant risk of loss. Past performance is not indicative of future results. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+  </div>
+</footer>
 
-<h3>Band risk multipliers — 1× / 2× / 5×</h3>
-<p>Band 6 at 1× your base unit, band 7 at 2×, band 8 at 5×. Each band can also be switched off entirely.</p>
+<script>
+// Nav dropdown
+const navBtn = document.getElementById('navDropdown');
+const navMenu = document.getElementById('navMenu');
+navBtn?.addEventListener('click', () => {
+  navBtn.classList.toggle('active');
+  navMenu.classList.toggle('open');
+});
 
-<div class="callout warning">
-  The uncomfortable part: band 8 candles are not profitable on their own. Tested in isolation, they lose. They stay because their winners are large enough that at 5× they subsidise the losses across bands 6 and 7, and the three together outperform any two. Removing the losing band makes the whole thing worse. Paper 02 is the full write-up.
-</div>
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!navBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
+    navBtn?.classList.remove('active');
+    navMenu?.classList.remove('open');
+  }
+});
 
-<h3>Trend alignment — 2× with, 0.5× against, 1× consolidation</h3>
-<p>The EMA stack classifies trend state and scales risk by it. It does not gate entries. A fade agreeing with a genuine trend runs at 2× the band foundation, one opposing it at 0.5×.</p>
-<p>Set "against trend" to 0 to block counter-trend fades entirely, which is the single most effective change if your results are being damaged by fading strong trends.</p>
+// Active nav link on scroll
+const sections = document.querySelectorAll('.guide-section');
+const navLinks = document.querySelectorAll('.guide-nav a');
 
-<h3>Take profit — % of body, 100%</h3>
-<p>The target is a percentage of the trigger candle's body, not a fixed pip distance. At 100%, a fade of a bearish candle targets the price that candle opened at.</p>
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (scrollY >= sectionTop - 160) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
 
-<h3>Stop loss — wick plus 3.0 ATR</h3>
-<p>The stop sits this many ATRs beyond the trigger candle's extreme. Below the low on a long, above the high on a short.</p>
-<p>It is wider than feels comfortable, deliberately. Narrowing this is the most common change people make and the most common reason their results get worse.</p>
+// Smooth scroll for nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 
-<h2>Where Recoil fails</h2>
-
-<h3>It does not work in every condition</h3>
-<p>Recoil fades expansion. In a strong sustained trend an exceptional candle is often the start of something rather than an overreaction, and the fade is on the wrong side of it. This is the failure mode that costs money.</p>
-
-<h3>It does not tell you when to stay out</h3>
-<p>The Regime Tracker will tell you market quality has degraded. Recoil itself keeps triggering regardless. Check the regime before acting on a trigger. That single habit does more for your results than any setting in the indicator.</p>
-
-<h2>When it looks wrong</h2>
-<table>
-  <thead>
-    <tr><th>What you see</th><th>Usually</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>No coloured candles at all</td><td>ATR length too long for your timeframe, or thresholds too high</td></tr>
-    <tr><td>Coloured candles constantly</td><td>ATR length too short, or minimum body size set to 0</td></tr>
-    <tr><td>Coloured candles but nothing marked</td><td>Price is outside the three time windows, or the band's fade toggle is off</td></tr>
-    <tr><td>Stop distance looks enormous</td><td>Correct, and intentional. Check it in pips with the Position Sizer</td></tr>
-    <tr><td>Fades keep failing in the same direction</td><td>Likely a trending market. Check the Regime Tracker</td></tr>
-  </tbody>
-</table>
-
-<h2>Test it on your own instrument</h2>
-<p>Three reports in the Build menu exist to let you check all of the above rather than accept it:</p>
-<ul>
-  <li><strong>Band Report</strong> — how often each band appears on your instrument and what price did afterwards</li>
-  <li><strong>Zone Report</strong> — whether the volatility zones turn price or decorate the chart</li>
-  <li><strong>Session Report</strong> — whether the three windows are right for your pair</li>
-</ul>
-<p>Use a large sample. Five thousand candles, not five hundred. If the reports disagree with these defaults on your pair, believe the reports.</p>
-
-<div class="footer">
-  <p>Related papers: 01 The Friction Threshold · 02 The Subsidised Signal · 03 The Timeframe Ceiling · 05 The Stop Is Not a Number · 06 The Comfort Trade · 09 Three Windows</p>
-  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
-</div>
+// Theme detection
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+</script>
 
 </body>
 </html>

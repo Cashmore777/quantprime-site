@@ -1,267 +1,980 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cockpit — Operator Guide</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --surface: #111117;
-      --border: rgba(255,255,255,0.08);
-      --text-1: #f2f4f7;
-      --text-2: #a0a4ab;
-      --text-3: #6b7078;
-      --gold: #c9a84c;
-      --red: #ef4444;
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', -apple-system, system-ui, sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--sans);
-      background: var(--bg);
-      color: var(--text-1);
-      line-height: 1.7;
-      padding: 40px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: var(--red);
-    }
-    .subtitle {
-      font-size: 15px;
-      color: var(--text-2);
-      margin-bottom: 32px;
-    }
-    h2 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-top: 40px;
-      margin-bottom: 16px;
-      color: var(--text-1);
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    h3 {
-      font-size: 14px;
-      font-weight: 600;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      color: var(--gold);
-    }
-    p {
-      margin-bottom: 16px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0 24px;
-      font-size: 13px;
-    }
-    th, td {
-      padding: 10px 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    th {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-3);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    td {
-      color: var(--text-2);
-    }
-    td:first-child {
-      color: var(--text-1);
-      font-weight: 500;
-    }
-    .mono {
-      font-family: var(--mono);
-      font-size: 13px;
-    }
-    .gold { color: var(--gold); }
-    ul, ol {
-      margin: 16px 0;
-      padding-left: 24px;
-      color: var(--text-2);
-      font-size: 14px;
-    }
-    li {
-      margin-bottom: 8px;
-    }
-    .callout {
-      background: rgba(201,168,76,0.08);
-      border-left: 3px solid var(--gold);
-      padding: 16px 20px;
-      margin: 24px 0;
-      font-size: 13px;
-      color: var(--text-2);
-    }
-    .warning {
-      background: rgba(239,68,68,0.08);
-      border-left: 3px solid #ef4444;
-    }
-    code {
-      font-family: var(--mono);
-      font-size: 12px;
-      background: var(--surface);
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .footer {
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-      font-size: 11px;
-      color: var(--text-3);
-    }
-    .grade { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
-    .grade.prime { background: rgba(38,162,105,0.15); color: #26a269; }
-    .grade.favorable { background: rgba(0,171,255,0.15); color: #00abff; }
-    .grade.marginal { background: rgba(255,193,7,0.15); color: #ffc107; }
-    .grade.degraded { background: rgba(239,68,68,0.15); color: #ef4444; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- SEO -->
+<title>Cockpit Operator Guide | Quant Prime</title>
+<meta name="description" content="Complete operator guide for Cockpit - Quant Prime's regime analysis instrument. Setup, configuration, usage patterns, and troubleshooting for systematic traders.">
+<meta name="keywords" content="Cockpit indicator, regime analysis, market conditions, TradingView indicator guide, systematic trading, Quant Prime, multi-timeframe">
+<link rel="canonical" href="https://quantprime.uk/docs/guides/cockpit-operator-guide">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cockpit Operator Guide | Quant Prime">
+<meta property="og:description" content="Complete operator guide for Cockpit - regime analysis instrument that grades market quality across five timeframes.">
+<meta property="og:url" content="https://quantprime.uk/docs/guides/cockpit-operator-guide">
+<meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
+<meta property="og:site_name" content="Quant Prime">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cockpit Operator Guide | Quant Prime">
+<meta name="twitter:description" content="Complete operator guide for Cockpit - regime analysis instrument.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css?v=20260904">
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   OPERATOR GUIDE STYLES - Cockpit (Red Accent)
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --accent: #ef4444;
+  --accent-soft: rgba(239, 68, 68, 0.12);
+  --accent-border: rgba(239, 68, 68, 0.25);
+}
+
+[data-theme="dark"] {
+  --accent: #f87171;
+  --accent-soft: rgba(248, 113, 113, 0.12);
+  --accent-border: rgba(248, 113, 113, 0.3);
+}
+
+/* Page Header */
+.guide-header {
+  padding: 8rem 0 3rem;
+  background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 100%);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.guide-header .tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.guide-header h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.guide-header h1 span {
+  color: var(--accent);
+}
+
+.guide-header .subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
+.guide-header .meta {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* Guide Navigation */
+.guide-nav {
+  position: sticky;
+  top: 60px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  z-index: 50;
+}
+
+.guide-nav-inner {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.guide-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.guide-nav a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.guide-nav a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Main Content */
+.guide-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+/* Sections */
+.guide-section {
+  margin-bottom: 4rem;
+  scroll-margin-top: 140px;
+}
+
+.guide-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text);
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.guide-section h2 .section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.guide-section h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  color: var(--accent);
+}
+
+.guide-section p {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.guide-section strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Lists */
+.guide-section ul,
+.guide-section ol {
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.guide-section li {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.guide-table th {
+  text-align: left;
+  padding: 0.875rem 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.guide-table td {
+  padding: 0.875rem 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.guide-table tr:last-child td {
+  border-bottom: none;
+}
+
+.guide-table td:first-child {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.guide-table .mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+/* Tags/Badges */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.tag.yellow { background: rgba(255,193,7,0.15); color: #ffc107; }
+.tag.orange { background: rgba(255,152,0,0.15); color: #ff9800; }
+.tag.red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.tag.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.tag.green { background: rgba(34,197,94,0.15); color: #22c55e; }
+.tag.cyan { background: rgba(34,211,238,0.15); color: #22d3ee; }
+
+/* Grade badges */
+.grade {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.grade.prime { background: rgba(38,162,105,0.15); color: #26a269; }
+.grade.favorable { background: rgba(0,171,255,0.15); color: #00abff; }
+.grade.marginal { background: rgba(255,193,7,0.15); color: #ffc107; }
+.grade.degraded { background: rgba(239,68,68,0.15); color: #ef4444; }
+
+/* Callouts */
+.callout {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.callout.warning {
+  background: rgba(239,68,68,0.08);
+  border-left-color: #ef4444;
+}
+
+.callout.info {
+  background: rgba(59,130,246,0.08);
+  border-left-color: #3b82f6;
+}
+
+.callout.gold {
+  background: rgba(201,168,76,0.08);
+  border-left-color: #C9A84C;
+}
+
+.callout-title {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Code */
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  background: var(--surface-dim);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+/* Step Cards */
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.step {
+  display: flex;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.step:hover {
+  border-color: var(--accent-border);
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.step-content p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+
+/* Settings Card */
+.setting-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.setting-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.setting-name {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.setting-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.setting-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Footer */
+.guide-footer {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-papers {
+  margin-bottom: 1.5rem;
+}
+
+.related-papers h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+}
+
+.paper-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.paper-links a {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  background: var(--surface-dim);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.paper-links a:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.disclaimer {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+
+/* Back link */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .guide-header {
+    padding: 7rem 1rem 2rem;
+  }
+  
+  .guide-header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .guide-header .subtitle {
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+  }
+  
+  .guide-nav {
+    top: 56px;
+  }
+  
+  .guide-nav-inner {
+    padding: 0 1rem;
+  }
+  
+  .guide-content {
+    padding: 2rem 1rem 4rem;
+  }
+  
+  .guide-section {
+    margin-bottom: 3rem;
+    scroll-margin-top: 120px;
+  }
+  
+  .guide-section h2 {
+    font-size: 1.25rem;
+  }
+  
+  .guide-section h3 {
+    font-size: 1rem;
+  }
+  
+  .step {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .setting-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .callout {
+    padding: 1rem 1.25rem;
+  }
+  
+  .paper-links {
+    flex-direction: column;
+  }
+  
+  .paper-links a {
+    text-align: center;
+  }
+}
+</style>
 </head>
 <body>
 
-<h1>Cockpit</h1>
-<p class="subtitle">An analytical instrument. It takes no trades, has no entries and produces no signals. What it does is measure the conditions across five timeframes at once, so the decision about what to trade is made against a graded reading rather than a feeling.</p>
+<nav>
+  <div class="container">
+    <div class="nav-left">
+      <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+      <button class="nav-dropdown-btn" id="navDropdown">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 4.5L6 7.5L9 4.5"/>
+        </svg>
+      </button>
+      <div class="nav-dropdown" id="navMenu">
+        <a href="/">Home</a>
+        <a href="/framework">The Framework</a>
+        <a href="/results">Results</a>
+        <a href="/compounding">Compounding</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/dashboard/login.html">Member Login</a>
+      </div>
+    </div>
+    <a href="/checkout?tier=suite" class="nav-cta">Get Suite</a>
+  </div>
+</nav>
 
-<p><strong>Operator's guide</strong> · Read once, then use the settings reference at the bottom.</p>
+<!-- Guide Header -->
+<header class="guide-header">
+  <div class="container">
+    <div class="tool-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+      </svg>
+      QP Tool · 3 of 3
+    </div>
+    <h1><span>Cockpit</span> Operator Guide</h1>
+    <p class="subtitle">An analytical instrument. It takes no trades, has no entries and produces no signals. It measures market conditions across five timeframes so your decisions are based on graded readings rather than feelings.</p>
+    <p class="meta">Part of 3 QP Tools · 4 Build Menus · 1020 Combinations</p>
+  </div>
+</header>
 
-<h2>What it is for</h2>
-<p>Recoil and Meridian both trigger when their own conditions appear. Neither has an opinion about whether the wider market suits them, because neither is looking at it.</p>
-
-<p>That gap is where most losses come from in a system that genuinely works. Recoil faded in a strong trend. Meridian traded in a session with no clean liquidity. The instrument did exactly what it was built to do, in conditions it was not built for.</p>
-
-<p>Cockpit is the wider picture. It does not tell you which instrument to run, and it never will. It tells you what kind of market you are in, and you decide what that means.</p>
-
-<div class="callout warning">
-  Judged as a trading instrument, Cockpit fails immediately. It makes no money on its own. The correct test is whether it stops you giving money back in weeks you should not have been trading.
+<!-- Guide Navigation -->
+<div class="guide-nav">
+  <div class="container">
+    <div class="guide-nav-inner">
+      <a href="#overview">Overview</a>
+      <a href="#setup">Setup</a>
+      <a href="#configuration">Configuration</a>
+      <a href="#usage">Usage</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+    </div>
+  </div>
 </div>
 
-<h2>The regime score</h2>
-<p>The number the whole instrument is built around. It grades market quality out of 90, per timeframe, from two components:</p>
+<!-- Main Content -->
+<main class="guide-content">
+  
+  <a href="/dashboard/" class="back-link">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Back to Dashboard
+  </a>
 
-<ul>
-  <li><strong>Stability, 0 to 40.</strong> Current ATR measured against its own 50 period average. Scores 40 when they sit close together, 20 when loosely aligned, 0 when they diverge.</li>
-  <li><strong>Trend, 0 to 50.</strong> ADX, capped at 50.</li>
-</ul>
+  <!-- SECTION 1: OVERVIEW -->
+  <section id="overview" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+        </svg>
+      </span>
+      Overview
+    </h2>
+    
+    <p><strong>Cockpit is the wider picture.</strong> Recoil and Meridian both trigger when their own conditions appear. Neither has an opinion about whether the wider market suits them, because neither is looking at it.</p>
+    
+    <p>That gap is where most losses come from in a system that genuinely works. Recoil faded in a strong trend. Meridian traded in a session with no clean liquidity. The instrument did exactly what it was built to do, in conditions it was not built for.</p>
+    
+    <div class="callout warning">
+      <p class="callout-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Judged as a Trading Instrument, Cockpit Fails
+      </p>
+      <p>It makes no money on its own. The correct test is whether it stops you giving money back in weeks you should not have been trading.</p>
+    </div>
+    
+    <h3>The Regime Score</h3>
+    <p>The number the whole instrument is built around. It grades market quality out of 90, per timeframe, from two components:</p>
+    <ul>
+      <li><strong>Stability (0 to 40)</strong> — Current ATR measured against its own 50 period average. Scores 40 when they sit close together, 20 when loosely aligned, 0 when they diverge.</li>
+      <li><strong>Trend (0 to 50)</strong> — ADX, capped at 50.</li>
+    </ul>
+    <p>Note what stability is actually measuring. Not how much the market is moving. <strong>Whether it is moving the way it has recently been moving.</strong> A run of enormous expansion candles pushes the score down, not up.</p>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>Grade</th>
+            <th>Score</th>
+            <th>Reading</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="grade prime">PRIME</span></td>
+            <td class="mono">above 70</td>
+            <td>Conditions match what the systems were measured against</td>
+          </tr>
+          <tr>
+            <td><span class="grade favorable">FAVORABLE</span></td>
+            <td class="mono">above 55</td>
+            <td>Workable</td>
+          </tr>
+          <tr>
+            <td><span class="grade marginal">MARGINAL</span></td>
+            <td class="mono">above 40</td>
+            <td>Something is off. Reduce, or wait.</td>
+          </tr>
+          <tr>
+            <td><span class="grade degraded">DEGRADED</span></td>
+            <td class="mono">40 or below</td>
+            <td>Wrong conditions entirely</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <p><strong>A Recoil fade taken at 74 is a different trade from the identical fade at 41</strong>, even though the candle looks the same. The candle is the trigger. The score is the context.</p>
+    
+    <h3>Reading the Dashboard</h3>
+    <p>Five rows, five columns, top right by default.</p>
+    <p><strong>Rows</strong> are timeframes: 1 day, 3 hours, 30 minutes, your current chart, and 3 minutes. All five are editable.</p>
+    <p><strong>Columns</strong> are regime, score, EMA bias, volatility band and trend.</p>
+    
+    <p>The useful reading is not any single row. It is whether they agree.</p>
+    <ul>
+      <li><strong>Five rows pointing the same way</strong> is a market doing one thing at every scale. Rare, and it is when trend following works and fading anything is expensive.</li>
+      <li><strong>Rows disagreeing</strong>, daily bullish against 30M bearish, is a market doing different things at different scales. That is when reversal methods find their setups and trend following gets chopped to pieces.</li>
+    </ul>
+    
+    <div class="callout gold">
+      <p>You do not need a rule for this. You need the habit of looking at the five rows before you act, and asking whether the instrument you are about to use suits what you are seeing.</p>
+    </div>
+  </section>
 
-<p>Note what stability is actually measuring. Not how much the market is moving. Whether it is moving the way it has recently been moving. So a run of enormous expansion candles pushes the score down, not up.</p>
+  <!-- SECTION 2: SETUP -->
+  <section id="setup" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </span>
+      Setup
+    </h2>
+    
+    <div class="steps">
+      <div class="step">
+        <span class="step-number">1</span>
+        <div class="step-content">
+          <h4>Add to TradingView</h4>
+          <p>Open Indicators, then Invite-only scripts. Find <strong>Quant Prime — Cockpit</strong> and add it to your chart.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">2</span>
+        <div class="step-content">
+          <h4>Look at the Dashboard Only</h4>
+          <p>For the first few days, ignore everything Cockpit draws on the chart. Read the five rows and nothing else. Cockpit ships with every layer enabled: EMAs, liquidity across three timeframes, gaps across two, phase shading on three cycles, and higher timeframe candles—all at once. That is a great deal to look at and it is not how you should be using it.</p>
+        </div>
+      </div>
+      
+      <div class="step">
+        <span class="step-number">3</span>
+        <div class="step-content">
+          <h4>Then Turn Most of It Off</h4>
+          <p>Add layers back one at a time and keep only the ones that change a decision.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<table>
-  <thead>
-    <tr><th>Grade</th><th>Score</th><th>Reading</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><span class="grade prime">PRIME</span></td><td class="mono">above 70</td><td>Conditions match what the systems were measured against</td></tr>
-    <tr><td><span class="grade favorable">FAVORABLE</span></td><td class="mono">above 55</td><td>Workable</td></tr>
-    <tr><td><span class="grade marginal">MARGINAL</span></td><td class="mono">above 40</td><td>Something is off. Reduce, or wait.</td></tr>
-    <tr><td><span class="grade degraded">DEGRADED</span></td><td class="mono">40 or below</td><td>Wrong conditions entirely</td></tr>
-  </tbody>
-</table>
+  <!-- SECTION 3: CONFIGURATION -->
+  <section id="configuration" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </span>
+      Configuration
+    </h2>
+    
+    <p>Cockpit has more layers than the other instruments. These are the ones that matter.</p>
+    
+    <h3>EMAs</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">EMA Stack</span>
+        <span class="setting-value">8 / 26 / 80 / 233</span>
+      </div>
+      <p class="setting-desc">The trend classification behind the dashboard's bias and trend columns. A genuine trend requires the full 26/80/233 stack in order; anything else is consolidation.</p>
+    </div>
+    
+    <h3>Liquidity Pool Levels</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Liquidity Levels</span>
+        <span class="setting-value">3M / 30M / 3H — On</span>
+      </div>
+      <p class="setting-desc">Fractal pivot highs and lows across three timeframes, extending right and freezing when swept. Scale matters more than most people treat it. <strong>A 3M level getting taken is noise most of the time. A 3H level getting taken is an event.</strong> This is the layer that adds the most to Meridian—Meridian sees a sweep and a rejection but does not distinguish between scales. Cockpit does.</p>
+    </div>
+    
+    <h3>Fair Value Gaps</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">FVGs</span>
+        <span class="setting-value">3M and 30M — On</span>
+      </div>
+      <p class="setting-desc">Three candle gaps tracked with a full lifecycle: fresh, tapped at midpoint, then filled. The busiest layer on the chart. <strong>The recommended approach is to keep this off and turn it on when you specifically need it.</strong></p>
+    </div>
+    
+    <h3>Volatility Candle Colours</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Candle Colouring</span>
+        <span class="setting-value">On</span>
+      </div>
+      <p class="setting-desc">The same eight band system Recoil uses, with identical thresholds. A band 7 candle here is a candle Recoil reads as band 7. If you run Recoil and Cockpit on the same chart, <strong>one of them should have candle colouring switched off.</strong></p>
+    </div>
+    
+    <h3>AMD Phase Shading</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">Phase Shading</span>
+        <span class="setting-value">24H / 12H / 6H, UTC+0</span>
+      </div>
+      <p class="setting-desc">Shades the manipulation phase of each cycle, with vertical lines and labels at each phase start. Cockpit's cycles are 24, 12 and 6 hour, anchored to UTC+0. <strong>Meridian's are 12, 6 and 3 hour, anchored to UTC+1.</strong> They are different layers serving different purposes.</p>
+    </div>
+    
+    <h3>Higher Timeframe Candles</h3>
+    <div class="setting-card">
+      <div class="setting-header">
+        <span class="setting-name">HTF Candles</span>
+        <span class="setting-value">30M and 3H — On</span>
+      </div>
+      <p class="setting-desc">Draws the current 30 minute and 3 hour candles to the right of your chart. Tells you how far through the higher timeframe candle you are and what shape it is currently making.</p>
+    </div>
+  </section>
 
-<p>A Recoil fade taken at 74 is a different trade from the identical fade at 41, even though the candle looks the same. The candle is the trigger. The score is the context.</p>
+  <!-- SECTION 4: USAGE -->
+  <section id="usage" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+        </svg>
+      </span>
+      Usage
+    </h2>
+    
+    <h3>What Cockpit Does</h3>
+    <p>It reports conditions. The order that works: <strong>Cockpit first, then instrument, then build.</strong></p>
+    <p>Cockpit tells you what kind of market this is. That informs whether Recoil or Meridian is the appropriate engine, or whether neither is and you sit out.</p>
+    
+    <h3>What Cockpit Does Not Do</h3>
+    <ul>
+      <li><strong>It does not tell you which instrument to use.</strong> It reports conditions. Applying those conditions to a choice between your instruments is a judgement you make.</li>
+      <li><strong>It does not produce entries.</strong> No signals, no alerts on setups, nothing to execute. If you are waiting for it to tell you something is happening, you are using it wrong.</li>
+      <li><strong>It does not make money.</strong> Nothing in it generates a return. Its entire value is in the trades you do not take and the weeks you size down in.</li>
+    </ul>
+    
+    <h3>Using It With the Other Instruments</h3>
+    <p><strong>Cockpit + Recoil:</strong> A Recoil fade in a <span class="grade prime">PRIME</span> regime at 74 is a higher-conviction trade than the same fade in a <span class="grade marginal">MARGINAL</span> regime at 42. The candle looks the same. The context does not.</p>
+    <p><strong>Cockpit + Meridian:</strong> The liquidity pool levels in Cockpit show which scale of level was swept. Meridian does not distinguish. A 3H level sweep is more significant than a 3M level sweep.</p>
+    
+    <div class="callout info">
+      <p><strong>If reading the week is the part you are unsure about, ask QP Intelligence.</strong> It knows all three engines and how they relate.</p>
+    </div>
+  </section>
 
-<h2>Reading the dashboard</h2>
-<p>Five rows, five columns, top right by default.</p>
-<p><strong>Rows</strong> are timeframes: 1 day, 3 hours, 30 minutes, your current chart, and 3 minutes. All five are editable.</p>
-<p><strong>Columns</strong> are regime, score, EMA bias, volatility band and trend.</p>
+  <!-- SECTION 5: TROUBLESHOOTING -->
+  <section id="troubleshooting" class="guide-section">
+    <h2>
+      <span class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </span>
+      Troubleshooting
+    </h2>
+    
+    <div class="table-wrapper">
+      <table class="guide-table">
+        <thead>
+          <tr>
+            <th>What You See</th>
+            <th>Usually Means</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Chart unreadable</td>
+            <td>Every layer is on by default. Turn FVGs off first.</td>
+          </tr>
+          <tr>
+            <td>Score low during a big move</td>
+            <td>Working correctly. Stability measures consistency, not size.</td>
+          </tr>
+          <tr>
+            <td>Score high in a quiet market</td>
+            <td>Also correct, if ATR is near its average and ADX is present.</td>
+          </tr>
+          <tr>
+            <td>Rows disagreeing with each other</td>
+            <td>Not a fault. That disagreement is the reading.</td>
+          </tr>
+          <tr>
+            <td>Indicator not appearing</td>
+            <td>TradingView username mismatch. Check your dashboard for the linked account.</td>
+          </tr>
+          <tr>
+            <td>Candle colours conflict with Recoil</td>
+            <td>Turn off candle colouring on one of them. They use the same system.</td>
+          </tr>
+          <tr>
+            <td>Dashboard showing different values than expected</td>
+            <td>Check the timeframe assignments in settings. The five rows are customizable.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="callout">
+      <p><strong>Still stuck?</strong> Ask QP Intelligence in your dashboard—it knows all three engines and how they relate. Or reach out in the private trading room.</p>
+    </div>
+  </section>
 
-<p>The useful reading is not any single row. It is whether they agree.</p>
+  <!-- Footer -->
+  <footer class="guide-footer">
+    <div class="related-papers">
+      <h4>Related Papers</h4>
+      <div class="paper-links">
+        <a href="/research/papers/paper-03-timeframe-ceiling.html">03 · The Timeframe Ceiling</a>
+        <a href="/research/papers/paper-04-midnight-modulus.html">04 · Midnight Is Not a Modulus</a>
+        <a href="/research/papers/paper-08-statistical-confidence.html">08 · What 1.99 Actually Means</a>
+        <a href="/research/papers/paper-10-return-per-pain.html">10 · Return Per Unit of Pain</a>
+      </div>
+    </div>
+    
+    <p class="disclaimer">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
+  </footer>
 
-<p><strong>Five rows pointing the same way</strong> is a market doing one thing at every scale. Rare, and it is when trend following works and fading anything is expensive.</p>
+</main>
 
-<p><strong>Rows disagreeing</strong>, daily bullish against 30M bearish, is a market doing different things at different scales. That is when reversal methods find their setups and trend following gets chopped to pieces.</p>
+<footer>
+  <div class="container">
+    <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
+    <p>Quant Prime is not authorised or regulated by the FCA. This website is for educational purposes only. Trading carries significant risk of loss. Past performance is not indicative of future results. <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+  </div>
+</footer>
 
-<div class="callout">
-  You do not need a rule for this. You need the habit of looking at the five rows before you act, and asking whether the instrument you are about to use suits what you are seeing.
-</div>
+<script>
+// Nav dropdown
+const navBtn = document.getElementById('navDropdown');
+const navMenu = document.getElementById('navMenu');
+navBtn?.addEventListener('click', () => {
+  navBtn.classList.toggle('active');
+  navMenu.classList.toggle('open');
+});
 
-<h2>Setup</h2>
+// Close dropdown when clicking outside
+document.addEventListener('click', (e) => {
+  if (!navBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
+    navBtn?.classList.remove('active');
+    navMenu?.classList.remove('open');
+  }
+});
 
-<h3>1 · Add it to TradingView</h3>
-<p>Indicators, then Invite-only scripts. Find <strong>Quant Prime — Cockpit</strong> and add it to your chart.</p>
+// Active nav link on scroll
+const sections = document.querySelectorAll('.guide-section');
+const navLinks = document.querySelectorAll('.guide-nav a');
 
-<h3>2 · Look at the dashboard only</h3>
-<p>For the first few days, ignore everything Cockpit draws on the chart. Read the five rows and nothing else.</p>
-<p>Cockpit ships with every layer enabled: EMAs, liquidity across three timeframes, gaps across two, phase shading on three cycles, and higher timeframe candles, all at once. That is a great deal to look at and it is not how you should be using it.</p>
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (scrollY >= sectionTop - 160) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
 
-<h3>3 · Then turn most of it off</h3>
-<p>Add layers back one at a time and keep only the ones that change a decision.</p>
+// Smooth scroll for nav links
+navLinks.forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
 
-<h2>The layers</h2>
-
-<h3>EMAs — on, 8 / 26 / 80 / 233</h3>
-<p>The trend classification behind the dashboard's bias and trend columns. A genuine trend requires the full 26/80/233 stack in order; anything else is consolidation.</p>
-
-<h3>Liquidity pool levels — on, 3M / 30M / 3H</h3>
-<p>Fractal pivot highs and lows across three timeframes, extending right and freezing when swept.</p>
-<p>Scale matters more than most people treat it. A 3M level getting taken is noise most of the time. A 3H level getting taken is an event.</p>
-<p>This is the layer that adds the most to Meridian. Meridian sees a sweep and a rejection but does not distinguish between a 3M level nobody cared about and a 3H level half the market was watching. Cockpit does.</p>
-
-<h3>Fair value gaps — on, 3M and 30M</h3>
-<p>Three candle gaps tracked with a full lifecycle: fresh, tapped at midpoint, then filled.</p>
-<p>The busiest layer on the chart. The recommended approach is to keep this off and turn it on when you specifically need it.</p>
-
-<h3>Volatility candle colours — on</h3>
-<p>The same eight band system Recoil uses, with identical thresholds. A band 7 candle here is a candle Recoil reads as band 7.</p>
-<p>If you run Recoil and Cockpit on the same chart, one of them should have candle colouring switched off.</p>
-
-<h3>AMD phase shading — on, 24H / 12H / 6H, UTC+0</h3>
-<p>Shades the manipulation phase of each cycle, with vertical lines and labels at each phase start.</p>
-<p>Cockpit's cycles are 24, 12 and 6 hour, anchored to UTC+0. Meridian's are 12, 6 and 3 hour, anchored to UTC+1. They are different layers serving different purposes.</p>
-
-<h3>Higher timeframe candles — on, 30M and 3H</h3>
-<p>Draws the current 30 minute and 3 hour candles to the right of your chart. Tells you how far through the higher timeframe candle you are and what shape it is currently making.</p>
-
-<h2>What Cockpit does not do</h2>
-
-<h3>It does not tell you which instrument to use</h3>
-<p>It reports conditions. Applying those conditions to a choice between your instruments is a judgement you make.</p>
-
-<h3>It does not produce entries</h3>
-<p>No signals, no alerts on setups, nothing to execute. If you are waiting for it to tell you something is happening, you are using it wrong.</p>
-
-<h3>It does not make money</h3>
-<p>Nothing in it generates a return. Its entire value is in the trades you do not take and the weeks you size down in.</p>
-
-<h2>Using it with the other instruments</h2>
-<p>The order that works: <strong>Cockpit first, then instrument, then build.</strong></p>
-<p>Cockpit tells you what kind of market this is. That informs whether Recoil or Meridian is the appropriate engine, or whether neither is and you sit out.</p>
-
-<div class="callout">
-  If reading the week is the part you are unsure about, ask QP Intelligence. It knows all three engines and how they relate.
-</div>
-
-<h2>When it looks wrong</h2>
-<table>
-  <thead>
-    <tr><th>What you see</th><th>Usually</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Chart unreadable</td><td>Every layer is on by default. Turn FVGs off first.</td></tr>
-    <tr><td>Score low during a big move</td><td>Working correctly. Stability measures consistency, not size.</td></tr>
-    <tr><td>Score high in a quiet market</td><td>Also correct, if ATR is near its average and ADX is present.</td></tr>
-    <tr><td>Rows disagreeing with each other</td><td>Not a fault. That disagreement is the reading.</td></tr>
-  </tbody>
-</table>
-
-<div class="footer">
-  <p>Related papers: 03 The Timeframe Ceiling · 04 Midnight Is Not a Modulus · 08 What 1.99 Actually Means · 10 Return Per Unit of Pain</p>
-  <p style="margin-top: 12px;">Backtested results are hypothetical and do not indicate future results. Quant Prime is not FCA authorised. Educational content only, not financial advice. Trading carries risk of loss.</p>
-</div>
+// Theme detection
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+</script>
 
 </body>
 </html>
