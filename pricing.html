@@ -6,18 +6,18 @@
 
 <!-- SEO -->
 <title>Pricing — Quant Prime Quantitative Trading Platform</title>
-<meta name="description" content="Quant Prime pricing from £8/mo. 30-day free trial. Research papers, professional TradingView indicators, daily market analysis, and systematic trading education.">
+<meta name="description" content="Quant Prime pricing from £8/mo. 7-day free trial. 10 research papers, Intelligence AI, professional TradingView indicators with 765 build combinations.">
 <meta name="keywords" content="quant trading subscription, quantitative trading indicators, systematic trading tools, TradingView indicators price, forex indicators subscription">
 <link rel="canonical" href="https://quantprime.uk/pricing">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pricing — Quant Prime Quantitative Trading">
-<meta property="og:description" content="Start free for 30 days. From £8/mo. Professional quant trading indicators and research.">
+<meta property="og:description" content="7-day free trial. From £8/mo. Professional quant trading indicators with 765 build combinations.">
 <meta property="og:url" content="https://quantprime.uk/pricing">
 <meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 <meta property="og:site_name" content="Quant Prime">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Quant Prime Pricing — From £8/mo">
-<meta name="twitter:description" content="30-day free trial. Research, indicators, automation.">
+<meta name="twitter:description" content="7-day free trial. Research, indicators, automation.">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!-- Structured Data - Products -->
@@ -32,7 +32,7 @@
       "@type": "Product",
       "position": 1,
       "name": "Quant Prime Research",
-      "description": "Research papers, daily briefings, code snippets, private community",
+      "description": "10 research papers, daily Intelligence AI briefings, code snippets, private community",
       "offers": {
         "@type": "Offer",
         "price": "8",
@@ -46,7 +46,7 @@
       "@type": "Product",
       "position": 2,
       "name": "Quant Prime Recoil",
-      "description": "Volatility fade indicator with ATR-calibrated entries",
+      "description": "Volatility fade indicator with 255 build combinations, ATR-calibrated entries",
       "offers": {
         "@type": "Offer",
         "price": "28",
@@ -59,7 +59,7 @@
       "@type": "Product",
       "position": 3,
       "name": "Quant Prime Terminal",
-      "description": "Multi-timeframe structure scanner plus Recoil",
+      "description": "Multi-timeframe structure scanner plus Recoil - 510 total build combinations",
       "offers": {
         "@type": "Offer",
         "price": "58",
@@ -72,7 +72,7 @@
       "@type": "Product",
       "position": 4,
       "name": "Quant Prime Suite",
-      "description": "Full platform access with 1-on-1 calls and priority support",
+      "description": "Full platform access with 765 build combinations, unlimited Intelligence AI, 1-on-1 calls",
       "offers": {
         "@type": "Offer",
         "price": "88",
@@ -86,12 +86,13 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.css?v=20260904">
 <style>
 :root {
-  --gold: #a89264;
-  --gold-muted: #c4b896;
+  --gold: #C9A84C;
+  --gold-dim: #a89264;
+  --cyan: #4ECDC4;
   --bg: #fafaf9;
   --surface: #ffffff;
   --surface-elevated: #ffffff;
@@ -100,12 +101,14 @@
   --text-primary: #1a1a1a;
   --text-secondary: rgba(0,0,0,0.55);
   --text-muted: rgba(0,0,0,0.35);
+  --premium-gradient: linear-gradient(135deg, #C9A84C 0%, #4ECDC4 100%);
 }
 
 [data-theme="dark"] {
-  --gold: #b8a472;
-  --gold-muted: #9a8d6e;
-  --bg: #0a0a0c;
+  --gold: #C9A84C;
+  --gold-dim: #b8a472;
+  --cyan: #4ECDC4;
+  --bg: #0a0a0f;
   --surface: #111113;
   --surface-elevated: #18181b;
   --border: rgba(255,255,255,0.08);
@@ -122,188 +125,272 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PAGE HEADER - Clean & Minimal
+   HERO HEADER - Make them WANT it
    ═══════════════════════════════════════════════════════════════ */
-.page-header {
-  padding: 5rem 0 1.5rem;
+.pricing-hero {
+  padding: 7rem 0 3rem;
   text-align: center;
   position: relative;
+  overflow: hidden;
 }
 
-.page-header .label {
+.pricing-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.pricing-hero .label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
-  color: var(--text-muted);
-  margin-bottom: 0.75rem;
-  font-weight: 500;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 
-.page-header h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 500;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-  letter-spacing: -0.025em;
+.pricing-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.03em;
   color: var(--text-primary);
 }
 
-.page-header p {
-  font-size: 1rem;
+.pricing-hero h1 .gradient-text {
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pricing-hero .hero-sub {
+  font-size: 1.1rem;
   color: var(--text-secondary);
   max-width: 600px;
-  margin: 0 auto;
-  line-height: 1.4;
-  font-weight: 400;
-  white-space: nowrap;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
 }
 
-/* Tier Progression - Subtle, Clean */
-.tier-progression {
+/* Value Stats Row */
+.value-stats {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0;
-  margin: 1.5rem auto 0;
-  max-width: 480px;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
 }
 
-.tier-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+.value-stat {
+  text-align: center;
 }
 
-.tier-step-number {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.value-stat-number {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 500;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  font-size: 2.5rem;
+  font-weight: 600;
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.value-stat-label {
+  font-size: 0.75rem;
   color: var(--text-muted);
-  transition: all 0.3s;
-}
-
-/* First step (Research) - subtle gold highlight */
-.tier-step:first-child .tier-step-number {
-  border-color: rgba(201, 168, 76, 0.4);
-  color: #c9a84c;
-}
-
-.tier-step:first-child .tier-step-name {
-  color: #c9a84c;
-}
-
-.tier-step-name {
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: var(--text-muted);
-}
-
-.tier-connector {
-  width: 48px;
-  height: 1px;
-  background: var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0.4rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   PRICING GRID - Sophisticated Layout
+   PRICING GRID - Premium Cards
    ═══════════════════════════════════════════════════════════════ */
 .pricing-section {
-  padding: 1rem 0 4rem;
+  padding: 2rem 0 5rem;
 }
 
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  max-width: 1120px;
+  gap: 1.25rem;
+  max-width: 1200px;
   margin: 0 auto;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
 }
 
-/* Tier Card Base - Uniform, Clean */
+/* Base Card */
 .tier-card {
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: background 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.tier-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--border);
+  transition: all 0.4s ease;
 }
 
 .tier-card:hover {
-  background: var(--surface-elevated);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+  border-color: var(--gold);
 }
 
-/* Research Card - QP Brand Warmth (Tour-Style) */
+.tier-card:hover::before {
+  background: var(--premium-gradient);
+}
+
+/* Research Card - Entry Point - Gold Highlight */
 .tier-card[data-tier="research"] {
-  background: var(--surface);
-  position: relative;
+  border-color: rgba(201, 168, 76, 0.3);
+  background: linear-gradient(180deg, rgba(201,168,76,0.03) 0%, var(--surface) 100%);
 }
 
-/* Gold→Cyan gradient border - subtle, like tour callouts */
 .tier-card[data-tier="research"]::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.4), rgba(0, 212, 255, 0.25));
-  border-radius: inherit;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+  background: var(--premium-gradient);
+  height: 4px;
 }
 
-/* Subtle gold glow - like tour spotlight */
 .tier-card[data-tier="research"]::after {
   content: '';
   position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Suite Card - Premium Glow */
+.tier-card[data-tier="suite"] {
+  border-color: rgba(78, 205, 196, 0.25);
+}
+
+.tier-card[data-tier="suite"]::after {
+  content: '';
+  position: absolute;
   inset: -1px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
-  border-radius: inherit;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(78,205,196,0.08) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
 }
 
-/* Research tier name - warm gold accent */
-.tier-card[data-tier="research"] .tier-name {
-  color: #c9a84c;
+/* Tier Badge */
+.tier-badge {
+  position: absolute;
+  top: -1px;
+  right: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 0.8rem 0.35rem;
+  border-radius: 0 0 8px 8px;
+  text-transform: uppercase;
+}
+
+.tier-badge.start-here {
+  background: var(--premium-gradient);
+  color: #000;
+}
+
+.tier-badge.popular {
+  background: linear-gradient(135deg, #4ECDC4, #2cb5ab);
+  color: #000;
+}
+
+/* Trial Banner */
+.trial-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.trial-banner-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.trial-banner-icon svg {
+  width: 10px;
+  height: 10px;
+  stroke: #000;
+  stroke-width: 3;
+}
+
+.trial-banner-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.trial-banner-sub {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 /* Tier Header */
 .tier-header {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .tier-name {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 8px;
-  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.tier-card[data-tier="research"] .tier-name {
+  color: var(--gold);
+}
+
+.tier-card[data-tier="suite"] .tier-name {
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .tier-tagline {
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   line-height: 1.5;
-  min-height: 44px;
 }
 
-/* Pricing - Clean Typography */
+/* Pricing */
 .tier-price {
   display: flex;
   align-items: baseline;
@@ -312,240 +399,522 @@ body {
 }
 
 .tier-price .currency {
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--text-secondary);
 }
 
 .tier-price .amount {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 2.25rem;
-  font-weight: 500;
+  font-size: 3rem;
+  font-weight: 600;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .tier-price .period {
-  font-size: 0.85rem;
-  font-weight: 400;
+  font-size: 0.9rem;
+  font-weight: 500;
   color: var(--text-muted);
-  margin-left: 2px;
+  margin-left: 4px;
 }
 
 .tier-billing {
   font-size: 0.75rem;
   color: var(--text-muted);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
-/* Trial indicator - subtle */
-.tier-trial {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  color: var(--gold);
-  margin-bottom: 8px;
-}
-
-/* CTA Buttons - Sophisticated */
+/* CTA Buttons */
 .tier-cta {
   display: block;
   width: 100%;
-  padding: 12px 20px;
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 14px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
   text-align: center;
   text-decoration: none;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
-}
-
-/* Primary CTA (Research with trial) - Tour-style gold button */
-.tier-card[data-tier="research"] .tier-cta {
-  background: linear-gradient(135deg, #c9a84c, #d4b85a);
-  border: none;
-  color: #000;
-  font-weight: 600;
   position: relative;
   overflow: hidden;
 }
 
-/* Tour-style shimmer effect */
+/* Primary CTA - Research */
+.tier-card[data-tier="research"] .tier-cta {
+  background: var(--gold);
+  border: none;
+  color: #000;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
+}
+
 .tier-card[data-tier="research"] .tier-cta::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
   transform: translateX(-100%);
-  transition: transform 0.5s ease;
+  transition: transform 0.6s ease;
 }
 
 .tier-card[data-tier="research"] .tier-cta:hover {
-  background: linear-gradient(135deg, #d4b85a, #e6c876);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
-  color: #000;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.5);
 }
 
 .tier-card[data-tier="research"] .tier-cta:hover::before {
   transform: translateX(100%);
 }
 
-/* Secondary CTAs - Subtle but visible */
+/* Secondary CTAs */
 .tier-card[data-tier="recoil"] .tier-cta,
-.tier-card[data-tier="terminal"] .tier-cta,
-.tier-card[data-tier="suite"] .tier-cta {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(201, 168, 76, 0.2);
+.tier-card[data-tier="terminal"] .tier-cta {
+  background: transparent;
+  border: 2px solid var(--border);
   color: var(--text-primary);
-  transition: all 0.25s ease;
 }
 
 .tier-card[data-tier="recoil"] .tier-cta:hover,
-.tier-card[data-tier="terminal"] .tier-cta:hover,
+.tier-card[data-tier="terminal"] .tier-cta:hover {
+  border-color: var(--gold);
+  background: rgba(201, 168, 76, 0.06);
+  transform: translateY(-2px);
+}
+
+/* Suite CTA - Premium */
+.tier-card[data-tier="suite"] .tier-cta {
+  background: var(--premium-gradient);
+  border: none;
+  color: #000;
+  box-shadow: 0 4px 20px rgba(78, 205, 196, 0.3);
+}
+
+.tier-card[data-tier="suite"] .tier-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
 .tier-card[data-tier="suite"] .tier-cta:hover {
-  border-color: rgba(201, 168, 76, 0.5);
-  background: rgba(201, 168, 76, 0.08);
-  color: var(--text-primary);
-  transform: translateY(-1px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(78, 205, 196, 0.45);
 }
 
-/* Light mode adjustments for secondary CTAs */
-[data-theme="light"] .tier-card[data-tier="recoil"] .tier-cta,
-[data-theme="light"] .tier-card[data-tier="terminal"] .tier-cta,
-[data-theme="light"] .tier-card[data-tier="suite"] .tier-cta {
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(168, 146, 100, 0.25);
+.tier-card[data-tier="suite"] .tier-cta:hover::before {
+  transform: translateX(100%);
 }
 
-.tier-guarantee {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  text-align: center;
-  margin-top: 12px;
-}
-
-/* Features List - Clean */
+/* Features Section */
 .tier-features {
   flex: 1;
-  margin-top: 28px;
-  padding-top: 24px;
+  margin-top: 24px;
+  padding-top: 20px;
   border-top: 1px solid var(--border-light);
 }
 
-.feature-label {
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+.feature-group {
+  margin-bottom: 18px;
+}
+
+.feature-group:last-child {
+  margin-bottom: 0;
+}
+
+.feature-group-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .feature {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 6px 0;
+  padding: 5px 0;
   font-size: 0.82rem;
   color: var(--text-primary);
-  line-height: 1.45;
+  line-height: 1.4;
 }
 
 .feature-icon {
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
-.feature-icon svg {
+.feature-icon.check {
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.feature-icon.check svg {
   width: 10px;
   height: 10px;
-  stroke-width: 2;
-  stroke: var(--text-muted);
+  stroke: #22c55e;
+  stroke-width: 2.5;
 }
 
-.feature strong {
+.feature-icon.gold {
+  background: rgba(201, 168, 76, 0.12);
+}
+
+.feature-icon.gold svg {
+  width: 10px;
+  height: 10px;
+  stroke: var(--gold);
+  stroke-width: 2.5;
+}
+
+.feature-highlight {
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.feature-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Unlock Stack - Shows what's included from previous tiers */
+.unlock-stack {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.unlock-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
   font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(201, 168, 76, 0.08);
+  color: var(--gold-dim);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.unlock-badge.active {
+  background: var(--gold);
+  color: #000;
+  border-color: transparent;
+}
+
+/* Stats Preview Box */
+.stats-preview {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 16px;
+}
+
+[data-theme="dark"] .stats-preview {
+  background: rgba(255,255,255,0.02);
+}
+
+.stats-preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.stats-preview-row:not(:last-child) {
+  border-bottom: 1px solid var(--border-light);
+}
+
+.stats-preview-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.stats-preview-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stats-preview-value.unlimited {
+  color: var(--cyan);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   RESPONSIVE
+   VALUE SHOWCASE SECTIONS
    ═══════════════════════════════════════════════════════════════ */
-@media (max-width: 1100px) {
-  .pricing-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 720px;
-  }
+.showcase-section {
+  padding: 5rem 0;
+  border-top: 1px solid var(--border);
 }
 
-@media (max-width: 650px) {
-  .page-header {
-    padding: 6.5rem 0 2.5rem;
-  }
-  
-  .page-header h1 {
-    font-size: 1.5rem;
-    padding: 0 1rem;
-  }
-  
-  .page-header p {
-    font-size: 0.92rem;
-    padding: 0 1rem;
-  }
-  
-  .tier-progression {
-    display: none;
-  }
-  
-  .pricing-section {
-    padding: 1.5rem 0 4rem;
-  }
-  
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    max-width: 100%;
-    border-radius: 8px;
-    margin: 0 1rem;
-  }
-  
-  .tier-card {
-    padding: 28px 24px;
-  }
-  
-  .tier-name {
-    font-size: 1rem;
-  }
-  
-  .tier-tagline {
-    min-height: auto;
-    margin-bottom: 4px;
-  }
-  
-  .tier-price .amount {
-    font-size: 2rem;
-  }
-  
-  .tier-cta {
-    padding: 14px 20px;
-    font-size: 0.88rem;
-    min-height: 48px;
-  }
-  
-  .feature {
-    font-size: 0.8rem;
-  }
+.showcase-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.showcase-header .label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.showcase-header h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.showcase-header p {
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Build Menu Showcase */
+.build-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.build-menu-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+
+.build-menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  border-color: var(--gold);
+}
+
+.build-menu-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--premium-gradient);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.build-menu-card:hover::before {
+  opacity: 1;
+}
+
+.build-menu-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(78,205,196,0.08));
+  color: var(--gold);
+}
+
+.build-menu-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.build-menu-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.build-menu-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.build-menu-stats {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.build-menu-stat {
+  text-align: center;
+}
+
+.build-menu-stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+}
+
+.build-menu-stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Research Papers Grid */
+.papers-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.paper-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.paper-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+
+.paper-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.paper-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+/* Intelligence AI Section */
+.intel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.intel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.intel-card:hover {
+  border-color: var(--gold);
+}
+
+.intel-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.intel-allowance {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.intel-card[data-tier="research"] .intel-allowance {
+  color: var(--gold);
+}
+
+.intel-card[data-tier="recoil"] .intel-allowance {
+  color: var(--text-primary);
+}
+
+.intel-card[data-tier="terminal"] .intel-allowance {
+  color: var(--text-primary);
+}
+
+.intel-card[data-tier="suite"] .intel-allowance {
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.intel-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.intel-features {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-light);
+  text-align: left;
+}
+
+.intel-feature {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.intel-feature::before {
+  content: '✓';
+  color: var(--gold);
+  font-size: 0.65rem;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   COMPARISON TABLE - Minimal
+   COMPARISON TABLE
    ═══════════════════════════════════════════════════════════════ */
 .comparison-section {
   padding: 5rem 0;
@@ -555,15 +924,15 @@ body {
 
 .comparison-section h2 {
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 3rem;
   color: var(--text-primary);
 }
 
 .comparison-table {
   width: 100%;
-  max-width: 800px;
+  max-width: 950px;
   margin: 0 auto;
   border-collapse: collapse;
   font-size: 0.85rem;
@@ -571,19 +940,23 @@ body {
 
 .comparison-table th {
   text-align: center;
-  padding: 16px 12px;
-  font-weight: 500;
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border);
+  padding: 18px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--border);
 }
 
 .comparison-table th:first-child {
   text-align: left;
 }
 
+.comparison-table th.highlight {
+  color: var(--gold);
+}
+
 .comparison-table td {
-  padding: 14px 12px;
+  padding: 16px;
   border-bottom: 1px solid var(--border-light);
   text-align: center;
   color: var(--text-primary);
@@ -592,25 +965,34 @@ body {
 .comparison-table td:first-child {
   text-align: left;
   color: var(--text-secondary);
+  font-weight: 500;
 }
 
 .comparison-table .check {
-  color: var(--text-muted);
-  font-size: 1rem;
+  color: #22c55e;
+  font-size: 1.1rem;
 }
 
 .comparison-table .dash {
   color: var(--border);
 }
 
-@media (max-width: 700px) {
-  .comparison-section {
-    display: none;
-  }
+.comparison-table .number {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+}
+
+.comparison-table .unlimited {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  background: var(--premium-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   FAQ - Simple
+   FAQ
    ═══════════════════════════════════════════════════════════════ */
 .faq-section {
   padding: 5rem 0;
@@ -619,8 +1001,8 @@ body {
 
 .faq-section h2 {
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 3rem;
   color: var(--text-primary);
 }
@@ -629,58 +1011,77 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1px;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   background: var(--border);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 16px;
   overflow: hidden;
 }
 
 .faq-item {
   background: var(--surface);
-  padding: 24px;
+  padding: 28px;
 }
 
 .faq-item h4 {
-  font-size: 0.88rem;
-  font-weight: 500;
-  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 10px;
   color: var(--text-primary);
 }
 
 .faq-item p {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
-@media (max-width: 650px) {
-  .faq-grid { 
-    grid-template-columns: 1fr;
-    margin: 0 1rem;
-  }
-  
-  .faq-section {
-    padding: 3.5rem 0;
-  }
-  
-  .faq-section h2 {
-    font-size: 1.15rem;
-    margin-bottom: 2rem;
-  }
-  
-  .faq-item {
-    padding: 20px;
-  }
-  
-  .faq-item h4 {
-    font-size: 0.85rem;
-  }
-  
-  .faq-item p {
-    font-size: 0.8rem;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   FINAL CTA
+   ═══════════════════════════════════════════════════════════════ */
+.final-cta {
+  padding: 5rem 0;
+  text-align: center;
+  background: linear-gradient(180deg, var(--bg) 0%, rgba(201,168,76,0.03) 100%);
+  border-top: 1px solid var(--border);
+}
+
+.final-cta h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.final-cta p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.final-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 36px;
+  background: var(--gold);
+  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.35);
+}
+
+.final-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(201, 168, 76, 0.5);
+}
+
+.final-cta-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -724,40 +1125,133 @@ footer a:hover {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK MODE
+   RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
-[data-theme="dark"] .tier-card:hover {
-  background: var(--surface-elevated);
+@media (max-width: 1100px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 720px;
+  }
+  
+  .build-menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .papers-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .intel-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Research card glow more visible in dark mode */
-[data-theme="dark"] .tier-card[data-tier="research"]::after {
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+@media (max-width: 700px) {
+  .comparison-section {
+    display: none;
+  }
 }
 
-[data-theme="dark"] .tier-card[data-tier="research"]::before {
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.5), rgba(0, 212, 255, 0.3));
-}
-
-[data-theme="dark"] .comparison-section {
-  background: var(--surface);
-}
-
-[data-theme="dark"] footer {
-  background: var(--surface);
-}
-
-/* Light mode Research card adjustments */
-[data-theme="light"] .tier-card[data-tier="research"] .tier-name {
-  color: #a08040;
-}
-
-[data-theme="light"] .tier-card[data-tier="research"]::before {
-  background: linear-gradient(135deg, rgba(168, 146, 100, 0.35), rgba(0, 180, 220, 0.2));
-}
-
-[data-theme="light"] .tier-card[data-tier="research"]::after {
-  background: radial-gradient(ellipse at 50% 0%, rgba(168, 146, 100, 0.1) 0%, transparent 70%);
+@media (max-width: 650px) {
+  .pricing-hero {
+    padding: 6.5rem 0 2rem;
+  }
+  
+  .pricing-hero h1 {
+    font-size: 1.75rem;
+    padding: 0 1rem;
+  }
+  
+  .pricing-hero .hero-sub {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+  
+  .value-stats {
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+  
+  .value-stat-number {
+    font-size: 2rem;
+  }
+  
+  .pricing-section {
+    padding: 1.5rem 0 4rem;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .tier-card {
+    padding: 28px 24px;
+    border-radius: 16px;
+  }
+  
+  .tier-price .amount {
+    font-size: 2.5rem;
+  }
+  
+  .tier-cta {
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    min-height: 52px;
+  }
+  
+  .showcase-section {
+    padding: 3.5rem 0;
+  }
+  
+  .showcase-header h2 {
+    font-size: 1.35rem;
+  }
+  
+  .build-menu-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem;
+  }
+  
+  .papers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 1rem;
+  }
+  
+  .intel-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 1rem;
+  }
+  
+  .faq-section {
+    padding: 3.5rem 0;
+  }
+  
+  .faq-grid { 
+    grid-template-columns: 1fr;
+    margin: 0 1rem;
+    border-radius: 12px;
+  }
+  
+  .faq-item {
+    padding: 22px;
+  }
+  
+  .final-cta {
+    padding: 3.5rem 0;
+  }
+  
+  .final-cta h2 {
+    font-size: 1.5rem;
+    padding: 0 1rem;
+  }
+  
+  .final-cta p {
+    padding: 0 1rem;
+    font-size: 0.95rem;
+  }
 }
 </style>
 </head>
@@ -781,51 +1275,60 @@ footer a:hover {
         <a href="/dashboard/login.html">Member Login</a>
       </div>
     </div>
-    <a href="/checkout?tier=research" class="nav-cta">Start Free Trial</a>
+    <a href="/checkout?tier=research" class="nav-cta">Start 7-Day Trial</a>
   </div>
 </nav>
 
-<section class="page-header">
+<!-- ═══════════════════════════════════════════════════════════════
+     HERO - Hook them instantly
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="pricing-hero">
   <div class="container">
     <div class="label">PRICING</div>
-    <h1>Choose your tier</h1>
-    <p>Start with Research. Upgrade when you're ready. Cancel anytime.</p>
+    <h1>Everything you need.<br><span class="gradient-text">One subscription.</span></h1>
+    <p class="hero-sub">10 research papers. Daily Intelligence AI briefings. Up to 765 indicator combinations. Start free for 7 days.</p>
     
-    <!-- Tier Progression - Subtle -->
-    <div class="tier-progression">
-      <div class="tier-step">
-        <div class="tier-step-number">1</div>
-        <div class="tier-step-name">Research</div>
+    <div class="value-stats">
+      <div class="value-stat">
+        <div class="value-stat-number">765</div>
+        <div class="value-stat-label">Build Combinations</div>
       </div>
-      <div class="tier-connector"></div>
-      <div class="tier-step">
-        <div class="tier-step-number">2</div>
-        <div class="tier-step-name">Recoil</div>
+      <div class="value-stat">
+        <div class="value-stat-number">10</div>
+        <div class="value-stat-label">Research Papers</div>
       </div>
-      <div class="tier-connector"></div>
-      <div class="tier-step">
-        <div class="tier-step-number">3</div>
-        <div class="tier-step-name">Terminal</div>
-      </div>
-      <div class="tier-connector"></div>
-      <div class="tier-step">
-        <div class="tier-step-number">4</div>
-        <div class="tier-step-name">Suite</div>
+      <div class="value-stat">
+        <div class="value-stat-number">36</div>
+        <div class="value-stat-label">Modular Pieces</div>
       </div>
     </div>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     PRICING GRID
+     ═══════════════════════════════════════════════════════════════ -->
 <section class="pricing-section">
   <div class="container">
     <div class="pricing-grid">
       
       <!-- TIER 1: RESEARCH -->
       <div class="tier-card" data-tier="research">
+        <span class="tier-badge start-here">START HERE</span>
+        
+        <div class="trial-banner">
+          <div class="trial-banner-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor"/></svg>
+          </div>
+          <div>
+            <div class="trial-banner-text">7-Day Free Trial</div>
+            <div class="trial-banner-sub">Card required • Cancel anytime</div>
+          </div>
+        </div>
+        
         <div class="tier-header">
-          <div class="tier-trial">30-DAY FREE TRIAL</div>
           <div class="tier-name">Research</div>
-          <p class="tier-tagline">Learn the framework. Get daily intel. Join the community.</p>
+          <p class="tier-tagline">Learn the framework. Get daily intel. Access all 10 papers.</p>
         </div>
         
         <div class="tier-price">
@@ -833,32 +1336,37 @@ footer a:hover {
           <span class="amount">8</span>
           <span class="period">/mo</span>
         </div>
-        <div class="tier-billing">Free for 30 days, then billed monthly</div>
+        <div class="tier-billing">Free for 7 days, then billed monthly</div>
         
-        <a href="/checkout?tier=research" class="tier-cta">Start Free Trial</a>
-        <p class="tier-guarantee">No card required</p>
+        <a href="/checkout?tier=research" class="tier-cta">Start Free Trial →</a>
         
         <div class="tier-features">
-          <div class="feature-label">Includes</div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Daily market briefings</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Intelligence AI</div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Daily market briefings</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-number">10</span> AI conversations/mo</span>
+            </div>
           </div>
           
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>10 research papers</span>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>12 code snippets</span>
-          </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Private community</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Research Library</div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-number">10</span> research papers</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-number">12</span> code snippets</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Private Discord community</span>
+            </div>
           </div>
         </div>
       </div>
@@ -866,8 +1374,12 @@ footer a:hover {
       <!-- TIER 2: RECOIL -->
       <div class="tier-card" data-tier="recoil">
         <div class="tier-header">
+          <div class="unlock-stack">
+            <span class="unlock-badge active">Research</span>
+            <span class="unlock-badge active">+ Recoil</span>
+          </div>
           <div class="tier-name">Recoil</div>
-          <p class="tier-tagline">Your first indicator. Volatility-calibrated entries.</p>
+          <p class="tier-tagline">Your first indicator. Volatility-calibrated entries with 255 builds.</p>
         </div>
         
         <div class="tier-price">
@@ -878,29 +1390,45 @@ footer a:hover {
         <div class="tier-billing">or £280/year (save £56)</div>
         
         <a href="/checkout?tier=recoil" class="tier-cta">Get Recoil</a>
-        <p class="tier-guarantee">14-day money-back guarantee</p>
         
         <div class="tier-features">
-          <div class="feature-label">Everything in Research, plus</div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Recoil indicator</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Recoil System</div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">12 modular pieces</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">255 combinations</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Real-time TradingView alerts</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Operator's Guide</span>
+            </div>
           </div>
           
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Real-time alerts</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Intelligence AI</div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-number">50</span> AI conversations/mo</span>
+            </div>
           </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Operator's Guide</span>
+        </div>
+        
+        <div class="stats-preview">
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">Build combinations</span>
+            <span class="stats-preview-value">255</span>
           </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Recoil chat channel</span>
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">Modular pieces</span>
+            <span class="stats-preview-value">12</span>
           </div>
         </div>
       </div>
@@ -908,6 +1436,11 @@ footer a:hover {
       <!-- TIER 3: TERMINAL -->
       <div class="tier-card" data-tier="terminal">
         <div class="tier-header">
+          <div class="unlock-stack">
+            <span class="unlock-badge active">Research</span>
+            <span class="unlock-badge active">Recoil</span>
+            <span class="unlock-badge active">+ Meridian</span>
+          </div>
           <div class="tier-name">Terminal</div>
           <p class="tier-tagline">Multi-timeframe structure. Know the trend before entry.</p>
         </div>
@@ -920,38 +1453,62 @@ footer a:hover {
         <div class="tier-billing">or £580/year (save £116)</div>
         
         <a href="/checkout?tier=terminal" class="tier-cta">Get Terminal</a>
-        <p class="tier-guarantee">14-day money-back guarantee</p>
         
         <div class="tier-features">
-          <div class="feature-label">Everything in Recoil, plus</div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Meridian indicator</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Meridian System</div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">+12 modular pieces</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">+255 combinations</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>AMD cycle phases</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Liquidity sweep tracking</span>
+            </div>
           </div>
           
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Structure sync signals</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Intelligence AI</div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-number">100</span> AI conversations/mo</span>
+            </div>
           </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Meridian Guide</span>
+        </div>
+        
+        <div class="stats-preview">
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">Total combinations</span>
+            <span class="stats-preview-value">510</span>
           </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Terminal chat channel</span>
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">Modular pieces</span>
+            <span class="stats-preview-value">24</span>
           </div>
         </div>
       </div>
       
       <!-- TIER 4: SUITE -->
       <div class="tier-card" data-tier="suite">
+        <span class="tier-badge popular">COMPLETE ACCESS</span>
+        
         <div class="tier-header">
+          <div class="unlock-stack">
+            <span class="unlock-badge active">Research</span>
+            <span class="unlock-badge active">Recoil</span>
+            <span class="unlock-badge active">Meridian</span>
+            <span class="unlock-badge active">+ Cockpit</span>
+          </div>
           <div class="tier-name">Suite</div>
-          <p class="tier-tagline">Everything we build. All indicators. 1-on-1 calls.</p>
+          <p class="tier-tagline">Everything we build. All 765 combinations. Unlimited AI. 1-on-1 calls.</p>
         </div>
         
         <div class="tier-price">
@@ -961,30 +1518,62 @@ footer a:hover {
         </div>
         <div class="tier-billing">or £880/year (save £176)</div>
         
-        <a href="/checkout?tier=suite" class="tier-cta">Get Suite</a>
-        <p class="tier-guarantee">14-day money-back guarantee</p>
+        <a href="/checkout?tier=suite" class="tier-cta">Get Full Suite →</a>
         
         <div class="tier-features">
-          <div class="feature-label">Everything in Terminal, plus</div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>The Cockpit dashboard</span>
+          <div class="feature-group">
+            <div class="feature-group-label">The Cockpit</div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">+12 modular pieces</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">+255 combinations</span></span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Regime scoring system</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Cross-TF alignment</span>
+            </div>
           </div>
           
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>All 48 code snippets</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Intelligence AI</div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span><span class="feature-highlight">Unlimited</span> conversations</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Weekly AI reports</span>
+            </div>
           </div>
           
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>30min setup call</span>
+          <div class="feature-group">
+            <div class="feature-group-label">Priority Support</div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>30min setup call</span>
+            </div>
+            <div class="feature">
+              <span class="feature-icon check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
+              <span>Monthly 1-on-1 calls</span>
+            </div>
           </div>
-          
-          <div class="feature">
-            <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg></span>
-            <span>Monthly 1-on-1 calls</span>
+        </div>
+        
+        <div class="stats-preview">
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">Total combinations</span>
+            <span class="stats-preview-value">765</span>
+          </div>
+          <div class="stats-preview-row">
+            <span class="stats-preview-label">AI conversations</span>
+            <span class="stats-preview-value unlimited">∞</span>
           </div>
         </div>
       </div>
@@ -993,15 +1582,207 @@ footer a:hover {
   </div>
 </section>
 
-<!-- Feature Comparison Table (Desktop) -->
+<!-- ═══════════════════════════════════════════════════════════════
+     BUILD MENU SHOWCASE
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="showcase-section">
+  <div class="container">
+    <div class="showcase-header">
+      <div class="label">THE BUILD MENUS</div>
+      <h2>12 Pieces. 255 Combinations. Your Way.</h2>
+      <p>Each indicator system comes with 12 modular pieces across 4 courses. Pick what you need. Build exactly what fits your style.</p>
+    </div>
+    
+    <div class="build-menu-grid">
+      <div class="build-menu-card">
+        <div class="build-menu-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <div class="build-menu-name">Recoil</div>
+        <div class="build-menu-tier">RECOIL TIER & ABOVE</div>
+        <p class="build-menu-desc">Volatility measurement, entry zones, position sizing, and statistical reports. Fade expansion with precision.</p>
+        <div class="build-menu-stats">
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">12</div>
+            <div class="build-menu-stat-label">Pieces</div>
+          </div>
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">255</div>
+            <div class="build-menu-stat-label">Combinations</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="build-menu-card">
+        <div class="build-menu-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </div>
+        <div class="build-menu-name">Meridian</div>
+        <div class="build-menu-tier">TERMINAL TIER & ABOVE</div>
+        <p class="build-menu-desc">AMD phase cycles, liquidity levels, sweep tracking, and trend stacks. Know structure before you act.</p>
+        <div class="build-menu-stats">
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">12</div>
+            <div class="build-menu-stat-label">Pieces</div>
+          </div>
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">255</div>
+            <div class="build-menu-stat-label">Combinations</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="build-menu-card">
+        <div class="build-menu-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div class="build-menu-name">Cockpit</div>
+        <div class="build-menu-tier">SUITE TIER ONLY</div>
+        <p class="build-menu-desc">Regime scoring, confidence meters, cross-TF alignment, and session reports. Command center for your trading.</p>
+        <div class="build-menu-stats">
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">12</div>
+            <div class="build-menu-stat-label">Pieces</div>
+          </div>
+          <div class="build-menu-stat">
+            <div class="build-menu-stat-value">255</div>
+            <div class="build-menu-stat-label">Combinations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     RESEARCH PAPERS
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="showcase-section" style="background: var(--surface);">
+  <div class="container">
+    <div class="showcase-header">
+      <div class="label">RESEARCH LIBRARY</div>
+      <h2>10 Original Papers. Every Tier.</h2>
+      <p>The quantitative research that powers everything else. Available from day one, even on Research tier.</p>
+    </div>
+    
+    <div class="papers-grid">
+      <div class="paper-card">
+        <div class="paper-number">PAPER 01</div>
+        <div class="paper-title">The Friction Threshold</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 02</div>
+        <div class="paper-title">The Subsidised Signal</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 03</div>
+        <div class="paper-title">The Timeframe Ceiling</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 04</div>
+        <div class="paper-title">The Midnight Modulus</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 05</div>
+        <div class="paper-title">Stop Placement</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 06</div>
+        <div class="paper-title">The Comfort Trade</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 07</div>
+        <div class="paper-title">The Filter Removed</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 08</div>
+        <div class="paper-title">Statistical Confidence</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 09</div>
+        <div class="paper-title">The Three Windows</div>
+      </div>
+      <div class="paper-card">
+        <div class="paper-number">PAPER 10</div>
+        <div class="paper-title">Return Per Pain</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     INTELLIGENCE AI
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="showcase-section">
+  <div class="container">
+    <div class="showcase-header">
+      <div class="label">INTELLIGENCE AI</div>
+      <h2>Your Personal Trading Analyst</h2>
+      <p>Daily briefings. Strategy discussions. Market analysis. An AI trained on the Quant Prime methodology.</p>
+    </div>
+    
+    <div class="intel-grid">
+      <div class="intel-card" data-tier="research">
+        <div class="intel-tier">RESEARCH</div>
+        <div class="intel-allowance">10</div>
+        <div class="intel-label">conversations/mo</div>
+        <div class="intel-features">
+          <div class="intel-feature">Daily market briefings</div>
+          <div class="intel-feature">Framework questions</div>
+        </div>
+      </div>
+      <div class="intel-card" data-tier="recoil">
+        <div class="intel-tier">RECOIL</div>
+        <div class="intel-allowance">50</div>
+        <div class="intel-label">conversations/mo</div>
+        <div class="intel-features">
+          <div class="intel-feature">Everything in Research</div>
+          <div class="intel-feature">Indicator guidance</div>
+          <div class="intel-feature">Setup analysis</div>
+        </div>
+      </div>
+      <div class="intel-card" data-tier="terminal">
+        <div class="intel-tier">TERMINAL</div>
+        <div class="intel-allowance">100</div>
+        <div class="intel-label">conversations/mo</div>
+        <div class="intel-features">
+          <div class="intel-feature">Everything in Recoil</div>
+          <div class="intel-feature">Multi-TF analysis</div>
+          <div class="intel-feature">Liquidity mapping</div>
+        </div>
+      </div>
+      <div class="intel-card" data-tier="suite">
+        <div class="intel-tier">SUITE</div>
+        <div class="intel-allowance">∞</div>
+        <div class="intel-label">unlimited</div>
+        <div class="intel-features">
+          <div class="intel-feature">Everything in Terminal</div>
+          <div class="intel-feature">Weekly AI reports</div>
+          <div class="intel-feature">Priority responses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     COMPARISON TABLE (Desktop)
+     ═══════════════════════════════════════════════════════════════ -->
 <section class="comparison-section">
   <div class="container">
-    <h2>Compare tiers</h2>
+    <h2>Compare All Tiers</h2>
     <table class="comparison-table">
       <thead>
         <tr>
           <th>Feature</th>
-          <th>Research</th>
+          <th class="highlight">Research</th>
           <th>Recoil</th>
           <th>Terminal</th>
           <th>Suite</th>
@@ -1009,14 +1790,28 @@ footer a:hover {
       </thead>
       <tbody>
         <tr>
-          <td>Daily briefings & research</td>
+          <td>Research papers</td>
+          <td class="number">10</td>
+          <td class="number">10</td>
+          <td class="number">10</td>
+          <td class="number">10</td>
+        </tr>
+        <tr>
+          <td>Intelligence AI</td>
+          <td class="number">10/mo</td>
+          <td class="number">50/mo</td>
+          <td class="number">100/mo</td>
+          <td class="unlimited">Unlimited</td>
+        </tr>
+        <tr>
+          <td>Daily briefings</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
         </tr>
         <tr>
-          <td>Private community access</td>
+          <td>Private community</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
@@ -1030,32 +1825,46 @@ footer a:hover {
           <td class="check">✓</td>
         </tr>
         <tr>
-          <td>Real-time alerts</td>
+          <td>Recoil combinations</td>
           <td class="dash">—</td>
-          <td class="check">✓</td>
-          <td class="check">✓</td>
-          <td class="check">✓</td>
+          <td class="number">255</td>
+          <td class="number">255</td>
+          <td class="number">255</td>
         </tr>
         <tr>
-          <td>Meridian MTF scanner</td>
-          <td class="dash">—</td>
-          <td class="dash">—</td>
-          <td class="check">✓</td>
-          <td class="check">✓</td>
-        </tr>
-        <tr>
-          <td>Structure sync signals</td>
+          <td>Meridian indicator</td>
           <td class="dash">—</td>
           <td class="dash">—</td>
           <td class="check">✓</td>
           <td class="check">✓</td>
         </tr>
         <tr>
-          <td>The Cockpit dashboard</td>
+          <td>Meridian combinations</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="number">255</td>
+          <td class="number">255</td>
+        </tr>
+        <tr>
+          <td>Cockpit dashboard</td>
           <td class="dash">—</td>
           <td class="dash">—</td>
           <td class="dash">—</td>
           <td class="check">✓</td>
+        </tr>
+        <tr>
+          <td>Cockpit combinations</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="number">255</td>
+        </tr>
+        <tr>
+          <td>Total combinations</td>
+          <td class="dash">—</td>
+          <td class="number">255</td>
+          <td class="number">510</td>
+          <td class="number">765</td>
         </tr>
         <tr>
           <td>1-on-1 calls</td>
@@ -1066,37 +1875,64 @@ footer a:hover {
         </tr>
         <tr>
           <td>Code snippets</td>
-          <td>12</td>
-          <td>24</td>
-          <td>36</td>
-          <td>48</td>
+          <td class="number">12</td>
+          <td class="number">24</td>
+          <td class="number">36</td>
+          <td class="number">48</td>
         </tr>
       </tbody>
     </table>
   </div>
 </section>
 
+<!-- ═══════════════════════════════════════════════════════════════
+     FAQ
+     ═══════════════════════════════════════════════════════════════ -->
 <section class="faq-section">
   <div class="container">
     <h2>Questions</h2>
     <div class="faq-grid">
       <div class="faq-item">
         <h4>How does the free trial work?</h4>
-        <p>Start Research free for 30 days. Full access to all Research features. After 30 days, you're charged £8/month. Cancel anytime before with one click.</p>
+        <p>Start Research free for 7 days. Card is required upfront to prevent abuse. If it's not for you, cancel before day 7 and pay nothing. After the trial, you're charged £8/month. Cancel anytime with one click.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What are build combinations?</h4>
+        <p>Each indicator system has 12 modular pieces. You can combine them in 255 different ways to build exactly what suits your trading style. More pieces = more options. Suite tier gets all 765 combinations across three systems.</p>
       </div>
       <div class="faq-item">
         <h4>Can I upgrade or downgrade?</h4>
-        <p>Yes, anytime. Upgrades are prorated—you only pay the difference. Downgrades take effect at your next billing cycle.</p>
+        <p>Yes, anytime. Upgrades are prorated — you only pay the difference. Downgrades take effect at your next billing cycle. Your access adjusts immediately.</p>
       </div>
       <div class="faq-item">
-        <h4>How do the indicators work?</h4>
-        <p>After purchase, share your TradingView username. We grant access within 24 hours. They appear in your "Invite-only scripts" section.</p>
+        <h4>How do the TradingView indicators work?</h4>
+        <p>After purchase, share your TradingView username. We grant access within 24 hours (usually faster). They appear in your "Invite-only scripts" section. Works on any TradingView plan.</p>
       </div>
       <div class="faq-item">
         <h4>What's the refund policy?</h4>
-        <p>All paid tiers have a 14-day money-back guarantee. If it's not for you, email us within 14 days for a full refund.</p>
+        <p>All paid tiers have a 14-day money-back guarantee. If the indicators aren't for you, email us within 14 days for a full refund. No questions asked.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Do I keep the research papers if I cancel?</h4>
+        <p>Papers are part of your active subscription. If you cancel, you lose access at the end of your billing period. But you can always re-subscribe to regain access.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     FINAL CTA
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Start Your 7-Day Free Trial</h2>
+    <p>Full access to Research tier. 10 papers. Daily briefings. Cancel anytime.</p>
+    <a href="/checkout?tier=research" class="final-cta-btn">
+      Start Free Trial
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
   </div>
 </section>
 
