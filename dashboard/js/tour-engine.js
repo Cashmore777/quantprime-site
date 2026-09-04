@@ -118,7 +118,7 @@ const QPTour = (function() {
         page: 'research',
         selector: '#papers-carousel',
         title: 'The Research Vault',
-        content: '10 papers that\'ll change how you think about trading. Real backtests. Real results.',
+        content: '10 papers that\'ll change how you think about trading. Real data. Real results.',
         position: 'top',
         emphasis: 'feature'
       },
@@ -127,7 +127,7 @@ const QPTour = (function() {
         page: 'research',
         selector: '#paper-dots',
         title: 'Browse Them All',
-        content: 'Position sizing, stop placement, session timing — it\'s all here. Swipe through.',
+        content: 'Position sizing, stop placement, session timing. All here. Swipe through.',
         position: 'top'
       },
       {
@@ -1177,8 +1177,16 @@ const QPTour = (function() {
     
     const isMobile = window.innerWidth <= 650;
     const navSelector = VIEW_NAV_SELECTOR[targetPage];
+    const mainContent = document.getElementById('main');
     
     forceTheme();
+    
+    // Fade out current view
+    if (mainContent) {
+      mainContent.style.transition = 'opacity 200ms ease-out';
+      mainContent.style.opacity = '0';
+      await sleep(200);
+    }
     
     // Open mobile menu if needed
     if (isMobile) {
@@ -1203,6 +1211,14 @@ const QPTour = (function() {
       await sleep(TIMING.navClick);
     } else if (typeof switchView === 'function') {
       switchView(targetPage);
+    }
+    
+    // Fade in new view
+    if (mainContent) {
+      mainContent.style.transition = 'opacity 200ms ease-in';
+      mainContent.style.opacity = '1';
+      await sleep(200);
+      mainContent.style.transition = ''; // Clean up
     }
     
     // Close mobile menu
@@ -1231,39 +1247,24 @@ const QPTour = (function() {
     const headerHeight = isMobile ? 60 : 0;
     const navHeight = isMobile ? 90 : 0;
     
-    // Native scroll into view
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'nearest'
-    });
+    // Calculate target scroll position in ONE motion
+    const rect = element.getBoundingClientRect();
+    const safeTop = headerHeight + 100;
+    const safeBottom = window.innerHeight - navHeight - 100;
+    const safeCenterY = (safeTop + safeBottom) / 2;
+    const elemCenterY = rect.top + rect.height / 2;
+    const scrollAdjust = elemCenterY - safeCenterY;
     
-    await sleep(350);
-    
-    // Check if element is in safe viewing area
-    let rect = element.getBoundingClientRect();
-    const safeTop = headerHeight + 120;
-    const safeBottom = window.innerHeight - navHeight - 120;
-    
-    // Secondary scroll if needed
-    if (rect.top < safeTop || rect.bottom > safeBottom) {
-      if (main) {
-        const safeCenterY = (safeTop + safeBottom) / 2;
-        const elemCenterY = rect.top + rect.height / 2;
-        const scrollAdjust = elemCenterY - safeCenterY;
-        
-        const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
-        
-        main.scrollTo({
-          top: newScroll,
-          behavior: 'smooth'
-        });
-        
-        await sleep(350);
-      }
+    if (main && Math.abs(scrollAdjust) > 20) {
+      const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
+      main.scrollTo({
+        top: newScroll,
+        behavior: 'smooth'
+      });
+      await sleep(400); // Single wait for scroll to complete
+    } else {
+      await sleep(100);
     }
-    
-    await sleep(100);
   }
 
   // ═══════════════════════════════════════════════════════════════════════
