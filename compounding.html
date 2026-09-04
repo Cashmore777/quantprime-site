@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- SEO -->
-<title>Compounding Calculator — Trading Account Growth | Quant Prime</title>
+<title>Compounding Calculator - Trading Account Growth | Quant Prime</title>
 <meta name="description" content="Free trading compounding calculator. See how systematic trading grows your account over time. Calculate returns with adjustable risk, win rate, and timeframes.">
 <meta name="keywords" content="compounding calculator, trading calculator, forex compounding, account growth calculator, trading returns calculator, compound interest trading">
 <link rel="canonical" href="https://quantprime.uk/compounding">
@@ -14,14 +14,14 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://quantprime.uk/compounding">
-<meta property="og:title" content="Compounding Calculator — Trading Account Growth">
+<meta property="og:title" content="Compounding Calculator - Trading Account Growth">
 <meta property="og:description" content="Free trading compounding calculator. See how systematic trading grows your account over time.">
 <meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 <meta property="og:site_name" content="Quant Prime">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Compounding Calculator — Quant Prime">
+<meta name="twitter:title" content="Compounding Calculator - Quant Prime">
 <meta name="twitter:description" content="Calculate how trading compounds your account over time.">
 <meta name="twitter:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 
@@ -467,7 +467,7 @@
     <div class="calculator-section reveal" id="expectancy-calc">
       <div class="calc-header">
         <h2>Calculate Your Expectancy</h2>
-        <p>The number that actually matters — does your system make money after costs?</p>
+        <p>The number that actually matters - does your system make money after costs?</p>
       </div>
 
       <div class="calc-inputs">
@@ -497,7 +497,7 @@
       
       <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg); border-radius: 10px; font-size: 0.85rem; color: var(--text-secondary);">
         <strong>The Formula:</strong> Expectancy = (Win% × Avg Win) − (Loss% × Avg Loss) − Commission<br>
-        <span style="color: var(--text-tertiary);">If expectancy is positive, the system makes money over time. If negative, it loses — no matter the win rate.</span>
+        <span style="color: var(--text-tertiary);">If expectancy is positive, the system makes money over time. If negative, it loses - no matter the win rate.</span>
       </div>
     </div>
 
@@ -830,15 +830,15 @@ function calculateExpectancy() {
   // Verdict
   const verdictEl = document.getElementById('expectancyVerdict');
   if (netExpectancy > 1) {
-    verdictEl.innerHTML = '✓ Strong edge — this system survives execution costs at scale';
+    verdictEl.innerHTML = '✓ Strong edge - this system survives execution costs at scale';
     verdictEl.style.background = 'rgba(22, 163, 74, 0.1)';
     verdictEl.style.color = '#16a34a';
   } else if (netExpectancy > 0) {
-    verdictEl.innerHTML = '⚠ Marginal edge — profitable but sensitive to spread/slippage';
+    verdictEl.innerHTML = '⚠ Marginal edge - profitable but sensitive to spread/slippage';
     verdictEl.style.background = 'rgba(201, 168, 76, 0.1)';
     verdictEl.style.color = 'var(--gold)';
   } else {
-    verdictEl.innerHTML = '✗ Negative expectancy — this system loses money over time';
+    verdictEl.innerHTML = '✗ Negative expectancy - this system loses money over time';
     verdictEl.style.background = 'rgba(220, 38, 38, 0.1)';
     verdictEl.style.color = '#dc2626';
   }
