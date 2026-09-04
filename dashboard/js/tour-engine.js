@@ -1247,23 +1247,54 @@ const QPTour = (function() {
     const headerHeight = isMobile ? 60 : 0;
     const navHeight = isMobile ? 90 : 0;
     
-    // Calculate target scroll position in ONE motion
     const rect = element.getBoundingClientRect();
-    const safeTop = headerHeight + 100;
-    const safeBottom = window.innerHeight - navHeight - 100;
-    const safeCenterY = (safeTop + safeBottom) / 2;
-    const elemCenterY = rect.top + rect.height / 2;
-    const scrollAdjust = elemCenterY - safeCenterY;
+    const safeTop = headerHeight + 80;
+    const safeBottom = window.innerHeight - navHeight - 80;
     
-    if (main && Math.abs(scrollAdjust) > 20) {
-      const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
+    // Check if element is already in a good visible position
+    const isVisible = rect.top >= safeTop && rect.bottom <= safeBottom;
+    
+    if (isVisible) {
+      // Element already visible - no scroll needed
+      await sleep(50);
+      return;
+    }
+    
+    if (!main) {
+      await sleep(100);
+      return;
+    }
+    
+    // Calculate how much we need to scroll
+    const maxScroll = main.scrollHeight - main.clientHeight;
+    const currentScroll = main.scrollTop;
+    
+    let targetScroll;
+    
+    // If element is below viewport, scroll down just enough to show it
+    if (rect.bottom > safeBottom) {
+      const scrollNeeded = rect.bottom - safeBottom + 40; // Extra padding
+      targetScroll = Math.min(currentScroll + scrollNeeded, maxScroll);
+    }
+    // If element is above viewport, scroll up
+    else if (rect.top < safeTop) {
+      const scrollNeeded = safeTop - rect.top + 40;
+      targetScroll = Math.max(currentScroll - scrollNeeded, 0);
+    }
+    else {
+      await sleep(50);
+      return;
+    }
+    
+    // Only scroll if there's actually somewhere to go
+    if (Math.abs(targetScroll - currentScroll) > 10) {
       main.scrollTo({
-        top: newScroll,
+        top: targetScroll,
         behavior: 'smooth'
       });
-      await sleep(400); // Single wait for scroll to complete
+      await sleep(350);
     } else {
-      await sleep(100);
+      await sleep(50);
     }
   }
 
