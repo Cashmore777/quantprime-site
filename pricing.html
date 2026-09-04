@@ -6,18 +6,18 @@
 
 <!-- SEO -->
 <title>Pricing — Quant Prime Quantitative Trading Platform</title>
-<meta name="description" content="Quant Prime pricing from £8/mo. 7-day free trial. Research papers, professional TradingView indicators, daily market analysis, and systematic trading education.">
+<meta name="description" content="Quant Prime pricing from £8/mo. 30-day free trial. Research papers, professional TradingView indicators, daily market analysis, and systematic trading education.">
 <meta name="keywords" content="quant trading subscription, quantitative trading indicators, systematic trading tools, TradingView indicators price, forex indicators subscription">
 <link rel="canonical" href="https://quantprime.uk/pricing">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Pricing — Quant Prime Quantitative Trading">
-<meta property="og:description" content="Start free for 7 days. From £8/mo. Professional quant trading indicators and research.">
+<meta property="og:description" content="Start free for 30 days. From £8/mo. Professional quant trading indicators and research.">
 <meta property="og:url" content="https://quantprime.uk/pricing">
 <meta property="og:image" content="https://quantprime.uk/assets/og-image.png?v=2">
 <meta property="og:site_name" content="Quant Prime">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Quant Prime Pricing — From £8/mo">
-<meta name="twitter:description" content="7-day free trial. Research, indicators, automation.">
+<meta name="twitter:description" content="30-day free trial. Research, indicators, automation.">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 
 <!-- Structured Data - Products -->
@@ -190,6 +190,16 @@ body {
   transition: all 0.3s;
 }
 
+/* First step (Research) - subtle gold highlight */
+.tier-step:first-child .tier-step-number {
+  border-color: rgba(201, 168, 76, 0.4);
+  color: #c9a84c;
+}
+
+.tier-step:first-child .tier-step-name {
+  color: #c9a84c;
+}
+
 .tier-step-name {
   font-size: 0.65rem;
   font-weight: 500;
@@ -234,6 +244,42 @@ body {
 
 .tier-card:hover {
   background: var(--surface-elevated);
+}
+
+/* Research Card - QP Brand Warmth (Tour-Style) */
+.tier-card[data-tier="research"] {
+  background: var(--surface);
+  position: relative;
+}
+
+/* Gold→Cyan gradient border - subtle, like tour callouts */
+.tier-card[data-tier="research"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.4), rgba(0, 212, 255, 0.25));
+  border-radius: inherit;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle gold glow - like tour spotlight */
+.tier-card[data-tier="research"]::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.12) 0%, transparent 70%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Research tier name - warm gold accent */
+.tier-card[data-tier="research"] .tier-name {
+  color: #c9a84c;
 }
 
 /* Tier Header */
@@ -316,33 +362,62 @@ body {
   cursor: pointer;
 }
 
-/* Primary CTA (Research with trial) - Subtle gold outline */
+/* Primary CTA (Research with trial) - Tour-style gold button */
 .tier-card[data-tier="research"] .tier-cta {
-  background: transparent;
-  border: 1px solid var(--gold);
-  color: var(--gold);
+  background: linear-gradient(135deg, #c9a84c, #d4b85a);
+  border: none;
+  color: #000;
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tour-style shimmer effect */
+.tier-card[data-tier="research"] .tier-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
 }
 
 .tier-card[data-tier="research"] .tier-cta:hover {
-  background: var(--gold);
-  color: #fff;
+  background: linear-gradient(135deg, #d4b85a, #e6c876);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.35);
+  color: #000;
 }
 
-/* Secondary CTAs - Ghost buttons */
+.tier-card[data-tier="research"] .tier-cta:hover::before {
+  transform: translateX(100%);
+}
+
+/* Secondary CTAs - Subtle but visible */
 .tier-card[data-tier="recoil"] .tier-cta,
 .tier-card[data-tier="terminal"] .tier-cta,
 .tier-card[data-tier="suite"] .tier-cta {
-  background: transparent;
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.2);
   color: var(--text-primary);
+  transition: all 0.25s ease;
 }
 
 .tier-card[data-tier="recoil"] .tier-cta:hover,
 .tier-card[data-tier="terminal"] .tier-cta:hover,
 .tier-card[data-tier="suite"] .tier-cta:hover {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg);
+  border-color: rgba(201, 168, 76, 0.5);
+  background: rgba(201, 168, 76, 0.08);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* Light mode adjustments for secondary CTAs */
+[data-theme="light"] .tier-card[data-tier="recoil"] .tier-cta,
+[data-theme="light"] .tier-card[data-tier="terminal"] .tier-cta,
+[data-theme="light"] .tier-card[data-tier="suite"] .tier-cta {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(168, 146, 100, 0.25);
 }
 
 .tier-guarantee {
@@ -654,12 +729,34 @@ footer a:hover {
   background: var(--surface-elevated);
 }
 
+/* Research card glow more visible in dark mode */
+[data-theme="dark"] .tier-card[data-tier="research"]::after {
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+}
+
+[data-theme="dark"] .tier-card[data-tier="research"]::before {
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.5), rgba(0, 212, 255, 0.3));
+}
+
 [data-theme="dark"] .comparison-section {
   background: var(--surface);
 }
 
 [data-theme="dark"] footer {
   background: var(--surface);
+}
+
+/* Light mode Research card adjustments */
+[data-theme="light"] .tier-card[data-tier="research"] .tier-name {
+  color: #a08040;
+}
+
+[data-theme="light"] .tier-card[data-tier="research"]::before {
+  background: linear-gradient(135deg, rgba(168, 146, 100, 0.35), rgba(0, 180, 220, 0.2));
+}
+
+[data-theme="light"] .tier-card[data-tier="research"]::after {
+  background: radial-gradient(ellipse at 50% 0%, rgba(168, 146, 100, 0.1) 0%, transparent 70%);
 }
 </style>
 </head>
@@ -725,7 +822,7 @@ footer a:hover {
       <!-- TIER 1: RESEARCH -->
       <div class="tier-card" data-tier="research">
         <div class="tier-header">
-          <div class="tier-trial">7-DAY FREE TRIAL</div>
+          <div class="tier-trial">30-DAY FREE TRIAL</div>
           <div class="tier-name">Research</div>
           <p class="tier-tagline">Learn the framework. Get daily intel. Join the community.</p>
         </div>
@@ -735,7 +832,7 @@ footer a:hover {
           <span class="amount">8</span>
           <span class="period">/mo</span>
         </div>
-        <div class="tier-billing">Free for 7 days, then billed monthly</div>
+        <div class="tier-billing">Free for 30 days, then billed monthly</div>
         
         <a href="/checkout?tier=research" class="tier-cta">Start Free Trial</a>
         <p class="tier-guarantee">No card required</p>
@@ -984,7 +1081,7 @@ footer a:hover {
     <div class="faq-grid">
       <div class="faq-item">
         <h4>How does the free trial work?</h4>
-        <p>Start Research free for 7 days. Full access to all Research features. After 7 days, you're charged £8/month. Cancel anytime before with one click.</p>
+        <p>Start Research free for 30 days. Full access to all Research features. After 30 days, you're charged £8/month. Cancel anytime before with one click.</p>
       </div>
       <div class="faq-item">
         <h4>Can I upgrade or downgrade?</h4>
