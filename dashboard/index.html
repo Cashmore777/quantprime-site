@@ -11435,6 +11435,19 @@ button, .nav-item, .room, .video-item, .filter-chip {
       </div>
       
       <div class="panel">
+        <h4>Discord</h4>
+        <div class="form-row">
+          <label>Username</label>
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <input class="mono" id="discord-username-settings" placeholder="e.g. sean.qp" style="max-width: 280px;">
+            <button class="btn sm" onclick="saveDiscordUsername()">Save</button>
+          </div>
+        </div>
+        <div id="discord-save-status" style="margin-top: 8px; font-size: 13px;"></div>
+        <div class="callout">Link your Discord to let QP Intelligence know your tier when you ask in the server.</div>
+      </div>
+      
+      <div class="panel">
         <h4>Subscription</h4>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
           <div>
@@ -12610,13 +12623,14 @@ async function checkAuth() {
   } else {
     console.log('[Auth] No display_name in profile, keeping currentUser as:', currentUser);
   }
-  // Store full profile including TV username
+  // Store full profile including TV username and Discord username
   userProfile = { 
     id: authUser.id, 
     tier: userTier,
     email: authUser.email,
     display_name: profile?.display_name || '',
-    tradingview_username: profile?.tradingview_username || ''
+    tradingview_username: profile?.tradingview_username || '',
+    discord_username: profile?.discord_username || ''
   };
   
   // Check for pending tier from payment queue (auto-apply after Stripe payment)
@@ -12660,7 +12674,7 @@ async function checkAuth() {
   currentUser = currentUser || authUser.email.split('@')[0];
   // Ensure userProfile is populated (fallback if profile load failed)
   if (!userProfile) {
-    userProfile = { id: authUser.id, tier: userTier, email: authUser.email, tradingview_username: '' };
+    userProfile = { id: authUser.id, tier: userTier, email: authUser.email, tradingview_username: '', discord_username: '' };
   } else {
     // Make sure tier is up to date
     userProfile.tier = userTier;
@@ -13023,6 +13037,48 @@ async function saveProfile() {
     
   } catch (e) {
     console.error('[Profile] Save exception:', e);
+    statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
+  }
+}
+
+async function saveDiscordUsername() {
+  const statusEl = document.getElementById('discord-save-status');
+  const discordUsername = document.getElementById('discord-username-settings')?.value?.trim();
+  
+  if (!authUser) {
+    statusEl.innerHTML = '<span style="color: var(--danger);">Not logged in</span>';
+    return;
+  }
+  
+  // Allow empty to clear, but validate format if provided
+  if (discordUsername && !/^[a-z0-9_.]{2,32}$/i.test(discordUsername)) {
+    statusEl.innerHTML = '<span style="color: var(--danger);">Invalid format. Use your Discord username (e.g. sean.qp)</span>';
+    return;
+  }
+  
+  statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .update({ discord_username: discordUsername || null })
+      .eq('id', authUser.id)
+      .select();
+    
+    if (error) {
+      console.error('[Discord] Save error:', error);
+      statusEl.innerHTML = `<span style="color: var(--danger);">Failed: ${error.message}</span>`;
+      return;
+    }
+    
+    // Update local state
+    if (userProfile) userProfile.discord_username = discordUsername;
+    
+    statusEl.innerHTML = '<span style="color: var(--success);">✓ Saved - QP Intelligence can now see your tier</span>';
+    setTimeout(() => statusEl.innerHTML = '', 5000);
+    
+  } catch (e) {
+    console.error('[Discord] Save exception:', e);
     statusEl.innerHTML = `<span style="color: var(--danger);">Error: ${e.message}</span>`;
   }
 }
@@ -13665,6 +13721,12 @@ function updateDashboardData() {
   
   const settingsEmail = document.getElementById('settings-email');
   if (settingsEmail) settingsEmail.value = authUser.email;
+  
+  // Populate Discord username if set
+  const discordUsernameInput = document.getElementById('discord-username-settings');
+  if (discordUsernameInput && userProfile?.discord_username) {
+    discordUsernameInput.value = userProfile.discord_username;
+  }
   
   // Update settings subscription display
   const settingsTier = document.querySelector('#view-settings .panel:last-child div[style*="font-size: 18px"]');
