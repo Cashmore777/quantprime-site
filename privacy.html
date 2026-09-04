@@ -45,6 +45,8 @@ body { background: #fafafa; }
 .terms-section strong { color: #1a1a1a; font-weight: 600; }
 .highlight-box { background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.04)); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
 .highlight-box p { margin: 0; color: #1a1a1a; }
+.warning-box { background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(239,68,68,0.04)); border-left: 4px solid #ef4444; border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+.warning-box p { margin: 0; color: #1a1a1a; font-weight: 500; }
 .contact-info { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; }
 .contact-info h4 { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; }
 .contact-info p { font-size: 0.9rem; margin: 0; }
@@ -125,14 +127,18 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
       <li><a href="#sharing">5. Who We Share It With</a></li>
       <li><a href="#cookies">6. Cookies</a></li>
       <li><a href="#international">7. International Transfers</a></li>
-      <li><a href="#rights">8. Your Rights</a></li>
-      <li><a href="#retention">9. How Long We Keep It</a></li>
+      <li><a href="#security">8. Data Security</a></li>
+      <li><a href="#rights">9. Your Rights</a></li>
+      <li><a href="#retention">10. How Long We Keep It</a></li>
+      <li><a href="#children">11. Children's Privacy</a></li>
+      <li><a href="#changes">12. Changes to This Policy</a></li>
+      <li><a href="#contact">13. Contact Us</a></li>
     </ul>
   </div>
 
   <section class="terms-section" id="who">
     <h2>1. Who We Are</h2>
-    <p>Quant Prime is operated by Sean Jack Davies, a sole trader trading as "Quant Prime", based in the United Kingdom. We are the "data controller" for the personal data described in this policy, which means we decide how and why it is used.</p>
+    <p>Quant Prime is operated by <strong>Sean Jack Davies</strong>, a sole trader trading as "Quant Prime", based in the United Kingdom. We are the "data controller" for the personal data described in this policy, which means we decide how and why it is used.</p>
     <div class="contact-info">
       <h4>Data Controller</h4>
       <p>
@@ -146,7 +152,7 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
         Email: <a href="mailto:support@quantprime.uk">support@quantprime.uk</a>
       </p>
     </div>
-    <p style="margin-top: 1rem;">You have the right to complain to the Information Commissioner's Office (ICO), the UK's data protection regulator, at <a href="https://ico.org.uk" target="_blank" style="color: var(--gold);">ico.org.uk</a> or on 0303 123 1113.</p>
+    <p style="margin-top: 1rem;">You have the right to complain to the Information Commissioner's Office (ICO), the UK's data protection regulator, at <a href="https://ico.org.uk" target="_blank" style="color: var(--gold);">ico.org.uk</a> or by phone at 0303 123 1113.</p>
   </section>
 
   <section class="terms-section" id="collect">
@@ -155,7 +161,7 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
     <h3>When you subscribe to our emails</h3>
     <ul>
       <li>Email address</li>
-      <li>First name, if you give it</li>
+      <li>First name, if you provide it</li>
       <li>The date you signed up and which form you used</li>
       <li>Whether you open our emails and which links you click</li>
     </ul>
@@ -163,17 +169,19 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
     <h3>When you create an account</h3>
     <ul>
       <li>Email address and name</li>
+      <li>Your TradingView username (for indicator access)</li>
       <li>Your Discord ID, if you link your account</li>
-      <li>Which tier you are on and when you joined it</li>
+      <li>Which tier you are on and when you joined</li>
+      <li>Account preferences and settings</li>
     </ul>
 
     <h3>When you buy something</h3>
     <ul>
       <li>Email address and billing address</li>
-      <li>A record of what you bought and when</li>
+      <li>A record of what you bought, when, and how much you paid</li>
     </ul>
     <div class="highlight-box">
-      <p><strong>Important:</strong> We do not see or store your card details. Payments are handled entirely by Stripe, and your card number never reaches our systems.</p>
+      <p><strong>Important:</strong> We do <strong>not</strong> see or store your card details. Payments are handled entirely by Stripe, and your card number never reaches our systems. Stripe is PCI DSS Level 1 certified — the highest level of payment security.</p>
     </div>
 
     <h3>When you join our Discord server</h3>
@@ -181,21 +189,29 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
       <li>Your Discord username and ID</li>
       <li>Your join date</li>
       <li>Messages you post in the server</li>
+      <li>Your assigned roles and permissions</li>
     </ul>
 
-    <h3>When you email us</h3>
+    <h3>When you email us or use support</h3>
     <ul>
       <li>Your email address and the contents of your correspondence</li>
+      <li>Any attachments or files you send</li>
     </ul>
 
     <h3>Automatically, when you use our website</h3>
     <ul>
-      <li>IP address, browser type, pages visited and timestamps, recorded in standard server logs</li>
+      <li>IP address and approximate location</li>
+      <li>Browser type and version</li>
+      <li>Device type and operating system</li>
+      <li>Pages visited, timestamps, and time spent</li>
+      <li>Referral source (how you found us)</li>
+      <li>Actions taken on our site (clicks, form submissions)</li>
     </ul>
   </section>
 
   <section class="terms-section" id="why">
     <h2>3. Why We Use It, and Our Legal Basis</h2>
+    <p>Under UK GDPR, we must have a lawful basis to process your personal data. Here's how we use your data and which legal basis applies:</p>
     <table class="data-table">
       <thead>
         <tr>
@@ -221,18 +237,28 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
           <td>Performance of a contract</td>
         </tr>
         <tr>
+          <td>Grant indicator access on TradingView</td>
+          <td>To deliver the service you subscribed to</td>
+          <td>Performance of a contract</td>
+        </tr>
+        <tr>
           <td>Take payment and keep financial records</td>
           <td>To complete your purchase and meet tax obligations</td>
-          <td>Contract, and legal obligation</td>
+          <td>Contract and legal obligation</td>
         </tr>
         <tr>
           <td>Run our Discord community</td>
           <td>To provide the community you joined</td>
-          <td>Contract, and legitimate interests</td>
+          <td>Contract and legitimate interests</td>
+        </tr>
+        <tr>
+          <td>Respond to support requests</td>
+          <td>To help you with problems</td>
+          <td>Contract and legitimate interests</td>
         </tr>
         <tr>
           <td>Keep our systems secure and working</td>
-          <td>To prevent abuse and diagnose faults</td>
+          <td>To prevent abuse, fraud, and diagnose faults</td>
           <td>Legitimate interests</td>
         </tr>
         <tr>
@@ -240,108 +266,272 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
           <td>To understand what our subscribers find useful</td>
           <td>Legitimate interests</td>
         </tr>
+        <tr>
+          <td>Analyze website usage patterns</td>
+          <td>To improve our website and services</td>
+          <td>Legitimate interests</td>
+        </tr>
+        <tr>
+          <td>Detect and prevent account sharing</td>
+          <td>To protect our business from revenue loss</td>
+          <td>Legitimate interests</td>
+        </tr>
       </tbody>
     </table>
-    <p>Where we rely on <strong>consent</strong>, you can withdraw it at any time - every marketing email has an unsubscribe link, and you can email us instead if you prefer. Withdrawing consent does not affect anything we did before you withdrew it.</p>
-    <p>Where we rely on <strong>legitimate interests</strong>, we have considered whether our interest is outweighed by your rights, and we think it isn't. You can object - see Section 7.</p>
+    <p>Where we rely on <strong>consent</strong>, you can withdraw it at any time — every marketing email has an unsubscribe link, and you can email us if you prefer. Withdrawing consent does not affect anything we did before you withdrew it.</p>
+    <p>Where we rely on <strong>legitimate interests</strong>, we have considered whether our interest is outweighed by your rights, and we believe it is not. You have the right to object — see Section 9.</p>
   </section>
 
   <section class="terms-section" id="discord">
     <h2>4. Automated Processing in Our Discord Server</h2>
-    <p>Our Discord server uses an AI assistant. Messages posted in channels where the assistant is active are sent to Anthropic, our AI provider, so it can generate a reply. This means your Discord messages may be processed by a third party outside the UK.</p>
-    <p><strong>If you would rather this did not happen, do not post in channels where the assistant is active.</strong></p>
-    <p>The assistant does not make any decision that produces a legal effect for you or similarly significantly affects you. It does not decide access, pricing, or anything about your account.</p>
+    <p>Our Discord server uses an AI assistant powered by Anthropic. Messages posted in channels where the assistant is active are sent to Anthropic so it can generate a reply. This means your Discord messages may be processed by a third party located outside the UK.</p>
+    <div class="warning-box">
+      <p>⚠️ If you would rather your messages were not processed by AI, do not post in channels where the assistant is active. These channels are clearly marked.</p>
+    </div>
+    <p>The AI assistant does <strong>not</strong>:</p>
+    <ul>
+      <li>Make any decision that produces a legal effect for you</li>
+      <li>Significantly affect you in any meaningful way</li>
+      <li>Decide access, pricing, or anything about your account</li>
+      <li>Store your messages beyond what is necessary for the conversation</li>
+    </ul>
+    <p>The assistant is purely for community engagement and support purposes.</p>
   </section>
 
   <section class="terms-section" id="sharing">
     <h2>5. Who We Share It With</h2>
-    <p>We use the following providers to run Quant Prime. Each only receives the data it needs, and none of them are permitted to use it for their own purposes.</p>
+    <p>We use the following providers to run Quant Prime. Each only receives the data it needs, and none of them are permitted to use it for their own marketing purposes.</p>
     <table class="data-table">
       <thead>
         <tr>
           <th>Provider</th>
           <th>What they handle</th>
-          <th>Where</th>
+          <th>Location</th>
         </tr>
       </thead>
       <tbody>
-        <tr><td>Supabase</td><td>Accounts and authentication</td><td>United States</td></tr>
+        <tr><td>Supabase</td><td>Accounts, authentication, database</td><td>United States</td></tr>
         <tr><td>Brevo</td><td>Email delivery and engagement tracking</td><td>European Union (France)</td></tr>
-        <tr><td>Discord</td><td>Community server</td><td>United States</td></tr>
-        <tr><td>Stripe</td><td>Payments and card processing</td><td>United States</td></tr>
+        <tr><td>Discord</td><td>Community server and messaging</td><td>United States</td></tr>
+        <tr><td>Stripe</td><td>Payments, subscriptions, and card processing</td><td>United States</td></tr>
+        <tr><td>TradingView</td><td>Indicator access (we grant access to your username)</td><td>United States</td></tr>
         <tr><td>Netlify</td><td>Website hosting and server logs</td><td>United States</td></tr>
         <tr><td>EUGamehost</td><td>Server infrastructure</td><td>European Union</td></tr>
         <tr><td>Google Workspace</td><td>Our support inbox</td><td>United States</td></tr>
         <tr><td>Anthropic</td><td>AI processing of Discord messages</td><td>United States</td></tr>
+        <tr><td>Firebase</td><td>Real-time chat features</td><td>United States</td></tr>
       </tbody>
     </table>
-    <p>We may also disclose personal data where we are legally required to, or to establish or defend legal claims.</p>
-    <p><strong>We do not sell your personal data, and we do not share it with advertisers.</strong></p>
+    <p>We may also disclose personal data where:</p>
+    <ul>
+      <li>We are legally required to (e.g., court order, regulatory request)</li>
+      <li>It is necessary to establish, exercise, or defend legal claims</li>
+      <li>It is necessary to protect the rights, property, or safety of Quant Prime, our users, or others</li>
+    </ul>
+    <div class="highlight-box">
+      <p><strong>We do not sell your personal data</strong>, and we do not share it with advertisers or data brokers.</p>
+    </div>
   </section>
 
   <section class="terms-section" id="cookies">
     <h2>6. Cookies</h2>
     <p>Cookies are small text files placed on your device when you visit a website. We use a minimal number of cookies to make our site work properly.</p>
     
-    <h3>Essential Cookies</h3>
+    <h3>Essential Cookies (Required)</h3>
     <p>These are necessary for the site to function and cannot be switched off:</p>
     <ul>
-      <li><strong>Authentication cookies</strong> - remember that you're logged in</li>
-      <li><strong>Session cookies</strong> - maintain your session as you navigate the site</li>
-      <li><strong>Preference cookies</strong> - remember your theme preference (light/dark mode)</li>
+      <li><strong>Authentication cookies</strong> — remember that you're logged in</li>
+      <li><strong>Session cookies</strong> — maintain your session as you navigate the site</li>
+      <li><strong>Security cookies</strong> — help protect against cross-site request forgery</li>
+      <li><strong>Preference cookies</strong> — remember your theme preference (light/dark mode)</li>
     </ul>
     
-    <h3>Analytics Cookies</h3>
-    <p>We use basic analytics to understand how visitors use our site. This helps us improve the user experience. Analytics data is aggregated and does not identify individual visitors.</p>
+    <h3>Analytics Cookies (Optional)</h3>
+    <p>We use basic analytics to understand how visitors use our site. This helps us improve the user experience. Analytics data is aggregated and does not identify individual visitors by name.</p>
     
     <h3>Third-Party Cookies</h3>
-    <p>Some of our providers may set their own cookies:</p>
+    <p>Some of our providers may set their own cookies when you interact with their services:</p>
     <ul>
-      <li><strong>Stripe</strong> - for payment security and fraud prevention</li>
-      <li><strong>Supabase</strong> - for authentication</li>
+      <li><strong>Stripe</strong> — for payment security and fraud prevention</li>
+      <li><strong>Supabase</strong> — for authentication tokens</li>
     </ul>
     
     <h3>Managing Cookies</h3>
-    <p>Most web browsers allow you to control cookies through their settings. You can choose to block or delete cookies, but this may affect how our site functions. For more information on managing cookies, visit <a href="https://www.allaboutcookies.org" target="_blank" style="color: var(--gold);">allaboutcookies.org</a>.</p>
+    <p>Most web browsers allow you to control cookies through their settings. You can choose to:</p>
+    <ul>
+      <li>Block all cookies</li>
+      <li>Delete existing cookies</li>
+      <li>Allow only first-party cookies</li>
+      <li>Set preferences for specific websites</li>
+    </ul>
+    <p><strong>Note:</strong> Blocking essential cookies may affect how our site functions, including your ability to log in or make purchases.</p>
+    <p>For more information on managing cookies, visit <a href="https://www.allaboutcookies.org" target="_blank" style="color: var(--gold);">allaboutcookies.org</a>.</p>
   </section>
 
   <section class="terms-section" id="international">
     <h2>7. Sending Data Outside the UK</h2>
-    <p>Several of our providers are based outside the UK, as shown above. Where personal data is transferred out of the UK, we rely on the UK International Data Transfer Agreement, or the UK Addendum to the European Commission's Standard Contractual Clauses, to make sure it stays protected to UK standards.</p>
-    <p>You can ask us for more detail about the safeguards for any particular transfer.</p>
+    <p>Several of our providers are based outside the UK, as shown in the table above. The countries include the United States and France (EU).</p>
+    <p>Where personal data is transferred out of the UK, we ensure it remains protected to UK standards by relying on:</p>
+    <ul>
+      <li>The <strong>UK International Data Transfer Agreement</strong> (UK IDTA)</li>
+      <li>The <strong>UK Addendum</strong> to the European Commission's Standard Contractual Clauses</li>
+      <li>Adequacy decisions where applicable (e.g., transfers to the EU)</li>
+    </ul>
+    <p>You can request more detail about the safeguards for any particular transfer by contacting us.</p>
+  </section>
+
+  <section class="terms-section" id="security">
+    <h2>8. Data Security</h2>
+    <p>We take the security of your personal data seriously and implement appropriate technical and organizational measures to protect it.</p>
+    
+    <h3>Technical Measures</h3>
+    <ul>
+      <li><strong>Encryption in transit</strong> — All data transmitted to and from our website is encrypted using TLS (HTTPS)</li>
+      <li><strong>Encryption at rest</strong> — Sensitive data stored in our database is encrypted</li>
+      <li><strong>Secure authentication</strong> — We use industry-standard authentication protocols and secure password hashing</li>
+      <li><strong>Access controls</strong> — Only authorized personnel have access to personal data, on a need-to-know basis</li>
+      <li><strong>Regular updates</strong> — We keep our systems and software up to date with security patches</li>
+    </ul>
+    
+    <h3>Payment Security</h3>
+    <p>All payment processing is handled by Stripe, which is <strong>PCI DSS Level 1 certified</strong> — the highest level of certification in the payment card industry. We never see, store, or have access to your full card number.</p>
+    
+    <h3>Third-Party Security</h3>
+    <p>We carefully select providers who maintain high security standards. Our key providers (Stripe, Supabase, Netlify) all maintain SOC 2 compliance and industry-standard security certifications.</p>
+    
+    <h3>Incident Response</h3>
+    <p>In the unlikely event of a data breach that poses a risk to your rights and freedoms, we will:</p>
+    <ul>
+      <li>Notify the ICO within 72 hours where required</li>
+      <li>Notify affected individuals without undue delay if there is a high risk</li>
+      <li>Take immediate steps to contain and remediate the breach</li>
+    </ul>
+    
+    <div class="warning-box">
+      <p>⚠️ While we implement robust security measures, no system is 100% secure. You are responsible for keeping your account credentials confidential and using a strong, unique password.</p>
+    </div>
   </section>
 
   <section class="terms-section" id="rights">
-    <h2>8. Your Rights</h2>
-    <p>Under UK data protection law you have the right to:</p>
+    <h2>9. Your Rights</h2>
+    <p>Under UK data protection law (UK GDPR), you have the following rights:</p>
     <ul>
-      <li><strong>Access</strong> - get a copy of the personal data we hold about you</li>
-      <li><strong>Rectification</strong> - have inaccurate data corrected</li>
-      <li><strong>Erasure</strong> - ask us to delete your data, in certain circumstances</li>
-      <li><strong>Restriction</strong> - ask us to limit how we use your data</li>
-      <li><strong>Portability</strong> - receive your data in a portable format</li>
-      <li><strong>Object</strong> - object to processing based on legitimate interests, and to direct marketing at any time</li>
-      <li><strong>Withdraw consent</strong> - where we rely on it</li>
+      <li><strong>Right to Access</strong> — Get a copy of the personal data we hold about you</li>
+      <li><strong>Right to Rectification</strong> — Have inaccurate data corrected or incomplete data completed</li>
+      <li><strong>Right to Erasure</strong> — Ask us to delete your data in certain circumstances (e.g., data no longer needed, consent withdrawn)</li>
+      <li><strong>Right to Restriction</strong> — Ask us to limit how we use your data while a complaint is resolved</li>
+      <li><strong>Right to Data Portability</strong> — Receive your data in a structured, commonly used, machine-readable format</li>
+      <li><strong>Right to Object</strong> — Object to processing based on legitimate interests, and to direct marketing at any time</li>
+      <li><strong>Right to Withdraw Consent</strong> — Where we rely on consent, withdraw it at any time</li>
+      <li><strong>Rights related to automated decision-making</strong> — We do not make significant decisions about you using solely automated means</li>
     </ul>
-    <p>To exercise any of these, email <a href="mailto:support@quantprime.uk" style="color: var(--gold);">support@quantprime.uk</a>. We will respond within one month. We will not charge you, and we will not treat you differently for asking.</p>
+    
+    <h3>How to Exercise Your Rights</h3>
+    <p>To exercise any of these rights, email <a href="mailto:support@quantprime.uk" style="color: var(--gold);">support@quantprime.uk</a> with "Data Rights Request" in the subject line.</p>
+    <p>We will:</p>
+    <ul>
+      <li>Respond within <strong>one month</strong> (we may extend this by up to two months for complex requests)</li>
+      <li>Verify your identity before processing your request</li>
+      <li>Not charge you a fee (unless requests are manifestly unfounded or excessive)</li>
+      <li>Not treat you differently for exercising your rights</li>
+    </ul>
+    
+    <h3>Right to Complain</h3>
+    <p>If you are unhappy with how we have handled your data, you have the right to complain to the Information Commissioner's Office (ICO):</p>
+    <ul>
+      <li>Website: <a href="https://ico.org.uk" target="_blank" style="color: var(--gold);">ico.org.uk</a></li>
+      <li>Phone: 0303 123 1113</li>
+    </ul>
+    <p>We would appreciate the chance to address your concerns before you contact the ICO, so please reach out to us first.</p>
   </section>
 
   <section class="terms-section" id="retention">
-    <h2>9. How Long We Keep It</h2>
-    <p>We keep your data only as long as necessary for the purposes described in this policy:</p>
-    <ul>
-      <li><strong>Account data:</strong> For as long as your account is active, plus a reasonable period after closure</li>
-      <li><strong>Email subscriber data:</strong> Until you unsubscribe, plus a suppression record to prevent re-adding you</li>
-      <li><strong>Payment records:</strong> As required by UK tax law (typically 6 years)</li>
-      <li><strong>Server logs:</strong> Typically 90 days</li>
-      <li><strong>Support correspondence:</strong> 2 years after resolution</li>
-    </ul>
+    <h2>10. How Long We Keep It</h2>
+    <p>We keep your data only as long as necessary for the purposes described in this policy. Our retention periods are:</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data Type</th>
+          <th>Retention Period</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Account data</td>
+          <td>For as long as your account is active, plus 2 years after closure</td>
+        </tr>
+        <tr>
+          <td>Email subscriber data</td>
+          <td>Until you unsubscribe, plus a suppression record indefinitely to prevent re-adding you</td>
+        </tr>
+        <tr>
+          <td>Payment and transaction records</td>
+          <td>6 years (as required by UK tax law)</td>
+        </tr>
+        <tr>
+          <td>Support correspondence</td>
+          <td>2 years after resolution</td>
+        </tr>
+        <tr>
+          <td>Server logs (IP addresses, etc.)</td>
+          <td>90 days</td>
+        </tr>
+        <tr>
+          <td>Discord messages</td>
+          <td>Retained by Discord according to their policies; we do not separately store these</td>
+        </tr>
+        <tr>
+          <td>Analytics data</td>
+          <td>26 months (aggregated, non-identifying)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>When data is no longer needed, we will securely delete it or anonymize it so it can no longer be linked to you.</p>
   </section>
 
-  <section class="terms-section">
-    <h2>Contact Us</h2>
+  <section class="terms-section" id="children">
+    <h2>11. Children's Privacy</h2>
+    <div class="warning-box">
+      <p>⚠️ OUR SERVICES ARE NOT INTENDED FOR ANYONE UNDER THE AGE OF 18.</p>
+    </div>
+    <p>Quant Prime does not knowingly collect or solicit personal data from anyone under the age of 18. Our Services involve financial trading concepts and are designed exclusively for adults.</p>
+    <p>If you are under 18:</p>
+    <ul>
+      <li>Do not use our Services</li>
+      <li>Do not create an account</li>
+      <li>Do not provide any personal information to us</li>
+    </ul>
+    <p>If we learn that we have collected personal data from a child under 18, we will delete that information as quickly as possible. If you believe a child under 18 has provided us with personal information, please contact us immediately at <a href="mailto:support@quantprime.uk" style="color: var(--gold);">support@quantprime.uk</a>.</p>
+    <p>Parents or guardians who believe their child has submitted personal information to us should contact us, and we will promptly remove the information and terminate any associated account.</p>
+  </section>
+
+  <section class="terms-section" id="changes">
+    <h2>12. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors.</p>
+    
+    <h3>How We Notify You</h3>
+    <ul>
+      <li><strong>Minor changes</strong> (clarifications, formatting) — We will update the "Last updated" date at the top of this page</li>
+      <li><strong>Material changes</strong> (new data collection, new third parties, changes to your rights) — We will notify you by email and/or a prominent notice on our website at least <strong>30 days</strong> before the changes take effect</li>
+    </ul>
+    
+    <h3>Your Options</h3>
+    <p>If you do not agree with a change to this policy, you may:</p>
+    <ul>
+      <li>Stop using our Services</li>
+      <li>Delete your account</li>
+      <li>Contact us to discuss your concerns</li>
+    </ul>
+    <p>Continued use of our Services after changes become effective constitutes your acceptance of the revised policy.</p>
+    
+    <h3>Review History</h3>
+    <p>We encourage you to review this policy periodically. Previous versions are available upon request by emailing us.</p>
+  </section>
+
+  <section class="terms-section" id="contact">
+    <h2>13. Contact Us</h2>
     <div class="contact-info">
-      <h4>Quant Prime - Data Protection</h4>
+      <h4>Quant Prime — Data Protection</h4>
       <p>
         For questions about this Privacy Policy or to exercise your data subject rights:<br><br>
         <strong>Sean Jack Davies</strong><br>
@@ -350,7 +540,9 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
         Covent Garden<br>
         London, WC2H 9JQ<br>
         United Kingdom<br><br>
-        Email: <a href="mailto:support@quantprime.uk">support@quantprime.uk</a><br><br>
+        <strong>Email:</strong> <a href="mailto:support@quantprime.uk">support@quantprime.uk</a><br><br>
+        <strong>For data protection matters specifically:</strong><br>
+        Please include "Data Protection" or "Privacy" in the subject line of your email.<br><br>
         We aim to respond to all data protection queries within <strong>one calendar month</strong> as required by UK GDPR.
       </p>
     </div>
@@ -363,8 +555,8 @@ footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.06); }
 <footer>
   <div class="container">
     <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
-    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results.</p>
-    <p style="margin-top:1rem">© 2026 Quant Prime. | <a href="/terms" style="color: var(--gold);">Terms</a> | <a href="/privacy" style="color: var(--gold);">Privacy</a></p>
+    <p>Quant Prime provides quantitative instruments and educational content for systematic traders. Past performance does not guarantee future results. Trading leveraged products involves substantial risk of loss. Nothing on this site constitutes financial advice.</p>
+    <p style="margin-top:1rem">© 2026 Quant Prime. All rights reserved. | <a href="/terms" style="color: var(--gold);">Terms</a> · <a href="/privacy" style="color: var(--gold);">Privacy</a></p>
   </div>
 </footer>
 
