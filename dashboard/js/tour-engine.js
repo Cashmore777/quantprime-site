@@ -1290,13 +1290,10 @@ const QPTour = (function() {
     elements.callout.classList.remove('visible');
     await sleep(120); // Let callout fade
     
-    // 2. If changing pages, hide spotlight instantly. Otherwise keep it for smooth move.
-    if (needsNavigation) {
-      elements.spotlight.style.transition = 'none';
-      elements.spotlight.classList.remove('visible');
-      elements.spotlight.offsetHeight; // Force reflow
-    }
-    // If same page, spotlight will smoothly animate to new position
+    // 2. ALWAYS hide spotlight instantly - no visible movement between steps
+    elements.spotlight.style.transition = 'none';
+    elements.spotlight.classList.remove('visible');
+    elements.spotlight.offsetHeight; // Force reflow
     
     // 2. Navigate if needed
     if (needsNavigation) {
@@ -1375,13 +1372,13 @@ const QPTour = (function() {
       }
     }
     
-    // 7. Ensure smooth transitions restored, show spotlight
+    // 7. Restore transitions and show spotlight (fades in at new position)
     elements.spotlight.offsetHeight; // force reflow
-    elements.spotlight.style.transition = ''; // restore CSS transitions
+    elements.spotlight.style.transition = 'opacity 200ms ease-out'; // smooth fade in only
     elements.spotlight.classList.add('visible');
     
-    // 8. Wait for spotlight to settle (longer if it's animating to new position)
-    await sleep(needsNavigation ? 100 : 300);
+    // 8. Wait for spotlight to fade in
+    await sleep(180);
     
     // 9. Get FRESH TARGET bounds (more reliable than spotlight bounds)
     // The spotlight is just target + 10px padding on each side
