@@ -1504,6 +1504,9 @@ const QPTour = (function() {
     elements.nextText.textContent = isLast ? 'Finish' : 'Next';
     elements.nextBtn.querySelector('.tour-next-icon').textContent = isLast ? '✓' : '→';
     elements.nextBtn.classList.toggle('finish', isLast);
+    
+    // Hide skip button on last step
+    elements.skipBtn.style.display = isLast ? 'none' : '';
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -1751,11 +1754,11 @@ const QPTour = (function() {
       await markSectionComplete(currentSection);
     }
     
-    // Final celebration burst
-    const callout = elements.callout.getBoundingClientRect();
+    // Final celebration burst on Finish button
+    const btnRect = elements.nextBtn.getBoundingClientRect();
     playCelebration(
-      callout.left + callout.width / 2,
-      callout.top + callout.height / 2
+      btnRect.left + btnRect.width / 2,
+      btnRect.top + btnRect.height / 2
     );
     
     await sleep(500);
