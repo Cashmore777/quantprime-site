@@ -1286,18 +1286,18 @@ const QPTour = (function() {
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     const needsNavigation = step.page !== currentView;
     
-    // 1. Smooth transition: fade out callout first
-    elements.callout.style.transition = 'opacity 150ms ease-out, transform 150ms ease-out';
+    // 1. Smooth transition: fade out callout
+    elements.callout.style.transition = 'opacity 200ms ease-out, transform 200ms ease-out';
     elements.callout.classList.remove('visible');
-    await sleep(120); // Let callout fade
+    await sleep(200); // Let callout fully fade
     
-    // 2. ALWAYS hide spotlight instantly - no visible movement between steps
-    elements.spotlight.style.transition = 'none';
+    // 2. Fade out spotlight (not instant - smooth)
+    elements.spotlight.style.transition = 'opacity 150ms ease-out';
     elements.spotlight.classList.remove('visible');
-    elements.spotlight.offsetHeight; // Force reflow
+    await sleep(150); // Let spotlight fade
     
-    // Brief pause to let everything settle before next step
-    await sleep(50);
+    // 3. Pause to let everything settle
+    await sleep(100);
     
     // 3. Navigate if needed
     if (needsNavigation) {
@@ -1376,13 +1376,16 @@ const QPTour = (function() {
       }
     }
     
-    // 7. Restore transitions and show spotlight (fades in at new position)
+    // 7. Pause before showing spotlight at new position
+    await sleep(100);
+    
+    // 8. Restore transitions and show spotlight (smooth fade in)
     elements.spotlight.offsetHeight; // force reflow
-    elements.spotlight.style.transition = 'opacity 200ms ease-out'; // smooth fade in only
+    elements.spotlight.style.transition = 'opacity 250ms ease-in-out';
     elements.spotlight.classList.add('visible');
     
-    // 8. Wait for spotlight to fade in
-    await sleep(180);
+    // 9. Wait for spotlight to fully appear
+    await sleep(250);
     
     // 9. Get FRESH TARGET bounds (more reliable than spotlight bounds)
     // The spotlight is just target + 10px padding on each side
@@ -1406,9 +1409,9 @@ const QPTour = (function() {
     // 11. Position callout
     positionCallout(step.position, spotlightBounds);
     
-    // 12. Restore smooth transition and show callout with stagger
-    elements.callout.style.transition = ''; // restore CSS transitions
-    await sleep(50); // slight stagger after spotlight
+    // 12. Restore smooth transition and show callout
+    elements.callout.style.transition = 'opacity 300ms ease-out, transform 300ms ease-out';
+    await sleep(100); // stagger after spotlight
     elements.callout.classList.add('visible');
   }
 
