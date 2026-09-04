@@ -1,3 +1,40 @@
+/**
+ * ══════════════════════════════════════════════════════════════════════════
+ * QUANT PRIME - Main Stylesheet
+ * ══════════════════════════════════════════════════════════════════════════
+ * 
+ * Table of Contents:
+ * 1. Reset & Variables (Light/Dark mode)
+ * 2. Base Typography
+ * 3. Layout (Container, Section)
+ * 4. Navigation
+ * 5. Hero Section
+ * 6. Philosophy Section
+ * 7. Journey CTA
+ * 8. Page Header
+ * 9. Instrument Cards
+ * 10. Compounding Calculator
+ * 11. Results Section
+ * 12. Pricing Cards
+ * 13. Stats Section
+ * 14. Instruments Preview
+ * 15. Included Section
+ * 16. CTA Buttons
+ * 17. Footer
+ * 18. Animations & Utilities
+ * 19. Gradients & Accents
+ * 20. Responsive (900px, 650px breakpoints)
+ * 21. Dark Mode Overrides
+ * 22. Accessibility
+ * 
+ * Last updated: 2026-09-04
+ * ══════════════════════════════════════════════════════════════════════════
+ */
+
+/* ══════════════════════════════════════════════════════════════════════════
+   1. RESET & VARIABLES
+   ══════════════════════════════════════════════════════════════════════════ */
+
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root, [data-theme="light"] {
