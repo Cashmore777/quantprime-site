@@ -1282,16 +1282,21 @@ const QPTour = (function() {
     
     console.log('QPTour: Playing step', index, step.id);
     
-    // 1. Hide spotlight and callout IMMEDIATELY (no transition)
-    elements.spotlight.style.transition = 'none';
-    elements.spotlight.classList.remove('visible');
-    elements.callout.classList.remove('visible');
-    
-    // Force the hidden state to apply
-    elements.spotlight.offsetHeight;
-    
     const currentView = document.querySelector('.view.active')?.id?.replace('view-', '');
     const needsNavigation = step.page !== currentView;
+    
+    // 1. Smooth transition: fade out callout first
+    elements.callout.style.transition = 'opacity 150ms ease-out, transform 150ms ease-out';
+    elements.callout.classList.remove('visible');
+    await sleep(120); // Let callout fade
+    
+    // 2. If changing pages, hide spotlight instantly. Otherwise keep it for smooth move.
+    if (needsNavigation) {
+      elements.spotlight.style.transition = 'none';
+      elements.spotlight.classList.remove('visible');
+      elements.spotlight.offsetHeight; // Force reflow
+    }
+    // If same page, spotlight will smoothly animate to new position
     
     // 2. Navigate if needed
     if (needsNavigation) {
@@ -1370,13 +1375,13 @@ const QPTour = (function() {
       }
     }
     
-    // 7. NOW add visible class (will fade in with transition)
+    // 7. Ensure smooth transitions restored, show spotlight
     elements.spotlight.offsetHeight; // force reflow
-    elements.spotlight.style.transition = ''; // restore
+    elements.spotlight.style.transition = ''; // restore CSS transitions
     elements.spotlight.classList.add('visible');
     
-    // 8. Wait for spotlight to appear
-    await sleep(100);
+    // 8. Wait for spotlight to settle (longer if it's animating to new position)
+    await sleep(needsNavigation ? 100 : 300);
     
     // 9. Get FRESH TARGET bounds (more reliable than spotlight bounds)
     // The spotlight is just target + 10px padding on each side
@@ -1400,7 +1405,9 @@ const QPTour = (function() {
     // 11. Position callout
     positionCallout(step.position, spotlightBounds);
     
-    // 12. Show callout
+    // 12. Restore smooth transition and show callout with stagger
+    elements.callout.style.transition = ''; // restore CSS transitions
+    await sleep(50); // slight stagger after spotlight
     elements.callout.classList.add('visible');
   }
 
@@ -1709,11 +1716,11 @@ const QPTour = (function() {
       const currentStep = allSteps[currentStepIndex];
       const nextStep = allSteps[currentStepIndex + 1];
       
-      // Celebration at spotlight center
-      const spotlight = elements.spotlight.getBoundingClientRect();
+      // Celebration at Next button (instant feedback on click)
+      const btnRect = elements.nextBtn.getBoundingClientRect();
       playCelebration(
-        spotlight.left + spotlight.width / 2,
-        spotlight.top + spotlight.height / 2
+        btnRect.left + btnRect.width / 2,
+        btnRect.top + btnRect.height / 2
       );
       
       // Mark section complete if moving to next section or finishing
