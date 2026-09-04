@@ -1256,12 +1256,13 @@ footer a:hover {
 </style>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
 <nav>
   <div class="container">
     <div class="nav-left">
       <a href="/" class="nav-logo">QUANT<span>PRIME</span></a>
-      <button class="nav-dropdown-btn" id="navDropdown">
+      <button class="nav-dropdown-btn" id="navDropdown" aria-label="Toggle navigation menu" aria-expanded="false">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
           <path d="M3 4.5L6 7.5L9 4.5"/>
         </svg>
@@ -1282,7 +1283,7 @@ footer a:hover {
 <!-- ═══════════════════════════════════════════════════════════════
      HERO - Hook them instantly
      ═══════════════════════════════════════════════════════════════ -->
-<section class="pricing-hero">
+<section class="pricing-hero" id="main-content">
   <div class="container">
     <div class="label">PRICING</div>
     <h1>Everything you need.<br><span class="gradient-text">One subscription.</span></h1>
