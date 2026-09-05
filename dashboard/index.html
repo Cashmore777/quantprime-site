@@ -13059,10 +13059,22 @@ async function saveDiscordUsername() {
   statusEl.innerHTML = '<span style="color: var(--text-3);">Saving...</span>';
   
   try {
+    // Use upsert to handle both new and existing profiles
+    const payload = {
+      id: authUser.id,
+      email: authUser.email,
+      discord_username: discordUsername || null,
+      updated_at: new Date().toISOString()
+    };
+    
+    // Preserve existing fields if we have them
+    if (userProfile?.tier) payload.tier = userProfile.tier;
+    if (userProfile?.display_name) payload.display_name = userProfile.display_name;
+    if (userProfile?.tradingview_username) payload.tradingview_username = userProfile.tradingview_username;
+    
     const { data, error } = await supabaseClient
       .from('profiles')
-      .update({ discord_username: discordUsername || null })
-      .eq('id', authUser.id)
+      .upsert(payload, { onConflict: 'id' })
       .select();
     
     if (error) {
