@@ -11439,7 +11439,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         <div class="form-row">
           <label>Username</label>
           <div style="display: flex; gap: 8px; align-items: center;">
-            <input class="mono" id="discord-username-settings" placeholder="e.g. sean.qp" style="max-width: 280px;">
+            <input class="mono" id="discord-username-settings" placeholder="" style="max-width: 280px;">
             <button class="btn sm" onclick="saveDiscordUsername()">Save</button>
           </div>
         </div>
@@ -12605,7 +12605,7 @@ async function checkAuth() {
   // ALWAYS load profile (for ALL users including admins) to get display_name and TV username
   const { data: profile, error: profileError } = await supabaseClient
     .from('profiles')
-    .select('tier, display_name, tradingview_username')
+    .select('tier, display_name, tradingview_username, discord_username')
     .eq('id', authUser.id)
     .single();
   
