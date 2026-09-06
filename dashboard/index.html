@@ -6130,9 +6130,10 @@ body {
 /* ═══════════════════════════════════════════════════════════════════════
    ACADEMY - Premium £3,497 Experience
    100vh locked, no scrolling, everything in viewport
+   FIXED LAYOUT - Sept 2026
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* Lock academy view to viewport */
+/* Lock academy view to viewport - CRITICAL: no overflow, no scroll */
 #view-academy.active {
   display: flex !important;
   flex-direction: column;
@@ -6140,6 +6141,7 @@ body {
   max-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom) - var(--nav-height));
   overflow: hidden;
   padding: 0;
+  margin: 0;
 }
 
 @media (min-width: 651px) {
@@ -6153,47 +6155,21 @@ body {
   display: none; /* Hide the old header - we'll integrate progress into layout */
 }
 
-/* Main academy layout - fills viewport */
+/* Main academy layout - fills viewport exactly */
 .academy-layout {
   display: grid;
-  grid-template-columns: 220px 1fr;
+  grid-template-columns: 200px 1fr;
   grid-template-rows: 1fr;
   gap: 0;
   height: 100%;
-  flex: 1;
+  width: 100%;
   overflow: hidden;
   background: var(--bg);
-}
-
-@media (max-width: 1100px) {
-  .academy-layout { 
-    grid-template-columns: 200px 1fr; 
-  }
-  
-  .level-header {
-    padding: 8px 10px;
-    font-size: 11px;
-  }
-  
-  .video-item {
-    padding: 6px 8px 6px 16px;
-    font-size: 10px;
-  }
 }
 
 @media (max-width: 900px) {
   .academy-layout {
     grid-template-columns: 180px 1fr;
-  }
-  
-  .progress-ring {
-    padding: 12px;
-    gap: 10px;
-  }
-  
-  .ring-svg {
-    width: 38px;
-    height: 38px;
   }
 }
 
@@ -6207,7 +6183,7 @@ body {
     top: var(--header-height);
     left: 0;
     bottom: var(--nav-height);
-    width: 280px;
+    width: 260px;
     z-index: 50;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -6237,27 +6213,28 @@ body {
   }
 }
 
+/* Sidebar navigation - compact, no gaps */
 .level-nav {
   background: var(--surface);
   border-right: 1px solid var(--border);
   border-radius: 0;
   padding: 0;
   height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* No scroll on container */
   box-shadow: none;
   transition: all 0.3s ease;
 }
 
+/* Progress ring - compact header */
 .progress-ring {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 8px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-raised) 100%);
+  background: var(--surface);
   flex-shrink: 0;
   position: relative;
 }
@@ -6275,17 +6252,19 @@ body {
 }
 
 .ring-svg { 
-  width: 36px; 
-  height: 36px; 
+  width: 32px; 
+  height: 32px; 
   flex-shrink: 0;
   filter: drop-shadow(0 0 6px rgba(201,168,76,0.3));
 }
 
+/* Level list - scrollable area only */
 #level-list {
   flex: 1;
+  min-height: 0; /* CRITICAL: allows flex child to shrink */
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 8px;
+  padding: 6px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -6308,26 +6287,21 @@ body {
 }
 
 .level-group {
-  margin-bottom: 2px;
-  transition: all 0.2s ease;
-}
-
-.level-group:hover {
-  transform: translateX(2px);
+  margin-bottom: 1px;
 }
 
 .level-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 10px;
+  padding: 6px 8px;
   font-size: 11px;
   font-weight: 600;
   color: var(--text-2);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.15s;
-  gap: 6px;
+  gap: 4px;
 }
 
 .level-header:hover {
@@ -6340,7 +6314,6 @@ body {
   background: var(--gold-glow);
   border-left: 2px solid var(--gold);
   margin-left: -2px;
-  box-shadow: inset 0 0 20px rgba(201,168,76,0.05);
 }
 
 .level-header .level-progress {
@@ -6352,7 +6325,7 @@ body {
 
 .level-videos {
   display: none;
-  padding: 4px 0 8px 0;
+  padding: 2px 0 4px 0;
 }
 
 .level-group.open .level-videos { display: block; }
@@ -6360,14 +6333,15 @@ body {
 .video-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 8px 6px 16px;
-  font-size: 11px;
+  gap: 4px;
+  padding: 5px 6px 5px 14px;
+  font-size: 10px;
   color: var(--text-2);
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 3px;
   transition: all 0.15s;
   line-height: 1.2;
+  position: relative;
 }
 
 .video-item:hover {
@@ -6380,32 +6354,16 @@ body {
   color: var(--text-1);
   border-left: 2px solid var(--gold);
   margin-left: -2px;
-  box-shadow: 0 2px 8px rgba(201,168,76,0.15);
 }
 
 .video-item.completed .video-status { 
   color: var(--success); 
-  text-shadow: 0 0 8px rgba(34,197,94,0.4);
-}
-.video-item.completed::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 4px;
-  background: var(--success);
-  border-radius: 50%;
 }
 .video-item.active .video-status { color: var(--gold); }
-.video-item {
-  position: relative;
-}
 
 .video-item .video-status {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
   flex-shrink: 0;
 }
@@ -6413,7 +6371,7 @@ body {
 .video-item .video-duration {
   margin-left: auto;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 8px;
   color: var(--text-3);
   flex-shrink: 0;
 }
@@ -6422,10 +6380,10 @@ body {
   background: none;
   border: none;
   color: var(--text-3);
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
-  padding: 4px 8px;
-  margin-left: 8px;
+  padding: 2px 4px;
+  margin-left: 4px;
   opacity: 0;
   transition: all 0.2s;
 }
@@ -6438,14 +6396,19 @@ body {
   color: var(--gold);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   VIDEO SECTION - Main content area with header, video, notes
+   Uses CSS Grid with explicit row heights
+   ═══════════════════════════════════════════════════════════════════════ */
 .video-section {
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: 10px;
+  grid-template-rows: auto 1fr 90px; /* header auto, video fills, notes fixed 90px */
+  gap: 8px;
   height: 100%;
+  min-height: 0; /* CRITICAL: allows grid to shrink */
   overflow: hidden;
   background: var(--bg);
-  padding: 12px 20px;
+  padding: 8px 12px;
   position: relative;
 }
 
@@ -6458,21 +6421,7 @@ body {
   transform: translate(-50%, -50%);
   width: 90%;
   height: 70%;
-  background: radial-gradient(ellipse at center, rgba(201,168,76,0.04) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Secondary glow for depth */
-.video-section::after {
-  content: '';
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 40%;
-  background: radial-gradient(ellipse, rgba(0,171,255,0.02) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.03) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
@@ -6486,162 +6435,98 @@ body {
   z-index: 2;
 }
 
-/* Academy Progress Header */
+/* ═══════════════════════════════════════════════════════════════════════
+   ACADEMY PROGRESS HEADER - Compact bar at top
+   ═══════════════════════════════════════════════════════════════════════ */
 .academy-progress-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 10px 16px;
+  gap: 10px;
+  padding: 8px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-}
-
-/* Subtle gold accent line at top */
-.academy-progress-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20px;
-  right: 20px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+  min-height: 0;
 }
 
 .academy-progress-header .progress-info {
   flex: 0 0 auto;
-  max-width: 280px;
+  max-width: 220px;
   min-width: 0;
 }
 
 .academy-progress-header .current-lesson-title {
   display: block;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-1);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 .academy-progress-header .lesson-meta {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-3);
   font-family: var(--mono);
-  margin-top: 2px;
+  margin-top: 1px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .academy-progress-header .lesson-meta::before {
   content: '';
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: var(--gold);
   border-radius: 50%;
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.8); }
 }
 
 .academy-progress-header .progress-bar-container {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
-}
-
-@media (max-width: 650px) {
-  .academy-progress-header .progress-bar-container {
-    gap: 8px;
-  }
-  
-  .academy-progress-header .progress-bar-track {
-    height: 6px;
-  }
 }
 
 .academy-progress-header .progress-bar-track {
   flex: 1;
-  height: 8px;
+  height: 6px;
   background: var(--surface-raised);
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-  position: relative;
 }
 
 .academy-progress-header .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, 
-    #a08030 0%, 
-    var(--gold) 30%, 
-    #d4b85a 50%, 
-    var(--gold) 70%, 
-    #a08030 100%
-  );
-  background-size: 200% 100%;
-  border-radius: 4px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 0 12px rgba(201,168,76,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-  0%, 100% { background-position: 0% 0; }
-  50% { background-position: 100% 0; }
-}
-
-/* Progress update pulse */
-@keyframes progress-pulse {
-  0% { box-shadow: 0 0 12px rgba(201,168,76,0.5), inset 0 1px 0 rgba(255,255,255,0.3); }
-  50% { box-shadow: 0 0 20px rgba(201,168,76,0.8), inset 0 1px 0 rgba(255,255,255,0.3); }
-  100% { box-shadow: 0 0 12px rgba(201,168,76,0.5), inset 0 1px 0 rgba(255,255,255,0.3); }
-}
-
-.academy-progress-header .progress-bar-fill.pulse {
-  animation: progress-pulse 0.5s ease-out;
+  background: linear-gradient(90deg, var(--gold), #d4b85a);
+  border-radius: 3px;
+  transition: width 0.4s ease;
 }
 
 .academy-progress-header .progress-percentage {
   font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--gold);
-  min-width: 48px;
+  min-width: 36px;
   text-align: center;
-  background: var(--gold-glow);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(201,168,76,0.2);
-  text-shadow: 0 0 10px rgba(201,168,76,0.3);
 }
 
 .academy-progress-header .video-controls {
   display: flex;
-  gap: 6px;
-  padding: 4px;
-  background: var(--surface-raised);
-  border-radius: 12px;
-  border: 1px solid var(--border);
+  gap: 4px;
+  flex-shrink: 0;
 }
 
 .btn-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
   display: flex;
@@ -6649,7 +6534,7 @@ body {
   justify-content: center;
   cursor: pointer;
   color: var(--text-2);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s;
   position: relative;
 }
 
@@ -6657,13 +6542,10 @@ body {
   border-color: var(--gold);
   color: var(--gold);
   background: var(--gold-glow);
-  box-shadow: 0 4px 12px rgba(201,168,76,0.15);
-  transform: translateY(-1px);
 }
 
 .btn-icon:active {
-  transform: scale(0.95) translateY(0);
-  transition-duration: 0.1s;
+  transform: scale(0.95);
 }
 
 /* Success state for mark complete */
@@ -6678,142 +6560,107 @@ body {
   border-color: var(--success);
 }
 
-/* Keyboard shortcut hint */
-.btn-icon[title]::after {
-  content: attr(data-key);
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--mono);
-  font-size: 9px;
-  color: var(--text-3);
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
-
-.video-controls:hover .btn-icon[data-key]::after {
-  opacity: 1;
-}
-
-/* Premium border on video controls */
-.academy-progress-header .video-controls {
-  background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 100%);
-}
-
-/* Video player wrapper for centering */
+/* ═══════════════════════════════════════════════════════════════════════
+   VIDEO PLAYER WRAPPER - Fills available space
+   ═══════════════════════════════════════════════════════════════════════ */
 .video-player-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  min-height: 0;
+  min-height: 0; /* CRITICAL: allows flex child to shrink */
+  height: 100%;
   overflow: hidden;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   ACADEMY NOTEBOOK - Fixed height at bottom, always visible
+   ═══════════════════════════════════════════════════════════════════════ */
+.academy-notebook {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  height: 90px; /* Fixed height - matches grid row */
+  min-height: 90px;
+  max-height: 90px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.academy-notebook:hover {
+  border-color: var(--border-hover);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Tablet */
 @media (max-width: 900px) {
-  .video-player {
-    max-height: calc(100vh - 380px);
-    max-width: calc((100vh - 380px) * 16 / 9);
+  .academy-progress-header .progress-info {
+    max-width: 180px;
+  }
+  
+  .academy-progress-header .current-lesson-title {
+    font-size: 12px;
   }
 }
 
+/* Mobile */
 @media (max-width: 650px) {
   .video-section {
-    padding: 12px 12px;
-    gap: 10px;
-  }
-  
-  .video-player {
-    max-height: calc(100vh - 320px);
-    max-width: 100%;
-    border-radius: 10px;
-  }
-  
-  .academy-notebook {
-    height: 110px;
-  }
-  
-  /* Simpler play button on mobile */
-  .play-btn-large {
-    width: 72px;
-    height: 72px;
-    font-size: 26px;
-  }
-  
-  .play-btn-large::before {
-    display: none;
-  }
-  
-  .player-placeholder .video-title {
-    font-size: 16px;
-    padding: 0 20px;
-    text-align: center;
-  }
-  
-  .player-placeholder .video-meta {
-    font-size: 11px;
-  }
-}
-
-@media (max-height: 700px) {
-  .video-player {
-    max-height: calc(100vh - 260px);
-    max-width: calc((100vh - 260px) * 16 / 9);
-  }
-  
-  .academy-notebook {
-    height: 90px;
+    padding: 8px;
+    gap: 6px;
+    grid-template-rows: auto 1fr 80px;
   }
   
   .academy-progress-header {
-    padding: 10px 14px;
+    padding: 6px 10px;
+    gap: 8px;
   }
   
-  .progress-ring {
-    padding: 12px 14px;
+  .academy-progress-header .progress-info {
+    max-width: 140px;
   }
-}
-
-@media (max-height: 600px) {
-  .video-player {
-    max-height: calc(100vh - 220px);
-    max-width: calc((100vh - 220px) * 16 / 9);
+  
+  .academy-progress-header .current-lesson-title {
+    font-size: 11px;
+  }
+  
+  .academy-progress-header .lesson-meta {
+    display: none;
+  }
+  
+  .btn-icon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .btn-icon svg {
+    width: 14px;
+    height: 14px;
   }
   
   .academy-notebook {
     height: 80px;
-  }
-  
-  .notebook-header {
-    padding: 6px 10px;
+    min-height: 80px;
+    max-height: 80px;
   }
 }
 
-/* Landscape mobile - prioritize video */
-@media (max-height: 500px) and (orientation: landscape) {
-  .academy-layout {
-    grid-template-columns: 160px 1fr;
-  }
-  
+/* Short viewport */
+@media (max-height: 700px) {
   .video-section {
-    grid-template-rows: auto 1fr;
-    gap: 8px;
-    padding: 8px 12px;
+    grid-template-rows: auto 1fr 80px;
+    gap: 6px;
+    padding: 6px 10px;
   }
   
   .academy-notebook {
-    display: none;
-  }
-  
-  .video-player {
-    max-height: calc(100vh - 100px);
-    max-width: calc((100vh - 100px) * 16 / 9);
-  }
-  
-  .academy-progress-header {
-    padding: 6px 10px;
+    height: 80px;
+    min-height: 80px;
+    max-height: 80px;
   }
   
   .progress-ring {
@@ -6821,37 +6668,71 @@ body {
   }
 }
 
-/* Academy Notebook - Compact */
-.academy-notebook {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  height: 100px;
-  flex-shrink: 0;
-  overflow: hidden;
-  transition: all 0.3s ease;
+/* Very short viewport */
+@media (max-height: 600px) {
+  .video-section {
+    grid-template-rows: auto 1fr 70px;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+  
+  .academy-progress-header {
+    padding: 4px 8px;
+  }
+  
+  .academy-notebook {
+    height: 70px;
+    min-height: 70px;
+    max-height: 70px;
+  }
+  
+  .notebook-header {
+    padding: 4px 8px;
+  }
 }
 
-.academy-notebook:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-sm);
+/* Landscape mobile - hide notes */
+@media (max-height: 500px) and (orientation: landscape) {
+  .academy-layout {
+    grid-template-columns: 150px 1fr;
+  }
+  
+  .video-section {
+    grid-template-rows: auto 1fr;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+  
+  .academy-notebook {
+    display: none;
+  }
+  
+  .academy-progress-header {
+    padding: 4px 8px;
+  }
+  
+  .progress-ring {
+    padding: 6px 8px;
+  }
 }
 
 .notebook-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-raised);
   flex-shrink: 0;
+  min-height: 28px;
+  max-height: 28px;
 }
 
 @media (max-width: 650px) {
   .notebook-header {
-    padding: 8px 10px;
+    padding: 4px 8px;
+    min-height: 26px;
+    max-height: 26px;
   }
   
   .notebook-title span {
@@ -6859,50 +6740,50 @@ body {
   }
   
   .notebook-title svg {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
   }
   
   .notebook-tag {
-    font-size: 9px;
-    padding: 2px 6px;
-    max-width: 100px;
+    font-size: 8px;
+    padding: 1px 5px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
   
   .notebook-actions {
-    gap: 4px;
+    gap: 3px;
   }
   
   .notebook-char-count {
-    font-size: 9px;
-    padding: 2px 4px;
+    font-size: 8px;
+    padding: 1px 3px;
   }
   
   .btn-icon.sm {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
   }
 }
 
 .notebook-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--text-2);
 }
 
 .notebook-tag {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9px;
   background: var(--gold-glow);
   color: var(--gold);
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 1px 6px;
+  border-radius: 3px;
   font-weight: 500;
 }
 
@@ -6997,22 +6878,28 @@ body {
 }
 
 .btn-icon.sm {
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.btn-icon.sm svg {
+  width: 12px;
+  height: 12px;
 }
 
 .notebook-textarea {
   flex: 1;
   width: 100%;
-  padding: 12px 14px;
+  padding: 6px 10px;
   border: none;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.4;
   resize: none;
   font-family: var(--sans);
   background: var(--surface);
   color: var(--text-1);
+  min-height: 0; /* Allow shrinking */
 }
 
 .notebook-textarea::placeholder {
@@ -7104,31 +6991,20 @@ body {
   .mobile-nav-toggle {
     display: flex;
     flex-shrink: 0;
+    width: 32px;
+    height: 32px;
   }
   
-  .academy-progress-header .progress-info {
-    max-width: 130px;
-  }
-  
-  .academy-progress-header {
-    padding: 10px 12px;
-    gap: 8px;
-  }
-  
-  .academy-progress-header .progress-percentage {
-    display: none;
-  }
-  
-  /* Touch-friendly buttons */
-  .btn-icon {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
+  /* Mobile overrides for compact header - keep buttons smaller for viewport fit */
+  .academy-progress-header .btn-icon {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
   }
   
   .video-controls {
-    gap: 4px;
-    padding: 3px;
+    gap: 3px;
+    padding: 2px;
   }
   
   /* Hide keyboard hints on touch */
@@ -7198,17 +7074,18 @@ body {
 .video-player {
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, #0a0a0f 0%, #111117 40%, #0a0a0f 100%);
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
-  max-height: calc(100vh - 320px);
   width: 100%;
-  max-width: calc((100vh - 320px) * 16 / 9);
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   margin: 0 auto;
+  object-fit: contain;
   box-shadow: 
-    0 20px 60px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(201,168,76,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.03);
+    0 10px 40px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(201,168,76,0.1);
   transition: box-shadow 0.3s ease;
 }
 
