@@ -11658,7 +11658,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
               <span>Notes</span>
               <span class="notebook-tag" id="notebook-lesson-tag">No lesson</span>
-              <input type="text" id="manual-timestamp" placeholder="@0:00" style="width: 50px; font-size: 10px; font-family: var(--mono); padding: 2px 4px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--text-2); margin-left: 4px;" title="Enter timestamp (e.g. @2:30)">
+              <span class="notebook-timestamp" id="current-video-time" style="font-family: var(--mono); font-size: 10px; color: var(--gold); margin-left: 6px; opacity: 0.8;">@0:00</span>
             </div>
             <div class="notebook-actions">
               <span id="notebook-char-count" class="notebook-char-count">0</span>
@@ -20810,16 +20810,23 @@ function playVideo(videoId) {
     let videoUrl = video.video_url;
     if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
       const separator = videoUrl.includes('?') ? '&' : '?';
-      // Enable API and set gold color - try multiple color params
-      videoUrl = videoUrl + separator + 'color=%23c9a84c&primaryColor=%23c9a84c&accentColor=%23c9a84c&autoplay=false&preload=true&controls=true';
+      // Enable API, responsive mode, and set gold color
+      videoUrl = videoUrl + separator + 'responsive=true&color=%23c9a84c&primaryColor=%23c9a84c&autoplay=false&preload=true&controls=true';
     }
     iframe.src = videoUrl;
     
     // Reset video playback time when loading new video
     currentVideoPlaybackTime = 0;
     
-    // Remove loading state when iframe loads
-    iframe.onload = () => player.classList.remove('loading');
+    // Request time updates from Bunny iframe after it loads
+    iframe.onload = () => {
+      player.classList.remove('loading');
+      // Try to enable Bunny API communication
+      try {
+        iframe.contentWindow.postMessage({ action: 'getTime' }, '*');
+        iframe.contentWindow.postMessage({ command: 'addEventListener', value: 'timeupdate' }, '*');
+      } catch(e) { /* cross-origin may block this */ }
+    };
     
     // Handle iframe errors
     iframe.onerror = () => {
@@ -21068,22 +21075,13 @@ async function loadNotebookForVideo(videoId) {
   }
 }
 
-// Auto-save notes with debounce
+// Track character/word count (NO auto-save - manual only)
 document.getElementById('notebook-content')?.addEventListener('input', function() {
-  const statusEl = document.getElementById('notebook-status');
   const charCount = document.getElementById('notebook-char-count');
   
-  // Update character count and word count
-  const len = this.value.length;
+  // Update word count only
   const words = this.value.trim() ? this.value.trim().split(/\s+/).length : 0;
-  if (charCount) charCount.textContent = len > 0 ? `${words}w` : '0';
-  
-  // Show saving status
-  statusEl.textContent = 'Saving...';
-  statusEl.className = 'notebook-status saving';
-  
-  clearTimeout(notebookSaveTimeout);
-  notebookSaveTimeout = setTimeout(() => saveNote(true), 1500);
+  if (charCount) charCount.textContent = words > 0 ? `${words}w` : '0';
 });
 
 // Save note
@@ -21329,22 +21327,35 @@ window.addEventListener('message', function(e) {
     
     if (data && typeof data === 'object') {
       // Bunny Stream event formats - try all known patterns
-      const time = data.currentTime ?? data.time ?? data.seconds ?? data.position ?? null;
-      const event = data.event ?? data.type ?? data.action ?? '';
+      let time = null;
       
-      // Update time on any relevant event
-      if (time !== null && time > 0) {
+      // Direct properties
+      if (typeof data.currentTime === 'number') time = data.currentTime;
+      else if (typeof data.time === 'number') time = data.time;
+      else if (typeof data.seconds === 'number') time = data.seconds;
+      else if (typeof data.position === 'number') time = data.position;
+      
+      // Nested in data object
+      if (data.data) {
+        if (typeof data.data.currentTime === 'number') time = data.data.currentTime;
+        else if (typeof data.data.time === 'number') time = data.data.time;
+      }
+      
+      // Bunny specific: check for player state messages
+      if (data.player && typeof data.player.currentTime === 'number') {
+        time = data.player.currentTime;
+      }
+      
+      // Update if we got a valid time
+      if (time !== null && time >= 0) {
         currentVideoPlaybackTime = time;
-      }
-      
-      // Also check for nested data
-      if (data.data && typeof data.data.currentTime === 'number') {
-        currentVideoPlaybackTime = data.data.currentTime;
-      }
-      
-      // Log for debugging (remove after confirming it works)
-      if (event.includes('time') || event.includes('progress') || time !== null) {
-        console.log('Bunny event:', event, 'time:', time, 'stored:', currentVideoPlaybackTime);
+        // Update the timestamp display
+        const timeDisplay = document.getElementById('current-video-time');
+        if (timeDisplay) {
+          const mins = Math.floor(time / 60);
+          const secs = Math.floor(time % 60);
+          timeDisplay.textContent = `@${mins}:${String(secs).padStart(2, '0')}`;
+        }
       }
     }
   } catch (err) {
@@ -21353,16 +21364,7 @@ window.addEventListener('message', function(e) {
 });
 
 function getVideoTimestamp() {
-  // Check manual timestamp input first
-  const manualInput = document.getElementById('manual-timestamp');
-  if (manualInput && manualInput.value.trim()) {
-    let manual = manualInput.value.trim();
-    // Ensure it starts with @
-    if (!manual.startsWith('@')) manual = '@' + manual;
-    return manual;
-  }
-  
-  // Fall back to tracked video time
+  // Format tracked video time
   const totalSeconds = Math.floor(currentVideoPlaybackTime);
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
@@ -21430,8 +21432,6 @@ async function saveNoteToSidebar() {
   // Clear inputs after saving
   document.getElementById('notebook-content').value = '';
   document.getElementById('notebook-char-count').textContent = '0';
-  const manualTs = document.getElementById('manual-timestamp');
-  if (manualTs) manualTs.value = '';
   
   // Visual feedback
   const statusEl = document.getElementById('notebook-status');
