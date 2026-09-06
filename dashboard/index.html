@@ -6136,10 +6136,17 @@ body {
 #view-academy.active {
   display: flex !important;
   flex-direction: column;
-  height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
-  max-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
+  height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom) - var(--nav-height));
+  max-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom) - var(--nav-height));
   overflow: hidden;
   padding: 0;
+}
+
+@media (min-width: 651px) {
+  #view-academy.active {
+    height: calc(100vh - var(--safe-top) - var(--safe-bottom));
+    max-height: calc(100vh - var(--safe-top) - var(--safe-bottom));
+  }
 }
 
 #view-academy .view-header {
@@ -6161,6 +6168,32 @@ body {
 @media (max-width: 1100px) {
   .academy-layout { 
     grid-template-columns: 200px 1fr; 
+  }
+  
+  .level-header {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+  
+  .video-item {
+    padding: 6px 8px 6px 16px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .academy-layout {
+    grid-template-columns: 180px 1fr;
+  }
+  
+  .progress-ring {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .ring-svg {
+    width: 38px;
+    height: 38px;
   }
 }
 
@@ -6250,7 +6283,27 @@ body {
 #level-list {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for level list */
+#level-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+#level-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#level-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+#level-list::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
 }
 
 .level-group {
@@ -6504,6 +6557,17 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+}
+
+@media (max-width: 650px) {
+  .academy-progress-header .progress-bar-container {
+    gap: 8px;
+  }
+  
+  .academy-progress-header .progress-bar-track {
+    height: 6px;
+  }
 }
 
 .academy-progress-header .progress-bar-track {
@@ -6656,29 +6720,103 @@ body {
 
 @media (max-width: 650px) {
   .video-section {
-    padding: 12px 16px;
-    gap: 12px;
+    padding: 12px 12px;
+    gap: 10px;
   }
   
   .video-player {
-    max-height: calc(100vh - 340px);
+    max-height: calc(100vh - 320px);
     max-width: 100%;
     border-radius: 10px;
   }
   
   .academy-notebook {
-    height: 120px;
+    height: 110px;
+  }
+  
+  /* Simpler play button on mobile */
+  .play-btn-large {
+    width: 72px;
+    height: 72px;
+    font-size: 26px;
+  }
+  
+  .play-btn-large::before {
+    display: none;
+  }
+  
+  .player-placeholder .video-title {
+    font-size: 16px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  
+  .player-placeholder .video-meta {
+    font-size: 11px;
   }
 }
 
 @media (max-height: 700px) {
   .video-player {
-    max-height: calc(100vh - 280px);
-    max-width: calc((100vh - 280px) * 16 / 9);
+    max-height: calc(100vh - 260px);
+    max-width: calc((100vh - 260px) * 16 / 9);
   }
   
   .academy-notebook {
-    height: 100px;
+    height: 90px;
+  }
+  
+  .academy-progress-header {
+    padding: 10px 14px;
+  }
+  
+  .progress-ring {
+    padding: 12px 14px;
+  }
+}
+
+@media (max-height: 600px) {
+  .video-player {
+    max-height: calc(100vh - 220px);
+    max-width: calc((100vh - 220px) * 16 / 9);
+  }
+  
+  .academy-notebook {
+    height: 80px;
+  }
+  
+  .notebook-header {
+    padding: 6px 10px;
+  }
+}
+
+/* Landscape mobile - prioritize video */
+@media (max-height: 500px) and (orientation: landscape) {
+  .academy-layout {
+    grid-template-columns: 160px 1fr;
+  }
+  
+  .video-section {
+    grid-template-rows: auto 1fr;
+    gap: 8px;
+    padding: 8px 12px;
+  }
+  
+  .academy-notebook {
+    display: none;
+  }
+  
+  .video-player {
+    max-height: calc(100vh - 100px);
+    max-width: calc((100vh - 100px) * 16 / 9);
+  }
+  
+  .academy-progress-header {
+    padding: 6px 10px;
+  }
+  
+  .progress-ring {
+    padding: 8px 10px;
   }
 }
 
@@ -6707,6 +6845,45 @@ body {
   padding: 10px 14px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-raised);
+  flex-shrink: 0;
+}
+
+@media (max-width: 650px) {
+  .notebook-header {
+    padding: 8px 10px;
+  }
+  
+  .notebook-title span {
+    display: none;
+  }
+  
+  .notebook-title svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .notebook-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .notebook-actions {
+    gap: 4px;
+  }
+  
+  .notebook-char-count {
+    font-size: 9px;
+    padding: 2px 4px;
+  }
+  
+  .btn-icon.sm {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 .notebook-title {
@@ -6929,16 +7106,42 @@ body {
   }
   
   .academy-progress-header .progress-info {
-    max-width: 150px;
+    max-width: 130px;
   }
   
   .academy-progress-header {
     padding: 10px 12px;
-    gap: 10px;
+    gap: 8px;
   }
   
   .academy-progress-header .progress-percentage {
     display: none;
+  }
+  
+  /* Touch-friendly buttons */
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+  
+  .video-controls {
+    gap: 4px;
+    padding: 3px;
+  }
+  
+  /* Hide keyboard hints on touch */
+  .btn-icon[data-key]::after {
+    display: none;
+  }
+  
+  /* Larger tap targets */
+  .level-header {
+    min-height: 44px;
+  }
+  
+  .video-item {
+    min-height: 40px;
   }
 }
 
