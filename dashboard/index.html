@@ -6493,7 +6493,11 @@ body {
 
 .academy-progress-header .video-controls {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  padding: 4px;
+  background: var(--surface-raised);
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 .btn-icon {
@@ -6543,6 +6547,41 @@ body {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .video-player {
+    max-height: calc(100vh - 380px);
+    max-width: calc((100vh - 380px) * 16 / 9);
+  }
+}
+
+@media (max-width: 650px) {
+  .video-section {
+    padding: 12px 16px;
+    gap: 12px;
+  }
+  
+  .video-player {
+    max-height: calc(100vh - 340px);
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .academy-notebook {
+    height: 120px;
+  }
+}
+
+@media (max-height: 700px) {
+  .video-player {
+    max-height: calc(100vh - 280px);
+    max-width: calc((100vh - 280px) * 16 / 9);
+  }
+  
+  .academy-notebook {
+    height: 100px;
+  }
 }
 
 /* Academy Notebook - Compact */
@@ -6689,6 +6728,55 @@ body {
   }
 }
 
+/* Academy dark mode enhancements */
+[data-theme="dark"] .level-nav {
+  background: var(--surface);
+  border-right-color: var(--border);
+}
+
+[data-theme="dark"] .progress-ring {
+  background: linear-gradient(180deg, rgba(17,17,23,1) 0%, rgba(26,26,34,1) 100%);
+}
+
+[data-theme="dark"] .level-header:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+[data-theme="dark"] .level-group.open .level-header {
+  background: rgba(201,168,76,0.1);
+}
+
+[data-theme="dark"] .video-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+[data-theme="dark"] .video-item.active {
+  background: rgba(201,168,76,0.1);
+}
+
+[data-theme="dark"] .academy-progress-header {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .academy-notebook {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .notebook-header {
+  background: var(--surface-raised);
+}
+
+[data-theme="dark"] .notebook-textarea {
+  background: var(--surface);
+  color: var(--text-1);
+}
+
+[data-theme="dark"] .video-player {
+  background: linear-gradient(135deg, #070709 0%, #0d0d12 40%, #070709 100%);
+}
+
 .video-player {
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, #0a0a0f 0%, #111117 40%, #0a0a0f 100%);
@@ -6757,6 +6845,24 @@ body {
   transform: scale(0.98);
 }
 
+/* Pulsing play button animation */
+@keyframes play-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 8px rgba(201,168,76,0.05),
+      0 0 40px rgba(201,168,76,0.1);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 16px rgba(201,168,76,0.03),
+      0 0 60px rgba(201,168,76,0.15);
+  }
+}
+
+.play-btn-large {
+  animation: play-pulse 3s ease-in-out infinite;
+}
+
 .player-placeholder .video-title {
   font-size: 20px;
   font-weight: 600;
@@ -6782,6 +6888,19 @@ body {
 
 .academy-iframe.active {
   display: block;
+}
+
+/* Video player has active video */
+.video-player:has(.academy-iframe.active) {
+  box-shadow: 
+    0 25px 70px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(201,168,76,0.15),
+    0 0 60px rgba(201,168,76,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.video-player:has(.academy-iframe.active) .player-placeholder {
+  display: none;
 }
 
 .video-info {
@@ -10604,10 +10723,13 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <span class="progress-percentage" id="course-progress-percent">0%</span>
           </div>
           <div class="video-controls">
-            <button class="btn-icon" onclick="markVideoComplete()" title="Mark Complete">
+            <button class="btn-icon" onclick="playPreviousVideo()" title="Previous (P)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+            </button>
+            <button class="btn-icon" id="mark-complete-btn" onclick="markVideoComplete()" title="Mark Complete (C)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-            <button class="btn-icon" onclick="playNextVideo()" title="Next Lesson">
+            <button class="btn-icon" onclick="playNextVideo()" title="Next (N)">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
             </button>
           </div>
@@ -19447,6 +19569,47 @@ document.addEventListener('click', (e) => {
   }
 });
 
+// Keyboard shortcuts for academy
+document.addEventListener('keydown', (e) => {
+  // Only when academy view is active
+  if (!document.getElementById('view-academy')?.classList.contains('active')) return;
+  
+  // Don't interfere with typing in notebook
+  if (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT') return;
+  
+  switch(e.key) {
+    case 'ArrowRight':
+    case 'n':
+      e.preventDefault();
+      playNextVideo();
+      break;
+    case 'ArrowLeft':
+    case 'p':
+      e.preventDefault();
+      playPreviousVideo();
+      break;
+    case 'c':
+      e.preventDefault();
+      markVideoComplete();
+      break;
+    case 'Escape':
+      const nav = document.getElementById('academy-levels');
+      if (nav?.classList.contains('open')) {
+        nav.classList.remove('open');
+      }
+      break;
+  }
+});
+
+// Play previous video
+function playPreviousVideo() {
+  if (!currentVideoId) return;
+  const currentIndex = academyVideos.findIndex(v => v.id === currentVideoId);
+  if (currentIndex > 0) {
+    playVideo(academyVideos[currentIndex - 1].id);
+  }
+}
+
 async function loadAcademyVideos() {
   try {
     // Load all videos
@@ -19736,12 +19899,20 @@ function playVideo(videoId) {
   const levelGroup = document.querySelector(`.level-group[data-level="${video.level}"]`);
   if (levelGroup) levelGroup.classList.add('open');
   
+  // Update complete button state
+  updateCompleteButtonState(videoId);
+  
   // Load notebook for this video
   loadNotebookForVideo(videoId);
+  
+  // Close mobile nav after selecting video
+  document.getElementById('academy-levels')?.classList.remove('open');
 }
 
 async function markVideoComplete() {
   if (!currentVideoId || !authUser) return;
+  
+  const btn = document.getElementById('mark-complete-btn');
   
   try {
     const { error } = await supabaseClient
@@ -19760,10 +19931,31 @@ async function markVideoComplete() {
     renderAcademyLevels();
     updateProgressRing();
     
+    // Visual feedback on button
+    if (btn) {
+      btn.classList.add('completed');
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+    }
+    
     // Keep current video highlighted
     document.querySelector(`.video-item[data-video-id="${currentVideoId}"]`)?.classList.add('active');
   } catch (e) {
     alert('Error saving progress: ' + e.message);
+  }
+}
+
+// Update complete button state when playing a video
+function updateCompleteButtonState(videoId) {
+  const btn = document.getElementById('mark-complete-btn');
+  if (!btn) return;
+  
+  const isComplete = academyProgress[videoId]?.completed;
+  if (isComplete) {
+    btn.classList.add('completed');
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+  } else {
+    btn.classList.remove('completed');
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>';
   }
 }
 
@@ -19781,7 +19973,9 @@ function updateProgressRing() {
   const total = academyVideos.length || 1;
   const percent = Math.round((completed / total) * 100);
   
+  // Update sidebar ring
   document.getElementById('videos-completed').textContent = completed;
+  document.getElementById('videos-total').textContent = total;
   document.getElementById('progress-percent').textContent = percent + '%';
   
   // Update circle
@@ -19789,6 +19983,12 @@ function updateProgressRing() {
   const circumference = 125.6; // 2 * PI * 20
   const offset = circumference - (percent / 100) * circumference;
   circle.style.strokeDashoffset = offset;
+  
+  // Update progress header bar
+  const progressFill = document.getElementById('course-progress-fill');
+  const progressText = document.getElementById('course-progress-percent');
+  if (progressFill) progressFill.style.width = percent + '%';
+  if (progressText) progressText.textContent = percent + '%';
 }
 
 async function addAcademyVideo() {
