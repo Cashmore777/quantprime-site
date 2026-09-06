@@ -6179,10 +6179,28 @@ body {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     border-radius: 0;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.3);
   }
   
   .level-nav.open {
     transform: translateX(0);
+  }
+  
+  /* Overlay behind mobile nav */
+  .level-nav::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: -1;
+  }
+  
+  .level-nav.open::before {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 
@@ -6434,6 +6452,150 @@ body {
   flex: 1;
   min-height: 0;
   overflow: hidden;
+}
+
+/* Academy Notebook - Compact */
+.academy-notebook {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 140px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.notebook-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+.notebook-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+.notebook-tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--gold-glow);
+  color: var(--gold);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.notebook-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notebook-status {
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.btn-icon.sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+}
+
+.notebook-textarea {
+  flex: 1;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  font-size: 13px;
+  line-height: 1.5;
+  resize: none;
+  font-family: var(--sans);
+  background: var(--surface);
+  color: var(--text-1);
+}
+
+.notebook-textarea::placeholder {
+  color: var(--text-3);
+}
+
+.notebook-textarea:focus {
+  outline: none;
+}
+
+/* Academy Admin Modal */
+.academy-admin-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.admin-modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-modal-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.admin-modal-body {
+  padding: 20px;
+}
+
+/* Mobile nav toggle - only show on mobile */
+.mobile-nav-toggle {
+  display: none;
+}
+
+@media (max-width: 650px) {
+  .mobile-nav-toggle {
+    display: flex;
+    flex-shrink: 0;
+  }
+  
+  .academy-progress-header .progress-info {
+    max-width: 150px;
+  }
+  
+  .academy-progress-header {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  
+  .academy-progress-header .progress-percentage {
+    display: none;
+  }
 }
 
 .video-player {
@@ -10297,6 +10459,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
       <div class="video-section">
         <!-- Progress Bar Header -->
         <div class="academy-progress-header">
+          <button class="btn-icon mobile-nav-toggle" onclick="toggleAcademyNav()" title="Toggle Lessons">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
           <div class="progress-info">
             <span class="current-lesson-title" id="progress-lesson-title">Select a lesson to begin</span>
             <span class="lesson-meta" id="progress-lesson-meta"></span>
@@ -10334,9 +10499,36 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <p id="video-info-desc"></p>
         </div>
         
-        <!-- Admin: Add Video (only visible to admins) -->
-        <div class="panel admin-only" id="academy-admin" style="margin-top: 20px; display: none;">
+        <!-- Notebook - Compact for viewport fit -->
+        <div class="academy-notebook" id="notebook-panel">
+          <div class="notebook-header">
+            <div class="notebook-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              <span>Notes</span>
+              <span class="notebook-tag" id="notebook-lesson-tag">No lesson</span>
+            </div>
+            <div class="notebook-actions">
+              <span id="notebook-status" class="notebook-status"></span>
+              <button class="btn-icon sm" onclick="viewAllNotes()" title="View All Notes">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><path d="M12 18v-6M9 15l3-3 3 3"/></svg>
+              </button>
+            </div>
+          </div>
+          <textarea id="notebook-content" class="notebook-textarea" placeholder="Take notes while watching..."></textarea>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Admin: Add Video Modal (hidden, triggered from level-nav) -->
+    <div class="academy-admin-modal" id="academy-admin" style="display: none;">
+      <div class="admin-modal-content">
+        <div class="admin-modal-header">
           <h4>Add New Video</h4>
+          <button class="btn-icon sm" onclick="document.getElementById('academy-admin').style.display='none'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="admin-modal-body">
           <div class="grid-2">
             <div class="form-row">
               <label>Level (1-9)</label>
@@ -10371,30 +10563,6 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </div>
           <button class="btn sm" onclick="addAcademyVideo()">Add Video</button>
           <div id="add-video-result" style="margin-top: 12px; font-size: 13px;"></div>
-        </div>
-        
-        <!-- Notebook -->
-        <div class="panel" id="notebook-panel" style="margin-top: 20px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h4 style="margin: 0; display: flex; align-items: center; gap: 10px;">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
-              Your Notebook
-            </h4>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <input type="text" id="notebook-search" placeholder="Search notes..." style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; width: 180px;">
-              <span id="notebook-status" style="font-size: 11px; color: var(--text-3);"></span>
-            </div>
-          </div>
-          <textarea id="notebook-content" placeholder="Take notes while watching... Your notes are saved automatically and linked to this lesson." style="width: 100%; min-height: 180px; padding: 16px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; line-height: 1.7; resize: vertical; font-family: var(--sans); background: var(--surface-raised);"></textarea>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-            <div style="font-size: 11px; color: var(--text-3);">
-              <span id="notebook-lesson-tag" style="background: var(--gold-glow); color: var(--gold); padding: 3px 8px; border-radius: 4px; font-weight: 500;">No lesson selected</span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn outline sm" onclick="viewAllNotes()">View All Notes</button>
-              <button class="btn sm" onclick="saveNote()">Save Note</button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -19133,6 +19301,21 @@ let academyVideos = [];
 let academyProgress = {};
 let currentVideoId = null;
 
+// Toggle mobile level navigation
+function toggleAcademyNav() {
+  const nav = document.getElementById('academy-levels');
+  nav.classList.toggle('open');
+}
+
+// Close academy nav when clicking outside (mobile)
+document.addEventListener('click', (e) => {
+  const nav = document.getElementById('academy-levels');
+  const toggle = e.target.closest('.mobile-nav-toggle');
+  if (nav && nav.classList.contains('open') && !nav.contains(e.target) && !toggle) {
+    nav.classList.remove('open');
+  }
+});
+
 async function loadAcademyVideos() {
   try {
     // Load all videos
@@ -19165,9 +19348,14 @@ async function loadAcademyVideos() {
     // Auto-resume to next uncompleted video
     autoResumeVideo();
     
-    // Show admin controls if admin
+    // Show admin button if admin
     if (userTier === 'admin') {
-      document.getElementById('academy-admin').style.display = 'block';
+      const adminBtn = document.createElement('button');
+      adminBtn.className = 'btn sm';
+      adminBtn.style.cssText = 'margin: 12px 16px; width: calc(100% - 32px);';
+      adminBtn.innerHTML = '+ Add Video';
+      adminBtn.onclick = () => document.getElementById('academy-admin').style.display = 'flex';
+      document.getElementById('academy-levels').appendChild(adminBtn);
     }
   } catch (e) {
     console.error('Error loading academy:', e);
