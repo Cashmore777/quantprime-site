@@ -6244,14 +6244,13 @@ body {
   display: none; /* Removed gradient fade - using saved notes instead */
 }
 
-/* Saved Notes Section in Sidebar */
+/* Saved Notes Section in Sidebar - fills remaining space */
 .saved-notes-section {
-  margin-top: auto;
+  flex: 1; /* Fill remaining space after level-list */
+  min-height: 100px; /* Minimum usable height */
   padding: 8px;
   border-top: 1px solid var(--border);
   background: var(--surface);
-  flex-shrink: 0;
-  max-height: 200px;
   overflow-y: auto;
 }
 
@@ -6387,10 +6386,11 @@ body {
   filter: drop-shadow(0 0 6px rgba(201,168,76,0.3));
 }
 
-/* Level list - scrollable area only */
+/* Level list - scrollable area, fits content, doesn't push notes down */
 #level-list {
-  flex: 1;
-  min-height: 0; /* CRITICAL: allows flex child to shrink */
+  flex: 0 0 auto; /* Don't grow - fit content only */
+  max-height: 60%; /* Cap height so notes get space */
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 6px;
@@ -6535,12 +6535,12 @@ body {
 .video-section {
   display: grid;
   grid-template-rows: auto 1fr 90px; /* header auto, video fills, notes fixed 90px */
-  gap: 4px; /* Tighter spacing between header/video/notes */
+  gap: 0; /* NO gap between header and video */
   height: 100%;
   min-height: 0; /* CRITICAL: allows grid to shrink */
   overflow: hidden;
   background: var(--bg);
-  padding: 4px 12px 8px;
+  padding: 0 12px 8px; /* Remove top padding */
   position: relative;
 }
 
@@ -6565,6 +6565,7 @@ body {
 
 .video-section .video-player-wrapper {
   z-index: 2;
+  margin-top: 0; /* No gap after header */
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -6581,6 +6582,7 @@ body {
   flex-shrink: 0;
   min-height: 0;
   box-shadow: var(--shadow-sm);
+  margin-bottom: 0; /* No gap to video */
 }
 
 .academy-progress-header .progress-info {
@@ -6726,8 +6728,8 @@ body {
 /* Mobile */
 @media (max-width: 650px) {
   .video-section {
-    padding: 8px;
-    gap: 6px;
+    padding: 0 8px 8px;
+    gap: 0; /* NO gap on mobile too */
     grid-template-rows: auto 1fr 80px;
   }
   
@@ -7458,9 +7460,10 @@ body {
   max-height: 90px;
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* Enhanced card shadow */
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 4px; /* Small gap from video only */
 }
 
 /* Premium gradient accent bar on notebook */
@@ -21301,11 +21304,35 @@ function getLessonName(videoId) {
   return video ? `L${video.level}.${video.position}` : 'Note';
 }
 
+// Global variable to track current video playback time from Bunny Stream
+let currentVideoPlaybackTime = 0;
+
+// Listen for Bunny Stream postMessage events for time updates
+window.addEventListener('message', function(e) {
+  // Bunny Stream sends time updates via postMessage
+  if (e.data && typeof e.data === 'object') {
+    // Handle Bunny Stream time update events
+    if (e.data.event === 'timeupdate' || e.data.type === 'timeupdate') {
+      currentVideoPlaybackTime = e.data.currentTime || e.data.time || 0;
+    }
+    // Also handle general video time messages
+    if (typeof e.data.currentTime === 'number') {
+      currentVideoPlaybackTime = e.data.currentTime;
+    }
+  }
+});
+
 function getVideoTimestamp() {
-  // Try to get current timestamp from video iframe
-  const iframe = document.getElementById('video-iframe');
-  // For now, return placeholder - could integrate with Bunny/Vimeo API
-  return '@0:00';
+  // Format the tracked video time as @M:SS or @H:MM:SS
+  const totalSeconds = Math.floor(currentVideoPlaybackTime);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  
+  if (hours > 0) {
+    return `@${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }
+  return `@${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
 async function saveNoteToSidebar() {
