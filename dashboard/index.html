@@ -6576,15 +6576,16 @@ body {
 .academy-progress-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px;
+  gap: 12px;
+  padding: 10px 16px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px 10px 0 0; /* Rounded top only */
+  border-bottom: none; /* Connect with video */
   flex-shrink: 0;
   min-height: 0;
   box-shadow: var(--shadow-sm);
-  margin-bottom: 0; /* No gap to video */
+  margin-bottom: 0;
 }
 
 .academy-progress-header .progress-info {
@@ -7137,18 +7138,18 @@ body {
    ═══════════════════════════════════════════════════════════════════════ */
 .level-progress-segments {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex: 1;
-  max-width: 200px;
-  min-width: 120px;
+  max-width: 300px;
+  min-width: 180px;
 }
 
 .level-progress-segments .segment {
   flex: 1;
-  height: 8px;
+  height: 12px;
   background: rgba(201,168,76,0.15);
-  border-radius: 4px;
-  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(201,168,76,0.2);
   transition: all 0.4s ease;
   position: relative;
   overflow: hidden;
@@ -7157,7 +7158,7 @@ body {
 .level-progress-segments .segment.completed {
   background: linear-gradient(90deg, var(--gold), #d4b85a);
   border-color: var(--gold);
-  box-shadow: 0 0 12px rgba(201,168,76,0.4), 0 0 4px rgba(201,168,76,0.3);
+  box-shadow: 0 0 16px rgba(201,168,76,0.5), 0 0 6px rgba(201,168,76,0.4);
 }
 
 .level-progress-segments .segment.active {
@@ -7590,7 +7591,7 @@ body:has(#view-academy.active) #qp-support-widget {
 .video-player {
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, #0a0a0f 0%, #111117 40%, #0a0a0f 100%);
-  border-radius: 10px;
+  border-radius: 0 0 10px 10px; /* Rounded bottom only - connects with header */
   overflow: hidden;
   position: relative;
   width: 100%;
