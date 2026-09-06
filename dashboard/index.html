@@ -6236,6 +6236,20 @@ body {
   overflow: hidden; /* No scroll on container */
   box-shadow: none;
   transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Gradient fade at bottom to avoid trailing into empty space */
+.level-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--surface) 80%);
+  pointer-events: none;
+  z-index: 2;
 }
 
 /* Progress ring - compact header */
@@ -6363,8 +6377,11 @@ body {
 .video-item.active {
   background: var(--gold-glow);
   color: var(--text-1);
-  border-left: 2px solid var(--gold);
+  border: 1px solid var(--gold);
+  border-left: 3px solid var(--gold);
   margin-left: -2px;
+  box-shadow: 0 0 0 1px var(--gold), 0 0 12px rgba(201,168,76,0.25);
+  border-radius: 5px;
 }
 
 .video-item.completed .video-status { 
@@ -6414,12 +6431,12 @@ body {
 .video-section {
   display: grid;
   grid-template-rows: auto 1fr 90px; /* header auto, video fills, notes fixed 90px */
-  gap: 8px;
+  gap: 6px; /* Tighter spacing between header/video/notes */
   height: 100%;
   min-height: 0; /* CRITICAL: allows grid to shrink */
   overflow: hidden;
   background: var(--bg);
-  padding: 8px 12px;
+  padding: 6px 12px 8px;
   position: relative;
 }
 
@@ -6453,12 +6470,13 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
+  padding: 6px 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 8px;
   flex-shrink: 0;
   min-height: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .academy-progress-header .progress-info {
@@ -6507,9 +6525,10 @@ body {
 .academy-progress-header .progress-bar-track {
   flex: 1;
   height: 6px;
-  background: var(--surface-raised);
+  background: rgba(201,168,76,0.15); /* Visible gold-tinted track */
   border-radius: 3px;
   overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.1);
 }
 
 .academy-progress-header .progress-bar-fill {
@@ -6589,7 +6608,7 @@ body {
 .academy-notebook {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--card-radius);
   display: flex;
   flex-direction: column;
   height: 90px; /* Fixed height - matches grid row */
@@ -6597,10 +6616,28 @@ body {
   max-height: 90px;
   flex-shrink: 0;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium gradient accent bar on notebook */
+.academy-notebook::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  border-radius: 4px 0 0 4px;
+  opacity: 0.7;
 }
 
 .academy-notebook:hover {
   border-color: var(--border-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -7056,7 +7093,9 @@ body {
 }
 
 [data-theme="dark"] .video-item.active {
-  background: rgba(201,168,76,0.1);
+  background: rgba(201,168,76,0.12);
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 14px rgba(201,168,76,0.3);
 }
 
 [data-theme="dark"] .academy-progress-header {
@@ -7064,9 +7103,15 @@ body {
   border-color: var(--border);
 }
 
+[data-theme="dark"] .academy-progress-header .progress-bar-track {
+  background: rgba(201,168,76,0.12);
+  border-color: rgba(201,168,76,0.15);
+}
+
 [data-theme="dark"] .academy-notebook {
   background: var(--surface);
   border-color: var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 [data-theme="dark"] .notebook-header {
@@ -20253,7 +20298,14 @@ function playVideo(videoId) {
     placeholder.style.display = 'none';
     player.classList.add('loading');
     iframe.classList.add('active');
-    iframe.src = video.video_url;
+    
+    // Add gold primary color to Bunny embed URL
+    let videoUrl = video.video_url;
+    if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
+      const separator = videoUrl.includes('?') ? '&' : '?';
+      videoUrl = videoUrl + separator + 'primaryColor=%23c9a84c';
+    }
+    iframe.src = videoUrl;
     
     // Remove loading state when iframe loads
     iframe.onload = () => player.classList.remove('loading');
