@@ -6735,10 +6735,41 @@ body {
 
 .notebook-textarea::placeholder {
   color: var(--text-3);
+  font-style: italic;
+  opacity: 0.7;
 }
 
 .notebook-textarea:focus {
   outline: none;
+  background: var(--surface-raised);
+}
+
+/* Notebook focused state - expand slightly */
+.academy-notebook:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+}
+
+.academy-notebook:focus-within .notebook-header {
+  border-bottom-color: rgba(201,168,76,0.2);
+}
+
+/* Custom scrollbar for notebook */
+.notebook-textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notebook-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notebook-textarea::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.notebook-textarea::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
 }
 
 /* Academy Admin Modal */
@@ -10842,8 +10873,11 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <div class="notebook-actions">
               <span id="notebook-char-count" class="notebook-char-count">0</span>
               <span id="notebook-status" class="notebook-status"></span>
-              <button class="btn-icon sm" onclick="viewAllNotes()" title="View All Notes">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><path d="M12 18v-6M9 15l3-3 3 3"/></svg>
+              <button class="btn-icon sm" onclick="copyNotes()" title="Copy Notes">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              </button>
+              <button class="btn-icon sm" onclick="viewAllNotes()" title="All Notes">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
               </button>
             </div>
           </div>
@@ -20159,7 +20193,8 @@ async function loadNotebookForVideo(videoId) {
     if (data && !error) {
       textarea.value = data.content || '';
       currentNotes[videoId] = data.content || '';
-      if (charCount) charCount.textContent = (data.content || '').length || '0';
+      const words = (data.content || '').trim() ? (data.content || '').trim().split(/\s+/).length : 0;
+      if (charCount) charCount.textContent = words > 0 ? `${words}w` : '0';
     } else {
       textarea.value = '';
       currentNotes[videoId] = '';
@@ -20176,9 +20211,10 @@ document.getElementById('notebook-content')?.addEventListener('input', function(
   const statusEl = document.getElementById('notebook-status');
   const charCount = document.getElementById('notebook-char-count');
   
-  // Update character count
+  // Update character count and word count
   const len = this.value.length;
-  if (charCount) charCount.textContent = len > 0 ? len : '0';
+  const words = this.value.trim() ? this.value.trim().split(/\s+/).length : 0;
+  if (charCount) charCount.textContent = len > 0 ? `${words}w` : '0';
   
   // Show saving status
   statusEl.textContent = 'Saving...';
@@ -20244,7 +20280,16 @@ async function viewAllNotes() {
     if (error) throw error;
     
     if (!notes || notes.length === 0) {
-      alert('No notes yet. Start taking notes while watching lessons!');
+      showModal('Your Notes', `
+        <div style="text-align: center; padding: 40px 20px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="opacity: 0.5; margin-bottom: 16px;">
+            <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">No notes yet</h3>
+          <p style="color: var(--text-2); font-size: 14px;">Start taking notes while watching lessons.<br>They'll appear here, organized by video.</p>
+        </div>
+      `);
       return;
     }
     
@@ -20270,11 +20315,89 @@ async function viewAllNotes() {
     }
     notesHtml += '</div>';
     
+    // Add export button
+    notesHtml += `
+      <button class="btn outline sm" onclick="exportAllNotes()" style="margin-top: 16px; width: 100%;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export All Notes
+      </button>
+    `;
+    
     showModal('Your Notes', notesHtml);
   } catch (e) {
     console.error('Error loading notes:', e);
     alert('Error loading notes');
   }
+}
+
+async function exportAllNotes() {
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    
+    const { data: notes, error } = await supabaseClient
+      .from('academy_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('updated_at', { ascending: false });
+    
+    if (error) throw error;
+    if (!notes || notes.length === 0) {
+      alert('No notes to export');
+      return;
+    }
+    
+    // Build markdown export
+    let markdown = '# Quant Prime Academy Notes\n\n';
+    markdown += `Exported: ${new Date().toLocaleDateString()}\n\n---\n\n`;
+    
+    for (const note of notes) {
+      const video = academyVideos.find(v => v.id === note.video_id);
+      const title = video ? `Level ${video.level}.${video.position}: ${video.title}` : 'Unknown Lesson';
+      const date = new Date(note.updated_at).toLocaleDateString();
+      
+      markdown += `## ${title}\n`;
+      markdown += `*Updated: ${date}*\n\n`;
+      markdown += note.content + '\n\n---\n\n';
+    }
+    
+    // Download as file
+    const blob = new Blob([markdown], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `quant-prime-notes-${new Date().toISOString().split('T')[0]}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    closeModal();
+  } catch (e) {
+    console.error('Export error:', e);
+    alert('Error exporting notes');
+  }
+}
+
+function copyNotes() {
+  const content = document.getElementById('notebook-content').value;
+  if (!content) {
+    const statusEl = document.getElementById('notebook-status');
+    statusEl.textContent = 'No notes';
+    statusEl.className = 'notebook-status';
+    setTimeout(() => { statusEl.textContent = ''; }, 1500);
+    return;
+  }
+  
+  navigator.clipboard.writeText(content).then(() => {
+    const statusEl = document.getElementById('notebook-status');
+    statusEl.textContent = '✓ Copied';
+    statusEl.className = 'notebook-status saved';
+    setTimeout(() => { 
+      statusEl.textContent = ''; 
+      statusEl.className = 'notebook-status';
+    }, 1500);
+  }).catch(err => {
+    console.error('Copy failed:', err);
+  });
 }
 
 function jumpToNote(videoId) {
