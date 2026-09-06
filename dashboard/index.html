@@ -21651,6 +21651,18 @@ function openNotePopup(index) {
   
   const video = academyVideos.find(v => v.id === note.videoId);
   const lessonTitle = video ? video.title : note.lessonName;
+  const isSameVideo = note.videoId === currentVideoId;
+  
+  // Context-aware primary action
+  const primaryAction = isSameVideo
+    ? `<button class="btn-secondary sm" onclick="skipToNoteTime('${note.videoTimestamp}'); this.closest('.note-popup-overlay').remove();">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4l10 8-10 8V4z"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        Skip to Time
+      </button>`
+    : `<button class="btn-secondary sm" onclick="jumpToNoteVideo('${note.videoId}'); this.closest('.note-popup-overlay').remove();">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Go to Video
+      </button>`;
   
   const popup = document.createElement('div');
   popup.className = 'note-popup-overlay';
@@ -21667,10 +21679,7 @@ function openNotePopup(index) {
       </div>
       <div class="note-popup-content">${note.content}</div>
       <div class="note-popup-actions">
-        <button class="btn-secondary sm" onclick="jumpToNoteVideo('${note.videoId}'); this.closest('.note-popup-overlay').remove();">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Go to Video
-        </button>
+        ${primaryAction}
         <button class="btn-secondary sm" onclick="deleteNote(${index}); this.closest('.note-popup-overlay').remove();">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
           Delete
@@ -21681,6 +21690,31 @@ function openNotePopup(index) {
   
   popup.onclick = (e) => { if (e.target === popup) popup.remove(); };
   document.body.appendChild(popup);
+}
+
+// Skip to timestamp in current video (seek + auto-play)
+function skipToNoteTime(timestamp) {
+  if (!window.currentVimeoPlayer) return;
+  
+  // Parse timestamp like "@0:32" or "@1:05:32"
+  const clean = timestamp.replace('@', '').trim();
+  const parts = clean.split(':').map(Number);
+  let seconds = 0;
+  
+  if (parts.length === 3) {
+    // H:MM:SS
+    seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+  } else if (parts.length === 2) {
+    // M:SS
+    seconds = parts[0] * 60 + parts[1];
+  } else {
+    seconds = parts[0] || 0;
+  }
+  
+  // Seek and play
+  window.currentVimeoPlayer.setCurrentTime(seconds).then(() => {
+    window.currentVimeoPlayer.play();
+  });
 }
 
 function jumpToNoteVideo(videoId) {
