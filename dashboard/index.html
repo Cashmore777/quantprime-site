@@ -10138,6 +10138,8 @@ button, .nav-item, .room, .video-item, .filter-chip {
   }
 }
 </style>
+<!-- Vimeo Player API -->
+<script src="https://player.vimeo.com/api/player.js"></script>
 </head>
 <body>
 
@@ -20806,27 +20808,53 @@ function playVideo(videoId) {
     player.classList.add('loading');
     iframe.classList.add('active');
     
-    // Add gold primary color and enable API for Bunny embed URL
-    let videoUrl = video.video_url;
-    if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
-      const separator = videoUrl.includes('?') ? '&' : '?';
-      // Enable API, responsive mode, and set gold color
-      videoUrl = videoUrl + separator + 'responsive=true&color=%23c9a84c&primaryColor=%23c9a84c&autoplay=false&preload=true&controls=true';
-    }
-    iframe.src = videoUrl;
-    
     // Reset video playback time when loading new video
     currentVideoPlaybackTime = 0;
     
-    // Request time updates from Bunny iframe after it loads
-    iframe.onload = () => {
-      player.classList.remove('loading');
-      // Try to enable Bunny API communication
-      try {
-        iframe.contentWindow.postMessage({ action: 'getTime' }, '*');
-        iframe.contentWindow.postMessage({ command: 'addEventListener', value: 'timeupdate' }, '*');
-      } catch(e) { /* cross-origin may block this */ }
-    };
+    let videoUrl = video.video_url;
+    
+    // Check if it's a Vimeo URL
+    if (videoUrl.includes('vimeo.com')) {
+      // Add Vimeo player options
+      const separator = videoUrl.includes('?') ? '&' : '?';
+      videoUrl = videoUrl + separator + 'color=c9a84c&title=0&byline=0&portrait=0';
+      iframe.src = videoUrl;
+      
+      // Initialize Vimeo Player API for time tracking
+      iframe.onload = () => {
+        player.classList.remove('loading');
+        try {
+          const vimeoPlayer = new Vimeo.Player(iframe);
+          
+          // Track time updates
+          vimeoPlayer.on('timeupdate', function(data) {
+            currentVideoPlaybackTime = data.seconds;
+            // Update timestamp display
+            const timeDisplay = document.getElementById('current-video-time');
+            if (timeDisplay) {
+              const mins = Math.floor(data.seconds / 60);
+              const secs = Math.floor(data.seconds % 60);
+              timeDisplay.textContent = `@${mins}:${String(secs).padStart(2, '0')}`;
+            }
+          });
+          
+          // Store player reference for later use
+          window.currentVimeoPlayer = vimeoPlayer;
+        } catch(e) {
+          console.log('Vimeo Player init error:', e);
+        }
+      };
+    } else if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
+      // Bunny Stream URL
+      const separator = videoUrl.includes('?') ? '&' : '?';
+      videoUrl = videoUrl + separator + 'responsive=true&color=%23c9a84c&primaryColor=%23c9a84c&autoplay=false&preload=true&controls=true';
+      iframe.src = videoUrl;
+      iframe.onload = () => player.classList.remove('loading');
+    } else {
+      // Generic video URL
+      iframe.src = videoUrl;
+      iframe.onload = () => player.classList.remove('loading');
+    }
     
     // Handle iframe errors
     iframe.onerror = () => {
