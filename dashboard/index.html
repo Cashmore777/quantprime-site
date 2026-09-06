@@ -7530,8 +7530,13 @@ body {
    CHAT WIDGET ADJUSTMENT FOR ACADEMY
    ═══════════════════════════════════════════════════════════════════════ */
 body:has(#view-academy.active) #qp-support-widget {
-  bottom: 160px !important;
-  right: 20px !important;
+  /* Move to top left of header area, smaller */
+  top: 6px !important;
+  left: calc(var(--sidebar-width) + 12px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: scale(0.7);
+  transform-origin: top left;
 }
 
 @media (max-width: 820px) {
