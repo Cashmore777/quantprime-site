@@ -1822,6 +1822,8 @@ const QPTour = (function() {
   }
 
   function exit() {
+    // Mark tour as skipped to prevent auto-restart
+    localStorage.setItem('qp_tour_skipped', Date.now().toString());
     cleanup();
     if (typeof showToast === 'function') {
       showToast('Tour skipped - restart anytime from settings', 'info');
@@ -1958,6 +1960,11 @@ const QPTour = (function() {
   // ═══════════════════════════════════════════════════════════════════════
 
   async function shouldAutoStart(userTier) {
+    // Don't auto-start if user has skipped the tour
+    if (localStorage.getItem('qp_tour_skipped')) {
+      return false;
+    }
+    
     const tierSections = TIER_SECTIONS[userTier] || [];
     if (tierSections.length === 0) return false;
     
@@ -1971,6 +1978,7 @@ const QPTour = (function() {
 
   async function resetProgress() {
     localStorage.removeItem('qp_tour_progress');
+    localStorage.removeItem('qp_tour_skipped'); // Clear skip flag too
     
     try {
       if (typeof supabaseClient !== 'undefined' && authUser?.id) {
