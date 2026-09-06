@@ -1,7 +1,15 @@
 /**
- * QP Dashboard Onboarding Tour Engine v40
+ * QP Dashboard Onboarding Tour Engine v41
  * 
  * Changelog:
+ * v41 - DESKTOP VIEWPORT POLISH
+ *   - Added window resize listener for viewport changes
+ *   - Debounced resize handling with instant repositioning
+ *   - Increased callout width on desktop (360px)
+ *   - Better scroll detection for desktop with sidebar
+ *   - Fixed m-dash in toast message
+ *   - Improved space calculations accounting for sidebar
+ * 
  * v38 - USE TARGET BOUNDS FOR CALLOUT POSITIONING
  *   - Use fresh target element bounds instead of spotlight bounds
  *   - Spotlight bounds calculated from target + padding (more reliable)
@@ -437,19 +445,61 @@ const QPTour = (function() {
 
   function startResizeObserver() {
     if (resizeObserver) resizeObserver.disconnect();
+    
+    let resizeTimeout;
     resizeObserver = new ResizeObserver(() => {
       if (isActive && elements.spotlight) {
-        // Recalculate position on resize
-        const step = allSteps[currentStepIndex];
-        if (step) {
-          const target = document.querySelector(step.selector);
-          if (target) {
-            repositionElements(target, step);
+        // Debounce resize events for smooth repositioning
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const step = allSteps[currentStepIndex];
+          if (step) {
+            const target = document.querySelector(step.selector);
+            if (target) {
+              // Disable transitions during resize for instant repositioning
+              elements.spotlight.style.transition = 'none';
+              elements.callout.style.transition = 'none';
+              
+              repositionElements(target, step);
+              
+              // Re-enable transitions after a frame
+              requestAnimationFrame(() => {
+                elements.spotlight.style.transition = '';
+                elements.callout.style.transition = '';
+              });
+            }
           }
-        }
+        }, 50);
       }
     });
     resizeObserver.observe(document.body);
+    
+    // Also listen for window resize (catches viewport changes)
+    window.addEventListener('resize', handleWindowResize);
+  }
+  
+  let windowResizeTimeout;
+  function handleWindowResize() {
+    if (!isActive || !elements.spotlight) return;
+    
+    clearTimeout(windowResizeTimeout);
+    windowResizeTimeout = setTimeout(() => {
+      const step = allSteps[currentStepIndex];
+      if (step) {
+        const target = document.querySelector(step.selector);
+        if (target) {
+          elements.spotlight.style.transition = 'none';
+          elements.callout.style.transition = 'none';
+          
+          repositionElements(target, step);
+          
+          requestAnimationFrame(() => {
+            elements.spotlight.style.transition = '';
+            elements.callout.style.transition = '';
+          });
+        }
+      }
+    }, 100);
   }
 
   function stopResizeObserver() {
@@ -457,6 +507,7 @@ const QPTour = (function() {
       resizeObserver.disconnect();
       resizeObserver = null;
     }
+    window.removeEventListener('resize', handleWindowResize);
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -672,8 +723,8 @@ const QPTour = (function() {
          ═══════════════════════════════════════════════════════════════════ */
       .tour-callout {
         position: fixed;
-        width: 320px;
-        max-width: min(85vw, 320px);
+        width: 340px;
+        max-width: min(85vw, 340px);
         opacity: 0;
         transform: translateY(12px) scale(0.96);
         transition: 
@@ -683,6 +734,26 @@ const QPTour = (function() {
           left ${TIMING.spotlightMove}ms ${EASING.smooth};
         pointer-events: auto;
         z-index: 2;
+      }
+      
+      /* Desktop: slightly larger callout for better readability */
+      @media (min-width: 651px) {
+        .tour-callout {
+          width: 360px;
+          max-width: 360px;
+        }
+        
+        .tour-callout-inner {
+          padding: 28px;
+        }
+        
+        .tour-title {
+          font-size: 20px;
+        }
+        
+        .tour-content {
+          font-size: 15px;
+        }
       }
       
       .tour-callout.visible {
@@ -1244,24 +1315,30 @@ const QPTour = (function() {
     
     const main = getScrollContainer();
     const isMobile = window.innerWidth <= 650;
-    const headerHeight = isMobile ? 60 : 0;
-    const navHeight = isMobile ? 90 : 0;
+    const headerHeight = isMobile ? 60 : 20; // Desktop has some top padding
+    const navHeight = isMobile ? 90 : 20; // Desktop has some bottom padding
     
     // Calculate target scroll position in ONE motion
     const rect = element.getBoundingClientRect();
-    const safeTop = headerHeight + 100;
-    const safeBottom = window.innerHeight - navHeight - 100;
+    const safeTop = headerHeight + 120; // Extra room for callout above
+    const safeBottom = window.innerHeight - navHeight - 120; // Extra room for callout below
     const safeCenterY = (safeTop + safeBottom) / 2;
     const elemCenterY = rect.top + rect.height / 2;
     const scrollAdjust = elemCenterY - safeCenterY;
     
-    if (main && Math.abs(scrollAdjust) > 20) {
+    // On desktop, also check if element is horizontally scrolled out of view
+    const isVisible = rect.top >= headerHeight && 
+                      rect.bottom <= window.innerHeight - navHeight &&
+                      rect.left >= (isMobile ? 0 : 280) && // Account for sidebar
+                      rect.right <= window.innerWidth;
+    
+    if (main && (Math.abs(scrollAdjust) > 50 || !isVisible)) {
       const newScroll = Math.max(0, main.scrollTop + scrollAdjust);
       main.scrollTo({
         top: newScroll,
         behavior: 'smooth'
       });
-      await sleep(400); // Single wait for scroll to complete
+      await sleep(450); // Slightly longer wait for smooth scroll to complete
     } else {
       await sleep(100);
     }
@@ -1516,13 +1593,13 @@ const QPTour = (function() {
   function positionCallout(preferredPosition, spotlight) {
     const callout = elements.callout;
     const arrow = elements.arrow;
-    const gap = 12; // Increased from 16 for more breathing room
+    const gap = 16; // Comfortable gap between spotlight and callout
     
     const isMobile = window.innerWidth <= 650;
-    // Mobile: 85vw max, capped at 320px. 16px margins on each side.
+    // Mobile: 85vw max, capped at 320px. Desktop: 340px for more breathing room.
     const calloutWidth = isMobile 
       ? Math.min(window.innerWidth * 0.85, 320) 
-      : 320;
+      : 340;
     
     // Get callout height
     callout.style.visibility = 'hidden';
@@ -1534,11 +1611,13 @@ const QPTour = (function() {
     const vh = window.innerHeight;
     const headerOffset = isMobile ? 60 : 0;
     const navOffset = isMobile ? 90 : 0;
+    // Account for sidebar on desktop
+    const sidebarOffset = isMobile ? 0 : 280;
     
     // Available space (accounting for the gap requirement)
     const spaceAbove = spotlight.top - headerOffset - 20;
     const spaceBelow = vh - spotlight.bottom - navOffset - 20;
-    const spaceLeft = spotlight.left - 20;
+    const spaceLeft = spotlight.left - sidebarOffset - 20;
     const spaceRight = vw - spotlight.right - 20;
     
     // Check what fits with the required gap
@@ -1745,7 +1824,7 @@ const QPTour = (function() {
   function exit() {
     cleanup();
     if (typeof showToast === 'function') {
-      showToast('Tour skipped — restart anytime from settings', 'info');
+      showToast('Tour skipped - restart anytime from settings', 'info');
     }
   }
 
