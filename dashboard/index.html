@@ -6326,6 +6326,7 @@ body {
   color: var(--text-1);
   border-left: 2px solid var(--gold);
   margin-left: -2px;
+  box-shadow: 0 2px 8px rgba(201,168,76,0.15);
 }
 
 .video-item.completed .video-status { 
@@ -6425,6 +6426,10 @@ body {
 .video-section > * {
   position: relative;
   z-index: 1;
+}
+
+.video-section .video-player-wrapper {
+  z-index: 2;
 }
 
 /* Academy Progress Header */
@@ -6580,6 +6585,7 @@ body {
   cursor: pointer;
   color: var(--text-2);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
 .btn-icon:hover {
@@ -6605,6 +6611,30 @@ body {
 .btn-icon.completed:hover {
   background: rgba(34,197,94,0.2);
   border-color: var(--success);
+}
+
+/* Keyboard shortcut hint */
+.btn-icon[title]::after {
+  content: attr(data-key);
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-3);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.video-controls:hover .btn-icon[data-key]::after {
+  opacity: 1;
+}
+
+/* Premium border on video controls */
+.academy-progress-header .video-controls {
+  background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 100%);
 }
 
 /* Video player wrapper for centering */
@@ -6662,6 +6692,12 @@ body {
   height: 140px;
   flex-shrink: 0;
   overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.academy-notebook:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-sm);
 }
 
 .notebook-header {
@@ -6996,7 +7032,7 @@ body {
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  border: 2px solid rgba(201,168,76,0.3);
+  border: 2px solid rgba(201,168,76,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7004,10 +7040,27 @@ body {
   color: var(--gold);
   cursor: pointer;
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(201,168,76,0.05);
+  background: rgba(201,168,76,0.08);
   box-shadow: 
+    0 0 0 4px rgba(201,168,76,0.1),
     0 0 0 8px rgba(201,168,76,0.05),
-    0 0 40px rgba(201,168,76,0.1);
+    0 0 40px rgba(201,168,76,0.15);
+  position: relative;
+}
+
+/* Outer decorative ring */
+.play-btn-large::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border: 1px dashed rgba(201,168,76,0.2);
+  border-radius: 50%;
+  animation: spin-slow 30s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .play-btn-large:hover {
@@ -7066,6 +7119,26 @@ body {
 
 .academy-iframe.active {
   display: block;
+}
+
+/* Loading spinner for video */
+.video-player.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 3px solid rgba(201,168,76,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 10;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* Video player has active video */
@@ -10901,13 +10974,13 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <span class="progress-percentage" id="course-progress-percent">0%</span>
           </div>
           <div class="video-controls">
-            <button class="btn-icon" onclick="playPreviousVideo()" title="Previous (P)">
+            <button class="btn-icon" onclick="playPreviousVideo()" title="Previous" data-key="P">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
             </button>
-            <button class="btn-icon" id="mark-complete-btn" onclick="markVideoComplete()" title="Mark Complete (C)">
+            <button class="btn-icon" id="mark-complete-btn" onclick="markVideoComplete()" title="Complete" data-key="C">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
             </button>
-            <button class="btn-icon" onclick="playNextVideo()" title="Next (N)">
+            <button class="btn-icon" onclick="playNextVideo()" title="Next" data-key="N">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
             </button>
           </div>
@@ -20052,11 +20125,16 @@ function playVideo(videoId) {
   const placeholder = document.getElementById('player-placeholder');
   const iframe = document.getElementById('video-iframe');
   const info = document.getElementById('video-info');
+  const player = document.getElementById('video-player');
   
   if (video.video_url) {
     placeholder.style.display = 'none';
+    player.classList.add('loading');
     iframe.classList.add('active');
     iframe.src = video.video_url;
+    
+    // Remove loading state when iframe loads
+    iframe.onload = () => player.classList.remove('loading');
   } else {
     placeholder.style.display = 'flex';
     iframe.classList.remove('active');
