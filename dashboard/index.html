@@ -6633,6 +6633,85 @@ body {
 .notebook-status {
   font-size: 10px;
   color: var(--text-3);
+  transition: all 0.2s ease;
+  min-width: 50px;
+  text-align: right;
+}
+
+.notebook-status.saving {
+  color: var(--gold) !important;
+}
+
+.notebook-status.saved {
+  color: var(--success) !important;
+}
+
+.notebook-char-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  padding: 2px 6px;
+  background: var(--surface-raised);
+  border-radius: 4px;
+}
+
+/* Notes Modal List */
+.notes-modal-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notes-modal-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--surface);
+}
+
+.notes-modal-item:hover {
+  border-color: var(--gold);
+  background: var(--gold-glow);
+  transform: translateY(-1px);
+}
+
+.notes-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.notes-item-title {
+  font-weight: 600;
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.notes-item-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+  background: var(--surface-raised);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.notes-item-preview {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.notes-item-date {
+  font-size: 10px;
+  color: var(--text-3);
+  margin-top: 8px;
+  font-family: var(--mono);
 }
 
 .btn-icon.sm {
@@ -10761,6 +10840,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <span class="notebook-tag" id="notebook-lesson-tag">No lesson</span>
             </div>
             <div class="notebook-actions">
+              <span id="notebook-char-count" class="notebook-char-count">0</span>
               <span id="notebook-status" class="notebook-status"></span>
               <button class="btn-icon sm" onclick="viewAllNotes()" title="View All Notes">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><path d="M12 18v-6M9 15l3-3 3 3"/></svg>
@@ -20075,12 +20155,15 @@ async function loadNotebookForVideo(videoId) {
       .eq('video_id', videoId)
       .single();
     
+    const charCount = document.getElementById('notebook-char-count');
     if (data && !error) {
       textarea.value = data.content || '';
       currentNotes[videoId] = data.content || '';
+      if (charCount) charCount.textContent = (data.content || '').length || '0';
     } else {
       textarea.value = '';
       currentNotes[videoId] = '';
+      if (charCount) charCount.textContent = '0';
     }
   } catch (e) {
     console.log('No existing note for this video');
@@ -20091,8 +20174,15 @@ async function loadNotebookForVideo(videoId) {
 // Auto-save notes with debounce
 document.getElementById('notebook-content')?.addEventListener('input', function() {
   const statusEl = document.getElementById('notebook-status');
+  const charCount = document.getElementById('notebook-char-count');
+  
+  // Update character count
+  const len = this.value.length;
+  if (charCount) charCount.textContent = len > 0 ? len : '0';
+  
+  // Show saving status
   statusEl.textContent = 'Saving...';
-  statusEl.style.color = 'var(--text-3)';
+  statusEl.className = 'notebook-status saving';
   
   clearTimeout(notebookSaveTimeout);
   notebookSaveTimeout = setTimeout(() => saveNote(true), 1500);
@@ -20125,13 +20215,15 @@ async function saveNote(silent = false) {
     
     currentNotes[currentVideoId] = content;
     statusEl.textContent = '✓ Saved';
-    statusEl.style.color = 'var(--success)';
+    statusEl.className = 'notebook-status saved';
     
     setTimeout(() => {
       statusEl.textContent = '';
+      statusEl.className = 'notebook-status';
     }, 2000);
   } catch (e) {
-    statusEl.textContent = 'Error saving';
+    statusEl.textContent = '✗ Error';
+    statusEl.className = 'notebook-status';
     statusEl.style.color = 'var(--danger)';
     console.error('Note save error:', e);
   }
@@ -20157,18 +20249,22 @@ async function viewAllNotes() {
     }
     
     // Build notes list
-    let notesHtml = '<div style="max-height: 60vh; overflow-y: auto;">';
+    let notesHtml = '<div class="notes-modal-list">';
     for (const note of notes) {
       const video = academyVideos.find(v => v.id === note.video_id);
       const title = video ? `L${video.level}.${video.position}: ${video.title}` : 'Unknown Lesson';
-      const preview = note.content.substring(0, 200) + (note.content.length > 200 ? '...' : '');
+      const preview = note.content.substring(0, 150) + (note.content.length > 150 ? '...' : '');
       const date = new Date(note.updated_at).toLocaleDateString();
+      const charCount = note.content.length;
       
       notesHtml += `
-        <div style="border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; cursor: pointer;" onclick="jumpToNote('${note.video_id}')">
-          <div style="font-weight: 600; color: var(--gold); margin-bottom: 6px;">${title}</div>
-          <div style="font-size: 13px; color: var(--text-2); line-height: 1.5;">${preview}</div>
-          <div style="font-size: 11px; color: var(--text-3); margin-top: 8px;">${date}</div>
+        <div class="notes-modal-item" onclick="jumpToNote('${note.video_id}')">
+          <div class="notes-item-header">
+            <span class="notes-item-title">${title}</span>
+            <span class="notes-item-meta">${charCount} chars</span>
+          </div>
+          <div class="notes-item-preview">${preview}</div>
+          <div class="notes-item-date">${date}</div>
         </div>
       `;
     }
