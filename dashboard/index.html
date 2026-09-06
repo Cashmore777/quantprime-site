@@ -6248,6 +6248,7 @@ body {
   display: flex;
   flex-direction: column;
   box-shadow: none;
+  transition: all 0.3s ease;
 }
 
 .progress-ring {
@@ -7219,6 +7220,22 @@ body {
     inset 0 1px 0 rgba(255,255,255,0.03);
 }
 
+.video-player:focus {
+  outline: none;
+  box-shadow: 
+    0 25px 70px rgba(0,0,0,0.6),
+    0 0 0 2px var(--gold),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+/* Focus visible for keyboard navigation */
+.btn-icon:focus-visible,
+.level-header:focus-visible,
+.video-item:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 .player-placeholder {
   position: absolute;
   inset: 0;
@@ -7264,6 +7281,23 @@ body {
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .play-btn-large,
+  .academy-progress-header .progress-bar-fill,
+  .progress-ring circle {
+    animation: none !important;
+  }
+  
+  .play-btn-large::before {
+    animation: none !important;
+  }
+  
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .play-btn-large:hover {
@@ -11140,7 +11174,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
     
     <div class="academy-layout">
       <!-- Level Navigation -->
-      <div class="level-nav" id="academy-levels">
+      <nav class="level-nav" id="academy-levels" aria-label="Course levels">
         <div class="progress-ring">
           <svg class="ring-svg" viewBox="0 0 48 48">
             <circle cx="24" cy="24" r="20" fill="none" stroke="var(--border)" stroke-width="4"/>
@@ -11157,7 +11191,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <!-- Levels loaded dynamically -->
           <div style="padding: 20px; text-align: center; color: var(--text-3); font-size: 13px;">Loading curriculum...</div>
         </div>
-      </div>
+      </nav>
       
       <!-- Video Section - Main Content -->
       <div class="video-section">
@@ -11171,7 +11205,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <span class="lesson-meta" id="progress-lesson-meta"></span>
           </div>
           <div class="progress-bar-container">
-            <div class="progress-bar-track">
+            <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Course progress">
               <div class="progress-bar-fill" id="course-progress-fill" style="width: 0%"></div>
             </div>
             <span class="progress-percentage" id="course-progress-percent">0%</span>
@@ -11191,7 +11225,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
         
         <!-- Video Player -->
         <div class="video-player-wrapper">
-          <div class="video-player" id="video-player">
+          <div class="video-player" id="video-player" tabindex="-1">
             <div class="player-placeholder" id="player-placeholder">
               <div class="play-btn-large">▶</div>
               <div class="video-title" id="current-video-title">Select a lesson to begin</div>
@@ -20338,6 +20372,14 @@ function playVideo(videoId) {
     
     // Remove loading state when iframe loads
     iframe.onload = () => player.classList.remove('loading');
+    
+    // Handle iframe errors
+    iframe.onerror = () => {
+      player.classList.remove('loading');
+      placeholder.style.display = 'flex';
+      document.getElementById('current-video-title').textContent = 'Video unavailable';
+      document.getElementById('current-video-meta').textContent = 'Please try again later';
+    };
   } else {
     placeholder.style.display = 'flex';
     iframe.classList.remove('active');
@@ -20370,6 +20412,9 @@ function playVideo(videoId) {
   
   // Close mobile nav after selecting video
   document.getElementById('academy-levels')?.classList.remove('open');
+  
+  // Focus management - move focus to video area
+  document.getElementById('video-player')?.focus();
 }
 
 async function markVideoComplete() {
@@ -20449,9 +20494,12 @@ function updateProgressRing() {
   
   // Update progress header bar
   const progressFill = document.getElementById('course-progress-fill');
+  const progressTrack = progressFill?.parentElement;
   const progressText = document.getElementById('course-progress-percent');
   if (progressFill) {
     progressFill.style.width = percent + '%';
+    // Update ARIA
+    if (progressTrack) progressTrack.setAttribute('aria-valuenow', percent);
     // Add pulse animation
     progressFill.classList.add('pulse');
     setTimeout(() => progressFill.classList.remove('pulse'), 500);
