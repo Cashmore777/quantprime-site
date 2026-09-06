@@ -6536,11 +6536,12 @@ body {
   display: grid;
   grid-template-rows: auto 1fr 90px; /* header auto, video fills, notes fixed 90px */
   gap: 0; /* NO gap between header and video */
+  row-gap: 0 !important;
   height: 100%;
   min-height: 0; /* CRITICAL: allows grid to shrink */
   overflow: hidden;
   background: var(--bg);
-  padding: 0 12px 8px; /* Remove top padding */
+  padding: 0 12px 0; /* No padding top or bottom */
   position: relative;
 }
 
@@ -6566,6 +6567,7 @@ body {
 .video-section .video-player-wrapper {
   z-index: 2;
   margin-top: 0; /* No gap after header */
+  padding-top: 0;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -7450,9 +7452,9 @@ body {
    ACADEMY NOTEBOOK - Premium card styling
    ═══════════════════════════════════════════════════════════════════════ */
 .academy-notebook {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
+  background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 100%);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   height: 90px;
@@ -7460,10 +7462,13 @@ body {
   max-height: 90px;
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15); /* Enhanced card shadow */
+  box-shadow: 
+    0 4px 20px rgba(0,0,0,0.2),
+    0 0 0 1px rgba(201,168,76,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.03);
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 4px; /* Small gap from video only */
+  margin-top: 8px;
 }
 
 /* Premium gradient accent bar on notebook */
@@ -7515,7 +7520,8 @@ body {
    CHAT WIDGET ADJUSTMENT FOR ACADEMY
    ═══════════════════════════════════════════════════════════════════════ */
 body:has(#view-academy.active) #qp-support-widget {
-  bottom: 120px !important;
+  bottom: 160px !important;
+  right: 20px !important;
 }
 
 @media (max-width: 820px) {
@@ -20804,8 +20810,8 @@ function playVideo(videoId) {
     let videoUrl = video.video_url;
     if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
       const separator = videoUrl.includes('?') ? '&' : '?';
-      // Enable API and set gold color
-      videoUrl = videoUrl + separator + 'primaryColor=%23c9a84c&autoplay=false&preload=true';
+      // Enable API and set gold color - try multiple color params
+      videoUrl = videoUrl + separator + 'color=%23c9a84c&primaryColor=%23c9a84c&accentColor=%23c9a84c&autoplay=false&preload=true&controls=true';
     }
     iframe.src = videoUrl;
     
