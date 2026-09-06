@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level 1 Part 1: Foundations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-soft: rgba(201, 168, 76, 0.7);
+  --gold-faint: rgba(201, 168, 76, 0.12);
+  --cyan: #00abff;
+  --cyan-soft: rgba(0, 171, 255, 0.7);
+  --bg: #08080c;
+  --surface: #0c0c10;
+  --text: #ffffff;
+  --text-soft: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+  --danger: #dc2626;
+  --success: #16a34a;
+  --control-bg: #111118;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === LAYOUT === */
+.recording-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+.control-bar {
+  height: 72px;
+  background: var(--control-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  flex-shrink: 0;
+}
+
+.safe-frame {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #000;
+}
+
+.frame-border {
+  width: 100%;
+  max-width: 1600px;
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border: 2px solid rgba(201, 168, 76, 0.4);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === CONTROLS === */
+.ctrl-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-soft);
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text);
+}
+
+.ctrl-btn.danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.ctrl-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.progress-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+
+.progress-main span { color: var(--gold); }
+
+.progress-clicks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.click-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.2s;
+}
+
+.click-dot.active { background: var(--gold); }
+.click-dot.done { background: rgba(201, 168, 76, 0.5); }
+
+.click-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 8px;
+  letter-spacing: 0.03em;
+}
+
+/* === SLIDE BASE === */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === SUBTLE BACKGROUNDS === */
+.bg-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.bg-accent {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(200px);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.bg-accent.gold { background: var(--gold); }
+.bg-accent.cyan { background: var(--cyan); }
+.bg-accent.danger { background: var(--danger); }
+
+.bg-accent.center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.bg-accent.top-right { top: -200px; right: -200px; }
+.bg-accent.bottom-left { bottom: -200px; left: -200px; }
+
+/* Corner accent line */
+.corner-line {
+  position: absolute;
+  background: var(--gold);
+  opacity: 0.15;
+}
+
+.corner-line.top-left {
+  top: 40px;
+  left: 40px;
+  width: 60px;
+  height: 1px;
+}
+
+.corner-line.bottom-right {
+  bottom: 40px;
+  right: 40px;
+  width: 1px;
+  height: 60px;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  bottom: 28px;
+  right: 36px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.logo span { color: var(--gold-soft); }
+
+/* Level indicator */
+.level-badge {
+  position: absolute;
+  top: 28px;
+  left: 36px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+}
+
+/* === TYPOGRAPHY === */
+.eyebrow {
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.headline {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.headline-xl { font-size: 88px; }
+.headline-lg { font-size: 72px; }
+.headline-md { font-size: 56px; }
+.headline-sm { font-size: 44px; }
+
+.headline .accent { color: var(--gold); }
+.headline .accent-cyan { color: var(--cyan); }
+.headline .accent-danger { color: var(--danger); }
+
+.body-lg {
+  font-size: 24px;
+  color: var(--text-soft);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.body-md {
+  font-size: 20px;
+  color: var(--text-soft);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.body-sm {
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.accent-text { color: var(--gold); }
+.white-text { color: var(--text); }
+
+/* Horizontal rule */
+.hr {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-top: 40px;
+}
+
+/* === ANIMATIONS === */
+.step {
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step.visible { opacity: 1; }
+
+/* Reveal up - clean, subtle */
+.step.reveal-up {
+  transform: translateY(24px);
+}
+.step.reveal-up.visible {
+  transform: translateY(0);
+}
+
+/* Reveal scale - barely perceptible */
+.step.reveal-scale {
+  transform: scale(0.97);
+}
+.step.reveal-scale.visible {
+  transform: scale(1);
+}
+
+/* Reveal fade only */
+.step.reveal-fade {
+  transform: none;
+}
+
+/* Slide from side - subtle */
+.step.reveal-left {
+  transform: translateX(-30px);
+}
+.step.reveal-left.visible {
+  transform: translateX(0);
+}
+
+.step.reveal-right {
+  transform: translateX(30px);
+}
+.step.reveal-right.visible {
+  transform: translateX(0);
+}
+
+/* Stagger delay classes */
+.delay-1 { transition-delay: 0.05s; }
+.delay-2 { transition-delay: 0.1s; }
+.delay-3 { transition-delay: 0.15s; }
+.delay-4 { transition-delay: 0.2s; }
+
+/* === SLIDE 1: Opening - Centered, minimal === */
+.slide-opening {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slide-opening .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px;
+}
+
+/* === SLIDE 2: The Truth - Combined layout === */
+.slide-truth {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-truth .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 60px 80px;
+  width: 100%;
+  align-items: center;
+}
+
+.truth-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.truth-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stat-massive {
+  font-size: 140px;
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  background: linear-gradient(180deg, var(--danger) 0%, #7f1d1d 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-context {
+  font-size: 18px;
+  color: var(--text-soft);
+  margin-top: 12px;
+  font-weight: 400;
+}
+
+.truth-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.truth-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--gold-faint);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.truth-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.truth-text h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.truth-text p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* === SLIDE 3: Myths - Clean list, no cards === */
+.slide-myths {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-myths .content {
+  display: flex;
+  flex-direction: column;
+  padding: 60px 120px;
+  width: 100%;
+}
+
+.myth-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 900px;
+}
+
+.myth-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.myth-number {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+  flex-shrink: 0;
+  width: 24px;
+}
+
+.myth-content {
+  flex: 1;
+}
+
+.myth-claim {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.myth-reality {
+  font-size: 16px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* === SLIDE 4: Getting Started - Asymmetric layout === */
+.slide-start {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-start .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding: 60px 100px;
+  width: 100%;
+  align-items: center;
+}
+
+.start-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.start-right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.principle {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.principle-icon {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--gold-faint);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.principle-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.principle-text h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.principle-text p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* === SLIDE 5: Tools - Minimal cards === */
+.slide-tools {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-tools .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 80px;
+  text-align: center;
+}
+
+.tools-grid {
+  display: flex;
+  gap: 40px;
+  margin-top: 56px;
+}
+
+.tool-item {
+  width: 240px;
+  padding: 40px 32px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  text-align: center;
+  transition: border-color 0.3s ease;
+}
+
+.tool-item:hover {
+  border-color: rgba(255,255,255,0.15);
+}
+
+.tool-number {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.tool-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.tool-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.tool-item.primary {
+  border-color: var(--gold-faint);
+}
+
+.tool-item.primary .tool-number { color: var(--gold-soft); }
+
+.tool-item.secondary {
+  border-color: rgba(0, 171, 255, 0.15);
+}
+
+.tool-item.secondary .tool-number { color: var(--cyan-soft); }
+
+/* === SLIDE 6: Risk - Horizontal bars === */
+.slide-risk {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-risk .content {
+  display: flex;
+  flex-direction: column;
+  padding: 60px 100px;
+  width: 100%;
+}
+
+.risk-levels {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.risk-bar {
+  display: flex;
+  align-items: center;
+  padding: 20px 28px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border-left: 3px solid;
+  gap: 32px;
+}
+
+.risk-bar.conservative { border-left-color: var(--success); }
+.risk-bar.moderate { border-left-color: var(--cyan); }
+.risk-bar.elevated { border-left-color: #f59e0b; }
+.risk-bar.aggressive { border-left-color: var(--danger); }
+
+.risk-percent {
+  font-size: 20px;
+  font-weight: 700;
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.risk-bar.conservative .risk-percent { color: var(--success); }
+.risk-bar.moderate .risk-percent { color: var(--cyan); }
+.risk-bar.elevated .risk-percent { color: #f59e0b; }
+.risk-bar.aggressive .risk-percent { color: var(--danger); }
+
+.risk-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.risk-note {
+  font-size: 14px;
+  color: var(--text-muted);
+  flex: 1;
+  text-align: right;
+}
+
+/* === SLIDE 7: Measuring the Market === */
+.slide-measure {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-measure .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 60px 80px;
+  width: 100%;
+  align-items: center;
+}
+
+.measure-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.measure-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.decimal-box {
+  display: flex;
+  align-items: center;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+  gap: 20px;
+}
+
+.decimal-pair {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.decimal-place {
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.decimal-example {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.measure-formula {
+  margin-top: 16px;
+  padding: 24px;
+  background: rgba(201, 168, 76, 0.08);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.formula-text {
+  font-size: 18px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.formula-text span {
+  color: var(--gold);
+}
+
+/* === SLIDE 8: Trade Management - Split screen === */
+.slide-management {
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.slide-management .content {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  width: 100%;
+  height: 100%;
+}
+
+.management-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px;
+}
+
+.management-divider {
+  background: rgba(255,255,255,0.06);
+  align-self: center;
+  height: 60%;
+}
+
+.panel-label {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.panel-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.panel-desc {
+  font-size: 16px;
+  color: var(--text-soft);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.panel-left .panel-label { color: var(--gold-soft); }
+.panel-right .panel-label { color: var(--cyan-soft); }
+
+.management-footer {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+/* === SLIDE 9: Finding Style - Visual comparison === */
+.slide-style {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-style .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 80px;
+  text-align: center;
+}
+
+.style-comparison {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-top: 56px;
+}
+
+.style-option {
+  text-align: center;
+}
+
+.style-icon {
+  width: 80px;
+  height: 80px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.style-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--text-soft);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.style-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.style-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.style-vs {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+.quote-block {
+  margin-top: 56px;
+  max-width: 700px;
+  position: relative;
+  padding: 0 40px;
+}
+
+.quote-mark {
+  position: absolute;
+  font-size: 80px;
+  font-family: Georgia, serif;
+  color: var(--gold);
+  opacity: 0.2;
+  line-height: 1;
+}
+
+.quote-mark.open { top: -20px; left: 0; }
+.quote-mark.close { bottom: -40px; right: 0; }
+
+.quote-text {
+  font-size: 24px;
+  font-style: italic;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* === SLIDE 10: Path Forward - Checklist === */
+.slide-forward {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-forward .content {
+  display: flex;
+  flex-direction: column;
+  padding: 60px 120px;
+  width: 100%;
+}
+
+.task-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.task-check {
+  width: 24px;
+  height: 24px;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-check svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.task-item.checked .task-check {
+  border-color: var(--gold);
+}
+
+.task-item.checked .task-check svg {
+  opacity: 1;
+}
+
+.task-text {
+  font-size: 18px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.closing-statement {
+  margin-top: 48px;
+}
+
+.closing-hook {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+
+<div class="recording-wrapper">
+  <!-- CONTROL BAR -->
+  <div class="control-bar">
+    <div class="ctrl-section">
+      <button class="ctrl-btn danger" onclick="redoSlide()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Redo
+      </button>
+      <button class="ctrl-btn" onclick="prevSlide()">Back</button>
+    </div>
+
+    <div class="progress-display">
+      <div class="progress-main"><span id="slideNum">1</span> / <span id="slideTotal">10</span></div>
+      <div class="progress-clicks" id="clickDots"></div>
+      <div class="click-label"><span id="clickNum">0</span> / <span id="clickTotal">0</span></div>
+    </div>
+
+    <div class="ctrl-section">
+      <button class="ctrl-btn" onclick="nextStep()">Next</button>
+      <button class="ctrl-btn" onclick="toggleFullscreen()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDES -->
+  <div class="safe-frame">
+    <div class="frame-border" id="slideContainer">
+
+      <!-- SLIDE 1: Opening -->
+      <div class="slide slide-opening active" data-slide="1">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold center"></div>
+        <div class="corner-line top-left"></div>
+        <div class="corner-line bottom-right"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Ascension Academy</p>
+          </div>
+          <div class="step reveal-scale" data-step="2">
+            <h1 class="headline headline-xl"><span class="accent">Foundations</span></h1>
+          </div>
+          <div class="step reveal-up" data-step="3">
+            <p class="body-lg" style="margin-top: 32px;">This is where your foundations are set.</p>
+          </div>
+          <div class="step reveal-fade" data-step="4">
+            <p class="body-md white-text" style="margin-top: 20px;">Not with theory alone, but with honest truths that separate those who make it from those who don't.</p>
+          </div>
+          <div class="step reveal-fade" data-step="5">
+            <div class="hr"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: The Truth About Trading (Combined) -->
+      <div class="slide slide-truth" data-slide="2">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent danger top-right"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="truth-left">
+            <div class="step reveal-up" data-step="1">
+              <p class="eyebrow">The Reality</p>
+              <h1 class="headline headline-md">The <span class="accent-danger">Truth</span> About Trading</h1>
+            </div>
+            <div class="step reveal-scale" data-step="2">
+              <div class="stat-massive" style="margin-top: 32px;">70-90%</div>
+              <p class="stat-context">of retail traders lose money</p>
+            </div>
+          </div>
+          <div class="truth-right">
+            <div class="truth-point step reveal-right" data-step="3">
+              <div class="truth-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="truth-text">
+                <h4>Three Years of Effort</h4>
+                <p>It took the founder three years of consistent effort before reaching profitability.</p>
+              </div>
+            </div>
+            <div class="truth-point step reveal-right" data-step="4">
+              <div class="truth-icon">
+                <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+              <div class="truth-text">
+                <h4>Ten Hours Daily</h4>
+                <p>Studying charts, countless setbacks, and every time success felt close, the goal moved further away.</p>
+              </div>
+            </div>
+            <div class="truth-point step reveal-right" data-step="5">
+              <div class="truth-icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="truth-text">
+                <h4>Social Media Illusion</h4>
+                <p>The luxury lifestyle is marketing, not trading results. Real profitability is quiet and consistent.</p>
+              </div>
+            </div>
+            <div class="step reveal-fade" data-step="6">
+              <p class="body-sm accent-text" style="margin-top: 12px;">This isn't to discourage you. It's to calibrate your expectations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: The Myths -->
+      <div class="slide slide-myths" data-slide="3">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent cyan bottom-left"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Debunked</p>
+            <h1 class="headline headline-md">Four Common <span class="accent-cyan">Myths</span></h1>
+          </div>
+          <div class="myth-list">
+            <div class="myth-item step reveal-left" data-step="2">
+              <span class="myth-number">01</span>
+              <div class="myth-content">
+                <p class="myth-claim">"Markets are random"</p>
+                <p class="myth-reality">Markets operate on underlying mechanics that can be understood and anticipated.</p>
+              </div>
+            </div>
+            <div class="myth-item step reveal-left" data-step="3">
+              <span class="myth-number">02</span>
+              <div class="myth-content">
+                <p class="myth-claim">"Trading is too difficult"</p>
+                <p class="myth-reality">Trading isn't difficult. It's unfamiliar. The process is learnable.</p>
+              </div>
+            </div>
+            <div class="myth-item step reveal-left" data-step="4">
+              <span class="myth-number">03</span>
+              <div class="myth-content">
+                <p class="myth-claim">"One strategy is better"</p>
+                <p class="myth-reality">A simple approach mastered completely outperforms complex approaches executed poorly.</p>
+              </div>
+            </div>
+            <div class="myth-item step reveal-left" data-step="5">
+              <span class="myth-number">04</span>
+              <div class="myth-content">
+                <p class="myth-claim">"Get rich quickly"</p>
+                <p class="myth-reality">Wealth is built through compounding over time, not overnight windfalls.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: Getting Started -->
+      <div class="slide slide-start" data-slide="4">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold center"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="start-left">
+            <div class="step reveal-up" data-step="1">
+              <h1 class="headline headline-md">Getting <span class="accent">Started</span></h1>
+            </div>
+            <div class="step reveal-fade" data-step="2">
+              <p class="body-lg" style="margin-top: 24px;">Approach this education with a clean slate.</p>
+            </div>
+          </div>
+          <div class="start-right">
+            <div class="principle step reveal-right" data-step="3">
+              <div class="principle-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <div class="principle-text">
+                <h4>Fresh Perspective</h4>
+                <p>Set aside past wins and losses. Build from first principles.</p>
+              </div>
+            </div>
+            <div class="principle step reveal-right" data-step="4">
+              <div class="principle-icon">
+                <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </div>
+              <div class="principle-text">
+                <h4>Student Mindset</h4>
+                <p>The ego has no place in learning. Stay open to challenges.</p>
+              </div>
+            </div>
+            <div class="principle step reveal-right" data-step="5">
+              <div class="principle-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="principle-text">
+                <h4>Forget Money</h4>
+                <p>Focus on skill acquisition. Financial results follow competence.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Essential Tools -->
+      <div class="slide slide-tools" data-slide="5">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent cyan top-right"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Your Workspace</p>
+            <h1 class="headline headline-md">Essential <span class="accent-cyan">Tools</span></h1>
+          </div>
+          <div class="tools-grid">
+            <div class="tool-item primary step reveal-up delay-1" data-step="2">
+              <p class="tool-number">01</p>
+              <h3 class="tool-name">TradingView</h3>
+              <p class="tool-desc">Your charting platform</p>
+            </div>
+            <div class="tool-item secondary step reveal-up delay-2" data-step="3">
+              <p class="tool-number">02</p>
+              <h3 class="tool-name">MetaTrader 5</h3>
+              <p class="tool-desc">Your execution platform</p>
+            </div>
+            <div class="tool-item step reveal-up delay-3" data-step="4">
+              <p class="tool-number">03</p>
+              <h3 class="tool-name">Lot Calculator</h3>
+              <p class="tool-desc">Never guess position size</p>
+            </div>
+          </div>
+          <div class="step reveal-fade" data-step="5">
+            <p class="body-md" style="margin-top: 48px;">Spend time getting comfortable with these tools before moving forward.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: Understanding Risk -->
+      <div class="slide slide-risk" data-slide="6">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold bottom-left"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <h1 class="headline headline-md">Understanding <span class="accent">Risk</span></h1>
+            <p class="body-md" style="margin-top: 16px;">Risk management is the foundation of longevity.</p>
+          </div>
+          <div class="risk-levels">
+            <div class="risk-bar conservative step reveal-left" data-step="2">
+              <span class="risk-percent">0.25 - 0.5%</span>
+              <span class="risk-name">Conservative</span>
+              <span class="risk-note">Building consistency</span>
+            </div>
+            <div class="risk-bar moderate step reveal-left" data-step="3">
+              <span class="risk-percent">0.5 - 1.5%</span>
+              <span class="risk-name">Moderate</span>
+              <span class="risk-note">Most developing traders</span>
+            </div>
+            <div class="risk-bar elevated step reveal-left" data-step="4">
+              <span class="risk-percent">1.5 - 3%</span>
+              <span class="risk-name">Elevated</span>
+              <span class="risk-note">Experienced only</span>
+            </div>
+            <div class="risk-bar aggressive step reveal-left" data-step="5">
+              <span class="risk-percent">3%+</span>
+              <span class="risk-name">Aggressive</span>
+              <span class="risk-note">Accelerates gains and losses</span>
+            </div>
+          </div>
+          <div class="step reveal-fade" data-step="6">
+            <p class="body-md accent-text" style="margin-top: 32px;">Choose a risk level and commit to it. Consistency allows edge to compound.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: Measuring the Market (NEW) -->
+      <div class="slide slide-measure" data-slide="7">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent cyan center"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="measure-left">
+            <div class="step reveal-up" data-step="1">
+              <p class="eyebrow">Fundamentals</p>
+              <h1 class="headline headline-md">Measuring the <span class="accent-cyan">Market</span></h1>
+            </div>
+            <div class="step reveal-fade" data-step="2">
+              <p class="body-md" style="margin-top: 24px;">A pip is the standard unit of measurement in forex trading. It tells you how far price has moved.</p>
+            </div>
+            <div class="measure-formula step reveal-up" data-step="5">
+              <p class="formula-text"><span>Stop Loss</span> + <span>Risk %</span> = Position Size</p>
+            </div>
+            <div class="step reveal-fade" data-step="6">
+              <p class="body-sm" style="margin-top: 16px;">TradingView has built-in tools that display pip distance automatically. Use them.</p>
+            </div>
+          </div>
+          <div class="measure-right">
+            <div class="decimal-box step reveal-right" data-step="3">
+              <span class="decimal-pair">Most Pairs</span>
+              <span class="decimal-place">4th Decimal</span>
+              <span class="decimal-example">1.2345</span>
+            </div>
+            <div class="decimal-box step reveal-right" data-step="4">
+              <span class="decimal-pair">JPY Pairs</span>
+              <span class="decimal-place">2nd Decimal</span>
+              <span class="decimal-example">152.45</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: Trade Management -->
+      <div class="slide slide-management" data-slide="8">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="management-panel panel-left step reveal-left" data-step="1">
+            <p class="panel-label">OPTION A</p>
+            <h2 class="panel-title">Set and Forget</h2>
+            <p class="panel-desc">Hold until target or stop loss. No intervention. Removes emotion entirely.</p>
+          </div>
+          <div class="management-divider step reveal-fade" data-step="2"></div>
+          <div class="management-panel panel-right step reveal-right" data-step="3">
+            <p class="panel-label">OPTION B</p>
+            <h2 class="panel-title">Partial Profits</h2>
+            <p class="panel-desc">Close half at 50% target. Move stop to breakeven. Let remainder run.</p>
+          </div>
+        </div>
+        <div class="management-footer">
+          <div class="step reveal-up" data-step="4">
+            <p class="body-sm">Neither approach is superior.</p>
+          </div>
+          <div class="step reveal-fade" data-step="5">
+            <p class="body-md accent-text" style="margin-top: 8px;">What matters is choosing one and applying it consistently.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9: Finding Your Style -->
+      <div class="slide slide-style" data-slide="9">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold center"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <h1 class="headline headline-md">Finding Your <span class="accent">Style</span></h1>
+          </div>
+          <div class="step reveal-fade" data-step="2">
+            <p class="body-md" style="margin-top: 16px;">Trading style should match your personality and lifestyle.</p>
+          </div>
+          <div class="style-comparison">
+            <div class="style-option step reveal-left" data-step="3">
+              <div class="style-icon">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <h3 class="style-name">Active</h3>
+              <p class="style-desc">Watch charts, manual exits</p>
+            </div>
+            <div class="style-vs step reveal-fade" data-step="4">vs</div>
+            <div class="style-option step reveal-right" data-step="5">
+              <div class="style-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <h3 class="style-name">Passive</h3>
+              <p class="style-desc">Set positions, check later</p>
+            </div>
+          </div>
+          <div class="quote-block step reveal-up" data-step="6">
+            <span class="quote-mark open">"</span>
+            <p class="quote-text">Your trading plan should protect you from yourself during moments of poor judgment.</p>
+            <span class="quote-mark close">"</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10: The Path Forward -->
+      <div class="slide slide-forward" data-slide="10">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold top-right"></div>
+        <div class="level-badge">LEVEL 1 / PART 1</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Before Part Two</p>
+            <h1 class="headline headline-md">The Path <span class="accent">Forward</span></h1>
+          </div>
+          <div class="task-list">
+            <div class="task-item step reveal-left" data-step="2">
+              <div class="task-check">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p class="task-text">Download and set up TradingView, MetaTrader 5, and a lot size calculator</p>
+            </div>
+            <div class="task-item step reveal-left" data-step="3">
+              <div class="task-check">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p class="task-text">Practice measuring pip distances on any major currency pair</p>
+            </div>
+            <div class="task-item step reveal-left" data-step="4">
+              <div class="task-check">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p class="task-text">Calculate position size for a 20 pip SL, risking 1% of 1,000 pounds</p>
+            </div>
+          </div>
+          <div class="closing-statement step reveal-fade" data-step="5">
+            <p class="body-md white-text">These aren't optional exercises. They're prerequisites for what comes next.</p>
+          </div>
+          <div class="closing-hook step reveal-scale" data-step="6">
+            <p class="body-lg accent-text" style="font-weight: 600;">This is where it starts to get interesting.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  currentSlide: 1,
+  currentStep: 0,
+  totalSlides: 10
+};
+
+const slideSteps = {
+  1: 5, 2: 6, 3: 5, 4: 5, 5: 5,
+  6: 6, 7: 6, 8: 5, 9: 6, 10: 6
+};
+
+function updateUI() {
+  document.getElementById('slideNum').textContent = state.currentSlide;
+  document.getElementById('slideTotal').textContent = state.totalSlides;
+  
+  const totalSteps = slideSteps[state.currentSlide];
+  document.getElementById('clickNum').textContent = state.currentStep;
+  document.getElementById('clickTotal').textContent = totalSteps;
+  
+  const dotsContainer = document.getElementById('clickDots');
+  dotsContainer.innerHTML = '';
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'click-dot';
+    if (i < state.currentStep) dot.classList.add('done');
+    if (i === state.currentStep) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`)?.classList.add('active');
+  document.querySelectorAll(`[data-slide="${n}"] .step`).forEach(s => s.classList.remove('visible'));
+  state.currentSlide = n;
+  state.currentStep = 0;
+  updateUI();
+}
+
+function nextStep() {
+  const totalSteps = slideSteps[state.currentSlide];
+  
+  if (state.currentStep < totalSteps) {
+    state.currentStep++;
+    document.querySelectorAll(`[data-slide="${state.currentSlide}"] [data-step="${state.currentStep}"]`).forEach(step => {
+      step.classList.add('visible');
+    });
+    updateUI();
+  } else if (state.currentSlide < state.totalSlides) {
+    showSlide(state.currentSlide + 1);
+    setTimeout(() => nextStep(), 100);
+  }
+}
+
+function prevSlide() {
+  if (state.currentSlide > 1) showSlide(state.currentSlide - 1);
+}
+
+function redoSlide() {
+  showSlide(state.currentSlide);
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    nextStep();
+  } else if (e.key === 'ArrowLeft') {
+    prevSlide();
+  } else if (e.key === 'r' || e.key === 'R') {
+    redoSlide();
+  } else if (e.key === 'f' || e.key === 'F') {
+    toggleFullscreen();
+  }
+});
+
+document.querySelector('.frame-border').addEventListener('click', (e) => {
+  if (!e.target.closest('button')) nextStep();
+});
+
+updateUI();
+</script>
+</body>
+</html>

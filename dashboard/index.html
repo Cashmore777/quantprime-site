@@ -6127,71 +6127,112 @@ body {
   #mobile-nav { display: flex; }
 }
 
-/* Academy Layout */
+/* ═══════════════════════════════════════════════════════════════════════
+   ACADEMY - Premium £3,497 Experience
+   100vh locked, no scrolling, everything in viewport
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Lock academy view to viewport */
+#view-academy.active {
+  display: flex !important;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
+  max-height: calc(100vh - var(--header-height) - var(--safe-top) - var(--safe-bottom));
+  overflow: hidden;
+  padding: 0;
+}
+
+#view-academy .view-header {
+  display: none; /* Hide the old header - we'll integrate progress into layout */
+}
+
+/* Main academy layout - fills viewport */
 .academy-layout {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: var(--grid-gap);
-  min-height: 500px;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 1fr;
+  gap: 0;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+  background: var(--bg);
 }
 
 @media (max-width: 1100px) {
   .academy-layout { 
-    grid-template-columns: 260px 1fr; 
+    grid-template-columns: 200px 1fr; 
   }
 }
 
 @media (max-width: 650px) {
   .academy-layout { 
     grid-template-columns: 1fr;
-    gap: 16px;
   }
   
   .level-nav {
-    max-height: 250px;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    bottom: var(--nav-height);
+    width: 280px;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-radius: 0;
   }
   
-  .video-section {
-    min-height: 400px;
+  .level-nav.open {
+    transform: translateX(0);
   }
 }
 
 .level-nav {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  max-height: 700px;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
+  padding: 0;
+  height: 100%;
   overflow-y: auto;
-  box-shadow: var(--shadow-sm);
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: none;
 }
 
 .progress-ring {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding-bottom: 18px;
+  gap: 12px;
+  padding: 16px;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 16px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-raised) 100%);
+  flex-shrink: 0;
 }
 
-.ring-svg { width: 52px; height: 52px; }
+.ring-svg { width: 44px; height: 44px; flex-shrink: 0; }
+
+#level-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
 
 .level-group {
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .level-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px;
-  font-size: 13px;
+  padding: 10px 12px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-2);
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 6px;
   transition: all 0.15s;
+  gap: 8px;
 }
 
 .level-header:hover {
@@ -6200,19 +6241,20 @@ body {
 }
 
 .level-group.open .level-header {
-  color: var(--text-1);
+  color: var(--gold);
   background: var(--gold-glow);
 }
 
 .level-header .level-progress {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
+  white-space: nowrap;
 }
 
 .level-videos {
   display: none;
-  padding: 6px 0;
+  padding: 4px 0 8px 0;
 }
 
 .level-group.open .level-videos { display: block; }
@@ -6220,13 +6262,14 @@ body {
 .video-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px 10px 24px;
-  font-size: 13px;
+  gap: 8px;
+  padding: 8px 10px 8px 20px;
+  font-size: 11px;
   color: var(--text-2);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 4px;
   transition: all 0.15s;
+  line-height: 1.3;
 }
 
 .video-item:hover {
@@ -6237,6 +6280,8 @@ body {
 .video-item.active {
   background: var(--gold-glow);
   color: var(--text-1);
+  border-left: 2px solid var(--gold);
+  margin-left: -2px;
 }
 
 .video-item.completed .video-status { color: var(--success); }
@@ -6244,15 +6289,17 @@ body {
 
 .video-item .video-status {
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 10px;
   color: var(--text-3);
+  flex-shrink: 0;
 }
 
 .video-item .video-duration {
   margin-left: auto;
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: 9px;
   color: var(--text-3);
+  flex-shrink: 0;
 }
 
 .video-edit-btn {
@@ -6276,17 +6323,130 @@ body {
 }
 
 .video-section {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  padding: 20px 24px;
+}
+
+/* Academy Progress Header */
+.academy-progress-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 20px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.academy-progress-header .progress-info {
+  flex: 0 0 auto;
+  max-width: 250px;
+}
+
+.academy-progress-header .current-lesson-title {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.academy-progress-header .lesson-meta {
+  font-size: 11px;
+  color: var(--text-3);
+  font-family: var(--mono);
+}
+
+.academy-progress-header .progress-bar-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.academy-progress-header .progress-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--surface-raised);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.academy-progress-header .progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(201,168,76,0.4);
+}
+
+.academy-progress-header .progress-percentage {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold);
+  min-width: 40px;
+  text-align: right;
+}
+
+.academy-progress-header .video-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.btn-icon:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.btn-icon:active {
+  transform: scale(0.95);
+}
+
+/* Video player wrapper for centering */
+.video-player-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .video-player {
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-  border-radius: 14px;
+  background: linear-gradient(135deg, #0f0f14 0%, #1a1a22 50%, #0f0f14 100%);
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
+  max-height: calc(100vh - 340px); /* Leave room for progress bar + notebook */
+  width: 100%;
+  max-width: calc((100vh - 340px) * 16 / 9);
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.05);
 }
 
 .player-placeholder {
@@ -6332,23 +6492,19 @@ body {
 }
 
 .video-info {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
+  display: none; /* Hide - integrating into progress bar area */
 }
 
 .video-info h3 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .video-info p {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-2);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -10137,24 +10293,45 @@ button, .nav-item, .room, .video-item, .filter-chip {
         </div>
       </div>
       
-      <!-- Video Player -->
+      <!-- Video Section - Main Content -->
       <div class="video-section">
-        <div class="video-player" id="video-player">
-          <div class="player-placeholder" id="player-placeholder">
-            <div class="play-btn-large">▶</div>
-            <div class="video-title" id="current-video-title">Select a lesson to begin</div>
-            <div class="video-meta" id="current-video-meta">27 lessons across 9 levels</div>
+        <!-- Progress Bar Header -->
+        <div class="academy-progress-header">
+          <div class="progress-info">
+            <span class="current-lesson-title" id="progress-lesson-title">Select a lesson to begin</span>
+            <span class="lesson-meta" id="progress-lesson-meta"></span>
           </div>
-          <iframe id="video-iframe" style="display: none; width: 100%; height: 100%; border: none; border-radius: 10px;" allowfullscreen></iframe>
+          <div class="progress-bar-container">
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="course-progress-fill" style="width: 0%"></div>
+            </div>
+            <span class="progress-percentage" id="course-progress-percent">0%</span>
+          </div>
+          <div class="video-controls">
+            <button class="btn-icon" onclick="markVideoComplete()" title="Mark Complete">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <button class="btn-icon" onclick="playNextVideo()" title="Next Lesson">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Video Player -->
+        <div class="video-player-wrapper">
+          <div class="video-player" id="video-player">
+            <div class="player-placeholder" id="player-placeholder">
+              <div class="play-btn-large">▶</div>
+              <div class="video-title" id="current-video-title">Select a lesson to begin</div>
+              <div class="video-meta" id="current-video-meta">27 lessons across 9 levels</div>
+            </div>
+            <iframe id="video-iframe" style="display: none; width: 100%; height: 100%; border: none; border-radius: 10px;" allowfullscreen></iframe>
+          </div>
         </div>
         
         <div class="video-info" id="video-info" style="display: none;">
           <h3 id="video-info-title"></h3>
           <p id="video-info-desc"></p>
-          <div style="display: flex; gap: 12px; margin-top: 16px;">
-            <button class="btn sm" onclick="markVideoComplete()">Mark Complete</button>
-            <button class="btn outline sm" onclick="playNextVideo()">Next Lesson →</button>
-          </div>
         </div>
         
         <!-- Admin: Add Video (only visible to admins) -->
