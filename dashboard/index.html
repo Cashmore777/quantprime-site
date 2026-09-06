@@ -6239,17 +6239,121 @@ body {
   position: relative;
 }
 
-/* Gradient fade at bottom to avoid trailing into empty space */
+/* Saved notes section at bottom of sidebar */
 .level-nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, var(--surface) 80%);
-  pointer-events: none;
-  z-index: 2;
+  display: none; /* Removed gradient fade - using saved notes instead */
+}
+
+/* Saved Notes Section in Sidebar */
+.saved-notes-section {
+  margin-top: auto;
+  padding: 8px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.saved-notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+}
+
+.saved-notes-header h5 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin: 0;
+}
+
+.saved-notes-header .note-count {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--gold);
+  background: var(--gold-glow);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.saved-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.saved-note {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saved-note:hover {
+  border-color: var(--gold);
+  background: var(--gold-glow);
+}
+
+.saved-note .note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.saved-note .note-lesson {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.saved-note .note-timestamp {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.saved-note .note-content {
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.4;
+  margin-top: 4px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.saved-note .note-content.expanded {
+  max-height: 100px;
+}
+
+.saved-note.collapsed .note-content {
+  max-height: 0;
+}
+
+.saved-notes-empty {
+  text-align: center;
+  padding: 16px 8px;
+  color: var(--text-3);
+  font-size: 11px;
+}
+
+.saved-notes-empty svg {
+  display: block;
+  margin: 0 auto 8px;
+  opacity: 0.4;
 }
 
 /* Progress ring - compact header */
@@ -6431,12 +6535,12 @@ body {
 .video-section {
   display: grid;
   grid-template-rows: auto 1fr 90px; /* header auto, video fills, notes fixed 90px */
-  gap: 6px; /* Tighter spacing between header/video/notes */
+  gap: 4px; /* Tighter spacing between header/video/notes */
   height: 100%;
   min-height: 0; /* CRITICAL: allows grid to shrink */
   overflow: hidden;
   background: var(--bg);
-  padding: 6px 12px 8px;
+  padding: 4px 12px 8px;
   position: relative;
 }
 
@@ -6602,43 +6706,7 @@ body {
   overflow: hidden;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   ACADEMY NOTEBOOK - Fixed height at bottom, always visible
-   ═══════════════════════════════════════════════════════════════════════ */
-.academy-notebook {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--card-radius);
-  display: flex;
-  flex-direction: column;
-  height: 90px; /* Fixed height - matches grid row */
-  min-height: 90px;
-  max-height: 90px;
-  flex-shrink: 0;
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Premium gradient accent bar on notebook */
-.academy-notebook::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--premium-gradient);
-  border-radius: 4px 0 0 4px;
-  opacity: 0.7;
-}
-
-.academy-notebook:hover {
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
-}
+/* ACADEMY NOTEBOOK - styles moved to premium section below */
 
 /* ═══════════════════════════════════════════════════════════════════════
    RESPONSIVE ADJUSTMENTS
@@ -6764,17 +6832,7 @@ body {
   }
 }
 
-.notebook-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 10px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-raised);
-  flex-shrink: 0;
-  min-height: 28px;
-  max-height: 28px;
-}
+/* Note: Main .notebook-header styles defined in premium notebook section */
 
 @media (max-width: 650px) {
   .notebook-header {
@@ -7067,6 +7125,399 @@ body {
   
   .video-item {
     min-height: 40px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LEVEL PROGRESS SEGMENTS - Current level's 3 parts
+   ═══════════════════════════════════════════════════════════════════════ */
+.level-progress-segments {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  max-width: 200px;
+  min-width: 120px;
+}
+
+.level-progress-segments .segment {
+  flex: 1;
+  height: 8px;
+  background: rgba(201,168,76,0.15);
+  border-radius: 4px;
+  border: 1px solid rgba(201,168,76,0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-progress-segments .segment.completed {
+  background: linear-gradient(90deg, var(--gold), #d4b85a);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,76,0.4), 0 0 4px rgba(201,168,76,0.3);
+}
+
+.level-progress-segments .segment.active {
+  border-color: var(--gold);
+  animation: segment-pulse 2s ease-in-out infinite;
+}
+
+@keyframes segment-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0.3); }
+  50% { box-shadow: 0 0 8px 2px rgba(201,168,76,0.2); }
+}
+
+.segment-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.segment-labels span {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--text-3);
+  text-align: center;
+}
+
+.segment-labels span.completed {
+  color: var(--gold);
+}
+
+/* View Full Curriculum Button */
+.view-curriculum-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--gold);
+  background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.3);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.view-curriculum-btn:hover {
+  background: var(--gold);
+  color: #000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   FULL CURRICULUM MODAL
+   ═══════════════════════════════════════════════════════════════════════ */
+.curriculum-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.curriculum-modal.open {
+  display: flex;
+}
+
+.curriculum-modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg), 0 0 60px rgba(201,168,76,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.curriculum-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-raised) 100%);
+}
+
+.curriculum-modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.curriculum-modal-header h3 svg {
+  color: var(--gold);
+}
+
+.curriculum-modal-header .close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.curriculum-modal-header .close-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.curriculum-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.curriculum-level {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.curriculum-level:hover {
+  border-color: var(--border-hover);
+}
+
+.curriculum-level.completed {
+  border-color: rgba(34,197,94,0.3);
+}
+
+.curriculum-level-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.curriculum-level-header:hover {
+  background: var(--gold-glow);
+}
+
+.curriculum-level-header .level-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.curriculum-level-header .level-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-2);
+  transition: all 0.2s;
+}
+
+.curriculum-level.completed .level-number {
+  background: rgba(34,197,94,0.15);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.curriculum-level.current .level-number {
+  background: var(--gold-glow);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,76,0.3);
+}
+
+.curriculum-level-header .level-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.curriculum-level-header .level-progress {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.curriculum-level-header .level-progress.complete {
+  color: var(--success);
+}
+
+.curriculum-level-header .expand-icon {
+  color: var(--text-3);
+  transition: transform 0.3s ease;
+}
+
+.curriculum-level.open .expand-icon {
+  transform: rotate(180deg);
+}
+
+.curriculum-level-videos {
+  display: none;
+  padding: 8px 12px 12px;
+  background: var(--surface);
+}
+
+.curriculum-level.open .curriculum-level-videos {
+  display: block;
+}
+
+.curriculum-video {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.curriculum-video:hover {
+  background: var(--surface-raised);
+}
+
+.curriculum-video.active {
+  background: var(--gold-glow);
+  border: 1px solid rgba(201,168,76,0.3);
+}
+
+.curriculum-video .video-status-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+.curriculum-video.completed .video-status-icon {
+  background: rgba(34,197,94,0.15);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.curriculum-video .video-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.curriculum-video .video-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.curriculum-video .video-duration {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ACADEMY NOTEBOOK - Premium card styling
+   ═══════════════════════════════════════════════════════════════════════ */
+.academy-notebook {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  display: flex;
+  flex-direction: column;
+  height: 90px;
+  min-height: 90px;
+  max-height: 90px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Premium gradient accent bar on notebook */
+.academy-notebook::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--premium-gradient);
+  border-radius: 4px 0 0 4px;
+}
+
+/* Subtle glow effect */
+.academy-notebook::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, rgba(201,168,76,0.03) 0%, transparent 50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.academy-notebook:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(201,168,76,0.08);
+  transform: translateY(-2px);
+}
+
+.academy-notebook:hover::after {
+  opacity: 1;
+}
+
+.notebook-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface) 100%);
+  flex-shrink: 0;
+  min-height: 32px;
+  max-height: 32px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CHAT WIDGET ADJUSTMENT FOR ACADEMY
+   ═══════════════════════════════════════════════════════════════════════ */
+body:has(#view-academy.active) #qp-support-widget {
+  bottom: 120px !important;
+}
+
+@media (max-width: 820px) {
+  body:has(#view-academy.active) #qp-support-widget {
+    display: none !important;
   }
 }
 
@@ -11121,6 +11572,20 @@ button, .nav-item, .room, .video-item, .filter-chip {
           <!-- Levels loaded dynamically -->
           <div style="padding: 20px; text-align: center; color: var(--text-3); font-size: 13px;">Loading curriculum...</div>
         </div>
+        
+        <!-- Saved Notes Section -->
+        <div class="saved-notes-section" id="saved-notes-section">
+          <div class="saved-notes-header">
+            <h5>📝 My Notes</h5>
+            <span class="note-count" id="note-count">0</span>
+          </div>
+          <div class="saved-notes-list" id="saved-notes-list">
+            <div class="saved-notes-empty">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+              <span>Notes will appear here</span>
+            </div>
+          </div>
+        </div>
       </nav>
       
       <!-- Video Section - Main Content -->
@@ -11134,12 +11599,19 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <span class="current-lesson-title" id="progress-lesson-title">Select a lesson to begin</span>
             <span class="lesson-meta" id="progress-lesson-meta"></span>
           </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Course progress">
-              <div class="progress-bar-fill" id="course-progress-fill" style="width: 0%"></div>
-            </div>
-            <span class="progress-percentage" id="course-progress-percent">0%</span>
+          
+          <!-- Level Progress Segments (current level's 3 parts) -->
+          <div class="level-progress-segments" id="level-progress-segments">
+            <div class="segment" id="segment-1" title="Part 1"></div>
+            <div class="segment" id="segment-2" title="Part 2"></div>
+            <div class="segment" id="segment-3" title="Part 3"></div>
           </div>
+          
+          <button class="view-curriculum-btn" onclick="openCurriculumModal()" title="View all 9 levels">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Full Curriculum
+          </button>
+          
           <div class="video-controls">
             <button class="btn-icon" onclick="playPreviousVideo()" title="Previous" data-key="P">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
@@ -11181,6 +11653,9 @@ button, .nav-item, .room, .video-item, .filter-chip {
             <div class="notebook-actions">
               <span id="notebook-char-count" class="notebook-char-count">0</span>
               <span id="notebook-status" class="notebook-status"></span>
+              <button class="btn-icon sm save-note-btn" onclick="saveNoteToSidebar()" title="Save Note to Sidebar" style="background: var(--gold-glow); border-color: rgba(201,168,76,0.3);">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              </button>
               <button class="btn-icon sm" onclick="copyNotes()" title="Copy Notes">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
               </button>
@@ -11238,6 +11713,25 @@ button, .nav-item, .room, .video-item, .filter-chip {
           </div>
           <button class="btn sm" onclick="addAcademyVideo()">Add Video</button>
           <div id="add-video-result" style="margin-top: 12px; font-size: 13px;"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Full Curriculum Modal -->
+    <div class="curriculum-modal" id="curriculum-modal">
+      <div class="curriculum-modal-content">
+        <div class="curriculum-modal-header">
+          <h3>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 6 3 6 3s6-1 6-3v-5"/></svg>
+            Full Curriculum
+          </h3>
+          <button class="close-btn" onclick="closeCurriculumModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="curriculum-modal-body" id="curriculum-modal-body">
+          <!-- Levels will be loaded dynamically -->
+          <div style="padding: 40px; text-align: center; color: var(--text-3);">Loading curriculum...</div>
         </div>
       </div>
     </div>
@@ -20061,6 +20555,9 @@ async function loadAcademyVideos() {
     renderAcademyLevels();
     updateProgressRing();
     
+    // Load saved notes for sidebar
+    loadSavedNotes();
+    
     // Auto-resume to next uncompleted video
     autoResumeVideo();
     
@@ -20347,6 +20844,9 @@ function playVideo(videoId) {
   // Load notebook for this video
   loadNotebookForVideo(videoId);
   
+  // Update level progress segments
+  updateLevelSegments();
+  
   // Close mobile nav after selecting video
   document.getElementById('academy-levels')?.classList.remove('open');
   
@@ -20375,6 +20875,7 @@ async function markVideoComplete() {
     academyProgress[currentVideoId] = { completed: true };
     renderAcademyLevels();
     updateProgressRing();
+    updateLevelSegments();
     
     // Visual feedback on button
     if (btn) {
@@ -20750,6 +21251,306 @@ function copyNotes() {
 function jumpToNote(videoId) {
   closeModal();
   playVideo(videoId);
+}
+
+// ========================================
+// SAVED NOTES SIDEBAR - NEW ROUND 2
+// ========================================
+let savedNotes = [];
+
+// Load saved notes from localStorage (backup) or Supabase
+async function loadSavedNotes() {
+  try {
+    // Try localStorage first for offline support
+    const localNotes = localStorage.getItem('qp-academy-saved-notes');
+    if (localNotes) {
+      savedNotes = JSON.parse(localNotes);
+      renderSavedNotesInSidebar();
+    }
+    
+    // Then try Supabase for synced notes
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return;
+    
+    const { data: notes, error } = await supabaseClient
+      .from('academy_notes')
+      .select('*')
+      .eq('user_id', user.id)
+      .not('saved_timestamp', 'is', null)
+      .order('saved_timestamp', { ascending: false });
+    
+    if (!error && notes) {
+      savedNotes = notes.map(n => ({
+        id: n.id,
+        videoId: n.video_id,
+        timestamp: n.saved_timestamp || n.updated_at,
+        videoTimestamp: n.video_timestamp || '0:00',
+        content: n.content,
+        lessonName: getLessonName(n.video_id)
+      }));
+      localStorage.setItem('qp-academy-saved-notes', JSON.stringify(savedNotes));
+      renderSavedNotesInSidebar();
+    }
+  } catch (e) {
+    console.log('Error loading saved notes:', e);
+  }
+}
+
+function getLessonName(videoId) {
+  const video = academyVideos.find(v => v.id === videoId);
+  return video ? `L${video.level}.${video.position}` : 'Note';
+}
+
+function getVideoTimestamp() {
+  // Try to get current timestamp from video iframe
+  const iframe = document.getElementById('video-iframe');
+  // For now, return placeholder - could integrate with Bunny/Vimeo API
+  return '@0:00';
+}
+
+async function saveNoteToSidebar() {
+  if (!currentVideoId) {
+    alert('Select a lesson first');
+    return;
+  }
+  
+  const content = document.getElementById('notebook-content').value.trim();
+  if (!content) {
+    alert('Write some notes first');
+    return;
+  }
+  
+  const video = academyVideos.find(v => v.id === currentVideoId);
+  const lessonName = video ? `L${video.level}.${video.position}` : 'Note';
+  const timestamp = getVideoTimestamp();
+  
+  const note = {
+    id: Date.now().toString(),
+    videoId: currentVideoId,
+    timestamp: new Date().toISOString(),
+    videoTimestamp: timestamp,
+    content: content,
+    lessonName: lessonName
+  };
+  
+  // Add to saved notes
+  savedNotes.unshift(note);
+  
+  // Save to localStorage
+  localStorage.setItem('qp-academy-saved-notes', JSON.stringify(savedNotes));
+  
+  // Try to save to Supabase with timestamp marker
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      await supabaseClient
+        .from('academy_notes')
+        .upsert({
+          user_id: user.id,
+          video_id: currentVideoId,
+          content: content,
+          saved_timestamp: note.timestamp,
+          video_timestamp: timestamp,
+          updated_at: new Date().toISOString()
+        });
+    }
+  } catch (e) {
+    console.log('Supabase save error:', e);
+  }
+  
+  // Re-render sidebar
+  renderSavedNotesInSidebar();
+  
+  // Visual feedback
+  const statusEl = document.getElementById('notebook-status');
+  statusEl.textContent = '✓ Saved to sidebar';
+  statusEl.className = 'notebook-status saved';
+  setTimeout(() => { 
+    statusEl.textContent = ''; 
+    statusEl.className = 'notebook-status';
+  }, 2000);
+}
+
+function renderSavedNotesInSidebar() {
+  const listEl = document.getElementById('saved-notes-list');
+  const countEl = document.getElementById('note-count');
+  
+  if (!listEl) return;
+  
+  countEl.textContent = savedNotes.length;
+  
+  if (savedNotes.length === 0) {
+    listEl.innerHTML = `
+      <div class="saved-notes-empty">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span>Notes will appear here</span>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  for (const note of savedNotes.slice(0, 10)) { // Show last 10
+    const preview = note.content.length > 60 ? note.content.substring(0, 60) + '...' : note.content;
+    html += `
+      <div class="saved-note collapsed" onclick="toggleNoteExpand(this)" data-video-id="${note.videoId}">
+        <div class="note-header">
+          <span class="note-lesson">${note.lessonName}</span>
+          <span class="note-timestamp">${note.videoTimestamp}</span>
+        </div>
+        <div class="note-content">${note.content}</div>
+      </div>
+    `;
+  }
+  
+  listEl.innerHTML = html;
+}
+
+function toggleNoteExpand(el) {
+  const content = el.querySelector('.note-content');
+  const isExpanded = content.classList.contains('expanded');
+  
+  // Collapse all others
+  document.querySelectorAll('.saved-note .note-content').forEach(c => c.classList.remove('expanded'));
+  
+  if (!isExpanded) {
+    content.classList.add('expanded');
+  }
+  
+  // Double-click to jump to video
+  el.ondblclick = function() {
+    const videoId = el.dataset.videoId;
+    if (videoId) playVideo(videoId);
+  };
+}
+
+// ========================================
+// CURRICULUM MODAL - NEW ROUND 2
+// ========================================
+function openCurriculumModal() {
+  const modal = document.getElementById('curriculum-modal');
+  modal.classList.add('open');
+  renderCurriculumModal();
+  
+  // Close on backdrop click
+  modal.onclick = function(e) {
+    if (e.target === modal) closeCurriculumModal();
+  };
+  
+  // Close on Escape
+  document.addEventListener('keydown', function curriculumEscHandler(e) {
+    if (e.key === 'Escape') {
+      closeCurriculumModal();
+      document.removeEventListener('keydown', curriculumEscHandler);
+    }
+  });
+}
+
+function closeCurriculumModal() {
+  document.getElementById('curriculum-modal').classList.remove('open');
+}
+
+function renderCurriculumModal() {
+  const body = document.getElementById('curriculum-modal-body');
+  
+  // Group videos by level
+  const levels = {};
+  for (const video of academyVideos) {
+    if (!levels[video.level]) levels[video.level] = [];
+    levels[video.level].push(video);
+  }
+  
+  const currentLevel = academyVideos.find(v => v.id === currentVideoId)?.level || 1;
+  
+  let html = '';
+  for (let level = 1; level <= 9; level++) {
+    const videos = levels[level] || [];
+    const completedInLevel = videos.filter(v => academyProgress[v.id]?.completed).length;
+    const isComplete = videos.length > 0 && completedInLevel === videos.length;
+    const isCurrent = level === currentLevel;
+    
+    html += `
+      <div class="curriculum-level ${isComplete ? 'completed' : ''} ${isCurrent ? 'current' : ''}" data-level="${level}">
+        <div class="curriculum-level-header" onclick="toggleCurriculumLevel(${level})">
+          <div class="level-info">
+            <div class="level-number">${isComplete ? '✓' : level}</div>
+            <div>
+              <div class="level-title">Level ${level}</div>
+              <div class="level-progress ${isComplete ? 'complete' : ''}">${completedInLevel}/${videos.length} complete</div>
+            </div>
+          </div>
+          <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="curriculum-level-videos">
+          ${videos.map(v => `
+            <div class="curriculum-video ${academyProgress[v.id]?.completed ? 'completed' : ''} ${v.id === currentVideoId ? 'active' : ''}" onclick="playVideoFromCurriculum('${v.id}')">
+              <div class="video-status-icon">${academyProgress[v.id]?.completed ? '✓' : v.position}</div>
+              <div class="video-info">
+                <div class="video-title">${v.title}</div>
+                <div class="video-duration">${formatDuration(v.duration_seconds)}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  body.innerHTML = html;
+  
+  // Open current level by default
+  document.querySelector(`.curriculum-level[data-level="${currentLevel}"]`)?.classList.add('open');
+}
+
+function toggleCurriculumLevel(level) {
+  const levelEl = document.querySelector(`.curriculum-level[data-level="${level}"]`);
+  if (levelEl) {
+    levelEl.classList.toggle('open');
+  }
+}
+
+function playVideoFromCurriculum(videoId) {
+  closeCurriculumModal();
+  playVideo(videoId);
+}
+
+function formatDuration(seconds) {
+  if (!seconds) return '--:--';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+// ========================================
+// LEVEL PROGRESS SEGMENTS - NEW ROUND 2
+// ========================================
+function updateLevelSegments() {
+  // Get current level
+  const currentVideo = academyVideos.find(v => v.id === currentVideoId);
+  if (!currentVideo) return;
+  
+  const currentLevel = currentVideo.level;
+  const videosInLevel = academyVideos.filter(v => v.level === currentLevel).sort((a, b) => a.position - b.position);
+  
+  // Update each segment
+  for (let i = 0; i < 3; i++) {
+    const segment = document.getElementById(`segment-${i + 1}`);
+    if (!segment) continue;
+    
+    const video = videosInLevel[i];
+    if (!video) {
+      segment.classList.remove('completed', 'active');
+      segment.title = `Part ${i + 1}`;
+      continue;
+    }
+    
+    const isCompleted = academyProgress[video.id]?.completed;
+    const isActive = video.id === currentVideoId;
+    
+    segment.classList.toggle('completed', isCompleted);
+    segment.classList.toggle('active', isActive && !isCompleted);
+    segment.title = `Part ${i + 1}: ${video.title}`;
+  }
 }
 
 // Search notes
