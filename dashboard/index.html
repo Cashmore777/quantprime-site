@@ -6598,6 +6598,25 @@ body {
 }
 .video-item.active .video-status { color: var(--gold); }
 
+/* Locked states */
+.level-group.locked .level-header {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.level-group.locked .level-header:hover {
+  background: transparent;
+}
+.video-item.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.video-item.locked:hover {
+  background: transparent;
+}
+.video-item.locked .video-status {
+  color: var(--text-3);
+}
+
 .video-item .video-status {
   font-family: var(--mono);
   font-size: 9px;
@@ -20748,34 +20767,58 @@ function renderAcademyLevels() {
     return;
   }
   
-  // Group by level
+  // Group by level and sort within each level
   const levels = {};
   academyVideos.forEach(v => {
     if (!levels[v.level]) levels[v.level] = [];
     levels[v.level].push(v);
   });
+  Object.keys(levels).forEach(lvl => {
+    levels[lvl].sort((a, b) => a.position - b.position);
+  });
+  
+  // Build ordered list of all videos (level 0 first, then 1, etc.)
+  const allVideosOrdered = [];
+  for (let l = 0; l <= 9; l++) {
+    if (levels[l]) allVideosOrdered.push(...levels[l]);
+  }
+  
+  // Determine which videos are unlocked (all previous must be completed)
+  const unlockedVideos = new Set();
+  let allPreviousCompleted = true;
+  for (const video of allVideosOrdered) {
+    if (allPreviousCompleted) {
+      unlockedVideos.add(video.id);
+    }
+    if (!academyProgress[video.id]?.completed) {
+      allPreviousCompleted = false;
+    }
+  }
   
   let html = '';
   Object.keys(levels).sort((a, b) => a - b).forEach(level => {
     const vids = levels[level];
     const completed = vids.filter(v => academyProgress[v.id]?.completed).length;
+    const levelLocked = vids.length > 0 && !unlockedVideos.has(vids[0].id);
     
     const levelLabel = level == 0 ? 'Introduction' : `Level ${level}`;
+    const lockIcon = levelLocked ? '🔒 ' : '';
     html += `
-      <div class="level-group" data-level="${level}">
-        <div class="level-header" onclick="toggleLevel(${level})">
-          <span>${levelLabel}</span>
+      <div class="level-group ${levelLocked ? 'locked' : ''}" data-level="${level}">
+        <div class="level-header" onclick="${levelLocked ? 'showLockedLevelMessage()' : `toggleLevel(${level})`}">
+          <span>${lockIcon}${levelLabel}</span>
           <span class="level-progress">${completed}/${vids.length}</span>
         </div>
         <div class="level-videos">
           ${vids.map(v => {
             const prog = academyProgress[v.id];
-            const status = prog?.completed ? '✓' : '○';
-            const statusClass = prog?.completed ? 'completed' : '';
-            const duration = formatDuration(v.duration_seconds);
+            const isLocked = !unlockedVideos.has(v.id);
+            const status = prog?.completed ? '✓' : isLocked ? '🔒' : '○';
+            const statusClass = prog?.completed ? 'completed' : isLocked ? 'locked' : '';
+            const duration = isLocked ? 'Locked' : formatDuration(v.duration_seconds);
             const editBtn = userTier === 'admin' ? `<button class="video-edit-btn" onclick="event.stopPropagation(); editVideo('${v.id}')" title="Edit">✎</button>` : '';
             return `
-              <div class="video-item ${statusClass}" data-video-id="${v.id}" onclick="playVideo('${v.id}')">
+              <div class="video-item ${statusClass}" data-video-id="${v.id}" onclick="${isLocked ? 'showLockedMessage()' : `playVideo('${v.id}')`}">
                 <span class="video-status">${status}</span>
                 <span class="video-name">${v.title}</span>
                 <span class="video-duration">${duration}</span>
@@ -20790,6 +20833,14 @@ function renderAcademyLevels() {
   
   container.innerHTML = html;
   document.getElementById('videos-total').textContent = academyVideos.length;
+}
+
+function showLockedLevelMessage() {
+  if (typeof showToast === 'function') {
+    showToast('Complete previous levels to unlock this one', 'warning');
+  } else {
+    alert('Complete previous levels to unlock this one');
+  }
 }
 
 function toggleLevel(level) {
