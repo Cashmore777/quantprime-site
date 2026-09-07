@@ -6135,7 +6135,8 @@ body {
 
 /* Lock academy view to viewport - CRITICAL: no overflow, no scroll */
 /* Remove main padding when academy is active */
-#main:has(#view-academy.active) {
+#main:has(#view-academy.active),
+#main.academy-active {
   padding: 0 !important;
   padding-top: calc(var(--header-height) + var(--safe-top)) !important;
   padding-bottom: 0 !important;
@@ -6187,6 +6188,14 @@ body {
 @media (max-width: 650px) {
   .academy-layout { 
     grid-template-columns: 1fr;
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+  
+  /* Ensure video section fills the full academy layout on mobile */
+  .video-section {
+    height: 100% !important;
+    max-height: 100% !important;
   }
   
   .level-nav {
@@ -15580,6 +15589,12 @@ function switchView(viewId) {
   document.querySelectorAll('.nav-item, #mobile-nav button').forEach(b => {
     b.classList.toggle('active', b.dataset.view === viewId);
   });
+  
+  // Toggle academy-active class on #main for CSS fallback (when :has() not supported)
+  const main = document.getElementById('main');
+  if (main) {
+    main.classList.toggle('academy-active', viewId === 'academy');
+  }
   
   // Update URL to persist view on refresh (without page reload)
   const url = new URL(window.location);
