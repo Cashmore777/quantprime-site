@@ -307,44 +307,12 @@
             line-height: 1.5;
         }
 
-        /* PDF Preview - static info, not tappable */
-        .pdf-preview {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 24px;
-            padding: 0 4px;
-        }
-
-        .pdf-icon {
-            font-size: 18px;
-            color: var(--text-muted);
-            flex-shrink: 0;
-        }
-
-        .pdf-info {
-            display: flex;
-            align-items: baseline;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .pdf-info h4 {
+        /* PDF meta - simple text */
+        .pdf-meta {
             font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin: 0;
-        }
-
-        .pdf-info p {
-            font-size: 12px;
             color: var(--text-muted);
-            margin: 0;
-        }
-
-        .pdf-info p::before {
-            content: "·";
-            margin-right: 6px;
+            margin-bottom: 24px;
+            text-align: center;
         }
 
         /* Success state */
@@ -525,13 +493,7 @@
                     <h2>Get The Manifesto – free</h2>
                     <p class="subtext">Instant access. No spam. Unsubscribe anytime.</p>
                     
-                    <div class="pdf-preview">
-                        <span class="pdf-icon">📄</span>
-                        <div class="pdf-info">
-                            <h4>The Quant Prime Manifesto</h4>
-                            <p>8 pages · 5 min read</p>
-                        </div>
-                    </div>
+                    <p class="pdf-meta">8 pages · 5 min read</p>
 
                     <form id="leadForm">
                         <div class="form-group">
