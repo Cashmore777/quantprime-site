@@ -307,38 +307,44 @@
             line-height: 1.5;
         }
 
-        /* PDF Preview */
+        /* PDF Preview - static info, not tappable */
         .pdf-preview {
-            background: var(--surface-dim);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding: 0 4px;
         }
 
         .pdf-icon {
-            width: 44px;
-            height: 44px;
-            background: var(--gold-bg);
-            border-radius: 10px;
+            font-size: 18px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .pdf-info {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
+            align-items: baseline;
+            gap: 6px;
+            flex-wrap: wrap;
         }
 
         .pdf-info h4 {
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 3px;
-            color: var(--text);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin: 0;
         }
 
         .pdf-info p {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
+            margin: 0;
+        }
+
+        .pdf-info p::before {
+            content: "·";
+            margin-right: 6px;
         }
 
         /* Success state */
@@ -520,10 +526,10 @@
                     <p class="subtext">Instant access. No spam. Unsubscribe anytime.</p>
                     
                     <div class="pdf-preview">
-                        <div class="pdf-icon">📄</div>
+                        <span class="pdf-icon">📄</span>
                         <div class="pdf-info">
                             <h4>The Quant Prime Manifesto</h4>
-                            <p>8 pages • 5 min read</p>
+                            <p>8 pages · 5 min read</p>
                         </div>
                     </div>
 
