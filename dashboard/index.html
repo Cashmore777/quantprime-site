@@ -6564,6 +6564,25 @@ body {
 
 .level-group.open .level-videos { display: block; }
 
+/* Flat intro entry - no nesting needed for single-video level */
+.level-group.flat {
+  margin-bottom: 2px;
+}
+.level-group.flat .video-item.intro-flat {
+  padding: 10px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface-raised);
+  border-radius: 6px;
+  border-left: 3px solid var(--gold);
+}
+.level-group.flat .video-item.intro-flat:hover {
+  background: var(--gold-glow);
+}
+.level-group.flat .video-item.intro-flat.completed {
+  border-left-color: var(--green);
+}
+
 .video-item {
   display: flex;
   align-items: center;
@@ -11739,16 +11758,14 @@ button, .nav-item, .room, .video-item, .filter-chip {
     <div class="academy-layout">
       <!-- Level Navigation -->
       <nav class="level-nav" id="academy-levels" aria-label="Course levels">
-        <div class="progress-ring">
-          <svg class="ring-svg" viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="20" fill="none" stroke="var(--border)" stroke-width="4"/>
-            <circle id="progress-circle" cx="24" cy="24" r="20" fill="none" stroke="#c9a84c" stroke-width="4" stroke-dasharray="125.6" stroke-dashoffset="125.6" stroke-linecap="round" transform="rotate(-90 24 24)"/>
-            <text id="progress-percent" x="24" y="28" text-anchor="middle" fill="var(--text-1)" font-family="monospace" font-size="11">0%</text>
+        <!-- Hidden progress elements for JS compatibility -->
+        <div style="display:none;">
+          <svg viewBox="0 0 48 48">
+            <circle id="progress-circle" cx="24" cy="24" r="20"/>
+            <text id="progress-percent">0%</text>
           </svg>
-          <div>
-            <div style="font-size: 13px; font-weight: 600;">Your Progress</div>
-            <div class="mono" style="font-size: 10px; color: var(--text-3);"><span id="videos-completed">0</span> / <span id="videos-total">27</span> COMPLETE</div>
-          </div>
+          <span id="videos-completed">0</span>
+          <span id="videos-total">27</span>
         </div>
         
         <div id="level-list">
@@ -20801,7 +20818,29 @@ function renderAcademyLevels() {
     const completed = vids.filter(v => academyProgress[v.id]?.completed).length;
     const levelLocked = vids.length > 0 && !unlockedVideos.has(vids[0].id);
     
-    const levelLabel = level == 0 ? 'Introduction' : `Level ${level}`;
+    // Flatten Introduction (level 0) - single video doesn't need nesting
+    if (level == 0 && vids.length === 1) {
+      const v = vids[0];
+      const prog = academyProgress[v.id];
+      const isLocked = !unlockedVideos.has(v.id);
+      const status = prog?.completed ? '✓' : isLocked ? '🔒' : '○';
+      const statusClass = prog?.completed ? 'completed' : isLocked ? 'locked' : '';
+      const duration = isLocked ? 'Locked' : formatDuration(v.duration_seconds);
+      const editBtn = userTier === 'admin' ? `<button class="video-edit-btn" onclick="event.stopPropagation(); editVideo('${v.id}')" title="Edit">✎</button>` : '';
+      html += `
+        <div class="level-group flat ${levelLocked ? 'locked' : ''}" data-level="0">
+          <div class="video-item intro-flat ${statusClass}" data-video-id="${v.id}" onclick="${isLocked ? 'showLockedMessage()' : `playVideo('${v.id}')`}">
+            <span class="video-status">${status}</span>
+            <span class="video-name">Introduction</span>
+            <span class="video-duration">${duration}</span>
+            ${editBtn}
+          </div>
+        </div>
+      `;
+      return;
+    }
+    
+    const levelLabel = `Level ${level}`;
     const lockIcon = levelLocked ? '🔒 ' : '';
     html += `
       <div class="level-group ${levelLocked ? 'locked' : ''}" data-level="${level}">
@@ -21077,7 +21116,7 @@ function playVideo(videoId) {
   
   // Update progress header
   document.getElementById('progress-lesson-title').textContent = video.title;
-  const levelMeta = video.level == 0 ? 'Introduction' : `Level ${video.level}`;
+  const levelMeta = video.level == 0 ? 'Orientation' : `Level ${video.level}`;
   document.getElementById('progress-lesson-meta').textContent = `${levelMeta} • ${formatDuration(video.duration_seconds)}`;
   
   // Update notebook tag
