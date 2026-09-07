@@ -20746,10 +20746,11 @@ function renderAcademyLevels() {
     const vids = levels[level];
     const completed = vids.filter(v => academyProgress[v.id]?.completed).length;
     
+    const levelLabel = level == 0 ? 'Introduction' : `Level ${level}`;
     html += `
       <div class="level-group" data-level="${level}">
         <div class="level-header" onclick="toggleLevel(${level})">
-          <span>Level ${level}</span>
+          <span>${levelLabel}</span>
           <span class="level-progress">${completed}/${vids.length}</span>
         </div>
         <div class="level-videos">
@@ -21011,10 +21012,12 @@ function playVideo(videoId) {
   
   // Update progress header
   document.getElementById('progress-lesson-title').textContent = video.title;
-  document.getElementById('progress-lesson-meta').textContent = `Level ${video.level} • ${formatDuration(video.duration_seconds)}`;
+  const levelMeta = video.level == 0 ? 'Introduction' : `Level ${video.level}`;
+  document.getElementById('progress-lesson-meta').textContent = `${levelMeta} • ${formatDuration(video.duration_seconds)}`;
   
   // Update notebook tag
-  document.getElementById('notebook-lesson-tag').textContent = `L${video.level}: ${video.title.substring(0, 20)}${video.title.length > 20 ? '...' : ''}`;
+  const levelTag = video.level == 0 ? 'Intro' : `L${video.level}`;
+  document.getElementById('notebook-lesson-tag').textContent = `${levelTag}: ${video.title.substring(0, 20)}${video.title.length > 20 ? '...' : ''}`;
   
   // Don't show old info panel anymore
   // info.style.display = 'block';
@@ -21776,9 +21779,9 @@ function renderCurriculumModal() {
   
   const currentLevel = academyVideos.find(v => v.id === currentVideoId)?.level || 1;
   
-  // Build ordered list of all videos to check completion sequence
+  // Build ordered list of all videos to check completion sequence (starting from 0 for intro)
   const allVideosOrdered = [];
-  for (let l = 1; l <= 9; l++) {
+  for (let l = 0; l <= 9; l++) {
     if (levels[l]) allVideosOrdered.push(...levels[l]);
   }
   
@@ -21795,20 +21798,23 @@ function renderCurriculumModal() {
   }
   
   let html = '';
-  for (let level = 1; level <= 9; level++) {
+  // Include level 0 (Introduction) and levels 1-9
+  for (let level = 0; level <= 9; level++) {
     const videos = levels[level] || [];
     const completedInLevel = videos.filter(v => academyProgress[v.id]?.completed).length;
     const isComplete = videos.length > 0 && completedInLevel === videos.length;
     const isCurrent = level === currentLevel;
     const levelLocked = videos.length > 0 && !unlockedVideos.has(videos[0].id);
     
+    const levelTitle = level === 0 ? 'Introduction' : `Level ${level}`;
+    const levelNum = level === 0 ? '★' : level;
     html += `
       <div class="curriculum-level ${isComplete ? 'completed' : ''} ${isCurrent ? 'current' : ''} ${levelLocked ? 'locked' : ''}" data-level="${level}">
         <div class="curriculum-level-header" onclick="toggleCurriculumLevel(${level})">
           <div class="level-info">
-            <div class="level-number">${isComplete ? '✓' : levelLocked ? '🔒' : level}</div>
+            <div class="level-number">${isComplete ? '✓' : levelLocked ? '🔒' : levelNum}</div>
             <div>
-              <div class="level-title">Level ${level}</div>
+              <div class="level-title">${levelTitle}</div>
               <div class="level-progress ${isComplete ? 'complete' : ''}">${completedInLevel}/${videos.length} complete</div>
             </div>
           </div>

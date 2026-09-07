@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascension Academy - Introduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --silver: #e8e8e8;
+  --silver-soft: rgba(232, 232, 232, 0.7);
+  --silver-faint: rgba(232, 232, 232, 0.12);
+  --white: #ffffff;
+  --gold: #c9a84c;
+  --bg: #050507;
+  --bg-elevated: #0a0a0e;
+  --text: #ffffff;
+  --text-soft: rgba(255,255,255,0.75);
+  --text-muted: rgba(255,255,255,0.4);
+  --danger: #ef4444;
+  --control-bg: #0c0c10;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === LAYOUT === */
+.recording-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+.control-bar {
+  height: 72px;
+  background: var(--control-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  flex-shrink: 0;
+}
+
+.safe-frame {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #000;
+}
+
+.frame-border {
+  width: 100%;
+  max-width: 1600px;
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === CONTROLS === */
+.ctrl-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-soft);
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text);
+}
+
+.ctrl-btn.danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.ctrl-btn svg { width: 16px; height: 16px; }
+
+.progress-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+
+.progress-main span { color: var(--silver); }
+
+.progress-clicks { display: flex; align-items: center; gap: 4px; }
+
+.click-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.2s;
+}
+
+.click-dot.active { background: var(--silver); }
+.click-dot.done { background: rgba(232, 232, 232, 0.5); }
+
+.click-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 8px;
+  letter-spacing: 0.03em;
+}
+
+/* === SLIDE BASE === */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === CINEMATIC BACKGROUNDS === */
+.bg-base {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  z-index: 0;
+}
+
+/* Animated gradient orb */
+.bg-orb {
+  position: absolute;
+  width: 1000px;
+  height: 1000px;
+  border-radius: 50%;
+  filter: blur(180px);
+  opacity: 0.12;
+  animation: orbFloat 20s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-orb.silver { background: var(--silver); }
+.bg-orb.white { background: rgba(255,255,255,0.8); }
+.bg-orb.danger { background: var(--danger); }
+
+.bg-orb.center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.bg-orb.drift-1 { top: -20%; left: 60%; animation-delay: -5s; }
+.bg-orb.drift-2 { bottom: -30%; left: 20%; animation-delay: -10s; }
+
+@keyframes orbFloat {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-45%, -55%) scale(1.1); }
+}
+
+/* Ascending lines */
+.ascending-lines {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.08;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ascending-line {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to top, transparent, var(--silver), transparent);
+  animation: ascend 8s linear infinite;
+}
+
+.ascending-line:nth-child(1) { left: 15%; height: 30%; animation-delay: 0s; }
+.ascending-line:nth-child(2) { left: 35%; height: 45%; animation-delay: -2s; }
+.ascending-line:nth-child(3) { left: 55%; height: 35%; animation-delay: -4s; }
+.ascending-line:nth-child(4) { left: 75%; height: 50%; animation-delay: -6s; }
+.ascending-line:nth-child(5) { left: 90%; height: 40%; animation-delay: -1s; }
+
+@keyframes ascend {
+  0% { bottom: -50%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { bottom: 120%; opacity: 0; }
+}
+
+/* Subtle noise */
+.bg-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Vignette - reduced intensity to prevent hiding content */
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.35) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Logo - more prominent for intro */
+.logo {
+  position: absolute;
+  bottom: 32px;
+  right: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.25);
+  z-index: 10;
+}
+
+.logo span { color: rgba(232, 232, 232, 0.5); }
+
+/* Content layer - always above backgrounds */
+.slide .content {
+  position: relative;
+  z-index: 20;
+}
+
+/* === TYPOGRAPHY - CINEMATIC === */
+.eyebrow {
+  font-size: 12px;
+  color: var(--silver);
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+
+.headline {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+
+.headline-hero { font-size: 120px; }
+.headline-xl { font-size: 96px; }
+.headline-lg { font-size: 72px; }
+.headline-md { font-size: 56px; }
+
+.headline .accent { 
+  color: var(--silver);
+  text-shadow: 0 0 80px rgba(232, 232, 232, 0.3);
+}
+
+.headline .accent-danger { color: var(--danger); }
+
+.body-hero {
+  font-size: 28px;
+  color: var(--text-soft);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+.body-lg {
+  font-size: 24px;
+  color: var(--text-soft);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.body-md {
+  font-size: 18px;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+/* === ANIMATIONS - DRAMATIC === */
+.step {
+  opacity: 0;
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), 
+              transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.step.visible { 
+  opacity: 1 !important; 
+}
+
+.step.rise {
+  transform: translateY(60px);
+}
+.step.rise.visible {
+  transform: translateY(0) !important;
+}
+
+.step.fade-scale {
+  transform: scale(0.92);
+}
+.step.fade-scale.visible {
+  transform: scale(1) !important;
+}
+
+.step.fade-in {
+  transform: none;
+}
+.step.fade-in.visible {
+  transform: none !important;
+}
+
+.step.slide-left {
+  transform: translateX(-80px);
+}
+.step.slide-left.visible {
+  transform: translateX(0) !important;
+}
+
+.step.slide-right {
+  transform: translateX(80px);
+}
+.step.slide-right.visible {
+  transform: translateX(0) !important;
+}
+
+.delay-1 { transition-delay: 0.15s; }
+.delay-2 { transition-delay: 0.3s; }
+.delay-3 { transition-delay: 0.45s; }
+.delay-4 { transition-delay: 0.6s; }
+
+/* === SLIDE 1: HERO OPENING === */
+.slide-hero {
+  text-align: center;
+}
+
+.slide-hero .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  padding: 60px;
+}
+
+/* Geometric frame */
+.hero-frame {
+  position: absolute;
+  inset: 60px;
+  border: 1px solid rgba(232, 232, 232, 0.1);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hero-frame::before,
+.hero-frame::after {
+  content: '';
+  position: absolute;
+  background: var(--silver);
+}
+
+.hero-frame::before {
+  top: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 1px;
+}
+
+.hero-frame::after {
+  bottom: -1px; left: 50%;
+  transform: translateX(-50%);
+  width: 120px; height: 1px;
+}
+
+/* === SLIDE 2: THE PROBLEM === */
+.slide-problem {
+  text-align: center;
+}
+
+.slide-problem .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  padding: 60px;
+}
+
+.problem-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 56px;
+  width: 100%;
+}
+
+.problem-item {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 32px;
+  background: rgba(239, 68, 68, 0.05);
+  border-left: 2px solid var(--danger);
+  border-radius: 0 12px 12px 0;
+  text-align: left;
+}
+
+.problem-item .number {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--danger);
+  opacity: 0.6;
+}
+
+.problem-item p {
+  font-size: 20px;
+  color: var(--text-soft);
+  font-weight: 500;
+}
+
+/* === SLIDE 3: THE SHIFT === */
+.slide-shift {
+  text-align: center;
+}
+
+.slide-shift .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1100px;
+  padding: 60px;
+}
+
+.shift-comparison {
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  margin-top: 56px;
+}
+
+.shift-side {
+  flex: 1;
+  text-align: center;
+}
+
+.shift-side.old { opacity: 0.7; }
+
+.shift-label {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.shift-side.new .shift-label { color: var(--silver); }
+
+.shift-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.shift-item {
+  font-size: 18px;
+  color: var(--text-muted);
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+}
+
+.shift-side.old .shift-item {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.shift-side.new .shift-item {
+  color: var(--text-soft);
+  background: rgba(232, 232, 232, 0.05);
+  border: 1px solid rgba(232, 232, 232, 0.1);
+}
+
+.shift-arrow {
+  font-size: 32px;
+  color: var(--silver);
+  opacity: 0.4;
+}
+
+/* === SLIDE 4: THE JOURNEY === */
+.slide-journey {
+  text-align: center;
+}
+
+.slide-journey .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
+  padding: 60px;
+}
+
+.journey-path {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 64px;
+  position: relative;
+}
+
+.journey-path::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 80px;
+  right: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,232,232,0.2), rgba(232,232,232,0.2), transparent);
+}
+
+.journey-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 40px;
+  position: relative;
+}
+
+.journey-number {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 232, 232, 0.2);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--silver);
+  margin-bottom: 20px;
+}
+
+.journey-node.active .journey-number {
+  border-color: var(--silver);
+  box-shadow: 0 0 40px rgba(232, 232, 232, 0.2);
+}
+
+.journey-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.journey-levels {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+/* === SLIDE 5: WHO === */
+.slide-who {
+  text-align: center;
+}
+
+.slide-who .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  padding: 60px;
+}
+
+.who-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 48px;
+  width: 100%;
+}
+
+.who-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 28px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.who-item.yes {
+  background: rgba(232, 232, 232, 0.05);
+  border: 1px solid rgba(232, 232, 232, 0.1);
+}
+
+.who-item.no {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Ensure step visibility takes precedence over component styles */
+.step.who-item.no:not(.visible) {
+  opacity: 0 !important;
+}
+
+.step.who-item.no.visible {
+  opacity: 0.6 !important;
+}
+
+.who-icon {
+  font-size: 20px;
+}
+
+.who-item p {
+  font-size: 18px;
+  color: var(--text-soft);
+}
+
+.who-item.no p {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* === SLIDE 6: COMMITMENT === */
+.slide-commit {
+  text-align: center;
+}
+
+.slide-commit .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  padding: 60px;
+}
+
+.commit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+  width: 100%;
+}
+
+.commit-card {
+  padding: 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  text-align: left;
+}
+
+.commit-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--silver);
+  opacity: 0.3;
+  margin-bottom: 12px;
+}
+
+.commit-text {
+  font-size: 17px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* === SLIDE 7: BEGIN === */
+.slide-begin {
+  text-align: center;
+}
+
+.slide-begin .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  padding: 60px;
+}
+
+.begin-cta {
+  margin-top: 48px;
+  padding: 24px 64px;
+  background: var(--silver);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  box-shadow: 0 0 60px rgba(232, 232, 232, 0.3);
+}
+
+.begin-sublabel {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+
+<div class="recording-wrapper">
+  <!-- CONTROL BAR -->
+  <div class="control-bar">
+    <div class="ctrl-section">
+      <button class="ctrl-btn danger" onclick="redoSlide()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Redo
+      </button>
+      <button class="ctrl-btn" onclick="prevSlide()">Back</button>
+    </div>
+
+    <div class="progress-display">
+      <div class="progress-main"><span id="slideNum">1</span> / <span id="slideTotal">7</span></div>
+      <div class="progress-clicks" id="clickDots"></div>
+      <div class="click-label"><span id="clickNum">0</span> / <span id="clickTotal">0</span></div>
+    </div>
+
+    <div class="ctrl-section">
+      <button class="ctrl-btn" onclick="nextStep()">Next</button>
+      <button class="ctrl-btn" onclick="toggleFullscreen()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDES -->
+  <div class="safe-frame">
+    <div class="frame-border" id="slideContainer">
+
+      <!-- SLIDE 1: HERO OPENING -->
+      <div class="slide slide-hero active" data-slide="1">
+        <div class="bg-base"></div>
+        <div class="bg-orb silver center"></div>
+        <div class="ascending-lines">
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+        </div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="hero-frame"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">Welcome To</p>
+          </div>
+          <div class="step fade-scale" data-step="2">
+            <h1 class="headline headline-hero"><span class="accent">Ascension</span></h1>
+          </div>
+          <div class="step fade-scale delay-1" data-step="2">
+            <h1 class="headline headline-lg" style="margin-top: -10px; font-weight: 300; letter-spacing: 0.1em;">ACADEMY</h1>
+          </div>
+          <div class="step rise" data-step="3">
+            <p class="body-hero" style="margin-top: 48px;">The path to consistent profitability.</p>
+          </div>
+          <div class="step fade-in" data-step="4">
+            <p class="body-md" style="margin-top: 24px; max-width: 600px;">Not through signals. Not through secrets.<br>Through systems that work - and the discipline to follow them.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: THE PROBLEM -->
+      <div class="slide slide-problem" data-slide="2">
+        <div class="bg-base"></div>
+        <div class="bg-orb danger drift-1"></div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">The Reality</p>
+            <h1 class="headline headline-lg">Why Traders Stay <span class="accent-danger">Stuck</span></h1>
+          </div>
+          
+          <div class="problem-stack">
+            <div class="problem-item step slide-left" data-step="2">
+              <span class="number">01</span>
+              <p>Subjective methods that change depending on who's drawing them</p>
+            </div>
+            <div class="problem-item step slide-left delay-1" data-step="3">
+              <span class="number">02</span>
+              <p>No actual measurement of edge - trading blind on hope</p>
+            </div>
+            <div class="problem-item step slide-left delay-2" data-step="4">
+              <span class="number">03</span>
+              <p>Psychology working against the plan instead of with it</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in" data-step="5">
+            <p class="body-lg" style="margin-top: 48px; color: var(--silver);">These aren't character flaws. They're symptoms of the wrong approach.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: THE SHIFT -->
+      <div class="slide slide-shift" data-slide="3">
+        <div class="bg-base"></div>
+        <div class="bg-orb silver drift-2"></div>
+        <div class="ascending-lines">
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+        </div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">The Solution</p>
+            <h1 class="headline headline-lg">A Different <span class="accent">Path</span></h1>
+          </div>
+          
+          <div class="shift-comparison">
+            <div class="shift-side old step slide-left" data-step="2">
+              <p class="shift-label">THE OLD WAY</p>
+              <div class="shift-items">
+                <div class="shift-item">Trendlines</div>
+                <div class="shift-item">Support & Resistance</div>
+                <div class="shift-item">Pattern Recognition</div>
+                <div class="shift-item">Gut Feeling</div>
+              </div>
+            </div>
+            
+            <div class="shift-arrow step fade-in" data-step="3">→</div>
+            
+            <div class="shift-side new step slide-right" data-step="4">
+              <p class="shift-label">THE QP METHOD</p>
+              <div class="shift-items">
+                <div class="shift-item">Mathematical Rules</div>
+                <div class="shift-item">Measured Expectancy</div>
+                <div class="shift-item">Systematic Execution</div>
+                <div class="shift-item">Documented Edge</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="step fade-in" data-step="5">
+            <p class="body-md" style="margin-top: 48px;">When the system is clear, discipline becomes easier.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: THE JOURNEY -->
+      <div class="slide slide-journey" data-slide="4">
+        <div class="bg-base"></div>
+        <div class="bg-orb white center"></div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">The Curriculum</p>
+            <h1 class="headline headline-lg">Nine <span class="accent">Levels</span></h1>
+          </div>
+          <div class="step fade-in" data-step="2">
+            <p class="body-lg" style="margin-top: 16px;">Each level builds on the last. Skip nothing.</p>
+          </div>
+          
+          <div class="journey-path">
+            <div class="journey-node active step rise" data-step="3">
+              <div class="journey-number">1-3</div>
+              <p class="journey-title">Foundations</p>
+              <p class="journey-levels">Method & Mechanics</p>
+            </div>
+            <div class="journey-node step rise delay-1" data-step="4">
+              <div class="journey-number">4-6</div>
+              <p class="journey-title">Mastery</p>
+              <p class="journey-levels">Psychology & Timing</p>
+            </div>
+            <div class="journey-node step rise delay-2" data-step="5">
+              <div class="journey-number">7-9</div>
+              <p class="journey-title">Integration</p>
+              <p class="journey-levels">Precision & Systems</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in" data-step="6">
+            <p class="body-md" style="margin-top: 48px;">27 lessons. Each one earns its place.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: WHO THIS IS FOR -->
+      <div class="slide slide-who" data-slide="5">
+        <div class="bg-base"></div>
+        <div class="bg-orb silver center"></div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <h1 class="headline headline-lg">Who This Is <span class="accent">For</span></h1>
+          </div>
+          <div class="step fade-in" data-step="2">
+            <p class="body-lg" style="margin-top: 20px;">This course assumes you already know the basics.</p>
+          </div>
+          
+          <div class="who-list">
+            <div class="who-item yes step slide-right" data-step="3">
+              <span class="who-icon">✓</span>
+              <p>Traders with 1-3+ years who can't break through</p>
+            </div>
+            <div class="who-item yes step slide-right delay-1" data-step="4">
+              <span class="who-icon">✓</span>
+              <p>Those ready to follow a system, not chase signals</p>
+            </div>
+            <div class="who-item yes step slide-right delay-2" data-step="5">
+              <span class="who-icon">✓</span>
+              <p>People who want math over mysticism</p>
+            </div>
+            <div class="who-item no step slide-right delay-3" data-step="6">
+              <span class="who-icon">✗</span>
+              <p>Complete beginners needing platform tutorials</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: COMMITMENT -->
+      <div class="slide slide-commit" data-slide="6">
+        <div class="bg-base"></div>
+        <div class="bg-orb silver drift-1"></div>
+        <div class="ascending-lines">
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+        </div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">Your Commitment</p>
+            <h1 class="headline headline-lg">What's <span class="accent">Expected</span></h1>
+          </div>
+          
+          <div class="commit-grid">
+            <div class="commit-card step rise" data-step="2">
+              <div class="commit-number">01</div>
+              <p class="commit-text">Watch every lesson in order. The sequence matters.</p>
+            </div>
+            <div class="commit-card step rise delay-1" data-step="3">
+              <div class="commit-number">02</div>
+              <p class="commit-text">Take notes. Timestamps are captured automatically.</p>
+            </div>
+            <div class="commit-card step rise delay-2" data-step="4">
+              <div class="commit-number">03</div>
+              <p class="commit-text">Apply what you learn. Backtest and paper trade.</p>
+            </div>
+            <div class="commit-card step rise delay-3" data-step="5">
+              <div class="commit-number">04</div>
+              <p class="commit-text">Use the Journal. Document everything. Review weekly.</p>
+            </div>
+          </div>
+          
+          <div class="step fade-in" data-step="6">
+            <p class="body-lg" style="margin-top: 40px; color: var(--silver);">The system works. Your job is to follow it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: BEGIN -->
+      <div class="slide slide-begin" data-slide="7">
+        <div class="bg-base"></div>
+        <div class="bg-orb silver center"></div>
+        <div class="ascending-lines">
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+          <div class="ascending-line"></div>
+        </div>
+        <div class="bg-noise"></div>
+        <div class="bg-vignette"></div>
+        <div class="hero-frame"></div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step rise" data-step="1">
+            <p class="eyebrow">Level 1 Awaits</p>
+          </div>
+          <div class="step fade-scale" data-step="2">
+            <h1 class="headline headline-xl">Let's <span class="accent">Begin</span></h1>
+          </div>
+          <div class="step fade-in" data-step="3">
+            <p class="body-hero" style="margin-top: 32px;">Everything you need is ahead.</p>
+          </div>
+          <div class="step rise" data-step="4">
+            <div class="begin-cta">Continue to Level 1</div>
+            <p class="begin-sublabel">Your transformation starts now</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  currentSlide: 1,
+  currentStep: 0,
+  totalSlides: 7
+};
+
+const slideSteps = {
+  1: 4, 2: 5, 3: 5, 4: 6, 5: 6, 6: 6, 7: 4
+};
+
+function updateUI() {
+  document.getElementById('slideNum').textContent = state.currentSlide;
+  document.getElementById('slideTotal').textContent = state.totalSlides;
+  
+  const totalSteps = slideSteps[state.currentSlide];
+  document.getElementById('clickNum').textContent = state.currentStep;
+  document.getElementById('clickTotal').textContent = totalSteps;
+  
+  const dotsContainer = document.getElementById('clickDots');
+  dotsContainer.innerHTML = '';
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'click-dot';
+    if (i < state.currentStep) dot.classList.add('done');
+    if (i === state.currentStep) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`)?.classList.add('active');
+  document.querySelectorAll(`[data-slide="${n}"] .step`).forEach(s => s.classList.remove('visible'));
+  state.currentSlide = n;
+  state.currentStep = 0;
+  updateUI();
+}
+
+function nextStep() {
+  const totalSteps = slideSteps[state.currentSlide];
+  
+  if (state.currentStep < totalSteps) {
+    state.currentStep++;
+    document.querySelectorAll(`[data-slide="${state.currentSlide}"] [data-step="${state.currentStep}"]`).forEach(step => {
+      step.classList.add('visible');
+    });
+    updateUI();
+  } else if (state.currentSlide < state.totalSlides) {
+    showSlide(state.currentSlide + 1);
+    setTimeout(() => nextStep(), 100);
+  }
+}
+
+function prevSlide() {
+  if (state.currentSlide > 1) showSlide(state.currentSlide - 1);
+}
+
+function redoSlide() {
+  showSlide(state.currentSlide);
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    nextStep();
+  } else if (e.key === 'ArrowLeft') {
+    prevSlide();
+  } else if (e.key === 'r' || e.key === 'R') {
+    redoSlide();
+  } else if (e.key === 'f' || e.key === 'F') {
+    toggleFullscreen();
+  }
+});
+
+document.querySelector('.frame-border').addEventListener('click', (e) => {
+  if (!e.target.closest('button')) nextStep();
+});
+
+updateUI();
+</script>
+</body>
+</html>

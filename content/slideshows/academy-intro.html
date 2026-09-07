@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascension Academy — Introduction</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a84c;
+  --gold-soft: rgba(201, 168, 76, 0.7);
+  --gold-faint: rgba(201, 168, 76, 0.12);
+  --cyan: #00abff;
+  --cyan-soft: rgba(0, 171, 255, 0.7);
+  --bg: #08080c;
+  --surface: #0c0c10;
+  --text: #ffffff;
+  --text-soft: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.4);
+  --danger: #dc2626;
+  --success: #16a34a;
+  --control-bg: #111118;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === LAYOUT === */
+.recording-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+}
+
+.control-bar {
+  height: 72px;
+  background: var(--control-bg);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  flex-shrink: 0;
+}
+
+.safe-frame {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: #000;
+}
+
+.frame-border {
+  width: 100%;
+  max-width: 1600px;
+  aspect-ratio: 16 / 9;
+  background: var(--bg);
+  border: 2px solid rgba(201, 168, 76, 0.4);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* === CONTROLS === */
+.ctrl-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ctrl-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-soft);
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text);
+}
+
+.ctrl-btn.danger:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.ctrl-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.progress-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.progress-main {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-soft);
+  letter-spacing: 0.05em;
+}
+
+.progress-main span { color: var(--gold); }
+
+.progress-clicks {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.click-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.2s;
+}
+
+.click-dot.active { background: var(--gold); }
+.click-dot.done { background: rgba(201, 168, 76, 0.5); }
+
+.click-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 8px;
+  letter-spacing: 0.03em;
+}
+
+/* === SLIDE BASE === */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === SUBTLE BACKGROUNDS === */
+.bg-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+
+.bg-accent {
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-radius: 50%;
+  filter: blur(200px);
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+.bg-accent.gold { background: var(--gold); }
+.bg-accent.cyan { background: var(--cyan); }
+.bg-accent.danger { background: var(--danger); }
+
+.bg-accent.center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.bg-accent.top-right { top: -200px; right: -200px; }
+.bg-accent.bottom-left { bottom: -200px; left: -200px; }
+
+/* Corner accent line */
+.corner-line {
+  position: absolute;
+  background: var(--gold);
+  opacity: 0.15;
+}
+
+.corner-line.top-left {
+  top: 40px;
+  left: 40px;
+  width: 60px;
+  height: 1px;
+}
+
+.corner-line.bottom-right {
+  bottom: 40px;
+  right: 40px;
+  width: 1px;
+  height: 60px;
+}
+
+/* Logo */
+.logo {
+  position: absolute;
+  bottom: 28px;
+  right: 36px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.logo span { color: var(--gold-soft); }
+
+/* Level indicator */
+.level-badge {
+  position: absolute;
+  top: 28px;
+  left: 36px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+}
+
+/* === TYPOGRAPHY === */
+.eyebrow {
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.headline {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.headline-xl { font-size: 88px; }
+.headline-lg { font-size: 72px; }
+.headline-md { font-size: 56px; }
+.headline-sm { font-size: 44px; }
+
+.headline .accent { color: var(--gold); }
+.headline .accent-cyan { color: var(--cyan); }
+.headline .accent-danger { color: var(--danger); }
+
+.body-lg {
+  font-size: 24px;
+  color: var(--text-soft);
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.body-md {
+  font-size: 20px;
+  color: var(--text-soft);
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 640px;
+}
+
+.body-sm {
+  font-size: 16px;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.accent-text { color: var(--gold); }
+.white-text { color: var(--text); }
+
+/* Horizontal rule */
+.hr {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  margin-top: 40px;
+}
+
+/* === ANIMATIONS === */
+.step {
+  opacity: 0;
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step.visible { opacity: 1; }
+
+.step.reveal-up {
+  transform: translateY(24px);
+}
+.step.reveal-up.visible {
+  transform: translateY(0);
+}
+
+.step.reveal-scale {
+  transform: scale(0.97);
+}
+.step.reveal-scale.visible {
+  transform: scale(1);
+}
+
+.step.reveal-fade {
+  transform: none;
+}
+
+.step.reveal-left {
+  transform: translateX(-30px);
+}
+.step.reveal-left.visible {
+  transform: translateX(0);
+}
+
+.step.reveal-right {
+  transform: translateX(30px);
+}
+.step.reveal-right.visible {
+  transform: translateX(0);
+}
+
+.delay-1 { transition-delay: 0.05s; }
+.delay-2 { transition-delay: 0.1s; }
+.delay-3 { transition-delay: 0.15s; }
+.delay-4 { transition-delay: 0.2s; }
+
+/* === SLIDE 1: Opening === */
+.slide-opening {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slide-opening .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px;
+}
+
+/* === SLIDE 2: The Problem === */
+.slide-problem {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-problem .content {
+  display: flex;
+  flex-direction: column;
+  padding: 60px 120px;
+  width: 100%;
+}
+
+.problem-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 900px;
+}
+
+.problem-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.problem-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.problem-icon svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--danger);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.problem-text h4 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.problem-text p {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* === SLIDE 3: Different Path === */
+.slide-path {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-path .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  padding: 60px 100px;
+  width: 100%;
+  align-items: center;
+}
+
+.path-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.path-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.path-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.path-icon {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--gold-faint);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.path-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gold);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.path-text h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.path-text p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* === SLIDE 4: The Journey === */
+.slide-journey {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-journey .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 80px;
+  text-align: center;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.level-card {
+  padding: 28px 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  background: rgba(255,255,255,0.02);
+  text-align: left;
+}
+
+.level-card.highlight {
+  border-color: var(--gold-faint);
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.level-number {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.level-card.highlight .level-number {
+  color: var(--gold-soft);
+}
+
+.level-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.level-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* === SLIDE 5: Who This Is For === */
+.slide-who {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-who .content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 60px 80px;
+  width: 100%;
+  align-items: center;
+}
+
+.who-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.who-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.who-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+}
+
+.who-item.not {
+  border-left-color: var(--danger);
+  opacity: 0.6;
+}
+
+.who-item p {
+  font-size: 16px;
+  color: var(--text-soft);
+}
+
+.who-item.not p {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* === SLIDE 6: What's Expected === */
+.slide-expected {
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-expected .content {
+  display: flex;
+  flex-direction: column;
+  padding: 60px 120px;
+  width: 100%;
+}
+
+.expect-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+}
+
+.expect-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.expect-number {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gold);
+  width: 28px;
+  flex-shrink: 0;
+}
+
+.expect-text {
+  font-size: 18px;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+/* === SLIDE 7: Let's Begin === */
+.slide-begin {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slide-begin .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px;
+}
+
+.begin-cta {
+  margin-top: 48px;
+  padding: 20px 48px;
+  background: linear-gradient(135deg, var(--gold) 0%, #a08339 100%);
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: 0.05em;
+}
+</style>
+</head>
+<body>
+
+<div class="recording-wrapper">
+  <!-- CONTROL BAR -->
+  <div class="control-bar">
+    <div class="ctrl-section">
+      <button class="ctrl-btn danger" onclick="redoSlide()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Redo
+      </button>
+      <button class="ctrl-btn" onclick="prevSlide()">Back</button>
+    </div>
+
+    <div class="progress-display">
+      <div class="progress-main"><span id="slideNum">1</span> / <span id="slideTotal">7</span></div>
+      <div class="progress-clicks" id="clickDots"></div>
+      <div class="click-label"><span id="clickNum">0</span> / <span id="clickTotal">0</span></div>
+    </div>
+
+    <div class="ctrl-section">
+      <button class="ctrl-btn" onclick="nextStep()">Next</button>
+      <button class="ctrl-btn" onclick="toggleFullscreen()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SLIDES -->
+  <div class="safe-frame">
+    <div class="frame-border" id="slideContainer">
+
+      <!-- SLIDE 1: Opening -->
+      <div class="slide slide-opening active" data-slide="1">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold center"></div>
+        <div class="corner-line top-left"></div>
+        <div class="corner-line bottom-right"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Welcome To</p>
+          </div>
+          <div class="step reveal-scale" data-step="2">
+            <h1 class="headline headline-xl"><span class="accent">Ascension</span> Academy</h1>
+          </div>
+          <div class="step reveal-up" data-step="3">
+            <p class="body-lg" style="margin-top: 32px;">The path to consistent profitability.</p>
+          </div>
+          <div class="step reveal-fade" data-step="4">
+            <p class="body-md" style="margin-top: 20px;">Not through signals. Not through secrets.<br>Through systems that work — and the discipline to follow them.</p>
+          </div>
+          <div class="step reveal-fade" data-step="5">
+            <div class="hr"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: The Problem -->
+      <div class="slide slide-problem" data-slide="2">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent danger top-right"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">The Reality</p>
+            <h1 class="headline headline-md">Why Traders Stay <span class="accent-danger">Stuck</span></h1>
+          </div>
+          <div class="problem-list">
+            <div class="problem-item step reveal-left" data-step="2">
+              <div class="problem-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+              </div>
+              <div class="problem-text">
+                <h4>Subjective Methods</h4>
+                <p>Trendlines, support and resistance, pattern recognition — methods that change depending on who's drawing them.</p>
+              </div>
+            </div>
+            <div class="problem-item step reveal-left" data-step="3">
+              <div class="problem-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg>
+              </div>
+              <div class="problem-text">
+                <h4>No Edge Measurement</h4>
+                <p>Trading without knowing your actual expectancy. Win rate means nothing without risk-reward math.</p>
+              </div>
+            </div>
+            <div class="problem-item step reveal-left" data-step="4">
+              <div class="problem-icon">
+                <svg viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+              </div>
+              <div class="problem-text">
+                <h4>Uncontrolled Psychology</h4>
+                <p>Revenge trading, moving stops, cutting winners early. The mind working against the plan.</p>
+              </div>
+            </div>
+          </div>
+          <div class="step reveal-fade" data-step="5">
+            <p class="body-md accent-text" style="margin-top: 40px;">These aren't character flaws. They're symptoms of the wrong approach.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: A Different Path -->
+      <div class="slide slide-path" data-slide="3">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold bottom-left"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="path-left">
+            <div class="step reveal-up" data-step="1">
+              <p class="eyebrow">The Solution</p>
+              <h1 class="headline headline-md">A Different <span class="accent">Path</span></h1>
+            </div>
+            <div class="step reveal-fade" data-step="2">
+              <p class="body-lg" style="margin-top: 24px;">Mathematical. Systematic. Repeatable.</p>
+            </div>
+            <div class="step reveal-fade" data-step="3">
+              <p class="body-md" style="margin-top: 16px;">No trendlines. No support and resistance.<br>A framework built on price mechanics that don't change based on interpretation.</p>
+            </div>
+          </div>
+          <div class="path-right">
+            <div class="path-item step reveal-right" data-step="4">
+              <div class="path-icon">
+                <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <div class="path-text">
+                <h4>Defined Rules</h4>
+                <p>Every entry, exit, and position size follows explicit criteria.</p>
+              </div>
+            </div>
+            <div class="path-item step reveal-right" data-step="5">
+              <div class="path-icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              </div>
+              <div class="path-text">
+                <h4>Measured Edge</h4>
+                <p>You'll know your expectancy before risking real capital.</p>
+              </div>
+            </div>
+            <div class="path-item step reveal-right" data-step="6">
+              <div class="path-icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="path-text">
+                <h4>Psychology Through Structure</h4>
+                <p>When the system is clear, discipline becomes easier.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: The Journey (9 Levels Overview) -->
+      <div class="slide slide-journey" data-slide="4">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent cyan center"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">The Curriculum</p>
+            <h1 class="headline headline-md">Nine <span class="accent-cyan">Levels</span></h1>
+          </div>
+          <div class="step reveal-fade" data-step="2">
+            <p class="body-md" style="margin-top: 16px;">Each level builds on the last. Skip nothing.</p>
+          </div>
+          <div class="levels-grid">
+            <div class="level-card highlight step reveal-up delay-1" data-step="3">
+              <p class="level-number">LEVELS 1–3</p>
+              <h3 class="level-name">Foundations & Method</h3>
+              <p class="level-desc">The reality of trading, core mechanics, and the framework itself.</p>
+            </div>
+            <div class="level-card step reveal-up delay-2" data-step="4">
+              <p class="level-number">LEVELS 4–6</p>
+              <h3 class="level-name">Psychology & Timing</h3>
+              <p class="level-desc">Controlling your mind, finding your edge, advanced timing.</p>
+            </div>
+            <div class="level-card step reveal-up delay-3" data-step="5">
+              <p class="level-number">LEVELS 7–9</p>
+              <h3 class="level-name">Precision & Integration</h3>
+              <p class="level-desc">Advanced techniques, execution mastery, full system integration.</p>
+            </div>
+          </div>
+          <div class="step reveal-fade" data-step="6">
+            <p class="body-sm" style="margin-top: 40px;">27 lessons. Each one earns its place.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Who This Is For -->
+      <div class="slide slide-who" data-slide="5">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold top-right"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="who-left">
+            <div class="step reveal-up" data-step="1">
+              <h1 class="headline headline-md">Who This Is <span class="accent">For</span></h1>
+            </div>
+            <div class="step reveal-fade" data-step="2">
+              <p class="body-lg" style="margin-top: 24px;">This course assumes you already know the basics.</p>
+            </div>
+            <div class="step reveal-fade" data-step="3">
+              <p class="body-md" style="margin-top: 16px;">You can place a trade. You understand risk. You've been at this for a while — and something still isn't clicking.</p>
+            </div>
+          </div>
+          <div class="who-right">
+            <div class="who-item step reveal-right" data-step="4">
+              <p>Traders with 1–3+ years of experience</p>
+            </div>
+            <div class="who-item step reveal-right" data-step="5">
+              <p>People who know the basics but can't get consistent</p>
+            </div>
+            <div class="who-item step reveal-right" data-step="6">
+              <p>Those ready to follow a system, not chase signals</p>
+            </div>
+            <div class="who-item not step reveal-right" data-step="7">
+              <p>Complete beginners who need platform tutorials</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: What's Expected -->
+      <div class="slide slide-expected" data-slide="6">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent cyan bottom-left"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Your Commitment</p>
+            <h1 class="headline headline-md">What's <span class="accent-cyan">Expected</span></h1>
+          </div>
+          <div class="expect-list">
+            <div class="expect-item step reveal-left" data-step="2">
+              <span class="expect-number">01</span>
+              <p class="expect-text">Watch every lesson in order. The sequence matters.</p>
+            </div>
+            <div class="expect-item step reveal-left" data-step="3">
+              <span class="expect-number">02</span>
+              <p class="expect-text">Take notes. Use the built-in notebook — timestamps are captured automatically.</p>
+            </div>
+            <div class="expect-item step reveal-left" data-step="4">
+              <span class="expect-number">03</span>
+              <p class="expect-text">Apply what you learn. Paper trade, backtest, journal every decision.</p>
+            </div>
+            <div class="expect-item step reveal-left" data-step="5">
+              <span class="expect-number">04</span>
+              <p class="expect-text">Use the Journal. Document your trades. Review weekly. This is non-negotiable.</p>
+            </div>
+          </div>
+          <div class="step reveal-fade" data-step="6">
+            <p class="body-md accent-text" style="margin-top: 40px;">The system works. Your job is to follow it.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: Let's Begin -->
+      <div class="slide slide-begin" data-slide="7">
+        <div class="bg-grain"></div>
+        <div class="bg-vignette"></div>
+        <div class="bg-accent gold center"></div>
+        <div class="corner-line top-left"></div>
+        <div class="corner-line bottom-right"></div>
+        <div class="level-badge">INTRODUCTION</div>
+        <div class="logo">QUANT<span>PRIME</span></div>
+        
+        <div class="content">
+          <div class="step reveal-up" data-step="1">
+            <p class="eyebrow">Level 1 Awaits</p>
+          </div>
+          <div class="step reveal-scale" data-step="2">
+            <h1 class="headline headline-lg">Let's <span class="accent">Begin</span></h1>
+          </div>
+          <div class="step reveal-fade" data-step="3">
+            <p class="body-lg" style="margin-top: 32px;">Everything you need is ahead of you.</p>
+          </div>
+          <div class="step reveal-fade" data-step="4">
+            <p class="body-md" style="margin-top: 16px;">Clear your distractions. Open your notebook.<br>The next video starts your transformation.</p>
+          </div>
+          <div class="step reveal-scale" data-step="5">
+            <div class="begin-cta">CONTINUE TO LEVEL 1</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  currentSlide: 1,
+  currentStep: 0,
+  totalSlides: 7
+};
+
+const slideSteps = {
+  1: 5, 2: 5, 3: 6, 4: 6, 5: 7, 6: 6, 7: 5
+};
+
+function updateUI() {
+  document.getElementById('slideNum').textContent = state.currentSlide;
+  document.getElementById('slideTotal').textContent = state.totalSlides;
+  
+  const totalSteps = slideSteps[state.currentSlide];
+  document.getElementById('clickNum').textContent = state.currentStep;
+  document.getElementById('clickTotal').textContent = totalSteps;
+  
+  const dotsContainer = document.getElementById('clickDots');
+  dotsContainer.innerHTML = '';
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'click-dot';
+    if (i < state.currentStep) dot.classList.add('done');
+    if (i === state.currentStep) dot.classList.add('active');
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function showSlide(n) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-slide="${n}"]`)?.classList.add('active');
+  document.querySelectorAll(`[data-slide="${n}"] .step`).forEach(s => s.classList.remove('visible'));
+  state.currentSlide = n;
+  state.currentStep = 0;
+  updateUI();
+}
+
+function nextStep() {
+  const totalSteps = slideSteps[state.currentSlide];
+  
+  if (state.currentStep < totalSteps) {
+    state.currentStep++;
+    document.querySelectorAll(`[data-slide="${state.currentSlide}"] [data-step="${state.currentStep}"]`).forEach(step => {
+      step.classList.add('visible');
+    });
+    updateUI();
+  } else if (state.currentSlide < state.totalSlides) {
+    showSlide(state.currentSlide + 1);
+    setTimeout(() => nextStep(), 100);
+  }
+}
+
+function prevSlide() {
+  if (state.currentSlide > 1) showSlide(state.currentSlide - 1);
+}
+
+function redoSlide() {
+  showSlide(state.currentSlide);
+}
+
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+    e.preventDefault();
+    nextStep();
+  } else if (e.key === 'ArrowLeft') {
+    prevSlide();
+  } else if (e.key === 'r' || e.key === 'R') {
+    redoSlide();
+  } else if (e.key === 'f' || e.key === 'F') {
+    toggleFullscreen();
+  }
+});
+
+document.querySelector('.frame-border').addEventListener('click', (e) => {
+  if (!e.target.closest('button')) nextStep();
+});
+
+updateUI();
+</script>
+</body>
+</html>
