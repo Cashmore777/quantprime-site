@@ -11833,7 +11833,7 @@ button, .nav-item, .room, .video-item, .filter-chip {
               <div class="video-title" id="current-video-title">Select a lesson to begin</div>
               <div class="video-meta" id="current-video-meta">27 lessons across 9 levels</div>
             </div>
-            <iframe id="video-iframe" class="academy-iframe" allowfullscreen></iframe>
+            <iframe id="video-iframe" class="academy-iframe" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>
         
@@ -21066,26 +21066,43 @@ function playVideo(videoId) {
       // Initialize Vimeo Player API for time tracking
       iframe.onload = () => {
         player.classList.remove('loading');
-        try {
-          const vimeoPlayer = new Vimeo.Player(iframe);
-          
-          // Track time updates
-          vimeoPlayer.on('timeupdate', function(data) {
-            currentVideoPlaybackTime = data.seconds;
-            // Update timestamp display
-            const timeDisplay = document.getElementById('current-video-time');
-            if (timeDisplay) {
-              const mins = Math.floor(data.seconds / 60);
-              const secs = Math.floor(data.seconds % 60);
-              timeDisplay.textContent = `@${mins}:${String(secs).padStart(2, '0')}`;
-            }
-          });
-          
-          // Store player reference for later use
-          window.currentVimeoPlayer = vimeoPlayer;
-        } catch(e) {
-          console.log('Vimeo Player init error:', e);
-        }
+        
+        // Small delay to ensure iframe is fully ready
+        setTimeout(() => {
+          try {
+            const vimeoPlayer = new Vimeo.Player(iframe);
+            
+            // Track time updates
+            vimeoPlayer.on('timeupdate', function(data) {
+              currentVideoPlaybackTime = data.seconds;
+              // Update timestamp display
+              const timeDisplay = document.getElementById('current-video-time');
+              if (timeDisplay) {
+                const mins = Math.floor(data.seconds / 60);
+                const secs = Math.floor(data.seconds % 60);
+                timeDisplay.textContent = `@${mins}:${String(secs).padStart(2, '0')}`;
+              }
+            });
+            
+            // Also update on play to catch initial state
+            vimeoPlayer.on('play', function() {
+              vimeoPlayer.getCurrentTime().then(function(seconds) {
+                const timeDisplay = document.getElementById('current-video-time');
+                if (timeDisplay) {
+                  const mins = Math.floor(seconds / 60);
+                  const secs = Math.floor(seconds % 60);
+                  timeDisplay.textContent = `@${mins}:${String(secs).padStart(2, '0')}`;
+                }
+              });
+            });
+            
+            // Store player reference for later use
+            window.currentVimeoPlayer = vimeoPlayer;
+            console.log('Vimeo Player initialized successfully');
+          } catch(e) {
+            console.log('Vimeo Player init error:', e);
+          }
+        }, 100);
       };
     } else if (videoUrl.includes('iframe.mediadelivery.net') || videoUrl.includes('bunny')) {
       // Bunny Stream URL

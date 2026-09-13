@@ -1,5 +1,35 @@
 [
   {
+    "date": "11 SEP 2026",
+    "filename": "2026-09-11.json",
+    "iso_date": "2026-09-11",
+    "instruments": 30
+  },
+  {
+    "date": "10 SEP 2026",
+    "filename": "2026-09-10.json",
+    "iso_date": "2026-09-10",
+    "instruments": 30
+  },
+  {
+    "date": "09 SEP 2026",
+    "filename": "2026-09-09.json",
+    "iso_date": "2026-09-09",
+    "instruments": 30
+  },
+  {
+    "date": "08 SEP 2026",
+    "filename": "2026-09-08.json",
+    "iso_date": "2026-09-08",
+    "instruments": 30
+  },
+  {
+    "date": "07 SEP 2026",
+    "filename": "2026-09-07.json",
+    "iso_date": "2026-09-07",
+    "instruments": 30
+  },
+  {
     "date": "04 SEP 2026",
     "filename": "2026-09-04.json",
     "iso_date": "2026-09-04",
